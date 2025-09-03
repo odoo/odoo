@@ -37,63 +37,6 @@ import { FontSizeSelector } from "./font_size_selector";
 import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 import { weakMemoize } from "@html_editor/utils/functions";
 
-export const fontItems = [
-    {
-        name: _t("Header 1 Display 1"),
-        tagName: "h1",
-        extraClass: "display-1",
-    },
-    // TODO @phoenix use them if showExtendedTextStylesOptions is true
-    // {
-    //     name: _t("Header 1 Display 2"),
-    //     tagName: "h1",
-    //     extraClass: "display-2",
-    // },
-    // {
-    //     name: _t("Header 1 Display 3"),
-    //     tagName: "h1",
-    //     extraClass: "display-3",
-    // },
-    // {
-    //     name: _t("Header 1 Display 4"),
-    //     tagName: "h1",
-    //     extraClass: "display-4",
-    // },
-    // ----
-
-    { name: _t("Header 1"), tagName: "h1" },
-    { name: _t("Header 2"), tagName: "h2" },
-    { name: _t("Header 3"), tagName: "h3" },
-    { name: _t("Header 4"), tagName: "h4" },
-    { name: _t("Header 5"), tagName: "h5" },
-    { name: _t("Header 6"), tagName: "h6" },
-
-    {
-        name: _t("Normal"),
-        tagName: "div",
-        // for the FontSelector component
-        selector: getBaseContainerSelector("DIV"),
-    },
-    { name: _t("Paragraph"), tagName: "p" },
-
-    // TODO @phoenix use them if showExtendedTextStylesOptions is true
-    // consider baseContainer if enabling them
-    // {
-    //     name: _t("Light"),
-    //     tagName: "p",
-    //     extraClass: "lead",
-    // },
-    // {
-    //     name: _t("Small"),
-    //     tagName: "p",
-    //     extraClass: "small",
-    // },
-    // ----
-
-    { name: _t("Code"), tagName: "pre" },
-    { name: _t("Quote"), tagName: "blockquote" },
-];
-
 export const fontSizeItems = [
     { variableName: "display-1-font-size", className: "display-1-fs" },
     { variableName: "display-2-font-size", className: "display-2-fs" },
@@ -130,6 +73,30 @@ export class FontPlugin extends Plugin {
         "lineBreak",
     ];
     resources = {
+        font_items: [
+            withSequence(10, {
+                name: _t("Header 1 Display 1"),
+                tagName: "h1",
+                extraClass: "display-1",
+            }),
+            ...[
+                { name: _t("Header 1"), tagName: "h1" },
+                { name: _t("Header 2"), tagName: "h2" },
+                { name: _t("Header 3"), tagName: "h3" },
+                { name: _t("Header 4"), tagName: "h4" },
+                { name: _t("Header 5"), tagName: "h5" },
+                { name: _t("Header 6"), tagName: "h6" },
+            ].map((item) => withSequence(20, item)),
+            withSequence(30, {
+                name: _t("Normal"),
+                tagName: "div",
+                // for the FontSelector component
+                selector: getBaseContainerSelector("DIV"),
+            }),
+            withSequence(40, { name: _t("Paragraph"), tagName: "p" }),
+            withSequence(50, { name: _t("Code"), tagName: "pre" }),
+            withSequence(60, { name: _t("Quote"), tagName: "blockquote" }),
+        ],
         user_commands: [
             {
                 id: "setTagHeading1",
@@ -315,6 +282,11 @@ export class FontPlugin extends Plugin {
         this.blockFormatIsAvailableMemoized = weakMemoize(
             (selection) => isHtmlContentSupported(selection) && this.dependencies.dom.canSetBlock()
         );
+        this.availableFontItems = this.getResource("font_items").filter(
+            ({ tagName }) =>
+                !SUPPORTED_BASE_CONTAINER_NAMES.includes(tagName.toUpperCase()) ||
+                this.config.baseContainers.includes(tagName.toUpperCase())
+        );
     }
 
     normalize(root) {
@@ -323,14 +295,6 @@ export class FontPlugin extends Plugin {
                 unwrapContents(el);
             }
         }
-    }
-
-    get availableFontItems() {
-        return fontItems.filter(
-            ({ tagName }) =>
-                !SUPPORTED_BASE_CONTAINER_NAMES.includes(tagName.toUpperCase()) ||
-                this.config.baseContainers.includes(tagName.toUpperCase())
-        );
     }
 
     get fontName() {

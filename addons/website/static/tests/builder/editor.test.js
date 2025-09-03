@@ -3,7 +3,7 @@ import { expect, test, describe } from "@odoo/hoot";
 import { animationFrame } from "@odoo/hoot-mock";
 import { contains, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { defineWebsiteModels, setupWebsiteBuilder } from "./website_helpers";
-import { click, manuallyDispatchProgrammaticEvent, waitFor, queryOne } from "@odoo/hoot-dom";
+import { click, manuallyDispatchProgrammaticEvent, waitFor, queryOne, waitForNone } from "@odoo/hoot-dom";
 import { isTextNode } from "@html_editor/utils/dom_info";
 import { parseHTML } from "@html_editor/utils/html";
 import { setSelection } from "@html_editor/../tests/_helpers/selection";
@@ -207,5 +207,54 @@ describe("toolbar dropdowns", () => {
         click(".o-we-toolbar .btn[name='font']");
         await animationFrame();
         expect(".o_font_selector_menu .o-dropdown-item[name='div']").toHaveCount(0);
+    });
+});
+
+describe("font types", () => {
+    test("Header 1 Display 1 to 4 are available", async () => {
+        const { getEditor } = await setupWebsiteBuilder(`<p>abc</p>`);
+        const editor = getEditor();
+        const p = editor.editable.querySelector("p");
+        setSelection({ anchorNode: p, anchorOffset: 0, focusOffset: 1 });
+        await waitFor(".o-we-toolbar");
+        click(".o-we-toolbar .btn[name='font']");
+        await waitFor(".o_font_selector_menu");
+        const expectedButtons = [
+            "Header 1 Display 1",
+            "Header 1 Display 2",
+            "Header 1 Display 3",
+            "Header 1 Display 4",
+        ];
+        expectedButtons.forEach((button) => {
+            expect(`.o_font_selector_menu .o-dropdown-item:contains('${button}')`).toHaveCount(1);
+        });
+    });
+    test("'Light' is available", async () => {
+        const { getEditor } = await setupWebsiteBuilder(`<p>abc</p>`);
+        const editor = getEditor();
+        const p = editor.editable.querySelector("p");
+        setSelection({ anchorNode: p, anchorOffset: 0, focusOffset: 1 });
+        await waitFor(".o-we-toolbar");
+        click(".o-we-toolbar .btn[name='font']");
+        await waitFor(".o_font_selector_menu");
+        expect(`.o_font_selector_menu .o-dropdown-item:contains('Light')`).toHaveCount(1);
+        click(".o_font_selector_menu .o-dropdown-item:contains('Light')");
+        await waitForNone(".o_font_selector_menu");
+        expect(".o-we-toolbar .btn[name='font']").toHaveText("Light");
+        expect(editor.editable.querySelector("p")).toHaveClass("lead");
+    });
+    test("'Small' is available", async () => {
+        const { getEditor } = await setupWebsiteBuilder(`<p>abc</p>`);
+        const editor = getEditor();
+        const p = editor.editable.querySelector("p");
+        setSelection({ anchorNode: p, anchorOffset: 0, focusOffset: 1 });
+        await waitFor(".o-we-toolbar");
+        click(".o-we-toolbar .btn[name='font']");
+        await waitFor(".o_font_selector_menu");
+        expect(`.o_font_selector_menu .o-dropdown-item:contains('Small')`).toHaveCount(1);
+        click(".o_font_selector_menu .o-dropdown-item:contains('Small')");
+        await waitForNone(".o_font_selector_menu");
+        expect(".o-we-toolbar .btn[name='font']").toHaveText("Small");
+        expect(editor.editable.querySelector("p")).toHaveClass("small");
     });
 });

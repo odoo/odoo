@@ -13,9 +13,8 @@ export class ForumFontPlugin extends FontPlugin {
         toolbar_items: this.resources.toolbar_items.filter(
             (item) => item.object.id !== "font-size"
         ),
+        font_items: this.resources.font_items.filter(
+            (item) => !excludedFontItems.includes(item.object.tagName)
+        ),
     };
-
-    get availableFontItems() {
-        return super.availableFontItems.filter((item) => !excludedFontItems.includes(item.tagName));
-    }
 }

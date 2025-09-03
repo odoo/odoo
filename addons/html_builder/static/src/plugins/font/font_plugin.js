@@ -5,6 +5,7 @@ import { _t } from "@web/core/l10n/translation";
 import { Cache } from "@web/core/utils/cache";
 import { loadCSS } from "@web/core/assets";
 import { BuilderFontSizeSelector } from "./font_size_selector";
+import { withSequence } from "@html_editor/utils/resource";
 
 export class BuilderFontPlugin extends Plugin {
     static id = "builderFont";
@@ -26,6 +27,15 @@ export class BuilderFontPlugin extends Plugin {
             "display-3-font",
             "display-4-font",
             "buttons-font",
+        ],
+        font_items: [
+            ...[
+                { name: _t("Header 1 Display 2"), tagName: "h1", extraClass: "display-2" },
+                { name: _t("Header 1 Display 3"), tagName: "h1", extraClass: "display-3" },
+                { name: _t("Header 1 Display 4"), tagName: "h1", extraClass: "display-4" },
+            ].map((item) => withSequence(15, item)),
+            withSequence(43, { name: _t("Light"), tagName: "p", extraClass: "lead" }),
+            withSequence(46, { name: _t("Small"), tagName: "p", extraClass: "small" }),
         ],
     };
     setup() {
