@@ -9,11 +9,12 @@
                 <label for="publisher_comment" string="Comment"/>
                 <div>
                     <field name="publisher_comment"/>
-                    <br />
-                    <span class="oe_inline">by </span>
-                    <field name="publisher_id" class="oe_inline"/>
-                    <span class="oe_inline"> on </span>
-                    <field name="publisher_datetime" class="oe_inline"/>
+                    <div invisible="not publisher_comment">
+                        <span>by </span>
+                        <field name="publisher_id" class="oe_inline"/>
+                        <span> on </span>
+                        <field name="publisher_datetime" class="oe_inline"/>
+                    </div>
                 </div>
             </xpath>
         </field>
