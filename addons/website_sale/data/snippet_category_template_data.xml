@@ -12,13 +12,16 @@
                 t-attf-style="grid-row: span {{ 4 if is_parent else size }}; grid-column: span {{ 2 if is_parent and colSpanTwo else 1 }}"
                 role="article"
             >
-                <img
-                    name="category_image"
-                    loading="lazy"
-                    t-att-src="category['cover_image']"
-                    alt="Category Image"
-                    class="o_category_image img-fluid position-absolute w-100 h-100 object-fit-cover"
-                />
+                <div class="overflow-hidden">
+                    <img
+                        name="category_image"
+                        loading="lazy"
+                        t-att-src="category['cover_image']"
+                        alt="Category Image"
+                        class="o_category_image img-fluid position-absolute w-100 h-100 object-fit-cover"
+                    />
+                    <div t-if="category.get('unpublished')" class="o_ribbon_right small text-bg-light">Unpublished</div>
+                </div>
                 <div
                     name="category_overlay"
                     t-attf-class="p-3 bg-black-25 position-relative w-100 h-100 d-flex flex-column justify-content-between {{alignmentClass}}"
