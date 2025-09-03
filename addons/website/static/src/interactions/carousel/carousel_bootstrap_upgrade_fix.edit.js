@@ -4,7 +4,7 @@ import { withHistory } from "@website/core/website_edit_service";
 
 const CarouselBootstrapUpgradeFixEdit = I => class extends I {
     // Suspend ride in edit mode.
-    carouselOptions = { ride: false, pause: true };
+    carouselOptions = { ride: false, pause: true, keyboard: false };
 
     setup() {
         super.setup();
