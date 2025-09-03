@@ -50,3 +50,19 @@ class TestEmbedDetection(HttpCase, common.SlidesCase):
         self.assertFalse(bool(self.env['slide.embed'].search([
             ('slide_id', '=', self.slide.id)
         ])))
+
+    def test_embed_category_slide(self):
+        self.slide.channel_id.website_id = False
+        res = self.url_open(f'/slides/embed/{self.category.id}')
+        res.raise_for_status()
+        self.assertFalse(bool(self.env['slide.embed'].search([
+            ('slide_id', '=', self.category.id)
+        ])))
+
+    def test_embed_if_no_website_id(self):
+        self.slide.channel_id.website_id = False
+        res = self.url_open(f'/slides/embed/{self.slide.id}')
+        res.raise_for_status()
+        self.assertFalse(bool(self.env['slide.embed'].search([
+            ('slide_id', '=', self.slide.id)
+        ])))
