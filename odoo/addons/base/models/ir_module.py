@@ -808,7 +808,7 @@ class IrModuleModule(models.Model):
 
     def _update_dependencies(self, depends=None, auto_install_requirements=()):
         self.env['ir.module.module.dependency'].flush_model()
-        existing = set(dep.name for dep in self.dependencies_id)
+        existing = {dep.name for dep in self.dependencies_id}
         needed = set(depends or [])
         for dep in (needed - existing):
             self.env.cr.execute('INSERT INTO ir_module_module_dependency (module_id, name) values (%s, %s)', (self.id, dep))
@@ -831,7 +831,7 @@ class IrModuleModule(models.Model):
 
     def _update_exclusions(self, excludes=None):
         self.env['ir.module.module.exclusion'].flush_model()
-        existing = set(excl.name for excl in self.exclusion_ids)
+        existing = {excl.name for excl in self.exclusion_ids}
         needed = set(excludes or [])
         for name in (needed - existing):
             self.env.cr.execute('INSERT INTO ir_module_module_exclusion (module_id, name) VALUES (%s, %s)', (self.id, name))
@@ -1001,11 +1001,11 @@ class IrModuleModuleDependency(models.Model):
     @api.depends('name')
     def _compute_depend(self):
         # retrieve all modules corresponding to the dependency names
-        names = list(set(dep.name for dep in self))
+        names = {dep.name for dep in self}
         mods = self.env['ir.module.module'].search([('name', 'in', names)])
 
         # index modules by name, and assign dependencies
-        name_mod = dict((mod.name, mod) for mod in mods)
+        name_mod = {mod.name: mod for mod in mods}
         for dep in self:
             dep.depend_id = name_mod.get(dep.name)
 
@@ -1025,7 +1025,7 @@ class IrModuleModuleDependency(models.Model):
         to_search = {key: True for key in module_names}
         res = {}
         def search_direct_deps(to_search, res):
-            to_search_list = list(to_search.keys())
+            to_search_list = to_search.keys()
             dependencies = self.web_search_read(domain=[("module_id.name", "in", to_search_list)], specification={"module_id":{"fields":{"name":{}}}, "name": {}, })["records"]
             to_search.clear()
             for dependency in dependencies:
@@ -1034,7 +1034,7 @@ class IrModuleModuleDependency(models.Model):
                 if dep_name not in res and dep_name not in to_search and dep_name not in to_search_list:
                     to_search[dep_name] = True
                 if mod_name not in res:
-                    res[mod_name] = list()
+                    res[mod_name] = []
                 res[mod_name].append(dep_name)
         search_direct_deps(to_search, res)
         while to_search:
@@ -1061,7 +1061,7 @@ class IrModuleModuleExclusion(models.Model):
     @api.depends('name')
     def _compute_exclusion(self):
         # retrieve all modules corresponding to the exclusion names
-        names = list(set(excl.name for excl in self))
+        names = {excl.name for excl in self}
         mods = self.env['ir.module.module'].search([('name', 'in', names)])
 
         # index modules by name, and assign dependencies
