@@ -151,10 +151,7 @@
                                 <field name="l10n_it_edi_attachment_file" widget="binary" filename="l10n_it_edi_attachment_name" groups="base.group_no_one" readonly="1"/>
                                 <field name="l10n_it_stamp_duty" readonly="state != 'draft'"/>
                                 <field name="l10n_it_ddt_id" readonly="state != 'draft'" invisible="move_type not in ('out_invoice', 'out_refund')"/>
-                                <field name="l10n_it_document_type"
-                                       string="Document Type"
-                                       domain="[('type', '=', 'purchase' if move_type in ('in_invoice', 'in_receipt', 'in_refund') else 'sale')]"
-                                />
+                                <field name="l10n_it_document_type" string="Document Type"/>
                                 <field name="l10n_it_payment_method" string="Payment Method"/>
                             </group>
                             <field name="l10n_it_partner_pa" invisible="1"/>
