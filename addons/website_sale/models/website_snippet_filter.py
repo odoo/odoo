@@ -163,6 +163,7 @@ class WebsiteSnippetFilter(models.Model):
         return [{
             'id': cat.id,
             'name': cat.name,
+            'unpublished': not cat.has_published_products,
             'cover_image': (
                 f'{base_url}{request.website.image_url(cat, "cover_image")}'
                 if cat.cover_image else default_img_url

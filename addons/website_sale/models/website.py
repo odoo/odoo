@@ -519,6 +519,7 @@ class Website(models.Model):
                     'name': cat['name'],
                     'website_description': cat['description'],
                     'image_1920': image_base64,
+                    'cover_image': image_base64,
                 })
             self.env['product.public.category'].sudo().create(categories)
         return res
