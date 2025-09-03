@@ -80,8 +80,8 @@ class HrLeave(models.Model):
 
                 overlappping |= self.env['hr.work.entry']._from_intervals(outside_intervals)
                 included |= previous_employee_work_entries - overlappping
-            overlappping.write({'leave_id': False})
-            included.write({'active': False})
+            overlappping.filtered(lambda entry: entry.state != 'validated').write({'leave_id': False})
+            included.filtered(lambda entry: entry.state != 'validated').write({'active': False})
 
     def write(self, vals):
         if not self:
