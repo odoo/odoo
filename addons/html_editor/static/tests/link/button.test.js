@@ -2,6 +2,7 @@ import { describe, expect, test } from "@odoo/hoot";
 import {
     click,
     edit,
+    hover,
     queryAll,
     queryOne,
     select,
@@ -113,6 +114,28 @@ describe("Custom button style", () => {
         expect(queryOne(".custom-border-picker").style.backgroundColor).toBe("rgb(255, 0, 0)");
         expect(queryOne(".custom-border-size").value).toBe("4");
         expect(queryOne(".custom-border-style").value).toBe("dotted");
+    });
+
+    test.tags("desktop");
+    test("The color preview should be reset after cursor is out of the colorpicker", async () => {
+        await setupEditor(
+            '<p><a href="https://test.com/" class="btn btn-custom" style="color: rgb(0, 255, 0); background-color: rgb(0, 0, 255); border-width: 4px; border-color: rgb(255, 0, 0); border-style: dotted;">link[]Label</a></p>',
+            allowCustomOpt
+        );
+        await waitFor(".o-we-linkpopover");
+        await click(".o_we_edit_link");
+        await animationFrame();
+        await click(".custom-fill-picker");
+        await animationFrame();
+        await hover(".o_color_button[data-color='#00FF00']");
+        await animationFrame();
+
+        expect(queryOne(".custom-fill-picker").style.backgroundColor).toBe("rgb(0, 255, 0)");
+
+        await hover(".custom-fill-picker"); // cursor out of the colorpicker
+        await animationFrame();
+
+        expect(queryOne(".custom-fill-picker").style.backgroundColor).toBe("rgb(0, 0, 255)");
     });
 
     test("should convert all selected text to a custom button", async () => {

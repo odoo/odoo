@@ -203,11 +203,11 @@ export class LinkPopover extends Component {
                         },
                         applyColorResetPreview: () => {
                             this[colorStateRef].selectedColor = this[resetValueRef];
+                            this.onChange();
                         },
                     },
                     {
                         env: this.__owl__.childEnv,
-                        onClose: this.onChange.bind(this),
                     }
                 );
             this.customTextColorPicker = createCustomColorPicker(
