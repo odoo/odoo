@@ -596,6 +596,15 @@ export const accountTaxHelpers = {
             base_line.price_unit = extra_tax_data.price_unit;
         }
 
+        // Propagate custom values.
+        if (record && typeof record === "object") {
+            for (const [k, v] of Object.entries(record)) {
+                if (k && typeof k === "string" && k.startsWith("_") && !(k in base_line)) {
+                    base_line[k] = v;
+                }
+            }
+        }
+
         return base_line;
     },
 
@@ -1677,7 +1686,7 @@ export const accountTaxHelpers = {
             for (const tax_data of tax_details.taxes_data) {
                 const tax = tax_data.tax;
                 const tax_id_str = tax.id.toString();
-                if (tax_id_str in agg_taxes_data[tax]) {
+                if (tax_id_str in agg_taxes_data) {
                     const agg_tax_data = agg_taxes_data[tax_id_str];
                     for (const prefix of ["raw_", ""]) {
                         for (const suffix of ["_currency", ""]) {
@@ -1814,10 +1823,22 @@ export const accountTaxHelpers = {
             let target_base_line = base_line_map[grouping_key_json];
             if (target_base_line) {
                 target_base_line.price_unit += new_base_line.price_unit;
+                target_base_line.tax_details = this.merge_tax_details(
+                    target_base_line.tax_details,
+                    base_line.tax_details
+                );
             } else {
                 base_line_map[grouping_key_json] = this.prepare_base_line_for_taxes_computation(
                     new_base_line,
-                    grouping_key
+                    {
+                        ...grouping_key,
+                        tax_details: {
+                            ...base_line.tax_details,
+                            taxes_data: base_line.tax_details.taxes_data.map((tax_data) =>
+                                Object.assign({}, tax_data)
+                            ),
+                        },
+                    }
                 );
                 target_base_line = base_line_map[grouping_key_json];
             }
@@ -2148,42 +2169,37 @@ export const accountTaxHelpers = {
             target_tax_amounts_mapping[tax_id_str] = target_tax_amounts;
         }
 
-        // Apply percentage to each line.
-        const new_base_lines = [];
-        for (const base_line of discountable_base_lines) {
-            const new_base_line = this.prepare_base_line_for_taxes_computation(base_line, {
-                computation_key,
-                price_unit: base_line.price_unit * -percentage,
-            });
-            this.add_tax_details_in_base_line(new_base_line, company);
-
-            // Propagate custom values.
-            for (const [k, v] of Object.entries(base_line)) {
-                if (!(k in new_base_line)) {
-                    new_base_line[k] = v;
-                }
+        const reduced_base_lines = this.reduce_base_lines_with_grouping_function(
+            discountable_base_lines,
+            {
+                grouping_function: grouping_function,
             }
-
-            new_base_lines.push(new_base_line);
-        }
-
-        const reduced_base_lines = this.reduce_base_lines_with_grouping_function(new_base_lines, {
-            grouping_function: grouping_function,
-        });
+        );
         if (!reduced_base_lines.length) {
             return [];
         }
 
-        this.add_tax_details_in_base_lines(reduced_base_lines, company);
-        this.round_base_lines_tax_details(reduced_base_lines, company);
+        // Apply percentage to each line.
+        const new_base_lines = [];
+        for (const base_line of reduced_base_lines) {
+            new_base_lines.push(
+                this.prepare_base_line_for_taxes_computation(base_line, {
+                    computation_key,
+                    price_unit: base_line.price_unit * -percentage,
+                })
+            );
+        }
+
+        this.add_tax_details_in_base_lines(new_base_lines, company);
+        this.round_base_lines_tax_details(new_base_lines, company);
         this.apply_base_lines_manual_amounts_to_reach(
-            reduced_base_lines,
+            new_base_lines,
             company,
             target_base_amount_currency,
             target_base_amount,
             target_tax_amounts_mapping
         );
-        return reduced_base_lines;
+        return new_base_lines;
     },
 
     // -------------------------------------------------------------------------
@@ -2350,41 +2366,36 @@ export const accountTaxHelpers = {
             target_tax_amounts_mapping[tax_id_str] = target_tax_amounts;
         }
 
-        // Apply percentage to each line.
-        const new_base_lines = [];
-        for (const base_line of base_lines_for_dp) {
-            const new_base_line = this.prepare_base_line_for_taxes_computation(base_line, {
-                computation_key,
-                price_unit: base_line.price_unit * percentage,
-            });
-            this.add_tax_details_in_base_line(new_base_line, company);
-
-            // Propagate custom values.
-            for (const [k, v] of Object.entries(base_line)) {
-                if (!(k in new_base_line)) {
-                    new_base_line[k] = v;
-                }
+        const reduced_base_lines = this.reduce_base_lines_with_grouping_function(
+            base_lines_for_dp,
+            {
+                grouping_function: grouping_function,
             }
-
-            new_base_lines.push(new_base_line);
-        }
-
-        const reduced_base_lines = this.reduce_base_lines_with_grouping_function(new_base_lines, {
-            grouping_function: grouping_function,
-        });
+        );
         if (!reduced_base_lines.length) {
             return [];
         }
 
-        this.add_tax_details_in_base_lines(reduced_base_lines, company);
-        this.round_base_lines_tax_details(reduced_base_lines, company);
+        // Apply percentage to each line.
+        const new_base_lines = [];
+        for (const base_line of reduced_base_lines) {
+            new_base_lines.push(
+                this.prepare_base_line_for_taxes_computation(base_line, {
+                    computation_key,
+                    price_unit: base_line.price_unit * percentage,
+                })
+            );
+        }
+
+        this.add_tax_details_in_base_lines(new_base_lines, company);
+        this.round_base_lines_tax_details(new_base_lines, company);
         this.apply_base_lines_manual_amounts_to_reach(
-            reduced_base_lines,
+            new_base_lines,
             company,
             target_base_amount_currency,
             target_base_amount,
             target_tax_amounts_mapping
         );
-        return reduced_base_lines;
+        return new_base_lines;
     },
 };
