@@ -1,6 +1,6 @@
 import { formatFloat } from "@web/views/fields/formatters";
 import { useService } from "@web/core/utils/hooks";
-import { Component } from "@odoo/owl";
+import { Component, useState } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 
 export class ForecastedDetails extends Component {
@@ -9,14 +9,22 @@ export class ForecastedDetails extends Component {
 
     setup() {
         this.orm = useService("orm");
-
-        this.onHandCondition =
-            this.props.docs.lines.length &&
-            !this.props.docs.lines.some((line) => line.document_in || line.replenishment_filled);
-
+        this.onHandCondition = this.getOnHandCondition();
+        this.state = useState({
+            warehouses: Object.fromEntries((this.props.docs?.warehouses || []).map(
+                w => [w.id, false]
+            )),
+        });
         this._formatFloat = (num) => {
             return formatFloat(num, { digits: this.props.docs.precision });
         };
+    }
+
+    getOnHandCondition() {
+        const lines = this.props.docs.multiple_warehouses
+            ? this.props.docs.warehouses.flatMap(w => w.lines || [])
+            : this.props.docs.lines || [];
+        return lines.length && !lines.some(line => line.document_in || line.replenishment_filled);
     }
 
     async _reserve(move_id){
@@ -42,6 +50,14 @@ export class ForecastedDetails extends Component {
 
         await this.orm.call(modelName, "write", [[record.id], { priority: value }]);
         this.props.reloadReport();
+    }
+
+    toggleFolded(warehouseId) {
+        this.state.warehouses[warehouseId] = !this.state.warehouses[warehouseId];
+    }
+
+    isFolded(warehouseId) {
+        return this.state.warehouses[warehouseId];
     }
 
     displayReserve(line){
