@@ -24,6 +24,8 @@ patch(DiscussClientAction.prototype, {
     },
     closeWelcomePage() {
         super.closeWelcomePage(...arguments);
-        this.joinCallWithDefaultSettings();
+        if (this.store.discuss.thread.default_display_mode === "video_full_screen") {
+            this.joinCallWithDefaultSettings();
+        }
     },
 });
