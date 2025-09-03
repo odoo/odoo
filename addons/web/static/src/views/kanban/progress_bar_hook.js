@@ -160,16 +160,15 @@ class ProgressBarState {
             const currencies = group.aggregates?.[aggregateField.currency_field];
             if (currencies?.length > 1) {
                 return {
-                    title: `${title}: ${_t("different currencies cannot be aggregated")}`,
                     value,
-                    currencyId: false,
+                    currencies,
                 };
             }
             if (currencies?.[0]) {
                 return {
                     title,
                     value,
-                    currencyId: currencies[0],
+                    currencies: [currencies[0]],
                 };
             }
         }

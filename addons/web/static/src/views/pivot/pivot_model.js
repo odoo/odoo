@@ -989,6 +989,13 @@ export class PivotModel extends Model {
             if (aggregator === "array_agg_distinct") {
                 return measurements;
             }
+            if (aggregator === "sum_currency") {
+                const currencies =
+                    group[metaData.fields[fieldName].currency_field + ":array_agg_distinct"];
+                if (currencies.length === 1) {
+                    return measurements;
+                }
+            }
             if (metaData.measures[fieldName].type === "boolean" && measurement instanceof Boolean) {
                 measurement = measurement ? 1 : 0;
             }
@@ -1014,8 +1021,7 @@ export class PivotModel extends Model {
             }
             const measureField = metaData.measures[fieldName];
             if (measureField.type === "monetary" && measureField.currency_field) {
-                const currencies = group[measureField.currency_field + ":array_agg_distinct"];
-                currencyIds[fieldName] = currencies?.length === 1 ? currencies[0] : false;
+                currencyIds[fieldName] = group[measureField.currency_field + ":array_agg_distinct"];
             }
             return currencyIds;
         }, {});
@@ -1078,10 +1084,11 @@ export class PivotModel extends Model {
                     "No aggregate function has been provided for the measure '" + measure + "'"
                 );
             }
+            acc.push(measure + ":" + field.aggregator);
             if (field.currency_field) {
                 acc.push(field.currency_field + ":array_agg_distinct");
+                acc.push(field.name + ":sum_currency");
             }
-            acc.push(measure + ":" + field.aggregator);
             return acc;
         }, []);
     }
@@ -1212,7 +1219,7 @@ export class PivotModel extends Model {
             const value = this._getCellValue(groupIntersectionId, measure, {
                 data: this.data,
             });
-            const currencyId = this._getCellCurrency(groupIntersectionId, measure, {
+            const currencyIds = this._getCellCurrency(groupIntersectionId, measure, {
                 data: this.data,
             });
 
@@ -1220,7 +1227,7 @@ export class PivotModel extends Model {
                 groupId: groupIntersectionId,
                 measure: measure,
                 value: value,
-                currencyId: currencyId,
+                currencyIds,
                 isBold: !groupIntersectionId[0].length || !groupIntersectionId[1].length,
             };
             return measurement;

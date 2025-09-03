@@ -166,7 +166,7 @@ export class SampleServer {
     _aggregateFields(measures, records) {
         const group = {};
         for (const { fieldName, func, name } of measures) {
-            if (["sum", "avg", "max", "min"].includes(func)) {
+            if (["sum", "sum_currency", "avg", "max", "min"].includes(func)) {
                 if (!records.length) {
                     group[name] = false;
                 } else {

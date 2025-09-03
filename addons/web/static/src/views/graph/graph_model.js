@@ -1,6 +1,7 @@
 import { Domain } from "@web/core/domain";
 import { _t } from "@web/core/l10n/translation";
-import { sortBy, unique } from "@web/core/utils/arrays";
+import { user } from "@web/core/user";
+import { sortBy } from "@web/core/utils/arrays";
 import { KeepLast, Race } from "@web/core/utils/concurrency";
 import { addPropertyFieldDefs, Model } from "@web/model/model";
 import { rankInterval } from "@web/search/utils/dates";
@@ -137,9 +138,7 @@ export class GraphModel extends Model {
      * @param {boolean} [forceUseAllDataPoints=false]
      */
     async _fetchDataPoints(metaData, forceUseAllDataPoints = false) {
-        [this.dataPoints, this.currencyState] = await this.keepLast.add(
-            this._loadDataPoints(metaData)
-        );
+        [this.dataPoints] = await this.keepLast.add(this._loadDataPoints(metaData));
         this.metaData = metaData;
         this._prepareData(forceUseAllDataPoints);
     }
@@ -320,9 +319,10 @@ export class GraphModel extends Model {
             cumulatedStart && SEQUENTIAL_TYPES.includes(fields[fieldName]?.type) ? fieldName : null;
         const sequentialSpec = sequentialField && groupBy[0].spec;
         const measures = ["__count"];
-        let currencyState;
+        let fieldAggregate = "__count",
+            monetaryAggregates;
         if (measure !== "__count") {
-            let { aggregator, type, currency_field } = fields[measure];
+            let { aggregator, currency_field, name, type } = fields[measure];
             if (type === "many2one") {
                 aggregator = "count_distinct";
             }
@@ -332,13 +332,14 @@ export class GraphModel extends Model {
                 );
             }
             if (type === "monetary" && currency_field) {
-                currencyState = {
-                    currencyField: currency_field,
-                    currencies: [],
-                };
-                measures.push(`${currency_field}:array_agg_distinct`);
+                monetaryAggregates = [
+                    `${currency_field}:array_agg_distinct`,
+                    `${name}:sum_currency`,
+                ];
+                measures.push(...monetaryAggregates);
             }
-            measures.push(`${measure}:${aggregator}`);
+            fieldAggregate = `${measure}:${aggregator}`;
+            measures.push(fieldAggregate);
         }
 
         const numbering = {}; // used to avoid ambiguity with many2one with values with same labels:
@@ -389,6 +390,8 @@ export class GraphModel extends Model {
                 cumulatedStartValue[JSON.stringify(rawValues)] = group[measures.slice(-1)];
             }
         }
+        const graphCurrencies = new Set();
+        const defaultCurrency = user.activeCompany.currency_id;
         for (const group of groups) {
             const { __domain, __count } = group;
             const labels = [];
@@ -428,7 +431,7 @@ export class GraphModel extends Model {
                 labels.push(label);
             }
 
-            const value = group[measures.at(-1)];
+            const value = group[fieldAggregate];
             if (!Number.isInteger(value)) {
                 metaData.allIntegers = false;
             }
@@ -442,14 +445,26 @@ export class GraphModel extends Model {
                 cumulatedStart: cumulatedStartValue[groupId] || 0,
             };
             // There is a currency aggregate
-            if (measures.length > 2) {
-                const currencies = group[measures[1]];
-                currencyState.currencies = unique(currencyState.currencies.concat(currencies));
-                dataPoint.currencyId = currencies.length > 1 ? false : currencies[0];
+            if (monetaryAggregates) {
+                const currencies = group[monetaryAggregates[0]];
+                dataPoint.currencyId = currencies[0];
+                dataPoint.convertedValue = group[monetaryAggregates[1]];
+                if (currencies.length > 1) {
+                    dataPoint.currencyId = defaultCurrency;
+                    dataPoint.value = dataPoint.convertedValue;
+                }
+                graphCurrencies.add(dataPoint.currencyId);
             }
             dataPoints.push(dataPoint);
         }
-        return [dataPoints, currencyState];
+        for (const dataPoint of dataPoints) {
+            if (graphCurrencies.size > 1) {
+                dataPoint.currencyId = defaultCurrency;
+                dataPoint.value = dataPoint.convertedValue;
+            }
+            delete dataPoint.convertedValue;
+        }
+        return [dataPoints, graphCurrencies];
     }
 
     /**

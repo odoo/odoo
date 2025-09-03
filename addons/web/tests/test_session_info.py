@@ -53,6 +53,7 @@ class TestSessionInfo(common.HttpCase):
                 'name': company.name,
                 'sequence': company.sequence,
                 'child_ids': company.child_ids.ids,
+                'currency_id': company.currency_id.id,
                 'parent_id': company.parent_id.id,
             } for company in self.allowed_companies
         }

@@ -1,6 +1,10 @@
+import { reactive } from "@odoo/owl";
+import { serializeDate } from "@web/core/l10n/dates";
+import { rpc } from "@web/core/network/rpc";
+import { user } from "@web/core/user";
 import { formatFloat, humanNumber } from "@web/core/utils/numbers";
-import { session } from "@web/session";
 import { nbsp } from "@web/core/utils/strings";
+import { session } from "@web/session";
 
 export const currencies = session.currencies || {};
 // to make sure code is reading currencies from here
@@ -8,6 +12,42 @@ delete session.currencies;
 
 export function getCurrency(id) {
     return currencies[id];
+}
+
+export async function getCurrencyRates() {
+    const rates = reactive({});
+
+    function recordsToRates(records) {
+        return Object.fromEntries(records.map((r) => [r.id, r.inverse_rate]));
+    }
+
+    const model = "res.currency";
+    const method = "read";
+    const url = `/web/dataset/call_kw/${model}/${method}`;
+    const context = {
+        ...user.context,
+        to_currency: user.activeCompany.currency_id,
+        date: serializeDate(luxon.DateTime.now()),
+    };
+    const params = {
+        model,
+        method,
+        args: [Object.keys(currencies).map(Number), ["inverse_rate"]],
+        kwargs: { context },
+    };
+    const records = await rpc(url, params, {
+        cache: {
+            type: "disk",
+            update: "once",
+            callback: (records, hasChanged) => {
+                if (hasChanged) {
+                    Object.assign(rates, recordsToRates(records));
+                }
+            },
+        },
+    });
+    Object.assign(rates, recordsToRates(records));
+    return rates;
 }
 
 /**

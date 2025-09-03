@@ -12,7 +12,7 @@ test("default state", () => {
     expect(s).toInclude("view_info");
     delete s.view_info;
     expect(s).toEqual({
-        companies: [{ id: 1, name: "Hermit" }],
+        companies: [{ id: 1, name: "Hermit", currency_id: 1 }],
         currencies: [
             { id: 1, name: "USD", position: "before", symbol: "$" },
             { id: 2, name: "EUR", position: "after", symbol: "€" },

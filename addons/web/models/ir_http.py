@@ -149,6 +149,7 @@ class IrHttp(models.AbstractModel):
                             'sequence': comp.sequence,
                             'child_ids': (comp.child_ids & user_companies).ids,
                             'parent_id': comp.parent_id.id,
+                            'currency_id': comp.currency_id.id,
                         } for comp in user_companies
                     },
                     'disallowed_ancestor_companies': {
