@@ -165,12 +165,16 @@ registerWebsitePreviewTour('edit_menus', {
         run: "click",
     },
     {
-        content: "It didn't save without URL input value. Fill url input.",
-        trigger: ".modal:not(.o_inactive_modal) .modal-dialog .o_website_dialog input#url_input",
-        run: "edit #",
+        content: "Re-open the link dialog ",
+        trigger: '.modal .input-group:has(.js_menu_label:contains("Random!")) .js_edit_menu',
+        run: "click",
     },
     {
-        content: "Confirm the new menu entry with # url",
+        content: "Check that the URL is #",
+        trigger: ".modal:not(.o_inactive_modal) #url_input:value('#')",
+    },
+    {
+        content: "Save the dialog",
         trigger: ".modal:not(.o_inactive_modal) .modal-footer .btn-primary:contains(Continue)",
         run: "click",
     },
