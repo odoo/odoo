@@ -182,7 +182,7 @@ class AccountAccruedOrdersWizard(models.TransientModel):
                             # As included taxes are not taken into account in the price_unit, we need to compute the price_subtotal
                             qty_to_invoice = order_line.qty_received_at_date - order_line.qty_invoiced_at_date
                             price_subtotal = order_line.tax_ids.compute_all(
-                                order_line.price_unit,
+                                order_line._get_gross_price_unit(),
                                 currency=order_line.order_id.currency_id,
                                 quantity=qty_to_invoice,
                                 product=order_line.product_id,
@@ -197,7 +197,7 @@ class AccountAccruedOrdersWizard(models.TransientModel):
                             order_line=_ellipsis(order_line.name, 20),
                             quantity_billed=order_line.qty_invoiced_at_date,
                             quantity_received=order_line.qty_received_at_date,
-                            unit_price=formatLang(self.env, order_line.price_unit, currency_obj=order.currency_id),
+                            unit_price=formatLang(self.env, order_line._get_gross_price_unit(), currency_obj=order.currency_id),
                         )
                     else:
                         expense_account, stock_variation_account = self._get_product_expense_and_stock_var_accounts(product)
