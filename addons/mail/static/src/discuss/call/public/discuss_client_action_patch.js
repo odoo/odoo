@@ -15,7 +15,7 @@ patch(DiscussClientAction.prototype, {
             return;
         }
         if (
-            this.publicState.welcome ||
+            this.store.is_welcome_page_displayed ||
             this.store.discuss.thread.default_display_mode !== "video_full_screen"
         ) {
             return;
