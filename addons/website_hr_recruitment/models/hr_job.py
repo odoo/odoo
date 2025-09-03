@@ -19,6 +19,10 @@ class HrJob(models.Model):
     def _get_default_website_description(self):
         return self.env['ir.qweb']._render("website_hr_recruitment.default_website_description", raise_if_not_found=False)
 
+    @mute_logger('odoo.addons.base.models.ir_qweb')
+    def _get_default_website_rating(self):
+        return self.env['ir.qweb']._render("website_hr_recruitment.default_website_rating", raise_if_not_found=False)
+
     def _get_default_job_details(self):
         return _("""
             <span class="text-muted small">Time to Answer</span>
@@ -34,11 +38,26 @@ class HrJob(models.Model):
         'Job Description', translate=html_translate,
         prefetch=False,
         sanitize_overridable=True,
-        sanitize_attributes=False, sanitize_form=False)
+        sanitize_attributes=False, sanitize_form=False,
+        default='''
+As an employee of our company, you will <b>collaborate with each department
+to create and deploy disruptive products.</b> Come work at a growing company
+that offers great benefits with opportunities to moving forward and learn
+alongside accomplished leaders. We're seeking an experienced and outstanding
+member of staff.
+<br/><br/>
+This position is both <b>creative and rigorous</b> by nature you need to think
+outside the box. We expect the candidate to be proactive and have a "get it done"
+spirit. To be successful, you will have solid solving problem skills.''')
     website_published = fields.Boolean(help='Set if the application is published on the website of the company.', tracking=True)
     website_description = fields.Html(
         'Website description', translate=html_translate,
         default=_get_default_website_description, prefetch=False,
+        sanitize_overridable=True,
+        sanitize_attributes=False, sanitize_form=False)
+    website_rating = fields.Html(
+        'Website rating', translate=html_translate,
+        default=_get_default_website_rating, prefetch=False,
         sanitize_overridable=True,
         sanitize_attributes=False, sanitize_form=False)
     job_details = fields.Html(
