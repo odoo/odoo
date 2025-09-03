@@ -980,7 +980,11 @@ class Task(models.Model):
 
         if defaults:
             vals = {
-                **{key[8:]: value for key, value in self.env.context.items() if key.startswith("default_")},
+                **{
+                    key[8:]: value
+                    for key, value in self.env.context.items()
+                    if key.startswith("default_") and key[8:] in self._fields
+                },
                 **vals
             }
 
