@@ -6,13 +6,16 @@ import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { localization } from "@web/core/l10n/localization";
 import { _t } from "@web/core/l10n/translation";
 import { download } from "@web/core/network/download";
+import { usePopover } from "@web/core/popover/popover_hook";
 import { registry } from "@web/core/registry";
+import { user } from "@web/core/user";
 import { sortBy } from "@web/core/utils/arrays";
 import { useService } from "@web/core/utils/hooks";
 import { CustomGroupByItem } from "@web/search/custom_group_by_item/custom_group_by_item";
 import { PropertiesGroupByItem } from "@web/search/properties_group_by_item/properties_group_by_item";
 import { getIntervalOptions } from "@web/search/utils/dates";
 import { GROUPABLE_TYPES } from "@web/search/utils/misc";
+import { MultiCurrencyPopover } from "@web/views/view_components/multi_currency_popover";
 import { ReportViewMeasures } from "@web/views/view_components/report_view_measures";
 
 const formatters = registry.category("formatters");
@@ -61,6 +64,9 @@ export class PivotRenderer extends Component {
                 },
             }),
         };
+        this.multiCurrencyPopover = usePopover(MultiCurrencyPopover, {
+            position: "right",
+        });
         const fields = [];
         for (const [fieldName, field] of Object.entries(this.env.searchModel.searchViewFields)) {
             if (this.validateField(fieldName, field)) {
@@ -99,14 +105,15 @@ export class PivotRenderer extends Component {
             Object.assign(formatOptions, formatter.extractOptions(fieldInfo));
         }
         if (formatType === "monetary") {
-            if (cell.currencyId === false) {
+            if (cell.currencyIds.length > 1) {
+                formatOptions.currencyId = user.activeCompany.currency_id;
                 return {
-                    help: _t("Different currencies cannot be aggregated"),
+                    rawValue: cell.value,
                     value: formatter(cell.value, formatOptions),
-                    warning: true,
+                    currencies: cell.currencyIds,
                 };
             }
-            formatOptions.currencyId = cell.currencyId;
+            formatOptions.currencyId = cell.currencyIds[0];
         }
         return { value: formatter(cell.value, formatOptions) };
     }
@@ -282,6 +289,15 @@ export class PivotRenderer extends Component {
      */
     onMeasureSelected({ measure }) {
         this.model.toggleMeasure(measure);
+    }
+    openMultiCurrencyPopover(ev, value, currencyIds) {
+        if (!this.multiCurrencyPopover.isOpen) {
+            this.multiCurrencyPopover.open(ev.target, {
+                currencyIds,
+                target: ev.target,
+                value,
+            });
+        }
     }
     /**
      * Execute the action to open the view on the current model.

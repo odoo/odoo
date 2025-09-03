@@ -189,10 +189,11 @@ class Currency extends models.Model {
             ["before", "B"],
         ],
     });
+    inverse_rate = fields.Float();
 
     _records = [
-        { id: 1, name: "USD", symbol: "$", position: "before" },
-        { id: 2, name: "EUR", symbol: "€", position: "after" },
+        { id: 1, name: "USD", symbol: "$", position: "before", inverse_rate: 1 },
+        { id: 2, name: "EUR", symbol: "€", position: "after", inverse_rate: 0.5 },
     ];
 }
 
@@ -243,6 +244,14 @@ async function selectMany2xItem(fieldName, value) {
         await contains(`.o_dialog .o_kanban_record:contains(${value})`).click();
     } else {
         await selectFieldDropdownItem(fieldName, value);
+    }
+}
+
+async function toggleMultiCurrencyPopover(el) {
+    if (getMockEnv().isSmall) {
+        await contains(el).click();
+    } else {
+        await contains(el).hover();
     }
 }
 
@@ -4655,11 +4664,10 @@ test(`monetary aggregates in grouped list`, async () => {
     // it is bad practice and the server won't send the information anyway
     expect(`.o_group_header:first`).toHaveText("USD (3)\n $ 800.00 19.00");
     expect(`.o_group_header:last`).toHaveText("EUR (1)\n 1,200.00 € 0.40");
-    expect(`.o_list_footer .o_list_number span:first`).toHaveText("2,000.00?");
-    expect(`.o_list_footer .o_list_number span:first`).toHaveAttribute(
-        "data-tooltip",
-        "Different currencies cannot be aggregated"
-    );
+    expect(`.o_list_footer .o_list_number span:first`).toHaveText("$ 1,400.00?");
+    await toggleMultiCurrencyPopover(".o_list_footer .o_list_number span:first sup");
+    expect(".o_multi_currency_popover").toHaveCount(1);
+    expect(".o_multi_currency_popover").toHaveText("2,800.00 € at $ 0.50");
 });
 
 test(`monetary aggregates in grouped list (different currencies in same group)`, async () => {
@@ -4679,16 +4687,8 @@ test(`monetary aggregates in grouped list (different currencies in same group)`,
     await contains(`.o_group_header:first`).click();
     await contains(`.o_group_header:last`).click();
     expect(`.o_group_header:first`).toHaveText("No (1)\n $ 0.00");
-    expect(`.o_group_header:last`).toHaveText("Yes (3)\n 2,000.00?");
-    expect(`.o_group_header:last .o_list_number span`).toHaveAttribute(
-        "data-tooltip",
-        "Different currencies cannot be aggregated"
-    );
-    expect(`.o_list_footer .o_list_number span`).toHaveText("2,000.00?");
-    expect(`.o_list_footer .o_list_number span`).toHaveAttribute(
-        "data-tooltip",
-        "Different currencies cannot be aggregated"
-    );
+    expect(`.o_group_header:last`).toHaveText("Yes (3)\n $ 2,000.00?");
+    expect(`.o_list_footer .o_list_number span`).toHaveText("$ 2,000.00?");
 });
 
 test(`handle false values in aggregates`, async () => {
@@ -4716,7 +4716,7 @@ test(`handle false values in aggregates`, async () => {
     });
     expect.verifySteps(["web_read_group"]);
     expect(`.o_group_header:first`).toHaveText("No (1)\n 9.00 $ 0.00 $ 0.00");
-    expect(`.o_group_header:last`).toHaveText("Yes (3)\n 2,000.00?", {
+    expect(`.o_group_header:last`).toHaveText("Yes (3)\n $ 2,000.00?", {
         message: "false values are just hidden except for monetary field with multiple currencies",
     });
 });
@@ -4867,7 +4867,10 @@ test(`aggregates monetary (different currencies)`, async () => {
         "$ 300.00",
         "$ 0.00",
     ]);
-    expect(`tfoot`).toHaveText("2,000.00?");
+    expect(`tfoot`).toHaveText("$ 1,400.00?");
+    await toggleMultiCurrencyPopover("tfoot span sup");
+    expect(".o_multi_currency_popover").toHaveCount(1);
+    expect(".o_multi_currency_popover").toHaveText("2,800.00 € at $ 0.50");
 });
 
 test(`aggregates monetary (currency field not in view)`, async () => {
@@ -4993,7 +4996,7 @@ test(`currency_field is taken into account when formatting monetary values`, asy
     expect(`.o_data_row:eq(0) td[name=amount_currency]`).toHaveText("$ 1,100.00", {
         message: "field should be formatted based on company_currency_id",
     });
-    expect(`tfoot td.o_list_number`).toHaveText("2,000.00?", {
+    expect(`tfoot td.o_list_number`).toHaveText("$ 1,400.00?", {
         message: "aggregates monetary should indicate when different currencies are used",
     });
     expect(`tfoot td.o_list_number ~ td`).toHaveCount(0, {

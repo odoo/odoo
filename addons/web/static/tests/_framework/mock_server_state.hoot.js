@@ -38,6 +38,7 @@ const SERVER_STATE_VALUES = {
         {
             id: 1,
             name: "Hermit",
+            currency_id: 1,
         },
     ],
     currencies: [

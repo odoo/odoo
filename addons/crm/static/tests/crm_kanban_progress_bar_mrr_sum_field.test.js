@@ -188,27 +188,36 @@ test("Progressbar: ensure correct MRR updation after state change", async () => 
     });
 
     //MRR before state change
-    expect(queryAllTexts(".o_animated_number[title='Recurring Revenue']")).toEqual(["+30", "+35"], {
-        message: "counter should display the sum of recurring_revenue_monthly values",
-    });
+    expect(queryAllTexts(".o_animated_number[data-tooltip='Recurring Revenue']")).toEqual(
+        ["+30", "+35"],
+        {
+            message: "counter should display the sum of recurring_revenue_monthly values",
+        }
+    );
 
     // Drag the first kanban record from 1st column to the top of the last column
     await contains(".o_kanban_record:first").dragAndDrop(".o_kanban_record:last");
 
     //check MRR after drag&drop
-    expect(queryAllTexts(".o_animated_number[title='Recurring Revenue']")).toEqual(["+25", "+40"], {
-        message:
-            "counter should display the sum of recurring_revenue_monthly correctly after drag and drop",
-    });
+    expect(queryAllTexts(".o_animated_number[data-tooltip='Recurring Revenue']")).toEqual(
+        ["+25", "+40"],
+        {
+            message:
+                "counter should display the sum of recurring_revenue_monthly correctly after drag and drop",
+        }
+    );
 
     //Activate "planned" filter on first column
     await contains('.o_kanban_group:eq(1) .progress-bar[aria-valuenow="2"]').click();
 
     //check MRR after applying filter
-    expect(queryAllTexts(".o_animated_number[title='Recurring Revenue']")).toEqual(["+25", "+25"], {
-        message:
-            "counter should display the sum of recurring_revenue_monthly only of overdue filter in 1st column",
-    });
+    expect(queryAllTexts(".o_animated_number[data-tooltip='Recurring Revenue']")).toEqual(
+        ["+25", "+25"],
+        {
+            message:
+                "counter should display the sum of recurring_revenue_monthly only of overdue filter in 1st column",
+        }
+    );
 });
 
 test.tags("desktop");
