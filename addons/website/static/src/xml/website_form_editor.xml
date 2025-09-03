@@ -16,11 +16,8 @@
     </t>
 
     <t t-name="website.s_website_form_recaptcha_legal">
-        <div class="col-12 s_website_form_recaptcha" data-name="Recaptcha Legal">
-            <div t-attf-style="width: #{labelWidth or '200px'}" class="s_website_form_label"/>
-            <div class="col-sm">
-                <t t-call="google_recaptcha.recaptcha_legal_terms"/>
-            </div>
+        <div class="col-12 s_website_form_recaptcha" data-name="Recaptcha Legal" style="text-align: right;">
+            <t t-call="google_recaptcha.recaptcha_legal_terms"/>
         </div>
     </t>
 
