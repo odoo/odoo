@@ -1,8 +1,10 @@
 .html-history-dialog-container {
     margin-left: 10px;
     margin-right: 10px;
+    width: calc(100% - 20px);
 }
 .html-history-dialog {
+    position: relative;
     .history-view-top-bar {
         display: flex;
         align-items: center;
@@ -31,6 +33,7 @@
         padding: 8px 12px;
         border: 1px solid #ddd;
         border-top: 0;
+        overflow: auto;
         .embedded-history-dialog-placeholder {
             color: #444;
             padding: 32px;
@@ -51,10 +54,14 @@
                     0px -3px 0 #d1d1d1,
                     0px 3px 0 #d1d1d1,
         }
+        .history-comparison-split {
+            position: relative;
+        }
     }
     .history-container {
         --border-color: #ddd;
         margin-left: 240px;
+        overflow: hidden;
         .o_notebook_content {
             padding: 10px 12px;
             border: 1px solid var(--border-color);
@@ -79,10 +86,10 @@
     }
     .revision-list {
         overflow: auto;
-        max-height: 100%;
-        width: 220px;
-        float : left;
-
+        width: 230px;
+        position: absolute;
+        top:0;
+        left: 0;
         .btn {
             --Avatar-size: 24px;
             display: block;
