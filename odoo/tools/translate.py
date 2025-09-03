@@ -505,25 +505,19 @@ def _get_uid(frame) -> int | None:
 
 
 def _get_lang(frame, default_lang='') -> str:
-    # get from: context.get('lang'), kwargs['context'].get('lang'),
-    if local_context := frame.f_locals.get('context'):
-        if lang := local_context.get('lang'):
-            return lang
-    if (local_kwargs := frame.f_locals.get('kwargs')) and (local_context := local_kwargs.get('context')):
-        if lang := local_context.get('lang'):
-            return lang
-    # get from self.env
-    log_level = logging.WARNING
-    local_self = frame.f_locals.get('self')
-    local_env = local_self is not None and getattr(local_self, 'env', None)
-    if local_env:
-        if lang := local_env.lang:
-            return lang
-        # we found the env, in case we fail, just log in debug
-        log_level = logging.DEBUG
-    # get from request?
-    if (req := odoo.http.request) and (env := req.env) and (lang := env.lang):
-        return lang
+    # get from: context.get('lang')
+    if 'context' in frame.f_locals and isinstance((local_context := frame.f_locals['context']), dict):
+        return local_context.get('lang') or 'en_US'
+    # get from: kwargs['context'].get('lang'),
+    if (kwargs := frame.f_locals.get('kwargs')) and isinstance(kwargs, dict) \
+        and 'context' in kwargs and isinstance((local_context := kwargs['context']), dict):
+        return local_context.get('lang') or 'en_US'
+    # get from: self.env.context.get('lang')
+    if isinstance((local_env := getattr((frame.f_locals.get('self')), 'env', None)), odoo.api.Environment):
+        return local_env.context.get('lang') or 'en_US'
+    # get from request.env.context.get('lang')
+    if (req := odoo.http.request) and (env := req.env):
+        return env.context.get('lang') or 'en_US'
     # Last resort: attempt to guess the language of the user
     # Pitfall: some operations are performed in sudo mode, and we
     #          don't know the original uid, so the language may
@@ -533,14 +527,13 @@ def _get_lang(frame, default_lang='') -> str:
     if cr and uid:
         from odoo import api  # noqa: PLC0415
         env = api.Environment(cr, uid, {})
-        if lang := env['res.users'].context_get().get('lang'):
-            return lang
+        return env['res.users'].context_get().get('lang') or 'en_US'
     # fallback
     if default_lang:
         _logger.debug('no translation language detected, fallback to %s', default_lang)
         return default_lang
     # give up
-    _logger.log(log_level, 'no translation language detected, skipping translation %s', frame, stack_info=True)
+    _logger.warning('no translation language detected, skipping translation %s', frame, stack_info=True)
     return ''
 
 

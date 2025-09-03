@@ -14,9 +14,12 @@ from odoo.fields import Domain
 from odoo.tests import Form, TransactionCase, tagged, users
 from odoo.tools import float_repr, mute_logger
 from odoo.tools.image import image_data_uri
+from odoo.tools.translate import LazyTranslate
 
 from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
 from odoo.addons.base.tests.test_expression import TransactionExpressionCase
+
+_lt = LazyTranslate(__name__)
 
 
 class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
@@ -3251,6 +3254,23 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
         self.assertEqual(record.comment0, record_value)
         record.invalidate_recordset()
         self.assertEqual(record.comment0, record_value)
+
+    def test_write_value_lazy_translation(self):
+        self.env['res.lang']._activate_lang('fr_FR')
+        Container_en = self.env['test_orm.compute.container']
+        container_en = Container_en.create({'name': 'test', 'name_translated': _lt('lazy_translation_1_en')})
+        container_fr = container_en.with_context(lang='fr_FR')
+
+        self.assertEqual(container_en.name_translated, 'lazy_translation_1_en')
+        self.assertEqual(container_fr.name_translated, 'lazy_translation_1_en')
+
+        container_en.name_translated = _lt('lazy_translation_2_en')
+        self.assertEqual(container_en.name_translated, 'lazy_translation_2_en')
+        self.assertEqual(container_fr.name_translated, 'lazy_translation_2_en')
+
+        container_fr.name_translated = _lt('lazy_translation_1_en')
+        self.assertEqual(container_en.name_translated, 'lazy_translation_2_en')
+        self.assertEqual(container_fr.name_translated, 'lazy_translation_1_fr')
 
 
 class TestX2many(TransactionExpressionCase):
