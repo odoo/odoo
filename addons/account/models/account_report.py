@@ -163,10 +163,10 @@ class AccountReport(models.Model):
         compute=lambda x: x._compute_report_option_filter('filter_journals'), readonly=False,
         precompute=True, store=True, depends=['root_report_id', 'section_main_report_ids'],
     )
-    filter_hierarchy = fields.Selection(
+    filter_subtotal = fields.Selection(
         string="Account Groups",
         selection=[('by_default', "Enabled by Default"), ('optional', "Optional"), ('never', "Never")],
-        compute=lambda x: x._compute_report_option_filter('filter_hierarchy', 'optional'), readonly=False,
+        compute=lambda x: x._compute_report_option_filter('filter_subtotal', 'optional'), readonly=False,
         precompute=True, store=True, depends=['root_report_id', 'section_main_report_ids'],
     )
     filter_account_type = fields.Selection(

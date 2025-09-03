@@ -306,6 +306,11 @@ class ResCompany(models.Model):
         domain=ACCOUNT_DOMAIN,
         help="During perpetual valuation, this account will hold the price difference between the standard price and the bill price.",
     )
+    auto_set_account_parent = fields.Boolean(
+        string='Automatically set account parents',
+        help='When an account is created automatically, also attempt to set a parent account.',
+        default=False,
+    )
 
     def get_next_batch_payment_communication(self):
         '''

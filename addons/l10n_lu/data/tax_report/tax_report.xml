@@ -10,7 +10,7 @@
         <field name="availability_condition">country</field>
         <field name="allow_foreign_vat" eval="True"/>
         <field name="filter_multi_company">tax_units</field>
-        <field name="filter_hierarchy">never</field>
+        <field name="filter_subtotal">never</field>
         <field name="use_sections" eval="True"/>
         <field name="section_report_ids" eval="[Command.set([ref('l10n_lu.l10n_lu_tax_report_section_1'),
                                                             ref('l10n_lu.l10n_lu_tax_report_section_2'),

@@ -193,6 +193,8 @@ class ResConfigSettings(models.TransientModel):
         domain="[('account_type', 'in', ('income', 'income_other', 'expense', 'expense_other'))]",
     )
 
+    auto_set_account_parent = fields.Boolean(related='company_id.auto_set_account_parent', readonly=False)
+
     # PEPPOL
     is_account_peppol_eligible = fields.Boolean(
         string='PEPPOL eligible',

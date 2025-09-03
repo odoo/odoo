@@ -950,6 +950,18 @@ class AccountJournal(models.Model):
         else:
             default_account_vals = {}
 
+        if account_prefix and company.auto_set_account_parent:
+            parent_account = self.env['account.account'].with_context(active_test=False).search(
+                self.env['account.account']._check_company_domain(company) + [
+                    ('code', 'ilike', account_prefix),
+                    ('internal_group', '=', self.env['account.account']._get_internal_group(default_account_vals.get('account_type'))),
+                ],
+                order='code',
+                limit=1,
+            )
+            if parent_account:
+                default_account_vals['parent_id'] = parent_account.id
+
         default_account = self.env['account.account'].create(default_account_vals)
         if default_account:
             self.env['ir.model.data']._update_xmlids([
