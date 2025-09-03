@@ -98,6 +98,7 @@ class ResPartner(models.Model):
     vat = fields.Char(inverse="_inverse_vat", store=True)
 
     @api.model
+<<<<<<< 0395363f28ee55477825d98b631d306199f32fb9
     def _run_vat_checks(self, country, vat, partner_name='', validation='error'):
         """ OVERRIDE """
         if not country or not vat:
@@ -110,6 +111,38 @@ class ResPartner(models.Model):
             if validation == 'error':
                 raise ValidationError(_("To explicitly indicate no (valid) VAT, use '/' instead. "))
         vat_prefix, vat_number = self._split_vat(vat)
+||||||| 0b0887e8e5699ad2e67230188e29141f7b033f72
+    def simple_vat_check(self, country_code, vat_number):
+        '''
+        Check the VAT number depending of the country.
+        http://sima-pc.com/nif.php
+        '''
+        if not country_code.encode().isalpha():
+            return False
+        check_func_name = 'check_vat_' + country_code
+        check_func = getattr(self, check_func_name, None) or getattr(stdnum.util.get_cc_module(country_code, 'vat'), 'is_valid', None)
+        if not check_func:
+            # No VAT validation available, default to check that the country code exists
+            country_code = _eu_country_vat_inverse.get(country_code, country_code)
+            return bool(self.env['res.country'].search([('code', '=ilike', country_code)]))
+        return check_func(vat_number)
+=======
+    def simple_vat_check(self, country_code, vat_number):
+        '''
+        Check the VAT number depending of the country.
+        http://sima-pc.com/nif.php
+        '''
+        if not country_code.encode().isalpha():
+            return False
+
+        country_code = _eu_country_vat_inverse.get(country_code.upper(), country_code).lower()
+        check_func_name = 'check_vat_' + country_code
+        check_func = getattr(self, check_func_name, None) or getattr(stdnum.util.get_cc_module(country_code, 'vat'), 'is_valid', None)
+        if not check_func:
+            # No VAT validation available, default to check that the country code exists
+            return bool(self.env['res.country'].search([('code', '=ilike', country_code)]))
+        return check_func(vat_number)
+>>>>>>> 29bf2666bd6c0ffe12216579a4fba503b35f00ba
 
         if vat_prefix == 'EU' and country not in self.env.ref('base.europe').country_ids:
             # Foreign companies that trade with non-enterprises in the EU
