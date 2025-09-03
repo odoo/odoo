@@ -106,6 +106,7 @@ class StockReturnPicking(models.TransientModel):
     def _compute_moves_locations(self):
         for wizard in self:
             if not wizard.picking_id:
+                wizard.product_return_moves = [Command.clear()]
                 continue
             product_return_moves = [Command.clear()]
             if not wizard.picking_id._can_return():
@@ -157,17 +158,22 @@ class StockReturnPicking(models.TransientModel):
         return vals
 
     def _create_return(self):
-        for return_move in self.product_return_moves.move_id:
-            return_move.move_dest_ids.filtered(lambda m: m.state not in ('done', 'cancel'))._do_unreserve()
+        if self.picking_id:
+            for return_move in self.product_return_moves.move_id:
+                return_move.move_dest_ids.filtered(lambda m: m.state not in ('done', 'cancel'))._do_unreserve()
 
-        # create new picking for returned products
-        new_picking = self.picking_id.copy(self._prepare_picking_default_values())
-        new_picking.user_id = False
-        new_picking.message_post_with_source(
-            'mail.message_origin_link',
-            render_values={'self': new_picking, 'origin': self.picking_id},
-            subtype_xmlid='mail.mt_note',
-        )
+            # create new picking for returned products
+            new_picking = self.picking_id.copy(self._prepare_picking_default_values())
+            new_picking.user_id = False
+            new_picking.message_post_with_source(
+                'mail.message_origin_link',
+                render_values={'self': new_picking, 'origin': self.picking_id},
+                subtype_xmlid='mail.mt_note',
+            )
+        else:
+            # if no picking is selected create a new return from scratch
+            new_picking = self.env['stock.picking'].create(self._prepare_picking_default_values())
+
         returned_lines = False
         for return_line in self.product_return_moves:
             if return_line._process_line(new_picking):
