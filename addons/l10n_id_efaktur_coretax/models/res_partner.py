@@ -7,9 +7,8 @@ class Partner(models.Model):
     _inherit = "res.partner"
 
     l10n_id_tku = fields.Char(
-        default="000000",
         string="TKU",
-        help="Branch Number of your company, 000000 is the default for headquarters"
+        help="Branch Number of your company, leave empty for headquarters"
     )
 
     # document selection

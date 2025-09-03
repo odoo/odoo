@@ -315,7 +315,7 @@ class AccountMove(models.Model):
             "CustomDocMonthYear": self.l10n_id_coretax_custom_doc_month_year and self.l10n_id_coretax_custom_doc_month_year.strftime("%m%Y") or "",
             "FacilityStamp": "",
             "RefDesc": self.name,
-            "SellerIDTKU": self.company_id.vat + self.company_id.partner_id.l10n_id_tku,
+            "SellerIDTKU": self.company_id.vat + (self.company_id.partner_id.l10n_id_tku or '000000'),
             "BuyerDocument": partner.l10n_id_buyer_document_type,
             "BuyerTin": partner.vat if partner.l10n_id_buyer_document_type == "TIN" else "0000000000000000",
             "BuyerCountry": COUNTRY_CODE_MAP.get(partner.country_id.code),
@@ -323,7 +323,7 @@ class AccountMove(models.Model):
             "BuyerName": self.partner_id.name,
             "BuyerAdress": self.partner_id.contact_address.replace('\n', ' ').strip(),
             "BuyerEmail": partner.email or "",
-            "BuyerIDTKU": partner.vat + partner.l10n_id_tku,
+            "BuyerIDTKU": partner.vat + (partner.l10n_id_tku or '000000'),
         })
 
         if trx_code == '07':
