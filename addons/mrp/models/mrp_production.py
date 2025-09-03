@@ -619,7 +619,7 @@ class MrpProduction(models.Model):
                             'workcenter_id': operation.workcenter_id.id,
                             'product_uom_id': production.product_uom_id.id,
                             'operation_id': operation.id,
-                            'state': 'ready',
+                            'state': 'blocked',
                         }]
                 workorders_dict = {wo.operation_id.id: wo for wo in production.workorder_ids.filtered(
                     lambda wo: wo.operation_id and wo.ids and wo.id not in deleted_workorders_ids)}
@@ -792,7 +792,7 @@ class MrpProduction(models.Model):
         for production in self:
             if production.id in ignored_mo_ids:
                 continue
-            if production.state != 'draft':
+            if production.state != 'draft' or production.move_finished_ids or production.move_byproduct_ids:
                 updated_values = {}
                 if production.date_finished:
                     updated_values['date'] = production.date_finished
@@ -1573,7 +1573,6 @@ class MrpProduction(models.Model):
         if not self.workorder_ids:
             return
         workorder_per_operation = {workorder.operation_id: workorder for workorder in self.workorder_ids}
-        workorder_boms = self.workorder_ids.operation_id.bom_id
         last_workorder_per_bom = defaultdict(lambda: self.env['mrp.workorder'])
         self.allow_workorder_dependencies = self.bom_id.allow_operation_dependencies
 

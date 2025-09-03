@@ -967,7 +967,7 @@ class MrpWorkorder(models.Model):
 
     def get_fulfilled_qty_produced(self):
         self.ensure_one()
-        return 1 if self.product_tracking == 'serial' else min(self.qty_produced or self.qty_producing or self.qty_production, self.qty_production - self.qty_reported_from_previous_wo)
+        return min(self.qty_produced or self.qty_producing or self.qty_production, self.qty_production - self.qty_reported_from_previous_wo)
 
     def fulfill_empty_qty_produced(self):
         for wo in self:
