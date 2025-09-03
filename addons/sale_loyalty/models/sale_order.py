@@ -1191,6 +1191,7 @@ class SaleOrder(models.Model):
         """
         self.ensure_one()
 
+        # GDPF This function is the problem that points are not being granted for new manually created invoices (not cron).
         # Prepare quantities
         order_lines = self._get_not_rewarded_order_lines().filtered(
             lambda line: not line.combo_item_id
