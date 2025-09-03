@@ -215,8 +215,8 @@ export class SelectionPlugin extends Plugin {
             }
         });
         this.addDomListener(this.editable, "mousedown", (ev) => {
-            if (ev.detail === 2) {
-                this.correctDoubleClick = true;
+            if (ev.detail && ev.detail % 3 === 2) {
+                this.onDoubleClick(ev);
             }
             if (ev.detail && ev.detail % 3 === 0) {
                 this.onTripleClick(ev);
@@ -275,6 +275,16 @@ export class SelectionPlugin extends Plugin {
         this.activeSelection = this.makeActiveSelection();
     }
 
+    onDoubleClick(ev) {
+        const selectionData = this.getSelectionData();
+        if (selectionData.documentSelectionIsInEditable) {
+            if (this.delegateTo("double_click_overrides", ev)) {
+                // If the override is handled, we don't do anything.
+                return;
+            }
+        }
+    }
+
     onTripleClick(ev) {
         const selectionData = this.getSelectionData();
         if (selectionData.documentSelectionIsInEditable) {
@@ -299,31 +309,6 @@ export class SelectionPlugin extends Plugin {
         this.previousActiveSelection = this.activeSelection;
         // getSelectionData sets this.activeSelection to the current selection
         const selectionData = this.getSelectionData();
-        if (selectionData.documentSelectionIsInEditable && this.correctDoubleClick) {
-            this.correctDoubleClick = false;
-            const { anchorNode, anchorOffset, focusNode } = this.activeSelection;
-            const anchorElement = closestElement(anchorNode);
-            // Allow editing the text of a link after "double click" on the last word of said link.
-            // This is done by correcting the selection focus inside of the link
-            if (
-                anchorElement.tagName === "A" &&
-                anchorNode !== focusNode &&
-                focusNode.previousSibling === anchorElement
-            ) {
-                const anchorElementLength = anchorElement.childNodes.length;
-
-                // Due to the ZWS added around links we can always expect
-                // the last childNode to be a ZWS in its own textNode.
-                // therefore we can safely set the selection focus before last node.
-                const newSelection = {
-                    anchorNode: anchorNode,
-                    anchorOffset: anchorOffset,
-                    focusNode: anchorElement,
-                    focusOffset: anchorElementLength - 1,
-                };
-                return this.setSelection(newSelection);
-            }
-        }
         if (this.fixSelectionOnEditableRoot(selectionData)) {
             return;
         }

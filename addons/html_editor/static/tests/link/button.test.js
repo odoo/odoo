@@ -12,7 +12,7 @@ import { animationFrame } from "@odoo/hoot-mock";
 import { setupEditor } from "../_helpers/editor";
 import { cleanLinkArtifacts, unformat } from "../_helpers/format";
 import { contains } from "../../../../web/static/tests/_framework/dom_test_helpers";
-import { getContent, simulateDoubleClickSelect } from "../_helpers/selection";
+import { getContent, setSelection } from "../_helpers/selection";
 import { insertText } from "../_helpers/user_actions";
 
 describe("button style", () => {
@@ -232,9 +232,11 @@ describe("button edit", () => {
         await waitForNone(".o-we-linkpopover");
         const button = el.querySelector("a");
         // simulate double click selection
-        await simulateDoubleClickSelect(button);
+        setSelection({ anchorNode: button, anchorOffset: 0 });
+        manuallyDispatchProgrammaticEvent(button, "mousedown", { detail: 2 });
+        await animationFrame();
         expect(getContent(el)).toBe(
-            '<p>this is a \ufeff<a href="http://test.test/" class="o_link_in_selection">[\ufefflink]\ufeff</a>\ufeff</p>'
+            '<p>this is a \ufeff<a href="http://test.test/" class="o_link_in_selection">\ufeff[link]\ufeff</a>\ufeff</p>'
         );
         expect(cleanLinkArtifacts(getContent(el))).toBe(
             '<p>this is a <a href="http://test.test/">[link]</a></p>'
@@ -242,6 +244,38 @@ describe("button edit", () => {
         await insertText(editor, "X");
         expect(cleanLinkArtifacts(getContent(el))).toBe(
             '<p>this is a <a href="http://test.test/">X[]</a></p>'
+        );
+    });
+
+    test("double click select on a link should stay inside the link (1)", async () => {
+        const { el } = await setupEditor(
+            '<p>this is a <a href="http://test.test/">test b[]tn</a><a href="http://test2.test/">test btn2</a></p>'
+        );
+        const link = el.querySelector("a[href='http://test.test/']");
+        // simulate double click selection
+        manuallyDispatchProgrammaticEvent(link, "mousedown", { detail: 2 });
+        await animationFrame();
+        expect(getContent(el)).toBe(
+            '<p>this is a \ufeff<a href="http://test.test/" class="o_link_in_selection">\ufefftest [btn]\ufeff</a>\ufeff<a href="http://test2.test/">\ufefftest btn2\ufeff</a>\ufeff</p>'
+        );
+        expect(cleanLinkArtifacts(getContent(el))).toBe(
+            '<p>this is a <a href="http://test.test/">test [btn]</a><a href="http://test2.test/">test btn2</a></p>'
+        );
+    });
+
+    test("double click select on a link should stay inside the link (2)", async () => {
+        const { el } = await setupEditor(
+            '<p>this is a <a href="http://test.test/">test btn</a><a href="http://test2.test/">t[]est btn2</a></p>'
+        );
+        const link = el.querySelector("a[href='http://test2.test/']");
+        // simulate double click selection
+        manuallyDispatchProgrammaticEvent(link, "mousedown", { detail: 2 });
+        await animationFrame();
+        expect(getContent(el)).toBe(
+            '<p>this is a \ufeff<a href="http://test.test/">\ufefftest btn\ufeff</a>\ufeff<a href="http://test2.test/" class="o_link_in_selection">\ufeff[test] btn2\ufeff</a>\ufeff</p>'
+        );
+        expect(cleanLinkArtifacts(getContent(el))).toBe(
+            '<p>this is a <a href="http://test.test/">test btn</a><a href="http://test2.test/">[test] btn2</a></p>'
         );
     });
 
