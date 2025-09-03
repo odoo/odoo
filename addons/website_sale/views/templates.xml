@@ -2464,27 +2464,25 @@
     </template>
 
     <template id="product_tags" name="Product Tags" active="True">
+        <t t-set="visible_tags" t-value="all_product_tags.filtered('visible_to_customers')"/>
         <div
-            class="o_product_tags o_field_tags d-flex flex-wrap align-items-center gap-2 mb-2 mt-1"
-            t-if="any(tag.visible_to_customers for tag in all_product_tags)"
+            t-attf-class="o_product_tags o_field_tags {{ 'd-flex flex-wrap align-items-center gap-2 mb-2 mt-1' if visible_tags else '' }}"
         >
-            <t t-foreach="all_product_tags" t-as="tag">
-                <t t-if="tag.visible_to_customers">
-                    <span t-if="tag.image"
-                          class="order-0"
-                          t-field="tag.image"
-                          t-options="{'widget': 'image', 'class': 'o_product_tag_img rounded'}"
+            <t t-foreach="visible_tags" t-as="tag">
+                <span t-if="tag.image"
+                      class="order-0"
+                      t-field="tag.image"
+                      t-options="{'widget': 'image', 'class': 'o_product_tag_img rounded'}"
+                />
+                <span t-else="" class="position-relative order-1 py-1 px-2">
+                    <span class="position-absolute top-0 start-0 w-100 h-100 rounded"
+                          t-attf-style="background-color: #{tag.color}; opacity: .2;"
                     />
-                    <span t-else="" class="position-relative order-1 py-1 px-2">
-                        <span class="position-absolute top-0 start-0 w-100 h-100 rounded"
-                              t-attf-style="background-color: #{tag.color}; opacity: .2;"
-                        />
-                        <span class="text-nowrap small"
-                              t-attf-style="color: #{tag.color}"
-                              t-field="tag.name"
-                        />
-                    </span>
-                </t>
+                    <span class="text-nowrap small"
+                          t-attf-style="color: #{tag.color}"
+                          t-field="tag.name"
+                    />
+                </span>
             </t>
         </div>
     </template>
