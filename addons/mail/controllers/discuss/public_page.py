@@ -5,7 +5,8 @@ from werkzeug.exceptions import NotFound
 from odoo import _, http
 from odoo.exceptions import UserError
 from odoo.http import request
-from odoo.tools import consteq, replace_exceptions
+from odoo.tools import consteq, email_normalize, replace_exceptions
+from odoo.tools.misc import verify_hash_signed
 from odoo.addons.mail.tools.discuss import add_guest_to_context, Store
 
 
@@ -40,13 +41,17 @@ class PublicPageController(http.Controller):
 
     @http.route("/chat/<int:channel_id>/<string:invitation_token>", methods=["GET"], type="http", auth="public")
     @add_guest_to_context
-    def discuss_channel_invitation(self, channel_id, invitation_token):
+    def discuss_channel_invitation(self, channel_id, invitation_token, email_token=None):
+        guest_email = email_token and verify_hash_signed(
+            self.env(su=True), "mail.invite_email", email_token
+        )
+        guest_email = email_normalize(guest_email)
         channel = request.env["discuss.channel"].browse(channel_id).exists()
         # sudo: discuss.channel - channel access is validated with invitation_token
         if not channel or not channel.sudo().uuid or not consteq(channel.sudo().uuid, invitation_token):
             raise NotFound()
         store = Store().add_global_values(isChannelTokenSecret=True)
-        return self._response_discuss_channel_invitation(store, channel)
+        return self._response_discuss_channel_invitation(store, channel, guest_email)
 
     @http.route("/discuss/channel/<int:channel_id>", methods=["GET"], type="http", auth="public")
     @add_guest_to_context
@@ -82,7 +87,7 @@ class PublicPageController(http.Controller):
         store = Store().add_global_values(isChannelTokenSecret=False)
         return self._response_discuss_channel_invitation(store, channel_sudo.sudo(False))
 
-    def _response_discuss_channel_invitation(self, store, channel):
+    def _response_discuss_channel_invitation(self, store, channel, guest_email=None):
         # group restriction takes precedence over token
         # sudo - res.groups: can access group public id of parent channel to determine if we
         # can access the channel.
@@ -93,10 +98,13 @@ class PublicPageController(http.Controller):
         with replace_exceptions(UserError, by=NotFound()):
             # sudo: mail.guest - creating a guest and its member inside a channel of which they have the token
             __, guest = channel.sudo()._find_or_create_persona_for_channel(
-                guest_name=_("Guest"),
+                guest_name=guest_email if guest_email else _("Guest"),
                 country_code=request.geoip.country_code,
                 timezone=request.env["mail.guest"]._get_timezone_from_request(request),
             )
+        if guest_email and not guest.email:
+            # sudo - mail.guest: writing email address of self guest is allowed
+            guest.sudo().email = guest_email
         if guest and not guest_already_known:
             store.add_global_values(shouldDisplayWelcomeViewInitially=True)
             channel = channel.with_context(guest=guest)
