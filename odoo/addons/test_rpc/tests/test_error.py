@@ -10,6 +10,11 @@ from odoo.tools.misc import mute_logger
 class TestError(common.HttpCase):
     def setUp(self):
         super(TestError, self).setUp()
+
+        ml = mute_logger('odoo.addons.rpc.controllers.xmlrpc')
+        ml.__enter__()  # noqa: PLC2801
+        self.addCleanup(ml.__exit__)
+
         uid = self.ref("base.user_admin")
         self.rpc = partial(self.xmlrpc_object.execute, common.get_db_name(), uid, "admin")
 

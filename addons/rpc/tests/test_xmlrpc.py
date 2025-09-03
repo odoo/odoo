@@ -5,13 +5,14 @@ import time
 
 import odoo
 import odoo.tools
-from odoo.addons.base.tests.common import SavepointCaseWithUserDemo
 from odoo.exceptions import AccessDenied, AccessError
 from odoo.http import _request_stack
 from odoo.service import common as auth
 from odoo.service import model
 from odoo.tests import common
-from odoo.tools import DotDict
+from odoo.tools import DotDict, mute_logger
+
+from odoo.addons.base.tests.common import SavepointCaseWithUserDemo
 
 
 class TestExternalAPI(SavepointCaseWithUserDemo):
@@ -31,6 +32,14 @@ class TestXMLRPC(common.HttpCase):
     def setUp(self):
         super(TestXMLRPC, self).setUp()
         self.admin_uid = self.env.ref('base.user_admin').id
+
+        ml_xml = mute_logger('odoo.addons.rpc.controllers.xmlrpc')
+        ml_xml.__enter__()  # noqa: PLC2801
+        self.addCleanup(ml_xml.__exit__)
+
+        ml_json = mute_logger('odoo.addons.rpc.controllers.jsonrpc')
+        ml_json.__enter__()  # noqa: PLC2801
+        self.addCleanup(ml_json.__exit__)
 
     def xmlrpc(self, model, method, *args, **kwargs):
         return self.xmlrpc_object.execute_kw(
