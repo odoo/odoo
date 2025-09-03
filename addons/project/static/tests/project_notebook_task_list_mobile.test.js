@@ -106,7 +106,7 @@ beforeEach(() => {
                             <t t-name="card">
                                 <main>
                                     <field name="name" class="fw-bold fs-5"/>
-                                    <field name="project_id" widget="project"/>
+                                    <field name="project_id" widget="many2one_private_placeholder"/>
                                     <field name="state"/>
                                 </main>
                             </t>
@@ -119,7 +119,7 @@ beforeEach(() => {
                             <t t-name="card">
                                 <main>
                                     <field name="name" class="fw-bold fs-5"/>
-                                    <field name="project_id" widget="project"/>
+                                    <field name="project_id" widget="many2one_private_placeholder"/>
                                     <field name="state"/>
                                 </main>
                             </t>

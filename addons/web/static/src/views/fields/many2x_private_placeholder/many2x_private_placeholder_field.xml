@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="web.Many2XPrivatePlaceholderField">
+        <div class="o_private_placeholder d-flex align-items-center gap-1">
+            <span t-if="props.readonly and hasNoValue" t-out="props.record.fields[props.name].falsy_value_label or '🔒 Private'" class="text-danger fst-italic text-muted"/>
+            <Many2One t-elif="isM2OField" t-props="componentProps" />
+            <Many2ManyTagsField t-else="" t-props="componentProps" />
+        </div>
+    </t>
+</templates>

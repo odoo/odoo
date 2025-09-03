@@ -1,7 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models, api
+from odoo.tools import LazyTranslate
 from odoo.addons.mail.tools.discuss import Store
+
+_lt = LazyTranslate(__name__)
 
 
 class MailCannedResponse(models.Model):
@@ -27,6 +30,7 @@ class MailCannedResponse(models.Model):
         "res.groups",
         string="Authorized Groups",
         domain=lambda self: [("id", "in", self.env.user.all_group_ids.ids)],
+        falsy_value_label=_lt("🔒 Private"),
     )
     is_shared = fields.Boolean(
         string="Determines if the canned_response is currently shared with other users",

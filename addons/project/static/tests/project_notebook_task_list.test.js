@@ -91,7 +91,7 @@ beforeEach(() => {
                 <field name="child_ids" widget="subtasks_one2many">
                     <list editable="bottom">
                         <field name="display_in_project" force_save="1"/>
-                        <field name="project_id" widget="project"/>
+                        <field name="project_id" widget="many2one_private_placeholder"/>
                         <field name="name"/>
                         <field name="state"/>
                     </list>
@@ -99,7 +99,7 @@ beforeEach(() => {
                 <field name="depend_on_ids" widget="notebook_task_one2many" context="{ 'closed_X2M_count': closed_depend_on_count }">
                     <list editable="bottom">
                         <field name="display_in_project" force_save="1"/>
-                        <field name="project_id" widget="project"/>
+                        <field name="project_id" widget="many2one_private_placeholder"/>
                         <field name="name"/>
                         <field name="state"/>
                     </list>

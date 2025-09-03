@@ -9,11 +9,13 @@ export class MailCannedResponse extends models.ServerModel {
         list: `
             <list>
                 <field name="source" widget="shortcut"/>
+                <field name="group_ids" widget="many2many_private_placeholder"/>
             </list>
         `,
         form: `
             <form>
                 <field name="source" widget="shortcut"/>
+                <field name="group_ids" widget="many2many_private_placeholder"/>
             </form>
         `,
         kanban: `
@@ -21,6 +23,7 @@ export class MailCannedResponse extends models.ServerModel {
                 <templates>
                     <t t-name="card">
                         <field name="source" widget="shortcut"/>
+                        <field name="group_ids" widget="many2many_private_placeholder"/>
                     </t>
                 </templates>
             </kanban>
