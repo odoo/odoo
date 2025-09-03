@@ -1,6 +1,8 @@
 import logging
 
 from odoo.tests import Like, get_db_name, tagged
+from odoo.tools import mute_logger
+
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo
 
 
@@ -51,6 +53,7 @@ class TestRpcPath(HttpCaseWithUserDemo):
             Like('...POST /web/dataset/call_kw/res.users.read HTTP/...'),
         ])
 
+    @mute_logger('odoo.addons.rpc.controllers.jsonrpc')
     def test_rpc_path_jsonrpc(self):
         with self.assertLogs('werkzeug', logging.INFO) as capture:
             self.make_jsonrpc_request('/jsonrpc', {
@@ -65,6 +68,7 @@ class TestRpcPath(HttpCaseWithUserDemo):
             Like('...POST /jsonrpc#res.users.read HTTP/...'),
         ])
 
+    @mute_logger('odoo.addons.rpc.controllers.xmlrpc')
     def test_rpc_path_xmlrpc(self):
         with self.assertLogs('werkzeug', logging.INFO) as capture:
             self.xmlrpc_object.execute_kw(

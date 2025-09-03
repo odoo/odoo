@@ -1,8 +1,10 @@
 import logging
 
 from odoo import api
-from odoo.addons.auth_totp.tests.test_totp import TestTOTPMixin
 from odoo.tests import HttpCase, get_db_name, tagged
+from odoo.tools import mute_logger
+
+from odoo.addons.auth_totp.tests.test_totp import TestTOTPMixin
 
 _logger = logging.getLogger(__name__)
 
@@ -23,6 +25,10 @@ class TestAPIKeys(TestTOTPMixin, HttpCase):
         @self.addCleanup
         def remove_callback():
             del self.registry['ir.logging'].send_key
+
+        ml = mute_logger('odoo.addons.rpc.controllers.xmlrpc')
+        ml.__enter__()  # noqa: PLC2801
+        self.addCleanup(ml.__exit__)
 
     def test_addremove(self):
         db = get_db_name()

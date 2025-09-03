@@ -1,3 +1,4 @@
+import logging
 import sys
 import traceback
 import xmlrpc.client
@@ -12,7 +13,9 @@ from odoo.http import Controller, Response, dispatch_rpc, request, route
 from odoo.tools import lazy
 from odoo.tools.misc import frozendict
 
-from . import _check_request
+from . import RPC_DEPRECATION_NOTICE, _check_request
+
+logger = logging.getLogger(__name__)
 
 # XML-RPC fault codes. Some care must be taken when changing these: the
 # constants are also defined client-side and must remain in sync.
@@ -126,7 +129,6 @@ class XMLRPC(Controller):
 
     def _xmlrpc(self, service):
         """Common method to handle an XML-RPC request."""
-        _check_request()
         data = request.httprequest.get_data()
         params, method = xmlrpc.client.loads(data, use_datetime=True)
         result = dispatch_rpc(service, method, params)
@@ -139,6 +141,7 @@ class XMLRPC(Controller):
         This entrypoint is historical and non-compliant, but kept for
         backwards-compatibility.
         """
+        logger.warning(RPC_DEPRECATION_NOTICE, __name__)
         _check_request()
         try:
             response = self._xmlrpc(service)
@@ -153,6 +156,7 @@ class XMLRPC(Controller):
     @route("/xmlrpc/2/<service>", auth="none", methods=["POST"], csrf=False, save_session=False)
     def xmlrpc_2(self, service):
         """XML-RPC service that returns faultCode as int."""
+        logger.warning(RPC_DEPRECATION_NOTICE, __name__)
         _check_request()
         try:
             response = self._xmlrpc(service)
