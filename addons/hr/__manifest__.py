@@ -17,6 +17,7 @@
         'phone_validation',
         'resource_mail',
         'web',
+        'web_hierarchy',
     ],
     'data': [
         'security/hr_security.xml',
@@ -74,6 +75,9 @@
         ],
         'web.assets_tests': [
             'hr/static/tests/tours/**/*',
+        ],
+        'web._assets_primary_variables': [
+            'hr/static/src/scss/variables.scss',
         ],
     },
     'author': 'Odoo S.A.',
