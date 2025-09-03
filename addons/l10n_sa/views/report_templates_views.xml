@@ -6,7 +6,7 @@
     <template id="l10n_sa_external_layout_standard" inherit_id="web.external_layout_standard">
         <!-- support for custom header -->
         <xpath expr="//img" position="after">
-            <t t-if="custom_header" t-out="custom_header"/>
+            <t t-if="custom_header_sa" t-out="custom_header_sa"/>
         </xpath>
         <xpath expr="//span[hasclass('page')]/.." position="before">
             <t t-call="l10n_sa.l10n_sa_additional_footer"/>
@@ -15,7 +15,7 @@
     <template id="l10n_sa_external_layout_boxed" inherit_id="web.external_layout_boxed">
         <!-- support for custom header -->
         <xpath expr="//img" position="after">
-            <t t-if="custom_header" t-out="custom_header"/>
+            <t t-if="custom_header_sa" t-out="custom_header_sa"/>
         </xpath>
         <xpath expr="//span[hasclass('page')]/.." position="before">
             <t t-call="l10n_sa.l10n_sa_additional_footer"/>
@@ -24,7 +24,7 @@
     <template id="l10n_sa_external_layout_bold" inherit_id="web.external_layout_bold">
         <!-- support for custom header -->
         <xpath expr="//img" position="after">
-            <t t-if="custom_header" t-out="custom_header"/>
+            <t t-if="custom_header_sa" t-out="custom_header_sa"/>
         </xpath>
         <xpath expr="//span[hasclass('page')]/.." position="before">
             <t t-call="l10n_sa.l10n_sa_additional_footer"/>
@@ -33,7 +33,7 @@
     <template id="l10n_sa_external_layout_striped" inherit_id="web.external_layout_striped">
         <!-- support for custom header -->
         <xpath expr="//img" position="after">
-            <t t-if="custom_header" t-out="custom_header"/>
+            <t t-if="custom_header_sa" t-out="custom_header_sa"/>
         </xpath>
         <xpath expr="//span[hasclass('page')]/.." position="before">
             <t t-call="l10n_sa.l10n_sa_additional_footer"/>
@@ -42,7 +42,7 @@
     <template id="l10n_sa_external_layout_folder" inherit_id="web.external_layout_folder">
         <!-- support for custom header -->
         <xpath expr="//img" position="after">
-            <t t-if="custom_header" t-out="custom_header"/>
+            <t t-if="custom_header_sa" t-out="custom_header_sa"/>
         </xpath>
         <xpath expr="//span[hasclass('page')]/.." position="before">
             <t t-call="l10n_sa.l10n_sa_additional_footer"/>
@@ -51,7 +51,7 @@
     <template id="l10n_sa_external_layout_wave" inherit_id="web.external_layout_wave">
         <!-- support for custom header -->
         <xpath expr="//img" position="after">
-            <t t-if="custom_header" t-out="custom_header"/>
+            <t t-if="custom_header_sa" t-out="custom_header_sa"/>
         </xpath>
         <xpath expr="//span[hasclass('page')]/.." position="before">
             <t t-call="l10n_sa.l10n_sa_additional_footer"/>
@@ -60,7 +60,7 @@
     <template id="l10n_sa_external_layout_bubble" inherit_id="web.external_layout_bubble">
         <!-- support for custom header -->
         <xpath expr="//img" position="after">
-            <t t-if="custom_header" t-out="custom_header"/>
+            <t t-if="custom_header_sa" t-out="custom_header_sa"/>
         </xpath>
         <xpath expr="//span[hasclass('page')]/.." position="before">
             <t t-call="l10n_sa.l10n_sa_additional_footer"/>
