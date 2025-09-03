@@ -200,7 +200,7 @@ class HrEmployeeBase(models.AbstractModel):
 
                 leave_type_data = allocations_leaves_consumed[employee][leave_type]
                 for leave in leaves_per_employee_type[employee][leave_type].sorted('date_from'):
-                    leave_duration = leave[leave_duration_field]
+                    leave_duration = leave._get_durations()[leave.id][0 if leave_unit == 'days' else 1]
                     skip_excess = False
 
                     if sorted_leave_allocations.filtered(lambda alloc: alloc.allocation_type == 'accrual') and leave.date_from.date() > target_date:
