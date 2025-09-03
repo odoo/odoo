@@ -343,8 +343,9 @@ class ResourceResource(models.Model):
                     continue
 
                 ranges_to_remove = []
-                for leave in leaves._items:
-                    resource_by_id[resource_id]._format_leave(leave, resource_hours_per_day, resource_hours_per_week, ranges_to_remove, start_day, end_day, locale)
+                for leaves_per_item in leaves._items:
+                    for leave in leaves_per_item[2]:
+                        resource_by_id[resource_id]._format_leave([leaves_per_item[0], leaves_per_item[1], leave], resource_hours_per_day, resource_hours_per_week, ranges_to_remove, start_day, end_day, locale)
 
                 resource_work_intervals[resource_id] -= Intervals(ranges_to_remove)
 
