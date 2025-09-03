@@ -235,6 +235,8 @@ describe("EditMenuDialog", () => {
             expect(model).toBe("website.menu");
             expect(method).toBe("get_tree");
             expect(args[0]).toBe(1);
+            expect(args[1]).toBe(null);
+            expect.step("get_tree");
             return sampleMenuData;
         });
 
@@ -256,6 +258,43 @@ describe("EditMenuDialog", () => {
         await waitFor(".o_website_dialog");
         expect(".oe_menu_editor").toHaveCount(1);
         expect(".js_menu_label").toHaveText("Top Menu Item");
+        expect.verifySteps(["get_tree"]);
+    });
+
+    test("after clicking on edit menu button in a sub-menu, an EditMenuDialog should appear", async () => {
+        await setupEditor(
+            `<ul class="nav" data-content_menu_id="4">
+                <li>
+                    <a class="nav-link" href="exists">
+                        <span>[]Top Menu Item</span>
+                    </a>
+                </li>
+            </ul>`,
+            {
+                config: { Plugins: [...MAIN_PLUGINS, MenuDataPlugin, SavePlugin] },
+            }
+        );
+
+        onRpc(({ model, method, args }) => {
+            expect(model).toBe("website.menu");
+            expect(method).toBe("get_tree");
+            expect(args[0]).toBe(1);
+            expect(args[1]).toBe(4);
+            expect.step("get_tree");
+            return sampleMenuData;
+        });
+
+        onRpc("/website/get_suggested_links", () => {
+            return {
+                matching_pages: [],
+                others: [],
+            };
+        });
+
+        await waitFor(".o-we-linkpopover");
+        await click(".js_edit_menu");
+        await waitFor(".o_website_dialog");
+        expect.verifySteps(["get_tree"]);
     });
 
     test("clicking save in the EditMenuDialog should not clear the editor changes", async () => {

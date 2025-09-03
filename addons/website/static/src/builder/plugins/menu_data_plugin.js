@@ -44,7 +44,7 @@ export class MenuDataPlugin extends Plugin {
                             },
                         });
                     },
-                    onClickEditMenu: this.openEditMenu.bind(this),
+                    onClickEditMenu: this.openEditMenu.bind(this, props.linkElement),
                 }),
             }),
         ],
@@ -55,14 +55,19 @@ export class MenuDataPlugin extends Plugin {
         this.websiteService = this.services.website;
     }
 
-    openEditMenu() {
+    openEditMenu(linkEl) {
         if (this.isEditMenuOpening) {
             return Promise.resolve();
         }
         this.isEditMenuOpening = true;
         return new Promise((resolve) => {
-            this.services.dialog.add(EditMenuDialog,
+            const rootID = parseInt(
+                linkEl?.closest("[data-content_menu_id]")?.dataset.content_menu_id
+            );
+            this.services.dialog.add(
+                EditMenuDialog,
                 {
+                    rootID: isNaN(rootID) ? null : rootID,
                     save: async (newPageUrl) => {
                         // Save the page before reloading the editor.
                         await this.dependencies.savePlugin.save();
