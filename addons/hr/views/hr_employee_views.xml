@@ -72,7 +72,7 @@
                         <filter name="group_job" string="Job Position" domain="[]" context="{'group_by': 'job_id'}"/>
                         <filter name="group_employee_type" string="Employee Type" domain="[]" context="{'group_by': 'employee_type'}"/>
                         <separator name="main_groupby_separator"/>
-                        <filter name="group_birthday" domain="[]" context="{'group_by': 'birthday'}"/>
+                        <filter name="group_birthday" domain="[]" context="{'group_by': 'birthday_month'}"/>
                         <filter name="group_start" string="Start Date" domain="[]" context="{'group_by': 'contract_date_start'}" groups="hr.group_hr_manager"/>
                         <separator name="secondary_groupby_separator"/>
                         <separator name="managers_groupby_separator"/>
@@ -632,9 +632,9 @@
                                     <span t-if="record.contract_date_end.raw_value"> - </span>
                                     <field t-if="record.contract_date_end.raw_value" name="contract_date_end"/>
                                 </div>
-                                <div invisible="birthday_public_display_string == 'hidden'">
+                                <div invisible="not birthday" groups="hr.group_hr_user">
                                     <i class="fa fa-fw me-2 fa-birthday-cake text-primary" title="Birthday"/>
-                                    <field name="birthday_public_display_string"/>
+                                    <field name="birthday"/>
                                 </div>
                                 <field name="employee_properties" widget="properties"/>
                                 <field class="hr_tags" name="category_ids" widget="many2many_tags" options="{'color_field': 'color', 'on_tag_click': 'edit_color'}" optional="hide"/>
