@@ -6,6 +6,7 @@ import math
 import uuid
 from datetime import datetime, timedelta
 from itertools import repeat
+from markupsafe import Markup
 
 import pytz
 from werkzeug.urls import url_parse
@@ -656,6 +657,34 @@ class CalendarEvent(models.Model):
             else vals
             for vals in vals_list
         ]
+
+        if not self.env.context.get('skip_contact_description'):
+            # Add organizer and first partner details to event description
+            organizer_ids, partner_ids = set(), set()
+            vals_partner_list = []
+            for vals in vals_list:
+                if vals.get('user_id'):
+                    organizer_ids.add(vals['user_id'])
+                # attendee_ids structure = [[2, partner_id_to_remove], [0, 0, {'partner_id': partner_id_to_add}], ...]
+                partner_ids_from_attendees = {
+                    attendee_vals[2]['partner_id']
+                    for attendee_vals in vals['attendee_ids']
+                    if len(attendee_vals) > 2 and isinstance(attendee_vals[2], dict) and 'partner_id' in attendee_vals[2]
+                }
+                partner_ids.update(partner_ids_from_attendees)
+                vals_partner_list.append(partner_ids_from_attendees)
+            organizers = self.env['res.users'].browse(organizer_ids).with_prefetch(organizer_ids)
+            partners = self.env['res.partner'].browse(partner_ids).with_prefetch(partner_ids)
+
+            for vals, vals_partner_ids in zip(vals_list, vals_partner_list):
+                contact_description = self._get_contact_details_description(
+                    organizers.browse(vals.get('user_id', False)),
+                    partners.browse(vals_partner_ids),
+                )
+                if not is_html_empty(contact_description):
+                    base_description = f"{vals['description']}<br/>" if not is_html_empty(vals.get('description')) else ''
+                    vals['description'] = f'<div>{base_description}{contact_description}</div>'
+
         recurrence_fields = self._get_recurrent_fields()
         recurring_vals = [vals for vals in vals_list if vals.get('recurrency')]
         other_vals = [vals for vals in vals_list if not vals.get('recurrency')]
@@ -669,7 +698,7 @@ class CalendarEvent(models.Model):
         for event, vals in zip(recurring_events, recurring_vals):
             recurrence_values = {field: vals.pop(field) for field in recurrence_fields if field in vals}
             if vals.get('recurrency'):
-                detached_events = event._apply_recurrence_values(recurrence_values)
+                detached_events = event.with_context(skip_contact_description=True)._apply_recurrence_values(recurrence_values)
                 detached_events.active = False
 
         events.filtered(lambda event: event.start > fields.Datetime.now()).attendee_ids._send_invitation_emails()
@@ -923,7 +952,7 @@ class CalendarEvent(models.Model):
         # We need to make sure that the attendee_ids are recreated with new ids to avoid sharing attendees between events
         # The copy should not have the same attendee status than the original event
         default.update(partner_ids=[Command.set([])], attendee_ids=[Command.set([])])
-        new_events = super().copy(default)
+        new_events = super(CalendarEvent, self.with_context(skip_contact_description=True)).copy(default)
         for old_event, new_event in zip(self, new_events):
             new_event.write({'partner_ids': [(Command.set(old_event.partner_ids.ids))]})
         return new_events
@@ -1612,6 +1641,35 @@ class CalendarEvent(models.Model):
             result[meeting.id] = cal.serialize().encode('utf-8')
 
         return result
+
+    @api.model
+    def _get_contact_details_description(self, organizer, partners):
+        """Build sanitized HTML with the organizer details and the details
+        of the contact partner (the first partner which is not the organizer).
+        """
+        odoobot = self.env.ref('base.user_root')
+        contact_description = []
+        # Organizer
+        if organizer and organizer != odoobot:
+            contact_description.extend(self._prepare_partner_contact_details_html(_("Organized by"), organizer.partner_id))
+        # First contact partner
+        first_partner = partners.filtered(lambda partner: partner not in (odoobot.partner_id + organizer.partner_id))[:1]
+        if first_partner:
+            if contact_description:
+                contact_description.append("")  # To add a blank line between the organizer and partner details
+            contact_description.extend(self._prepare_partner_contact_details_html(_("Contact Details"), first_partner))
+        return Markup("<br/>").join(contact_description)
+
+    @api.model
+    def _prepare_partner_contact_details_html(self, section_title, partner):
+        details = list(filter(None, [
+            partner.name,
+            partner.email and Markup("<a href='mailto:%(email)s'>%(email)s</a>") % {'email': partner.email},
+            partner.phone and Markup("<a href='tel:%(phone)s'>%(phone)s</a>") % {'phone': partner.phone},
+        ]))
+        if details:
+            details.insert(0, Markup("<strong>%s</strong>") % section_title)
+        return details
 
     def _get_customer_description(self):
         """:return (html): Sanitized HTML description for customer to include in calendar exports"""

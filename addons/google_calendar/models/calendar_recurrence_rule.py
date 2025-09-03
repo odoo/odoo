@@ -43,7 +43,7 @@ class CalendarRecurrence(models.Model):
                 }]
                 event.with_user(event._get_event_user())._google_delete(google_service, event.google_id)
                 event.google_id = False
-        self.env['calendar.event'].create(vals)
+        self.env['calendar.event'].with_context(skip_contact_description=True).create(vals)
 
         self.calendar_event_ids.need_sync = False
         return detached_events
@@ -174,7 +174,7 @@ class CalendarRecurrence(models.Model):
             # Google reuse the event google_id to identify the recurrence in that case
             base_event = self.env['calendar.event'].search([('google_id', '=', vals['google_id'])])
             if not base_event:
-                base_event = self.env['calendar.event'].create(base_values)
+                base_event = self.env['calendar.event'].with_context(skip_contact_description=True).create(base_values)
             else:
                 # We override the base_event values because they could have been changed in Google interface
                 # The event google_id will be recalculated once the recurrence is created
