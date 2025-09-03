@@ -27,6 +27,7 @@ export class WebsiteSlidesCourseJoinLink extends Interaction {
         this.slidesService.setUser({
             isPartnerWithoutUser: !!data.isPartnerWithoutUser,
         });
+        this.joinAfterQuiz = data.joinAfterQuiz;
         this.user = this.slidesService.data.user;
         this.channel = this.slidesService.data.channel;
     }
@@ -44,7 +45,7 @@ export class WebsiteSlidesCourseJoinLink extends Interaction {
         }
 
         if (this.channel.enroll !== "invite") {
-            if (this.user.public) {
+            if (this.user.public && this.joinAfterQuiz) {
                 await this.waitFor(this.slidesService.beforeJoin());
                 this.redirectToLogin();
             } else if (!this.channel.isMember) {
