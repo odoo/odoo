@@ -100,3 +100,11 @@ class ComplexModel(models.Model):
     currency_id = fields.Many2one('res.currency')
     d = fields.Date()
     dt = fields.Datetime()
+
+
+class CharSameString(models.Model):
+    _name = model('char.string')
+    _description = 'Tests: Base Import Model Char String'
+
+    test = fields.Char(string='Test 1', readonly=True)
+    test2 = fields.Char(string='Test 2')

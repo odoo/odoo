@@ -835,7 +835,7 @@ class Import(models.TransientModel):
                     min_dist_field = field['name']
                     min_dist = current_field_dist
 
-            if min_dist < self.FUZZY_MATCH_DISTANCE:
+            if round(min_dist, 1) < self.FUZZY_MATCH_DISTANCE:
                 return {
                     'field_path': [min_dist_field],
                     'distance': min_dist

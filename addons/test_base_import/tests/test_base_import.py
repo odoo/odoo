@@ -103,6 +103,12 @@ class TestBasicFields(BaseImportCase):
                 {'id': 'value', 'name': '.id', 'string': 'Database ID', 'required': True, 'fields': [], 'type': 'id', 'model_name': base_import_model('m2o.required')},
         ]))
 
+    def test_field_with_similar_string(self):
+        fields_tree = self.get_fields('char.string')
+        match = self.env['base_import.import']._get_mapping_suggestion("Test 1", fields_tree, ['char'], {})
+
+        self.assertFalse(bool(match), "Match should not be empty")
+
 
 class TestO2M(BaseImportCase):
 
@@ -289,7 +295,7 @@ class TestColumnMapping(TransactionCase):
             match = self.env['base_import.import']._get_mapping_suggestion(value[1], model_fields_info, ['char'], {})
 
             self.assertEqual(
-                bool(match), distance < max_distance
+                bool(match), round(distance, 1) < max_distance
             )
 
 
