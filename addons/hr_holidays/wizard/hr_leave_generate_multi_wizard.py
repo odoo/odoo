@@ -43,7 +43,7 @@ class HrLeaveGenerateMultiWizard(models.TransientModel):
     def _get_employees_from_allocation_mode(self):
         self.ensure_one()
         if self.allocation_mode == 'employee':
-            employees = self.employee_ids
+            employees = self.employee_ids or self.env['hr.employee'].search(self._get_employee_domain())
         elif self.allocation_mode == 'category':
             employees = self.category_id.employee_ids.filtered(lambda e: e.company_id in self.env.companies)
         elif self.allocation_mode == 'company':
