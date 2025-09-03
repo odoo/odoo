@@ -28,14 +28,16 @@
             </menuitem>
             <menuitem id="account_closing_menu" name="Closing" groups="account.group_account_readonly" sequence="20"/>
         </menuitem>
-        <menuitem id="account_audit_menu" name="Audit" sequence="7" groups="account.group_account_readonly">
+        <menuitem id="account_audit_menu" name="Review" sequence="7" groups="account.group_account_readonly">
             <menuitem id="account_audit_control_menu" name="Control" sequence="20" groups="account.group_account_readonly">
                 <menuitem id="menu_action_account_moves_all" action="action_account_moves_all" groups="account.group_account_readonly" sequence="6"/>
             </menuitem>
+            <menuitem id="account_logs_menu" name="Logs" sequence="60"/>
         </menuitem>
         <menuitem id="menu_finance_reports" name="Reporting" sequence="20" groups="account.group_account_readonly,account.group_account_invoice">
             <menuitem id="account_reports_partners_reports_menu" name="Partner Reports" sequence="3"/>
-            <menuitem id="account_reports_management_menu" name="Management" sequence="4">
+            <menuitem id="account_reports_taxes_and_fiscal_menu" name="Taxes &amp; Fiscal" sequence="4"/>
+            <menuitem id="account_reports_management_menu" name="Management" sequence="5">
                 <menuitem id="menu_action_account_invoice_report_all" name="Invoice Analysis" action="action_account_invoice_report_all" sequence="1"/>
                 <menuitem id="menu_action_analytic_reporting" name="Analytic Report" action="action_analytic_reporting" groups="account.group_account_readonly"/>
             </menuitem>
