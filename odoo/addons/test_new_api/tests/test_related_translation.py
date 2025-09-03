@@ -348,3 +348,8 @@ class TestRelatedTranslation(odoo.tests.TransactionCase):
         # inconsistent behavior but usually users don't care or may even be happy about it
         self.assertEqual(record_en.html, '<p>Knife</p><p>Fork</p><p>Spoon</p>')
         self.assertEqual(record_fr.html, '<p>Couteau</p><p>Fourchette</p><p>Cuiller</p>')
+
+    def test_edit_translations_related_compute(self):
+        self.patch(self.env['test_new_api.related_translation_2']._fields['name'], 'readonly', True)
+        self.patch(self.env['test_new_api.related_translation_2']._fields['name'], 'inverse', None)
+        self.assertEqual(self.test2.with_context(lang='fr_FR', edit_translations=True).name, 'Couteau')
