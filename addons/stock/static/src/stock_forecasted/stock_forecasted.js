@@ -176,6 +176,10 @@ export class StockForecasted extends Component {
         return { noContentHelp: _t("Try to add some incoming or outgoing transfers.") };
     }
 
+    get hasStock() {
+        return this.docs.product_variants_ids.some((id) => this.docs.product[id].quantity_on_hand > 0);
+    }
+
     async openView(resModel, view, resId=false, domain = false) {
         const action = {
             type: "ir.actions.act_window",

@@ -70,9 +70,11 @@ class ProductReplenish(models.TransientModel):
             res['uom_id'] = product_tmpl_id.uom_id.id
         if 'company_id' in fields:
             res['company_id'] = company.id
-        if 'warehouse_id' in fields and 'warehouse_id' not in res:
-            warehouse = self.env['stock.warehouse'].search([('company_id', '=', company.id)], limit=1)
-            res['warehouse_id'] = warehouse.id
+        if 'warehouse_id' in fields and 'warehouse_id':
+            warehouse = res.get('warehouse_id')
+            if warehouse in (False, 0, None):
+                warehouse = self.env['stock.warehouse'].search([('company_id', '=', company.id)], limit=1)
+                res['warehouse_id'] = warehouse.id
         if 'route_id' in fields and 'route_id' not in res and product_tmpl_id:
             res['route_id'] = self.env['stock.route'].search(self._get_route_domain(product_tmpl_id), limit=1).id
             if not res['route_id'] and product_tmpl_id.route_ids:

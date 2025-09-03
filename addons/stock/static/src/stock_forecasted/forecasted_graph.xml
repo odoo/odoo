@@ -4,5 +4,8 @@
         <xpath expr="//canvas[@t-ref='canvas']" position="attributes">
             <attribute name="height">300</attribute>
         </xpath>
+        <xpath expr="//t[@t-call='{{ props.buttonTemplate }}']" position="attributes">
+            <attribute name="t-if" add="model.metaData.context.show_graph_buttons" separator=" "/>
+        </xpath>
     </t>
 </templates>
