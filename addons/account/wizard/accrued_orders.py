@@ -181,13 +181,14 @@ class AccountAccruedOrdersWizard(models.TransientModel):
                         if any(tax.price_include for tax in order_line.tax_ids):
                             # As included taxes are not taken into account in the price_unit, we need to compute the price_subtotal
                             price_subtotal = order_line.tax_ids.compute_all(
-                                order_line.price_unit,
+                                order_line.price_unit_discounted,
                                 currency=order_line.order_id.currency_id,
                                 quantity=order_line.qty_to_invoice,
                                 product=order_line.product_id,
                                 partner=order_line.order_id.partner_id)['total_excluded']
+
                         else:
-                            price_subtotal = order_line.qty_to_invoice * order_line.price_unit
+                            price_subtotal = order_line.qty_to_invoice * order_line.price_unit_discounted
                         amount_currency = order_line.currency_id.round(price_subtotal)
                         amount = order.currency_id._convert(amount_currency, self.company_id.currency_id, self.company_id)
                         fnames = ['qty_to_invoice', 'qty_received', 'qty_invoiced', 'invoice_lines']
@@ -197,7 +198,7 @@ class AccountAccruedOrdersWizard(models.TransientModel):
                             order_line=_ellipsis(order_line.name, 20),
                             quantity_billed=order_line.qty_invoiced,
                             quantity_received=order_line.qty_received,
-                            unit_price=formatLang(self.env, order_line.price_unit, currency_obj=order.currency_id),
+                            unit_price=formatLang(self.env, amount_currency / order_line.qty_to_invoice, currency_obj=order.currency_id),
                         )
                     else:
                         account = self._get_computed_account(order, order_line.product_id, is_purchase)
@@ -210,7 +211,7 @@ class AccountAccruedOrdersWizard(models.TransientModel):
                             order_line=_ellipsis(order_line.name, 20),
                             quantity_invoiced=order_line.qty_invoiced,
                             quantity_delivered=order_line.qty_delivered,
-                            unit_price=formatLang(self.env, order_line.price_unit, currency_obj=order.currency_id),
+                            unit_price=formatLang(self.env, amount_currency / order_line.qty_to_invoice, currency_obj=order.currency_id),
                         )
                     distribution = order_line.analytic_distribution if order_line.analytic_distribution else {}
                     values = _get_aml_vals(order, amount, amount_currency, account.id, label=label, analytic_distribution=distribution)
