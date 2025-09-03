@@ -16,6 +16,15 @@
     padding-top: 0px !important;
 }
 
+.o_cw_body li:has(.o_field_html[name="description"]){
+    span:has(i) {
+        align-self: flex-start;
+    }
+    .o_field_html {
+        text-wrap: wrap;
+    }
+}
+
 .o_field_many2manyattendeeexpandable .o_field_tags {
     flex-direction: column;
 
