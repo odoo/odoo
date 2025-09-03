@@ -246,3 +246,62 @@ class TestManualConsumption(TestMrpCommon):
         self.assertEqual(mo.reservation_state, "assigned")
         mo.move_raw_ids.filtered(lambda m: m.product_id == components[0]).picked = True
         self.assertEqual(mo.reservation_state, "assigned")
+
+    def test_no_consumption_when_quant_changed(self):
+        """
+        Test to ensure that from 'Details' wizard, changing only the lot or location
+        of a component move line/quant (without changing the quantity) does not mark it as consumed.
+
+        The wizard (opened via 'action_show_details' on move) should only set
+        'manual_consumption' and 'picked' to True when the done quantity(quantity)
+        differs from the demanded quantity(product_uom_qty).
+        """
+        bom = self.bom_4
+        component = bom.bom_line_ids.product_id
+        component.write({
+            "is_storable": True,
+            "tracking": "lot",
+        })
+
+        # Create two lots with quants.
+        lots = self.env["stock.lot"].create([
+            {"name": f"lot_{i}", "product_id": component.id} for i in range(2)
+        ])
+        for lot in lots:
+            self.env["stock.quant"]._update_available_quantity(
+                component, self.stock_location, 5, lot_id=lot
+            )
+
+        # Create and confirm a Manufacturing Order.
+        mo_form = Form(self.env["mrp.production"])
+        mo_form.bom_id = bom
+        mo_form.product_qty = 1
+        mo = mo_form.save()
+        mo.action_confirm()
+
+        # Initially: not consumed.
+        self.assertRecordValues(mo.move_raw_ids, [
+            {"manual_consumption": False, "picked": False, "lot_ids": lots[0].ids},
+        ])
+
+        # Change only the lot in the 'Details' wizard, keep quantity unchanged.
+        with Form.from_action(self.env, mo.move_raw_ids[0].action_show_details()) as wiz_form:
+            with wiz_form.move_line_ids.edit(0) as move_line:
+                move_line.lot_id = lots[1]
+            wiz_form.save()
+
+        # Still it should not consumed.
+        self.assertRecordValues(mo.move_raw_ids, [
+            {"manual_consumption": False, "picked": False, "lot_ids": lots[1].ids},
+        ])
+
+        # Change the quantity in the 'Details' wizard.
+        with Form.from_action(self.env, mo.move_raw_ids[0].action_show_details()) as wiz_form:
+            with wiz_form.move_line_ids.edit(0) as move_line:
+                move_line.quantity = 2
+            wiz_form.save()
+
+        # Now it should be marked as consumed, since the done quantity differs from the demand.
+        self.assertRecordValues(mo.move_raw_ids, [
+            {"manual_consumption": True, "picked": True, "lot_ids": lots[1].ids},
+        ])

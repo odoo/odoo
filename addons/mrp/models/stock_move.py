@@ -286,9 +286,10 @@ class StockMove(models.Model):
                 updated_product_move._action_confirm()
                 move_to_unlink.unlink()
                 self = other_move + updated_product_move
-        if self.env.context.get('force_manual_consumption'):
-            vals['manual_consumption'] = True
-            vals['picked'] = True
+        if self.env.context.get('force_manual_consumption') and 'quantity' in vals:
+            moves_to_update = self.filtered(lambda move: move.product_uom_qty != vals['quantity'])
+            if moves_to_update:
+                moves_to_update.write({'manual_consumption': True, 'picked': True})
         if 'product_uom_qty' in vals and 'move_line_ids' in vals:
             # first update lines then product_uom_qty as the later will unreserve
             # so possibly unlink lines
