@@ -16,7 +16,16 @@ class LoyaltyCard(models.Model):
 
     @api.model
     def _load_pos_data_domain(self, data):
+<<<<<<< 0d2d469e9a3afb02cc1b408711de372b36300cbc
         return False
+||||||| 8594380427794b71fe01f5d1860b8acbf5ff8593
+        return [('program_id', 'in', [program["id"] for program in data["loyalty.program"]['data']])]
+=======
+        return [
+            ('partner_id', 'in', [partner["id"] for partner in data["res.partner"]['data']]),
+            ('program_id', 'in', [program["id"] for program in data["loyalty.program"]['data']]),
+        ]
+>>>>>>> 6b46ad100c033797ca7288b7da985690c7d8f1b7
 
     @api.model
     def _load_pos_data_fields(self, config_id):
