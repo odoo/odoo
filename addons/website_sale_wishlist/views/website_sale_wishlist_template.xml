@@ -285,9 +285,11 @@
             <t t-set="additional_title">Shop Wishlist</t>
             <div id="wrap" class="js_sale">
                 <div class="oe_structure" id="oe_structure_website_sale_wishlist_product_wishlist_1"/>
-                <div class="container oe_website_sale pt-4">
+                <div class="container oe_website_sale">
                     <section class="container wishlist-section pb-5">
-                        <h1 class="h4-fs mb-3">My Wishlist</h1>
+                        <div class="o_wishlist_products_header pt-4 pb-3">
+                            <h1 class="h4-fs mb-0">My Wishlist</h1>
+                        </div>
                         <div
                             id="empty-wishlist-message"
                             t-attf-class="w-100 #{'d-none' if wishes else ''}"
