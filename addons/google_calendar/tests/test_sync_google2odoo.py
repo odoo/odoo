@@ -121,7 +121,12 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
 
     @patch_api
     def test_new_google_event(self):
-        description = '<script>alert("boom")</script><p style="white-space: pre"><h1>HELLO</h1></p><ul><li>item 1</li><li>item 2</li></ul>'
+        description = (
+            '<div><p style="white-space: pre"></p>'
+            '<h1>HELLO</h1><ul><li>item 1</li><li>item 2</li></ul><br>'
+            '<strong>Contact Details</strong><br>Public Contact<br>'
+            '<a href="mailto:public_email@example.com">public_email@example.com</a></div>'
+        )
         values = {
             'id': 'oj44nep1ldf8a3ll02uip0c9aa',
             'description': description,
@@ -1398,7 +1403,7 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
             'start': {'date': str(event.start_date), 'dateTime': None},
             'end': {'date': str(event.stop_date + relativedelta(days=1)), 'dateTime': None},
             'summary': 'coucou',
-            'description': '',
+            'description': event.description,
             'location': '',
             'guestsCanModify': True,
             'organizer': {'email': 'c.c@example.com', 'self': False},

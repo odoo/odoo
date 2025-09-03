@@ -169,7 +169,7 @@ class GoogleCalendarSync(models.AbstractModel):
             dict(self._odoo_values(e, default_reminders), need_sync=False)
             for e in new
         ]
-        new_odoo = self.with_context(dont_notify=True)._create_from_google(new, odoo_values)
+        new_odoo = self.with_context(dont_notify=True, skip_contact_description=True)._create_from_google(new, odoo_values)
         cancelled = existing.cancelled()
         cancelled_odoo = self.browse(cancelled.odoo_ids(self.env))
 
