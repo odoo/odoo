@@ -10,7 +10,7 @@ import odoo
 from odoo.http import content_disposition, root
 from odoo.tests import tagged
 from odoo.tests.common import HOST, BaseCase, get_db_name, new_test_user
-from odoo.tools import config, file_path, parse_version
+from odoo.tools import config, file_path, mute_logger, parse_version
 
 from .test_common import TestHttpBase
 from odoo.addons import test_http
@@ -96,7 +96,8 @@ class TestHttpMisc(TestHttpBase):
 
         for method in (self.db_url_open, self.nodb_url_open):
             with self.subTest(method=method.__name__):
-                res = method('/jsonrpc', data=payload, headers=CT_JSON)
+                with mute_logger('odoo.addons.rpc.controllers.jsonrpc'):
+                    res = method('/jsonrpc', data=payload, headers=CT_JSON)
                 res.raise_for_status()
 
                 res_rpc = res.json()

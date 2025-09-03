@@ -119,10 +119,11 @@ class TestHttpModels(TestHttpBase):
 
     def test_models6_rpc_path_poisoning(self):
         with self.assertLogs('werkzeug', logging.INFO) as capture:
-            self.xmlrpc_object.execute_kw(
-                get_db_name(), self.jackoneill.id, 'jackoneill',
-               'res.users', 'read', [self.jackoneill.id, ['login']]
-            )
+            with mute_logger('odoo.addons.rpc.controllers.xmlrpc'):
+                self.xmlrpc_object.execute_kw(
+                    get_db_name(), self.jackoneill.id, 'jackoneill',
+                   'res.users', 'read', [self.jackoneill.id, ['login']]
+                )
             res = self.url_open('/test_http/wsgi_environ')
             res.raise_for_status()
 

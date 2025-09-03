@@ -24,6 +24,10 @@ class TestTOTPMixin:
             cls.env, 'test_user', password='test_user', tz='UTC',
         )
 
+        ml = mute_logger('odoo.addons.rpc.controllers.xmlrpc')
+        ml.__enter__()  # noqa: PLC2801
+        cls.addClassCleanup(ml.__exit__)
+
     def install_totphook(self):
         baseline_time = time.time()
         last_offset = 0
