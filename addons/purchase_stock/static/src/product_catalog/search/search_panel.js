@@ -51,7 +51,7 @@ export class PurchaseSuggestCatalogSearchPanel extends ProductCatalogSearchPanel
     }
     get estimatedSuggestPrice() {
         const { currencyId, digits } = this.suggest;
-        return formatMonetary(this.suggest.estimatedPrice, { currencyId, digits });
+        return formatMonetary(this.suggest.totalEstimatedPrice, { currencyId, digits });
     }
     get timePeriodProps() {
         return {
