@@ -22,6 +22,12 @@
             <field name="active" eval="True"/>
         </record>
 
+        <!--
+            Note that the default website may change and the fields listed below
+            will not automatically move to the new default website. Add fields
+            to _get_settings_to_copy_onto_new_default_website() to copy
+            them when the default website changes.
+        -->
         <record model="website" id="base.default_website">
             <field name="salesteam_id" ref="sales_team.salesteam_website_sales"/>
             <field name="salesperson_id" ref="base.user_admin"/>
