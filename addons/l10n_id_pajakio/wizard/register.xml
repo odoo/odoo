@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="model_l10n_id_pajakio_register_user_form" model="ir.ui.view">
+        <field name="name">l10n_id_pajakio.register.user.view.form</field>
+        <field name="model">l10n_id_pajakio.register.user</field>
+        <field name="arch" type="xml">
+            <form string="Pajak.io User Registration">
+                <group>
+                    <field name="email"/>
+                    <field name="password" password="True"/>
+                    <field name="name"/>
+                    <field name="phone"/>
+                </group>
+                <footer>
+                    <button string="Register User" type="object" name="action_register" class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="model_l10n_id_pajakio_register_company_form" model="ir.ui.view">
+        <field name="name">l10n_id_pajakio.reigster.company.view.form</field>
+        <field name="model">l10n_id_pajakio.register.company</field>
+        <field name="arch" type="xml">
+            <form string="Pajak.io company registration">
+                <group>
+                    <!-- hide email and password when there is a default value filled in (i.e. from context) -->
+                    <field name="email" invisible="email"/>
+                    <field name="password" password="True" invisible="password"/>
+                    <field name="company_name"/>
+                    <field name="npwp"/>
+                    <field name="address"/>
+                    <field name="city"/>
+                </group>
+                <footer>
+                    <button string="Register Company" type="object" name="action_register" class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="model_l10n_id_pajakio_signin_form" model="ir.ui.view">
+        <field name="name">l10n_id_pajakio.signin.form.inherit</field>
+        <field name="model">l10n_id_pajakio.signin</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <field name="email"/>
+                    <field name="password" password="True"/>
+                    <field name="npwp"/>
+                </group>
+                <footer>
+                    <button string="Sign In" type="object" name="action_sign_in" class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+</odoo>
