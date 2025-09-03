@@ -1,15 +1,17 @@
 import { TranscriptSender } from "@im_livechat/core/common/transcript_sender";
+import { ConversationTagEdit } from "@im_livechat/core/web/livechat_conversation_tag_edit";
 
 import { ActionPanel } from "@mail/discuss/core/common/action_panel";
 import { prettifyMessageContent } from "@mail/utils/common/format";
 
-import { Component, useEffect, useSubEnv } from "@odoo/owl";
+import { Component, useEffect, useRef, useSubEnv } from "@odoo/owl";
 
 import { rpc } from "@web/core/network/rpc";
 import { useService } from "@web/core/utils/hooks";
 import { url } from "@web/core/utils/urls";
 import { startUrl } from "@web/core/browser/router";
 import { TagsList } from "@web/core/tags_list/tags_list";
+import { usePopover } from "@web/core/popover/popover_hook";
 
 export class LivechatChannelInfoList extends Component {
     static components = { ActionPanel, TagsList, TranscriptSender };
@@ -20,6 +22,11 @@ export class LivechatChannelInfoList extends Component {
         super.setup();
         this.store = useService("mail.store");
         this.ui = useService("ui");
+        this.tagEditPopover = usePopover(ConversationTagEdit, {
+            closeOnClickAway: true,
+            position: "left",
+        });
+        this.tagsContainer = useRef("tagsContainer");
         useSubEnv({ inLivechatInfoPanel: true });
         useEffect(
             () => {
@@ -33,6 +40,15 @@ export class LivechatChannelInfoList extends Component {
             },
             () => [this.props.thread.id, this.props.thread.hasFetchedLivechatSessionData]
         );
+    }
+
+    get conversationTags() {
+        return this.props.thread.livechat_conversation_tag_ids.map((tag) => ({
+            id: tag.id,
+            text: tag.name,
+            colorIndex: tag.color,
+            className: "me-1 mb-1",
+        }));
     }
 
     get expectAnswerSteps() {
@@ -53,6 +69,12 @@ export class LivechatChannelInfoList extends Component {
     onBlurNote() {
         prettifyMessageContent(this.props.thread.livechatNoteText).then((note) => {
             rpc("/im_livechat/session/update_note", { channel_id: this.props.thread.id, note });
+        });
+    }
+
+    onClickEditTags(ev) {
+        this.tagEditPopover.open(this.tagsContainer.el, {
+            thread: this.props.thread,
         });
     }
 

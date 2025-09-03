@@ -206,6 +206,7 @@ class TestLivechatBasicFlowHttpCase(HttpCaseWithUserDemo, TestLivechatCommon):
                         "is_editable": True,
                         "last_interest_dt": fields.Datetime.to_string(channel.last_interest_dt),
                         "livechat_channel_id": self.livechat_channel.id,
+                        "livechat_conversation_tag_ids": [],
                         "livechat_end_dt": False,
                         "livechat_note": False,
                         "livechat_status": "in_progress",

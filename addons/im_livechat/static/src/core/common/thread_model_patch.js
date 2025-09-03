@@ -9,6 +9,7 @@ patch(Thread.prototype, {
         super.setup();
         this.livechat_end_dt = fields.Datetime();
         this.livechat_operator_id = fields.One("res.partner");
+        this.livechat_conversation_tag_ids = fields.Many("im_livechat.conversation.tag");
         this.livechatVisitorMember = fields.One("discuss.channel.member", {
             compute() {
                 if (this.channel_type !== "livechat") {
