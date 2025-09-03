@@ -1441,3 +1441,39 @@ test("html composer: send a message with styling", async () => {
     await click(".o-mail-Composer-send:enabled");
     await click(".o-mail-Message[data-persistent] strong:contains(Hello)");
 });
+
+test("[text composer] send a message end with a space clears the composer", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_type: "channel",
+        name: "General",
+    });
+    await start();
+    await openDiscuss(channelId);
+    await insertText("textarea.o-mail-Composer-input", "Hello ");
+    await contains("textarea.o-mail-Composer-input", { value: "Hello ", count: 1 });
+    await press("Enter");
+    await contains("textarea.o-mail-Composer-input", { value: "Hello ", count: 0 });
+});
+
+test.tags("html composer");
+test("send a message end with a space clears the composer", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_type: "channel",
+        name: "General",
+    });
+    await start();
+    await openDiscuss(channelId);
+    const composerService = getService("mail.composer");
+    composerService.setHtmlComposer();
+    await focus(".o-mail-Composer-html.odoo-editor-editable");
+    const editor = {
+        document,
+        editable: document.querySelector(".o-mail-Composer-html.odoo-editor-editable"),
+    };
+    await htmlInsertText(editor, "Hello ");
+    await contains(editor.editable, { text: "Hello", count: 1 });
+    await press("Enter");
+    await contains(editor.editable, { text: "Hello", count: 0 });
+});
