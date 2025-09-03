@@ -507,15 +507,15 @@
 
     <!-- /shop product listing -->
     <template id="products" name="Products">
-        <t t-call="website.layout">
-            <t t-set="additional_title" t-value="category.name"/>
-            <t t-set="grid_block_name">Grid</t>
-            <t t-set="product_block_name">Product</t>
-
-            <!-- Qweb variable defining the class suffix for navbar items.
-                 Change accordingly to the derired visual result (eg. `primary`, `dark`...)-->
-            <t t-set="navClass" t-valuef="light"/>
-
+        <!-- The value navClass is the class suffix for navbar items.
+             Change accordingly to the desired visual result (eg. `primary`, `dark`...)-->
+        <t
+            t-call="website.layout"
+            additional_title="category.name"
+            grid_block_name.translate="Grid"
+            product_block_name.translate="Product"
+            navClass.f="light"
+        >
             <!-- Check for active options: the stored value may be used in sub-templates too  -->
             <t t-set="opt_wsale_fullwidth" t-value="website.shop_page_container == 'fluid'"/>
             <t t-set="opt_wsale_categories" t-value="is_view_active('website_sale.products_categories')"/>
@@ -1963,7 +1963,7 @@
 
     <template id="website_sale.product" name="Product" track="1">
         <!-- Qweb variable defining the class suffix for navbar items.
-             Change accordingly to the derired visual result (eg. `primary`, `dark`...)-->
+             Change accordingly to the desired visual result (eg. `primary`, `dark`...)-->
         <t t-set="navClass" t-valuef="light"/>
 
         <t
@@ -1972,8 +1972,7 @@
         />
         <t t-set="is_50_pc" t-value="website.product_page_image_width == '50_pc'"/>
 
-        <t t-call="website.layout">
-            <t t-set="additional_title" t-value="product.name" />
+        <t t-call="website.layout" additional_title="product.name">
             <div id="wrap" class="js_sale o_wsale_product_page">
                 <div class="oe_structure oe_empty oe_structure_not_nearest" id="oe_structure_website_sale_product_1" data-editor-message.translate="DROP BUILDING BLOCKS HERE TO MAKE THEM AVAILABLE ACROSS ALL PRODUCTS"/>
                 <section id="product_detail"
