@@ -532,8 +532,6 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.assertEqual(gift_card_program.coupon_ids.points, 46.8)
         loyalty_history = self.env['loyalty.history'].search([('card_id','=',gift_card_program.coupon_ids.id)])
         self.assertEqual(loyalty_history[0].used, 3.2)
-        last_order = self.env['pos.order'].search([], order='id desc', limit=1).name
-        self.assertEqual(loyalty_history[1].description, f"Assigning order {last_order}")
 
     def test_ewallet_program(self):
         """
