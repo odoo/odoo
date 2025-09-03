@@ -1,0 +1,50 @@
+.s_categories_inline {
+    scrollbar-color: currentColor transparent;
+    scrollbar-width: thin;
+
+    .o_placeholder_wrap {
+        max-width: map-get($grid-breakpoints, 'sm');
+    }
+
+    &[data-layout="listgroup"][data-horizontal],
+    &[data-layout="thumbnails"][data-format="column"] {
+        .dynamic_snippet_template {
+            // Force the wrapper to grow and get the right
+            // padding around when there's an horizontal scroll.
+            min-width: max-content;
+        }
+    }
+
+    &[data-layout="thumbnails"] {
+        .s_categories_inline_inner {
+            gap: inherit;
+
+            @include media-breakpoint-down(lg) {
+                --#{$prefix}columns: 4;
+            }
+
+            @include media-breakpoint-down(md) {
+                --#{$prefix}columns: 2;
+            }
+        }
+
+        .s_categories_inline_inner,
+        .s_categories_inline_item,
+        .s_categories_inline_item img {
+            border-radius: inherit;
+        }
+
+        img {
+            width: var(--o-we-sale-img-size);
+        }
+    }
+
+    &[data-layout="nav"] {
+        &.o_has_separator {
+            .nav-item:where(:not(:last-child)):after {
+                content: var(--o-we-sale-separator);
+                pointer-events: none;
+            }
+        }
+    }
+}
