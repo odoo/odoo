@@ -147,6 +147,7 @@ import threading
 import time
 import traceback
 import warnings
+import weakref
 from abc import ABC, abstractmethod
 from datetime import datetime, timedelta
 from hashlib import sha512
@@ -2344,7 +2345,13 @@ class Dispatcher(ABC):
         _dispatchers[cls.routing_type] = cls
 
     def __init__(self, request):
-        self.request = request
+        # use a weak reference to break the cycle between the dispatcher and
+        # the Request object so they can be collected by the GC
+        self._request = weakref.ref(request)
+
+    @property
+    def request(self):
+        return self._request()
 
     @classmethod
     @abstractmethod
