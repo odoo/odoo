@@ -75,7 +75,7 @@ patch(Thread.prototype, {
         if (
             this.store.env.services.ui.isSmall &&
             this.model !== "mail.box" &&
-            !this.store.shouldDisplayWelcomeViewInitially
+            !this.store.is_welcome_page_displayed
         ) {
             this.open({ focus: true });
         }

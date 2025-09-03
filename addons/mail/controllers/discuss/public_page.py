@@ -106,7 +106,7 @@ class PublicPageController(http.Controller):
             # sudo - mail.guest: writing email address of self guest is allowed
             guest.sudo().email = guest_email
         if guest and not guest_already_known:
-            store.add_global_values(shouldDisplayWelcomeViewInitially=True)
+            store.add_global_values(is_welcome_page_displayed=True)
             channel = channel.with_context(guest=guest)
         return self._response_discuss_public_template(store, channel)
 

@@ -13,7 +13,7 @@ const storeServicePatch = {
         /** @type {boolean|undefined} */
         this.isChannelTokenSecret;
         /** @type {boolean|undefined} */
-        this.shouldDisplayWelcomeViewInitially;
+        this.is_welcome_page_displayed;
     },
 };
 

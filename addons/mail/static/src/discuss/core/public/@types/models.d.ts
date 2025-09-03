@@ -4,7 +4,7 @@ declare module "models" {
         discuss_public_thread: Thread;
         inPublicPage: boolean|undefined;
         isChannelTokenSecret: boolean|undefined;
-        shouldDisplayWelcomeViewInitially: boolean|undefined;
+        is_welcome_page_displayed: boolean|undefined;
     }
     export interface Thread {
         setActiveURL: () => void;
