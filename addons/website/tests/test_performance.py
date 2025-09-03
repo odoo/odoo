@@ -191,15 +191,15 @@ class TestWebsitePerformance(TestWebsitePerformanceCommon):
                     'orm_signaling_registry': 1,
                     'ir_attachment': 1,
                     # `_get_serve_attachment` dispatcher fallback
-                    'website_page': 3,
+                    'website_page': 2,
                     # 1. `_serve_page` search page matching URL..
                     # 2. ..then reads it (`is_visible`)
                     'website': 1,
                     # menu and layout
                     'website_menu': 1,
-                    'ir_ui_view': 2,
+                    'ir_ui_view': 1,
                 }
-                expected_query_count = 9
+                expected_query_count = 7
                 self._check_url_hot_query(self.page.url, expected_query_count, select_tables_perf)
                 self.assertEqual(self._get_url_hot_query(self.page.url), expected_query_count)
                 self.menu.unlink()  # page being or not in menu shouldn't add queries
@@ -215,15 +215,15 @@ class TestWebsitePerformance(TestWebsitePerformanceCommon):
                     'orm_signaling_registry': 1,
                     'ir_attachment': 1,
                     # `_get_serve_attachment` dispatcher fallback
-                    'website_page': 3,
+                    'website_page': 2,
                     # 1. `_serve_page` search page matching URL..
                     # 2. ..then reads it (`is_visible`)
                     'website': 1,
                     # menu and layout
                     'website_menu': 1,
-                    'ir_ui_view': 2,
+                    'ir_ui_view': 1,
                 }
-                expected_query_count = 9
+                expected_query_count = 7
                 insert_tables_perf = {}
                 if not readonly_enabled:
                     insert_tables_perf = {
@@ -251,9 +251,9 @@ class TestWebsitePerformance(TestWebsitePerformanceCommon):
                     # 2. find page matching the `/` url
                     'website': 1,
                     # layout
-                    'ir_ui_view': 2,
+                    'ir_ui_view': 1,
                 }
-                expected_query_count = 7
+                expected_query_count = 6
                 insert_tables_perf = {}
                 if not readonly_enabled:
                     insert_tables_perf = {
@@ -271,7 +271,7 @@ class TestWebsitePerformance(TestWebsitePerformanceCommon):
             'orm_signaling_registry': 1,
             'ir_attachment': 1,
             # `_get_serve_attachment` dispatcher fallback
-            'website_page': 2,
+            'website_page': 1,
             # 1. `_serve_page` search page matching URL..
             # 2. ..then reads it (`is_visible`)
             'website': 1,
@@ -279,8 +279,8 @@ class TestWebsitePerformance(TestWebsitePerformanceCommon):
             'ir_ui_view': 1,
             # Check if `view.track` to track visitor or not
         }
-        self._check_url_hot_query(self.page.url, 6, select_tables_perf)
-        self.assertEqual(self._get_url_hot_query(self.page.url), 6)
+        self._check_url_hot_query(self.page.url, 5, select_tables_perf)
+        self.assertEqual(self._get_url_hot_query(self.page.url), 5)
 
     def test_40_perf_sql_queries_page_multi_level_menu(self):
         # menu structure should not impact SQL requests
@@ -296,15 +296,15 @@ class TestWebsitePerformance(TestWebsitePerformanceCommon):
             'orm_signaling_registry': 1,
             'ir_attachment': 1,
             # `_get_serve_attachment` dispatcher fallback
-            'website_page': 3,
+            'website_page': 2,
             # 1. `_serve_page` search page matching URL..
             # 2. ..then reads it (`is_visible`)
             'website': 1,
             'website_menu': 1,
-            'ir_ui_view': 2,
+            'ir_ui_view': 1,
         }
-        self._check_url_hot_query(self.page.url, 9, select_tables_perf)
-        self.assertEqual(self._get_url_hot_query(self.page.url), 9)
+        self._check_url_hot_query(self.page.url, 7, select_tables_perf)
+        self.assertEqual(self._get_url_hot_query(self.page.url), 7)
 
 @tagged('-at_install', 'post_install')
 class TestWebsitePerformancePost(UtilPerf):
