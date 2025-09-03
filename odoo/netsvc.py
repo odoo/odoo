@@ -9,7 +9,6 @@ import platform
 import pprint
 import sys
 import threading
-import time
 import traceback
 import warnings
 
@@ -71,7 +70,7 @@ class PostgreSQLHandler(logging.Handler):
                 msg = msg % record.args
             traceback = getattr(record, 'exc_text', '')
             if traceback:
-                msg = "%s\n%s" % (msg, traceback)
+                msg = f"{msg}\n{traceback}"
             # we do not use record.levelname because it may have been changed by ColoredFormatter.
             levelname = logging.getLevelName(record.levelno)
 
@@ -81,20 +80,17 @@ class PostgreSQLHandler(logging.Handler):
                 from . import modules
                 metadata = {}
                 if modules.module.current_test:
-                    try:
+                    with contextlib.suppress(Exception):
                         metadata['test'] = modules.module.current_test.get_log_metadata()
-                    except:
-                        pass
 
                 if metadata:
-                    val = (*val, json.dumps(metadata))
-                    cr.execute(f"""
+                    cr.execute("""
                         INSERT INTO ir_logging(create_date, type, dbname, name, level, message, path, line, func, metadata)
                         VALUES (NOW() at time zone 'UTC', %s, %s, %s, %s, %s, %s, %s, %s, %s)
-                    """, val)
+                    """, (*val, json.dumps(metadata)))
                     return
 
-            cr.execute(f"""
+            cr.execute("""
                 INSERT INTO ir_logging(create_date, type, dbname, name, level, message, path, line, func)
                 VALUES (NOW() at time zone 'UTC', %s, %s, %s, %s, %s, %s, %s, %s)
             """, val)
@@ -105,7 +101,7 @@ BLACK, RED, GREEN, YELLOW, BLUE, MAGENTA, CYAN, WHITE, _NOTHING, DEFAULT = range
 RESET_SEQ = "\033[0m"
 COLOR_SEQ = "\033[1;%dm"
 BOLD_SEQ = "\033[1m"
-COLOR_PATTERN = "%s%s%%s%s" % (COLOR_SEQ, COLOR_SEQ, RESET_SEQ)
+COLOR_PATTERN = f"{COLOR_SEQ}{COLOR_SEQ}%s{RESET_SEQ}"
 LEVEL_COLOR_MAPPING = {
     logging.DEBUG: (BLUE, DEFAULT),
     logging.INFO: (GREEN, DEFAULT),
@@ -117,7 +113,7 @@ LEVEL_COLOR_MAPPING = {
 class PerfFilter(logging.Filter):
 
     def format_perf(self, query_count, query_time, remaining_time):
-        return ("%d" % query_count, "%.3f" % query_time, "%.3f" % remaining_time)
+        return (f"{query_count:d}", f"{query_time:.3f}", f"{remaining_time:.3f}")
 
     def format_cursor_mode(self, cursor_mode):
         return cursor_mode or '-'
@@ -162,23 +158,20 @@ class ColoredPerfFilter(PerfFilter):
         )
         return COLOR_PATTERN % (30 + cursor_mode_color, 40 + DEFAULT, cursor_mode)
 
-class DBFormatter(logging.Formatter):
-    def format(self, record):
-        record.pid = os.getpid()
-        record.dbname = getattr(threading.current_thread(), 'dbname', '?')
-        return logging.Formatter.format(self, record)
 
-class ColoredFormatter(DBFormatter):
+class ColoredFormatter(logging.Formatter):
     def format(self, record):
         fg_color, bg_color = LEVEL_COLOR_MAPPING.get(record.levelno, (GREEN, DEFAULT))
         record.levelname = COLOR_PATTERN % (30 + fg_color, 40 + bg_color, record.levelname)
-        return DBFormatter.format(self, record)
+        return super().format(record)
 
 
 class LogRecord(logging.LogRecord):
-    def __init__(self, name, level, pathname, lineno, msg, args, exc_info, func=None, sinfo=None):
-        super().__init__(name, level, pathname, lineno, msg, args, exc_info, func, sinfo)
+    def __init__(self, name, level, pathname, lineno, msg, args, exc_info, func=None, sinfo=None, **kwargs):
+        super().__init__(name, level, pathname, lineno, msg, args, exc_info, func=func, sinfo=sinfo, **kwargs)
         self.perf_info = ""
+        self.pid = os.getpid()
+        self.dbname = getattr(threading.current_thread(), 'dbname', '?')
 
 
 showwarning = None
@@ -243,13 +236,12 @@ def init_logger():
     if tools.config['syslog']:
         # SysLog Handler
         if os.name == 'nt':
-            handler = logging.handlers.NTEventLogHandler("%s %s" % (release.description, release.version))
+            handler = logging.handlers.NTEventLogHandler(f"{release.description} {release.version}")
         elif platform.system() == 'Darwin':
             handler = logging.handlers.SysLogHandler('/var/run/log')
         else:
             handler = logging.handlers.SysLogHandler('/dev/log')
-        format = '%s %s' % (release.description, release.version) \
-                + ':%(dbname)s:%(levelname)s:%(name)s:%(message)s'
+        format = f'{release.description} {release.version}:%(dbname)s:%(levelname)s:%(name)s:%(message)s'
 
     elif tools.config['logfile']:
         # LogFile Handler
@@ -277,7 +269,7 @@ def init_logger():
         formatter = ColoredFormatter(format)
         perf_filter = ColoredPerfFilter()
     else:
-        formatter = DBFormatter(format)
+        formatter = logging.Formatter(format)
         perf_filter = PerfFilter()
         werkzeug.serving._log_add_style = False
     handler.setFormatter(formatter)
