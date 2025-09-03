@@ -2,10 +2,10 @@
 <templates xml:space="preserve">
     <t t-inherit="mail.DiscussClientAction" t-inherit-mode="extension">
         <xpath expr="//Discuss" position="attributes">
-            <attribute name="t-if">!publicState.welcome and store.discuss.hasRestoredThread </attribute>
+            <attribute name="t-if">!store.is_welcome_page_displayed and store.discuss.hasRestoredThread </attribute>
         </xpath>
         <xpath expr="//Discuss" position="after">
-            <WelcomePage t-if="publicState.welcome" proceed.bind="closeWelcomePage"/>
+            <WelcomePage t-if="store.is_welcome_page_displayed" proceed.bind="closeWelcomePage"/>
         </xpath>
     </t>
 </templates>
