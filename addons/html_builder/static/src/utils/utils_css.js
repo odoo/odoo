@@ -116,7 +116,11 @@ export function areCssValuesEqual(value1, value2, cssProp, htmlStyle) {
     }
 
     // In case the values are a size, they might be made of two parts.
-    if (cssProp && cssProp.endsWith("-size")) {
+    // TODO this seems completely arbitrary to rely on the presence of '-size'
+    // to do this: should not we just list the right CSS property explicitly
+    // if we want to do this? That would have avoided the CSS variable fix that
+    // had to be made here (the '--' part).
+    if (cssProp && cssProp.endsWith('-size') && !cssProp.startsWith('--')) {
         // Avoid re-splitting each part during their individual comparison.
         const pseudoPartProp = cssProp + "-part";
         const re = /-?[0-9.]+(?:e[+|-]?[0-9]+)?\s*[A-Za-z%-]+|auto/g;
