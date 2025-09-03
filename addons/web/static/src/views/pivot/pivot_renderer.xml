@@ -46,7 +46,12 @@
                                             <t t-set="formattedValue" t-value="getFormattedValue(cell)"/>
                                             <span t-att-data-tooltip="formattedValue.help">
                                                 <t t-esc="formattedValue.value"/>
-                                                <sup t-if="formattedValue.warning" class="ms-1 fw-bolder text-info">?</sup>
+                                                <sup
+                                                    t-if="formattedValue.currencies"
+                                                    class="p-1 fw-bolder text-info"
+                                                    t-on-mouseover.stop="(ev) => this.openMultiCurrencyPopover(ev, formattedValue.rawValue, formattedValue.currencies)"
+                                                    t-on-touchstart.stop="(ev) => this.openMultiCurrencyPopover(ev, formattedValue.rawValue, formattedValue.currencies)"
+                                                >?</sup>
                                             </span>
                                         </div>
                                     </t>

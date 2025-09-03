@@ -55,6 +55,7 @@ import {
     getKanbanProgressBars,
     getKanbanRecord,
     getKanbanRecordTexts,
+    getMockEnv,
     getPagerLimit,
     getPagerValue,
     getService,
@@ -112,6 +113,14 @@ async function createFileInput({ mockPost, mockAdd, props }) {
         post: mockPost || (() => {}),
     });
     await mountWithCleanup(FileInput, { props });
+}
+
+async function toggleMultiCurrencyPopover(el) {
+    if (getMockEnv().isSmall) {
+        await contains(el).click();
+    } else {
+        await contains(el).hover();
+    }
 }
 
 class Partner extends models.Model {
@@ -225,10 +234,11 @@ class Currency extends models.Model {
             ["before", "B"],
         ],
     });
+    inverse_rate = fields.Float();
 
     _records = [
-        { id: 1, name: "USD", symbol: "$", position: "before" },
-        { id: 2, name: "EUR", symbol: "€", position: "after" },
+        { id: 1, name: "USD", symbol: "$", position: "before", inverse_rate: 1 },
+        { id: 2, name: "EUR", symbol: "€", position: "after", inverse_rate: 0.5 },
     ];
 }
 
@@ -9406,16 +9416,22 @@ test("progress bar recompute after filter selection (aggregates)", async () => {
     expect.verifySteps(["read_progress_bar", "web_read_group"]);
 });
 
-test("progress bar with false aggregate value", async () => {
+test("progress bar with monetary aggregate and multi currencies", async () => {
+    const aed = { id: 3, name: "AED", symbol: "AED", position: "after", inverse_rate: 0.25 };
+    serverState.currencies = serverState.currencies.concat([aed]);
+    Currency._records.push(aed);
+    Partner._records.push({ id: 99, foo: "bar", salary: 300, currency_id: 3, product_id: 3 });
     await mountView({
         type: "kanban",
         resModel: "partner",
         arch: `
             <kanban>
                 <progressbar field="foo" colors='{"yop": "success", "gnap": "warning", "blip": "danger"}' sum_field="salary"/>
+                <field name="currency_id"/>
                 <templates>
                     <t t-name="card">
                         <field name="foo"/>
+                        <field name="salary"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -9423,13 +9439,12 @@ test("progress bar with false aggregate value", async () => {
     });
 
     expect(".o_kanban_counter .o_animated_number").toHaveCount(2);
-
     expect(".o_kanban_counter:last .o_animated_number").toHaveText("$ 3,722");
-    expect(".o_kanban_counter:first .o_animated_number").toHaveText("3,750?");
-    expect(".o_kanban_counter:first .o_animated_number").toHaveAttribute(
-        "title",
-        "Salary: different currencies cannot be aggregated"
-    );
+    expect(".o_kanban_counter:first .o_animated_number").toHaveText("$ 4,050?");
+
+    await toggleMultiCurrencyPopover(".o_kanban_counter:first .o_animated_number sup");
+    expect(".o_multi_currency_popover").toHaveCount(1);
+    expect(".o_multi_currency_popover").toHaveText("8,100.00 € at $ 0.50\n16,200.00 AED at $ 0.25");
 });
 
 test("progress bar with aggregates: activate bars (grouped by boolean)", async () => {

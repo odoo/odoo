@@ -72,6 +72,7 @@ export class ListController extends Component {
     setup() {
         this.actionService = useService("action");
         this.dialogService = useService("dialog");
+        this.orm = useService("orm");
         this.rootRef = useRef("root");
 
         this.archInfo = this.props.archInfo;
@@ -103,7 +104,6 @@ export class ListController extends Component {
         onWillStart(async () => {
             this.isExportEnable = await user.hasGroup("base.group_allow_export");
         });
-
         let { rendererScrollPositions } = this.props.state || {};
         useEffect(() => {
             if (rendererScrollPositions) {

@@ -44,15 +44,17 @@ class Currency extends models.Model {
             ["before", "B"],
         ],
     });
+    inverse_rate = fields.Float();
 
     _records = [
-        { id: 1, name: "USD", symbol: "$", position: "before" },
-        { id: 2, name: "EUR", symbol: "€", position: "after" },
+        { id: 1, name: "USD", symbol: "$", position: "before", inverse_rate: 1 },
+        { id: 2, name: "EUR", symbol: "€", position: "after", inverse_rate: 0.5 },
         {
             id: 3,
             name: "VEF",
             symbol: "Bs.F",
             position: "after",
+            inverse_rate: 0.3,
         },
     ];
 }

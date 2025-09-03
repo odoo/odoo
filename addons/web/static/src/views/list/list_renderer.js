@@ -30,16 +30,21 @@ import {
     onWillDestroy,
     onWillPatch,
     onWillRender,
+    onWillStart,
     status,
     useExternalListener,
     useRef,
     useState,
 } from "@odoo/owl";
+import { getCurrencyRates } from "@web/core/currency";
 import { _t } from "@web/core/l10n/translation";
+import { usePopover } from "@web/core/popover/popover_hook";
+import { user } from "@web/core/user";
 import { exprToBoolean } from "@web/core/utils/strings";
 import { MOVABLE_RECORD_TYPES } from "@web/model/relational_model/dynamic_group_list";
 import { ActionHelper } from "@web/views/action_helper";
 import { GroupConfigMenu } from "@web/views/view_components/group_config_menu";
+import { MultiCurrencyPopover } from "@web/views/view_components/multi_currency_popover";
 
 /**
  * @typedef {import('@web/model/relational_model/dynamic_list').DynamicList} DynamicList
@@ -133,6 +138,7 @@ export class ListRenderer extends Component {
     setup() {
         this.uiService = useService("ui");
         this.notificationService = useService("notification");
+        this.orm = useService("orm");
         const key = this.createViewKey();
         this.keyOptionalFields = `optional_fields,${key}`;
         this.keyDebugOpenView = `debug_open_view,${key}`;
@@ -186,7 +192,15 @@ export class ListRenderer extends Component {
             this.columns = this.getActiveColumns();
             this.withHandleColumn = this.columns.some((col) => col.widget === "handle");
         });
-        this.state = useState({ groupInput: false });
+        this.multiCurrencyPopover = usePopover(MultiCurrencyPopover, {
+            position: "right",
+        });
+        this.state = useState({ groupInput: false, currencyRates: null });
+        onWillStart(async () => {
+            if (!this.isX2Many && this.hasMonetary) {
+                this.state.currencyRates = await getCurrencyRates();
+            }
+        });
         this.groupInputRef = useRef("groupInput");
         useAutofocus({ refName: "groupInput" });
         let dataRowId;
@@ -325,6 +339,18 @@ export class ListRenderer extends Component {
             this.activeActions.onDelete ||
             this.hasOptionalOpenFormViewColumn
         );
+    }
+
+    get hasMonetary() {
+        return this.props.archInfo.columns.some((column) => {
+            if (column.type !== "field") {
+                return false;
+            }
+            const field = this.props.list.fields[column.name];
+            return (
+                (field.type === "monetary" && field.currency_field) || column.widget === "monetary"
+            );
+        });
     }
 
     add(params) {
@@ -681,11 +707,9 @@ export class ListRenderer extends Component {
                 (attrs.max && "max") ||
                 (attrs.min && "min");
             let currencyId;
+            let multiCurrency = false;
             if (type === "monetary" || widget === "monetary") {
-                const currencyField =
-                    column.options.currency_field ||
-                    this.fields[fieldName].currency_field ||
-                    "currency_id";
+                const currencyField = this.getCurrencyField(column);
                 if (currencyField in this.props.list.activeFields) {
                     if (this.props.list.isGrouped && !this.props.list.selection.length) {
                         currencyId = values.find((v) => v[currencyField]?.length)?.[
@@ -695,22 +719,26 @@ export class ListRenderer extends Component {
                         currencyId = values[0][currencyField] && values[0][currencyField].id;
                     }
                     if (currencyId && func) {
-                        let sameCurrency;
-                        if (this.props.list.isGrouped && !this.props.list.selection.length) {
-                            sameCurrency = values.every(
-                                (value) =>
-                                    !value[currencyField] ||
-                                    value[currencyField].length === 0 ||
-                                    (value[currencyField].length === 1 &&
-                                        currencyId === value[currencyField][0])
-                            );
-                        } else {
-                            sameCurrency = values.every(
-                                (value) => currencyId === value[currencyField]?.id
-                            );
-                        }
-                        if (!sameCurrency) {
-                            currencyId = false;
+                        const currencies = this.getFieldCurrencies(fieldName);
+                        // in case of multiple currencies, convert values into default currency using conversion rates
+                        if (currencies.size > 1) {
+                            multiCurrency = true;
+                            currencyId = user.activeCompany.currency_id;
+                            for (const i in values) {
+                                let currency = values[i][currencyField].id;
+                                if (
+                                    this.props.list.isGrouped &&
+                                    !this.props.list.selection.length
+                                ) {
+                                    currency =
+                                        values[i][currencyField].length > 1
+                                            ? currencyId
+                                            : values[i][currencyField][0];
+                                }
+                                if (currency !== currencyId) {
+                                    fieldValues[i] *= this.state.currencyRates[currency];
+                                }
+                            }
                         }
                     }
                 }
@@ -725,25 +753,45 @@ export class ListRenderer extends Component {
                 if (currencyId) {
                     formatOptions.currencyId = currencyId;
                 }
-                if (currencyId === false) {
-                    aggregates[fieldName] = {
-                        help: _t("Different currencies cannot be aggregated"),
-                        value: formatter
-                            ? formatter(aggregatedValue, formatOptions)
-                            : aggregatedValue,
-                        warning: true,
-                    };
-                } else {
-                    aggregates[fieldName] = {
-                        help: attrs[func],
-                        value: formatter
-                            ? formatter(aggregatedValue, formatOptions)
-                            : aggregatedValue,
-                    };
-                }
+                aggregates[fieldName] = {
+                    help: multiCurrency ? "" : attrs[func],
+                    value: formatter ? formatter(aggregatedValue, formatOptions) : aggregatedValue,
+                    multiCurrency,
+                    rawValue: aggregatedValue,
+                };
             }
         }
         return aggregates;
+    }
+
+    getFieldCurrencies(fieldName) {
+        const column = this.columns.find((c) => c.name === fieldName);
+        const currencyField = this.getCurrencyField(column);
+        let values;
+        if (this.props.list.selection.length) {
+            values = this.props.list.selection.map((r) => r.data);
+        } else if (this.props.list.isGrouped) {
+            values = this.props.list.groups.map((g) => g.aggregates);
+        } else {
+            values = this.props.list.records.map((r) => r.data);
+        }
+        if (this.props.list.isGrouped && !this.props.list.selection.length) {
+            return values.reduce((set, value) => {
+                value[currencyField].forEach((c) => {
+                    set.add(c);
+                });
+                return set;
+            }, new Set());
+        }
+        return values.reduce((set, value) => set.add(value[currencyField]?.id), new Set());
+    }
+
+    getCurrencyField(column) {
+        return (
+            column.options.currency_field ||
+            this.fields[column.name].currency_field ||
+            "currency_id"
+        );
     }
 
     getGroupConfigMenuProps(group) {
@@ -778,10 +826,11 @@ export class ListRenderer extends Component {
         if (field.type === "monetary") {
             const currencies = group.aggregates[field.currency_field];
             if (currencies.length > 1 && aggregateValue !== false) {
+                formatOptions.currencyId = user.activeCompany.currency_id;
                 return {
-                    help: _t("Different currencies cannot be aggregated"),
                     value: formatter ? formatter(aggregateValue, formatOptions) : aggregateValue,
-                    warning: true,
+                    multiCurrency: true,
+                    rawValue: aggregateValue,
                 };
             }
             formatOptions.currencyId = currencies[0];
@@ -1233,6 +1282,16 @@ export class ListRenderer extends Component {
             await this.onDeleteRecord(record, ev);
         } finally {
             delete element.dataset.clicked;
+        }
+    }
+
+    openMultiCurrencyPopover(ev, value, fieldName) {
+        if (!this.multiCurrencyPopover.isOpen) {
+            this.multiCurrencyPopover.open(ev.target, {
+                currencyIds: Array.from(this.getFieldCurrencies(fieldName)),
+                target: ev.target,
+                value,
+            });
         }
     }
 
@@ -1939,7 +1998,9 @@ export class ListRenderer extends Component {
             return false;
         }
         const focusableEls = getTabableElements(cell).filter(
-            (el) => el === document.activeElement || ["INPUT", "BUTTON", "TEXTAREA"].includes(el.tagName)
+            (el) =>
+                el === document.activeElement ||
+                ["INPUT", "BUTTON", "TEXTAREA"].includes(el.tagName)
         );
         const index = focusableEls.indexOf(document.activeElement);
         return (

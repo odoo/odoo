@@ -119,7 +119,12 @@
                         <td t-foreach="getAggregateColumns()" t-as="column" t-key="column.id" t-att-class="{'o_list_number': column.type === 'field'}">
                             <span t-if="column.type === 'field' and aggregates[column.name]" t-att-data-tooltip="aggregates[column.name].help">
                                 <t t-esc="aggregates[column.name].value"/>
-                                <sup t-if="aggregates[column.name].warning" class="ms-1 fw-bolder text-info">?</sup>
+                                <sup
+                                    t-if="aggregates[column.name].multiCurrency"
+                                    class="p-1 fw-bolder text-info"
+                                    t-on-mouseover.stop="(ev) => this.openMultiCurrencyPopover(ev, aggregates[column.name].rawValue, column.name)"
+                                    t-on-touchstart.stop="(ev) => this.openMultiCurrencyPopover(ev, aggregates[column.name].rawValue, column.name)"
+                                >?</sup>
                             </span>
                         </td>
                         <td t-if="hasOpenFormViewColumn" class="w-print-0 p-print-0"/>
@@ -243,9 +248,14 @@
             <td t-on-keydown="(ev) => this.onCellKeydown(ev, group)" t-foreach="getAggregateColumns(group)" t-as="column" t-key="column.id" t-att-class="{'o_list_number': column.type === 'field'}">
                 <t t-if="column.type === 'field'">
                     <t t-set="groupAggregate" t-value="formatGroupAggregate(group, column)"/>
-                    <span t-att-data-tooltip="groupAggregate.help || ''">
+                    <span class="fw-bold" t-att-data-tooltip="groupAggregate.help">
                         <t t-esc="groupAggregate.value"/>
-                        <sup t-if="groupAggregate.warning" class="ms-1 fw-bolder text-info">?</sup>
+                        <sup
+                            t-if="groupAggregate.multiCurrency"
+                            class="p-1 fw-bolder text-info"
+                            t-on-mouseover.stop="(ev) => this.openMultiCurrencyPopover(ev, groupAggregate.rawValue, column.name)"
+                            t-on-touchstart.stop="(ev) => this.openMultiCurrencyPopover(ev, groupAggregate.rawValue, column.name)"
+                        >?</sup>
                     </span>
                 </t>
             </td>

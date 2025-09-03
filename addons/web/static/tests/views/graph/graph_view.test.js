@@ -16,6 +16,7 @@ import {
     onRpc,
     patchWithCleanup,
     saveFavorite,
+    serverState,
     switchView,
     toggleMenu,
     toggleMenuItem,
@@ -2999,7 +3000,10 @@ test("graph views make their control panel available directly", async () => {
 });
 
 test.tags("desktop");
-test("monetary chart rendering", async () => {
+test("monetary chart rendering with multiple currencies", async () => {
+    // simulate that the company currency is EUR
+    serverState.companies[0].currency_id = 2;
+
     onRpc("/web/domain/validate", () => true);
     Foo._fields.amount = fields.Monetary({ currency_field: "currency_id" });
     Foo._fields.currency_id = fields.Many2one({ relation: "res.currency", default: 1 });
@@ -3031,31 +3035,7 @@ test("monetary chart rendering", async () => {
         label: "Amount",
     });
     checkLegend(view, "Amount");
-    checkTooltip(view, { title: "Amount", lines: [{ label: "false", value: "1,200.00?" }] }, 0);
-    checkTooltip(view, { title: "Amount", lines: [{ label: "true", value: "$ 1,000.00" }] }, 1);
-    expect(".o_graph_alert").toHaveCount(1);
-    expect(".o_graph_alert").toHaveText(
-        "The graph is mixing several currencies. Select one of them to perform an accurate analysis: EUR - USD"
-    );
-    await contains(".o_graph_alert a:first").click();
-    checkDatasets(view, ["backgroundColor", "borderColor", "data", "label"], {
-        backgroundColor: "#4EA7F2",
-        borderColor: undefined,
-        data: [1100],
-        label: "Amount",
-    });
-    checkTooltip(view, { title: "Amount", lines: [{ label: "false", value: "1,100.00 €" }] }, 0);
-    expect(".o_graph_alert").toHaveCount(0);
-    await contains(".o_searchview .o_facet_remove").click();
-    expect(".o_graph_alert").toHaveCount(1);
-    await contains(".o_graph_alert a:eq(1)").click();
-    checkDatasets(view, ["backgroundColor", "borderColor", "data", "label"], {
-        backgroundColor: "#4EA7F2",
-        borderColor: undefined,
-        data: [100, 1000],
-        label: "Amount",
-    });
-    checkTooltip(view, { title: "Amount", lines: [{ label: "false", value: "$ 100.00" }] }, 0);
-    checkTooltip(view, { title: "Amount", lines: [{ label: "true", value: "$ 1,000.00" }] }, 1);
-    expect(".o_graph_alert").toHaveCount(0);
+    // should display the sum in the company currency, i.e. EUR
+    checkTooltip(view, { title: "Amount", lines: [{ label: "false", value: "1,200.00 €" }] }, 0);
+    checkTooltip(view, { title: "Amount", lines: [{ label: "true", value: "1,000.00 €" }] }, 1);
 });

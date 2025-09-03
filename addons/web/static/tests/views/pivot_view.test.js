@@ -10,6 +10,7 @@ import {
     findComponent,
     getDropdownMenu,
     getFacetTexts,
+    getMockEnv,
     getService,
     MockServer,
     mockService,
@@ -35,6 +36,14 @@ function getCurrentValues() {
 
 async function removeFacet() {
     await contains("div.o_searchview_facet:eq(0) .o_facet_remove").click();
+}
+
+async function toggleMultiCurrencyPopover(el) {
+    if (getMockEnv().isSmall) {
+        await contains(el).click();
+    } else {
+        await contains(el).hover();
+    }
 }
 
 class Partner extends models.Model {
@@ -173,10 +182,11 @@ class Currency extends models.Model {
             ["before", "B"],
         ],
     });
+    inverse_rate = fields.Float();
 
     _records = [
-        { id: 1, name: "USD", symbol: "$", position: "before" },
-        { id: 2, name: "EUR", symbol: "€", position: "after" },
+        { id: 1, name: "USD", symbol: "$", position: "before", inverse_rate: 1 },
+        { id: 2, name: "EUR", symbol: "€", position: "after", inverse_rate: 0.5 },
     ];
 }
 
@@ -3949,7 +3959,7 @@ test("pivot views make their control panel available directly", async () => {
     expect(".o_pivot_view .o_pivot").toHaveCount(1);
 });
 
-test("pivot view with monetary", async () => {
+test("pivot view with monetary with multiple currencies", async () => {
     Partner._fields.amount = fields.Monetary({ currency_field: "currency_id" });
     Partner._fields.currency_id = fields.Many2one({ relation: "res.currency", default: 1 });
     Partner._records[0].amount = 500;
@@ -3967,13 +3977,15 @@ test("pivot view with monetary", async () => {
         groupBy: ["currency_id"],
     });
     expect(".o_pivot table tbody tr").toHaveCount(3);
-    expect(".o_pivot table tbody tr:first").toHaveText("Total \n1,400.00?");
-    expect(".o_pivot table tbody tr:first .o_value span").toHaveAttribute(
-        "data-tooltip",
-        "Different currencies cannot be aggregated"
-    );
+    expect(".o_pivot table tbody tr:first").toHaveText("Total \n$ 1,400.00?");
     expect(".o_pivot table tbody tr:eq(1)").toHaveText("USD \n$ 1,000.00");
     expect(".o_pivot table tbody tr:last").toHaveText("EUR \n400.00 €");
+
+    // multi currencies popover
+    await toggleMultiCurrencyPopover(".o_pivot table tbody tr:first .o_value sup");
+    expect(".o_multi_currency_popover").toHaveCount(1);
+    expect(".o_multi_currency_popover").toHaveText("2,800.00 € at $ 0.50");
+
     // test sorting
     await contains("th.o_pivot_measure_row").click();
     expect(".o_pivot table tbody tr:eq(1)").toHaveText("EUR \n400.00 €");

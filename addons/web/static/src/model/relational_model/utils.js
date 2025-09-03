@@ -545,7 +545,11 @@ export function getAggregateSpecifications(fields) {
     const currencyFields = unique(
         Object.values(fields)
             .filter((field) => field.aggregator && field.currency_field)
-            .map((field) => `${field.currency_field}:array_agg_distinct`)
+            .map((field) => [
+                `${field.currency_field}:array_agg_distinct`,
+                `${field.name}:sum_currency`,
+            ])
+            .flat()
     );
     return aggregatableFields.concat(currencyFields);
 }
@@ -588,7 +592,14 @@ function getAggregatesFromGroupData(groupData, fields) {
     const aggregates = {};
     for (const keyAggregate of getAggregateSpecifications(fields)) {
         if (keyAggregate in groupData) {
-            const fieldName = keyAggregate.split(":")[0];
+            const [fieldName, aggregate] = keyAggregate.split(":");
+            if (aggregate === "sum_currency") {
+                const currencies =
+                    groupData[fields[fieldName].currency_field + ":array_agg_distinct"];
+                if (currencies.length === 1) {
+                    continue;
+                }
+            }
             aggregates[fieldName] = groupData[keyAggregate];
         }
     }

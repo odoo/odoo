@@ -561,8 +561,6 @@ function isValidFieldValue(record, fieldDef) {
         case "integer": {
             return Number.isInteger(value);
         }
-        case "json":
-            return typeof value === "string" || Array.isArray(value) || isObject(value);
         case "many2many":
         case "one2many": {
             return (
@@ -1340,6 +1338,14 @@ function sum(records, fieldName) {
     return records.reduce((acc, record) => acc + record[fieldName], 0);
 }
 
+/** @type {AggregatorFunction} */
+function sum_currency(records, fieldName) {
+    if (!records.length) {
+        return false;
+    }
+    return records.reduce((acc, record) => acc + record[fieldName], 0);
+}
+
 //-----------------------------------------------------------------------------
 // Local constants
 //-----------------------------------------------------------------------------
@@ -1355,6 +1361,7 @@ const AGGREGATOR_FUNCTIONS = {
     max,
     min,
     sum,
+    sum_currency,
 };
 /** @type {Record<string, (date: luxon["DateTime"]["prototype"]) => string | number>} */
 const DATE_FORMAT = {
