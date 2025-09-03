@@ -659,3 +659,34 @@ Content-Type: text/html;
         self.assertIn("This is the main email content that should be kept", outlook_task.description)
         self.assertNotIn("John Smith", outlook_task.description, "The Outlook signature should have been removed.")
         self.assertNotIn("Software Developer", outlook_task.description, "The Outlook signature should have been removed.")
+
+    @mute_logger('odoo.addons.mail.models.mail_thread')
+    def test_task_creation_from_mail(self):
+        """ This test checks a `default_` key passed in the context with an invalid field doesn't prevent the task
+            creation.
+
+            This is related to the `_ensure_fields_write` method checking field write access rights
+            for collaborator portals
+        """
+        server = self.env['fetchmail.server'].create({
+            'name': 'Test server',
+            'user': 'test@example.com',
+            'password': '',
+        })
+        task_id = self.env["mail.thread"].with_context(
+            default_fetchmail_server_id=server.id
+        ).message_process(
+            server.object_id.model,
+            self.format(
+                MAIL_TEMPLATE,
+                email_from="chell@gladys.portal",
+                to=f"project+pigs@{self.alias_domain}",
+                subject="In a cage",
+                msg_id="<on.antibiotics@example.com>",
+            ),
+            save_original=server.original,
+            strip_attachments=not server.attach,
+        )
+        task = self.env['project.task'].browse(task_id)
+        self.assertEqual(task.name, "In a cage")
+        self.assertEqual(task.project_id, self.project_pigs)
