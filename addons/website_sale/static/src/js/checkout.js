@@ -49,7 +49,7 @@ publicWidget.registry.WebsiteSaleCheckout = publicWidget.Widget.extend({
         // Highlight the newly selected address card.
         this._highlightAddressCard(newAddress);
         const selectedPartnerId = newAddress.dataset.partnerId;
-        await this.updateAddress(addressType, selectedPartnerId);
+
         // A delivery address is changed.
         if (addressType === 'delivery' || this.billingContainer.dataset.deliveryAddressDisabled) {
             if (this.billingContainer.dataset.deliveryAddressDisabled) {
@@ -65,6 +65,8 @@ publicWidget.registry.WebsiteSaleCheckout = publicWidget.Widget.extend({
                 '/shop/delivery_methods'
             );
             await this._prepareDeliveryMethods();
+        } else {
+            await this.updateAddress(addressType, selectedPartnerId);
         }
         this._enableMainButton();  // Try to enable the main button.
     },
