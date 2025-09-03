@@ -1150,6 +1150,9 @@ class AccountMove(models.Model):
 
             # For unsupported document types, just assume in_invoice, and log that the type is unsupported
             document_type = get_text(tree, '//DatiGeneraliDocumento/TipoDocumento')
+            if l10n_it_document_type := self.env['l10n_it.document.type'].search([('code', '=', document_type)]):
+                self.l10n_it_document_type = l10n_it_document_type
+
             move_type = self._l10n_it_edi_document_type_mapping().get(document_type, {}).get('import_type')
             if not move_type:
                 move_type = "in_invoice"
