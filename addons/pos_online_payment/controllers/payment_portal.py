@@ -15,7 +15,7 @@ class PaymentPortal(payment_portal.PaymentPortal):
         try:
             order_sudo = self._document_check_access(
                 'pos.order', pos_order_id, access_token)
-        except:
+        except Exception:  # noqa: BLE001
             raise AccessError(
                 _("The provided order or access token is invalid."))
 

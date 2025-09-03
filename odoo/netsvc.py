@@ -83,7 +83,7 @@ class PostgreSQLHandler(logging.Handler):
                 if modules.module.current_test:
                     try:
                         metadata['test'] = modules.module.current_test.get_log_metadata()
-                    except:
+                    except Exception:  # noqa: BLE001
                         pass
 
                 if metadata:

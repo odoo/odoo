@@ -1445,7 +1445,7 @@ def parse_date(env: Environment, value: str, lang_code: str | None = None) -> da
     locale = babel_locale_parse(lang.code)
     try:
         return babel.dates.parse_date(value, locale=locale)
-    except:
+    except Exception:  # noqa: BLE001
         return value
 
 

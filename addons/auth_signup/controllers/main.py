@@ -145,7 +145,7 @@ class AuthSignupHome(Home):
                 token_infos = request.env['res.partner'].sudo()._signup_retrieve_info(qcontext.get('token'))
                 for k, v in token_infos.items():
                     qcontext.setdefault(k, v)
-            except:
+            except Exception:  # noqa: BLE001
                 qcontext['error'] = _("Invalid signup token")
                 qcontext['invalid_token'] = True
         return qcontext

@@ -79,7 +79,7 @@ _logger.warning("This is a %s warning %s", "test", "log")
 _logger.error("This is a %s error %s", "test", "log")
 try:
     0/0
-except:
+except Exception:
     _logger.exception("This is a %s exception %s", "test", "log")
 """,
         })

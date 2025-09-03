@@ -160,7 +160,7 @@ class Survey(http.Controller):
         survey_sudo, dummy = self._fetch_from_access_token(survey_token, False)
         try:
             answer_sudo = survey_sudo._create_answer(user=request.env.user, test_entry=True)
-        except:
+        except Exception:  # noqa: BLE001
             return request.redirect('/')
         return request.redirect('/survey/start/%s?%s' % (survey_sudo.access_token, keep_query('*', answer_token=answer_sudo.access_token)))
 
@@ -186,7 +186,7 @@ class Survey(http.Controller):
                 test_entry=answer_sudo.test_entry,
                 **self._prepare_retry_additional_values(answer_sudo)
             )
-        except:
+        except Exception:  # noqa: BLE001
             return request.redirect("/")
         return request.redirect('/survey/start/%s?%s' % (survey_sudo.access_token, keep_query('*', answer_token=retry_answer_sudo.access_token)))
 
@@ -238,7 +238,7 @@ class Survey(http.Controller):
         if not answer_sudo:
             try:
                 survey_sudo.with_user(request.env.user).check_access('read')
-            except:
+            except Exception:  # noqa: BLE001
                 return request.redirect("/")
             else:
                 return request.render("survey.survey_403_page", {'survey': survey_sudo})

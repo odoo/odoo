@@ -32,5 +32,5 @@ def uninstall_hook(env):
     try:
         with env.cr.savepoint():
             pbm_routes.unlink()
-    except:
+    except Exception:  # noqa: BLE001
         pass

@@ -441,7 +441,7 @@ class IrQwebFieldImage(models.AbstractModel):
             image.verify()
         except IOError:
             raise ValueError("Non-image binary fields can not be converted to HTML") from None
-        except: # image.verify() throws "suitable exceptions", I have no idea what they are
+        except Exception:  # noqa: BLE001 image.verify() throws "suitable exceptions", I have no idea what they are
             raise ValueError("Invalid image content") from None
 
         return "data:%s;base64,%s" % (Image.MIME[image.format], value.decode('ascii'))

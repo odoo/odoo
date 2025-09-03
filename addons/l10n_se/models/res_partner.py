@@ -17,5 +17,5 @@ class ResPartner(models.Model):
             reference = self.l10n_se_default_vendor_payment_ref
             try:
                 luhn.validate(reference)
-            except: 
+            except Exception:  # noqa: BLE001
                 return {'warning': {'title': _('Warning'), 'message': _('Default vendor OCR number isn\'t a valid OCR number.')}}

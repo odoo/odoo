@@ -22,5 +22,5 @@ def uninstall_hook(env):
         with env.cr.savepoint():
             subcontracting_routes.unlink()
             operations_type_to_remove.unlink()
-    except:
+    except Exception:  # noqa: BLE001
         pass

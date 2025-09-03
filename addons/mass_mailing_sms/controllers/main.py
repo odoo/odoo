@@ -14,7 +14,7 @@ class MailingSMSController(http.Controller):
     def _check_trace(self, mailing_id, trace_code):
         try:
             mailing = request.env['mailing.mailing'].sudo().search([('id', '=', mailing_id)])
-        except:
+        except Exception:  # noqa: BLE001
             mailing = False
         if not mailing:
             return {'error': 'mailing_error'}
