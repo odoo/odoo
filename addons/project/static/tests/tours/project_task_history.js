@@ -27,7 +27,7 @@ function changeDescriptionContentAndSave(newContent) {
     ];
 }
 
-function insertEditorContentAndSave(newContent) {
+function insertEditorContent(newContent) {
     return [
         {
             // force focus on editable so editor will create initial p (if not yet done)
@@ -45,9 +45,9 @@ function insertEditorContentAndSave(newContent) {
                 this.anchor.dispatchEvent(new Event("input", { bubbles: true }));
             },
         },
-        ...stepUtils.saveForm(),
     ];
 }
+
 
 registry.category("web_tour.tours").add("project_task_history_tour", {
     url: "/odoo",
@@ -221,7 +221,8 @@ registry.category("web_tour.tours").add("project_task_last_history_steps_tour", 
         trigger: ".o_kanban_view .o_kanban_record:contains(Test History Task)",
         run: "click",
     },
-    ...insertEditorContentAndSave("0"),
+        ...insertEditorContent("0"),
+        ...stepUtils.saveForm(),
     {
         content: "Open History Dialog",
         trigger: ".o_cp_action_menus i.fa-cog",
@@ -245,6 +246,18 @@ registry.category("web_tour.tours").add("project_task_last_history_steps_tour", 
         trigger: '.modal button.btn-primary:contains(/^Restore$/)',
         run: "click",
     },
-    ...insertEditorContentAndSave("2")
+        ...insertEditorContent("2"),
+        ...stepUtils.saveForm(),
+        ...insertEditorContent("4"),
+    {
+        trigger: ".o_notebook_headers li:nth-of-type(2) a",
+        run: "click",
+    },
+    {
+        trigger: ".o_notebook_headers li:nth-of-type(1) a",
+        run: "click",
+    },
+        ...insertEditorContent("5"),
+        ...stepUtils.saveForm(),
     ],
 });
