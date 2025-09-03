@@ -44,7 +44,12 @@ export class MenuDataPlugin extends Plugin {
                         });
                     },
                     onClickEditMenu: () => {
+                        const rootID = parseInt(
+                            props.linkElement.closest("[data-content_menu_id]")?.dataset
+                                .content_menu_id
+                        );
                         this.services.dialog.add(EditMenuDialog, {
+                            rootID: isNaN(rootID) ? null : rootID,
                             save: async () => {
                                 await this.dependencies.savePlugin.save();
                                 await this.config.reloadEditor();
