@@ -123,11 +123,12 @@ class ResPartner(models.Model):
         '''
         if not country_code.encode().isalpha():
             return False
+
+        country_code = _eu_country_vat_inverse.get(country_code.upper(), country_code).lower()
         check_func_name = 'check_vat_' + country_code
         check_func = getattr(self, check_func_name, None) or getattr(stdnum.util.get_cc_module(country_code, 'vat'), 'is_valid', None)
         if not check_func:
             # No VAT validation available, default to check that the country code exists
-            country_code = _eu_country_vat_inverse.get(country_code, country_code)
             return bool(self.env['res.country'].search([('code', '=ilike', country_code)]))
         return check_func(vat_number)
 
