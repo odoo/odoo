@@ -14,8 +14,7 @@ from markupsafe import Markup
 from odoo import api, fields, models, _, tools
 from odoo.fields import Domain
 from odoo.exceptions import ValidationError, AccessError, RedirectWarning, UserError
-from odoo.models import Query
-from odoo.tools import convert, format_time, email_normalize, SQL
+from odoo.tools import convert, format_time, format_date, email_normalize
 from odoo.tools.intervals import Intervals
 from odoo.addons.hr.models.hr_version import format_date_abbr
 from odoo.addons.mail.tools.discuss import Store
@@ -140,6 +139,30 @@ class HrEmployee(models.Model):
     birthday = fields.Date('Birthday', groups="hr.group_hr_user", tracking=True)
     birthday_public_display = fields.Boolean('Show to all employees', groups="hr.group_hr_user", default=False)
     birthday_public_display_string = fields.Char("Public Date of Birth", compute="_compute_birthday_public_display_string", default="hidden")
+
+    # For birthday group by month
+    birthday_month = fields.Selection(
+        selection=[
+            ('0', "Not specified"),  # key named '0' to make the "Not specified" column appear first to the left in grouped kanban view
+            ('1', "January"),
+            ('2', "February"),
+            ('3', "March"),
+            ('4', "April"),
+            ('5', "May"),
+            ('6', "June"),
+            ('7', "July"),
+            ('8', "August"),
+            ('9', "September"),
+            ('10', "October"),
+            ('11', "November"),
+            ('12', "December"),
+        ],
+        string="Birthday Month",
+        store=True,
+        compute='_compute_birthday_month',
+        groups="hr.group_hr_user"
+    )
+
     bank_account_ids = fields.Many2many(
         'res.partner.bank',
         relation='employee_bank_account_rel',
@@ -465,6 +488,11 @@ class HrEmployee(models.Model):
         for employee in self:
             employee.hr_icon_display = 'presence_' + employee.hr_presence_state
             employee.show_hr_icon_display = bool(employee.user_id)
+
+    @api.depends('birthday')
+    def _compute_birthday_month(self):
+        for employee in self:
+            employee.birthday_month = str(employee.birthday.month) if employee.birthday else '0'
 
     @api.model
     def _get_certificate_selection(self):
@@ -982,11 +1010,11 @@ class HrEmployee(models.Model):
             employee[avatar_field] = avatar
         super(HrEmployee, employee_wo_user_and_image)._compute_avatar(avatar_field, image_field)
 
-    @api.depends('birthday_public_display')
+    @api.depends('birthday', 'birthday_public_display')
     def _compute_birthday_public_display_string(self):
         for employee in self:
             if employee.birthday and employee.birthday_public_display:
-                employee.birthday_public_display_string = datetime.strftime(employee.birthday, "%d %B")
+                employee.birthday_public_display_string = format_date(self.env, employee.birthday, date_format="MMMM dd")
             else:
                 employee.birthday_public_display_string = "hidden"
 
