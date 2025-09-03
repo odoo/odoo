@@ -1219,7 +1219,7 @@ class Cache:
         """
         if field.translate:
             # only for model translated fields
-            lang = (records.env.lang or 'en_US') if dirty else records.env._lang
+            lang = (records.env.lang or 'en_US') if dirty or field.translate is True else records.env._lang
             field_cache = self._get_field_cache(records, field)
             cache_values = []
             for record, value in zip(records, values):
