@@ -153,6 +153,16 @@ class AccountMoveSend(models.AbstractModel):
                 ),
             }
 
+        if invalid_negative_lines := tr_nilvera_moves.filtered(
+            lambda move: move._l10n_tr_nilvera_einvoice_check_negative_lines(),
+        ):
+            alerts["critical_invalid_negative_lines"] = {
+                "level": "danger",
+                "message": _("Nilvera portal cannot process negative quantity nor negative price on invoice lines"),
+                "action_text": _("View Invoice(s)"),
+                "action": invalid_negative_lines._get_records_action(name=_("Check data on Invoice(s)")),
+            }
+
         return alerts
 
     # -------------------------------------------------------------------------
