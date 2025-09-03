@@ -85,7 +85,7 @@ registerWebsitePreviewTour('edit_link_popover', {
         trigger: ':iframe .top_menu a:contains("Home")',
         run: "click",
     },
-    ...openLinkPopup(":iframe #o_main_nav a.nav-link:contains('Home')", "/contactus", 1, true),
+    ...openLinkPopup(":iframe #o_main_nav a.nav-link:contains('Home')", "/contactus", 1, false),
     {
         content: "Popover should be shown (2)",
         trigger: ".o-we-linkpopover .o_we_url_link:contains('Home')",
@@ -160,15 +160,15 @@ registerWebsitePreviewTour('edit_link_popover', {
     },
     {
         content: "Ensure that the link toolbar is opened",
-        trigger: ".o-we-toolbar",
+        trigger: ".o-we-toolbar button[name='link']",
     },
     {
         content: "Click on the link from toolbar",
-        trigger: ".o-we-toolbar button[name='link']",
+        trigger: ".o-we-toolbar",
         run: "click",
     },
     // 6. Test link popover link opens a new window in edit mode
-    ...openLinkPopup(":iframe footer a[href='/']", "Footer Home", 0, false),
+    ...openLinkPopup(":iframe footer a[href='/']", "Footer Home", 1, true),
     {
         content: "Ensure that a click on the link popover link opens a new window in edit mode",
         trigger: ".o-we-linkpopover a.o_we_url_link[target='_blank']",
