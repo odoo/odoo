@@ -143,10 +143,7 @@ class PaymentTransaction(models.Model):
         """
         self.ensure_one()
 
-        reference = (f'{self.reference} - '
-                     f'{self.partner_id.display_name or ""} - '
-                     f'{self.provider_reference or ""}'
-                    )
+        reference = f'{self.reference} - {self.provider_reference or ""}'
 
         payment_method_line = self.provider_id.journal_id.inbound_payment_method_line_ids\
             .filtered(lambda l: l.payment_provider_id == self.provider_id)
