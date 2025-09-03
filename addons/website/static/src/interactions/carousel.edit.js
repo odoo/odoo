@@ -9,7 +9,6 @@ export class CarouselEdit extends Interaction {
     dynamicContent = {
         ".carousel-control-prev, .carousel-control-next, .carousel-indicators": {
             "t-on-click": this.throttled(this.onControlClick),
-            "t-on-keydown": this.onControlKeyDown,
             "t-att-class": () => ({ o_we_no_overlay: true }),
         },
         ".carousel-control-prev, .carousel-control-next": {
@@ -53,20 +52,6 @@ export class CarouselEdit extends Interaction {
 
         if (this.services["website_edit"].applyAction) {
             this.services["website_edit"].applyAction("slideCarousel", applySpec);
-        }
-    }
-
-    /**
-     * Since carousel controls are disabled in edit mode because slides are
-     * handled manually, we disable the left and right keydown events to prevent
-     * sliding this way.
-     *
-     * @param {Event} ev
-     */
-    onControlKeyDown(ev) {
-        if (["ArrowLeft", "ArrowRight"].includes(ev.code)) {
-            ev.preventDefault();
-            ev.stopPropagation();
         }
     }
 

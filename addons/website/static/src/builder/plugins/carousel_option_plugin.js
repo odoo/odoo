@@ -218,6 +218,7 @@ export class CarouselOptionPlugin extends Plugin {
             const carouselInstance = window.Carousel.getOrCreateInstance(editingElement, {
                 ride: false,
                 pause: true,
+                keyboard: false,
             });
             if (typeof direction === "number") {
                 carouselInstance.to(direction);
