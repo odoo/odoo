@@ -532,16 +532,11 @@
                                     <i class="fa fa-fw me-2 fa-phone text-primary" title="Phone"/>
                                     <field name="work_phone" />
                                 </div>
-                                <div t-if="record.contract_date_start.raw_value" groups="hr.group_hr_manager">
+                                <div t-if="record.contract_date_start.raw_value" groups="hr.group_hr_manager" t-att-class="{'text-danger': record.contract_date_end.raw_value &lt; luxon.DateTime.now().toISO()}">
                                     <i class="fa fa-fw me-2 fa-briefcase text-primary" title="Contract"/>
                                     <field name="contract_date_start"/>
-                                    <span> - </span>
+                                    <span t-if="record.contract_date_end.raw_value"> - </span>
                                     <field t-if="record.contract_date_end.raw_value" name="contract_date_end"/>
-                                    <span t-else="">Indefinitely</span>
-                                </div>
-                                <div t-else="">
-                                    <i class="fa fa-fw me-2 fa-briefcase text-primary" title="Contract"/>
-                                    <span>No Contract</span>
                                 </div>
                                 <div invisible="birthday_public_display_string == 'hidden'">
                                     <i class="fa fa-fw me-2 fa-birthday-cake text-primary" title="Birthday"/>
@@ -549,7 +544,7 @@
                                 </div>
                                 <field name="employee_properties" widget="properties"/>
                                 <field class="hr_tags" name="category_ids" widget="many2many_tags" options="{'color_field': 'color'}" optional="hide"/>
-                                <footer>
+                                <footer class="py-0">
                                     <div class="d-flex ms-auto">
                                         <field name="user_id" widget="many2one_avatar_user" readonly="1" class="mb-1 ms-2"/>
                                         <field name="activity_ids" widget="kanban_activity" class="m-1 ms-2"/>
