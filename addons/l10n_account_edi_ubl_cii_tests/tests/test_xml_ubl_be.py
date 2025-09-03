@@ -732,6 +732,21 @@ class TestUBLBE(TestUBLCommon):
             move_type='out_invoice',
         )
 
+    def test_import_header_fields_min_cii(self):
+        invoice = self._create_empty_vendor_bill()
+        self.update_invoice_from_file(
+            'l10n_account_edi_ubl_cii_tests',
+            'tests/test_files/from_factur-x_doc',
+            'facturx_invoice_basis_quantity.xml',
+            invoice,
+        )
+
+        self.assertEqual(invoice.ref, 'F20220024')
+        self.assertIn('FOURNISSEUR F', invoice.narration or '')
+        self.assertEqual(invoice.payment_reference, 'F20180023BUYER')
+        self.assertEqual(str(invoice.invoice_date), '2022-01-31')
+        self.assertEqual(str(invoice.invoice_date_due), '2022-03-02')
+
     def test_inverting_negative_price_unit(self):
         """ We can not have negative unit prices, so we try to invert the unit price and quantity.
         """

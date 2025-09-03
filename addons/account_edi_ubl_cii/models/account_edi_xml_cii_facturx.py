@@ -304,7 +304,7 @@ class AccountEdiXmlCII(models.AbstractModel):
 
         # ==== payment_reference ====
 
-        payment_reference_node = tree.find('.//{*}BuyerOrderReferencedDocument/{*}IssuerAssignedID')
+        payment_reference_node = tree.find('.//{*}ApplicableHeaderTradeSettlement/{*}PaymentReference')
         if payment_reference_node is not None:
             invoice.payment_reference = payment_reference_node.text
 
