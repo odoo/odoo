@@ -19,19 +19,7 @@
             <div t-else="">
                 <t t-set="has_side_column" t-value="True"/>
                 <div class="o_wslides_home_aside_loggedin card p-3 p-lg-0 mb-4">
-                    <div class="o_wslides_home_aside_title">
-                        <div class="d-flex align-items-center">
-                            <t t-call="website_slides.slides_misc_user_image">
-                                <t t-set="img_class" t-value="'rounded-circle me-1'"/>
-                                <t t-set="img_style" t-value="'width: 22px; height: 22px;'"/>
-                            </t>
-                            <h5 t-out="user.name" class="d-flex flex-grow-1 mb-0"/>
-                            <a class="d-none d-lg-block" t-att-href="'/profile/user/%s' % user.id">View</a>
-                            <a class="d-lg-none btn btn-sm bg-white border" href="#" data-bs-toggle="collapse" data-bs-target="#o_wslides_home_aside_content">More info</a>
-                        </div>
-                        <hr class="d-none d-lg-block mt-2 mb-2 mb-1"/>
-                    </div>
-                    <div id="o_wslides_home_aside_content" class="collapse d-lg-block">
+                    <div id="o_wslides_home_aside_content" class="d-none d-lg-block">
                         <div class="row g-0 mb-5 mt-3 mt-lg-0">
                             <div class="col-12 col-sm-6 col-lg-12">
                                 <t t-call="website_slides.slides_home_user_profile_small"/>
@@ -116,7 +104,7 @@
             <div class="oe_structure oe_empty"/>
             <div class="container-fluid mt-2">
                 <div class="row">
-                    <div t-attf-class="#{'col-12 col-lg-9 order-2 order-lg-1' if has_side_column else 'col-12'}">
+                    <div t-attf-class="#{'col-12 col-lg-8 col-xl-9' if has_side_column else 'col-12'}">
                         <div t-if="invite_error_msg" role="alert" class="o_not_editable alert alert-danger text-center" t-out="invite_error_msg"/>
                         <div class="container o_wslides_home_nav">
                             <div class="o_wprofile_email_validation_container">
@@ -138,9 +126,26 @@
                         <t t-call="website_slides.courses_my"/>
                         <t t-call="website_slides.courses_search_results"/>
                     </div>
-                    <div t-if="has_side_column" class="col-12 col-lg-3 order-1 order-lg-2 mt-1">
+                    <div t-if="has_side_column" class="d-none d-lg-block col-lg-4 col-xl-3">
                         <t t-call="website_slides.courses_home_side_bar"/>
                     </div>
+                </div>
+            </div>
+            <div class="offcanvas offcanvas-end" tabindex="-1" id="o_wslides_overview_offcanvas" aria-labelledby="o_wslides_overview_offcanvas_header">
+                <div class="offcanvas-header">
+                    <h2 class="h5 offcanvas-title" id="o_wslides_overview_offcanvas_header">Overview</h2>
+                    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"/>
+                </div>
+                <div class="offcanvas-body o_wslides_home_aside_loggedin d-flex flex-column gap-4">
+                    <t t-if="is_public_user and has_side_column">
+                        <t t-call="website_slides.slides_home_users_small"/>
+                    </t>
+                    <t t-else="">
+                        <t t-call="website_slides.slides_home_user_profile_small"/>
+                        <t t-call="website_slides.slides_home_user_achievements_small"/>
+                        <t t-call="website_slides.slides_home_achievements_small"/>
+                        <t t-call="website_slides.slides_home_users_small"/>
+                    </t>
                 </div>
             </div>
             <t t-call="website_slides.courses_footer"></t>
@@ -153,6 +158,11 @@
         <!-- Navbar dynamically composed using displayed channel tag groups. -->
         <nav class="navbar navbar-expand-md navbar-light shadow-sm px-2 mb-4">
             <a class="fw-bold" href="/slides">Online Courses</a>
+            <a class="btn d-block d-lg-none ms-auto p-0" data-bs-toggle="offcanvas" href="#o_wslides_overview_offcanvas" role="button" aria-controls="o_wslides_overview_offcanvas">
+                <t t-call="website_slides.slides_misc_user_image">
+                    <t t-set="img_class" t-value="'o_wslides_user_avatar rounded-circle'"/>
+                </t>
+            </a>
             <!-- Clear filtering (mobile)-->
             <div class="text-nowrap ms-auto d-md-none" t-if="search_slide_category or search_tags">
                 <a href="/slides" class="btn btn-info me-2" role="button" title="Clear filters">
@@ -343,37 +353,31 @@
 </template>
 
 <template id='slides_home_achievements_small' name="Users">
-    <t class="o_wslides_home_aside">
-    </t>
+    <div class="o_wslides_home_aside">
+    </div>
 </template>
 
 <template id="toggle_latest_achievements" inherit_id="website_slides.slides_home_achievements_small" active="True" name='Display Achievements'>
-    <xpath expr="//t[hasclass('o_wslides_home_aside')]" position="inside">
+    <xpath expr="//div[hasclass('o_wslides_home_aside')]" position="inside">
         <div t-if="achievements">
-            <div class="row o_wslides_home_aside_title">
-                <div class="col">
-                    <h5 class="m-0">Latest achievements</h5>
-                    <hr class="mt-2"/>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col">
-                    <t t-foreach="achievements" t-as="achievement">
-                        <t t-call="website_slides.achievement_card"/>
-                    </t>
-                </div>
+            <h2 class="h6 mb-3">Latest achievements</h2>
+            <div class="d-flex flex-column gap-3">
+                <t t-foreach="achievements" t-as="achievement">
+                    <t t-call="website_slides.achievement_card"/>
+                </t>
             </div>
         </div>
     </xpath>
 </template>
 
 <template id='achievement_card' name="Achivement Card">
-    <div class="d-flex g-0 mt8 align-items-center">
+    <div class="d-flex gap-2">
         <t t-call="website_slides.slides_misc_user_image">
             <t t-set="user" t-value="achievement.user_id"/>
         </t>
-        <div style="line-height: 1.3">
-            <span class="fw-bold" t-out="achievement.user_id.name"/> achieved <span class="fw-bold" t-out="achievement.badge_id.name"/>
+        <div>
+            <div class="lh-1" t-out="achievement.user_id.name"/>
+            <small class="text-muted" t-out="achievement.badge_id.name"/>
         </div>
     </div>
 </template>
@@ -385,91 +389,84 @@
 
 <template id="toggle_leaderboard" inherit_id="website_slides.slides_home_users_small" active="True" name='Display Leaderboard'>
     <xpath expr="//div[hasclass('o_wslides_home_aside')]" position="inside">
-        <div class="row o_wslides_home_aside_title">
-            <div class="col">
-                <a t-if="users" href="/profile/users" class="float-end">View all</a>
-                <div>
-                    <h5 class="m-0">Leaderboard</h5>
-                </div>
-                <hr class="mt-2 mb-2"/>
+        <div class="d-flex justify-content-between">
+            <h2 class="h6 mb-3">Leaderboard</h2>
+            <a t-if="users" href="/profile/users">View all</a>
+        </div>
+        <t t-if="users">
+            <div class="d-flex flex-column gap-3">
+                <t t-foreach="users" t-as="user">
+                    <t t-call="website_slides.user_quickkarma_card"/>
+                </t>
             </div>
-        </div>
-        <div class="row">
-            <t t-if="users">
-                <div class="col">
-                    <t t-set="counter" t-value="1"/>
-                    <t t-foreach="users" t-as="user">
-                        <t t-call="website_slides.user_quickkarma_card"/>
-                        <t t-set="counter" t-value="counter + 1"/>
-                    </t>
-                </div>
-            </t>
-            <t t-else=""><p class="col mt8">No leaderboard currently :(</p></t>
-        </div>
+        </t>
+        <t t-else=""><p class="text-muted">No leaderboard currently :(</p></t>
     </xpath>
 </template>
 
 <template id='user_quickkarma_card' name="User QuickKarma Card">
-    <div class="d-flex mb-3 align-items-center">
-        <b class="me-2 text-muted" t-out="counter"/>
+    <div class="d-flex align-items-start gap-2">
         <t t-call="website_slides.slides_misc_user_image"/>
-        <div style="line-height:1.3">
-            <span class="fw-bold" t-out="user.name"/>
+        <div class="flex-grow-1">
+            <div class="lh-1" t-out="user.name"/>
             <div class="d-flex align-items-center">
-                <t t-out="user.rank_id.name"/>
-                <span class="text-500 mx-2">&#8226;</span>
-                <span class="badge text-bg-success"><t t-out="user.karma"/> xp</span>
+                <small class="text-muted" t-out="user.rank_id.name"/>
             </div>
+        </div>
+        <div class="small">
+            <span class="badge bg-light"><t t-out="user.karma"/> xp</span>
         </div>
     </div>
 </template>
 
 <template id='slides_home_user_profile_small' name="User Profile">
-    <div class="o_wslides_home_aside">
-        <div t-if="user.rank_id" class="d-flex align-items-center">
-            <span class="fw-bold text-muted me-2">Current rank:</span>
-            <img t-att-src="website.image_url(user.rank_id, 'image_128')" width="16" height="16" alt="" class="object-fit-cover me-1"/>
-            <a href="/profile/ranks_badges" t-field="user.rank_id"/>
+    <div class="position-relative d-flex justify-content-between gap-3 mb-4">
+        <div class="d-flex gap-2">
+            <t t-call="website_slides.slides_misc_user_image">
+                <t t-set="img_class" t-value="'o_wslides_user_avatar rounded-circle'"/>
+            </t>
+            <div class="lh-1">
+                <h6 t-out="user.name" class="mb-0"/>
+                <span class="text-muted"><t t-out="user.karma"/>XP</span>
+            </div>
         </div>
+        <a class="stretched-link" t-att-href="'/profile/user/%s' % user.id">View</a>
+    </div>
+    <div class="o_wslides_home_aside">
         <t t-set="next_rank_id" t-value="user._get_next_rank()"/>
-        <div t-if="next_rank_id" class="fw-bold text-muted mt-1">Next rank:</div>
-        <t t-if="next_rank_id or user.rank_id" t-call="website_profile.profile_next_rank_card">
-            <t t-set="bg_class" t-valuef="bg-200"/>
-            <t t-set="img_max_width" t-value="'50%'"/>
-        </t>
-        <div t-if="next_rank_id" t-field="next_rank_id.description_motivational"/>
-        <div t-else="">Congratulations, you have reached the last rank!</div>
+        <div t-if="next_rank_id">
+            <t t-call="website_profile.profile_next_rank_card"/>
+            <div t-field="next_rank_id.description_motivational" class="mt-3 rounded p-3 bg-100"/>
+        </div>
+        <div t-else="" class="mt-3">Congratulations, you have reached the last rank!</div>
     </div>
 </template>
 
 <template id='slides_home_user_achievements_small' name="User Achievements">
     <div class="o_wslides_home_aside flex-grow-1">
-        <div class="row o_wslides_home_aside_title">
-            <div class="col">
-                <a href="/profile/ranks_badges?badge_category=slides" class="float-end">View all</a>
-                <h5 class="m-0">Badges</h5>
-                <hr class="mt-2 mt-2"/>
-            </div>
+        <div class="d-flex justify-content-between">
+            <h2 class="h6 mb-3">Badges</h2>
+            <a href="/profile/ranks_badges?badge_category=slides">View all</a>
         </div>
         <t t-foreach="challenges" t-as="challenge">
             <t t-set="challenge_done" t-value="challenge in challenges_done if challenges_done else False"/>
-            <div t-attf-class="d-flex mb-3 align-items-center #{'o_wslides_entry_muted' if not challenge_done else ''}">
-                <div t-if="challenge.reward_id.image_1920" t-field="challenge.reward_id.image_1920"
+            <div t-attf-class="d-flex #{'opacity-50' if challenge_done else ''}">
+                <div t-if="challenge.reward_id.image_1920" class="flex-shrink-0" t-field="challenge.reward_id.image_1920"
                     t-options="{'widget': 'image', 'preview_image': 'image_128', 'class': 'me-2', 'style': 'max-height: 36px'}"/>
-                <img t-else="" t-attf-src="'/website_profile/static/src/img/badge_%s.svg' % (challenge.reward_id.level)" t-att-alt="challenge.reward_id.name" style="max-height: 36px" class="me-2"/>
+                <img t-else="" t-attf-src="'/website_profile/static/src/img/badge_%s.svg' % (challenge.reward_id.level)" t-att-alt="challenge.reward_id.name" style="max-height: 36px" class="flex-shrink-0 me-2"/>
                 <div class="flex-grow-1">
-                    <b class="text_small_caps" t-out="challenge.reward_id.name"/><br/>
-                    <span class="text-muted" t-out="challenge.reward_id.description"/>
+                    <div class="lh-1" t-out="challenge.reward_id.name"/>
+                    <small class="text-muted" t-out="challenge.reward_id.description"/>
                 </div>
-                <i t-if="challenge_done" class="fa fa-check h5 text-success" aria-label="Done" title="Done" role="img"></i>
+                <i t-if="challenge_done" class="fa fa-check text-success" aria-label="Done" title="Done" role="img"/>
             </div>
         </t>
     </div>
 </template>
 
 <template id='slides_misc_user_image' name="User Avatar">
-    <img t-attf-class="o_avatar {{img_class or 'rounded-circle float-start'}}"
-        t-att-style="img_style if img_style else 'width: 32px; height: 32px;'"
+    <img t-attf-class="o_avatar {{img_class or 'rounded-circle'}}"
+        t-att-style="img_style if img_style else ''"
         t-att-src="'/profile/avatar/%s?field=avatar_128' % user.id"
         t-att-alt="user.name"/>
 </template>
