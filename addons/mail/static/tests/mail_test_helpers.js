@@ -283,6 +283,8 @@ async function addSwitchTabDropdownItem(rootTarget, tabTarget) {
     dropdownDiv.querySelector(".dropdown-menu").appendChild(li);
 }
 
+let discussAsTabId = 0;
+
 /**
  * @param {{
  *  asTab?: boolean;
@@ -326,13 +328,16 @@ export async function start(options) {
     }
     let env;
     if (options?.asTab) {
+        discussAsTabId++;
         restoreRegistry(registry);
         const rootTarget = target;
         target = document.createElement("div");
         target.classList.add("o-mail-Discuss-asTabContainer");
+        target.dataset.asTabId = discussAsTabId;
         rootTarget.appendChild(target);
         addSwitchTabDropdownItem(rootTarget, target);
-        env = await makeMockEnv({}, { makeNew: true });
+        const selector = `.o-mail-Discuss-asTabContainer[data-as-tab-id="${target.dataset.asTabId}"]`;
+        env = await makeMockEnv({ discussAsTabId, selector }, { makeNew: true });
     } else {
         env = getMockEnv() || (await makeMockEnv({}));
     }

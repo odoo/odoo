@@ -59,20 +59,17 @@ test("Can toggle allow public upload", async () => {
     const env1 = await start({ asTab: true });
     const env2 = await start({ asTab: true });
     await openDiscuss(channelId, { target: env1 });
-    await click(".o-mail-Discuss-header button[title='Attachments']", { target: env1 });
-    await contains(".o-mail-ActionPanel", {
+    await click(`${env1.selector} .o-mail-Discuss-header button[title='Attachments']`);
+    await contains(`${env1.selector} .o-mail-ActionPanel`, {
         contains: ["label", { text: "File upload is disabled for external users" }],
-        target: env1,
     });
     await openDiscuss(channelId, { target: env2 });
-    await click(".o-mail-Discuss-header button[title='Attachments']", { target: env2 });
-    await contains(".o-mail-ActionPanel", {
+    await click(`${env2.selector} .o-mail-Discuss-header button[title='Attachments']`);
+    await contains(`${env2.selector} .o-mail-ActionPanel`, {
         contains: ["label", { text: "File upload is disabled for external users" }],
-        target: env2,
     });
-    await click(".o-mail-ActionPanel input[type='checkbox']", { target: env1 });
-    await contains(".o-mail-ActionPanel", {
+    await click(`${env1.selector} .o-mail-ActionPanel input[type='checkbox']`);
+    await contains(`${env2.selector} .o-mail-ActionPanel`, {
         contains: ["label", { text: "File upload is enabled for external users" }],
-        target: env2,
     });
 });

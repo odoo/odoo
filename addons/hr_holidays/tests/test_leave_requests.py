@@ -1523,3 +1523,55 @@ class TestLeaveRequests(TestHrHolidaysCommon):
                 expected_days,
                 f"{data['name']} should have {expected_days} days duration"
             )
+
+    def test_coextensive_holidays_one_include_public_leave(self):
+        """
+            The purpose is to test whether two holidays that span the same time frame,
+            one with the include_public_leave active, will both work correctly.
+        """
+        employee = self.employee_emp
+        employee_hr = self.employee_hrmanager
+        calendar = employee.resource_calendar_id
+        calendar = employee_hr.resource_calendar_id
+
+        sick_leave_type = self.env['hr.leave.type'].create({
+            'name': 'Sick Leave (days)',
+            'request_unit': 'day',
+            'leave_validation_type': 'hr',
+            'requires_allocation': 'no',
+        })
+
+        sick_leave_type_paid = self.env['hr.leave.type'].create({
+            'name': 'Paid Leave (days)',
+            'request_unit': 'day',
+            'leave_validation_type': 'hr',
+            'requires_allocation': 'no',
+        })
+
+        sick_leave_type.include_public_holidays_in_duration = True
+
+        sick_leave = self.env['hr.leave'].create({
+            'name': 'Sick 3 days',
+            'employee_id': employee.id,
+            'holiday_status_id': sick_leave_type.id,
+            'request_date_from': '2021-11-15',
+            'request_date_to': '2021-11-17',
+        })
+
+        sick_leave_hr = self.env['hr.leave'].create({
+            'name': 'Paid 3 days',
+            'employee_id': employee_hr.id,
+            'holiday_status_id': sick_leave_type_paid.id,
+            'request_date_from': '2021-11-15',
+            'request_date_to': '2021-11-17',
+        })
+
+        calendar.global_leave_ids = [Command.create({
+            'name': 'Autumn Holidays',
+            'date_from': '2021-11-16 00:00:00',
+            'date_to': '2021-11-16 23:59:59',
+            'time_type': 'leave',
+        })]
+
+        self.assertEqual(sick_leave.duration_display, '3 days', "hr_holidays: duration_display should not update after adding an overlapping holiday")
+        self.assertEqual(sick_leave_hr.duration_display, '2 days', "hr_holidays: duration_display should update after adding an overlapping holiday")
