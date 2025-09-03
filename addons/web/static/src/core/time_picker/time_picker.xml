@@ -3,7 +3,7 @@
     <t t-name="web.TimePicker">
         <div
             class="o_time_picker d-flex align-items-center justify-content-center"
-            t-att-class="{ o_time_picker_seconds: this.props.showSeconds, [this.props.class]: true }"
+            t-att-class="cssClass"
         >
             <Dropdown
                 state="dropdownState"
