@@ -2,7 +2,7 @@
 
 from odoo import api, fields, models
 from odoo.fields import Domain
-from odoo.tools import SQL
+from odoo.tools import email_normalize, single_email_re, SQL
 from odoo.addons.mail.tools.discuss import Store
 from odoo.exceptions import AccessError
 
@@ -31,13 +31,48 @@ class ResPartner(models.Model):
     @api.model
     def search_for_channel_invite(self, search_term, channel_id=None, limit=30):
         """Returns partners matching search_term that can be invited to a channel.
-        If the channel_id is specified, only partners that can actually be invited to the channel
-        are returned (not already members, and in accordance to the channel configuration).
+
+        - If `channel_id` is specified, only partners that can actually be invited to the channel
+          are returned (not already members, and in accordance to the channel configuration).
+
+        - If no matching partners are found and the search term is a valid email address,
+          then the method may return `selectable_email` as a fallback direct email invite, provided that
+          the channel allows invites by email.
+
         """
         store = Store()
         channel_invites = self._search_for_channel_invite(store, search_term, channel_id, limit)
+        selectable_email = None
+        email_already_sent = None
+        if channel_invites["count"] == 0 and single_email_re.match(search_term):
+            email = email_normalize(search_term)
+            channel = self.env["discuss.channel"].search_fetch([("id", "=", int(channel_id))])
+            member_domain = Domain("channel_id", "=", channel.id)
+            member_domain &= Domain("guest_id.email", "=", email) | Domain(
+                "partner_id.email", "=", email
+            )
+            if channel._allow_invite_by_email() and not self.env[
+                "discuss.channel.member"
+            ].search_count(member_domain):
+                selectable_email = email
+                # sudo - mail.mail: checking mail records to determine if an email was already sent is acceptable.
+                email_already_sent = (
+                    self.env["mail.mail"]
+                    .sudo()
+                    .search_count(
+                        [
+                            ("email_to", "=", email),
+                            ("model", "=", "discuss.channel"),
+                            ("res_id", "=", channel.id),
+                        ]
+                    )
+                    > 0
+                )
+
         return {
             **channel_invites,
+            "email_already_sent": email_already_sent,
+            "selectable_email": selectable_email,
             "store_data": store.get_result(),
         }
 

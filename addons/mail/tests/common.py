@@ -854,9 +854,9 @@ class MockEmail(common.BaseCase, MockSmtplibCase):
         """ Check no mail.mail and email was generated during gateway mock. """
         try:
             if recipients:
-                self._find_mail_mail_wpartners(recipients, False, mail_message=mail_message, author=author)
+                self._find_mail_mail_wpartners(recipients, None, mail_message=mail_message, author=author)
             elif email_to is not None:
-                self._find_mail_mail_wemail(email_to, False, mail_message=mail_message, author=author)
+                self._find_mail_mail_wemail(email_to, None, mail_message=mail_message, author=author)
         except AssertionError:
             pass
         else:
