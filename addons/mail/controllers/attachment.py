@@ -55,27 +55,18 @@ class AttachmentController(http.Controller):
             raise NotFound()
         if thread_model == "discuss.channel" and not thread.allow_public_upload and not request.env.user._is_internal():
             raise AccessError(_("You are not allowed to upload attachments on this channel."))
-        vals = {
-            "name": ufile.filename,
-            "raw": ufile.read(),
-            "res_id": int(thread_id),
-            "res_model": thread_model,
-        }
         if is_pending and is_pending != "false":
             # Add this point, the message related to the uploaded file does
             # not exist yet, so we use those placeholder values instead.
-            vals.update(
-                {
-                    "res_id": 0,
-                    "res_model": "mail.compose.message",
-                }
-            )
+            vals = {"res_id": 0, "res_model": "mail.compose.message"}
+        else:
+            vals = {"res_id": int(thread_id), "res_model": thread_model}
         if request.env.user.share:
             # Only generate the access token if absolutely necessary (= not for internal user).
             vals["access_token"] = request.env["ir.attachment"]._generate_access_token()
         try:
             # sudo: ir.attachment - posting a new attachment on an accessible thread
-            attachment = request.env["ir.attachment"].sudo().create(vals)
+            attachment = request.env["ir.attachment"].sudo()._from_request_file(ufile, mimetype="GUESS", **vals)
             attachment._post_add_create(**kwargs)
             res = {"data": Store(attachment, extra_fields=["access_token"]).get_result()}
         except AccessError:
