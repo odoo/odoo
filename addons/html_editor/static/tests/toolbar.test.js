@@ -27,7 +27,7 @@ import {
     models,
     mountView,
 } from "@web/../tests/web_test_helpers";
-import { fontItems, fontSizeItems } from "../src/main/font/font_plugin";
+import { fontSizeItems } from "../src/main/font/font_plugin";
 import { Plugin } from "../src/plugin";
 import { MAIN_PLUGINS } from "../src/plugin_sets";
 import { convertNumericToUnit, getCSSVariableValue, getHtmlStyle } from "../src/utils/formatting";
@@ -288,9 +288,9 @@ test("toolbar works: can select font", async () => {
 });
 
 test("toolbar works: show the right font name", async () => {
-    await setupEditor("<p>[test]</p>");
+    const { editor } = await setupEditor("<p>[test]</p>");
     await waitFor(".o-we-toolbar");
-    const items = fontItems;
+    const items = editor.getResource("font_items");
     for (const item of items) {
         await contains(".o-we-toolbar [name='font'] .dropdown-toggle").click();
         await animationFrame();
