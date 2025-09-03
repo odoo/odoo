@@ -2,6 +2,7 @@
 
 from datetime import datetime
 from itertools import product
+from markupsafe import Markup
 
 from odoo import api, fields, models, _
 from odoo.osv import expression
@@ -129,7 +130,16 @@ class ApplicantGetRefuseReason(models.TransientModel):
         refused_applications.write({'refuse_reason_id': self.refuse_reason_id.id, 'active': False, 'refuse_date': datetime.now()})
 
         if self.send_mail:
-            self._prepare_send_refusal_mails()
+            mails = self._prepare_send_refusal_mails()
+            for mail in mails:
+                applicant = self.env['hr.applicant'].browse(mail['res_id'])
+                applicant.message_post(
+                    body=Markup(mail.body_html),
+                    message_type="comment",
+                    subtype_xmlid="mail.mt_note",
+                    subject=mail.subject,
+                )
+                mail.send()
 
         return {'type': 'ir.actions.act_window_close'}
 
@@ -154,7 +164,7 @@ class ApplicantGetRefuseReason(models.TransientModel):
         mail_values = []
         for applicant in self.applicant_ids:
             mail_values.append(self._prepare_mail_values(applicant))
-        self.env['mail.mail'].sudo().create(mail_values)
+        return self.env['mail.mail'].sudo().create(mail_values)
 
     def _prepare_mail_values(self, applicant):
         """ Create mail specific for recipient """
@@ -168,8 +178,8 @@ class ApplicantGetRefuseReason(models.TransientModel):
             'body_html': body,
             'email_to': applicant.email_from or applicant.partner_id.email,
             'email_from': self.env.user.email_formatted,
-            'model': None,
-            'res_id': None,
+            'model': 'hr.applicant',
+            'res_id': applicant.id,
             'subject': subject,
             'scheduled_date': self.scheduled_date,
         }
