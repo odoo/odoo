@@ -204,3 +204,34 @@ class TestAccruedPurchaseOrders(AccountTestInvoicingCommon):
         ).new()
         with self.assertRaises(UserError, msg="An error should be raised if two different currencies are used for Accrued Expense Entry."):
             accrued_wizard._compute_move_vals()
+
+    def test_accrued_entries_with_discount(self):
+        purchase_order = self.env['purchase.order'].with_context(tracking_disable=True).create({
+            'partner_id': self.partner_a.id,
+            'order_line': [
+                Command.create({
+                    'name': self.product_a.name,
+                    'product_id': self.product_a.id,
+                    'product_qty': 10.0,
+                    'product_uom': self.product_a.uom_id.id,
+                    'price_unit': 10.0,
+                    'taxes_id': False,
+                    'discount': 10,
+                }),
+            ],
+        })
+        purchase_order.button_confirm()
+        purchase_order.order_line.qty_received = 10
+        accrued_wizard = self.env['account.accrued.orders.wizard'].with_context(
+            active_model='purchase.order',
+            active_ids=purchase_order.ids,
+        ).create({
+            'account_id': self.account_revenue.id,
+        })
+        res = self.env['account.move'].search(accrued_wizard.create_entries()['domain']).line_ids
+        self.assertRecordValues(res, [
+            {'debit': 0.0, 'credit': 90.0},
+            {'debit': 90.0, 'credit': 0.0},
+            {'debit': 90.0, 'credit': 0.0},
+            {'debit': 0.0, 'credit': 90.0},
+        ])
