@@ -12,7 +12,10 @@ class LoyaltyCard(models.Model):
 
     @api.model
     def _load_pos_data_domain(self, data):
-        return [('program_id', 'in', [program["id"] for program in data["loyalty.program"]['data']])]
+        return [
+            ('partner_id', 'in', [partner["id"] for partner in data["res.partner"]['data']]),
+            ('program_id', 'in', [program["id"] for program in data["loyalty.program"]['data']]),
+        ]
 
     @api.model
     def _load_pos_data_fields(self, config_id):
