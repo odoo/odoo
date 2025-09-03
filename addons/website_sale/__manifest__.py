@@ -169,6 +169,7 @@
             'website_sale/static/src/js/components/wysiwyg_adapter/wysiwyg_adapter.js',
         ],
         'website.inside_builder_style': [
+            'web/static/lib/bootstrap/scss/_variables.scss',
             'website_sale/static/src/website_builder/**/*.inside.scss',
         ],
         'web.assets_tests': [

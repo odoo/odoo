@@ -33,15 +33,18 @@
 // ==========================
 body.editor_enable:has(.o_wsale_edit_preview_enabled) {
   // Hide default handles when other elements are highlighted
-  &:has(.o_wsale_previewing_sidebar),
-  &:has(.o_wsale_previewing_filmstrip),
-  &:has(.o_wsale_previewing_offcanvas),
-  &:has(.o_wsale_previewing_description),
-  &:has(.o_wsale_previewing_floating_bar) {
-    .o_handles {
-      visibility: hidden;
-    }
-  }
+  // Note: Since the handles have been moved outside the iframe,
+  // these selectors don't work anymore.
+  // TODO: Find a solution to make this work again.
+  // &:has(.o_wsale_previewing_sidebar),
+  // &:has(.o_wsale_previewing_filmstrip),
+  // &:has(.o_wsale_previewing_offcanvas),
+  // &:has(.o_wsale_previewing_description),
+  // &:has(.o_wsale_previewing_floating_bar) {
+  //   .o_handles {
+  //     visibility: hidden;
+  //   }
+  // }
 
   // @mixin _showcase {
   //   z-index: $zindex-tooltip;
@@ -49,13 +52,21 @@ body.editor_enable:has(.o_wsale_edit_preview_enabled) {
   // }
 
   // Sidebar
+  @keyframes sidebar_preview {
+      to {
+        min-width: o-to-rem(240px);
+        max-width: var(--o-wsale-sidebar-maxwidth, 15rem);
+        opacity: 1;
+        transform: translateX(0);
+      }
+  }
+
   .o_wsale_sidebar_preview {
     padding: 0;
     flex: 0 0 25%;
     min-width: 0;
     max-width: 0;
     transform: translateX(-50%);
-    transition: all .2s;
     opacity: 0;
   }
 
@@ -65,24 +76,27 @@ body.editor_enable:has(.o_wsale_edit_preview_enabled) {
     // }
 
     .o_wsale_sidebar_preview:first-child {
-      // TODO: style error when including media-breakpoint-up
-      // @include media-breakpoint-up(lg) {
-      min-width: o-to-rem(240px);
-      max-width: var(--o-wsale-sidebar-maxwidth, 15rem);
-      opacity: 1;
-      transform: translateX(0);
-      // @include _showcase();
-      // }
+      @include media-breakpoint-up(lg) {
+        animation: sidebar_preview .2s forwards;
+        // @include _showcase();
+      }
     }
   }
 
   // Categories Filmstrip (top)
+  @keyframes filmstrip_preview {
+      to {
+        max-height: 100px;
+        transform: translateY(0);
+        opacity: 1;
+      }
+  }
+
   .o_wsale_filmstrip_preview {
     max-height: 0;
     padding: 0;
     transform: translateY(-50%);
     opacity: 0;
-    transition: all .2s;
   }
 
   .o_wsale_previewing_filmstrip {
@@ -91,9 +105,7 @@ body.editor_enable:has(.o_wsale_edit_preview_enabled) {
     // }
 
     .o_wsale_filmstrip_preview {
-      transform: translateY(0);
-      opacity: 1;
-      max-height: 100px;
+      animation: filmstrip_preview .4s forwards;
       // @include _showcase();
       // outline-offset: 2px;
     }
@@ -104,9 +116,16 @@ body.editor_enable:has(.o_wsale_edit_preview_enabled) {
     #o_wsale_offcanvas {
       visibility: visible;
       transform: none;
-      // box-shadow: $box-shadow-lg;
+      box-shadow: $box-shadow-lg;
       // @include _showcase();
     }
+  }
+
+  // This prevents a glitch animation when we stop hovering over the 'Filter / Offcanvas' option
+  .o_wsale_edit_preview_enabled:not(.o_wsale_previewing_offcanvas) {
+      #o_wsale_offcanvas #o_wsale_price_range_option_inner * {
+        visibility: hidden !important;
+      }
   }
 
   // Descriptions
@@ -140,6 +159,12 @@ body.editor_enable:has(.o_wsale_edit_preview_enabled) {
   }
 
   // Floating Bar
+  @keyframes floating_bar_preview {
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+  }
   .o_wsale_floating_bar_preview {
     transform: translateY(100%);
     opacity: 0;
@@ -163,8 +188,7 @@ body.editor_enable:has(.o_wsale_edit_preview_enabled) {
 
     .o_wsale_floating_bar_preview {
       // @include _showcase();
-      transform: translateY(0);
-      opacity: 1;
+      animation: floating_bar_preview .2s forwards;
     }
   }
 }
