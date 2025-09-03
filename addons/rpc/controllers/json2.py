@@ -2,80 +2,21 @@
 
 import inspect
 import logging
-from collections.abc import Callable, Mapping, Sequence
-from http import HTTPStatus
+from collections.abc import Mapping, Sequence
 from typing import Any
 
 from werkzeug.exceptions import (
-    BadRequest,
-    HTTPException,
     NotFound,
     UnprocessableEntity,
 )
 
 from odoo import http
-from odoo.exceptions import UserError
 from odoo.http import request
 from odoo.models import BaseModel
 from odoo.service.model import get_public_method
 from odoo.tools import frozendict
 
 _logger = logging.getLogger(__name__)
-
-
-class Json2RpcDispatcher(http.Dispatcher):
-    routing_type = '/json/2/rpc'
-    mimetypes = ('application/json',)
-
-    @classmethod
-    def is_compatible_with(cls, request):
-        return request.httprequest.mimetype in cls.mimetypes
-
-    def dispatch(self, endpoint, args):
-        # "args" are the path parameters, "id" in /web/image/<id>
-        json = {}
-        if self.request.httprequest.content_length:
-            try:
-                json = self.request.get_json_data()
-            except ValueError as exc:
-                e = f"could not parse the body as json: {exc.args[0]}"
-                raise BadRequest(e) from exc
-        try:
-            self.request.params = json | args
-        except TypeError:
-            self.request.params = dict(args)  # make a copy
-
-        if self.request.db:
-            result = self.request.registry['ir.http']._dispatch(endpoint)
-        else:
-            result = endpoint(**self.request.params)
-        if isinstance(result, http.Response):
-            return result
-        return self.request.make_json_response(result)
-
-    def handle_error(self, exc: Exception) -> Callable:
-        if isinstance(exc, HTTPException) and exc.response:
-            return exc.response
-
-        headers = None
-        if isinstance(exc, (UserError, http.SessionExpiredException)):
-            status = exc.http_status
-            body = http.serialize_exception(exc)
-        elif isinstance(exc, HTTPException):
-            status = exc.code
-            body = http.serialize_exception(
-                exc,
-                message=exc.description,
-                arguments=(exc.description, exc.code),
-            )
-            # strip Content-Type but keep the remaining headers
-            ct, *headers = exc.get_headers()
-            assert ct == ('Content-Type', 'text/html; charset=utf-8')
-        else:
-            status = HTTPStatus.INTERNAL_SERVER_ERROR
-            body = http.serialize_exception(exc)
-
-        return self.request.make_json_response(body, headers=headers, status=status)
 
 
 class WebJson2Controller(http.Controller):
@@ -97,7 +38,7 @@ class WebJson2Controller(http.Controller):
     @http.route(
         ['/json/2', '/json/2/<path:subpath>'],
         auth='public',
-        type='/json/2/rpc',
+        type='json2',
         readonly=True,
         methods=['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
     )
@@ -109,7 +50,7 @@ class WebJson2Controller(http.Controller):
         '/json/2/<model>/<method>',
         methods=['POST'],
         auth='bearer',
-        type='/json/2/rpc',
+        type='json2',
         readonly=_web_json_2_rpc_readonly,
         save_session=False,
     )

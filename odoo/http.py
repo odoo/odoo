@@ -2591,6 +2591,64 @@ class JsonRPCDispatcher(Dispatcher):
         return self.request.make_json_response(response)
 
 
+class Json2Dispatcher(Dispatcher):
+    routing_type = 'json2'
+    mimetypes = ('application/json',)
+
+    def __init__(self, request):
+        super().__init__(request)
+        self.jsonrequest = None
+
+    @classmethod
+    def is_compatible_with(cls, request):
+        return request.httprequest.mimetype in cls.mimetypes
+
+    def dispatch(self, endpoint, args):
+        # "args" are the path parameters, "id" in /web/image/<id>
+        if self.request.httprequest.content_length:
+            try:
+                self.jsonrequest = self.request.get_json_data()
+            except ValueError as exc:
+                e = f"could not parse the body as json: {exc.args[0]}"
+                raise werkzeug.exceptions.BadRequest(e) from exc
+        try:
+            self.request.params = self.jsonrequest | args
+        except TypeError:
+            self.request.params = dict(args)  # make a copy
+
+        if self.request.db:
+            result = self.request.registry['ir.http']._dispatch(endpoint)
+        else:
+            result = endpoint(**self.request.params)
+        if isinstance(result, Response):
+            return result
+        return self.request.make_json_response(result)
+
+    def handle_error(self, exc: Exception) -> collections.abc.Callable:
+        if isinstance(exc, HTTPException) and exc.response:
+            return exc.response
+
+        headers = None
+        if isinstance(exc, (UserError, SessionExpiredException)):
+            status = exc.http_status
+            body = serialize_exception(exc)
+        elif isinstance(exc, HTTPException):
+            status = exc.code
+            body = serialize_exception(
+                exc,
+                message=exc.description,
+                arguments=(exc.description, exc.code),
+            )
+            # strip Content-Type but keep the remaining headers
+            ct, *headers = exc.get_headers()
+            assert ct == ('Content-Type', 'text/html; charset=utf-8')
+        else:
+            status = HTTPStatus.INTERNAL_SERVER_ERROR
+            body = serialize_exception(exc)
+
+        return self.request.make_json_response(body, headers=headers, status=status)
+
+
 # =========================================================
 # WSGI Entry Point
 # =========================================================
