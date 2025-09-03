@@ -95,7 +95,10 @@ export class CollaborationPlugin extends Plugin {
      */
     getBranchIds() {
         const steps = this.dependencies.history.getHistorySteps();
-        return [this.initialBranchStepId].concat(this.branchStepIds).concat(steps.map((s) => s.id));
+        return (this.initialBranchStepId || "")
+            .split(",")
+            .concat(this.branchStepIds)
+            .concat(steps.map((s) => s.id));
     }
     /**
      * Safely set an attribute on a node.
