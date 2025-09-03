@@ -301,7 +301,15 @@ class IrHttp(models.AbstractModel):
 
         def _search_page(comparator='='):
             page_domain = Domain('url', comparator, req_page) & request.website.website_domain()
-            return request.env['website.page'].sudo().search(page_domain, order='website_id asc', limit=1)
+
+            # fetch on all preffetchable fields to get all data at once (e.g., 'website_meta').
+            fields_to_fetch = [name for name, field in request.env['website.page']._fields.items() if field.prefetch]
+            page = request.env['website.page'].sudo().search_fetch(page_domain, field_names=fields_to_fetch, order='website_id asc', limit=1)
+
+            # fetch on all preffetchable fields to get all data at once (e.g., 'website_meta').
+            fields_to_fetch = [name for name, field in page.view_id._fields.items() if field.prefetch]
+            page.view_id.fetch(fields_to_fetch)
+            return page
 
         # specific page first
         page = _search_page()
