@@ -79,19 +79,6 @@ export class ColorPlugin extends Plugin {
         remove_all_formats_handlers: this.removeAllColor.bind(this),
         color_combination_getters: getColorCombinationFromClass,
 
-        /** Overridables */
-        /**
-         * Makes the way colors are applied overridable.
-         *
-         * @param {Element} element
-         * @param {string} color hexadecimal or bg-name/text-name class
-         * @param {'color'|'backgroundColor'} mode 'color' or 'backgroundColor'
-         */
-        apply_style: (element, mode, color) => {
-            element.style[mode] = color;
-            return true;
-        },
-
         /** Predicates */
         has_format_predicates: [
             (node) => hasColor(closestElement(node), "color"),
@@ -576,12 +563,7 @@ export class ColorPlugin extends Plugin {
                 element.style["background-color"] = "";
                 element.classList.add("text-gradient");
             }
-            this.delegateTo(
-                "apply_style",
-                element,
-                "background-image",
-                backgroundImagePartsToCss(parts)
-            );
+            this.applyColorStyle(element, "background-image", backgroundImagePartsToCss(parts));
         } else {
             delete parts.gradient;
             if (hasGradientStyle && !backgroundImagePartsToCss(parts)) {
@@ -589,7 +571,7 @@ export class ColorPlugin extends Plugin {
             }
             // Change camelCase to kebab-case.
             mode = mode.replace("backgroundColor", "background-color");
-            this.delegateTo("apply_style", element, mode, color);
+            this.applyColorStyle(element, mode, color);
         }
         this.fixColorCombination(element, color);
     }
@@ -627,6 +609,18 @@ export class ColorPlugin extends Plugin {
                 return value;
             }
         }
+    }
+
+    /**
+     * @param {Element} element
+     * @param {string} cssProp
+     * @param {string} cssValue
+     */
+    applyColorStyle(element, mode, color) {
+        if (this.delegateTo("apply_color_style_overrides", element, mode, color)) {
+            return;
+        }
+        element.style[mode] = color;
     }
 }
 

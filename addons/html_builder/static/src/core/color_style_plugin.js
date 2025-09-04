@@ -7,7 +7,7 @@ class ColorStylePlugin extends Plugin {
     static id = "colorStyle";
     static dependencies = ["color"];
     resources = {
-        apply_style: withSequence(5, (element, cssProp, color) => {
+        apply_color_style_overrides: withSequence(5, (element, cssProp, color) => {
             applyNeededCss(element, cssProp, color);
             return true;
         }),
