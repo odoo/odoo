@@ -23,7 +23,7 @@ class HrLeaveAllocation(models.Model):
         return res
 
     overtime_deductible = fields.Boolean(compute='_compute_overtime_deductible')
-    overtime_id = fields.Many2one('hr.attendance.overtime', string='Extra Hours', groups='hr_holidays.group_hr_holidays_user')
+    #overtime_id = fields.Many2one('hr.attendance.overtime', string='Extra Hours', groups='hr_holidays.group_hr_holidays_user')
     employee_overtime = fields.Float(related='employee_id.total_overtime', groups='base.group_user')
 
     @api.depends('holiday_status_id')
@@ -37,16 +37,15 @@ class HrLeaveAllocation(models.Model):
         deductible = self.env['hr.leave']._get_deductible_employee_overtime(res.employee_id)
         for allocation in res:
             if allocation.overtime_deductible:
-                duration = deductible[allocation.employee_id]
-                if duration > allocation.employee_id.sudo().total_overtime:
+                if deductible[allocation.employee_id] < 0:
                     raise ValidationError(_('The employee does not have enough overtime hours to request this leave.'))
-                if not allocation.overtime_id:
-                    allocation.sudo().overtime_id = self.env['hr.attendance.overtime.line'].sudo().create({
-                        'employee_id': allocation.employee_id.id,
-                        'date': allocation.date_from,
-                        'adjustment': True,
-                        'duration': -1 * duration,
-                    })
+                # if not allocation.overtime_id:
+                #     allocation.sudo().overtime_id = self.env['hr.attendance.overtime.line'].sudo().create({
+                #         'employee_id': allocation.employee_id.id,
+                #         'date': allocation.date_from,
+                #         'adjustment': True,
+                #         'duration': -1 * duration,
+                #     })
         return res
 
     def write(self, vals):
@@ -55,14 +54,10 @@ class HrLeaveAllocation(models.Model):
             return res
         if not self.env.user.has_group("hr_holidays.group_hr_holidays_user") and any(allocation.state not in ('draft', 'confirm') for allocation in self):
             raise ValidationError(_('Only an Officer or Administrator is allowed to edit the allocation duration in this status.'))
-        for allocation in self.sudo().filtered('overtime_id'):
-            employee = allocation.employee_id
-            duration = allocation.number_of_hours_display
-            overtime_duration = allocation.overtime_id.sudo().duration
-            if overtime_duration != -1 * duration:
-                if duration > employee.total_overtime - overtime_duration:
-                    raise ValidationError(_('The employee does not have enough extra hours to extend this allocation.'))
-                allocation.overtime_id.sudo().duration = -1 * duration
+        deductible = self.env['hr.leave']._get_deductible_employee_overtime(self.employee_id)
+        for allocation in self.sudo().filtered('overtime_deductible'):
+            if deductible[allocation.employee_id] < 0:
+                raise ValidationError(_('The employee does not have enough overtime hours to request this leave.'))
         return res
 
     def action_refuse(self):

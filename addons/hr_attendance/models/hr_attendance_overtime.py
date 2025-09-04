@@ -24,9 +24,6 @@ class HrAttendanceOvertime(models.Model):
         help="Extra-hours including the threshold duration")
     adjustment = fields.Boolean(default=False)
 
-    # Allows only 1 overtime record per employee per day unless it's an adjustment
-    _unique_employee_per_day = models.UniqueIndex("(employee_id, date) WHERE adjustment IS NOT TRUE")
-
 
 class HrAttendanceOvertimeLine(models.Model):
     _name = 'hr.attendance.overtime.line'
@@ -71,14 +68,14 @@ class HrAttendanceOvertimeLine(models.Model):
     # Technical explanation: Exclude constraints compares the given expression on rows 2 by 2 using the given operator; && on tsrange is the intersection.
     # cf: https://www.postgresql.org/docs/current/ddl-constraints.html#DDL-CONSTRAINTS-EXCLUSION
     # for employee_id we compare [employee_id -> employee_id] ranges bc raw integer is not supported (?)
-    # _overtime_no_overlap_same_employee = models.Constraint("""
-    #     EXCLUDE USING GIST (
-    #         tsrange(time_start, time_stop, '()') WITH &&,
-    #         int4range(employee_id, employee_id, '[]') WITH =
-    #     )
-    #     """,
-    #     "Employee cannot have overlapping overtimes",
-    # )
+    _overtime_no_overlap_same_employee = models.Constraint("""
+        EXCLUDE USING GIST (
+            tsrange(time_start, time_stop, '()') WITH &&,
+            int4range(employee_id, employee_id, '[]') WITH =
+        )
+        """,
+        "Employee cannot have overlapping overtimes",
+    )
     _overtime_start_before_end = models.Constraint(
         'CHECK (time_stop > time_start)',
         'Starting time should be before end time.',
