@@ -726,7 +726,7 @@ class BaseCase(case.TestCase, metaclass=MetaCase):
         """Guess if the test_methods is a query_count and adds an `is_query_count` tag on the test
         """
         additional_tags = []
-        if 'is_query_count' in odoo.tools.config['test_tags']:
+        if odoo.tools.config['test_tags'] and 'is_query_count' in odoo.tools.config['test_tags']:
             method_source = inspect.getsource(test_method) if test_method else ''
             if 'self.assertQueryCount' in method_source:
                 additional_tags.append('is_query_count')
@@ -2064,7 +2064,7 @@ class HttpCase(TransactionCase):
         guess if the test_methods is a tour and adds an `is_tour` tag on the test
         """
         additional_tags = super().get_method_additional_tags(test_method)
-        if 'is_tour' in odoo.tools.config['test_tags']:
+        if odoo.tools.config['test_tags'] and 'is_tour' in odoo.tools.config['test_tags']:
             method_source = inspect.getsource(test_method)
             if 'self.start_tour' in method_source:
                 additional_tags.append('is_tour')
