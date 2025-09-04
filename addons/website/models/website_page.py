@@ -1,12 +1,25 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import logging
+import os
 import re
+import time
 
+from odoo.addons.base.models.ir_http import EXTENSION_TO_WEB_MIMETYPES
 from odoo.addons.website.tools import text_from_html
-from odoo import api, fields, models
+from odoo import api, fields, models, tools, http
 from odoo.fields import Domain
 from odoo.tools import escape_psql, SQL
 from odoo.tools.translate import _
+from odoo.tools.safe_eval import safe_eval
+
+logger = logging.getLogger(__name__)
+
+
+class PageCanNotBeCached(Exception):
+    def __init__(self, value=None):
+        self.value = value
+    pass
 
 
 class WebsitePage(models.Model):
@@ -170,7 +183,11 @@ class WebsitePage(models.Model):
             if 'visibility' in vals:
                 if vals['visibility'] != 'restricted_group':
                     vals['group_ids'] = False
+
         self.env.registry.clear_cache()  # write on page == write on view that invalid cache
+        if 'url' in vals or 'visibility' in vals or 'group_ids' in vals:
+            self.env.registry.clear_cache('templates')
+
         return super().write(vals)
 
     def get_website_meta(self):
@@ -268,4 +285,152 @@ class WebsitePage(models.Model):
             'res_id': self.view_id.id,
             'view_mode': 'form',
             'view_id': self.env.ref('website.view_view_form_extend').id,
+        }
+
+    # website cache
+
+    cache_time = fields.Integer(default=3600, help='Time to cache the page. (0 = no cache)')
+    cache_key_expr = fields.Char(help='Expression (tuple) to evaluate the cached key. \nE.g.: "(request.params.get("currency"), )"')
+
+    @api.model
+    def _allow_to_use_cache(self, request):
+        """ Can the future reponse and rendering come from the cache? """
+        return (
+            request.httprequest.method == "GET"
+            and request.env.user._is_public()    # only cache for unlogged user
+            and 'nocache' not in request.httprequest.args  # allow bypass cache / debug
+        )
+
+    @api.model
+    def _allow_cache_insertion(self, layout):
+        """ Will the rendering be added to the cache for all visitors and not
+            contain any user information?
+        """
+        return True
+
+    @api.model
+    def _post_process_response_from_cache(self, request: http.Request, response: http.Response) -> None:
+        # used for _register_website_track
+        response._cached_view_id = self._get_page_info(request)['view_id']
+        response._cached_page = self
+
+    def _get_response(self, request):
+        self.ensure_one()
+        if self._allow_to_use_cache(request):
+            try:
+                response, cache_time = self._get_response_cached(request)
+            except PageCanNotBeCached as notCache:
+                if notCache.value:
+                    return notCache.value[0]
+
+            if response.time + cache_time > time.time():
+                html = re.sub(r'csrf_token: "[^"]+"', f'csrf_token: {request.csrf_token(None)!r}', response.response[0])
+                resp = http.Response(
+                    headers=response.headers.copy(),
+                    mimetype=response.mimetype,
+                    content_type=response.content_type,
+                    status=response.status,
+                    response=[html],
+                )
+                self._post_process_response_from_cache(request, resp)
+                return resp
+
+        return self._get_response_raw(request)
+
+    @api.model
+    def _get_cache_key(self, request):
+        # Always call me with super() AT THE END to have cache_key_expr appended as last element
+        # It is the only way for end user to not use cache via expr.
+        # E.g  (None if 'token' in request.params else 1,)  will bypass cache_time
+        cache_key = (request.website.id, request.lang.code, request.httprequest.path, request.session.debug)
+        cache_key_expr = self._get_page_info(request)['cache_key_expr']
+        if cache_key_expr:  # e.g. (request.geoip.get('country_code'),)
+            cache_key += safe_eval(cache_key_expr, {'request': request})
+        return cache_key
+
+    @tools.conditional(
+        'xml' not in tools.config['dev_mode'],
+        tools.ormcache('self._get_cache_key(request)', cache='templates.cached_values'),
+    )
+    def _get_response_cached(self, request) -> tuple[http.Response, int, str]:
+        response = self._get_response_raw(request)
+        result = (response, self.cache_time)
+
+        if not response or not self.cache_time:
+            raise PageCanNotBeCached(result)
+
+        response.flatten()
+        if not self._allow_cache_insertion(response.response[-1]):
+            raise PageCanNotBeCached(result)
+
+        return result
+
+    def _get_response_raw(self, request) -> http.Response:
+        req_page = request.httprequest.path
+
+        # Force prefetch on all fetchable fields to get all data at once (e.g., 'website_meta').
+        fields_to_fetch = [name for name, field in self._fields.items() if field.store and field.column_type]
+        self.fetch(fields_to_fetch)
+
+        # Force prefetch on all fetchable fields to get all data at once (e.g., 'website_meta').
+        fields_to_fetch = [name for name, field in self.view_id._fields.items() if field.store and field.column_type]
+        self.view_id.fetch(fields_to_fetch)
+
+        if (
+            (self.env.user.has_group('website.group_website_designer') or self.is_visible)
+            and (
+                # If a generic page (niche case) has been COWed and that COWed
+                # page received a URL change, it should not let you access the
+                # generic page anymore, despite having a different URL.
+                self.website_id
+                or self.view_id.id == self.env['ir.ui.view'].with_context(website_id=request.website.id)._get_cached_template_info(self.view_id.key)['id']
+            )
+        ):
+            _, ext = os.path.splitext(req_page)
+            response = request.render(self.view_id.id, {
+                'main_object': self,
+            }, mimetype=EXTENSION_TO_WEB_MIMETYPES.get(ext, 'text/html'))
+            response.time = time.time()
+            return response
+        return False
+
+    @api.model
+    def _get_page_info(self, request) -> dict | None:
+        if self._allow_to_use_cache(request):
+            try:
+                return self._get_page_info_cached(request)
+            except PageCanNotBeCached:
+                return None
+        return self._get_page_info_raw(request)
+
+    @tools.conditional(
+        'xml' not in tools.config['dev_mode'],
+        tools.ormcache('request.httprequest.path', cache='templates.cached_values'),
+    )
+    @api.model
+    def _get_page_info_cached(self, request) -> dict | None:
+        info = self._get_page_info_raw(request)
+        if info is None:
+            # Do not cache unknown page names.
+            raise PageCanNotBeCached()
+        return info
+
+    @api.model
+    def _get_page_info_raw(self, request) -> dict | None:
+        req_page = request.httprequest.path
+
+        # specific page first
+        page_domain = Domain('url', '=', req_page) & request.website.website_domain()
+        page = self.sudo().search_fetch(page_domain, order='website_id asc', limit=1)
+
+        # case insensitive search
+        if not page:
+            page_domain = Domain('url', '=ilike', req_page) & request.website.website_domain()
+            page = self.sudo().search_fetch(page_domain, order='website_id asc', limit=1)
+
+        return page and {
+            'id': page.id,
+            'url': page.url,
+            'cache_key_expr': page.cache_key_expr,
+            'view_id': page.view_id.id,
         }
