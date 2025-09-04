@@ -15,6 +15,7 @@ import { UPDATE_METHODS } from "@web/core/orm_service";
 import { CallbackRecorder } from "@web/search/action_hook";
 import { ControlPanel } from "@web/search/control_panel/control_panel";
 import { PATH_KEYS, router as _router, stateToUrl } from "@web/core/browser/router";
+import { DIALOG_SIZES } from "@web/core/dialog/dialog";
 
 import {
     Component,
@@ -98,13 +99,6 @@ function parseActiveIds(ids) {
     }
     return activeIds;
 }
-
-const DIALOG_SIZES = {
-    "extra-large": "xl",
-    large: "lg",
-    medium: "md",
-    small: "sm",
-};
 
 // -----------------------------------------------------------------------------
 // Errors
