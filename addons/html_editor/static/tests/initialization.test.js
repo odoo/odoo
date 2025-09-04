@@ -2,6 +2,7 @@ import { describe, test } from "@odoo/hoot";
 import { testEditor } from "./_helpers/editor";
 import { unformat } from "./_helpers/format";
 import { BOLD_TAGS } from "./_helpers/tags";
+import { FORMATTABLE_TAGS } from "@html_editor/utils/formatting";
 
 /**
  * content of the "init" sub suite in editor.test.js
@@ -326,5 +327,14 @@ describe("formatting normalization", () => {
                 </p>
             `),
         });
+    });
+
+    test("merges adjacent formattable tags", async () => {
+        for (const tagName of FORMATTABLE_TAGS.map((tag) => tag.toLowerCase())) {
+            await testEditor({
+                contentBefore: `<p><${tagName}>A</${tagName}><${tagName}>B</${tagName}></p>`,
+                contentAfter: `<p><${tagName}>AB</${tagName}></p>`,
+            });
+        }
     });
 });

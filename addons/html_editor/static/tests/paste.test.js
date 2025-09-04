@@ -2918,6 +2918,17 @@ describe("link", () => {
                 contentAfter: "<pre>http://www.xyz.com[]</pre>",
             });
         });
+        test("should not merge consecutive pastes of the same URL into a single anchor", async () => {
+            await testEditor({
+                contentBefore: "<p>[]</p>",
+                stepFunction: async (editor) => {
+                    pasteText(editor, "http://www.xyz.com");
+                    pasteText(editor, "http://www.xyz.com");
+                },
+                contentAfter:
+                    '<p><a href="http://www.xyz.com">http://www.xyz.com</a><a href="http://www.xyz.com">http://www.xyz.com</a>[]</p>',
+            });
+        });
     });
 
     describe("range not collapsed", () => {
