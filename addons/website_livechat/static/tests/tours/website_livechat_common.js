@@ -1,5 +1,3 @@
-import { waitFor } from "@odoo/hoot-dom";
-
 /*******************************
  *         Common Steps
  *******************************/
@@ -28,7 +26,7 @@ export const start = [
         content: "Verify the message has been sent",
         trigger:
             ".o-livechat-root:shadow .o-mail-ChatWindow:contains(El Deboulonnator) .o-mail-Thread:not([data-transient])",
-        async run() {
+        async run({ waitFor }) {
             await waitFor(".o-mail-Message:contains('Hello Sir!')", {
                 root: this.anchor,
                 only: true,

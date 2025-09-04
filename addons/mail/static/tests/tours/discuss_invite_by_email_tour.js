@@ -1,4 +1,3 @@
-import { waitFor } from "@odoo/hoot-dom";
 import { registry } from "@web/core/registry";
 
 registry.category("web_tour.tours").add("discuss.invite_by_email", {
@@ -13,12 +12,12 @@ registry.category("web_tour.tours").add("discuss.invite_by_email", {
         },
         {
             trigger: ".o-discuss-ChannelInvitation-selectable:contains('john (base.group_user)')",
-            async run() {
+            async run({ waitFor, click }) {
                 await waitFor(".o-discuss-ChannelInvitation-selectable", {
                     only: true,
                     timeout: 5000,
                 });
-                this.anchor.click();
+                await click();
             },
         },
         {

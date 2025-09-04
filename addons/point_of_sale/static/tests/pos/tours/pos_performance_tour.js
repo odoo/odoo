@@ -1,5 +1,4 @@
 import { registry } from "@web/core/registry";
-import { waitFor } from "@odoo/hoot-dom";
 
 function logText(displayText) {
     console.log(
@@ -15,7 +14,7 @@ registry.category("web_tour.tours").add("tourSessionOpenProductPerformance", {
             {
                 trigger: "body",
                 timeout: 25000,
-                async run() {
+                async run({ waitFor }) {
                     await waitFor("body:not(:has(.pos-loader))", { timeout: 20000 });
                     const startTime = performance.timeOrigin;
                     const endTime = Date.now();

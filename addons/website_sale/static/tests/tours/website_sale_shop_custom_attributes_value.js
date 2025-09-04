@@ -22,17 +22,17 @@ registry.category("web_tour.tours").add("a_shop_custom_attribute_value", {
     run: 'click',
 }, {
     trigger: configuratorTourUtils.optionalProductSelector("Conference Chair (TEST) (Steel)"),
-    run: function () {
+    run({ queryOne }) {
         optionVariantImage =
-            configuratorTourUtils.optionalProductImageSrc("Conference Chair (TEST) (Steel)")
+            configuratorTourUtils.optionalProductImageSrc(queryOne, "Conference Chair (TEST) (Steel)")
     }
 },
 configuratorTourUtils.selectAttribute("Conference Chair", "Legs", "Aluminium"),
 {
     trigger: configuratorTourUtils.optionalProductSelector("Conference Chair (TEST) (Aluminium)"),
-    run: function () {
+    run({ queryOne }) {
         const newOptionVariantImage =
-            configuratorTourUtils.optionalProductImageSrc("Conference Chair (TEST) (Aluminium)")
+            configuratorTourUtils.optionalProductImageSrc(queryOne, "Conference Chair (TEST) (Aluminium)")
         if (newOptionVariantImage === optionVariantImage) {
             console.error("The variant image wasn't updated");
         }

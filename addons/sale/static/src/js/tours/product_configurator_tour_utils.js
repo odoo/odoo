@@ -1,5 +1,3 @@
-import { queryAttribute } from '@odoo/hoot-dom';
-
 function productSelector(productName) {
     return `
         table.o_sale_product_configurator_table
@@ -16,10 +14,10 @@ function optionalProductSelector(productName) {
     `;
 }
 
-function optionalProductImageSrc(productName) {
-    return queryAttribute(
-        `${optionalProductSelector(productName)} td.o_sale_product_configurator_img>img`, 'src'
-    );
+function optionalProductImageSrc(queryOne, productName) {
+    return queryOne(
+        `${optionalProductSelector(productName)} td.o_sale_product_configurator_img>img`
+    ).getAttribute("src");
 }
 
 function addOptionalProduct(productName) {

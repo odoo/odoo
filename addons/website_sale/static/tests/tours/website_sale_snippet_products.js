@@ -1,4 +1,3 @@
-import { queryFirst } from '@odoo/hoot-dom';
 import {
     changeOptionInPopover,
     clickOnSave,
@@ -39,7 +38,7 @@ registerWebsitePreviewTour('website_sale.products_snippet_recently_viewed', {
     {
         content: 'make delete icon appear',
         trigger: ':iframe .s_dynamic_snippet_products .o_carousel_product_card',
-        run() {
+        run({ queryFirst }) {
             queryFirst(
                 `:iframe .o_carousel_product_card[aria-label="Storage Box"] .js_remove`,
             ).style.display = "block";

@@ -1,4 +1,3 @@
-import { isVisible } from '@odoo/hoot-dom';
 import {
     clickOnEditAndWaitEditMode,
     clickOnSave,
@@ -87,11 +86,10 @@ registerWebsitePreviewTour('snippet_table_of_content', {
     {
         content: "Check that we have the good TOC on desktop",
         trigger: ':iframe .s_table_of_content.o_snippet_mobile_invisible',
-        run: () => {
-            if (isVisible(':iframe .s_table_of_content.o_snippet_desktop_invisible')) {
-                console.error('The mobile TOC should not be visible on desktop');
-            }
-        },
+    },
+    {
+        content: "The mobile TOC should not be visible on desktop",
+        trigger: ':iframe .s_table_of_content.o_snippet_desktop_invisible:not(:visible)',
     },
     {
         content: "Toggle the mobile view",
@@ -101,10 +99,10 @@ registerWebsitePreviewTour('snippet_table_of_content', {
     {
         content: "Check that we have the good TOC on mobile",
         trigger: ':iframe .s_table_of_content.o_snippet_desktop_invisible',
-        run: () => {
-            if (isVisible(':iframe .s_table_of_content.o_snippet_mobile_invisible')) {
-                console.error('The desktop TOC should not be visible on mobile');
-            }
-        },
     },
+    {
+        content: "The desktop TOC should not be visible on mobile",
+        trigger: ":iframe .s_table_of_content.o_snippet_mobile_invisible:not(:visible)",
+
+    }
 ]);

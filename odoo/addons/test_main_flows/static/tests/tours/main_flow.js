@@ -3,7 +3,6 @@ import { registry } from "@web/core/registry";
 import { stepUtils } from "@web_tour/tour_utils";
 
 import { markup } from "@odoo/owl";
-import { queryFirst } from "@odoo/hoot-dom";
 
 registry.category("web_tour.tours").add('main_flow_tour', {
     url: "/odoo",
@@ -94,7 +93,7 @@ registry.category("web_tour.tours").add('main_flow_tour', {
     content: _t("Focus on customer taxes field."),
     async run(actions) {
         await actions.click();
-        const e = queryFirst(".ui-menu-item:not(.o_m2o_dropdown_option) > a.ui-state-active");
+        const e = document.querySelector(".ui-menu-item:not(.o_m2o_dropdown_option) > a.ui-state-active");
         if (e) {
             await actions.click(e);
         } else {
@@ -545,7 +544,7 @@ stepUtils.autoExpandMoreButtons(),
     content: _t("Focus on customer taxes field."),
     async run(actions) {
         await actions.click();
-        const e = queryFirst(
+        const e = document.querySelector(
             ".o_field_widget[name=taxes_id] .o-autocomplete--dropdown-item:not(.o_m2o_dropdown_option) > a"
         );
         if (e) {

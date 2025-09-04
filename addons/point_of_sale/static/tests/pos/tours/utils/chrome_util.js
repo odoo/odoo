@@ -1,6 +1,5 @@
 import * as Dialog from "@point_of_sale/../tests/generic_helpers/dialog_util";
 import { negate } from "@point_of_sale/../tests/generic_helpers/utils";
-import { waitFor } from "@odoo/hoot-dom";
 import * as Numpad from "@point_of_sale/../tests/generic_helpers/numpad_util";
 const { DateTime } = luxon;
 
@@ -183,7 +182,7 @@ export function waitRequest() {
             trigger: "body",
             content: "Wait loading is finished if it is shown",
             timeout: 15000,
-            async run() {
+            async run({ waitFor }) {
                 let isLoading = false;
                 try {
                     isLoading = await waitFor("body:has(.fa-circle-o-notch)", { timeout: 2000 });

@@ -27,10 +27,9 @@ function getMeetingViewTourSteps({ inWelcomePage = false } = {}) {
         {
             trigger:
                 ".o-mail-Meeting-sidePanel .o-mail-Thread:contains('john (base.group_user) and bob (base.group_user)')",
-            async run() {
+            async run({ waitFor }) {
                 const files = [new File(["hi there"], "file2.txt", { type: "text/plain" })];
                 await dragenterFiles(".o-mail-Meeting-sidePanel", files);
-                const { waitFor } = odoo.loader.modules.get("@odoo/hoot-dom");
                 // Ensure other dropzones such as discuss or chat window dropzones are not active in meeting view.
                 await waitFor(".o-Dropzone", { only: true });
             },

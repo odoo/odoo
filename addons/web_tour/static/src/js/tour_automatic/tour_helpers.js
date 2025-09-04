@@ -7,6 +7,15 @@ export class TourHelpers {
     constructor(anchor) {
         this.anchor = anchor;
         this.delay = 20;
+        return new Proxy(this, {
+            get(target, prop, receiver) {
+                const value = Reflect.get(target, prop, receiver);
+                if (typeof value === "function" && prop !== "constructor") {
+                    return value.bind(target);
+                }
+                return value;
+            },
+        });
     }
 
     /**
@@ -50,18 +59,19 @@ export class TourHelpers {
      * Performs a click sequence on the given **{@link Selector}**
      * @description Let's see more informations about click sequence here: {@link hoot.click}
      * @param {Selector} selector
+     * @param {import("@odoo/hoot-dom").PointerOptions} options
      * @example
      *  run: "click", // Click on the action element
      * @example
      *  run: "click .o_rows:first", // Click on the selector
      */
-    async click(selector) {
+    async click(selector, options = { interactive: false }) {
         const element = this._get_action_element(selector);
         // FIXME: should always target interactive element, but some tour steps are
         // targetting elements affected by 'pointer-events: none' for some reason.
         // This option should ultimately disappear, with all affected cased fixed
         // individually (no common cause found during a quick investigation).
-        await hoot.click(element, { interactive: false });
+        await hoot.click(element, options);
     }
 
     /**
@@ -76,20 +86,6 @@ export class TourHelpers {
     async dblclick(selector) {
         const element = this._get_action_element(selector);
         await hoot.dblclick(element);
-    }
-
-    /**
-     * Performs a pointerUp sequence on the given **{@link Selector}**
-     * @description Let's see more informations about pointerUp sequence here: {@link hoot.pointerUp}
-     * @param {Selector} selector
-     * @example
-     *  run: "pointerUp", // pointerUp on the action element
-     * @example
-     *  run: "pointerUp .o_rows:first", // pointerUp on the selector
-     */
-    async pointerup(selector) {
-        const element = this._get_action_element(selector);
-        await hoot.pointerUp(element);
     }
 
     /**
@@ -191,12 +187,13 @@ export class TourHelpers {
     /**
      * Performs a hover sequence on the given **{@link Selector}**.
      * @param {Selector} selector
+     * @param {import("@odoo/hoot-dom").PointerOptions} options
      * @example
      *  run: "hover",
      */
-    async hover(selector) {
+    async hover(selector, options) {
         const element = this._get_action_element(selector);
-        await hoot.hover(element);
+        await hoot.hover(element, options);
     }
 
     /**
@@ -361,5 +358,25 @@ export class TourHelpers {
         range.setStart(node, length);
         range.setEnd(node, length);
         selection.addRange(range);
+    }
+
+    queryAll(target, options) {
+        return hoot.queryAll(target, options);
+    }
+
+    queryFirst(target, options) {
+        return hoot.queryFirst(target, options);
+    }
+
+    queryOne(target, options) {
+        return hoot.queryOne(target, options);
+    }
+
+    waitFor(target, options) {
+        return hoot.waitFor(target, options);
+    }
+
+    waitUntil(predicate, options) {
+        return hoot.waitUntil(predicate, options);
     }
 }

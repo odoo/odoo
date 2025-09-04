@@ -1,4 +1,3 @@
-import { queryAll } from "@odoo/hoot-dom";
 import { registry } from "@web/core/registry";
 import { stepUtils } from "@web_tour/tour_utils";
 const today = luxon.DateTime.now();
@@ -58,9 +57,9 @@ registry.category("web_tour.tours").add('crm_forecast', {
     }, {
         trigger: ".o_kanban_record:contains('Test Opportunity 1')",
         content: "move to the next month",
-        async run(helpers) {
+        async run({ queryAll, drag_and_drop }) {
             const undefined_groups = queryAll('.o_column_title:contains("None")').length;
-            await helpers.drag_and_drop(`.o_opportunity_kanban .o_kanban_group:eq(${1 + undefined_groups})`);
+            await drag_and_drop(`.o_opportunity_kanban .o_kanban_group:eq(${1 + undefined_groups})`);
         },
     }, {
         trigger: ".o_kanban_record:contains('Test Opportunity 1')",
