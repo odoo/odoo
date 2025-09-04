@@ -103,8 +103,31 @@ class AccountChartTemplate(models.AbstractModel):
             taxes_xml_ids = [f"igst_sale_{rate}_sez_exp_lut" for rate in rates] + ['igst_sale_0_sez_exp_lut']
         return [Command.set(taxes_xml_ids)]
 
+    def _set_l10n_in_default_outstanding_payment_accounts(self, company, bank_journal=None, pay_type=None):
+        if bank_journal := bank_journal or self.env.ref(f"account.{company.id}_bank", raise_if_not_found=False):
+            payment_account_map = {
+                "inbound": (
+                    "account.account_payment_method_manual_in",
+                    f"account.{company.id}_account_journal_payment_debit_account_id",
+                ),
+                "outbound": (
+                    "account.account_payment_method_manual_out",
+                    f"account.{company.id}_account_journal_payment_credit_account_id",
+                ),
+            }
+
+            for ptype in ([pay_type] if pay_type in payment_account_map else payment_account_map.keys()):
+                method_xmlid, account_xmlid = payment_account_map[ptype]
+                if ((method := self.env.ref(method_xmlid, raise_if_not_found=False)) and
+                    (account_ref := self.env.ref(account_xmlid, raise_if_not_found=False))):
+                    method_line = bank_journal[f"{ptype}_payment_method_line_ids"].filtered(lambda l: l.payment_method_id == method)
+                    if method_line:
+                        method_line.payment_account_id = account_ref
+
     def _post_load_data(self, template_code, company, template_data):
         super()._post_load_data(template_code, company, template_data)
         if template_code == 'in':
             company = company or self.env.company
             company._update_l10n_in_is_gst_registered()
+
+            self._set_l10n_in_default_outstanding_payment_accounts(company)
