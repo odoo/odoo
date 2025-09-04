@@ -62,7 +62,7 @@
     </t>
 
     <t t-name="point_of_sale.OrderChangeReceiptLine">
-        <div t-attf-class="orderline #{line.isCombo ? 'ms-5 px-2' : 'mx-1'}" style="font-size: 120%;">
+        <div t-attf-class="orderline #{line.combo_parent_uuid ? 'ms-5 px-2' : 'mx-1'}" style="font-size: 120%;">
             <div class="d-flex medium">
                 <span class="me-3" t-esc="line.quantity"/> <span class="product-name" t-esc="line.basic_name"/>
             </div>
