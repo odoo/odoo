@@ -1590,7 +1590,7 @@ class HrExpense(models.Model):
                 'commercial_partner_id': employee_sudo.user_partner_id.id,
                 'currency_id': expenses_sudo.company_currency_id.id,
                 'line_ids': [Command.create(expense_sudo._prepare_move_lines_vals()) for expense_sudo in expenses_sudo],
-                'partner_bank_id': employee_sudo.bank_account_id.id,
+                'partner_bank_id': employee_sudo.primary_bank_account_id.id,
                 'attachment_ids': attachments_data,
             })
         return return_vals

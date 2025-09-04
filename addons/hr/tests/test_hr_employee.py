@@ -3,7 +3,7 @@ from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from psycopg2.errors import UniqueViolation
 
-from odoo import fields
+from odoo import fields, Command
 from odoo.fields import Domain
 from odoo.tests import Form, users, new_test_user, HttpCase, tagged
 from odoo.addons.hr.tests.common import TestHrCommon
@@ -327,7 +327,7 @@ class TestHrEmployee(TestHrCommon):
             'name': 'Test User - employee',
             'user_id': test_user.id,
             'company_id': test_company.id,
-            'bank_account_id': bank_account.id,
+            'bank_account_ids': [Command.link(bank_account.id)],
         })
         # change user -> bank account change company
         with Form(test_employee) as employee_form:

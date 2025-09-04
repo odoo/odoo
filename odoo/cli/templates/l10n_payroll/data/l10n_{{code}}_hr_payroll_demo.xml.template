@@ -100,7 +100,7 @@
         <field name="country_id" ref="base.{{code}}"/>
         <field name="resource_calendar_id" ref="resource.resource_calendar_std"/>
         <field name="identification_id">8752027365496</field>
-        <field name="bank_account_id" ref="l10n_{{code}}_hr_payroll.res_partner_bank_account_norberta"/>
+        <field name="bank_account_ids" eval="[(4, ref('l10n_{{code}}_hr_payroll.res_partner_bank_account_norberta'))]"/>
         <field name="company_id" ref="l10n_{{code}}_hr_payroll.res_company_{{code}}"/>
         <field name="user_id" ref="l10n_{{code}}_hr_payroll.user_antonina"/>
     </record>
