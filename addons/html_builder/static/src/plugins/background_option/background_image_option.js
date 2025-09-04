@@ -1,4 +1,4 @@
-import { BaseOptionComponent } from "@html_builder/core/utils";
+import { BaseOptionComponent, useDomState } from "@html_builder/core/utils";
 import { getBgImageURLFromEl, normalizeColor } from "@html_builder/utils/utils_css";
 import { ImageSize } from "../image/image_size";
 import { getHtmlStyle } from "@html_editor/utils/formatting";
@@ -11,6 +11,9 @@ export class BackgroundImageOption extends BaseOptionComponent {
         // done here because we have direct access to the editing element
         // (which we don't have in the normalize of the current plugin)
         this.toggleBgImageClasses();
+        this.domState = useDomState((editingEl) => ({
+            show: this.showMainColorPicker(editingEl),
+        }));
         super.setup();
     }
     toggleBgImageClasses() {
@@ -23,8 +26,7 @@ export class BackgroundImageOption extends BaseOptionComponent {
             );
         });
     }
-    showMainColorPicker() {
-        const editingEl = this.env.getEditingElement();
+    showMainColorPicker(editingEl) {
         const src = new URL(getBgImageURLFromEl(editingEl), window.location.origin);
         return (
             src.origin === window.location.origin &&
