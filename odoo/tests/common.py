@@ -924,9 +924,21 @@ class BaseCase(case.TestCase):
         """Guess if the test_methods is a query_count and adds an `is_query_count` tag on the test
         """
         additional_tags = []
+<<<<<<< 308e75bd5c03da4c0ba1e45731515b75cdd22bf0
         method_source = inspect.getsource(test_method) if test_method else ''
         if 'self.assertQueryCount' in method_source:
             additional_tags.append('is_query_count')
+||||||| e7da32fe67cfe78bc6da8bf5d36a7c584763e3bb
+        if 'is_query_count' in odoo.tools.config['test_tags']:
+            method_source = inspect.getsource(test_method) if test_method else ''
+            if 'self.assertQueryCount' in method_source:
+                additional_tags.append('is_query_count')
+=======
+        if odoo.tools.config['test_tags'] and 'is_query_count' in odoo.tools.config['test_tags']:
+            method_source = inspect.getsource(test_method) if test_method else ''
+            if 'self.assertQueryCount' in method_source:
+                additional_tags.append('is_query_count')
+>>>>>>> 4d6bd5d3bf07e6eb0dbe87986bee7d85f864b841
         return additional_tags
 
 class Like:
@@ -2486,9 +2498,21 @@ class HttpCase(TransactionCase):
         guess if the test_methods is a tour and adds an `is_tour` tag on the test
         """
         additional_tags = super().get_method_additional_tags(test_method)
+<<<<<<< 308e75bd5c03da4c0ba1e45731515b75cdd22bf0
         method_source = inspect.getsource(test_method)
         if 'self.start_tour' in method_source:
             additional_tags.append('is_tour')
+||||||| e7da32fe67cfe78bc6da8bf5d36a7c584763e3bb
+        if 'is_tour' in odoo.tools.config['test_tags']:
+            method_source = inspect.getsource(test_method)
+            if 'self.start_tour' in method_source:
+                additional_tags.append('is_tour')
+=======
+        if odoo.tools.config['test_tags'] and 'is_tour' in odoo.tools.config['test_tags']:
+            method_source = inspect.getsource(test_method)
+            if 'self.start_tour' in method_source:
+                additional_tags.append('is_tour')
+>>>>>>> 4d6bd5d3bf07e6eb0dbe87986bee7d85f864b841
         return additional_tags
 
     def make_jsonrpc_request(self, route, params=None, headers=None, cookies=None, timeout=12):
