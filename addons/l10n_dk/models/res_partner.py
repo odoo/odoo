@@ -8,7 +8,6 @@ from urllib import parse
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 
-from odoo.addons.account.models.partner import _ref_company_registry
 from odoo.addons.l10n_dk.tools.demo_utils import handle_demo
 
 TIMEOUT = 10
@@ -66,14 +65,6 @@ class ResPartner(models.Model):
             vat_country, vat_number = self._split_vat(partner.vat)
             if vat_country in ('DK', '') and self._check_vat_number('DK', vat_number):
                 partner.company_registry = vat_number
-
-    @api.depends('country_id.code', 'ref_company_ids.account_fiscal_country_id.code')
-    def _compute_company_registry_placeholder(self):
-        super()._compute_company_registry_placeholder()
-        for partner in self:
-            country = partner.ref_company_ids[:1].account_fiscal_country_id or partner.country_id
-            if country.code == 'DK':
-                partner.company_registry_placeholder = _ref_company_registry.get('dk') or ''
 
     @api.depends('country_code', 'vat', 'company_registry')
     def _compute_nemhandel_identifier_type(self):
