@@ -33,6 +33,8 @@ import {
     setVisibilityDependency,
     rerenderField,
     getFormCacheKey,
+    isFieldRequired,
+    getFieldFillWith,
     getDescriptionPosition,
 } from "./utils";
 import { SyncCache } from "@html_builder/utils/sync_cache";
@@ -346,6 +348,42 @@ export class FormOptionPlugin extends Plugin {
         }
     }
     /**
+     * Checks if a form element conforms to its default configuration.
+     *
+     * @param {HTMLElement} formEl The form element.
+     * @param {Object[]} formInfo The default config.
+     */
+    isDefaultFormConfig(formEl, formInfo) {
+        const DOMFields = [
+            ...formEl.querySelectorAll(".s_website_form_field:not(.s_website_form_dnone)"),
+        ].toSorted((a, b) => getFieldName(a).localeCompare(getFieldName(b)));
+        if (DOMFields.length !== formInfo.formFields.length) {
+            return false;
+        }
+        const fieldFormatID = (field) => JSON.stringify(getFieldFormat(field)).replaceAll(" ", "");
+        const fieldLabelText = (field) =>
+            field.querySelector(".s_website_form_label_content")?.textContent;
+        // We use sorted fields here since changing fields order is not
+        // considered as significant.
+        for (const [i, field] of formInfo.formFields
+            .toSorted((a, b) => a.name.localeCompare(b.name))
+            .entries()) {
+            const fieldEl = renderField(field);
+            if (
+                isFieldCustom(fieldEl) != isFieldCustom(DOMFields[i]) ||
+                getFieldName(fieldEl) !== getFieldName(DOMFields[i]) ||
+                getFieldType(fieldEl) !== getFieldType(DOMFields[i]) ||
+                isFieldRequired(fieldEl) != isFieldRequired(DOMFields[i]) ||
+                fieldLabelText(fieldEl) !== fieldLabelText(DOMFields[i]) ||
+                getFieldFillWith(fieldEl) !== getFieldFillWith(DOMFields[i]) ||
+                fieldFormatID(fieldEl) !== fieldFormatID(DOMFields[i])
+            ) {
+                return false;
+            }
+        }
+        return true;
+    }
+    /**
      * Apply the model on the form changing its fields
      *
      * @param {HTMLElement} el
@@ -355,6 +393,7 @@ export class FormOptionPlugin extends Plugin {
      */
     applyFormModel(el, activeForm, modelId, formInfo) {
         let oldFormInfo;
+        let newFormFields = formInfo?.formFields;
         if (modelId) {
             const oldFormKey = activeForm.website_form_key;
             if (oldFormKey) {
@@ -362,8 +401,42 @@ export class FormOptionPlugin extends Plugin {
                     .category("website.form_editor_actions")
                     .get(oldFormKey, null);
             }
-            for (const fieldEl of el.querySelectorAll(".s_website_form_field")) {
-                fieldEl.remove();
+            // TO apply the new model on the current form:
+            // 1. We check if the form was edited.
+            if (this.isDefaultFormConfig(el, oldFormInfo) || !newFormFields) {
+                // 2. The form hasn't been edited yet > We allow to replace
+                // the whole form with the one from the new model.
+                for (const fieldEl of el.querySelectorAll(".s_website_form_field")) {
+                    fieldEl.remove();
+                }
+            } else {
+                // 3. Otherwise, we remove all the fields that are linked to
+                // the current model.
+                for (const fieldData of oldFormInfo.fields) {
+                    const fieldEl = el.querySelector(
+                        `.s_website_form_field:has([name="${fieldData.name}"])`
+                    );
+                    fieldEl?.remove();
+                }
+                // 4. "Model required fields" will be removed too (Otherwise,
+                // they will be handled as "required" for the new action).
+                for (const fieldEl of el.querySelectorAll(
+                    ".s_website_form_field.s_website_form_model_required"
+                )) {
+                    fieldEl.remove();
+                }
+                // 5. If a field from the new form refers the same information
+                // as a current one, it won't be added.
+                // 6. The rest of the fields will be automatically added to
+                // the form DOM.
+                newFormFields = formInfo.formFields.filter(
+                    (newField) =>
+                        ![...el.querySelectorAll(".s_website_form_field")].some(
+                            (oldFieldEl) =>
+                                getFieldName(oldFieldEl) === newField.name ||
+                                getFieldFillWith(oldFieldEl) === newField.fillWith
+                        )
+                );
             }
             activeForm = this.getModelsCache(el).find((model) => model.id === modelId);
         }
@@ -389,7 +462,7 @@ export class FormOptionPlugin extends Plugin {
         // Load template
         if (formInfo) {
             const formatInfo = getDefaultFormat(el);
-            formInfo.formFields.forEach((field) => {
+            newFormFields.forEach((field) => {
                 // Create a shallow copy of field to prevent unintended
                 // mutations to the original field stored in the registry
                 const _field = { ...field };
@@ -922,12 +995,14 @@ export class SelectAction extends BuilderAction {
         const models = this.dependencies.websiteFormOption.getModelsCache(el);
         const targetModelName = getModelName(el);
         const activeForm = models.find((m) => m.model === targetModelName);
-        this.dependencies.websiteFormOption.applyFormModel(
-            el,
-            activeForm,
-            parseInt(modelId),
-            loadResult.formInfo
-        );
+        if (models.find((model) => model.id === parseInt(modelId)).model !== targetModelName) {
+            this.dependencies.websiteFormOption.applyFormModel(
+                el,
+                activeForm,
+                parseInt(modelId),
+                loadResult.formInfo
+            );
+        }
     }
     isApplied({ editingElement: el, value: modelId }) {
         const models = this.dependencies.websiteFormOption.getModelsCache(el);

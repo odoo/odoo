@@ -249,6 +249,16 @@ export function getFieldType(fieldEl) {
 }
 
 /**
+ * Returns the "fillWith" value of the field input (if it exists).
+ *
+ * @param {HTMLElement} fieldEl
+ * @returns {string}
+ */
+export function getFieldFillWith(fieldEl) {
+    return `${fieldEl.querySelector("[data-fill-with]")?.dataset.fillWith}`;
+}
+
+/**
  * Set the active field properties on the field Object
  *
  * @param {HTMLElement} fieldEl
