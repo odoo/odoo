@@ -380,7 +380,7 @@ describe("system classes and attributes", () => {
 
     test("should not copy system classes when changing a tag name", async () => {
         const { el, editor } = await setupEditor(`<p class="x">a[]</p>`, { config: { Plugins } });
-        editor.shared.dom.setTag({
+        editor.shared.dom.setBlock({
             tagName: "h1",
         });
         expect(getContent(el)).toBe(`<h1>a[]</h1>`);
