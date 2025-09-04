@@ -1,8 +1,7 @@
 import { describe, expect, test } from "@odoo/hoot";
 import { leave, runAllTimers } from "@odoo/hoot-dom";
 
-import { withUser } from "@web/../tests/_framework/mock_server/mock_server";
-import { Command, serverState } from "@web/../tests/web_test_helpers";
+import { Command, serverState, withUser } from "@web/../tests/web_test_helpers";
 import { rpc } from "@web/core/network/rpc";
 import {
     assertSteps,

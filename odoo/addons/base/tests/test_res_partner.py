@@ -1056,3 +1056,13 @@ class TestPartnerRecursion(TransactionCase):
         self.p1.parent_id = self.p2
         with self.assertRaises(ValidationError):
             (self.p3|self.p2).write({'parent_id': self.p1.id})
+
+
+@tagged('res_partner')
+class TestPartnerCategory(TransactionCase):
+
+    def test_name_search(self):
+        category = self.env['res.partner.category'].create({'name': 'buggy_test'})
+        result = self.env['res.partner.category'].name_search('buggy_test')
+        self.assertEqual(len(result), 1)
+        self.assertEqual(result, [(category.id, category.display_name)])
