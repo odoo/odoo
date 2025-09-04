@@ -151,7 +151,7 @@
 <template id="courses_search_bar">
     <div class="container o_wslides_home_nav">
         <!-- Navbar dynamically composed using displayed channel tag groups. -->
-        <nav class="navbar navbar-expand-md navbar-light shadow-sm px-2 mb-4">
+        <nav class="navbar navbar-expand-md navbar-light shadow-sm px-2 mb-4 rounded px-3">
             <a class="fw-bold" href="/slides">Online Courses</a>
             <!-- Clear filtering (mobile)-->
             <div class="text-nowrap ms-auto d-md-none" t-if="search_slide_category or search_tags">
@@ -207,7 +207,7 @@
                 </div>
                 <!-- Search box (desktop) -->
                 <t t-call="website.website_search_box_input">
-                    <t t-set="_form_classes" t-valuef="o_wslides_nav_navbar_right d-none d-md-flex"/>
+                    <t t-set="_form_classes" t-valuef="o_wslides_nav_navbar_right"/>
                     <t t-set="search_type" t-valuef="slides"/>
                     <!-- No action: remain on same URL -->
                     <t t-set="display_description" t-valuef="true"/>
