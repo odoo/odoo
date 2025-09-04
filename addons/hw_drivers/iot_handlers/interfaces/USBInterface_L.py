@@ -24,7 +24,10 @@ class USBInterface(Interface):
                         return False
 
         # Ignore serial adapters
-        return dev.product != "USB2.0-Ser!"
+        try:
+            return dev.product != "USB2.0-Ser!"
+        except ValueError:
+            return True
 
     def get_devices(self):
         """
