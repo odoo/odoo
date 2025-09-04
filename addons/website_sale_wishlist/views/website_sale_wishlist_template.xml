@@ -90,7 +90,7 @@
             <t
                 t-if="website.product_page_image_width == '50_pc' and not (is_view_active('website_sale.cta_wrapper_boxed') or is_view_active('website_sale.cta_wrapper_large'))"
                 t-set="_button_classes"
-                t-value="_button_classes + ' flex-grow-0'"
+                t-value="_button_classes + ' flex-grow-1 flex-sm-grow-0'"
             />
             <t
                 t-else=""
