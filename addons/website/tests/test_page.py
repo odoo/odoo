@@ -247,12 +247,6 @@ class WithContext(HttpCase):
         admin_uid = self.env.ref('base.user_admin').id
         website = self.env['website'].get_current_website()
 
-        robot = self.xmlrpc_object.execute(
-            dbname, admin_uid, 'admin',
-            'website', 'search_pages', [website.id], 'info'
-        )
-        self.assertIn({'loc': '/website/info'}, robot)
-
         pages = self.xmlrpc_object.execute(
             dbname, admin_uid, 'admin',
             'website', 'search_pages', [website.id], 'page'

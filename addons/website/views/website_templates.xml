@@ -388,6 +388,14 @@
     </xpath>
 </template>
 
+<template id="auth_pages_meta_robots" inherit_id="web.login_layout" name="Auth Pages - No Index">
+    <xpath expr="t[@t-call]" position="before">
+        <t t-set="head">
+            <meta name="robots" content="noindex, nofollow"/>
+        </t>
+    </xpath>
+</template>
+
 <template id="custom_code_layout" name="Custom Code Layout" inherit_id="website.layout" priority="55">
     <xpath expr="//head" position="inside">
         <t t-out="website.custom_code_head"/>
@@ -2777,6 +2785,9 @@
 <!-- Error and special pages -->
 <template id="website_info" name="Odoo Information">
     <t t-call="website.layout">
+        <t t-set="head">
+            <meta name="robots" content="noindex, nofollow"/>
+        </t>
         <div id="wrap" class="o_website_info"/>
     </t>
 </template>
@@ -3037,7 +3048,7 @@ Sitemap: <t t-out="website.domain"/>/sitemap.xml
 </t>
 <t t-else="">
 Sitemap: <t t-out="url_root"/>sitemap.xml
-
+<t id="robots_module_rules"/>
 
 ##############
 #   custom   #

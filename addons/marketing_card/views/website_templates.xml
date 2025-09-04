@@ -1,7 +1,7 @@
 <odoo>
     <data>
         <template id="robots" inherit_id="website.robots">
-            <xpath expr="//t[@t-out='request.website.sudo().robots_txt']" position="before">
+            <xpath expr="//t[@id='robots_module_rules']" position="inside">
 <t t-translation="off">
 User-agent: *
 Allow: /cards/
