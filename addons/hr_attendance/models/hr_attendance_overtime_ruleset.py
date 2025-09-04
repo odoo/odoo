@@ -10,7 +10,6 @@ class HrAttendanceOvertimeRuleset(models.Model):
     name = fields.Char(required=True)
     description = fields.Html()
     rule_ids = fields.One2many('hr.attendance.overtime.rule', 'ruleset_id')
-    version_ids = fields.One2many('hr.version', 'ruleset_id')
     country_id = fields.Many2one(
         'res.country',
         default=lambda self: self.env.company.country_id,
@@ -37,16 +36,15 @@ class HrAttendanceOvertimeRuleset(models.Model):
             ruleset.rules_count = len(ruleset.rule_ids)
 
     def _attendances_to_regenerate_for(self):
-        if not self.version_ids:
+        self.ensure_one()
+        elligible_version = self.env['hr.version'].search([('ruleset_id', '=', self.id)])
+        if not elligible_version:
             return self.env['hr.attendance']
-        attendances = self.env['hr.attendance'].search([
-            ('employee_id', 'in', self.version_ids.employee_id.ids),
-            ('date', '>=', min(self.version_ids.mapped('date_version'))),
+        elligible_attendances = self.env['hr.attendance'].search([
+            ('employee_id', 'in', elligible_version.employee_id.ids),
+            ('date', '>=', min(elligible_version.mapped('date_version'))),
         ])
-        return self.env['hr.attendance'].search([
-            ('employee_id', 'in', self.version_ids.employee_id.ids),
-            ('date', '>=', min(self.version_ids.mapped('date_version'))),
-        ])
+        return elligible_attendances
 
     def action_regenerate_overtimes(self):
         self._attendances_to_regenerate_for()._update_overtime()

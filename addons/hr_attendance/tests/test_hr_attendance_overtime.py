@@ -85,14 +85,6 @@ class TestHrAttendanceOvertime(TransactionCase):
             'flexible_hours': True,
             'full_time_required_hours': 40,
         })
-        cls.flexible_employee = cls.env['hr.employee'].create({
-            'name': 'Flexi',
-            'company_id': cls.company.id,
-            'tz': 'UTC',
-            'resource_calendar_id': cls.calendar_flex_40h.id,
-            'date_version': date(2020, 1, 1),
-            'contract_date_start': date(2020, 1, 1),
-        })
 
         cls.ruleset = cls.env['hr.attendance.overtime.ruleset'].create({
             'name': 'Ruleset schedule quantity',
@@ -102,8 +94,18 @@ class TestHrAttendanceOvertime(TransactionCase):
                     'expected_hours_from_contract': True,
                     'quantity_period': 'day',
                 })],
-            'version_ids': [*cls.employee.version_ids.ids],
         })
+
+        cls.flexible_employee = cls.env['hr.employee'].create({
+            'name': 'Flexi',
+            'company_id': cls.company.id,
+            'tz': 'UTC',
+            'resource_calendar_id': cls.calendar_flex_40h.id,
+            'date_version': date(2020, 1, 1),
+            'contract_date_start': date(2020, 1, 1),
+            'ruleset_id': cls.ruleset.id
+        })
+
 
     def test_overtime_company_settings(self):
         self.company.write({
@@ -841,9 +843,8 @@ class TestHrAttendanceOvertime(TransactionCase):
 
     def test_overtime_rule_timing(self):
         version = self.employee._get_version(date(2025, 8, 20))
-        self.env['hr.attendance.overtime.ruleset'].create({
+        ruleset = self.env['hr.attendance.overtime.ruleset'].create({
             'name': 'Test Timing Ruleset',
-            'version_ids': [Command.link(version.id)],
             'rule_ids': [
                 Command.create({
                     'name': "Company Schedule",
@@ -860,6 +861,9 @@ class TestHrAttendanceOvertime(TransactionCase):
                 }),
             ],
         })
+
+        version.ruleset_id = ruleset
+
         # attendance 7 -> 16 (5-14) on a wednesday. Expected overtimes:
         # * Naptime 14-15 (= 12-13 utc)
         # * Company Schedule: 7-8 (= 5-6 utc)
@@ -887,9 +891,8 @@ class TestHrAttendanceOvertime(TransactionCase):
 
     def test_overtime_rule_quantity(self):
         version = self.employee._get_version(date(2025, 8, 20))
-        self.env['hr.attendance.overtime.ruleset'].create({
+        ruleset = self.env['hr.attendance.overtime.ruleset'].create({
             'name': 'Test Qty Ruleset',
-            'version_ids': [Command.link(version.id)],
             'rule_ids': [
                 Command.create({
                     'name': "> 9h/d",
@@ -907,6 +910,8 @@ class TestHrAttendanceOvertime(TransactionCase):
                 }),
             ],
         })
+
+        version.ruleset_id = ruleset
 
         # 10h on monday: 1h daily ot
         # 8h on tue-thu (24h)

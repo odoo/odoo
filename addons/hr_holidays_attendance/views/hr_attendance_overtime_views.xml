@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <record id="view_attendance_overtime_line_list" model="ir.ui.view">
-        <field name="name">hr.attendance.overtime.line.list.inherit.hr_work_entry_attendance</field>
-        <field name="model">hr.attendance.overtime.line</field>
-        <field name="inherit_id" ref="hr_attendance.view_attendance_overtime_line_list"/>
+        <field name="name">hr.attendance</field>
+        <field name="model">hr.attendance</field>
+        <field name="inherit_id" ref="hr_attendance.hr_attendance_view_form"/>
         <field name="arch" type="xml">
-            <field name="duration" position="after">
+            <field name="manual_duration" position="after">
                 <field name="compensable_as_leave" optional="show"/>
             </field>
         </field>

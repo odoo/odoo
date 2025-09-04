@@ -56,6 +56,12 @@
                                 style="grid-template-columns:max-content 1fr"
                             >
                                 <span colspan="2" class="mb-3 fw-bold">The hours will be considered extra and submitted to approval.</span>
+                                                <label for="paid" string="Pay extra hours"/>
+                                <span class="d-flex gap-1" name="paid">
+                                    <field class="w-auto" nolabel="1" name="paid"/>
+                                    <label for="amount_rate" string="with a rate of" invisible="not paid"/>
+                                    <field name="amount_rate" style="width:10ch" widget="percentage" invisible="not paid"/>
+                                </span>
                             </group>
                         </page>
                         <page string="Description">
