@@ -3370,9 +3370,7 @@ class MailThread(models.AbstractModel):
           avoid fetching it and easing translation support;
         :param record force_email_company: <res.company> record used when rendering
           notification layout. Otherwise computed based on current record;
-        :param str force_email_lang: when no specific lang is found this is the
-          default lang to use notably to compute model name or translate access
-          buttons;
+        :param str force_email_lang: lang used to group the recipients;
         :param list subtitles: optional list set as template value "subtitles";
 
         :return: iterator based on recipients classified by lang, with their
@@ -3401,7 +3399,7 @@ class MailThread(models.AbstractModel):
         lang_to_recipients = {}
         for data in recipients_data:
             lang_to_recipients.setdefault(
-                data.get('lang') or force_email_lang or self.env.lang,
+                force_email_lang or data.get('lang') or self.env.lang,
                 [],
             ).append(data)
 
