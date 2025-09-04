@@ -120,13 +120,22 @@ const addField = function (
             run: `edit ${display.condition} && press Tab`,
         });
     }
-    if (required) {
-        testText += ".s_website_form_required";
+    const addToggleRequiredStep = (required = true) =>
         ret.push({
-            content: "Mark the field as required",
+            content: `Mark the field as ${required ? "" : "non-"}required`,
             trigger: ".o_customize_tab div[data-action-id='toggleRequired'] input[type='checkbox']",
             run: "click",
         });
+    if (required) {
+        testText += ".s_website_form_required";
+        if (name !== "boolean") {
+            addToggleRequiredStep();
+        }
+    } else {
+        if (name === "boolean") {
+            // Checkbox fields are "required" by default.
+            addToggleRequiredStep(false);
+        }
     }
     if (label) {
         testText += `:has(label:contains(${label}))`;
@@ -887,7 +896,7 @@ registerWebsitePreviewTour(
 
         // Ensure that the description option is working as wanted.
         ...addCustomField("char", "text", "Check description option", false),
-        changeOption("Field", "[data-action-id='toggleDescription'] input"),
+        changeOption("Field", "[data-action-id='setDescription'] input"),
         {
             content: "Ensure that the description has correctly been added on the field",
             trigger:

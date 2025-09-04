@@ -24,7 +24,7 @@
     <!-- Generic Field Layout -->
     <!-- Changes made here needs to be reflected in the different Form view (Contact Us, Jobs, ...) -->
     <t t-name="website.form_field">
-        <div t-attf-class="s_website_form_field mb-3 #{this.field.formatInfo.col or 'col-12'} #{this.field.formatInfo.offset} #{this.field.custom and 's_website_form_custom' or ''} #{(this.field.required and 's_website_form_required' or '') or (this.field.modelRequired and 's_website_form_model_required' or '')} #{this.field.hidden and 's_website_form_field_hidden' or ''} #{this.field.dnone and 's_website_form_dnone' or ''}"
+        <div t-attf-class="s_website_form_field mb-3 #{this.field.formatInfo.col or 'col-12'} #{this.field.formatInfo.offset} #{this.field.custom and 's_website_form_custom' or ''} #{(this.field.required and 's_website_form_required' or '') or (this.field.modelRequired and 's_website_form_model_required' or '')} #{this.field.hidden and 's_website_form_field_hidden' or ''} #{this.field.dnone and 's_website_form_dnone' or ''} #{fieldTypeClasses or ''}"
             t-att-data-type="this.field.type"
             data-name="Field"
             t-att-data-translated-name="this.defaultName">
@@ -70,9 +70,9 @@
             form descriptions as the behavior is kinda weird (but it mainly does
             not make sense to try and change it over there anyway).
         -->
-        <div t-if="default_description" class="s_website_form_field_description small form-text text-muted" contenteditable="true">
+        <span t-if="default_description" class="s_website_form_field_description small form-text text-muted" contenteditable="true">
             <t t-out="default_description"/>
-        </div>
+        </span>
     </t>
 
     <!-- Hidden Field -->
@@ -213,6 +213,7 @@
 
     <!-- Boolean Field -->
     <t t-name="website.form_field_boolean">
+        <t t-set="fieldTypeClasses" t-value="['top', 'center', 'wrap'].includes(field.formatInfo.textPosition) and 's_website_form_description_' + field.formatInfo.textPosition"/>
         <t t-call="website.form_field">
             <div class="form-check">
                 <input

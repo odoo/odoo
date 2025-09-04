@@ -2,7 +2,9 @@ import { _t } from "@web/core/l10n/translation";
 import { renderToElement } from "@web/core/utils/render";
 import { generateHTMLId } from "@web/core/utils/strings";
 import { isSmallInteger } from "@html_builder/utils/utils";
+import { markup } from "@odoo/owl";
 
+const DESCRIPTION_POSITION_PREFIX = "s_website_form_description_";
 export const VISIBILITY_DATASET = [
     "visibilityDependency",
     "visibilityCondition",
@@ -61,6 +63,7 @@ export function getDefaultFormat(el) {
         requiredMark: isRequiredMark(el),
         optionalMark: isOptionalMark(el),
         mark: getMark(el),
+        textPosition: getFieldType(el) === "boolean" ? "top" : "stacked",
     };
 }
 
@@ -109,7 +112,12 @@ export function renderField(field, resetId = false) {
         params.field.string = field.name;
     }
     if (field.description) {
-        params.default_description = _t("Describe your field here.");
+        params.default_description =
+            field.type === "boolean"
+                ? markup`<span>${_t(
+                      "I agree to the"
+                  )} <a class="o_translate_inline" href="#bottom" target="_blank">Terms & Conditions</a></span>`
+                : _t("Describe your field here.");
     } else if (["email_cc", "email_to"].includes(field.name)) {
         params.default_description = _t("Separate email addresses with a comma.");
     }
@@ -189,6 +197,8 @@ export function getFieldFormat(fieldEl) {
         requiredMark: requiredMark,
         optionalMark: optionalMark,
         mark: mark && mark.textContent,
+        textPosition:
+            getFieldType(fieldEl) == "boolean" ? getDescriptionPosition(fieldEl) : "stacked",
     };
     return format;
 }
@@ -566,4 +576,22 @@ export function rerenderField(fieldEl, fields) {
     delete field.id;
     const newFieldEl = renderField(field);
     replaceFieldElement(fieldEl, newFieldEl);
+}
+
+/**
+ * Returns the field description layout (currently used for checkbox fields).
+ *
+ * @param {HTMLElement} fieldEl
+ */
+export function getDescriptionPosition(fieldEl) {
+    if (!fieldEl.querySelector(".s_website_form_field_description")) {
+        return "none";
+    } else {
+        const descriptionPositionClass = [...fieldEl.classList].find((cls) =>
+            cls.startsWith(DESCRIPTION_POSITION_PREFIX)
+        );
+        return descriptionPositionClass
+            ? descriptionPositionClass.replace(DESCRIPTION_POSITION_PREFIX, "")
+            : "stacked";
+    }
 }

@@ -35,6 +35,7 @@ import {
     setVisibilityDependency,
     rerenderField,
     getFormCacheKey,
+    getDescriptionPosition,
 } from "./utils";
 import { SyncCache } from "@html_builder/utils/sync_cache";
 import { _t } from "@web/core/l10n/translation";
@@ -158,7 +159,7 @@ export class FormOptionPlugin extends Plugin {
             MultiCheckboxDisplayAction,
             SetLabelTextAction,
             SelectLabelsPositionAction,
-            ToggleDescriptionAction,
+            SetDescriptionAction,
             SelectTextareaValueAction,
             ToggleRequiredAction,
             SetVisibilityAction,
@@ -1132,8 +1133,28 @@ export class CustomFieldAction extends BuilderAction {
         delete fieldEl.dataset.requirementComparator;
         const oldLabelText = fieldEl.querySelector(".s_website_form_label_content").textContent;
         const field = getCustomField(value, oldLabelText);
+        const isFieldRequired = field.required;
+        const isCheckbox = (type) => type === "boolean";
+
         setActiveProperties(fieldEl, field);
+        if (isCheckbox(getFieldType(fieldEl))) {
+            field.description = !!field.description;
+        }
+        if (isCheckbox(value)) {
+            if (!isFieldRequired) {
+                field.required = true;
+            }
+            if (field.description) {
+                // Sets a default checkbox description & description layout.
+                field.description = !!field.description;
+                field.formatInfo.textPosition = "top";
+            }
+        }
         this.dependencies.websiteFormOption.replaceField(fieldEl, field, fields);
+        if (isCheckbox(value) && !isFieldRequired) {
+            // Set the mark on the "checkbox" field (required by default).
+            this.dependencies.websiteFormOption.setLabelsMark(fieldEl.closest("form"));
+        }
     }
     isApplied({ editingElement: fieldEl, value }) {
         const currentValue = isFieldCustom(fieldEl) ? getFieldType(fieldEl) : "";
@@ -1327,22 +1348,34 @@ export class SelectLabelsPositionAction extends BuilderAction {
         return currentValue === value;
     }
 }
-export class ToggleDescriptionAction extends BuilderAction {
-    static id = "toggleDescription";
+export class SetDescriptionAction extends BuilderAction {
+    static id = "setDescription";
     static dependencies = ["websiteFormOption"];
     load(context) {
         return this.dependencies.websiteFormOption.prepareFields(context);
     }
     apply({ editingElement: fieldEl, loadResult: fields, value }) {
-        const description = fieldEl.querySelector(".s_website_form_field_description");
-        const hasDescription = !!description;
         const field = getActiveField(fieldEl, { fields });
-        field.description = !hasDescription; // Will be changed to default description in qweb
+        // This action is used for two scenarios:
+        // 1. The target field is a checkbox: The field description will be set
+        // with the position specified in the `value`.
+        // 2. Otherwise, the field description will be simply toggled.
+        const toggleMode = !value || value === "none" || !field.description;
+        field.formatInfo.textPosition = value;
+        if (toggleMode) {
+            // If enabled, the field description will be changed to the
+            // default one in qweb.
+            field.description = !field.description;
+        }
         this.dependencies.websiteFormOption.replaceField(fieldEl, field, fields);
     }
-    isApplied({ editingElement: fieldEl }) {
+    isApplied({ editingElement: fieldEl, value }) {
         const description = fieldEl.querySelector(".s_website_form_field_description");
-        return !!description;
+        if (getFieldType(fieldEl) !== "boolean") {
+            return !!description;
+        } else {
+            return getDescriptionPosition(fieldEl) === value;
+        }
     }
 }
 export class ToggleAllowEmptyAction extends BuilderAction {
