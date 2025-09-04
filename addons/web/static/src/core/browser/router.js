@@ -123,7 +123,7 @@ export function startUrl() {
  * @param {{ [key: string]: any }} state
  * @returns
  */
-export function stateToUrl(state) {
+function stateToUrl(state) {
     let path = "";
     const pathKeysToOmit = [..._hiddenKeysFromUrl];
     const actionStack = (state.actionStack || [state]).map((a) => ({ ...a }));
@@ -158,7 +158,7 @@ export function stateToUrl(state) {
     return `/${start_url}${path}${search ? `?${search}` : ""}`;
 }
 
-export function urlToState(urlObj) {
+function urlToState(urlObj) {
     const { pathname, hash, search } = urlObj;
     const state = parseSearchQuery(search);
 

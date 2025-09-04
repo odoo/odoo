@@ -8,7 +8,7 @@ import {
 } from "@mail/utils/common/format";
 
 import { browser } from "@web/core/browser/browser";
-import { stateToUrl } from "@web/core/browser/router";
+import { router } from "@web/core/browser/router";
 import { loadEmoji } from "@web/core/emoji_picker/emoji_picker";
 import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
@@ -293,7 +293,7 @@ export class Message extends Record {
     }
 
     get resUrl() {
-        return url(stateToUrl({ model: this.thread.model, resId: this.thread.id }));
+        return url(router.stateToUrl({ model: this.thread.model, resId: this.thread.id }));
     }
 
     isTranslatable(thread) {
