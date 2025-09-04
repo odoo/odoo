@@ -1852,7 +1852,9 @@ export class PosStore extends WithLazyGetterTrap {
 
     generateOrderChange(order, orderChange, categories, reprint = false) {
         const isPartOfCombo = (line) =>
-            line.isCombo || this.models["product.product"].get(line.product_id).type == "combo";
+            line.isCombo ||
+            line.combo_parent_uuid ||
+            this.models["product.product"].get(line.product_id).type == "combo";
         const comboChanges = orderChange.new.filter(isPartOfCombo);
         const normalChanges = orderChange.new.filter((line) => !isPartOfCombo(line));
         normalChanges.sort((a, b) => {
@@ -1988,24 +1990,35 @@ export class PosStore extends WithLazyGetterTrap {
     }
 
     filterChangeByCategories(categories, currentOrderChange) {
-        const filterFn = (change) => {
+        const matchesCategories = (change) => {
             const product = this.models["product.product"].get(change["product_id"]);
             const categoryIds = product.parentPosCategIds;
-
-            if (change.isCombo) {
-                return true;
-            }
             for (const categoryId of categoryIds) {
                 if (categories.includes(categoryId)) {
                     return true;
                 }
             }
+            return false;
+        };
+
+        const filterChanges = (changes) => {
+            // Combo line uuids to have at least one child line in the given categories
+            const validComboUuids = new Set(
+                changes
+                    .filter((change) => change.combo_parent_uuid && matchesCategories(change))
+                    .map((change) => change.combo_parent_uuid)
+            );
+            return changes.filter(
+                (change) =>
+                    (change.isCombo && validComboUuids.has(change.uuid)) ||
+                    (!change.isCombo && matchesCategories(change))
+            );
         };
 
         return {
-            new: currentOrderChange["new"].filter(filterFn),
-            cancelled: currentOrderChange["cancelled"].filter(filterFn),
-            noteUpdate: currentOrderChange["noteUpdate"].filter(filterFn),
+            new: filterChanges(currentOrderChange["new"]),
+            cancelled: filterChanges(currentOrderChange["cancelled"]),
+            noteUpdate: filterChanges(currentOrderChange["noteUpdate"]),
         };
     }
 
