@@ -476,7 +476,7 @@ export class DashboardSearchBar extends Component {
                     const strings = filterValue?.strings || [];
                     newValue = {
                         strings: isILike ? [...strings, item.value] : [item.value],
-                        operator: isILike ? "ilike" : filterValue?.operator || "ilike",
+                        operator: isILike ? filterValue.operator : "ilike",
                     };
                 }
                 break;
