@@ -120,7 +120,7 @@ class MicrosoftCalendarSync(models.AbstractModel):
 
     @api.model
     def _create_from_microsoft(self, microsoft_event, vals_list):
-        return self.with_context(dont_notify=True).create(vals_list)
+        return self.with_context(dont_notify=True, skip_contact_description=True).create(vals_list)
 
     def _sync_odoo2microsoft(self):
         if not self:
@@ -284,7 +284,7 @@ class MicrosoftCalendarSync(models.AbstractModel):
             dict(self._microsoft_to_odoo_values(e, with_ids=True), need_sync_m=False)
             for e in (new - new_recurrence)
         ]
-        synced_events = self.with_context(dont_notify=True)._create_from_microsoft(new, odoo_values)
+        synced_events = self.with_context(dont_notify=True, skip_contact_description=True)._create_from_microsoft(new, odoo_values)
         synced_recurrences, updated_events = self._sync_recurrence_microsoft2odoo(existing, new_recurrence)
         synced_events |= updated_events
 

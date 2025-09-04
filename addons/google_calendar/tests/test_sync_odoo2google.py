@@ -50,7 +50,7 @@ class TestSyncOdoo2Google(TestSyncGoogle):
             'start': {'dateTime': '2020-01-15T08:00:00+00:00', 'date': None},
             'end': {'dateTime': '2020-01-15T18:00:00+00:00', 'date': None},
             'summary': 'Event',
-            'description': tools.html_sanitize(description),
+            'description': event.description,
             'location': '',
             'visibility': 'private',
             'guestsCanModify': True,
@@ -161,7 +161,7 @@ class TestSyncOdoo2Google(TestSyncGoogle):
             'start': {'dateTime': '2020-01-15T08:00:00+00:00', 'date': None},
             'end': {'dateTime': '2020-01-15T18:00:00+00:00', 'date': None},
             'summary': 'Event',
-            'description': '',
+            'description': event.description,
             'location': '',
             'visibility': 'private',
             'guestsCanModify': True,
@@ -383,7 +383,7 @@ class TestSyncOdoo2Google(TestSyncGoogle):
             'start': {'dateTime': '2020-01-15T08:00:00+00:00', 'date': None},
             'end': {'dateTime': '2020-01-15T18:00:00+00:00', 'date': None},
             'summary': 'Event',
-            'description': '',
+            'description': event.description,
             'location': '',
             'guestsCanModify': True,
             'reminders': {'overrides': [], 'useDefault': False},
@@ -550,7 +550,7 @@ class TestSyncOdoo2Google(TestSyncGoogle):
             'start': {'date': str(event.start_date), 'dateTime': None},
             'end': {'date': str(event.stop_date + relativedelta(days=1)), 'dateTime': None},
             'summary': 'Event with attendees',
-            'description': '',
+            'description': event.description,
             'location': '',
             'guestsCanModify': True,
             'organizer': {'email': 'odoobot@example.com', 'self': True},
@@ -838,7 +838,7 @@ class TestSyncOdoo2Google(TestSyncGoogle):
             'start': {'dateTime': '2023-01-15T08:00:00+00:00', 'date': None},
             'end': {'dateTime': '2023-01-15T18:00:00+00:00', 'date': None},
             'summary': 'Event',
-            'description': '',
+            'description': record.description,
             'location': '',
             'guestsCanModify': True,
             'transparency': 'opaque',
@@ -880,7 +880,7 @@ class TestSyncOdoo2Google(TestSyncGoogle):
             'start': {'date': '2024-01-17', 'dateTime': None},
             'end': {'date': '2024-01-18', 'dateTime': None},
             'summary': 'All Day Recurrent Event',
-            'description': '',
+            'description': event.description,
             'location': '',
             'guestsCanModify': True,
             'reminders': {'overrides': [], 'useDefault': False},
@@ -932,7 +932,10 @@ class TestSyncOdoo2Google(TestSyncGoogle):
                 'start': {'dateTime': '2023-01-15T08:00:00+00:00', 'date': None},
                 'end': {'dateTime': '2023-01-15T18:00:00+00:00', 'date': None},
                 'summary': 'Event',
-                'description': '',
+                'description': ('<div><strong>Organized by</strong><br>'
+                    'organizer_user (base.group_user)<br><a href="mailto:o.o@example.com">o.o@example.com</a><br><br>'
+                    '<strong>Contact Details</strong><br>'
+                    'attendee_user (base.group_user)<br><a href="mailto:a.a@example.com">a.a@example.com</a></div>'),
                 'location': '',
                 'guestsCanModify': True,
                 'transparency': 'opaque',
@@ -961,7 +964,7 @@ class TestSyncOdoo2Google(TestSyncGoogle):
             'start': {'date': '2020-01-15', 'dateTime': None},
             'end': {'date': '2020-01-16', 'dateTime': None},
             'summary': 'Event',
-            'description': '',
+            'description': event.description,
             'location': '',
             'guestsCanModify': True,
             'organizer': {'email': self.organizer_user.email, 'self': True},
@@ -979,6 +982,7 @@ class TestSyncOdoo2Google(TestSyncGoogle):
 
         event2 = event.copy()
         event2._sync_odoo2google(self.google_service)
+        event_response_data['description'] = event2.description
         self.assertGoogleEventInsertedMultiTime({
             **event_response_data,
             'extendedProperties': {'shared': {'%s_odoo_id' % self.env.cr.dbname: event2.id}},
