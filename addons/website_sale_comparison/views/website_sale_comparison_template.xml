@@ -61,12 +61,12 @@
             <t t-set="product_variant_id" t-value="product._get_first_possible_variant_id()"/>
             <t
                 t-set="_button_classes"
-                t-valuef="o_add_compare_dyn btn btn-outline-primary order-last"
+                t-valuef="o_add_compare_dyn btn btn-outline-primary order-last flex-grow-1 flex-sm-grow-0"
             />
             <t
-                t-if="not is_view_active('website_sale_wishlist.product_add_to_wishlist')"
+                t-if="not is_view_active('website_sale_wishlist.product_add_to_wishlist') and not is_view_active('website_sale.cta_wrapper_default')"
                 t-set="_button_classes"
-                t-value="_button_classes + ' flex-grow-1'"
+                t-value="_button_classes + ' w-100'"
             />
             <t
                 t-if="is_view_active('website_sale.cta_wrapper_large')"
@@ -85,7 +85,7 @@
                 data-action="o_comparelist"
             >
                 <span class="fa fa-exchange"/>
-                <span t-att-class="'d-inline' + (' d-lg-none' if website.product_page_image_width == '50_pc' and not (is_view_active('website_sale.cta_wrapper_boxed') or is_view_active('website_sale.cta_wrapper_large')) or is_view_active('website_sale_wishlist.product_add_to_wishlist') else '')">Add to Compare</span>
+                <span t-att-class="'d-inline ms-2' + (' d-lg-none' if website.product_page_image_width == '50_pc' and not (is_view_active('website_sale.cta_wrapper_boxed') or is_view_active('website_sale.cta_wrapper_large')) or is_view_active('website_sale_wishlist.product_add_to_wishlist') else '')">Add to Compare</span>
             </button>
         </xpath>
     </template>

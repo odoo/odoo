@@ -223,6 +223,12 @@
                 border-color: map-get($theme-colors, "primary");
             }
         }
+
+        @include media-breakpoint-down(sm) {
+            .css_attribute_color {
+                --o-wsale-css-attribute-color__size: 1.6rem;
+            }
+        }
     }
 
     .o_wsale_product_information_text {
@@ -804,7 +810,7 @@
         }
 
         .css_attribute_color {
-            --o-wsale-css-attribute-color__height: calc(var(--o-wsale-product-variant-preview-height) - var(--o-wsale-css-attribute-color__border-width));
+            --o-wsale-css-attribute-color__size: var(--o-wsale-product-variant-preview-height);
         }
 
         span[name="hidden_ptavs_count"] {

@@ -192,7 +192,7 @@
         </ul>
         <ul
             t-if="product._has_multiple_uoms()"
-            t-attf-class="o_wsale_product_page_variants d-flex flex-column gap-4 list-unstyled js_add_cart_variants mt-4 pt-3 #{ul_class}"
+            t-attf-class="o_wsale_product_page_variants d-flex flex-column gap-4 list-unstyled js_add_cart_variants mt-4 #{ul_class}"
             t-att-data-attribute_exclusions="json.dumps(attribute_exclusions)"
         >
             <!-- NOTE: the t-att-data-attribute_exclusions is only there to match existing events selectors -->
