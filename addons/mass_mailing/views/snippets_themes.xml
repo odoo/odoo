@@ -52,6 +52,7 @@
 
                 <t t-snippet="mass_mailing.s_mail_block_footer_social" string="Footer Center" group="footers"/>
                 <t t-snippet="mass_mailing.s_mail_block_footer_social_left" string="Footer Left" group="footers"/>
+                <t t-snippet="mass_mailing.s_mail_block_footer_one_liner" string="One Liner" group="footers"/>
 
                 <t t-snippet="mass_mailing.s_cover" string="Cover" group="images"/>
                 <t t-snippet="mass_mailing.s_image_text" group="images" string="Image - Text"/>
@@ -60,86 +61,65 @@
                 <t t-snippet="mass_mailing.s_masonry_block" string="Masonry" group="images"/>
 
                 <t t-snippet="mass_mailing.s_title" string="Title" group="headings"/>
+                <t t-snippet="mass_mailing.s_subtitle" string="Subtitle" group="headings"/>
+                <t t-snippet="mass_mailing.s_author" string="Author" group="headings"/>
+                <t t-snippet="mass_mailing.s_hr_title" string="Separator Title" group="headings"/>
+                <t t-snippet="mass_mailing.s_blog_title" string="Blog Title" group="headings"/>
 
                 <t t-snippet="mass_mailing.s_company_team" string="Team" group="people"/>
+                <t t-snippet="mass_mailing.s_company_team_shapes" string="Team shapes" group="people"/>
+                <t t-snippet="mass_mailing.s_reviews_wall" string="Customer testimonials" group="people"/>
                 <t t-snippet="mass_mailing.s_references" string="References" group="people"/>
                 <t t-snippet="mass_mailing.s_blockquote" string="Blockquote" group="people"/>
 
                 <t t-snippet="mass_mailing.s_three_columns" string="Columns" group="columns"/>
                 <t t-snippet="mass_mailing.s_color_blocks_2" string="Big Boxes" group="columns"/>
                 <t t-snippet="mass_mailing.s_media_list" string="Media List" group="columns"/>
-                <t t-snippet="mass_mailing.s_features" string="Features" group="columns"/>
+                <t t-snippet="mass_mailing.s_attributes_horizontal" string="Features" group="columns"/>
                 <t t-snippet="mass_mailing.s_numbers" string="Numbers" group="columns"/>
                 <t t-snippet="mass_mailing.s_event" string="Event" group="columns"/>
                 <t t-snippet="mass_mailing.s_product_list" string="Items" group="columns"/>
-                    <t t-snippet="mass_mailing.s_features_grid" string="Features Grid" group="columns"/>
+                <t t-snippet="mass_mailing.s_features_grid" string="Features Grid" group="columns"/>
 
                 <t t-snippet="mass_mailing.s_comparisons" string="Comparisons" group="marketing"/>
                 <t t-snippet="mass_mailing.s_showcase" string="Showcase" group="marketing"/>
                 <t t-snippet="mass_mailing.s_call_to_action" string="Call to Action" group="marketing"/>
                 <t t-snippet="mass_mailing.s_coupon_code" string="Promo Code" group="marketing"/>
-                <t t-snippet="mass_mailing.s_mail_block_discount1" string="Discount Offer" group="marketing"/>
 
                 <t t-snippet="mass_mailing.s_text_block" string="Paragraph" group="text"/>
+                <t t-snippet="mass_mailing.s_link_list" string="Links List" group="text"/>
+                <t t-snippet="mass_mailing.s_schedule" string="Schedule" group="text"/>
+                <t t-snippet="mass_mailing.s_pricelist_boxed" string="Pricelist Boxed" group="text"/>
             </snippets>
             <snippets id="snippet_content" string="Inner Content">
+                <t t-snippet="mass_mailing.s_inline_text" string="Text" t-thumbnail="/mass_mailing/static/src/img/snippets_thumbs/s_text_block.svg"/>
                 <t t-snippet="mass_mailing.s_alert" string="Alert" t-thumbnail="/mass_mailing/static/src/img/snippets_thumbs/s_alert.svg"/>
-                <t t-snippet="mass_mailing.s_rating" string="Rating" t-thumbnail="/mass_mailing/static/src/img/snippets_thumbs/s_rating.svg"/>
                 <t t-snippet="mass_mailing.s_hr" string="Separator" t-thumbnail="/web_editor/static/src/img/snippets_thumbs/s_hr.svg"/>
                 <t t-snippet="mass_mailing.s_text_highlight" string="Text Highlight" t-thumbnail="/mass_mailing/static/src/img/snippets_thumbs/s_text_highlight.svg"/>
+                <t t-snippet="mass_mailing.s_rating" string="Rating" t-thumbnail="/mass_mailing/static/src/img/snippets_thumbs/s_rating.svg"/>
+                <t t-snippet="mass_mailing.s_button" string="Button" t-thumbnail="/mass_mailing/static/src/img/snippets_thumbs/s_button.svg"/>
+                <t t-snippet="mass_mailing.s_image" string="Image" t-thumbnail="/mass_mailing/static/src/img/snippets_thumbs/s_image.svg"/>
+                <t t-snippet="mass_mailing.s_video" string="Video" t-thumbnail="/mass_mailing/static/src/img/snippets_thumbs/s_video.svg"/>
+                <t t-snippet="mass_mailing.s_badge" string="Badge" t-thumbnail="/mass_mailing/static/src/img/snippets_thumbs/s_badge.svg"/>
+                <t t-snippet="mass_mailing.s_cta_badge" string="CTA Badge" t-thumbnail="/mass_mailing/static/src/img/snippets_thumbs/s_cta_badge.svg"/>
             </snippets>
         </t>
     </xpath>
 </template>
 
 <!-- Snippet Templates -->
-<template id="s_mail_block_header_social" name="Left Logo">
-    <section class="s_header_social o_mail_block_header_social o_mail_snippet_general pt16 pb16" data-name="Left Logo">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-4 pt16 pb16">
-                    <a t-att-href="(company_id.website) or '#'" style="text-decoration:none;float:none;" target="_blank">
-                         <img t-if="company_id.logo" border="0" t-att-src="image_data_uri(company_id.logo)" style="height:auto;max-width:100%;" />
-                    </a>
-                </div>
-                <div class="col-md-8 o_mail_header_social" style="text-align: right;">
-                    <t t-call="mass_mailing.social_links"/>
-                </div>
-            </div>
-        </div>
-    </section>
-</template>
-
 <template id="s_mail_block_header_text_social" name="Left Text">
     <section class="s_header_text_social o_mail_block_header_text_social o_mail_snippet_general" data-name="Left Text">
         <div class="container">
             <div class="row">
                 <div class="col-md-4 pt16 pb16">
                     <h1>
-                        <a t-att-href="(company_id.website) or '#'" target="_blank">
-                            My Company
-                        </a>
+                        <a t-att-href="(company_id.website) or '#'" target="_blank" t-out="company_id.partner_id.name"/>
                     </h1>
                 </div>
                 <div class="col-md-8 o_mail_header_social" style="text-align: right;">
                     <t t-call="mass_mailing.social_links"/>
                 </div>
-            </div>
-        </div>
-    </section>
-</template>
-
-<template id="s_mail_block_header_logo" name="Centered Logo">
-    <section class="s_header_logo o_mail_block_header_logo o_mail_snippet_general" data-name="Centered Logo">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-3"/>
-                <div class="col-md-6" style="text-align: center;">
-                    <a t-att-href="(company_id.website) or '#'" style="text-decoration:none;" target="_blank">
-                        <img t-if="company_id.logo" border="0" t-att-src="image_data_uri(company_id.logo)" style="height:auto;max-width:100%;"/>
-                    </a>
-                </div>
-                <div class="col-md-3" style="text-align: right;"/>
             </div>
         </div>
     </section>
@@ -151,91 +131,6 @@
             View Online
         </a>
     </section>
-</template>
-
-<template id="s_mail_block_discount1" name="Discount Offer">
-    <section class="s_discount1 o_mail_block_discount1 o_mail_snippet_general pt0 pb16" data-name="Discount Offer">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-6 pt16">
-                    <h3 style="text-align: center;"><font class="text-o-color-2"><span style="font-weight:bolder;">-20%</span></font></h3>
-                    <p style="text-align: center;">ON YOUR NEXT ORDER!</p>
-                    <div style="text-align: center;">
-                        <a role="button" href="#" class="btn btn-primary">Redeem Discount!</a>
-                    </div>
-                </div>
-                <div class="col-md-6 pt16">
-                    <p>We are continuing to grow and we miss seeing you be a part of it! We've increased store hours and have lot's of new brands available. To welcome you back please accept this 20% discount on you next purchase by clicking the button.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-</template>
-
-<template id="s_mail_block_footer_social">
-    <section class="s_footer_social o_mail_block_footer_social o_mail_footer_social_center o_mail_snippet_general bg-200 pt16" data-name="Footer Center">
-        <div class="container">
-            <div class="row">
-                <div class="col-md o_mail_footer_social" style="text-align: center;">
-                    <t t-call="mass_mailing.social_links"/>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md o_mail_footer_links" style="text-align: center;">
-                    <a role="button" href="/unsubscribe_from_list" class="btn btn-link">Unsubscribe</a>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md">
-                    <p style="text-align: center;">
-                        © <t t-esc="datetime.datetime.now().year"/> All Rights Reserved
-                    </p>
-                </div>
-            </div>
-        </div>
-    </section>
-</template>
-
-<template id="s_mail_block_footer_social_left" name="Footer Left">
-    <section class="s_footer_social o_mail_block_footer_social o_mail_footer_social_left o_mail_snippet_general pt16" data-name="Footer Left">
-        <div class="container">
-            <div class="row">
-                <div class="col-md o_mail_footer_description">
-                    <p t-if="res_company">
-                        <strong><t t-esc="res_company.partner_id.name"/></strong>
-                    </p>
-                    <div class="o_mail_footer_links">
-                        <a role="button" href="/unsubscribe_from_list" class="btn btn-link">Unsubscribe</a>
-                    </div>
-                </div>
-                <div class="col-md" align="right">
-                    <div class="o_mail_footer_social pb16"><t t-call="mass_mailing.social_links"/></div>
-                    <p class="o_mail_footer_copy">© <t t-esc="datetime.datetime.now().year"/> All Rights Reserved</p>
-                </div>
-            </div>
-        </div>
-    </section>
-</template>
-
-<template id="social_links">
-
-    <t t-set="social_links" t-value="company_id._get_social_media_links()"/>
-
-    <a t-att-href="social_links.get('social_facebook')" aria-label="Facebook" title="Facebook">
-        <span class="fa fa-facebook"></span>
-    </a>&amp;nbsp;&amp;nbsp;
-    <a t-att-href="social_links.get('social_linkedin')" style="margin-left:10px" aria-label="LinkedIn" title="LinkedIn">
-        <span class="fa fa-linkedin"></span>
-    </a>&amp;nbsp;&amp;nbsp;
-    <a t-att-href="social_links.get('social_twitter')" style="margin-left:10px" aria-label="X" title="X">
-        <span class="fa fa-twitter"></span>
-    </a>&amp;nbsp;&amp;nbsp;
-    <a t-att-href="social_links.get('social_instagram')" style="margin-left:10px" aria-label="Instagram" title="Instagram">
-        <span class="fa fa-instagram"></span>
-    </a>&amp;nbsp;&amp;nbsp;
-    <a t-att-href="social_links.get('social_tiktok')" style="margin-left:10px" aria-label="TikTok" title="TikTok">
-        <span class="fa fa-tiktok"></span>
-    </a>
 </template>
 
 </odoo>
