@@ -46,7 +46,7 @@ class StockMove(models.Model):
         super()._compute_description_picking()
         for move in self:
             if move.purchase_line_id:
-                seller = move.sudo().purchase_line_id.selected_seller_id
+                seller = move.purchase_line_id.sudo().selected_seller_id
                 vendor_reference = f'[{seller.product_code}]' if seller.product_code else ''
                 vendor_reference += f' {seller.product_name}' if seller.product_name else ''
                 no_variant_attributes = '\n'.join(f'{attribute.attribute_id.name}: {attribute.name}' for attribute in move.purchase_line_id.sudo().product_no_variant_attribute_value_ids)
