@@ -1,7 +1,7 @@
 import { redo, undo } from "@html_editor/../tests/_helpers/user_actions";
 import { expectElementCount } from "@html_editor/../tests/_helpers/ui_expectations";
 import { beforeEach, describe, expect, press, queryOne, test, waitFor } from "@odoo/hoot";
-import { animationFrame } from "@odoo/hoot-dom";
+import { animationFrame, edit } from "@odoo/hoot-dom";
 import {
     contains,
     defineModels,
@@ -516,6 +516,38 @@ test("Shouldn't have the 'Link to country' option if there's no country field", 
     );
     await contains(":iframe select[name='state_id']").click();
     expect(".options-container .hb-row[data-action-id='linkStateToCountry']").toHaveCount(0);
+});
+
+test("Label falls back to default value (data-translated-name) when removed", async () => {
+    onRpc("get_authorized_fields", () => ({}));
+    await setupWebsiteBuilder(
+        `<section class="s_website_form" data-snippet="s_website_form" data-name="Form">
+            <div class="container-fluid">
+            <form action="/website/form/" method="post" class="o_mark_required" data-model_name="mail.mail">
+                <div class="s_website_form_rows">
+                    <div data-name="Field" data-translated-name="Default value" class="s_website_form_field s_website_form_required" data-type="text">
+                        <div class="row">
+                            <label class="s_website_form_label" for="oyeqnysxh10b">
+                                <span class="s_website_form_label_content">My Field</span>
+                            </label>
+                        <select class="form-select s_website_form_input" required="" id="oyeqnysxh10b" name="field" />
+                        </div>
+                    </div>
+                </div>
+            </form>
+            </div>
+        </section>`
+    );
+
+    await contains(":iframe section span:contains('My Field')").click();
+    await contains("[data-action-id='setLabelText'] input").click();
+    expect("[data-action-id='setLabelText'] input").toHaveValue("My Field");
+    await edit("");
+    await press("Tab");
+    expect("[data-action-id='setLabelText'] input").toHaveValue("Default value");
+    expect(":iframe section [data-translated-name='Default value'] label").toHaveText(
+        "Default value"
+    );
 });
 
 describe("Many2one Field", () => {

@@ -1,4 +1,5 @@
 import { _t } from "@web/core/l10n/translation";
+import { escape } from "@web/core/utils/strings";
 import { renderToElement } from "@web/core/utils/render";
 import { generateHTMLId } from "@html_builder/utils/utils_css";
 import { isSmallInteger } from "@html_builder/utils/utils";
@@ -134,7 +135,7 @@ export function renderField(field, resetId = false) {
             });
         }
     }
-    const params = { field: { ...field } };
+    const params = { field: { ...field }, defaultName: escape(field.string || _t("Field")) };
     if (["url", "email", "tel"].includes(field.type)) {
         params.field.inputType = field.type;
     }

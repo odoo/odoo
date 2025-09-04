@@ -322,6 +322,14 @@ export class Form extends Interaction {
         }
 
         // Prepare form inputs
+        // Set a placeholder name to input fields without
+        // a label to allow FormData to function correctly
+        for (const [i, inputEl] of this.el
+            .querySelectorAll(".s_website_form_input:is(:not([name]), [name=''])")
+            .entries()) {
+            inputEl.setAttribute("name", "unknown_field_" + (i + 1));
+        }
+
         const formFields = [];
         new FormData(this.el).forEach((value, key) => {
             const inputElement = this.el.querySelector(`[name="${CSS.escape(key)}"]`);
