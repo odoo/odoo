@@ -202,8 +202,7 @@
                                         <t t-set="current_year_qweb" t-value="datetime.datetime.now().year"/>
                                         <t t-set="today_date_obj_qweb" t-value="datetime.date.today()"/>
                                         <t t-set="all_active_employees_for_welcome" t-value="request.env['hr.employee'].sudo().search([
-            ('active', '=', True),
-            ('company_id', '=', request.website.company_id.id)
+            ('active', '=', True)
         ])"/>
                                         <t t-set="new_hires_this_month_list" t-value="[]"/>
                                         <t t-foreach="all_active_employees_for_welcome" t-as="employee_new_hire">
@@ -355,7 +354,9 @@
                                         <t t-if="monthly_winners">
                                             <div class="winner-card">
                                                 <div class="winner-title">
-                                                    <h3>Ganadores del mes de <t t-esc="monthly_winners[0].winner_month"/></h3>
+                                                    <h3>Ganadores del mes de
+                                                        <t t-esc="monthly_winners[0].winner_month"/>
+                                                    </h3>
                                                     <t t-if="user.company_id.id == 1">
                                                         <img t-att-src="'/mi_website_ext/static/src/img/Trophy.svg'"
                                         alt="Sol" />
@@ -381,7 +382,6 @@
                                                                 <p>
                                                                     <t t-esc="winner_pub.winner_score"/> puntos
                                                                 </p>
-                                                                
                                                                 <p t-if="winner_pub.employee_id.department_id">
                                                                     <t t-esc="winner_pub.employee_id.department_id.name"/>
                                                                 </p>
