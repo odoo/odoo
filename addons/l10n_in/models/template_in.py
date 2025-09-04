@@ -108,3 +108,12 @@ class AccountChartTemplate(models.AbstractModel):
         if template_code == 'in':
             company = company or self.env.company
             company._update_l10n_in_is_gst_registered()
+
+            # The COA (Chart of Accounts) data is loaded after the initial compute methods are called.
+            # During initial journal setup, the payment methods and accounts may not exist yet,
+            # causing the payment method lines to not be properly configured.
+            # We call these helper methods again in _post_load_data to ensure all payment method lines
+            # are correctly assigned once all COA data is fully available.
+            bank_journals = company.bank_journal_ids
+            bank_journals._update_payment_method_lines("inbound")
+            bank_journals._update_payment_method_lines("outbound")
