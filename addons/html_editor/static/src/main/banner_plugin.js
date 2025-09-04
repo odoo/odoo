@@ -136,7 +136,7 @@ export class BannerPlugin extends Plugin {
         const nextNode = this.dependencies.baseContainer.isCandidateForBaseContainer(blockEl)
             ? blockEl.nodeName
             : this.dependencies.baseContainer.getDefaultNodeName();
-        this.dependencies.dom.setTag({ tagName: nextNode });
+        this.dependencies.dom.setBlock({ tagName: nextNode });
         // If the first child of editable is contenteditable false element
         // a chromium bug prevents selecting the container.
         // Add a baseContainer above it so it's no longer the first child.

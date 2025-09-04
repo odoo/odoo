@@ -136,7 +136,7 @@ export class FontPlugin extends Plugin {
                 title: _t("Heading 1"),
                 description: _t("Big section heading"),
                 icon: "fa-header",
-                run: () => this.dependencies.dom.setTag({ tagName: "H1" }),
+                run: () => this.dependencies.dom.setBlock({ tagName: "H1" }),
                 isAvailable: this.blockFormatIsAvailable.bind(this),
             },
             {
@@ -144,7 +144,7 @@ export class FontPlugin extends Plugin {
                 title: _t("Heading 2"),
                 description: _t("Medium section heading"),
                 icon: "fa-header",
-                run: () => this.dependencies.dom.setTag({ tagName: "H2" }),
+                run: () => this.dependencies.dom.setBlock({ tagName: "H2" }),
                 isAvailable: this.blockFormatIsAvailable.bind(this),
             },
             {
@@ -152,7 +152,7 @@ export class FontPlugin extends Plugin {
                 title: _t("Heading 3"),
                 description: _t("Small section heading"),
                 icon: "fa-header",
-                run: () => this.dependencies.dom.setTag({ tagName: "H3" }),
+                run: () => this.dependencies.dom.setBlock({ tagName: "H3" }),
                 isAvailable: this.blockFormatIsAvailable.bind(this),
             },
             {
@@ -161,7 +161,7 @@ export class FontPlugin extends Plugin {
                 description: _t("Paragraph block"),
                 icon: "fa-paragraph",
                 run: () => {
-                    this.dependencies.dom.setTag({
+                    this.dependencies.dom.setBlock({
                         tagName: this.dependencies.baseContainer.getDefaultNodeName(),
                     });
                 },
@@ -172,7 +172,7 @@ export class FontPlugin extends Plugin {
                 title: _t("Quote"),
                 description: _t("Add a blockquote section"),
                 icon: "fa-quote-right",
-                run: () => this.dependencies.dom.setTag({ tagName: "blockquote" }),
+                run: () => this.dependencies.dom.setBlock({ tagName: "blockquote" }),
                 isAvailable: this.blockFormatIsAvailable.bind(this),
             },
             {
@@ -180,7 +180,7 @@ export class FontPlugin extends Plugin {
                 title: _t("Code"),
                 description: _t("Add a code section"),
                 icon: "fa-code",
-                run: () => this.dependencies.dom.setTag({ tagName: "pre" }),
+                run: () => this.dependencies.dom.setBlock({ tagName: "pre" }),
                 isAvailable: this.blockFormatIsAvailable.bind(this),
             },
         ],
@@ -200,7 +200,7 @@ export class FontPlugin extends Plugin {
                     getItems: () => this.availableFontItems,
                     getDisplay: () => this.font,
                     onSelected: (item) => {
-                        this.dependencies.dom.setTag({
+                        this.dependencies.dom.setBlock({
                             tagName: item.tagName,
                             extraClass: item.extraClass,
                         });
@@ -313,7 +313,7 @@ export class FontPlugin extends Plugin {
         this.fontSize = reactive({ displayName: "" });
         this.font = reactive({ displayName: "" });
         this.blockFormatIsAvailableMemoized = weakMemoize(
-            (selection) => isHtmlContentSupported(selection) && this.dependencies.dom.canSetTag()
+            (selection) => isHtmlContentSupported(selection) && this.dependencies.dom.canSetBlock()
         );
     }
 
@@ -490,7 +490,7 @@ export class FontPlugin extends Plugin {
                 targetOffset,
                 blockToSplit,
             });
-            this.dependencies.dom.setTag({
+            this.dependencies.dom.setBlock({
                 tagName: this.dependencies.baseContainer.getDefaultNodeName(),
             });
             return true;
@@ -590,7 +590,7 @@ export class FontPlugin extends Plugin {
                 this.dependencies.selection.getEditableSelection()
             );
             fillEmpty(blockEl);
-            this.dependencies.dom.setTag({ tagName: headingToBe });
+            this.dependencies.dom.setBlock({ tagName: headingToBe });
         }
     }
 
