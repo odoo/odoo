@@ -1224,7 +1224,7 @@ class HrEmployee(models.Model):
 
     @api.onchange('resource_calendar_id')
     def _onchange_timezone(self):
-        if self.resource_calendar_id and not self.tz:
+        if not self.tz:
             self.tz = self.resource_calendar_id.tz
 
     def _remove_work_contact_id(self, user, employee_company):
@@ -1512,7 +1512,7 @@ class HrEmployee(models.Model):
         for employee in self.sudo():
             for version in employee._get_versions_with_contract_overlap_with_period(start.date(), stop.date()):
                 # if employee is under fully flexible contract, use timezone of the employee
-                calendar_tz = timezone(version.resource_calendar_id.tz) if version.resource_calendar_id else timezone(employee.resource_id.tz)
+                calendar_tz = timezone(version.resource_calendar_id.tz) or timezone(employee.resource_id.tz)
                 date_start = datetime.combine(
                     version.date_start,
                     time(0, 0, 0)
@@ -1545,7 +1545,7 @@ class HrEmployee(models.Model):
         if not employee_versions:
             # Checking the calendar directly allows to not grey out the leaves taken
             # by the employee or fallback to the company calendar
-            return (self.resource_calendar_id or self.env.company.resource_calendar_id)._get_unusual_days(
+            return self.resource_calendar_id._get_unusual_days(
                 datetime.combine(fields.Date.from_string(date_from), time.min).replace(tzinfo=UTC),
                 datetime.combine(fields.Date.from_string(date_to), time.max).replace(tzinfo=UTC),
                 self.company_id,
@@ -1568,14 +1568,14 @@ class HrEmployee(models.Model):
         else:
             valid_versions = self.sudo()._get_versions_with_contract_overlap_with_period(start.date(), stop.date())
             if not valid_versions:
-                calendar = self.resource_calendar_id or self.company_id.resource_calendar_id
+                calendar = self.resource_calendar_id
                 return calendar._attendance_intervals_batch(start, stop, self.resource_id, lunch=True)[self.resource_id.id]
             employee_tz = timezone(self.tz) if self.tz else None
             duration_data = Intervals()
             for version in valid_versions:
                 version_start = datetime.combine(version.date_start, time.min, employee_tz)
                 version_end = datetime.combine(version.date_end or date.max, time.max, employee_tz)
-                calendar = version.resource_calendar_id or version.company_id.resource_calendar_id
+                calendar = version.resource_calendar_id
                 lunch_intervals = calendar._attendance_intervals_batch(
                     max(start, version_start),
                     min(stop, version_end),
@@ -1589,7 +1589,7 @@ class HrEmployee(models.Model):
         valid_versions = self.sudo()._get_versions_with_contract_overlap_with_period(date_from.date(), date_to.date())
         employee_tz = timezone(self.tz) if self.tz else None
         if not valid_versions:
-            calendar = self.resource_calendar_id or self.company_id.resource_calendar_id
+            calendar = self.resource_calendar_id
             calendar_intervals = calendar._work_intervals_batch(
                 date_from,
                 date_to,
@@ -1602,7 +1602,7 @@ class HrEmployee(models.Model):
         for version in valid_versions:
             version_start = datetime.combine(version.date_start, time.min, employee_tz)
             version_end = datetime.combine(version.date_end or date.max, time.max, employee_tz)
-            calendar = version.resource_calendar_id or version.company_id.resource_calendar_id
+            calendar = version.resource_calendar_id
             version_intervals = calendar._work_intervals_batch(
                                     max(date_from, version_start),
                                     min(date_to, version_end),
@@ -1618,7 +1618,7 @@ class HrEmployee(models.Model):
         valid_versions = self.sudo()._get_versions_with_contract_overlap_with_period(date_from.date(), date_to.date())
         employee_tz = timezone(self.tz) if self.tz else None
         if not valid_versions:
-            calendar = self.resource_calendar_id or self.company_id.resource_calendar_id
+            calendar = self.resource_calendar_id
             return calendar.with_context(employee_timezone=employee_tz).get_work_duration_data(
                 date_from,
                 date_to,
@@ -1627,7 +1627,7 @@ class HrEmployee(models.Model):
         for version in valid_versions:
             version_start = datetime.combine(version.date_start, time.min, employee_tz)
             version_end = datetime.combine(version.date_end or date.max, time.max, employee_tz)
-            calendar = version.resource_calendar_id or version.company_id.resource_calendar_id
+            calendar = version.resource_calendar_id
             version_duration_data = calendar\
                 .with_context(employee_timezone=employee_tz)\
                 .get_work_duration_data(

@@ -136,7 +136,9 @@ class HrVersion(models.Model):
     departure_description = fields.Html(string="Additional Information", groups="hr.group_hr_user", copy=False)
     departure_date = fields.Date(string="Departure Date", groups="hr.group_hr_user", copy=False, tracking=True)
 
-    resource_calendar_id = fields.Many2one('resource.calendar', inverse='_inverse_resource_calendar_id', check_company=True, string="Working Hours", tracking=True)
+    resource_calendar_id = fields.Many2one('resource.calendar', inverse='_inverse_resource_calendar_id',
+                                           check_company=True, string="Working Hours", tracking=True, required=True,
+                                           default=lambda self: self.env.company.resource_calendar_id)
     is_flexible = fields.Boolean(compute='_compute_is_flexible', store=True, groups="hr.group_hr_user")
     is_fully_flexible = fields.Boolean(compute='_compute_is_flexible', store=True, groups="hr.group_hr_user")
     tz = fields.Selection(related='employee_id.tz')
@@ -390,13 +392,13 @@ class HrVersion(models.Model):
     def _is_fully_flexible(self):
         """ return True if the version has a fully flexible working calendar """
         self.ensure_one()
-        return not self.resource_calendar_id
+        return self.resource_calendar_id.schedule_type == 'fully_flexible'
 
     @api.depends('resource_calendar_id.flexible_hours')
     def _compute_is_flexible(self):
         for version in self:
             version.is_fully_flexible = version._is_fully_flexible()
-            version.is_flexible = version.is_fully_flexible or version.resource_calendar_id.flexible_hours
+            version.is_flexible = version.resource_calendar_id.flexible_hours
 
     @api.model
     def _get_whitelist_fields_from_template(self):
@@ -436,10 +438,9 @@ class HrVersion(models.Model):
         """
         wage = self._get_contract_wage()
         # without payroll installed, we suppose that the employee with a specific schedule has a monthly salary
-        if self.resource_calendar_id:
-            if not self.resource_calendar_id.hours_per_week:
-                return 0
-            return wage * 12 / 52 / self.resource_calendar_id.hours_per_week
+        if not self.resource_calendar_id.hours_per_week:
+            return 0
+        return wage * 12 / 52 / self.resource_calendar_id.hours_per_week
         # without any calendar, the employee has a fully flexible schedule and is supposedly working on an hourly wage
         return wage
 
@@ -570,10 +571,7 @@ class HrVersion(models.Model):
         return self_sudo.structure_type_id and self_sudo.structure_type_id.country_id.code == country_code
 
     def _get_tz(self):
-        if self.resource_calendar_id and self.resource_calendar_id.tz:
-            return self.resource_calendar_id.tz
-        else:
-            return self.tz
+        return self.resource_calendar_id.tz or self.tz
 
     def action_open_version(self):
         self.ensure_one()

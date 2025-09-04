@@ -14,6 +14,8 @@ from odoo.tools.date_utils import localized, sum_intervals, to_timezone, weeknum
 
 
 class ResourceResource(models.Model):
+    """ Something that has availability defined in a calendar.
+    E.g: an employee, a restaurant table, a production line, etc."""
     _name = 'resource.resource'
     _description = "Resources"
     _order = "name"
