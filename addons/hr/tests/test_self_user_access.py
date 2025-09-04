@@ -5,6 +5,7 @@ from collections import OrderedDict
 from itertools import chain
 from lxml import etree
 
+from odoo import Command
 from odoo.addons.hr.tests.common import TestHrCommon
 from odoo.tests import new_test_user, tagged, Form
 from odoo.exceptions import AccessError
@@ -16,10 +17,11 @@ class TestSelfAccessProfile(TestHrCommon):
         """ A simple user should be able to read all fields in his profile """
         james = new_test_user(self.env, login='hel', groups='base.group_user', name='Simple employee', email='ric@example.com')
         james = james.with_user(james)
+        james_bank_account = self.env['res.partner.bank'].create({'acc_number': 'BE1234567890', 'partner_id': james.partner_id.id})
         self.env['hr.employee'].create({
             'name': 'James',
             'user_id': james.id,
-            'bank_account_id': self.env['res.partner.bank'].create({'acc_number': 'BE1234567890', 'partner_id': james.partner_id.id}).id
+            'bank_account_ids': [Command.link(james_bank_account.id)]
         })
         view = self.env.ref('hr.res_users_view_form_profile')
         view_infos = james.get_view(view.id)
@@ -246,16 +248,14 @@ class TestSelfAccessRights(TestHrCommon):
         hubert_emp = self.env['hr.employee'].create({
             'name': 'Hubert',
             'user_id': hubert.id,
-            'bank_account_id': hubert_acc.id
+            'bank_account_ids': [Command.link(hubert_acc.id)]
         })
         hubert.partner_id.sudo().employee_ids = hubert_emp
 
         self.assertFalse(hubert.env.user.has_group('hr.group_hr_user'))
         self.assertFalse(hubert.env.su)
-
-        self.assertEqual(hubert.read(['employee_bank_account_id'])[0]['employee_bank_account_id'][1], 'FR******7890')
-        self.assertEqual(hubert.sudo().employee_bank_account_id.display_name, 'FR******7890')
-        self.assertEqual(hubert_emp.with_user(hubert).sudo().bank_account_id.display_name, 'FR******7890')
+        self.assertEqual(hubert.sudo().employee_bank_account_ids.display_name, 'FR******7890')
+        self.assertEqual(hubert_emp.with_user(hubert).sudo().bank_account_ids.display_name, 'FR******7890')
 
         hubert_acc.invalidate_recordset(["display_name"])
-        self.assertEqual(hubert_emp.with_user(hubert).sudo().bank_account_id.sudo(False).display_name, 'FR******7890')
+        self.assertEqual(hubert_emp.with_user(hubert).sudo().bank_account_ids.sudo(False).display_name, 'FR******7890')

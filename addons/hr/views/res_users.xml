@@ -140,7 +140,7 @@
                                 <field name="private_email" string="Email" readonly="not can_edit"/>
                                 <field name="private_phone" string="Phone" class="o_force_ltr" readonly="not can_edit"/>
                                 <field name="private_lang" string="Language" readonly="not can_edit"/>
-                                <field name="employee_bank_account_id" context="{'display_partner': True}" readonly="not can_edit"/>
+                                <field name="employee_bank_account_ids" widget="many2many_tags" context="{'display_partner': True}" readonly="not can_edit"/>
                                 <label for="distance_home_work"/>
                                 <div class="o_row">
                                     <field name="distance_home_work" readonly="not can_edit" class="o_hr_narrow_field"/>

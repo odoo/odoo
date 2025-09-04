@@ -25,7 +25,7 @@ HR_READABLE_FIELDS = [
     'is_system',
     'employee_resource_calendar_id',
     'work_contact_id',
-    'bank_account_id',
+    'bank_account_ids',
 ]
 
 HR_WRITABLE_FIELDS = [
@@ -50,7 +50,7 @@ HR_WRITABLE_FIELDS = [
     'display_name',
     'emergency_contact',
     'emergency_phone',
-    'employee_bank_account_id',
+    'employee_bank_account_ids',
     'employee_country_id',
     'sex',
     'identification_id',
@@ -122,7 +122,7 @@ class ResUsers(models.Model):
     distance_home_work = fields.Integer(related='employee_id.distance_home_work', readonly=False, related_sudo=False)
     distance_home_work_unit = fields.Selection(related='employee_id.distance_home_work_unit', readonly=False, related_sudo=False)
     # res.users already have a field bank_account_id and country_id from the res.partner inheritance: don't redefine them
-    employee_bank_account_id = fields.Many2one(related='employee_id.bank_account_id', string="Employee's Bank Account Number", related_sudo=False, readonly=False)
+    employee_bank_account_ids = fields.Many2many('res.partner.bank', related='employee_id.bank_account_ids', string="Employee's Bank Accounts", related_sudo=False, readonly=False)
     employee_country_id = fields.Many2one(related='employee_id.country_id', string="Employee's Country", readonly=False, related_sudo=False)
     identification_id = fields.Char(related='employee_id.identification_id', readonly=False, related_sudo=False)
     ssnid = fields.Char(related='employee_id.ssnid', readonly=False, related_sudo=False)
@@ -153,7 +153,7 @@ class ResUsers(models.Model):
     last_activity_time = fields.Char(related='employee_id.last_activity_time')
     employee_type = fields.Selection(related='employee_id.employee_type', readonly=False, related_sudo=False)
     employee_resource_calendar_id = fields.Many2one(related='employee_id.resource_calendar_id', string="Employee's Working Hours", readonly=True)
-    bank_account_id = fields.Many2one(related="employee_id.bank_account_id")
+    bank_account_ids = fields.Many2many(related="employee_id.bank_account_ids")
 
     create_employee = fields.Boolean(store=False, default=False, copy=False, string="Technical field, whether to create an employee")
     create_employee_id = fields.Many2one('hr.employee', store=False, copy=False, string="Technical field, bind user to this employee on create")

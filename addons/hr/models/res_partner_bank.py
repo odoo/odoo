@@ -14,7 +14,31 @@ class ResPartnerBank(models.Model):
     bank_country = fields.Many2one(related='bank_id.country', readonly=False)
     bank_email = fields.Char(related='bank_id.email', readonly=False)
     bank_phone = fields.Char(related='bank_id.phone', readonly=False)
-    employee_id = fields.Many2one('hr.employee', 'Employee', compute="_compute_employee_id")
+    employee_id = fields.Many2many('hr.employee', 'Employee', compute="_compute_employee_id", search="_search_employee_id")
+    employee_salary_amount = fields.Float(string='Salary Allocation', compute='_compute_salary_amount', digits=(16, 4), readonly=True, store=False)
+    employee_salary_amount_is_percentage = fields.Boolean(compute='_compute_salary_amount', readonly=True, store=False)
+    currency_symbol = fields.Char(related='currency_id.symbol')
+    employee_has_multiple_bank_accounts = fields.Boolean(related="employee_id.has_multiple_bank_accounts")
+
+    @api.depends('employee_id.salary_distribution')
+    def _compute_salary_amount(self):
+        for bank in self:
+            if bank.employee_id and bank.employee_id.salary_distribution:
+                bank.employee_salary_amount, bank.employee_salary_amount_is_percentage = bank.employee_id.get_bank_account_salary_allocation(bank.id)
+                continue
+            bank.employee_salary_amount_is_percentage = True
+            if bank.employee_id.salary_distribution:
+                bank.employee_salary_amount = bank.employee_id.get_remaining_percentage()
+            else:
+                bank.employee_salary_amount = 0
+
+    def _search_employee_id(self, operator, value):
+        matching_employees = self.env['hr.employee'].sudo().search([('id', operator, value)])
+        return [('id', 'in', matching_employees.bank_account_ids.ids)]
+
+    def action_open_allocation_wizard(self):
+        self.ensure_one()
+        return self.employee_id.action_open_allocation_wizard()
 
     @api.depends('partner_id')
     def _compute_employee_id(self):
