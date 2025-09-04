@@ -651,6 +651,12 @@ export function useInputBuilderComponent({
 
     const withLoadingEffect = useWithLoadingEffect(getAllActions);
 
+    onWillUpdateProps((nextProps) => {
+        if ("default" in nextProps) {
+            defaultValue = nextProps.default;
+        }
+    });
+
     async function callApply(applySpecs, isPreviewing) {
         const proms = [];
         for (const applySpec of applySpecs) {

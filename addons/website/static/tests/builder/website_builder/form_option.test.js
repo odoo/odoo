@@ -10,7 +10,7 @@ import { patch } from "@web/core/utils/patch";
 import { IrModel } from "@web/../tests/_framework/mock_server/mock_models/ir_model";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
-import { animationFrame } from "@odoo/hoot-dom";
+import { animationFrame, edit, press } from "@odoo/hoot-dom";
 
 class HrJob extends models.Model {
     _name = "hr.job";
@@ -434,4 +434,36 @@ test("Form using the Outgoing Mails model includes hidden email_to field", async
 
     expect(":iframe input[type='hidden'][name='email_to']").toHaveCount(1);
     expect(":iframe input[type='hidden'][name='email_to']").toHaveValue("info@yourcompany.example.com");
+});
+
+test("Label falls back to default value (data-translated-name) when removed", async () => {
+    onRpc("get_authorized_fields", () => ({}));
+    await setupWebsiteBuilder(
+        `<section class="s_website_form" data-snippet="s_website_form" data-name="Form">
+            <div class="container-fluid">
+            <form action="/website/form/" method="post" class="o_mark_required" data-model_name="mail.mail">
+                <div class="s_website_form_rows">
+                    <div data-name="Field" data-translated-name="Default value" class="s_website_form_field s_website_form_required" data-type="text">
+                        <div class="row">
+                            <label class="s_website_form_label" for="oyeqnysxh10b">
+                                <span class="s_website_form_label_content">My Field</span>
+                            </label>
+                        <select class="form-select s_website_form_input" required="" id="oyeqnysxh10b" name="field" />
+                        </div>
+                    </div>
+                </div>
+            </form>
+            </div>
+        </section>`
+    );
+
+    await contains(":iframe section span:contains('My Field')").click();
+    await contains("[data-action-id='setLabelText'] input").click();
+    expect("[data-action-id='setLabelText'] input").toHaveValue("My Field");
+    await edit("");
+    await press("Tab");
+    expect("[data-action-id='setLabelText'] input").toHaveValue("Default value");
+    expect(":iframe section [data-translated-name='Default value'] label").toHaveText(
+        "Default value"
+    );
 });
