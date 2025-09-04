@@ -313,6 +313,14 @@ import wUtils from '@website/js/utils';
             }
 
             // Prepare form inputs
+            // Set a placeholder name to input fields without
+            // a label to allow FormData to function correctly
+            for (const [i, inputEl] of this.el
+                .querySelectorAll(".s_website_form_input:not([name]), [name=''].s_website_form_input")
+                .entries()) {
+                inputEl.setAttribute("name", "unknown_field_" + (i + 1));
+            };
+
             this.form_fields = this.$el.serializeArray();
             $.each(this.$el.find('input[type=file]:not([disabled])'), (outer_index, input) => {
                 $.each($(input).prop('files'), function (index, file) {
