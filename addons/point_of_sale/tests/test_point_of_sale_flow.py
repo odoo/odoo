@@ -2857,3 +2857,59 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
 
         with self.assertRaises(ValidationError, msg='You cannot delete a customer that has point of sales orders. You can archive it instead.'):
             partner.unlink()
+
+    def test_company_specific_products_deletion(self):
+        """
+        Tests the deletion methods for a company specific product, meaning
+        it can be deleted even if a session is opened in another company.
+        """
+        cash_payment_method_2 = self.env['pos.payment.method'].create({
+            'name': 'Cash Company 2',
+            'receivable_account_id': self.company_data_2['default_account_receivable'].id,
+            'journal_id': self.company_data_2['default_journal_cash'].id,
+            'company_id': self.company_data_2['company'].id,
+        })
+        pos_config_2 = self.env['pos.config'].create({
+            'name': 'Second config',
+            'company_id': self.company_data_2['company'].id,
+            'journal_id': self.company_data_2['default_journal_sale'].id,
+            'invoice_journal_id': self.company_data_2['default_journal_sale'].id,
+            'payment_method_ids': [(4, cash_payment_method_2.id)],
+        })
+
+        self.led_lamp.company_id = self.company_data['company'].id
+        self.newspaper_rack.company_id = self.company_data['company'].id
+        self.product3.company_id = self.company_data['company'].id
+        self.product3.available_in_pos = True
+        self.product4.available_in_pos = True
+        pos_config_2.open_ui()
+        # Company specific product with another company's session opened
+        try:
+            self.led_lamp.unlink()
+        except UserError:
+            self.fail("Company 1 product deletion should not raise UserError when only Company 2 session is open")
+        # Normal product with another company's session opened
+        with self.assertRaises(UserError):
+            self.whiteboard_pen.unlink()
+        # Both a company specific and a normal product
+        both_products = self.newspaper_rack | self.whiteboard_pen
+        with self.assertRaises(UserError):
+            both_products.unlink()
+
+        # Same tests but with a closed session
+        sessions = self.env['pos.session'].sudo().search([('state', '!=', 'closed')])
+        for session in sessions:
+            draft_orders = self.env['pos.order'].sudo().search([
+                ('session_id', '=', session.id),
+                ('state', '=', 'draft')
+            ])
+            for order in draft_orders:
+                order.action_pos_order_cancel()
+            session.action_pos_session_closing_control()
+
+        try:
+            self.product3.unlink()
+            self.product4.unlink()
+            both_products.unlink()
+        except UserError:
+            self.fail("Products should be deleted if no sessions are opened")
