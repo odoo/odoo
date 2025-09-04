@@ -1029,3 +1029,31 @@ class TestAccountAnalyticAccount(AccountTestInvoicingCommon, AnalyticCommon):
         # After posting the move, the analytic line should be created as usual
         journal_entry.action_post()
         self.assertTrue(self.get_analytic_lines(journal_entry))
+
+    def test_multicurrency_different_rounding_analytic_line(self):
+        """If using a foreign currency, the rounding of the analytic_line amount should the one from the company currency"""
+        foreign_currency = self.env['res.currency'].create({
+            'name': "Great Currency",
+            'symbol': '🫀',
+            'rounding': 1,
+            'rate_ids': [
+                Command.create({'name': '2025-01-01', 'rate': 3}),
+            ],
+        })
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'date': '2025-01-01',
+            'currency_id': foreign_currency.id,
+            'invoice_line_ids': [Command.create({
+                'product_id': self.product_a.id,
+                'price_unit': 10.0,
+                'quantity': 1,
+                'tax_ids': [],
+                'analytic_distribution': {
+                    self.analytic_account_1.id: 100,
+                },
+            })]
+        })
+        invoice.action_post()
+        self.assertEqual(self.get_analytic_lines(invoice).amount, 3.33)
