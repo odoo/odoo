@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="gmc_xml" inherit_id="website_sale.gmc_xml">
+        <xpath expr="//g:gtin/following-sibling::*[1]" position="replace"/>
+        <t name="shippings" position="replace"/>
+    </template>
+</odoo>
