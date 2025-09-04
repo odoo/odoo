@@ -273,6 +273,26 @@ class HrEmployee(models.Model):
             or field.name not in ('activity_calendar_event_id', 'rating_ids', 'website_message_ids', 'message_has_sms_error')
         )
 
+    @api.onchange('private_phone', 'emergency_phone')
+    def _onchange_private_emergency_phones_validation(self):
+        country = self.current_version_id.private_country_id
+        if not country:
+            return
+
+        if self.private_phone:
+            self.private_phone = self._phone_format(
+                    fname="private_phone",
+                    force_format="INTERNATIONAL",
+                    country=country,
+                ) or self.private_phone
+
+        if self.emergency_phone:
+            self.emergency_phone = self._phone_format(
+                    fname="emergency_phone",
+                    force_format="INTERNATIONAL",
+                    country=country,
+                ) or self.emergency_phone
+
     @api.onchange('contract_template_id')
     def _onchange_contract_template_id(self):
         if self.contract_template_id:
