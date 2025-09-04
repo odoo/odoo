@@ -1,4 +1,3 @@
-import { queryAll } from "@odoo/hoot-dom";
 import {
     closeChat,
     okRating,
@@ -28,7 +27,7 @@ const chatRequest = [
     {
         content: "Verify there is no duplicates",
         trigger: ".o-livechat-root:shadow .o-mail-Thread",
-        run() {
+        run({ queryAll }) {
             if (
                 queryAll(
                     ".o-mail-Message:contains('Hi ! What a coincidence! I need your help indeed.')",

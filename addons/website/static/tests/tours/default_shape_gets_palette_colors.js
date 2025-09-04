@@ -1,4 +1,3 @@
-import { queryFirst } from "@odoo/hoot-dom";
 import {
     changeOption,
     clickOnSnippet,
@@ -23,7 +22,7 @@ registerWebsitePreviewTour("default_shape_gets_palette_colors", {
     {
         content: "Check that shape does not have a background-image in its inline style",
         trigger: ':iframe #wrap .s_text_image .o_we_shape',
-        run() {
+        run({ queryFirst }) {
             const shape = queryFirst(":iframe :not(.o_ignore_in_tour) #wrap .s_text_image .o_we_shape");
             if (shape.style.backgroundImage) {
                 throw new Error("The default shape has a background-image in its inline style (should rely on the class)");

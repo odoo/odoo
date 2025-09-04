@@ -1,5 +1,3 @@
-import { queryAll } from '@odoo/hoot-dom';
-
 function comboSelector(comboName) {
     return `
         .sale-combo-configurator-dialog
@@ -21,7 +19,7 @@ function assertComboCount(count) {
         trigger: '.sale-combo-configurator-dialog',
         run() {
             const selector = `.sale-combo-configurator-dialog [name="sale_combo_configurator_title"]`;
-            if (queryAll(selector).length !== count) {
+            if (document.querySelectorAll(selector).length !== count) {
                 console.error(`Assertion failed`);
             }
         },
@@ -32,7 +30,7 @@ function assertComboItemCount(comboName, count) {
     return {
         content: `Assert that there are ${count} combo items in combo ${comboName}`,
         trigger: comboSelector(comboName),
-        run() {
+        run({ queryAll }) {
             const selector = `${comboSelector(comboName)} + .row .product-card`;
             if (queryAll(selector).length !== count) {
                 console.error(`Assertion failed`);
@@ -47,7 +45,7 @@ function assertSelectedComboItemCount(count) {
         trigger: '.sale-combo-configurator-dialog',
         run() {
             const selector = `.sale-combo-configurator-dialog .row .product-card.selected`;
-            if (queryAll(selector).length !== count) {
+            if (document.querySelectorAll(selector).length !== count) {
                 console.error(`Assertion failed`);
             }
         },
@@ -60,7 +58,7 @@ function assertPreselectedComboItemCount(count) {
         trigger: '.sale-combo-configurator-dialog',
         run() {
             const selector = '.sale-combo-configurator-dialog div[name="preselected_product_name"]';
-            if (queryAll(selector).length !== count) {
+            if (document.querySelectorAll(selector).length !== count) {
                 console.error(`Assertion failed`);
             }
         },
