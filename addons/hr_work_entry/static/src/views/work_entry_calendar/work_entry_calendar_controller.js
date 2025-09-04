@@ -1,13 +1,12 @@
-import { CalendarController } from "@web/views/calendar/calendar_controller";
-import { useMultiSelectionButtons } from "@web/views/view_components/multi_selection_buttons";
-import { CallbackRecorder } from "@web/search/action_hook";
-import { useBus, useService } from "@web/core/utils/hooks";
 import { WorkEntryCalendarMultiSelectionButtons } from "@hr_work_entry/views/work_entry_calendar/work_entry_multi_selection_buttons";
-import { onWillRender } from "@odoo/owl";
-import { user } from "@web/core/user";
 import { useWorkEntry } from "@hr_work_entry/views/work_entry_hook";
-import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
+import { onWillRender } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
+import { user } from "@web/core/user";
+import { useService } from "@web/core/utils/hooks";
+import { CalendarController } from "@web/views/calendar/calendar_controller";
+import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
+
 const { DateTime } = luxon;
 
 export class WorkEntryCalendarController extends CalendarController {
@@ -116,43 +115,9 @@ export class WorkEntryCalendarController extends CalendarController {
     /**
      * @override
      */
-    prepareSelectionFeature() {
-        this.selectedCells = null;
-        this.multiSelectionButtonsReactive = useMultiSelectionButtons({
-            onCancel: this.cleanSquareSelection.bind(this),
-            onAdd: (multiCreateData) => {
-                this.onMultiCreate(multiCreateData, this.selectedCells);
-                this.cleanSquareSelection();
-            },
-            onDelete: () => {
-                this.onMultiDelete(this.selectedCells);
-                this.cleanSquareSelection();
-            },
-            nbSelected: 0,
-            multiCreateView: this.model.meta.multiCreateView,
-            resModel: this.model.meta.resModel,
-            multiCreateValues: this.props.state?.multiCreateValues,
-            showMultiCreateTimeRange: this.model.showMultiCreateTimeRange,
-            context: this.props.context,
-        });
-
-        this.callbackRecorder = new CallbackRecorder();
-        this._baseRendererProps.callbackRecorder = this.callbackRecorder;
-        this._baseRendererProps.onSquareSelection = (selectedCells) =>
-            this.updateMultiSelection(selectedCells);
-        this._baseRendererProps.cleanSquareSelection = this.cleanSquareSelection.bind(this);
-
-        useBus(this.model.bus, "update", this.cleanSquareSelection.bind(this));
-    }
-
-    updateMultiSelection(selectedCells) {
-        this.selectedCells = selectedCells;
-        this.multiSelectionButtonsReactive.visible = true;
+    updateMultiSelection() {
+        super.updateMultiSelection(...arguments);
         this.multiSelectionButtonsReactive.userFavoritesWorkEntries = this.userFavoritesWorkEntries;
-        this.multiSelectionButtonsReactive.nbSelected = this.getSelectedRecordIds(
-            this.selectedCells
-        ).length;
-        this.multiSelectionButtonsReactive.selection = this.getSelectedRecords(this.selectedCells);
         this.multiSelectionButtonsReactive.onQuickReplace = (values) => {
             this.onMultiReplace(values, this.selectedCells);
         };
