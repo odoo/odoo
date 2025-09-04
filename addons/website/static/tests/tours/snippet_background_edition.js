@@ -174,18 +174,17 @@ changeOption("Text - Image", "button[data-action-id='toggleBgImage']"),
 // again. It should keep the bg color class.
 ...checkAndUpdateBackgroundColor({
     checkCC: "o_cc2",
-    checkBg: backgroundColors[1].code,
     checkNoBg: backgroundColors[0].code,
     changeType: 'cc',
     change: "o_cc4",
-    finalSelector: `:iframe .${snippets[0].id}.o_cc4:not(.o_cc2).bg-${backgroundColors[1].code}`,
+    finalSelector: `:iframe .${snippets[0].id}.o_cc4:not(.o_cc2):not(.bg-${backgroundColors[1].code})`,
 }),
 
 // Check the current color palette status + Replace the bg color by a gradient
 ...checkAndUpdateBackgroundColor({
     checkCC: "o_cc4",
     checkNoCC: "o_cc2",
-    checkBg: backgroundColors[1].code,
+    checkNoBg: backgroundColors[1].code,
     changeType: 'gradient',
     change: gradients[0],
     finalSelector: `:iframe .${snippets[0].id}.o_cc4:not(.bg-${backgroundColors[1].code})[style*="background-image: ${gradients[0]}"]`,
@@ -202,21 +201,24 @@ changeOption("Text - Image", "button[data-action-id='toggleBgImage']"),
 }),
 
 // Check the current color palette selection + Change the color combination
-// again. It should keep the gradient.
+// again. Gradients should switch.
 ...checkAndUpdateBackgroundColor({
     checkCC: "o_cc4",
     checkGradient: gradients[1],
     checkNoGradient: gradients[0],
     changeType: 'cc',
     change: "o_cc1",
-    finalSelector: `:iframe .${snippets[0].id}.o_cc1:not(.o_cc4)[style*="background-image: ${gradients[1]}"]`,
+    finalSelector: `:iframe .${snippets[0].id}.o_cc1:not(.o_cc4):not([style*="background-image: ${gradients[1]}"])`,
 }),
 
-// Final check of the color status in the color palette
+// Final check of the color status in the color palette + re-add a gradient
 ...checkAndUpdateBackgroundColor({
     checkCC: "o_cc1",
     checkNoCC: "o_cc4",
-    checkGradient: gradients[1],
+    checkNoGradient: gradients[1],
+    changeType: 'gradient',
+    change: gradients[1],
+    finalSelector: `:iframe .${snippets[0].id}.o_cc1:not(.o_cc4)[style*="background-image: ${gradients[1]}"]`,
 }),
 
 // Now, add an image on top of that color combination + gradient

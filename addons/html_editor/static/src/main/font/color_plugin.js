@@ -527,22 +527,6 @@ export class ColorPlugin extends Plugin {
             removePresetGradient(element);
         }
 
-        if (color.startsWith("o_cc")) {
-            parts = backgroundImageCssToParts(element.style["background-image"]);
-            element.classList.remove(...COLOR_COMBINATION_CLASSES);
-            element.classList.add("o_cc", color);
-
-            const hasBackgroundColor = !!getComputedStyle(element).backgroundColor;
-            const hasGradient = getComputedStyle(element).backgroundImage.includes("-gradient");
-            const backgroundImage = element.style["background-image"];
-            // Override gradient background image if coming from css rather than inline style.
-            if (hasBackgroundColor && hasGradient && !backgroundImage) {
-                element.style.backgroundImage = "none";
-            }
-            this.fixColorCombination(element, color);
-            return;
-        }
-
         const hasGradientStyle = element.style.backgroundImage.includes("-gradient");
         if (mode === "backgroundColor") {
             if (!color) {
@@ -591,6 +575,25 @@ export class ColorPlugin extends Plugin {
             mode = mode.replace("backgroundColor", "background-color");
             this.delegateTo("apply_style", element, mode, color);
         }
+
+        // It was decided that applying a color combination removes any "color"
+        // value (custom color, color classes, gradients, ...). Changing any
+        // "color", including color combinations, should still not remove the
+        // other background layers though (image, video, shape, ...).
+        if (color.startsWith("o_cc")) {
+            parts = backgroundImageCssToParts(element.style["background-image"]);
+            element.classList.remove(...COLOR_COMBINATION_CLASSES);
+            element.classList.add("o_cc", color);
+
+            const hasBackgroundColor = !!getComputedStyle(element).backgroundColor;
+            const hasGradient = getComputedStyle(element).backgroundImage.includes("-gradient");
+            const backgroundImage = element.style["background-image"];
+            // Override gradient background image if coming from css rather than inline style.
+            if (hasBackgroundColor && hasGradient && !backgroundImage) {
+                element.style.backgroundImage = "none";
+            }
+        }
+
         this.fixColorCombination(element, color);
     }
     /**
