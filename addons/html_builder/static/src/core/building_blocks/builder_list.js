@@ -6,11 +6,35 @@ import {
     useInputBuilderComponent,
 } from "@html_builder/core/utils";
 import { isSmallInteger } from "@html_builder/utils/utils";
-import { Component, onWillUpdateProps, useRef } from "@odoo/owl";
+import { Component, onWillUpdateProps, useRef, onPatched } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { SelectMenu } from "@web/core/select_menu/select_menu";
 import { useSortable } from "@web/core/utils/sortable_owl";
 import { useService } from "@web/core/utils/hooks";
+
+/**
+ * Focus the last added input item to a list container referenced by default
+ * using a `t-ref="autofocusRoot"`.
+ *
+ * @param {string} refName overrides the "autofocusRoot" ref.
+ */
+export function useAutoFocusNewItem(refName) {
+    const ref = useRef(refName || "autofocusRoot");
+    let size = 0;
+    function autofocus() {
+        const prevSize = size;
+        const inputEls = ref.el.querySelectorAll(
+            "input[type='text'], input[type='email'], input[type='number'], input[type='tel'], input[type='url'], textarea"
+        );
+        size = inputEls.length;
+        const lastInputEl = inputEls[size - 1];
+        if (size > prevSize) {
+            lastInputEl.focus();
+            lastInputEl.selectionStart = lastInputEl.selectionEnd = lastInputEl.value.length;
+        }
+    }
+    onPatched(autofocus);
+}
 
 export class BuilderList extends Component {
     static template = "html_builder.BuilderList";
@@ -38,6 +62,7 @@ export class BuilderList extends Component {
         defaultNewValue: { type: Object, optional: true },
         columnWidth: { optional: true },
         forbidLastItemRemoval: { type: Boolean, optional: true },
+        autofocusNewItem: { type: Boolean, optional: true },
     };
     static defaultProps = {
         addItemTitle: _t("Add"),
@@ -49,6 +74,7 @@ export class BuilderList extends Component {
         defaultNewValue: {},
         columnWidth: {},
         forbidLastItemRemoval: false,
+        autofocusNewItem: false,
     };
     static components = { BuilderComponent, SelectMenu };
 
@@ -56,6 +82,9 @@ export class BuilderList extends Component {
         this.validateProps();
         this.dialog = useService("dialog");
         useBuilderComponent();
+        if (this.props.autofocusNewItem) {
+            useAutoFocusNewItem("table");
+        }
         const { state, commit, preview } = useInputBuilderComponent({
             id: this.props.id,
             defaultValue: this.parseDisplayValue([]),

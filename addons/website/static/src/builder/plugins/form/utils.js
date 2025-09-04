@@ -274,7 +274,8 @@ export function setActiveProperties(fieldEl, field) {
     const description = fieldEl.querySelector(".s_website_form_field_description");
     field.placeholder = input?.placeholder || "";
     if (input) {
-        // textarea value has no attribute,  date/datetime timestamp property is formated
+        // textarea value has no attribute, date/datetime timestamp property
+        // is formated
         field.value = input.getAttribute("value") || input.value;
     } else if (field.type === "boolean") {
         field.value = !!fieldEl.querySelector('input[type="checkbox"][checked]');
