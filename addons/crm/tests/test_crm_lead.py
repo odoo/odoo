@@ -991,6 +991,157 @@ class TestCRMLead(TestCrmCommon):
         self.assertFalse(lead.phone_sanitized)
 
 
+class TestCRMLeadRotting(TestCrmCommon):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.stage_team1_1.rotting_threshold_days = 5
+        cls.stage_team1_2.rotting_threshold_days = 3
+
+    @users('user_sales_manager')
+    def test_leads_rotting(self):
+        rotten_leads = self.env['crm.lead']
+        clean_leads = self.env['crm.lead']
+
+        close_future = datetime(2025, 1, 24, 12, 0, 0)
+        now = datetime(2025, 1, 20, 12, 0, 0)
+        close_past = datetime(2025, 1, 18, 12, 0, 0)
+        past = datetime(2025, 1, 10, 12, 0, 0)
+        last_year = datetime(2024, 1, 20, 12, 0, 0)
+
+        with self.mock_datetime_and_now(past):
+            rotten_leads += self.env['crm.lead'].create([
+                {
+                    'name': 'Opportunity',
+                    'type': 'opportunity',
+                    'stage_id': self.stage_team1_1.id,
+                } for x in range(3)
+            ])
+            rotten_leads.flush_recordset(['date_last_stage_update'])  # precalculate stage update
+
+        with self.mock_datetime_and_now(close_past):
+            clean_leads += self.env['crm.lead'].create({
+                'name': "Lead that won't have time to rot",
+                'type': 'opportunity',
+                'stage_id': self.stage_team1_1.id,
+            })
+            clean_leads.flush_recordset(['date_last_stage_update'])  # precalculate stage update
+        with self.mock_datetime_and_now(last_year):
+            clean_leads += self.env['crm.lead'].create({
+                'name': 'Opportuniy in Won Stage',
+                'type': 'opportunity',
+                'stage_id': self.stage_gen_won.id,
+            })
+            clean_leads.flush_recordset(['date_last_stage_update'])  # precalculate stage update
+
+        with self.mock_datetime_and_now(now):
+            for lead in rotten_leads:
+                self.assertTrue(lead.is_rotting)
+                self.assertEqual(lead.rotting_days, 10)
+            for lead in clean_leads:
+                self.assertFalse(lead.is_rotting)
+                self.assertEqual(lead.rotting_days, 0)
+
+            rotten_leads_iterator = iter(rotten_leads)
+
+            lead_edited = next(rotten_leads_iterator)
+            lead_edited.name = 'Edited Opportunity'
+            self.assertTrue(
+                lead_edited.is_rotting,
+                'Editing the lead has no effect on rotting status',
+            )
+
+            lead_changed_stage = next(rotten_leads_iterator)
+            lead_changed_stage.stage_id = self.stage_team1_2.id
+            self.assertFalse(
+                lead_changed_stage.is_rotting,
+                'Changing the stage disables rotting status',
+            )
+
+            lead_changed_rotting_threshold = next(rotten_leads_iterator)
+            old_rotting_threshold = self.stage_team1_1.rotting_threshold_days
+            self.stage_team1_1.rotting_threshold_days = 50
+            self.assertFalse(
+                lead_changed_rotting_threshold.is_rotting,
+                'Changing the rotting threshold to a higher value does affect rotten leads\' status',
+            )
+            self.stage_team1_1.rotting_threshold_days = old_rotting_threshold  # Revert rotting threshold
+            self.assertTrue(
+                lead_changed_rotting_threshold.is_rotting,
+                'Changing the threshold back should affect the status again',
+            )
+
+            self.stage_team1_1.rotting_threshold_days = 0
+            self.assertFalse(
+                lead_changed_rotting_threshold.is_rotting,
+                'A 0-day rotting threshold disables rotting',
+            )
+            self.stage_team1_1.rotting_threshold_days = old_rotting_threshold
+
+            # create a new lead in the New stage
+            jan20_lead = self.env['crm.lead'].create({
+                'name': 'Fresh Opportuniy',
+                'type': 'opportunity',
+                'stage_id': self.stage_team1_1.id,
+            })
+
+        # 4 days later:
+        with self.mock_datetime_and_now(close_future):
+            rotten_leads.invalidate_recordset(['is_rotting', 'rotting_days'])
+            self.assertEqual(
+                lead_changed_rotting_threshold.rotting_days,
+                14,
+                'Since this lead has not seen a stage change, it has been rotting for 14 days total',
+            )
+            self.assertFalse(
+                jan20_lead.is_rotting,
+                'Since this lead remained in a stage with a higher threshold, it\'s not rotting yet',
+            )
+            self.assertTrue(
+                lead_changed_stage.is_rotting,
+                'As its new stage has a lower rotting threshold, this lead should be rotting 3 days after its last stage change',
+            )
+            self.assertEqual(lead_changed_stage.rotting_days, 4)
+
+    def test_search_leads_rotting(self):
+        """
+            This test checks that the result of search_leads_rotting accurately matches is_rotting computation results
+        """
+        past = datetime(2025, 1, 1)
+        now = datetime(2025, 1, 10)
+        with self.mock_datetime_and_now(past):
+            all_leads = self.env['crm.lead'].create([{
+                'name': 'TestLead Rotting opportunity',
+                'type': 'opportunity',
+                'stage_id': self.stage_team1_1.id,
+            }] * 5 + [{
+                'name': 'TestLead Lead',
+                'type': 'lead',
+                'stage_id': self.stage_team1_1.id,
+            }] * 3 + [{
+                'name': 'TestLead Won Opportunity',
+                'type': 'opportunity',
+                'stage_id': self.stage_gen_won.id,
+            }] * 4)
+
+            all_leads.flush_recordset(['date_last_stage_update'])
+            rotten_leads = all_leads.filtered(lambda lead: 'Rotting' in lead.name)
+            clean_leads = all_leads - rotten_leads
+
+        with self.mock_datetime_and_now(now):
+            rot = self.env['crm.lead'].search([
+                ('name', 'ilike', 'TestLead'),
+                ('is_rotting', '=', True),
+            ], order='id ASC')
+            norot = self.env['crm.lead'].search([
+                ('name', 'ilike', 'TestLead'),
+                ('is_rotting', '=', False),
+            ], order='id ASC')
+
+            self.assertEqual(rot, rotten_leads)
+            self.assertEqual(norot, clean_leads)
+
+
 @tagged('lead_internals')
 class TestLeadFormTools(FormatAddressCase):
 
