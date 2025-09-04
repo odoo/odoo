@@ -151,6 +151,11 @@ class ResConfigSettings(models.TransientModel):
         company = self.company_id
         edi_proxy_client = self.env['account_edi_proxy_client.user']
         edi_identification = edi_proxy_client._get_proxy_identification(company, 'peppol')
+
+        recovered_edi_users = self.env['account_edi_proxy_client.user']._try_recover_peppol_proxy_users(company, peppol_identifier=edi_identification)
+        if recovered_edi_users:
+            return
+
         company.partner_id._check_peppol_eas()
 
         if (
