@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
-from odoo import http
+from odoo import _, http
+from odoo.exceptions import ValidationError
+
 from odoo.addons.payment import utils as payment_utils
 from odoo.addons.website_sale_delivery.controllers.main import WebsiteSaleDelivery
 from odoo.http import request
@@ -42,7 +44,9 @@ class WebsiteSaleLoyaltyDelivery(WebsiteSaleDelivery):
     @http.route()
     def cart_carrier_rate_shipment(self, carrier_id, **kw):
         Monetary = request.env['ir.qweb.field.monetary']
-        order = request.website.sale_get_order(force_create=True)
+        order = request.website.sale_get_order()
+        if not order:
+            raise ValidationError(_("Your cart is empty."))
         free_shipping_lines = order._get_free_shipping_lines()
         # Avoid computing carrier price delivery is free (coupon). It means if
         # the carrier has error (eg 'delivery only for Belgium') it will show
