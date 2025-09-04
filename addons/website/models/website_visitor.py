@@ -279,7 +279,7 @@ class WebsiteVisitor(models.Model):
             visitor_id, _ = self._upsert_visitor(access_token, force_track_values)
             return self.env['website.visitor'].sudo().browse(visitor_id)
 
-        visitor = self.env['website.visitor'].sudo().search([('access_token', '=', access_token)])
+        visitor = self.env['website.visitor'].sudo().search_fetch([('access_token', '=', access_token)])
 
         if not force_create and not self.env.cr.readonly and visitor and not visitor.timezone:
             tz = self._get_visitor_timezone()
