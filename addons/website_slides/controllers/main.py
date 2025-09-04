@@ -389,6 +389,7 @@ class WebsiteSlides(WebsiteProfile):
             'displayDetail': False,
             'displayExtraDetail': False,
             'displayExtraLink': False,
+            'displayHtmlContent': True,
             'displayImage': False,
             'allowFuzzy': not post.get('noFuzzy'),
             'my': my,
