@@ -213,6 +213,7 @@ GMC_SUPPORTED_UOM = {
     'kg',
     'floz',
     'pt',
+    'ct',
     'qt',
     'gal',
     'ml',
