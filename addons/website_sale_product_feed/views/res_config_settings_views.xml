@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.website.sale</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="website.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <setting
+                    id="google_merchant_center_setting"
+                    position="replace"
+            >
+                <setting
+                    id="google_merchant_center_setting"
+                    help="Connect your eCommerce via a product file."
+                    documentation="/applications/websites/ecommerce/google_merchant_center.html"
+                >
+                    <field name="group_gmc_feed"/>
+                    <div class="mt8" invisible="not group_gmc_feed">
+                        <button
+                            type="object"
+                            name="action_open_product_feeds"
+                            string="Manage feeds"
+                            class="btn-link"
+                            icon="oi-arrow-right"
+                        />
+                    </div>
+                </setting>
+            </setting>
+        </field>
+    </record>
+
+</odoo>
