@@ -275,6 +275,7 @@ export class CalendarModel extends Model {
             await this.load();
             return createdRecords;
         }
+        return [];
     }
 
     async unlinkFilter(fieldName, recordId) {
