@@ -171,10 +171,14 @@ export class MultiSelectionButtons extends Component {
     }
 
     onDelete() {
+        const body =
+            this.props.reactive.nbSelected === 1
+                ? _t("Are you sure you want to delete the selected record?")
+                : _t("Are you sure you want to delete the %(nbSelected)s selected records?", {
+                      nbSelected: this.props.reactive.nbSelected,
+                  });
         this.dialogService.add(ConfirmationDialog, {
-            body: _t("Are you sure you want to delete the %(nbSelected)s selected records?", {
-                nbSelected: this.props.reactive.nbSelected,
-            }),
+            body,
             confirm: async () => {
                 this.props.reactive.onDelete();
             },
