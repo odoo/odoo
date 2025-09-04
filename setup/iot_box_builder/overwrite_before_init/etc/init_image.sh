@@ -8,6 +8,10 @@ __dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 __file="${__dir}/$(basename "${BASH_SOURCE[0]}")"
 __base="$(basename ${__file} .sh)"
 
+mount -t proc none /proc
+mount -t sysfs none /sys
+mount -t devpts none /dev/pts
+
 # Recommends: antiword, graphviz, ghostscript, python-gevent, poppler-utils
 export DEBIAN_FRONTEND=noninteractive
 
@@ -18,6 +22,12 @@ export RUNLEVEL=1
 # Unset lang variables to prevent locale settings leaking from host
 unset "${!LC_@}"
 unset "${!LANG@}"
+
+# create a symbolic link to the new iot_box_builder if necessary (e.g.: building a branch where the old module is still there)
+if [ ! -d /home/pi/odoo/setup/iot_box_builder -a -d /home/pi/odoo/addons/iot_box_image ]; then
+  mkdir -p /home/pi/odoo/setup
+  ln -s /home/pi/odoo/addons/iot_box_image /home/pi/odoo/setup/iot_box_builder
+fi
 
 # set locale to en_US
 echo "set locale to en_US"
@@ -69,8 +79,8 @@ odoo_dev() {
   sudo -u odoo git fetch dev \$1 --depth=1 --prune
   sudo -u odoo git reset --hard FETCH_HEAD
   sudo -u odoo git branch -m \$1
-  sudo chroot /root_bypass_ramdisks /bin/bash -c \"export DEBIAN_FRONTEND=noninteractive && xargs apt-get -y -o Dpkg::Options::=\"--force-confdef\" -o Dpkg::Options::=\"--force-confold\" install < /home/pi/odoo/addons/iot_box_image/configuration/packages.txt\"
-  sudo -u odoo pip3 install -r /home/pi/odoo/addons/iot_box_image/configuration/requirements.txt --break-system-package
+  sudo -u odoo pip3 install -r /home/pi/odoo/setup/iot_box_builder/configuration/requirements.txt --break-system-package
+  sudo chroot /root_bypass_ramdisks /bin/bash -c \"export DEBIAN_FRONTEND=noninteractive && xargs apt-get -y -o Dpkg::Options::=\"--force-confdef\" -o Dpkg::Options::=\"--force-confold\" install < /home/pi/odoo/setup/iot_box_builder/configuration/packages.txt\"
   cd \$pwd
 }
 
@@ -85,8 +95,8 @@ odoo_origin() {
   sudo -u odoo git fetch origin \$1 --depth=1 --prune
   sudo -u odoo git reset --hard FETCH_HEAD
   sudo -u odoo git branch -m \$1
-  sudo chroot /root_bypass_ramdisks /bin/bash -c \"export DEBIAN_FRONTEND=noninteractive && xargs apt-get -y -o Dpkg::Options::=\"--force-confdef\" -o Dpkg::Options::=\"--force-confold\" install < /home/pi/odoo/addons/iot_box_image/configuration/packages.txt\"
-  sudo -u odoo pip3 install -r /home/pi/odoo/addons/iot_box_image/configuration/requirements.txt --break-system-package
+  sudo chroot /root_bypass_ramdisks /bin/bash -c \"export DEBIAN_FRONTEND=noninteractive && xargs apt-get -y -o Dpkg::Options::=\"--force-confdef\" -o Dpkg::Options::=\"--force-confold\" install < /home/pi/odoo/setup/iot_box_builder/configuration/packages.txt\"
+  sudo -u odoo pip3 install -r /home/pi/odoo/setup/iot_box_builder/configuration/requirements.txt --break-system-package
   cd \$pwd
 }
 
@@ -143,6 +153,9 @@ devtools() {
 echo iotbox | tee /etc/hostname
 sed -i 's/\braspberrypi/iotbox/g' /etc/hosts
 
+# Prevent Wi-Fi blocking and remove man pages
+apt-get -y -qq purge rfkill man-db
+
 apt-get update
 
 # At the first start it is necessary to configure a password
@@ -151,23 +164,20 @@ password="$(openssl rand -base64 12)"
 echo "pi:${password}" | chpasswd
 echo TrustedUserCAKeys /etc/ssh/ca.pub >> /etc/ssh/sshd_config
 
-# Prevent Wi-Fi blocking
-apt-get -y remove rfkill
-
 echo "Acquire::Retries "16";" > /etc/apt/apt.conf.d/99acquire-retries
 # KEEP OWN CONFIG FILES DURING PACKAGE CONFIGURATION
 # http://serverfault.com/questions/259226/automatically-keep-current-version-of-config-files-when-apt-get-install
-xargs apt-get -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" install < /home/pi/odoo/addons/iot_box_image/configuration/packages.txt
-apt-get -y autoremove
+xargs apt-get -y -qq -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" install < /home/pi/odoo/setup/iot_box_builder/configuration/packages.txt
+apt-get -y -qq autoremove
 
-apt-get clean
+apt-get -qq clean
 localepurge
 rm -rfv /usr/share/doc
 
 # Remove the default nginx website, we have our own config in /etc/nginx/conf.d/
 rm /etc/nginx/sites-enabled/default
-
-pip3 install -r /home/pi/odoo/addons/iot_box_image/configuration/requirements.txt --break-system-package
+cd /home/pi/odoo/
+pip3 install -r /home/pi/odoo/setup/iot_box_builder/configuration/requirements.txt --break-system-package
 
 # Create Odoo user for odoo service and disable password login
 adduser --disabled-password --gecos "" --shell /usr/sbin/nologin odoo
@@ -177,7 +187,7 @@ cp /etc/sudoers.d/010_pi-nopasswd /etc/sudoers.d/010_odoo-nopasswd
 sed -i 's/pi/odoo/g' /etc/sudoers.d/010_odoo-nopasswd
 
 # copy the odoo.conf file to the overwrite directory
-mv -v "/home/pi/odoo/addons/iot_box_image/configuration/odoo.conf" "/home/pi/"
+mv -v "/home/pi/odoo/setup/iot_box_builder/configuration/odoo.conf" "/home/pi/"
 chown odoo:odoo "/home/pi/odoo.conf"
 
 groupadd usbusers
@@ -229,3 +239,7 @@ mkdir -v /root_bypass_ramdisks
 echo ""
 echo "--- DEFAULT PASSWORD: ${password} ---"
 echo ""
+
+umount /proc || umount -lf /proc
+umount /sys
+umount /dev/pts
