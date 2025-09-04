@@ -423,3 +423,38 @@ class TestRecruitment(TransactionCase):
 
         res = A1.action_open_applications()
         self.assertEqual(len(res['domain'][0][2]), 3, "The list view should display 3 applications")
+
+    def test_make_similar_applicants_obsolete(self):
+        """
+        Ensure that the 'is_obsolete' field is correctly computed and stored
+        for related applicants based on email, phone and LinkedIn profile.
+        """
+        A1, A2, A3 = self.env["hr.applicant"].create(
+            [
+                {"partner_name": "Legit-Email", "email_from": "a@odoo.com"},
+                {"partner_name": "Legit-Phone", "partner_phone": "1000"},
+                {"partner_name": "Legit-LinkedIn", "linkedin_profile": "odoo"},
+            ]
+        )
+        previous_applicants = [A1, A2, A3]
+        self.assertTrue(
+            all(not app.is_obsolete for app in previous_applicants),
+            "All applicants must be legit as they have unique email, phone and LinkedIn.",
+        )
+
+        B1, B2, B3 = self.env["hr.applicant"].create(
+            [
+                {"partner_name": "Duplicated-Email", "email_from": "a@odoo.com"},
+                {"partner_name": "Duplicated-Phone", "partner_phone": "1000"},
+                {"partner_name": "Duplicated-LinkedIn", "linkedin_profile": "odoo"},
+            ]
+        )
+        new_applicants = [B1, B2, B3]
+        self.assertTrue(
+            all(not app.is_obsolete for app in new_applicants),
+            "None of the new applicants must be obsolete as they are the ones to be considered.",
+        )
+        self.assertTrue(
+            all(app.is_obsolete for app in previous_applicants),
+            "All previous applicants must now be obsolete as they have newer copies.",
+        )
