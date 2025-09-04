@@ -1,5 +1,5 @@
 import { fields, Record } from "@mail/core/common/record";
-import { stateToUrl } from "@web/core/browser/router";
+import { router } from "@web/core/browser/router";
 
 export class CrmLead extends Record {
     static id = "id";
@@ -11,7 +11,7 @@ export class CrmLead extends Record {
     name;
     href = fields.Attr("", {
         compute() {
-            return stateToUrl({ model: 'crm.lead', resId: this.id });
+            return router.stateToUrl({ model: 'crm.lead', resId: this.id });
         }
     });
 }

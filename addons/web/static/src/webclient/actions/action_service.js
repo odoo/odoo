@@ -14,7 +14,7 @@ import { ReportAction } from "./reports/report_action";
 import { UPDATE_METHODS } from "@web/core/orm_service";
 import { CallbackRecorder } from "@web/search/action_hook";
 import { ControlPanel } from "@web/search/control_panel/control_panel";
-import { PATH_KEYS, router as _router, stateToUrl } from "@web/core/browser/router";
+import { PATH_KEYS, router as _router } from "@web/core/browser/router";
 
 import {
     Component,
@@ -489,7 +489,7 @@ export function makeActionManager(env, router = _router) {
                     return controller.props?.type === "form";
                 },
                 get url() {
-                    return stateToUrl(controller.state);
+                    return router.stateToUrl(controller.state);
                 },
                 onSelected() {
                     restore(controller.jsId);
@@ -844,7 +844,7 @@ export function makeActionManager(env, router = _router) {
         // Store on the session the action for the new window
         browser.sessionStorage.setItem("current_action", action._originalAction || "{}");
         browser.sessionStorage.setItem("current_state", JSON.stringify(state));
-        _openURL(stateToUrl(state));
+        _openURL(router.stateToUrl(state));
         // restore the current action from the current window
         browser.sessionStorage.setItem("current_action", currentAction);
         browser.sessionStorage.setItem("current_state", currentState);
@@ -1443,7 +1443,10 @@ export function makeActionManager(env, router = _router) {
                 return _executeActURLAction(action, options);
             case "ir.actions.act_window":
                 if (action.target !== "new" && !options.newWindow) {
-                    const canProceed = await clearUncommittedChanges(env, pick(options, "forceLeave"));
+                    const canProceed = await clearUncommittedChanges(
+                        env,
+                        pick(options, "forceLeave")
+                    );
                     if (!canProceed) {
                         return new Promise(() => {});
                     }

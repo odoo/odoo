@@ -1,6 +1,6 @@
 import { htmlEscape, markup } from "@odoo/owl";
 
-import { stateToUrl } from "@web/core/browser/router";
+import { router } from "@web/core/browser/router";
 import { loadEmoji, loader } from "@web/core/emoji_picker/emoji_picker";
 import { normalize } from "@web/core/l10n/utils";
 import {
@@ -234,7 +234,7 @@ function generateMentionsLinks(
     for (const mention of mentions) {
         const link = document.createElement("a");
         setAttributes(link, {
-            href: stateToUrl({ model: mention.model, resId: mention.id }),
+            href: router.stateToUrl({ model: mention.model, resId: mention.id }),
             class: mention.class,
             "data-oe-id": mention.id,
             "data-oe-model": mention.model,

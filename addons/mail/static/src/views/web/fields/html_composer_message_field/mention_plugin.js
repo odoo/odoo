@@ -1,6 +1,6 @@
 import { Plugin } from "@html_editor/plugin";
 import { MentionList } from "@mail/core/web/mention_list";
-import { stateToUrl } from "@web/core/browser/router";
+import { router } from "@web/core/browser/router";
 import { renderToElement } from "@web/core/utils/render";
 import { url } from "@web/core/utils/urls";
 
@@ -24,7 +24,7 @@ export class MentionPlugin extends Plugin {
         const mentionBlock = renderToElement("mail.Wysiwyg.mentionLink", {
             option,
             href: url(
-                stateToUrl({
+                router.stateToUrl({
                     model: option.partner ? "res.partner" : "discuss.channel",
                     resId: option.partner ? option.partner.id : option.channel.id,
                 })
