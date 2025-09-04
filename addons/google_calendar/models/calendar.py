@@ -102,10 +102,11 @@ class CalendarEvent(models.Model):
 
     def _check_modify_event_permission(self, values):
         # Check if event modification attempt by attendee is valid to avoid duplicate events creation.
+        is_syncable = self._check_values_to_sync(values)
         for event in self:
             # Edge case: when restarting the synchronization, guests can write 'need_sync=True' on events.
             google_sync_restart = values.get('need_sync') and len(values)
-            if not google_sync_restart and (event.guests_readonly and self.env.user.id != event.user_id.id):
+            if is_syncable and not google_sync_restart and (event.guests_readonly and self.env.user.id != event.user_id.id):
                 raise ValidationError(_("The following event can only be updated by the organizer "
                                         "according to the event permissions set on Google Calendar."))
 
