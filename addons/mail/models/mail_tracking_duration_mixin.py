@@ -180,10 +180,10 @@ class MailTrackingDurationMixin(models.AbstractModel):
         rot_enabled = self.filtered_domain(self._get_rotting_domain())
         others = self - rot_enabled
         for stage, records in rot_enabled.grouped(self._track_duration_field).items():
-            rotting = records.filtered(lambda record: record.date_last_stage_update + timedelta(days=stage.rotting_threshold_days) < now)
+            rotting = records.filtered(lambda record: (record.date_last_stage_update or record.create_date) + timedelta(days=stage.rotting_threshold_days) < now)
             for record in rotting:
                 record.is_rotting = True
-                record.rotting_days = (now - record.date_last_stage_update).days
+                record.rotting_days = (now - (record.date_last_stage_update or record.create_date)).days
             others += records - rotting
         others.is_rotting = False
         others.rotting_days = 0
@@ -209,20 +209,21 @@ class MailTrackingDurationMixin(models.AbstractModel):
         if not base_query._joins or not stage_table_alias_name in base_query._joins:
             from_add_join = """
                 INNER JOIN %(stage_table)s AS %(stage_table_alias_name)s
-                    ON %(stage_table_alias_name)s.id = %(table)s.%(stage_table_alias_name)s
+                    ON %(stage_table_alias_name)s.id = %(table)s.%(stage_field)s
             """
 
         # Items with a date_last_stage_update inferior to that number of months will not be returned by the search function.
         max_rotting_months = int(self.env['ir.config_parameter'].sudo().get_param('crm.lead.rot.max.months', default=12))
 
-        query = """
+        # We use a F-string so that the from_add_join is added with its %s parameters before the query string is processed
+        query = f"""
             WITH perishables AS (
                 SELECT  %(table)s.id AS id,
                         (
                             %(table)s.date_last_stage_update + %(stage_table_alias_name)s.rotting_threshold_days * interval '1 day'
                         ) AS date_rot
                 FROM %(from_clause)s
-                    %(from_add_join)s
+                    {from_add_join}
                 WHERE
                     %(table)s.date_last_stage_update > %(today)s - INTERVAL '%(max_rotting_months)s months'
                     AND %(where_clause)s
@@ -233,7 +234,6 @@ class MailTrackingDurationMixin(models.AbstractModel):
 
         """
         self.env.cr.execute(SQL(query,
-            from_add_join=SQL(from_add_join),
             table=SQL.identifier(self._table),
             stage_table=SQL.identifier(self[self._track_duration_field]._table),
             stage_table_alias_name=SQL.identifier(stage_table_alias_name),
