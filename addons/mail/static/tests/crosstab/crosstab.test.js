@@ -31,12 +31,12 @@ test("Messages are received cross-tab", async () => {
     const env2 = await start({ asTab: true });
     await openDiscuss(channelId, { target: env1 });
     await openDiscuss(channelId, { target: env2 });
-    await contains(".o-mail-Thread:contains('The conversation is empty.')", { target: env1 }); // wait for loaded and focus in input
-    await contains(".o-mail-Thread:contains('The conversation is empty.')", { target: env2 }); // wait for loaded and focus in input
-    await insertText(".o-mail-Composer-input", "Hello World!", { target: env1 });
+    await contains(`${env1.selector} .o-mail-Thread:contains('The conversation is empty.')`); // wait for loaded and focus in input
+    await contains(`${env2.selector} .o-mail-Thread:contains('The conversation is empty.')`); // wait for loaded and focus in input
+    await insertText(`${env1.selector} .o-mail-Composer-input`, "Hello World!");
     await press("Enter");
-    await contains(".o-mail-Message-content", { target: env1, text: "Hello World!" });
-    await contains(".o-mail-Message-content", { target: env2, text: "Hello World!" });
+    await contains(`${env1.selector} .o-mail-Message-content`, { text: "Hello World!" });
+    await contains(`${env2.selector} .o-mail-Message-content`, { text: "Hello World!" });
 });
 
 test.tags("focus required");
@@ -50,13 +50,12 @@ test("Thread rename", async () => {
     const env2 = await start({ asTab: true });
     await openDiscuss(channelId, { target: env1 });
     await openDiscuss(channelId, { target: env2 });
-    await insertText(".o-mail-Discuss-threadName:enabled", "Sales", {
+    await insertText(`${env1.selector} .o-mail-Discuss-threadName:enabled`, "Sales", {
         replace: true,
-        target: env1,
     });
     triggerHotkey("Enter");
-    await contains(".o-mail-Discuss-threadName[title='Sales']", { target: env2 });
-    await contains(".o-mail-DiscussSidebarChannel", { target: env2, text: "Sales" });
+    await contains(`${env2.selector} .o-mail-Discuss-threadName[title='Sales']`);
+    await contains(`${env2.selector} .o-mail-DiscussSidebarChannel`, { text: "Sales" });
 });
 
 test.tags("focus required");
@@ -70,14 +69,17 @@ test("Thread description update", async () => {
     const env2 = await start({ asTab: true });
     await openDiscuss(channelId, { target: env1 });
     await openDiscuss(channelId, { target: env2 });
-    await insertText(".o-mail-Discuss-threadDescription", "The very best channel", {
-        replace: true,
-        target: env1,
-    });
+    await insertText(
+        `${env1.selector} .o-mail-Discuss-threadDescription`,
+        "The very best channel",
+        {
+            replace: true,
+        }
+    );
     triggerHotkey("Enter");
-    await contains(".o-mail-Discuss-threadDescription[title='The very best channel']", {
-        target: env2,
-    });
+    await contains(
+        `${env2.selector} .o-mail-Discuss-threadDescription[title='The very best channel']`
+    );
 });
 
 test.skip("Channel subscription is renewed when channel is added from invite", async () => {
@@ -131,9 +133,9 @@ test("Adding attachments", async () => {
         attachment_ids: [attachmentId],
         message_id: messageId,
     });
-    await contains(".o-mail-AttachmentCard:not(.o-isUploading):contains(test.txt)", {
-        target: env2,
-    });
+    await contains(
+        `${env2.selector} .o-mail-AttachmentCard:not(.o-isUploading):contains(test.txt)`
+    );
 });
 
 test("Remove attachment from message", async () => {
@@ -154,10 +156,10 @@ test("Remove attachment from message", async () => {
     const env2 = await start({ asTab: true });
     await openDiscuss(channelId, { target: env1 });
     await openDiscuss(channelId, { target: env2 });
-    await contains(".o-mail-AttachmentCard", { target: env1, text: "test.txt" });
-    await click(".o-mail-AttachmentCard-unlink", { target: env2 });
-    await click(".modal-footer .btn", { text: "Ok", target: env2 });
-    await contains(".o-mail-AttachmentCard", { count: 0, target: env1, text: "test.txt" });
+    await contains(`${env1.selector} .o-mail-AttachmentCard`, { text: "test.txt" });
+    await click(`${env2.selector} .o-mail-AttachmentCard-unlink`);
+    await click(`${env2.selector} .modal-footer .btn`, { text: "Ok" });
+    await contains(`${env1.selector} .o-mail-AttachmentCard`, { count: 0, text: "test.txt" });
 });
 
 test("Message (hard) delete notification", async () => {
