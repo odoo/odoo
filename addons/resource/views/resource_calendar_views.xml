@@ -53,15 +53,15 @@
                     <group name="resource_details" col="2">
                         <group name="resource_working_hours">
                             <field name="schedule_type" widget="radio"/>
-                            <label for="switch_based_on_duration" string="Duration Based" class="o_form_label"/>
+                            <label for="switch_based_on_duration" string="Define Amount of Hours per day" invisible="flexible_hours" class="o_form_label"/>
                             <button name="switch_based_on_duration" invisible="duration_based or flexible_hours" type="object"
                                 icon="fa-square-o" title="Switch to Duration based attendance" class="btn p-0"
-                                confirm="Are you sure you want to switch to a Duration based attendance?"
-                                confirm-label="Switch"/>
+                                confirm="If checked, the working schedule will be based on an amount of hours (defined for each day) and not a start &amp; end time anymore.Do you confirm ?"
+                                confirm-label="Confirm"/>
                             <button name="switch_based_on_duration" invisible="not duration_based or flexible_hours" type="object"
                                 icon="fa-check-square" title="Switch to fixed attendance" class="btn p-0"
-                                confirm="Are you sure you want to switch to a fixed attendance?"
-                                confirm-label="Switch"/>
+                                confirm="If unchecked, the working schedule will be based on a defined start and end hours.Do you confirm ?"
+                                confirm-label="Confirm"/>
                             <label for="full_time_required_hours" invisible="not company_id"/>
                             <label for="full_time_required_hours" string="Required Full Time" invisible="company_id"/>
                             <div>
