@@ -331,7 +331,8 @@ export class PosOrder extends Base {
                 this.last_order_preparation_change.lines[line.preparationKey] = {
                     attribute_value_names: line.attribute_value_ids.map((a) => a.name),
                     uuid: line.uuid,
-                    isCombo: line.combo_item_id?.id,
+                    isCombo: Boolean(line?.combo_line_ids?.length),
+                    combo_parent_uuid: line?.combo_parent_id?.uuid,
                     product_id: line.getProduct().id,
                     name: line.getFullProductName(),
                     basic_name: line.getProduct().name,
