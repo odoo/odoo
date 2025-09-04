@@ -418,3 +418,23 @@ class TestAccountJournalAlias(AccountTestInvoicingCommon, MailCommon):
             msg_id='<test-account-move-alias-id>',
         )
         self.assertTrue(self.env['account.move'].search([('invoice_source_email', '=', 'company_2_user@test.com')]))
+
+    def test_alias_uniqueness_without_domain(self):
+        """Ensure alias_name is unique even if alias_domain is not defined."""
+        default_account = self.env['account.account'].search(
+            domain=[('deprecated', '=', False), ('account_type', 'in', ('income', 'income_other'))],
+            limit=1,
+        )
+        with Form(self.env['account.journal']) as journal_form:
+            journal_form.type = 'sale'
+            journal_form.code = 'A'
+            journal_form.name = 'Test Journal 1'
+            journal_form.default_account_id = default_account
+            journal_1 = journal_form.save()
+        with Form(self.env['account.journal']) as journal_form:
+            journal_form.type = 'sale'
+            journal_form.code = 'B'
+            journal_form.name = 'Test Journal 2'
+            journal_form.default_account_id = default_account
+            journal_2 = journal_form.save()
+        self.assertNotEqual(journal_1.alias_id.alias_name, journal_2.alias_id.alias_name)
