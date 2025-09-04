@@ -847,6 +847,26 @@ test("should remove all formats when having multiple formats (3)", async () => {
     });
 });
 
+test("Remove format not remove background color if applied on .btn element", async () => {
+    await testEditor({
+        contentBefore:
+            '<p><a href="#" class="btn btn-custom bg-o-color-5" style="font-weight: 400;">T[es]t</a></p>',
+        stepFunction: (editor) => execCommand(editor, "removeFormat"),
+        contentAfter:
+            '<p><a href="#" class="btn btn-custom bg-o-color-5" style="font-weight: 400;">T[es]t</a></p>',
+    });
+});
+
+test("Remove format not remove text color if applied on .btn element", async () => {
+    await testEditor({
+        contentBefore:
+            '<p><a href="#" class="btn btn-custom text-o-color-5" style="font-weight: 400;">T[es]t</a></p>',
+        stepFunction: (editor) => execCommand(editor, "removeFormat"),
+        contentAfter:
+            '<p><a href="#" class="btn btn-custom text-o-color-5" style="font-weight: 400;">T[es]t</a></p>',
+    });
+});
+
 describe("Toolbar", () => {
     async function removeFormatClick() {
         await expandToolbar();
