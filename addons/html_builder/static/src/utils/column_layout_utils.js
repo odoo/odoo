@@ -9,7 +9,7 @@
  * @returns {integer|string} number of columns or "custom"
  */
 export function getNbColumns(columnEls, isMobile, mobileBreakpoint) {
-    if (!columnEls) {
+    if (!columnEls?.length) {
         return 0;
     }
     if (areColsCustomized(columnEls, isMobile, mobileBreakpoint)) {
@@ -75,6 +75,9 @@ export function removeMobileOrders(columnEls, mobileBreakpoint) {
  * @returns {boolean}
  */
 export function areColsCustomized(columnEls, isMobile, mobileBreakpoint) {
+    if (!columnEls?.length) {
+        return false;
+    }
     const resolutionModifier = isMobile ? "" : `${mobileBreakpoint}-`;
     const colRegex = new RegExp(`(?:^|\\s+)col-${resolutionModifier}(\\d{1,2})(?!\\S)`);
     const colSize = parseInt(columnEls[0].className.match(colRegex)?.[1] || 12);

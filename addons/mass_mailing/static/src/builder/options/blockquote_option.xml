@@ -1,0 +1,15 @@
+<templates>
+    <t t-name="mass_mailing.CustomerTestimonialsBlockquote">
+        <BuilderRow label.translate="Edge Spacing">
+            <BuilderRange action="'setClassRange'" actionParam="['p-1', 'p-2', 'p-3', 'p-4', 'p-5']" max="4"/>
+        </BuilderRow>
+        <BuilderRow label.translate="Author Alignment" applyTo="'.s_blockquote_infos'">
+            <BuilderSelect>
+                <BuilderSelectItem classAction="'flex-row align-items-start justify-content-start text-start'">Left</BuilderSelectItem>
+                <BuilderSelectItem classAction="'flex-column align-items-center text-center'">Center</BuilderSelectItem>
+                <BuilderSelectItem classAction="'flex-row-reverse align-items-start justify-content-start text-end'">Right</BuilderSelectItem>
+            </BuilderSelect>
+        </BuilderRow>
+        <t t-call="mass_mailing.BorderOption"/>
+    </t>
+</templates>

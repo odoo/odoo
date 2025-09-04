@@ -34,3 +34,9 @@ body {
         display: none !important;
     }
 }
+// Smaller container
+.o_container_small {
+    @include media-breakpoint-up(lg) {
+        max-width: map-get($container-max-widths, md);
+    }
+}

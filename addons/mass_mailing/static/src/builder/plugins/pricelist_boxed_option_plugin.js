@@ -1,11 +1,11 @@
-import { BEGIN, SNIPPET_SPECIFIC_END } from "@html_builder/utils/option_sequence";
+import { AddProductOption } from "@html_builder/plugins/add_product_option";
 import { Plugin } from "@html_editor/plugin";
 import { withSequence } from "@html_editor/utils/resource";
+import { BEGIN } from "@html_builder/utils/option_sequence";
 import { registry } from "@web/core/registry";
-import { AddProductOption } from "@html_builder/plugins/add_product_option";
 
-class PriceListBoxedOptionPlugin extends Plugin {
-    static id = "priceListBoxedOption";
+export class PricelistBoxedOptionPlugin extends Plugin {
+    static id = "mass_mailing.PricelistBoxedOptionPlugin";
     resources = {
         builder_options: [
             withSequence(BEGIN, {
@@ -25,17 +25,10 @@ class PriceListBoxedOptionPlugin extends Plugin {
                     productSelector: ".s_pricelist_boxed_item",
                 },
             }),
-            withSequence(SNIPPET_SPECIFIC_END, {
-                template: "website.PriceListBoxedDescriptionOption",
-                selector: ".s_pricelist_boxed",
-            }),
         ],
-        dropzone_selector: {
-            selector: ".s_pricelist_boxed_item",
-            dropNear: ".s_pricelist_boxed_item",
-        },
-        is_movable_selector: { selector: ".s_pricelist_boxed_item", direction: "vertical" },
     };
 }
 
-registry.category("website-plugins").add(PriceListBoxedOptionPlugin.id, PriceListBoxedOptionPlugin);
+registry
+    .category("mass_mailing-plugins")
+    .add(PricelistBoxedOptionPlugin.id, PricelistBoxedOptionPlugin);

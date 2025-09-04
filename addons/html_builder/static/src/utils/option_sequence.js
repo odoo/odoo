@@ -114,8 +114,9 @@ const [
     VERTICAL_ALIGNMENT,
     SNIPPET_SPECIFIC_NEXT,
     SNIPPET_SPECIFIC_END,
+    ANIMATE,
     ...__DETECT_ERROR_2__
-] = splitBetween(SNIPPET_SPECIFIC, END, 5);
+] = splitBetween(SNIPPET_SPECIFIC, END, 6);
 if (__DETECT_ERROR_2__.length > 0) {
     console.error("Wrong count in split after default");
 }
@@ -145,5 +146,6 @@ export {
     VERTICAL_ALIGNMENT,
     SNIPPET_SPECIFIC_NEXT,
     SNIPPET_SPECIFIC_END,
+    ANIMATE,
     END,
 };
