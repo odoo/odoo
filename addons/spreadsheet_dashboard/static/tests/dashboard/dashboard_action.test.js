@@ -561,6 +561,20 @@ describe("Quick search bar", () => {
         expect(filterValue).toEqual({ operator: "ilike", strings: ["phone"] });
     });
 
+    test("Can quick search a string in a relational filter if a record was already selected", async function () {
+        const filter = { ...productFilter, defaultValue: { operator: "in", ids: [37] } };
+        const spreadsheetData = { globalFilters: [filter] };
+        const serverData = getServerData(spreadsheetData);
+        const { model } = await createSpreadsheetDashboard({ serverData });
+
+        await contains(".o_searchview_input").edit("test");
+        expect(".o-dropdown-item.focus").toHaveText("Search Product for: test");
+        await press("Enter");
+
+        const filterValue = model.getters.getGlobalFilterValue(productFilter.id);
+        expect(filterValue).toEqual({ operator: "ilike", strings: ["test"] });
+    });
+
     test("Can quick search a specific record in a relational filter", async function () {
         const spreadsheetData = { globalFilters: [productFilter] };
         const serverData = getServerData(spreadsheetData);
