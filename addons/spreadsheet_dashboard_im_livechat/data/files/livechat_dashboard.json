@@ -1059,9 +1059,19 @@
     "2": { "fontSize": 16, "bold": true, "textColor": "#01666B" },
     "3": { "bold": true, "fontSize": 11, "textColor": "#434343" },
     "4": { "textColor": "#000000" },
-    "5": { "bold": true, "fillColor": "#FFFFFF", "fontSize": 16, "textColor": "#01666B" },
+    "5": {
+      "bold": true,
+      "fillColor": "#FFFFFF",
+      "fontSize": 16,
+      "textColor": "#01666B"
+    },
     "6": { "textColor": "#000000", "align": "right" },
-    "7": { "bold": true, "fontSize": 11, "align": "center", "textColor": "#434343" },
+    "7": {
+      "bold": true,
+      "fontSize": 11,
+      "align": "center",
+      "textColor": "#434343"
+    },
     "8": { "textColor": "#434343" }
   },
   "formats": {
@@ -1073,7 +1083,11 @@
     "6": "0 \"min\"",
     "7": "0%"
   },
-  "borders": { "1": { "bottom": { "style": "thin", "color": "#CCCCCC" } } },
+  "borders": {
+    "1": {
+      "bottom": { "style": "thin", "color": "#CCCCCC" }
+    }
+  },
   "revisionId": "3d6a9a87-82d5-4046-9946-0c9505fd822a",
   "uniqueFigureIds": true,
   "settings": {
@@ -1092,11 +1106,7 @@
     "1": {
       "type": "ODOO",
       "fieldMatching": {
-        "4db3e2d2-5471-44a4-80ca-7c2fa4f1a5ac": {
-          "chain": "start_date",
-          "type": "datetime",
-          "offset": 0
-        },
+        "4db3e2d2-5471-44a4-80ca-7c2fa4f1a5ac": { "chain": "start_date", "type": "datetime", "offset": 0 },
         "5124b7b1-aa17-46cc-b574-2309708de75b": { "chain": "partner_id", "type": "many2one" },
         "ee4a297f-0cc3": { "chain": "session_expertise_ids", "type": "many2many" },
         "5efd6191-32ae": { "chain": "country_id", "type": "many2one" },
@@ -1108,13 +1118,33 @@
       "id": "1",
       "measures": [
         { "id": "duration:avg", "fieldName": "duration", "aggregator": "avg" },
-        { "id": "time_to_answer:avg", "fieldName": "time_to_answer", "aggregator": "avg" },
+        {
+          "id": "time_to_answer:avg",
+          "fieldName": "time_to_answer",
+          "aggregator": "avg"
+        },
         { "id": "rating:avg", "fieldName": "rating", "aggregator": "avg" },
-        { "id": "nbr_message:avg", "fieldName": "nbr_message", "aggregator": "avg" },
+        {
+          "id": "nbr_message:avg",
+          "fieldName": "nbr_message",
+          "aggregator": "avg"
+        },
         { "id": "has_call:sum", "fieldName": "has_call", "aggregator": "sum" },
-        { "id": "call_duration_hour:avg", "fieldName": "call_duration_hour", "aggregator": "avg" },
-        { "id": "handled_by_bot:sum", "fieldName": "handled_by_bot", "aggregator": "sum" },
-        { "id": "handled_by_agent:sum", "fieldName": "handled_by_agent", "aggregator": "sum" }
+        {
+          "id": "call_duration_hour:avg",
+          "fieldName": "call_duration_hour",
+          "aggregator": "avg"
+        },
+        {
+          "id": "handled_by_bot:sum",
+          "fieldName": "handled_by_bot",
+          "aggregator": "sum"
+        },
+        {
+          "id": "handled_by_agent:sum",
+          "fieldName": "handled_by_agent",
+          "aggregator": "sum"
+        }
       ],
       "model": "im_livechat.report.channel",
       "name": "stats 2 - current",
@@ -1126,11 +1156,7 @@
     "2": {
       "type": "ODOO",
       "fieldMatching": {
-        "4db3e2d2-5471-44a4-80ca-7c2fa4f1a5ac": {
-          "chain": "start_date",
-          "type": "datetime",
-          "offset": -1
-        },
+        "4db3e2d2-5471-44a4-80ca-7c2fa4f1a5ac": { "chain": "start_date", "type": "datetime", "offset": -1 },
         "5124b7b1-aa17-46cc-b574-2309708de75b": { "chain": "partner_id", "type": "many2one" },
         "ee4a297f-0cc3": { "chain": "session_expertise_ids", "type": "many2many" },
         "5efd6191-32ae": { "chain": "country_id", "type": "many2one" },
@@ -1142,13 +1168,33 @@
       "id": "2",
       "measures": [
         { "id": "duration:avg", "fieldName": "duration", "aggregator": "avg" },
-        { "id": "time_to_answer:avg", "fieldName": "time_to_answer", "aggregator": "avg" },
+        {
+          "id": "time_to_answer:avg",
+          "fieldName": "time_to_answer",
+          "aggregator": "avg"
+        },
         { "id": "rating:avg", "fieldName": "rating", "aggregator": "avg" },
-        { "id": "nbr_message:avg", "fieldName": "nbr_message", "aggregator": "avg" },
+        {
+          "id": "nbr_message:avg",
+          "fieldName": "nbr_message",
+          "aggregator": "avg"
+        },
         { "id": "has_call:sum", "fieldName": "has_call", "aggregator": "sum" },
-        { "id": "call_duration_hour:avg", "fieldName": "call_duration_hour", "aggregator": "avg" },
-        { "id": "handled_by_agent:sum", "fieldName": "handled_by_agent", "aggregator": "sum" },
-        { "id": "handled_by_bot:sum", "fieldName": "handled_by_bot", "aggregator": "sum" }
+        {
+          "id": "call_duration_hour:avg",
+          "fieldName": "call_duration_hour",
+          "aggregator": "avg"
+        },
+        {
+          "id": "handled_by_agent:sum",
+          "fieldName": "handled_by_agent",
+          "aggregator": "sum"
+        },
+        {
+          "id": "handled_by_bot:sum",
+          "fieldName": "handled_by_bot",
+          "aggregator": "sum"
+        }
       ],
       "model": "im_livechat.report.channel",
       "name": "stats 2 - previous",
@@ -1160,11 +1206,7 @@
     "3": {
       "type": "ODOO",
       "fieldMatching": {
-        "4db3e2d2-5471-44a4-80ca-7c2fa4f1a5ac": {
-          "chain": "start_date",
-          "type": "datetime",
-          "offset": 0
-        },
+        "4db3e2d2-5471-44a4-80ca-7c2fa4f1a5ac": { "chain": "start_date", "type": "datetime", "offset": 0 },
         "5124b7b1-aa17-46cc-b574-2309708de75b": { "chain": "partner_id", "type": "many2one" },
         "ee4a297f-0cc3": { "chain": "session_expertise_ids", "type": "many2many" },
         "5efd6191-32ae": { "chain": "country_id", "type": "many2one" },
@@ -1172,30 +1214,42 @@
         "5d0a8551-7ea8": { "chain": "livechat_channel_id", "type": "many2one" }
       },
       "context": { "im_livechat.hide_partner_company": true },
-      "domain": [["partner_id.chatbot_script_ids", "=", false]],
+      "domain": [
+        ["partner_id.chatbot_script_ids", "=", false]
+      ],
       "id": "3",
       "measures": [
         { "id": "__count", "fieldName": "__count", "aggregator": "sum" },
-        { "id": "time_to_answer:avg", "fieldName": "time_to_answer", "aggregator": "avg" },
+        {
+          "id": "time_to_answer:avg",
+          "fieldName": "time_to_answer",
+          "aggregator": "avg"
+        },
         { "id": "duration:avg", "fieldName": "duration", "aggregator": "avg" },
         { "id": "rating:avg", "fieldName": "rating", "aggregator": "avg" },
-        { "id": "nbr_message:avg", "fieldName": "nbr_message", "aggregator": "avg" }
+        {
+          "id": "nbr_message:avg",
+          "fieldName": "nbr_message",
+          "aggregator": "avg"
+        }
       ],
       "model": "im_livechat.report.channel",
       "name": "Livechat Support Statistics by Agent",
-      "sortedColumn": { "domain": [], "order": "desc", "measure": "__count" },
+      "sortedColumn": {
+        "domain": [],
+        "order": "desc",
+        "measure": "__count"
+      },
       "formulaId": "3",
       "columns": [],
-      "rows": [{ "fieldName": "partner_id", "order": "asc" }]
+      "rows": [
+        { "fieldName": "partner_id", "order": "asc" }
+      ]
     },
     "4": {
       "type": "ODOO",
       "fieldMatching": {
-        "4db3e2d2-5471-44a4-80ca-7c2fa4f1a5ac": {
-          "chain": "start_date",
-          "type": "datetime",
-          "offset": 0
-        },
+        "4db3e2d2-5471-44a4-80ca-7c2fa4f1a5ac": { "chain": "start_date", "type": "datetime", "offset": 0 },
         "5124b7b1-aa17-46cc-b574-2309708de75b": { "chain": "partner_id", "type": "many2one" },
         "ee4a297f-0cc3": { "chain": "session_expertise_ids", "type": "many2many" },
         "5efd6191-32ae": { "chain": "country_id", "type": "many2one" },
@@ -1205,7 +1259,9 @@
       "context": {},
       "domain": [],
       "id": "4",
-      "measures": [{ "id": "__count", "fieldName": "__count" }],
+      "measures": [
+        { "id": "__count", "fieldName": "__count" }
+      ],
       "model": "im_livechat.report.channel",
       "name": "sessions count - current",
       "sortedColumn": null,
@@ -1216,11 +1272,7 @@
     "5": {
       "type": "ODOO",
       "fieldMatching": {
-        "4db3e2d2-5471-44a4-80ca-7c2fa4f1a5ac": {
-          "chain": "start_date",
-          "type": "datetime",
-          "offset": -1
-        },
+        "4db3e2d2-5471-44a4-80ca-7c2fa4f1a5ac": { "chain": "start_date", "type": "datetime", "offset": -1 },
         "5124b7b1-aa17-46cc-b574-2309708de75b": { "chain": "partner_id", "type": "many2one" },
         "ee4a297f-0cc3": { "chain": "session_expertise_ids", "type": "many2many" },
         "5efd6191-32ae": { "chain": "country_id", "type": "many2one" },
@@ -1230,7 +1282,9 @@
       "context": {},
       "domain": [],
       "id": "5",
-      "measures": [{ "id": "__count", "fieldName": "__count" }],
+      "measures": [
+        { "id": "__count", "fieldName": "__count" }
+      ],
       "model": "im_livechat.report.channel",
       "name": "sessions count - previous",
       "sortedColumn": null,
@@ -1241,11 +1295,7 @@
     "6": {
       "type": "ODOO",
       "fieldMatching": {
-        "4db3e2d2-5471-44a4-80ca-7c2fa4f1a5ac": {
-          "chain": "start_date",
-          "type": "datetime",
-          "offset": 0
-        },
+        "4db3e2d2-5471-44a4-80ca-7c2fa4f1a5ac": { "chain": "start_date", "type": "datetime", "offset": 0 },
         "5124b7b1-aa17-46cc-b574-2309708de75b": { "chain": "partner_id", "type": "many2one" },
         "ee4a297f-0cc3": { "chain": "session_expertise_ids", "type": "many2many" },
         "5efd6191-32ae": { "chain": "country_id", "type": "many2one" },
@@ -1253,28 +1303,41 @@
         "5d0a8551-7ea8": { "chain": "livechat_channel_id", "type": "many2one" }
       },
       "context": { "im_livechat.hide_partner_company": true },
-      "domain": [["partner_id.chatbot_script_ids", "=", false]],
+      "domain": [
+        ["partner_id.chatbot_script_ids", "=", false]
+      ],
       "id": "6",
       "measures": [
         { "id": "has_call:sum", "fieldName": "has_call", "aggregator": "sum" },
-        { "id": "call_duration_hour:avg", "fieldName": "call_duration_hour", "aggregator": "avg" },
-        { "id": "__count", "fieldName": "__count", "aggregator": "sum", "isHidden": false }
+        {
+          "id": "call_duration_hour:avg",
+          "fieldName": "call_duration_hour",
+          "aggregator": "avg"
+        },
+        {
+          "id": "__count",
+          "fieldName": "__count",
+          "aggregator": "sum",
+          "isHidden": false
+        }
       ],
       "model": "im_livechat.report.channel",
       "name": "Livechat Call Statistics by Agent",
-      "sortedColumn": { "domain": [], "order": "desc", "measure": "has_call:sum" },
+      "sortedColumn": {
+        "domain": [],
+        "order": "desc",
+        "measure": "has_call:sum"
+      },
       "formulaId": "6",
       "columns": [],
-      "rows": [{ "fieldName": "partner_id", "order": "" }]
+      "rows": [
+        { "fieldName": "partner_id", "order": "" }
+      ]
     },
     "a96176e7-d33f": {
       "type": "ODOO",
       "fieldMatching": {
-        "4db3e2d2-5471-44a4-80ca-7c2fa4f1a5ac": {
-          "chain": "start_date",
-          "type": "datetime",
-          "offset": 0
-        },
+        "4db3e2d2-5471-44a4-80ca-7c2fa4f1a5ac": { "chain": "start_date", "type": "datetime", "offset": 0 },
         "5124b7b1-aa17-46cc-b574-2309708de75b": { "chain": "partner_id", "type": "many2one" },
         "ee4a297f-0cc3": { "chain": "session_expertise_ids", "type": "many2many" },
         "5efd6191-32ae": { "chain": "country_id", "type": "many2one" },
@@ -1284,22 +1347,22 @@
       "context": {},
       "domain": [],
       "id": "1",
-      "measures": [{ "id": "__count", "fieldName": "__count", "aggregator": "sum" }],
+      "measures": [
+        { "id": "__count", "fieldName": "__count", "aggregator": "sum" }
+      ],
       "model": "im_livechat.report.channel",
       "name": "current escalated/failure statistics",
       "sortedColumn": null,
       "formulaId": "7",
       "columns": [],
-      "rows": [{ "fieldName": "session_outcome" }]
+      "rows": [
+        { "fieldName": "session_outcome" }
+      ]
     },
     "a22ba739-5135": {
       "type": "ODOO",
       "fieldMatching": {
-        "4db3e2d2-5471-44a4-80ca-7c2fa4f1a5ac": {
-          "chain": "start_date",
-          "type": "datetime",
-          "offset": 0
-        },
+        "4db3e2d2-5471-44a4-80ca-7c2fa4f1a5ac": { "chain": "start_date", "type": "datetime", "offset": 0 },
         "5124b7b1-aa17-46cc-b574-2309708de75b": { "chain": "partner_id", "type": "many2one" },
         "ee4a297f-0cc3": { "chain": "session_expertise_ids", "type": "many2many" },
         "5efd6191-32ae": { "chain": "country_id", "type": "many2one" },
@@ -1309,22 +1372,22 @@
       "context": {},
       "domain": [],
       "id": "1",
-      "measures": [{ "id": "__count", "fieldName": "__count", "aggregator": "sum" }],
+      "measures": [
+        { "id": "__count", "fieldName": "__count", "aggregator": "sum" }
+      ],
       "model": "im_livechat.report.channel",
       "name": "previous escalated/failure statistics",
       "sortedColumn": null,
       "formulaId": "8",
       "columns": [],
-      "rows": [{ "fieldName": "session_outcome" }]
+      "rows": [
+        { "fieldName": "session_outcome" }
+      ]
     },
     "6670ff23-c9c4": {
       "type": "ODOO",
       "fieldMatching": {
-        "4db3e2d2-5471-44a4-80ca-7c2fa4f1a5ac": {
-          "chain": "start_date",
-          "type": "datetime",
-          "offset": 0
-        },
+        "4db3e2d2-5471-44a4-80ca-7c2fa4f1a5ac": { "chain": "start_date", "type": "datetime", "offset": 0 },
         "5124b7b1-aa17-46cc-b574-2309708de75b": { "chain": "partner_id", "type": "many2one" },
         "ee4a297f-0cc3": { "chain": "session_expertise_ids", "type": "many2many" },
         "5efd6191-32ae": { "chain": "country_id", "type": "many2one" },
@@ -1332,25 +1395,34 @@
         "5d0a8551-7ea8": { "chain": "livechat_channel_id", "type": "many2one" }
       },
       "context": {},
-      "domain": [["country_id", "!=", false]],
+      "domain": [
+        ["country_id", "!=", false]
+      ],
       "id": "1",
-      "measures": [{ "id": "__count", "fieldName": "__count", "aggregator": "sum" }],
+      "measures": [
+        { "id": "__count", "fieldName": "__count", "aggregator": "sum" }
+      ],
       "model": "im_livechat.report.channel",
       "name": "Top countries",
-      "sortedColumn": { "domain": [], "order": "desc", "measure": "__count" },
+      "sortedColumn": {
+        "domain": [],
+        "order": "desc",
+        "measure": "__count"
+      },
       "formulaId": "9",
       "columns": [],
-      "rows": [{ "fieldName": "country_id" }],
-      "collapsedDomains": { "COL": [], "ROW": [] }
+      "rows": [
+        { "fieldName": "country_id" }
+      ],
+      "collapsedDomains": {
+        "COL": [],
+        "ROW": []
+      }
     },
     "b3250c1f-c721": {
       "type": "ODOO",
       "fieldMatching": {
-        "4db3e2d2-5471-44a4-80ca-7c2fa4f1a5ac": {
-          "chain": "start_date",
-          "type": "datetime",
-          "offset": 0
-        },
+        "4db3e2d2-5471-44a4-80ca-7c2fa4f1a5ac": { "chain": "start_date", "type": "datetime", "offset": 0 },
         "5124b7b1-aa17-46cc-b574-2309708de75b": { "chain": "partner_id", "type": "many2one" },
         "ee4a297f-0cc3": { "chain": "session_expertise_ids", "type": "many2many" },
         "5efd6191-32ae": { "chain": "country_id", "type": "many2one" },
@@ -1358,25 +1430,34 @@
         "5d0a8551-7ea8": { "chain": "livechat_channel_id", "type": "many2one" }
       },
       "context": {},
-      "domain": [["lang_id", "!=", false]],
+      "domain": [
+        ["lang_id", "!=", false]
+      ],
       "id": "1",
-      "measures": [{ "id": "__count", "fieldName": "__count", "aggregator": "sum" }],
+      "measures": [
+        { "id": "__count", "fieldName": "__count", "aggregator": "sum" }
+      ],
       "model": "im_livechat.report.channel",
       "name": "Top Languages",
-      "sortedColumn": { "domain": [], "order": "desc", "measure": "__count" },
+      "sortedColumn": {
+        "domain": [],
+        "order": "desc",
+        "measure": "__count"
+      },
       "formulaId": "10",
       "columns": [],
-      "rows": [{ "fieldName": "lang_id" }],
-      "collapsedDomains": { "COL": [], "ROW": [] }
+      "rows": [
+        { "fieldName": "lang_id" }
+      ],
+      "collapsedDomains": {
+        "COL": [],
+        "ROW": []
+      }
     },
     "21eaa7c7-29bc": {
       "type": "ODOO",
       "fieldMatching": {
-        "4db3e2d2-5471-44a4-80ca-7c2fa4f1a5ac": {
-          "chain": "start_date",
-          "type": "datetime",
-          "offset": 0
-        },
+        "4db3e2d2-5471-44a4-80ca-7c2fa4f1a5ac": { "chain": "start_date", "type": "datetime", "offset": 0 },
         "5124b7b1-aa17-46cc-b574-2309708de75b": { "chain": "partner_id", "type": "many2one" },
         "ee4a297f-0cc3": { "chain": "session_expertise_ids", "type": "many2many" },
         "5efd6191-32ae": { "chain": "country_id", "type": "many2one" },
@@ -1384,25 +1465,34 @@
         "5d0a8551-7ea8": { "chain": "livechat_channel_id", "type": "many2one" }
       },
       "context": {},
-      "domain": [["session_expertise_ids", "!=", false]],
+      "domain": [
+        ["session_expertise_ids", "!=", false]
+      ],
       "id": "1",
-      "measures": [{ "id": "__count", "fieldName": "__count", "aggregator": "sum" }],
+      "measures": [
+        { "id": "__count", "fieldName": "__count", "aggregator": "sum" }
+      ],
       "model": "im_livechat.report.channel",
       "name": "Top Expertises",
-      "sortedColumn": { "domain": [], "order": "desc", "measure": "__count" },
+      "sortedColumn": {
+        "domain": [],
+        "order": "desc",
+        "measure": "__count"
+      },
       "formulaId": "11",
       "columns": [],
-      "rows": [{ "fieldName": "session_expertises" }],
-      "collapsedDomains": { "COL": [], "ROW": [] }
+      "rows": [
+        { "fieldName": "session_expertises" }
+      ],
+      "collapsedDomains": {
+        "COL": [],
+        "ROW": []
+      }
     },
     "d11c47b1-b913": {
       "type": "ODOO",
       "fieldMatching": {
-        "4db3e2d2-5471-44a4-80ca-7c2fa4f1a5ac": {
-          "chain": "start_date",
-          "type": "datetime",
-          "offset": 0
-        },
+        "4db3e2d2-5471-44a4-80ca-7c2fa4f1a5ac": { "chain": "start_date", "type": "datetime", "offset": 0 },
         "5124b7b1-aa17-46cc-b574-2309708de75b": { "chain": "partner_id", "type": "many2one" },
         "ee4a297f-0cc3": { "chain": "session_expertise_ids", "type": "many2many" },
         "5efd6191-32ae": { "chain": "country_id", "type": "many2one" },
@@ -1410,16 +1500,29 @@
         "5d0a8551-7ea8": { "chain": "livechat_channel_id", "type": "many2one" }
       },
       "context": {},
-      "domain": [["chatbot_answers_path_str", "!=", false]],
+      "domain": [
+        ["chatbot_answers_path_str", "!=", false]
+      ],
       "id": "1",
-      "measures": [{ "id": "__count", "fieldName": "__count", "aggregator": "sum" }],
+      "measures": [
+        { "id": "__count", "fieldName": "__count", "aggregator": "sum" }
+      ],
       "model": "im_livechat.report.channel",
       "name": "Top Chatbot Answers",
-      "sortedColumn": { "domain": [], "order": "desc", "measure": "__count" },
+      "sortedColumn": {
+        "domain": [],
+        "order": "desc",
+        "measure": "__count"
+      },
       "formulaId": "12",
       "columns": [],
-      "rows": [{ "fieldName": "chatbot_answers_path_str" }],
-      "collapsedDomains": { "COL": [], "ROW": [] }
+      "rows": [
+        { "fieldName": "chatbot_answers_path_str" }
+      ],
+      "collapsedDomains": {
+        "COL": [],
+        "ROW": []
+      }
     }
   },
   "pivotNextId": 13,
@@ -1452,7 +1555,13 @@
       "label": "Languages",
       "type": "relation",
       "modelName": "res.lang",
-      "domainOfAllowedValues": [["active", "in", [true, false]]],
+      "domainOfAllowedValues": [
+        [
+          "active",
+          "in",
+          [true, false]
+        ]
+      ],
       "includeChildren": false
     },
     {

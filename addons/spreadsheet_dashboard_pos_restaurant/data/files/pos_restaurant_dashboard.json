@@ -1,5 +1,5 @@
 {
-  "version": "18.4.14",
+  "version": "18.5.10",
   "sheets": [
     {
       "id": "c960176a-048b-4f9a-a326-3cc55c5fd1f2",
@@ -57,19 +57,7 @@
         "9": { "size": 80 },
         "10": { "size": 84 }
       },
-      "merges": [
-        "H68:I68",
-        "H69:I69",
-        "H70:I70",
-        "H71:I71",
-        "H72:I72",
-        "H73:I73",
-        "H74:I74",
-        "H75:I75",
-        "H76:I76",
-        "H77:I77",
-        "H78:I78"
-      ],
+      "merges": [],
       "cells": {
         "A50": "#",
         "A51": "1",
@@ -106,135 +94,9 @@
         "B12": "=_t(\"Hourly Total Revenue\")",
         "B30": "=_t(\"Daily Total Revenue\")",
         "B49": "=_t(\"Top 15 Products per Margin\") ",
-        "B50": "=_t(\"Product \")",
-        "B51": "=PIVOT.HEADER(6,\"#product_id\",A51)",
-        "B52": "=PIVOT.HEADER(6,\"#product_id\",A52)",
-        "B53": "=PIVOT.HEADER(6,\"#product_id\",A53)",
-        "B54": "=PIVOT.HEADER(6,\"#product_id\",A54)",
-        "B55": "=PIVOT.HEADER(6,\"#product_id\",A55)",
-        "B56": "=PIVOT.HEADER(6,\"#product_id\",A56)",
-        "B57": "=PIVOT.HEADER(6,\"#product_id\",A57)",
-        "B58": "=PIVOT.HEADER(6,\"#product_id\",A58)",
-        "B59": "=PIVOT.HEADER(6,\"#product_id\",A59)",
-        "B60": "=PIVOT.HEADER(6,\"#product_id\",A60)",
-        "B61": "=PIVOT.HEADER(6,\"#product_id\",A61)",
-        "B62": "=PIVOT.HEADER(6,\"#product_id\",A62)",
-        "B63": "=PIVOT.HEADER(6,\"#product_id\",A63)",
-        "B64": "=PIVOT.HEADER(6,\"#product_id\",A64)",
-        "B65": "=PIVOT.HEADER(6,\"#product_id\",A65)",
+        "B50": "=PIVOT(6, 10, FALSE, FALSE)",
         "B67": "=_t(\"Top 15 Tables per Revenue\")",
-        "B68": "=_t(\"Table\")",
-        "B69": "=PIVOT.HEADER(7,\"#table_id\",A69)",
-        "B70": "=PIVOT.HEADER(7,\"#table_id\",A70)",
-        "B71": "=PIVOT.HEADER(7,\"#table_id\",A71)",
-        "B72": "=PIVOT.HEADER(7,\"#table_id\",A72)",
-        "B73": "=PIVOT.HEADER(7,\"#table_id\",A73)",
-        "B74": "=PIVOT.HEADER(7,\"#table_id\",A74)",
-        "B75": "=PIVOT.HEADER(7,\"#table_id\",A75)",
-        "B76": "=PIVOT.HEADER(7,\"#table_id\",A76)",
-        "B77": "=PIVOT.HEADER(7,\"#table_id\",A77)",
-        "B78": "=PIVOT.HEADER(7,\"#table_id\",A78)",
-        "B79": "=PIVOT.HEADER(7,\"#table_id\",A79)",
-        "B80": "=PIVOT.HEADER(7,\"#table_id\",A80)",
-        "B81": "=PIVOT.HEADER(7,\"#table_id\",A81)",
-        "B82": "=PIVOT.HEADER(7,\"#table_id\",A82)",
-        "B83": "=PIVOT.HEADER(7,\"#table_id\",A83)",
-        "C50": "=_t(\"Quantity Sold\")",
-        "C51": "=PIVOT.VALUE(6,\"product_qty:sum\",\"#product_id\",A51)",
-        "C52": "=PIVOT.VALUE(6,\"product_qty:sum\",\"#product_id\",A52)",
-        "C53": "=PIVOT.VALUE(6,\"product_qty:sum\",\"#product_id\",A53)",
-        "C54": "=PIVOT.VALUE(6,\"product_qty:sum\",\"#product_id\",A54)",
-        "C55": "=PIVOT.VALUE(6,\"product_qty:sum\",\"#product_id\",A55)",
-        "C56": "=PIVOT.VALUE(6,\"product_qty:sum\",\"#product_id\",A56)",
-        "C57": "=PIVOT.VALUE(6,\"product_qty:sum\",\"#product_id\",A57)",
-        "C58": "=PIVOT.VALUE(6,\"product_qty:sum\",\"#product_id\",A58)",
-        "C59": "=PIVOT.VALUE(6,\"product_qty:sum\",\"#product_id\",A59)",
-        "C60": "=PIVOT.VALUE(6,\"product_qty:sum\",\"#product_id\",A60)",
-        "C61": "=PIVOT.VALUE(6,\"product_qty:sum\",\"#product_id\",A61)",
-        "C62": "=PIVOT.VALUE(6,\"product_qty:sum\",\"#product_id\",A62)",
-        "C63": "=PIVOT.VALUE(6,\"product_qty:sum\",\"#product_id\",A63)",
-        "C64": "=PIVOT.VALUE(6,\"product_qty:sum\",\"#product_id\",A64)",
-        "C65": "=PIVOT.VALUE(6,\"product_qty:sum\",\"#product_id\",A65)",
-        "C68": "=_t(\"Orders\")",
-        "C69": "=PIVOT.VALUE(7,\"__count\",\"#table_id\",A69)",
-        "C70": "=PIVOT.VALUE(7,\"__count\",\"#table_id\",A70)",
-        "C71": "=PIVOT.VALUE(7,\"__count\",\"#table_id\",A71)",
-        "C72": "=PIVOT.VALUE(7,\"__count\",\"#table_id\",A72)",
-        "C73": "=PIVOT.VALUE(7,\"__count\",\"#table_id\",A73)",
-        "C74": "=PIVOT.VALUE(7,\"__count\",\"#table_id\",A74)",
-        "C75": "=PIVOT.VALUE(7,\"__count\",\"#table_id\",A75)",
-        "C76": "=PIVOT.VALUE(7,\"__count\",\"#table_id\",A76)",
-        "C77": "=PIVOT.VALUE(7,\"__count\",\"#table_id\",A77)",
-        "C78": "=PIVOT.VALUE(7,\"__count\",\"#table_id\",A78)",
-        "C79": "=PIVOT.VALUE(7,\"__count\",\"#table_id\",A79)",
-        "C80": "=PIVOT.VALUE(7,\"__count\",\"#table_id\",A80)",
-        "C81": "=PIVOT.VALUE(7,\"__count\",\"#table_id\",A81)",
-        "C82": "=PIVOT.VALUE(7,\"__count\",\"#table_id\",A82)",
-        "C83": "=PIVOT.VALUE(7,\"__count\",\"#table_id\",A83)",
-        "D50": "=_t(\"Revenue\")",
-        "D51": "=PIVOT.VALUE(6,\"price_total:sum\",\"#product_id\",A51)",
-        "D52": "=PIVOT.VALUE(6,\"price_total:sum\",\"#product_id\",A52)",
-        "D53": "=PIVOT.VALUE(6,\"price_total:sum\",\"#product_id\",A53)",
-        "D54": "=PIVOT.VALUE(6,\"price_total:sum\",\"#product_id\",A54)",
-        "D55": "=PIVOT.VALUE(6,\"price_total:sum\",\"#product_id\",A55)",
-        "D56": "=PIVOT.VALUE(6,\"price_total:sum\",\"#product_id\",A56)",
-        "D57": "=PIVOT.VALUE(6,\"price_total:sum\",\"#product_id\",A57)",
-        "D58": "=PIVOT.VALUE(6,\"price_total:sum\",\"#product_id\",A58)",
-        "D59": "=PIVOT.VALUE(6,\"price_total:sum\",\"#product_id\",A59)",
-        "D60": "=PIVOT.VALUE(6,\"price_total:sum\",\"#product_id\",A60)",
-        "D61": "=PIVOT.VALUE(6,\"price_total:sum\",\"#product_id\",A61)",
-        "D62": "=PIVOT.VALUE(6,\"price_total:sum\",\"#product_id\",A62)",
-        "D63": "=PIVOT.VALUE(6,\"price_total:sum\",\"#product_id\",A63)",
-        "D64": "=PIVOT.VALUE(6,\"price_total:sum\",\"#product_id\",A64)",
-        "D65": "=PIVOT.VALUE(6,\"price_total:sum\",\"#product_id\",A65)",
-        "D68": "=_t(\"Revenue\")",
-        "D69": "=PIVOT.VALUE(7,\"amount_total:sum\",\"#table_id\",A69)",
-        "D70": "=PIVOT.VALUE(7,\"amount_total:sum\",\"#table_id\",A70)",
-        "D71": "=PIVOT.VALUE(7,\"amount_total:sum\",\"#table_id\",A71)",
-        "D72": "=PIVOT.VALUE(7,\"amount_total:sum\",\"#table_id\",A72)",
-        "D73": "=PIVOT.VALUE(7,\"amount_total:sum\",\"#table_id\",A73)",
-        "D74": "=PIVOT.VALUE(7,\"amount_total:sum\",\"#table_id\",A74)",
-        "D75": "=PIVOT.VALUE(7,\"amount_total:sum\",\"#table_id\",A75)",
-        "D76": "=PIVOT.VALUE(7,\"amount_total:sum\",\"#table_id\",A76)",
-        "D77": "=PIVOT.VALUE(7,\"amount_total:sum\",\"#table_id\",A77)",
-        "D78": "=PIVOT.VALUE(7,\"amount_total:sum\",\"#table_id\",A78)",
-        "D79": "=PIVOT.VALUE(7,\"amount_total:sum\",\"#table_id\",A79)",
-        "D80": "=PIVOT.VALUE(7,\"amount_total:sum\",\"#table_id\",A80)",
-        "D81": "=PIVOT.VALUE(7,\"amount_total:sum\",\"#table_id\",A81)",
-        "D82": "=PIVOT.VALUE(7,\"amount_total:sum\",\"#table_id\",A82)",
-        "D83": "=PIVOT.VALUE(7,\"amount_total:sum\",\"#table_id\",A83)",
-        "E50": "=_t(\"Margin\")",
-        "E51": "=PIVOT.VALUE(6,\"margin:sum\",\"#product_id\",A51)",
-        "E52": "=PIVOT.VALUE(6,\"margin:sum\",\"#product_id\",A52)",
-        "E53": "=PIVOT.VALUE(6,\"margin:sum\",\"#product_id\",A53)",
-        "E54": "=PIVOT.VALUE(6,\"margin:sum\",\"#product_id\",A54)",
-        "E55": "=PIVOT.VALUE(6,\"margin:sum\",\"#product_id\",A55)",
-        "E56": "=PIVOT.VALUE(6,\"margin:sum\",\"#product_id\",A56)",
-        "E57": "=PIVOT.VALUE(6,\"margin:sum\",\"#product_id\",A57)",
-        "E58": "=PIVOT.VALUE(6,\"margin:sum\",\"#product_id\",A58)",
-        "E59": "=PIVOT.VALUE(6,\"margin:sum\",\"#product_id\",A59)",
-        "E60": "=PIVOT.VALUE(6,\"margin:sum\",\"#product_id\",A60)",
-        "E61": "=PIVOT.VALUE(6,\"margin:sum\",\"#product_id\",A61)",
-        "E62": "=PIVOT.VALUE(6,\"margin:sum\",\"#product_id\",A62)",
-        "E63": "=PIVOT.VALUE(6,\"margin:sum\",\"#product_id\",A63)",
-        "E64": "=PIVOT.VALUE(6,\"margin:sum\",\"#product_id\",A64)",
-        "E65": "=PIVOT.VALUE(6,\"margin:sum\",\"#product_id\",A65)",
-        "E68": "=_t(\"Tip\")",
-        "E69": "=PIVOT.VALUE(7,\"tip_amount:sum\",\"#table_id\",A69)",
-        "E70": "=PIVOT.VALUE(7,\"tip_amount:sum\",\"#table_id\",A70)",
-        "E71": "=PIVOT.VALUE(7,\"tip_amount:sum\",\"#table_id\",A71)",
-        "E72": "=PIVOT.VALUE(7,\"tip_amount:sum\",\"#table_id\",A72)",
-        "E73": "=PIVOT.VALUE(7,\"tip_amount:sum\",\"#table_id\",A73)",
-        "E74": "=PIVOT.VALUE(7,\"tip_amount:sum\",\"#table_id\",A74)",
-        "E75": "=PIVOT.VALUE(7,\"tip_amount:sum\",\"#table_id\",A75)",
-        "E76": "=PIVOT.VALUE(7,\"tip_amount:sum\",\"#table_id\",A76)",
-        "E77": "=PIVOT.VALUE(7,\"tip_amount:sum\",\"#table_id\",A77)",
-        "E78": "=PIVOT.VALUE(7,\"tip_amount:sum\",\"#table_id\",A78)",
-        "E79": "=PIVOT.VALUE(7,\"tip_amount:sum\",\"#table_id\",A79)",
-        "E80": "=PIVOT.VALUE(7,\"tip_amount:sum\",\"#table_id\",A80)",
-        "E81": "=PIVOT.VALUE(7,\"tip_amount:sum\",\"#table_id\",A81)",
-        "E82": "=PIVOT.VALUE(7,\"tip_amount:sum\",\"#table_id\",A82)",
-        "E83": "=PIVOT.VALUE(7,\"tip_amount:sum\",\"#table_id\",A83)",
+        "B68": "=PIVOT(7, 10, FALSE, FALSE)",
         "G50": "#",
         "G51": "1",
         "G52": "2",
@@ -251,105 +113,10 @@
         "G63": "13",
         "G64": "14",
         "G65": "15",
-        "H49": "=_t(\"Top 15 Products per Category\")",
-        "H50": "=_t(\"Category \")",
-        "H51": "=PIVOT.HEADER(9,\"#pos_categ_id\",G51)",
-        "H52": "=PIVOT.HEADER(9,\"#pos_categ_id\",G52)",
-        "H53": "=PIVOT.HEADER(9,\"#pos_categ_id\",G53)",
-        "H54": "=PIVOT.HEADER(9,\"#pos_categ_id\",G54)",
-        "H55": "=PIVOT.HEADER(9,\"#pos_categ_id\",G55)",
-        "H56": "=PIVOT.HEADER(9,\"#pos_categ_id\",G56)",
-        "H57": "=PIVOT.HEADER(9,\"#pos_categ_id\",G57)",
-        "H58": "=PIVOT.HEADER(9,\"#pos_categ_id\",G58)",
-        "H59": "=PIVOT.HEADER(9,\"#pos_categ_id\",G59)",
-        "H60": "=PIVOT.HEADER(9,\"#pos_categ_id\",G60)",
-        "H61": "=PIVOT.HEADER(9,\"#pos_categ_id\",G61)",
-        "H62": "=PIVOT.HEADER(9,\"#pos_categ_id\",G62)",
-        "H63": "=PIVOT.HEADER(9,\"#pos_categ_id\",G63)",
-        "H64": "=PIVOT.HEADER(9,\"#pos_categ_id\",G64)",
-        "H65": "=PIVOT.HEADER(9,\"#pos_categ_id\",G65)",
+        "H50": "=PIVOT(9, 10, FALSE, FALSE)",
         "H67": "=_t(\"Top Responsibles\")",
-        "H68": "=_t(\"Responsible\")",
-        "H69": "=PIVOT.HEADER(10,\"#user_id\",1)",
-        "H70": "=PIVOT.HEADER(10,\"#user_id\",2)",
-        "H71": "=PIVOT.HEADER(10,\"#user_id\",3)",
-        "H72": "=PIVOT.HEADER(10,\"#user_id\",4)",
-        "H73": "=PIVOT.HEADER(10,\"#user_id\",5)",
-        "H74": "=PIVOT.HEADER(10,\"#user_id\",6)",
-        "H75": "=PIVOT.HEADER(10,\"#user_id\",7)",
-        "H76": "=PIVOT.HEADER(10,\"#user_id\",8)",
-        "H77": "=PIVOT.HEADER(10,\"#user_id\",9)",
-        "H78": "=PIVOT.HEADER(10,\"#user_id\",10)",
-        "I50": "=_t(\"Product \")",
-        "I51": "=PIVOT.HEADER(9,\"#pos_categ_id\",G51,\"#product_id\",1)",
-        "I52": "=PIVOT.HEADER(9,\"#pos_categ_id\",G52,\"#product_id\",1)",
-        "I53": "=PIVOT.HEADER(9,\"#pos_categ_id\",G53,\"#product_id\",1)",
-        "I54": "=PIVOT.HEADER(9,\"#pos_categ_id\",G54,\"#product_id\",1)",
-        "I55": "=PIVOT.HEADER(9,\"#pos_categ_id\",G55,\"#product_id\",1)",
-        "I56": "=PIVOT.HEADER(9,\"#pos_categ_id\",G56,\"#product_id\",1)",
-        "I57": "=PIVOT.HEADER(9,\"#pos_categ_id\",G57,\"#product_id\",1)",
-        "I58": "=PIVOT.HEADER(9,\"#pos_categ_id\",G58,\"#product_id\",1)",
-        "I59": "=PIVOT.HEADER(9,\"#pos_categ_id\",G59,\"#product_id\",1)",
-        "I60": "=PIVOT.HEADER(9,\"#pos_categ_id\",G60,\"#product_id\",1)",
-        "I61": "=PIVOT.HEADER(9,\"#pos_categ_id\",G61,\"#product_id\",1)",
-        "I62": "=PIVOT.HEADER(9,\"#pos_categ_id\",G62,\"#product_id\",1)",
-        "I63": "=PIVOT.HEADER(9,\"#pos_categ_id\",G63,\"#product_id\",1)",
-        "I64": "=PIVOT.HEADER(9,\"#pos_categ_id\",G64,\"#product_id\",1)",
-        "I65": "=PIVOT.HEADER(9,\"#pos_categ_id\",G65,\"#product_id\",1)",
-        "J50": "=_t(\"Quantity\")",
-        "J51": "=PIVOT.VALUE(9,\"product_qty:sum\",\"#pos_categ_id\",G51,\"#product_id\",1)",
-        "J52": "=PIVOT.VALUE(9,\"product_qty:sum\",\"#pos_categ_id\",G52,\"#product_id\",1)",
-        "J53": "=PIVOT.VALUE(9,\"product_qty:sum\",\"#pos_categ_id\",G53,\"#product_id\",1)",
-        "J54": "=PIVOT.VALUE(9,\"product_qty:sum\",\"#pos_categ_id\",G54,\"#product_id\",1)",
-        "J55": "=PIVOT.VALUE(9,\"product_qty:sum\",\"#pos_categ_id\",G55,\"#product_id\",1)",
-        "J56": "=PIVOT.VALUE(9,\"product_qty:sum\",\"#pos_categ_id\",G56,\"#product_id\",1)",
-        "J57": "=PIVOT.VALUE(9,\"product_qty:sum\",\"#pos_categ_id\",G57,\"#product_id\",1)",
-        "J58": "=PIVOT.VALUE(9,\"product_qty:sum\",\"#pos_categ_id\",G58,\"#product_id\",1)",
-        "J59": "=PIVOT.VALUE(9,\"product_qty:sum\",\"#pos_categ_id\",G59,\"#product_id\",1)",
-        "J60": "=PIVOT.VALUE(9,\"product_qty:sum\",\"#pos_categ_id\",G60,\"#product_id\",1)",
-        "J61": "=PIVOT.VALUE(9,\"product_qty:sum\",\"#pos_categ_id\",G61,\"#product_id\",1)",
-        "J62": "=PIVOT.VALUE(9,\"product_qty:sum\",\"#pos_categ_id\",G62,\"#product_id\",1)",
-        "J63": "=PIVOT.VALUE(9,\"product_qty:sum\",\"#pos_categ_id\",G63,\"#product_id\",1)",
-        "J64": "=PIVOT.VALUE(9,\"product_qty:sum\",\"#pos_categ_id\",G64,\"#product_id\",1)",
-        "J65": "=PIVOT.VALUE(9,\"product_qty:sum\",\"#pos_categ_id\",G65,\"#product_id\",1)",
-        "J68": "=_t(\"Orders\")",
-        "J69": "=PIVOT.VALUE(10,\"order_id:count_distinct\",\"#user_id\",1)",
-        "J70": "=PIVOT.VALUE(10,\"order_id:count_distinct\",\"#user_id\",2)",
-        "J71": "=PIVOT.VALUE(10,\"order_id:count_distinct\",\"#user_id\",3)",
-        "J72": "=PIVOT.VALUE(10,\"order_id:count_distinct\",\"#user_id\",4)",
-        "J73": "=PIVOT.VALUE(10,\"order_id:count_distinct\",\"#user_id\",5)",
-        "J74": "=PIVOT.VALUE(10,\"order_id:count_distinct\",\"#user_id\",6)",
-        "J75": "=PIVOT.VALUE(10,\"order_id:count_distinct\",\"#user_id\",7)",
-        "J76": "=PIVOT.VALUE(10,\"order_id:count_distinct\",\"#user_id\",8)",
-        "J77": "=PIVOT.VALUE(10,\"order_id:count_distinct\",\"#user_id\",9)",
-        "J78": "=PIVOT.VALUE(10,\"order_id:count_distinct\",\"#user_id\",10)",
-        "K50": "=_t(\"Revenue \")",
-        "K51": "=PIVOT.VALUE(9,\"price_total:sum\",\"#pos_categ_id\",G51,\"#product_id\",1)",
-        "K52": "=PIVOT.VALUE(9,\"price_total:sum\",\"#pos_categ_id\",G52,\"#product_id\",1)",
-        "K53": "=PIVOT.VALUE(9,\"price_total:sum\",\"#pos_categ_id\",G53,\"#product_id\",1)",
-        "K54": "=PIVOT.VALUE(9,\"price_total:sum\",\"#pos_categ_id\",G54,\"#product_id\",1)",
-        "K55": "=PIVOT.VALUE(9,\"price_total:sum\",\"#pos_categ_id\",G55,\"#product_id\",1)",
-        "K56": "=PIVOT.VALUE(9,\"price_total:sum\",\"#pos_categ_id\",G56,\"#product_id\",1)",
-        "K57": "=PIVOT.VALUE(9,\"price_total:sum\",\"#pos_categ_id\",G57,\"#product_id\",1)",
-        "K58": "=PIVOT.VALUE(9,\"price_total:sum\",\"#pos_categ_id\",G58,\"#product_id\",1)",
-        "K59": "=PIVOT.VALUE(9,\"price_total:sum\",\"#pos_categ_id\",G59,\"#product_id\",1)",
-        "K60": "=PIVOT.VALUE(9,\"price_total:sum\",\"#pos_categ_id\",G60,\"#product_id\",1)",
-        "K61": "=PIVOT.VALUE(9,\"price_total:sum\",\"#pos_categ_id\",G61,\"#product_id\",1)",
-        "K62": "=PIVOT.VALUE(9,\"price_total:sum\",\"#pos_categ_id\",G62,\"#product_id\",1)",
-        "K63": "=PIVOT.VALUE(9,\"price_total:sum\",\"#pos_categ_id\",G63,\"#product_id\",1)",
-        "K64": "=PIVOT.VALUE(9,\"price_total:sum\",\"#pos_categ_id\",G64,\"#product_id\",1)",
-        "K65": "=PIVOT.VALUE(9,\"price_total:sum\",\"#pos_categ_id\",G65,\"#product_id\",1)",
-        "K68": "=_t(\"Revenue\")",
-        "K69": "=PIVOT.VALUE(10,\"price_total:sum\",\"#user_id\",1)",
-        "K70": "=PIVOT.VALUE(10,\"price_total:sum\",\"#user_id\",2)",
-        "K71": "=PIVOT.VALUE(10,\"price_total:sum\",\"#user_id\",3)",
-        "K72": "=PIVOT.VALUE(10,\"price_total:sum\",\"#user_id\",4)",
-        "K73": "=PIVOT.VALUE(10,\"price_total:sum\",\"#user_id\",5)",
-        "K74": "=PIVOT.VALUE(10,\"price_total:sum\",\"#user_id\",6)",
-        "K75": "=PIVOT.VALUE(10,\"price_total:sum\",\"#user_id\",7)",
-        "K76": "=PIVOT.VALUE(10,\"price_total:sum\",\"#user_id\",8)",
-        "K77": "=PIVOT.VALUE(10,\"price_total:sum\",\"#user_id\",9)",
-        "K78": "=PIVOT.VALUE(10,\"price_total:sum\",\"#user_id\",10)"
+        "H68": "=CHOOSECOLS(PIVOT(10, 10, FALSE, FALSE), 1)",
+        "J68": "=CHOOSECOLS(PIVOT(10, 10, FALSE, FALSE), 2, 3)"
       },
       "styles": {
         "A50": 1,
@@ -367,17 +134,17 @@
         "B50": 4,
         "B68": 4,
         "H50": 4,
-        "H68:I68": 4,
+        "H68:J68": 4,
         "C50:E50": 5,
         "C68:E68": 5,
         "I50:K50": 5,
-        "J68:K68": 5,
+        "K68": 5,
         "H67": 6
       },
       "formats": {},
       "borders": {
+        "B67:D67": 1,
         "B49:E49": 1,
-        "B67:E67": 1,
         "B12:K12": 1,
         "B30:K30": 1,
         "H49:K49": 1,
@@ -388,18 +155,20 @@
         "B31:K31": 2,
         "H50:K50": 2,
         "H68:K68": 2,
-        "B69:D69": 3,
         "B51:E51": 3,
+        "B69:E69": 3,
         "H51:K51": 3,
         "H69:K69": 3,
         "B70:D82": 4,
         "B52:E64": 4,
+        "E70:E81": 4,
         "H52:K64": 4,
         "H70:K78": 4,
         "B83:D83": 5,
         "B65:E65": 5,
+        "E82:E83": 5,
         "H65:K65": 5,
-        "H79:K79": 5
+        "H79:K83": 5
       },
       "conditionalFormats": [
         {
@@ -460,7 +229,9 @@
                 "title": { "text": "Average revenue per order" }
               }
             },
-            "showValues": false
+            "showValues": false,
+            "humanize": true,
+            "chartId": "fdceb3b9-643f-4d30-a572-2d9b0b684f17"
           },
           "offset": { "x": 0, "y": 289 },
           "col": 0,
@@ -494,7 +265,9 @@
               "y1": {
                 "title": { "text": "Average revenue per order" }
               }
-            }
+            },
+            "humanize": true,
+            "chartId": "1ebdd3d0-8af0-4922-9223-2da0d6ec024c"
           },
           "offset": { "x": 0, "y": 721 },
           "col": 0,
@@ -513,7 +286,8 @@
             "type": "scorecard",
             "background": "#EFF6FF",
             "keyValue": "Data!B2",
-            "humanize": false
+            "humanize": false,
+            "chartId": "49b3e330-3a31-4d43-9930-c42f2805c0c3"
           },
           "offset": { "x": 620, "y": 10 },
           "col": 0,
@@ -532,7 +306,8 @@
             "type": "scorecard",
             "background": "#FFF7ED",
             "keyValue": "Data!B3",
-            "humanize": false
+            "humanize": false,
+            "chartId": "d96a0fa5-e91b-455c-8004-9f39eeb09ee2"
           },
           "offset": { "x": 0, "y": 127 },
           "col": 0,
@@ -551,7 +326,8 @@
             "type": "scorecard",
             "background": "#FFF7ED",
             "keyValue": "Data!B4",
-            "humanize": false
+            "humanize": false,
+            "chartId": "6b97f89c-8416-43db-a32e-d0ab5cf9051e"
           },
           "offset": { "x": 0, "y": 10 },
           "col": 0,
@@ -570,7 +346,8 @@
             "type": "scorecard",
             "background": "#FFF7ED",
             "keyValue": "Data!B5",
-            "humanize": false
+            "humanize": false,
+            "chartId": "cd102569-7656-4986-bf87-6e87b3ea493a"
           },
           "offset": { "x": 207, "y": 10 },
           "col": 0,
@@ -589,7 +366,8 @@
             "type": "scorecard",
             "background": "#FFF7ED",
             "keyValue": "Data!B7",
-            "humanize": false
+            "humanize": false,
+            "chartId": "7b541ea8-8f93-44f4-9626-67073e540f16"
           },
           "offset": { "x": 414, "y": 10 },
           "col": 0,
@@ -608,7 +386,8 @@
             "type": "scorecard",
             "background": "#FEF2F2",
             "keyValue": "Data!B9",
-            "humanize": false
+            "humanize": false,
+            "chartId": "150978db-0307-4a65-a70a-e3a634dcfd48"
           },
           "offset": { "x": 620, "y": 127 },
           "col": 0,
@@ -627,7 +406,8 @@
             "type": "scorecard",
             "background": "#FFF7ED",
             "keyValue": "Data!B6",
-            "humanize": false
+            "humanize": false,
+            "chartId": "77f395fa-f25d-4ba8-a99d-405a99ebeef7"
           },
           "offset": { "x": 207, "y": 127 },
           "col": 0,
@@ -646,11 +426,76 @@
             "type": "scorecard",
             "background": "#FFF7ED",
             "keyValue": "Data!B8",
-            "humanize": false
+            "humanize": false,
+            "chartId": "87cda1aa-ba42-4865-8f56-912dd9e323a7"
           },
           "offset": { "x": 414, "y": 127 },
           "col": 0,
           "row": 0
+        },
+        {
+          "id": "9b676d28-0a28",
+          "col": 5,
+          "row": 48,
+          "offset": { "x": 26, "y": 8 },
+          "width": 474,
+          "height": 455,
+          "tag": "carousel",
+          "data": {
+            "chartDefinitions": {
+              "bb13976b-be42": {
+                "title": {},
+                "background": "#FFFFFF",
+                "legendPosition": "top",
+                "metaData": {
+                  "groupBy": ["product_categ_id"],
+                  "measure": "price_total",
+                  "order": null,
+                  "resModel": "report.pos.order",
+                  "mode": "bar"
+                },
+                "searchParams": {
+                  "context": {
+                    "group_by": []
+                  },
+                  "domain": [
+                    "&",
+                    ["state", "!=", "cancel"],
+                    [
+                      "config_id",
+                      "in",
+                      [4, 5]
+                    ]
+                  ],
+                  "groupBy": ["product_categ_id"],
+                  "orderBy": []
+                },
+                "type": "odoo_treemap",
+                "actionXmlId": "point_of_sale.action_report_pos_order_all",
+                "dataSets": [
+                  {}
+                ]
+              }
+            },
+            "items": [
+              { "type": "chart", "chartId": "bb13976b-be42" },
+              { "type": "carouselDataView", "title": "Top 15" }
+            ],
+            "fieldMatching": {
+              "bb13976b-be42": {
+                "4b44fd69-5c22-4402-be22-636d52226a76": { "chain": "date", "type": "datetime" },
+                "31b1d5d4-6549-4dbe-9c8e-57d6e6e0889d": { "chain": "pos_categ_id", "type": "many2one" },
+                "6cb73c89-2591-456e-a7bc-8eb76e321b9e": { "chain": "product_tmpl_id", "type": "many2one" },
+                "7674d2c1-e82b-4199-a991-6fae2268676b": { "chain": "employee_id", "type": "many2one" }
+              }
+            },
+            "title": {
+              "text": "Top Categories",
+              "bold": true,
+              "fontSize": 21,
+              "color": "#01666B"
+            }
+          }
         }
       ],
       "tables": [
@@ -700,7 +545,7 @@
           }
         },
         {
-          "range": "H67:K78",
+          "range": "H67:K83",
           "type": "static",
           "config": {
             "hasFilters": false,
@@ -1250,23 +1095,20 @@
         {
           "id": "order_id:count_distinct",
           "fieldName": "order_id",
-          "aggregator": "count_distinct"
+          "aggregator": "count_distinct",
+          "userDefinedName": "Quantity Sold"
         },
         {
           "id": "product_qty:sum",
           "fieldName": "product_qty",
-          "aggregator": "sum"
+          "aggregator": "sum",
+          "userDefinedName": "Revenue"
         },
         {
           "id": "price_total:sum",
           "fieldName": "price_total",
           "aggregator": "sum",
-          "format": ""
-        },
-        {
-          "id": "margin:sum",
-          "fieldName": "margin",
-          "aggregator": "sum",
+          "userDefinedName": "Margin",
           "format": ""
         }
       ],
@@ -1275,7 +1117,7 @@
       "rows": [
         { "fieldName": "product_id" }
       ],
-      "name": "Point of Sale Analysis by Product",
+      "name": "Product ",
       "actionXmlId": "point_of_sale.action_report_pos_order_all",
       "formulaId": "6",
       "fieldMatching": {
@@ -1309,14 +1151,16 @@
           "id": "amount_total:sum",
           "fieldName": "amount_total",
           "aggregator": "sum",
-          "format": ""
+          "format": "",
+          "userDefinedName": "Orders"
         },
-        { "id": "__count", "fieldName": "__count" },
+        { "id": "__count", "fieldName": "__count", "userDefinedName": "Revenue" },
         {
           "id": "tip_amount:sum",
           "fieldName": "tip_amount",
           "aggregator": "sum",
-          "format": ""
+          "format": "",
+          "userDefinedName": "Tip"
         }
       ],
       "model": "pos.order",
@@ -1324,7 +1168,7 @@
       "rows": [
         { "fieldName": "table_id" }
       ],
-      "name": "PoS Orders by Table",
+      "name": "Table",
       "actionXmlId": "point_of_sale.action_pos_pos_form",
       "formulaId": "7",
       "fieldMatching": {
@@ -1346,18 +1190,21 @@
         {
           "id": "order_id:count_distinct",
           "fieldName": "order_id",
-          "aggregator": "count_distinct"
+          "aggregator": "count_distinct",
+          "userDefinedName": "Product "
         },
         {
           "id": "product_qty:sum",
           "fieldName": "product_qty",
-          "aggregator": "sum"
+          "aggregator": "sum",
+          "userDefinedName": "Quantity"
         },
         {
           "id": "price_total:sum",
           "fieldName": "price_total",
           "aggregator": "sum",
-          "format": ""
+          "format": "",
+          "userDefinedName": "Revenue "
         }
       ],
       "model": "report.pos.order",
@@ -1366,7 +1213,7 @@
         { "fieldName": "pos_categ_id" },
         { "fieldName": "product_id" }
       ],
-      "name": "Point of Sale Analysis by Point of Sale Category",
+      "name": "Category ",
       "actionXmlId": "point_of_sale.action_report_pos_order_all",
       "formulaId": "9",
       "fieldMatching": {
@@ -1403,6 +1250,7 @@
           "id": "price_total:sum",
           "fieldName": "price_total",
           "aggregator": "sum",
+          "userDefinedName": "Revenue",
           "format": ""
         }
       ],
@@ -1411,7 +1259,7 @@
       "rows": [
         { "fieldName": "user_id" }
       ],
-      "name": "Point of Sale Analysis by User",
+      "name": "Responsible",
       "actionXmlId": "point_of_sale.action_report_pos_order_all",
       "formulaId": "10",
       "fieldMatching": {
