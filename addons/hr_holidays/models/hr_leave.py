@@ -858,6 +858,40 @@ class HrLeave(models.Model):
             # Is probably handled via ir.rule
             raise AccessError(_('You don\'t have the rights to apply second approval on a time off request'))
 
+    def _notify_time_off_officers(self):
+        """Notify time off officers for the given leave records."""
+        user_group = self.env.ref('hr_holidays.group_hr_holidays_user')
+        for leave in self:
+            time_off_officers = (user_group.all_user_ids).filtered(
+                lambda u: leave.employee_company_id.id in u.company_ids.ids
+            )
+            if not time_off_officers:
+                continue
+
+            message_body = Markup(
+                '%(intro_message)s<br/><br/>'
+                '<strong>Employee:</strong> %(employee_name)s<br/>'
+                '<strong>Type:</strong> %(leave_type)s<br/>'
+                '<strong>From:</strong> %(date_from)s<br/>'
+                '<strong>To:</strong> %(date_to)s<br/>'
+                '<strong>Duration:</strong> %(duration)s<br/><br/>'
+                '%(action_message)s'
+            ) % {
+                "employee_name": leave.employee_id.name,
+                "leave_type": leave.holiday_status_id.name,
+                "date_from": leave.date_from.strftime('%Y-%m-%d %H:%M') if leave.date_from else '',
+                "date_to": leave.date_to.strftime('%Y-%m-%d %H:%M') if leave.date_to else '',
+                "duration": leave.duration_display or '',
+                "intro_message": self.env._('A new time off request has been submitted:'),
+                "action_message": self.env._('Please review and take appropriate action.')
+            }
+            leave.message_notify(
+                partner_ids=time_off_officers.partner_id.ids,
+                subject=_('New Time Off Request: %(leave_type)s', leave_type=leave.holiday_status_id.name),
+                body=message_body,
+                email_layout_xmlid="mail.mail_notification_layout",
+            )
+
     @api.model_create_multi
     def create(self, vals_list):
         # Override to avoid automatic logging of creation
@@ -878,6 +912,11 @@ class HrLeave(models.Model):
         holidays = super(HrLeave, self.with_context(mail_create_nosubscribe=True)).create(vals_list)
         holidays._check_validity()
         self.env['hr.leave.allocation'].invalidate_model(['leaves_taken', 'max_leaves'])  # missing dependency on compute
+
+        if not self.env.context.get('leave_fast_create') and not self.env.context.get('import_file'):
+            to_notify = holidays.filtered(lambda h: h.holiday_status_id.notify_time_off_officers)
+            if to_notify:
+                to_notify.sudo()._notify_time_off_officers()
 
         for holiday in holidays:
             if not self.env.context.get('leave_fast_create'):
