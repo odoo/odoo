@@ -47,6 +47,7 @@ import { localization } from "@web/core/l10n/localization";
 import { formatDate } from "@web/core/l10n/dates";
 import { getParsedDataFor } from "@website/js/utils";
 import { isTargetVisible } from "@html_builder/core/visibility_plugin";
+import { nodeSize } from "@html_editor/utils/position";
 
 /**
  * @typedef { Object } FormOptionShared
@@ -1350,7 +1351,7 @@ export class SelectLabelsPositionAction extends BuilderAction {
 }
 export class SetDescriptionAction extends BuilderAction {
     static id = "setDescription";
-    static dependencies = ["websiteFormOption"];
+    static dependencies = ["websiteFormOption", "selection"];
     load(context) {
         return this.dependencies.websiteFormOption.prepareFields(context);
     }
@@ -1368,6 +1369,17 @@ export class SetDescriptionAction extends BuilderAction {
             field.description = !field.description;
         }
         this.dependencies.websiteFormOption.replaceField(fieldEl, field, fields);
+        const description = fieldEl.querySelector(".s_website_form_field_description")
+            ?.childNodes[0];
+        if (description) {
+            // Select the field description text in the editor.
+            this.dependencies.selection.setSelection({
+                anchorNode: description,
+                anchorOffset: 0,
+                focusNode: description,
+                focusOffset: nodeSize(description),
+            });
+        }
     }
     isApplied({ editingElement: fieldEl, value }) {
         const description = fieldEl.querySelector(".s_website_form_field_description");
