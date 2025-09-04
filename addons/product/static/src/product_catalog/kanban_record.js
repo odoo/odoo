@@ -92,7 +92,7 @@ export class ProductCatalogKanbanRecord extends KanbanRecord {
             this.notifyLineCountChange(lineCountChange);
         }
         this.productCatalogData.quantity = quantity || 0;
-        this.debouncedUpdateQuantity();
+        return this.debouncedUpdateQuantity();
     }
 
     /**

@@ -51,15 +51,13 @@ class TestPurchaseOrderSuggest(PurchaseTestCommon, HttpCase):
         base_warehouse = self.picking_type_out.default_location_src_id.warehouse_id
         warehouse_id = (warehouse or base_warehouse).id
         suggest_context = {
-            "order_id": po.id,
-            "domain": [],
             "warehouse_id": warehouse_id,
             "suggest_based_on": based_on,
             "suggest_percent": factor,
             "suggest_days": days,
         }
         po_id = self.env["purchase.order"].with_context(suggest_context).browse(po.id).ensure_one()
-        po_id.action_purchase_order_suggest(suggest_context)
+        po_id.action_purchase_order_suggest(po.id, [], suggest_context)
 
     def _create_and_process_delivery_at_date(self, products_and_quantities, date=False, warehouse=False, to_validate=True):
         date = date or datetime.now()

@@ -126,15 +126,12 @@ class PurchaseOrder(models.Model):
         }
 
     @api.model
-    def action_purchase_order_suggest(self, suggest_ctx):
+    def action_purchase_order_suggest(self, purchase_order_id, product_domain, suggest_ctx):
         """ Adds suggested products to PO, removing products with no suggested_qty, and
         collapsing existing po_lines into at most 1 orderline. Saves suggestion params
         (eg. number_of_days) to partner table. """
-        po = self.browse(suggest_ctx.get("order_id")).ensure_one()
-        domain = [('type', '=', 'consu')]
-        if self.env.context.get('domain'):
-            domain = fields.Domain.AND([domain, self.env.context.get('domain')])
-        products = self.env['product.product'].with_context(suggest_ctx).search(domain)
+        po = self.browse(purchase_order_id).ensure_one()
+        products = self.env['product.product'].with_context(suggest_ctx).search(product_domain)
 
         po.partner_id.suggest_days = suggest_ctx.get('suggest_days')
         po.partner_id.suggest_based_on = suggest_ctx.get('suggest_based_on')

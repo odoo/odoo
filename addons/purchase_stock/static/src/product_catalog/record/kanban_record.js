@@ -1,7 +1,14 @@
 import { ProductCatalogKanbanRecord } from "@product/product_catalog/kanban_record";
 import { ProductCatalogPurchaseSuggestOrderLine } from "./purchase_order_line";
+import { useEnv } from "@odoo/owl";
 
 export class ProductCatalogPurchaseSuggestKanbanRecord extends ProductCatalogKanbanRecord {
+    setup() {
+        super.setup();
+        this.suggest = useEnv().suggest;
+        this._debouncedKanbanRecompute = useEnv()._debouncedKanbanRecompute;
+    }
+
     /* Highlights product card if suggest_qty > 0,
      * hiding suggest line if suggest_qty == qty in PO */
     getRecordClasses(...args) {
@@ -27,5 +34,12 @@ export class ProductCatalogPurchaseSuggestKanbanRecord extends ProductCatalogKan
         Math.max(min_qty, suggested_qty) > 0
             ? super.addProduct(Math.max(min_qty, suggested_qty))
             : super.addProduct(1); // Don't add 0 if a vendor pricelist min_qty = 0;
+    }
+
+    async updateQuantity(quantity) {
+        await super.updateQuantity(quantity);
+        if (quantity === 0 && this.suggest.inTheOrderFilterOn && this.suggest.suggestToggle.isOn) {
+            await this._debouncedKanbanRecompute(); // Reload UI to hide product
+        }
     }
 }

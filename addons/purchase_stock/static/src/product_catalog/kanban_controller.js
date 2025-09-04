@@ -21,6 +21,7 @@ export class PurchaseSuggestCatalogKanbanController extends ProductCatalogKanban
             digits: this.props.context.product_catalog_digits,
             vendorName: this.props.context.vendor_name,
             suggestToggle: this._loadSuggestToggleState(),
+            inTheOrderFilterOn: false,
         });
 
         onWillStart(async () => {
@@ -62,21 +63,28 @@ export class PurchaseSuggestCatalogKanbanController extends ProductCatalogKanban
 
         /* Recompute Kanban on filter changes (incl. sidebar category filters)
          * The "update" triggers a refresh, which can happen before debounce on slow
-         * internet --> pass suggest context to searchModel in case it refreshes first */
+         * network --> pass suggest context to searchModel in case it refreshes first */
         useBus(this.env.searchModel, "update", () => {
             this.env.searchModel.globalContext = this._getCatalogContext(); // Check with slow internet before removing
+            this.state.inTheOrderFilterOn = this.env.searchModel.searchDomain.some(
+                (leaf) => leaf[0] === "is_in_purchase_order" && leaf[2] === true
+            );
             this._debouncedKanbanRecompute();
         });
 
         const onAddAll = async () => {
-            const ctx = this._filter_add_all_ctx(this._getCatalogContext()); // IMPROVE: Quickfix
-            await this.model.orm.call("purchase.order", "action_purchase_order_suggest", [ctx]);
+            await this.model.orm.call("purchase.order", "action_purchase_order_suggest", [
+                this._getCatalogContext()["order_id"],
+                this.model.config.domain,
+                this._getCatalogContext(),
+            ]);
             this._filterInTheOrder(); // Apply filter to show what was added
         };
 
         useSubEnv({
             suggest: this.state,
             addAllProducts: onAddAll,
+            _debouncedKanbanRecompute: this._debouncedKanbanRecompute,
         });
     }
 
