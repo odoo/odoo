@@ -28,6 +28,10 @@ export class SurveyTimer extends Interaction {
         }
     }
 
+    destroy() {
+        clearInterval(this.surveyTimerInterval);
+    }
+
     startTimer(timerData) {
         this.timeLimitMinutes = Number(timerData.timeLimitMinutes);
         this.timer = timerData.timer;
