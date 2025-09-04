@@ -148,7 +148,8 @@ test("undo redo add form field", async () => {
     expect(":iframe span.s_website_form_label_content").toHaveCount(1);
 
     await contains(":iframe span.s_website_form_label_content").click();
-    await contains("button[title='Add a new field after this one']").click();
+    await contains("button[title='Add some content after this field']").click();
+    await contains("span.o-dropdown-item:contains('Field')").click();
 
     expect(":iframe span.s_website_form_label_content").toHaveCount(2);
     undo(editor);

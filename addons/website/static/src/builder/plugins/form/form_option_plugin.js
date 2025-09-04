@@ -5,7 +5,10 @@ import { reactive } from "@odoo/owl";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { redirect } from "@web/core/utils/urls";
 import { FormFieldOptionRedraw } from "./form_field_option_redraw";
-import { FormOptionAddFieldButton } from "./form_option_add_field_button";
+import {
+    FormOptionAddFieldButton,
+    FormOptionAddContentDropdown,
+} from "./form_option_add_field_button";
 import {
     deleteConditionalVisibility,
     findCircular,
@@ -105,12 +108,12 @@ export class FormOptionPlugin extends Plugin {
                 },
             },
             {
-                Component: FormOptionAddFieldButton,
+                Component: FormOptionAddContentDropdown,
                 selector: ".s_website_form_field",
                 exclude: ".s_website_form_dnone",
                 props: {
-                    addField: (fieldEl) => this.addFieldAfterField(fieldEl),
-                    tooltip: _t("Add a new field after this one"),
+                    addField: (fieldEl, config) => this.addSnippetAfterField(fieldEl, config),
+                    tooltip: _t("Add some content after this field"),
                 },
             },
         ],
@@ -473,16 +476,25 @@ export class FormOptionPlugin extends Plugin {
         }
         this.dependencies.builderOptions.setNextTarget(fieldEl);
     }
-    addFieldAfterField(fieldEl) {
+    addSnippetAfterField(fieldEl, snippet) {
+        let newSnippetEl = null;
         const formEl = fieldEl.closest("form");
-        const field = getCustomField("char", _t("Custom Text"));
-        field.formatInfo = getFieldFormat(fieldEl);
-        field.formatInfo.requiredMark = isRequiredMark(formEl);
-        field.formatInfo.optionalMark = isOptionalMark(formEl);
-        field.formatInfo.mark = getMark(formEl);
-        const newFieldEl = renderField(field);
-        fieldEl.insertAdjacentElement("afterend", newFieldEl);
-        this.dependencies.builderOptions.setNextTarget(newFieldEl);
+        if (snippet.id === "field") {
+            const field = getCustomField("char", _t("Custom Text"));
+            field.formatInfo = getFieldFormat(fieldEl);
+            field.formatInfo.requiredMark = isRequiredMark(formEl);
+            field.formatInfo.optionalMark = isOptionalMark(formEl);
+            field.formatInfo.mark = getMark(formEl);
+            newSnippetEl = renderField(field);
+        } else {
+            const snippetConfig = this.config.snippetModel.getSnippetByName(
+                snippet.category,
+                snippet.id
+            );
+            newSnippetEl = snippetConfig.content.cloneNode(true);
+        }
+        fieldEl.insertAdjacentElement("afterend", newSnippetEl);
+        this.dependencies.builderOptions.setNextTarget(newSnippetEl);
     }
     /**
      * To be used in load for any action that uses getActiveField or

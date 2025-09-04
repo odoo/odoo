@@ -82,6 +82,19 @@
     </button>
 </t>
 
+<t t-name="website.s_website_form_form_option_add_snippet_dropdown">
+    <Dropdown menuClass="'o-hb-select-dropdown'">
+        <button class="btn btn-success pe-2" t-att-title="props.tooltip">+ New</button>
+        <t t-set-slot="content">
+            <t t-foreach="this.snippets" t-as="snippet" t-key="snippet.id">
+                <DropdownItem onSelected="() => this.addField(snippet)">
+                    <t t-esc="snippet.name"/>
+                </DropdownItem>
+            </t>
+        </t>
+    </Dropdown>
+</t>
+
 <t t-name="website.s_website_form_field_option_redraw">
     <FormFieldOption redrawSequence="domState.redrawSequence" t-props="props"/>
 </t>
