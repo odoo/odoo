@@ -24,7 +24,7 @@ export class ProductLabelSectionAndNoteListRender extends SectionAndNoteListRend
         if (this.productColumns.includes(column.name)) {
             return;
         }
-        super.getCellTitle(column, record);
+        return super.getCellTitle(column, record);
     }
 
     getActiveColumns(list) {
