@@ -19,4 +19,5 @@ class PosSession(models.Model):
             relations['email']['compute'] = False
             relations['phone']['compute'] = False
             relations['name']['compute'] = False
+            relations['company_name']['compute'] = False
         return relations
