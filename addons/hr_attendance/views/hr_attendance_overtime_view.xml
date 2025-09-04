@@ -12,52 +12,6 @@
         </field>
     </record>
 
-    <record id="view_attendance_overtime_line_search" model="ir.ui.view">
-        <field name="name">hr.attendance.overtime.line.search</field>
-        <field name="model">hr.attendance.overtime.line</field>
-        <field name="arch" type="xml">
-            <search>
-                <field name="employee_id"/>
-                <group>
-                    <filter string="Date" name="groupby_date" context="{'group_by': 'date:day'}"/>
-                    <filter string="Employee" name="employee" context="{'group_by': 'employee_id'}"/>
-                </group>
-            </search>
-        </field>
-    </record>
-
-    <!-- TODO probably remove -->
-    <record id="view_attendance_overtime_line_list" model="ir.ui.view">
-        <field name="name">hr.attendance.overtime.line.list</field>
-        <field name="model">hr.attendance.overtime.line</field>
-        <field name="arch" type="xml">
-            <list editable="top" create="0">
-                <field name="date" readonly="1"/>
-                <field name="employee_id" readonly="1"/>
-                <field name="manual_duration" widget="float_time" optional="hide"/>
-                <field name="duration" widget="float_time" readonly="1" optional="show"/>
-                <field name="status" widget="badge" readonly="1"/>
-                <button
-                    class="oe_stat_button"
-                    string="Approve"
-                    invisible="not is_manager or status not in ['to_approve', 'refused']"
-                    name="action_approve"
-                    icon="fa-check"
-                    type="object"
-                    groups="hr_attendance.group_hr_attendance_officer"/>
-                <button
-                    class="oe_stat_button"
-                    string="Refuse"
-                    invisible="not is_manager or status not in ['to_approve', 'approved']"
-                    name="action_refuse"
-                    icon="fa-times"
-                    type="object"
-                    groups="hr_attendance.group_hr_attendance_officer"/>
-                <field name="rules_display" readonly="1"/>
-            </list>
-        </field>
-    </record>
-
     <record id="view_attendance_overtime_search" model="ir.ui.view">
         <field name="name">hr.attendance.overtime.search</field>
         <field name="model">hr.attendance.overtime</field>
@@ -118,13 +72,4 @@
         </field>
 
     </record>
-
-    <record id="hr_attendance_overtime_line_action" model="ir.actions.act_window">
-        <field name="name">Overtime Details</field>
-        <field name="res_model">hr.attendance.overtime.line</field>
-        <field name="view_mode">list</field>
-    </record>
-
-    <menuitem id="menu_hr_attendance_view_overtime_line" name="Overtime Details" action="hr_attendance_overtime_line_action" parent="menu_hr_attendance_root" sequence="1000"/>
-    
 </odoo>

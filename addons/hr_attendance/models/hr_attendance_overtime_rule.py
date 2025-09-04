@@ -116,17 +116,15 @@ class HrAttendanceOvertimeRule(models.Model):
     company_id = fields.Many2one('res.company', "Company", default=lambda self: self.env.company)
     sequence = fields.Integer(default=10)
 
-    ruleset_id = fields.Many2one('hr.attendance.overtime.ruleset')
+    ruleset_id = fields.Many2one('hr.attendance.overtime.ruleset', required=True)
 
     paid = fields.Boolean("Pay Extra Hours")
-    amount_rate = fields.Float("Salary Rate", default=1.0)
+    amount_rate = fields.Float("Rate", default=1.0)
 
     # employee_tolerance = fields.Float() TODO with undertime rules (naja)
     employer_tolerance = fields.Float()
 
-    # TODO naja: replace with widget?
-    quantity_display = fields.Char("Quantity", compute='_compute_quantity_display')
-    timing_display = fields.Char("Timing", compute='_compute_timing_display')
+    information_display = fields.Char("Information", compute='_compute_information_display')
 
     _timing_start_is_hour = models.Constraint(
         'CHECK(0 <= timing_start AND timing_start < 24)',
@@ -421,29 +419,26 @@ class HrAttendanceOvertimeRule(models.Model):
             'amount_rate': combined_rate,
         }
 
-    def _compute_quantity_display(self):
-        self.quantity_display = ""
-        for rule in self.filtered(lambda r: r.base_off == 'quantity'):
-            if rule.expected_hours_from_contract:
-                rule.quantity_display = self.env._("From Employee")
-                continue
-            rule.quantity_display = self.env._(
-                "%(nb_hours)d h/%(period)s",
-                nb_hours=rule.expected_hours,
-                period={
-                    'day': self.env._('day'),
-                    'week': self.env._('week'),
-                }[rule.quantity_period],
-            )
-
-    def _compute_timing_display(self):
-        self.timing_display = ""
+    def _compute_information_display(self):
         timing_types = dict(self._fields['timing_type'].selection)
-        for rule in self.filtered(lambda r: r.base_off == 'timing'):
-            if rule.timing_type == 'schedule':
-                rule.timing_display = self.env._(
-                     "Outside Schedule: %(schedule_name)s",
-                     schedule_name=rule.resource_calendar_id.name,
+        for rule in self.filtered(lambda r: r.base_off == 'quantity'):
+            if rule.base_off == 'quantity':
+                if rule.expected_hours_from_contract:
+                    rule.information_display = self.env._("From Employee")
+                    continue
+                rule.information_display = self.env._(
+                    "%(nb_hours)d h / %(period)s",
+                    nb_hours=rule.expected_hours,
+                    period={
+                        'day': self.env._('day'),
+                        'week': self.env._('week'),
+                    }[rule.quantity_period],
                 )
-                continue
-            rule.timing_display = timing_types[rule.timing_type]
+            else:
+                if rule.timing_type == 'schedule':
+                    rule.information_display = self.env._(
+                        "Outside Schedule: %(schedule_name)s",
+                        schedule_name=rule.resource_calendar_id.name,
+                    )
+                    continue
+                rule.information_display = timing_types[rule.timing_type]

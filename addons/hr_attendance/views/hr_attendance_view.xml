@@ -201,7 +201,31 @@
                     </group>
                     <notebook invisible="not overtime_status">
                         <page string="Overtime Details">
-                            <field name="linked_overtime_ids"/>
+                            <field name="linked_overtime_ids">
+                                <list editable="bottom">
+                                    <field name="rule_ids" widget="many2many_tags" readonly="1"/>
+                                    <field name="duration" widget="float_time" readonly="1"/>
+                                    <field name="manual_duration" widget="float_time" readonly="0"/>
+                                    <field name="amount_rate" widget="percentage"/>
+                                    <field name="status" widget="badge" readonly="1" decoration-warning="status == 'to_approve'" decoration-success="status == 'approved'" decoration-danger="status == 'refused'"/>
+                                    <button
+                                        class="oe_stat_button"
+                                        string="Approve"
+                                        invisible="not is_manager or status not in ['to_approve', 'refused']"
+                                        name="action_approve"
+                                        icon="fa-check"
+                                        type="object"
+                                        groups="hr_attendance.group_hr_attendance_officer"/>
+                                    <button
+                                        class="oe_stat_button"
+                                        string="Refuse"
+                                        invisible="not is_manager or status not in ['to_approve', 'approved']"
+                                        name="action_refuse"
+                                        icon="fa-times"
+                                        type="object"
+                                        groups="hr_attendance.group_hr_attendance_officer"/>
+                                </list>
+                            </field>
                         </page>
                     </notebook>
                 </sheet>

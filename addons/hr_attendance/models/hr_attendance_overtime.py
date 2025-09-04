@@ -61,10 +61,7 @@ class HrAttendanceOvertimeLine(models.Model):
 
     is_manager = fields.Boolean(compute="_compute_is_manager")
 
-    # TODO overkill?
-    rule_ids = fields.Many2many("hr.attendance.overtime.rule")
-    # TODO remove (debug only)
-    rules_display = fields.Char(compute='_compute_rules_display')
+    rule_ids = fields.Many2many("hr.attendance.overtime.rule", string="Applied Rules")
 
 
     # in payroll: rate, work_entry_type
@@ -90,26 +87,13 @@ class HrAttendanceOvertimeLine(models.Model):
     @api.depends('employee_id')
     def _compute_status(self):
         for overtime in self:
-            if self.employee_id.company_id.attendance_overtime_validation != 'by_manager':
-                self.status = 'approved'
-            else:
-                self.status = 'to_approve'
-
-    @api.depends('rule_ids')
-    def _compute_rules_display(self):
-        for line in self:
-            line.rules_display = '|'.join(line.rule_ids.mapped('name'))
+            if not overtime.status:
+                overtime.status = 'to_approve' if overtime.employee_id.company_id.attendance_overtime_validation == 'by_manager' else 'approved'
 
     @api.depends('duration')
     def _compute_manual_duration(self):
         for overtime in self:
             overtime.manual_duration = overtime.duration
-
-    @api.depends('employee_id')
-    def _compute_overtime_status(self):
-        for overtime in self:
-            if not overtime.status:
-                overtime.status = 'to_approve' if overtime.employee_id.company_id.attendance_overtime_validation == 'by_manager' else 'approved'
 
     @api.depends('employee_id')
     def _compute_is_manager(self):
