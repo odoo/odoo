@@ -56,8 +56,9 @@ class CalendarEvent(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
+        description_context = self.env.context.get('skip_contact_description', False)
         notify_context = self.env.context.get('dont_notify', False)
-        return super(CalendarEvent, self.with_context(dont_notify=notify_context)).create([
+        return super(CalendarEvent, self.with_context(dont_notify=notify_context, skip_contact_description=description_context)).create([
             dict(vals, need_sync=False) if vals.get('recurrence_id') or vals.get('recurrency') else vals
             for vals in vals_list
         ])

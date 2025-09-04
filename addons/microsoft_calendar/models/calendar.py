@@ -234,7 +234,9 @@ class CalendarEvent(models.Model):
         """ Copy current event values, delete it and recreate it with the new organizer user. """
         self.ensure_one()
         event_copy = {**self.copy_data()[0], 'microsoft_id': False}
-        self.env['calendar.event'].with_user(sender_user).create({**event_copy, **values})
+        self.env['calendar.event'].with_user(sender_user).with_context(skip_contact_description=True).create(
+            {**event_copy, **values},
+        )
         if self.ms_universal_event_id:
             self._microsoft_delete(self._get_organizer(), self.microsoft_id)
 
