@@ -63,8 +63,8 @@ function getConnectedParents(nodes) {
  * @typedef {Object} DomShared
  * @property { DomPlugin['insert'] } insert
  * @property { DomPlugin['copyAttributes'] } copyAttributes
- * @property { DomPlugin['canSetTag'] } canSetTag
- * @property { DomPlugin['setTag'] } setTag
+ * @property { DomPlugin['canSetBlock'] } canSetBlock
+ * @property { DomPlugin['setBlock'] } setBlock
  * @property { DomPlugin['setTagName'] } setTagName
  * @property { DomPlugin['removeSystemProperties'] } removeSystemProperties
  */
@@ -75,8 +75,8 @@ export class DomPlugin extends Plugin {
     static shared = [
         "insert",
         "copyAttributes",
-        "canSetTag",
-        "setTag",
+        "canSetBlock",
+        "setBlock",
         "setTagName",
         "removeSystemProperties",
     ];
@@ -89,7 +89,7 @@ export class DomPlugin extends Plugin {
             },
             {
                 id: "setTag",
-                run: this.setTag.bind(this),
+                run: this.setBlock.bind(this),
                 isAvailable: isHtmlContentSupported,
             },
         ],
@@ -514,7 +514,7 @@ export class DomPlugin extends Plugin {
      * Basic method to change an element tagName.
      * It is a technical function which only modifies a tag and its attributes.
      * It does not modify descendants nor handle the cursor.
-     * @see setTag for the more thorough command.
+     * @see setBlock for the more thorough command.
      *
      * @param {HTMLElement} el
      * @param {string} newTagName
@@ -573,7 +573,7 @@ export class DomPlugin extends Plugin {
         this.dependencies.selection.setSelection({ anchorNode, anchorOffset });
     }
 
-    getBlocksToTag() {
+    getBlocksToSet() {
         const targetedBlocks = [...this.dependencies.selection.getTargetedBlocks()];
         return targetedBlocks.filter(
             (block) =>
@@ -582,8 +582,8 @@ export class DomPlugin extends Plugin {
         );
     }
 
-    canSetTag() {
-        return this.getBlocksToTag().length > 0;
+    canSetBlock() {
+        return this.getBlocksToSet().length > 0;
     }
 
     /**
@@ -591,7 +591,7 @@ export class DomPlugin extends Plugin {
      * @param {string} param0.tagName
      * @param {string} [param0.extraClass]
      */
-    setTag({ tagName, extraClass = "" }) {
+    setBlock({ tagName, extraClass = "" }) {
         let newCandidate = this.document.createElement(tagName.toUpperCase());
         if (extraClass) {
             newCandidate.classList.add(extraClass);
@@ -605,7 +605,7 @@ export class DomPlugin extends Plugin {
         }
         const cursors = this.dependencies.selection.preserveSelection();
         const newEls = [];
-        for (const block of this.getBlocksToTag()) {
+        for (const block of this.getBlocksToSet()) {
             if (
                 isParagraphRelatedElement(block) ||
                 isListItemElement(block) ||
