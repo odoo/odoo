@@ -14,7 +14,7 @@ export class PurchaseSuggestCatalogKanbanController extends ProductCatalogKanban
         this.state = useState({
             numberOfDays: this.props.context.vendor_suggest_days,
             basedOn: this.props.context.vendor_suggest_based_on,
-            percentFactor: this.props.context.vendo_suggest_percent,
+            percentFactor: this.props.context.vendor_suggest_percent,
             poState: this.props.context.po_state,
             totalEstimatedPrice: 0.0,
             currencyId: this.props.context.product_catalog_currency_id,
@@ -111,9 +111,9 @@ export class PurchaseSuggestCatalogKanbanController extends ProductCatalogKanban
      */
     async _reorderKanbanGrid() {
         const sortBySuggested = (list) => {
-            const suggest_products = list.filter((record) => record.data.suggested_qty > 0);
-            const not_suggested_products = list.filter((record) => record.data.suggested_qty == 0);
-            return [...suggest_products, ...not_suggested_products];
+            const suggestProducts = list.filter((record) => record.data.suggested_qty > 0);
+            const notSuggestedProducts = list.filter((record) => record.data.suggested_qty == 0);
+            return [...suggestProducts, ...notSuggestedProducts];
         };
 
         const isGroupFilterOff = this.model.config.groupBy.length === 0;
@@ -137,10 +137,8 @@ export class PurchaseSuggestCatalogKanbanController extends ProductCatalogKanban
         const inTheOrderFilter = Object.values(sm.searchItems).find(
             (searchItem) => searchItem.name === "products_in_purchase_order"
         );
-        const isActive = sm.query.some((f) => f.searchItemId === inTheOrderFilter.id);
-        sm.toggleSearchItem(inTheOrderFilter.id);
-        if (isActive) {
-            sm.toggleSearchItem(inTheOrderFilter.id); // Reapply with new updated values
+        if (!sm.query.some((f) => f.searchItemId === inTheOrderFilter.id)) {
+            sm.toggleSearchItem(inTheOrderFilter.id); // Apply if not already applied
         }
     }
 
@@ -150,12 +148,11 @@ export class PurchaseSuggestCatalogKanbanController extends ProductCatalogKanban
      * @returns {Object} base context or base + suggest context
      */
     _getCatalogContext() {
-        const ctx = { ...this._baseContext };
         if (this.state.suggestToggle.isOn === false) {
-            return ctx; // removes suggest context
+            return this._baseContext; // removes suggest context
         }
         return {
-            ...ctx,
+            ...this._baseContext,
             domain: this.model.config.domain,
             warehouse_id: this.props.context.warehouse_id,
             suggest_based_on: this.state.basedOn,
@@ -164,7 +161,7 @@ export class PurchaseSuggestCatalogKanbanController extends ProductCatalogKanban
         };
     }
 
-    /**  Loads last suggest toggle state from local storage (defaults to true) */
+    /** Loads last suggest toggle state from local storage (defaults to true) */
     _loadSuggestToggleState() {
         if (this.props.context.po_state !== "draft") {
             return { isOn: false };

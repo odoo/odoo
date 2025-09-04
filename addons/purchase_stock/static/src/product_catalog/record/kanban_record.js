@@ -17,7 +17,7 @@ export class ProductCatalogPurchaseSuggestKanbanRecord extends ProductCatalogKan
         const catalogData = this.productCatalogData || {};
         if (catalogData.suggested_qty) {
             if (catalogData.suggested_qty == catalogData.quantity) {
-                return classes + " o_suggest_highlight" + " o_hide_suggest_qty";
+                return classes + " o_suggest_highlight o_hide_suggest_qty";
             }
             return classes + " o_suggest_highlight";
         }
@@ -28,12 +28,10 @@ export class ProductCatalogPurchaseSuggestKanbanRecord extends ProductCatalogKan
         return ProductCatalogPurchaseSuggestOrderLine;
     }
 
-    // Adds 1 OR suggested_qty if it is > pricelist_min_qty ELSE pricelist_min_qty
     addProduct() {
+        // Add suggested_qty or pricelist_min_qty (the greater one) if positive, otherwise add 1.
         const { min_qty = 1, suggested_qty = 0 } = this.productCatalogData;
-        Math.max(min_qty, suggested_qty) > 0
-            ? super.addProduct(Math.max(min_qty, suggested_qty))
-            : super.addProduct(1); // Don't add 0 if a vendor pricelist min_qty = 0;
+        super.addProduct(Math.max(min_qty, suggested_qty, 1));
     }
 
     async updateQuantity(quantity) {

@@ -84,27 +84,26 @@ export function toggleSuggest(turnOn) {
 }
 
 /**
- * Checks a product Kanban is highlighted and in a specified place
+ * Checks a product's Kanban  is highlighted and in a specified place (if passed in param)
  * @param {string} product product display name
- * @param {number} expected_order  1 == [0], 2 == [1] ...
+ * @param {number | false } expectedOrder 0 is the first card
  * @param {boolean} highlightOn default to true
  */
-export function checkKanbanRecordHighlight(product, expected_order, highlightOn = true) {
+export function checkKanbanRecordHighlight(product, expectedOrder, highlightOn = true) {
     return {
         trigger: ".o_kanban_view.o_purchase_product_kanban_catalog_view .o_kanban_record",
         run() {
             const cards = [...document.querySelectorAll(".o_kanban_record")];
-            const product_card = cards.find((card) => card.textContent.includes(product));
-            const highlighted = product_card.className.includes("o_suggest_highlight");
+            if (expectedOrder) {
+                assert(expectedOrder + 1 <= cards.length, true, "expectedOrder out of range.");
+                assert(cards[expectedOrder].textContent.includes(product), true, "Wrong order");
+            }
+
+            const card = cards.find((card) => card.textContent.includes(product));
             if (highlightOn === true) {
-                assert(highlighted, true, `${product} record should be highlighted.`);
-                assert(
-                    product_card == cards[expected_order - 1],
-                    true,
-                    `Card in position ${cards.indexOf(product_card)} not ${expected_order}.`
-                );
+                assert(card.className.includes("o_suggest_highlight"), true, "Highlight missing");
             } else if (highlightOn === false) {
-                assert(highlighted, false, `${product} record should not be highlighted.`);
+                assert(card.className.includes("o_suggest_highlight"), false, "Wrong Highlight");
             }
         },
     };

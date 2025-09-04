@@ -30,7 +30,7 @@ export function selectPOWarehouse(warehouseName) {
             run: `edit ${warehouseName}`,
         },
         {
-            content: "Select BaseWarehouse as PO WH",
+            content: `Select ${warehouseName} as PO Warehouse`,
             isActive: ["auto"],
             trigger: `.ui-menu-item > a:contains(${warehouseName})`,
             run: "click",

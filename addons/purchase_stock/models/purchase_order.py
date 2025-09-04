@@ -121,7 +121,7 @@ class PurchaseOrder(models.Model):
             'vendor_name': self.partner_id.display_name,
             'vendor_suggest_days': self.partner_id.suggest_days,
             'vendor_suggest_based_on': self.partner_id.suggest_based_on,
-            'vendo_suggest_percent': self.partner_id.suggest_percent,
+            'vendor_suggest_percent': self.partner_id.suggest_percent,
             'po_state': self.state,
         }
 
