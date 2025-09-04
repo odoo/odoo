@@ -69,6 +69,7 @@
                                     widget="many2many_tags"
                                     placeholder="Nobody to notify"
                                     invisible="leave_validation_type in ['no_validation', 'manager'] and (not requires_allocation or allocation_validation_type not in ['hr', 'both'])"/>
+                                <field name="notify_time_off_officers" string="Notify Time Off Officer(s)?"/>
                         </group>
                         <group>
                             <field name="company_id" groups="base.group_multi_company" readonly="is_used" placeholder="Visible to all"/>
