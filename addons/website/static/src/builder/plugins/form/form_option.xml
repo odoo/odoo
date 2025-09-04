@@ -170,7 +170,7 @@
         <BuilderCheckbox action="'linkStateToCountry'" t-if="this.canLinkStateToCountry.value"
             id="'link_state_to_country_opt'" applyTo="'.s_website_form_input'"/>
     </BuilderRow>
-    <BuilderRow label.translate="Description">
+    <BuilderRow label.translate="Description" tooltip.translate="Add a description on your field">
         <!-- Use position options only when the target field is a "Checkbox" -->
         <BuilderSelect t-if="isActiveItem('custom_field_boolean_opt')" action="'setDescription'">
             <BuilderSelectItem actionValue="'none'">None</BuilderSelectItem>

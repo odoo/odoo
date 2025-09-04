@@ -50,6 +50,7 @@ import { BaseOptionComponent } from "@html_builder/core/utils";
 import { getParsedDataFor } from "@website/js/utils";
 import { StyleAction } from "@html_builder/core/core_builder_action_plugin";
 import { isVisible } from "@web/core/utils/ui";
+import { nodeSize } from "@html_editor/utils/position";
 
 /**
  * @typedef { Object } FormOptionShared
@@ -1382,7 +1383,7 @@ export class SelectLabelPositionAction extends BuilderAction {
 }
 export class SetDescriptionAction extends BuilderAction {
     static id = "setDescription";
-    static dependencies = ["websiteFormOption"];
+    static dependencies = ["websiteFormOption", "selection"];
     load(context) {
         return this.dependencies.websiteFormOption.prepareFields(context);
     }
@@ -1399,6 +1400,17 @@ export class SetDescriptionAction extends BuilderAction {
             field.formatInfo.textPosition = value;
         }
         this.dependencies.websiteFormOption.replaceField(fieldEl, field, fields);
+        if (enableDescription) {
+            const description = fieldEl.querySelector(".s_website_form_field_description")
+                .childNodes[0];
+            // Select the field description text in the editor.
+            this.dependencies.selection.setSelection({
+                anchorNode: description,
+                anchorOffset: 0,
+                focusNode: description,
+                focusOffset: nodeSize(description),
+            });
+        }
     }
     isApplied({ editingElement: fieldEl, value }) {
         const description = fieldEl.querySelector(".s_website_form_field_description");
