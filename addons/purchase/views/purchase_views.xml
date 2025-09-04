@@ -260,7 +260,7 @@
                                     <field name="product_uom_id" groups="uom.group_uom"
                                         readonly="state in ('purchase', 'done', 'cancel') or is_downpayment"
                                         required="not display_type and not is_downpayment"
-                                        options="{'no_open': True, 'quantity_field': 'product_qty'}"
+                                        options="{'no_create': True, 'no_open': True, 'quantity_field': 'product_qty'}"
                                         widget="many2one_uom"
                                         force_save="1" optional="show"/>
                                     <field name="price_unit" readonly="qty_invoiced != 0"/>
