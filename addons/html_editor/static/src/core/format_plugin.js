@@ -8,6 +8,7 @@ import { cleanTextNode, fillEmpty, removeClass, splitTextNode, unwrapContents } 
 import {
     areSimilarElements,
     isContentEditable,
+    isElement,
     isEmptyBlock,
     isEmptyTextNode,
     isParagraphRelatedElement,
@@ -26,7 +27,7 @@ import {
     findFurthest,
     selectElements,
 } from "../utils/dom_traversal";
-import { formatsSpecs } from "../utils/formatting";
+import { formatsSpecs, FORMATTABLE_TAGS } from "../utils/formatting";
 import { boundariesIn, boundariesOut, DIRECTIONS, leftPos, rightPos } from "../utils/position";
 import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 
@@ -608,7 +609,7 @@ export class FormatPlugin extends Plugin {
      */
     mergeAdjacentInlines(root, { preserveSelection = true } = {}) {
         let selectionToRestore = null;
-        for (const node of [root, ...descendants(root)]) {
+        for (const node of [root, ...descendants(root)].filter(isElement)) {
             if (this.shouldBeMergedWithPreviousSibling(node)) {
                 if (preserveSelection) {
                     selectionToRestore ??= this.dependencies.selection.preserveSelection();
@@ -623,6 +624,7 @@ export class FormatPlugin extends Plugin {
 
     shouldBeMergedWithPreviousSibling(node) {
         const isMergeable = (node) =>
+            FORMATTABLE_TAGS.includes(node.nodeName) &&
             !this.getResource("unsplittable_node_predicates").some((predicate) => predicate(node));
         return (
             !isSelfClosingElement(node) &&
