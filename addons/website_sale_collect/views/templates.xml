@@ -36,7 +36,7 @@
                     'inStoreStockData': combination_info.get('in_store_stock_data', {}),
                     'deliveryStockData': combination_info.get('delivery_stock_data', {}),
                 })"
-                class="d-flex o_not_editable m-2"
+                t-attf-class="d-flex o_not_editable mb-4 #{'w-100' if not is_50_pc else 'w-100 w-sm-75'}"
             />
         </xpath>
     </template>

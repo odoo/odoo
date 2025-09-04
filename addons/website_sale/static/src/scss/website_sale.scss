@@ -30,11 +30,6 @@
             top: $-container-top-gap;
         }
 
-        .css_attribute_color {
-            height: 32px;
-            width: 32px;
-        }
-
         .o_wsale_products_grid_before_rail{
             scrollbar-width: none;
             -ms-overflow-style: none;
@@ -1110,6 +1105,13 @@ $-product-radius-map: (
                 --o-wsale-product-col-details-padding-left: #{$grid-gutter-width * 2};
             }
         }
+    }
+
+    .breadcrumb .breadcrumb-item {
+        padding-top: calc(#{$btn-padding-y} + #{$btn-border-width});
+        padding-bottom: calc(#{$btn-padding-y} + #{$btn-border-width});
+        font-size: $btn-font-size;
+        line-height: $btn-line-height;
     }
 }
 #product_detail_main:where(.flex-lg-row-reverse) #product_details {

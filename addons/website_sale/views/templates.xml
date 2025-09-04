@@ -994,10 +994,11 @@
                t-value="'background: ' + str(v.html_color or v.name if not v.is_custom else '')"
             />
             <label t-attf-style="#{img_style or color_style}"
-                   t-attf-class="css_attribute_color mb-1 #{'active' if v.id in attrib_set else ''}"
+                   t-attf-class="css_attribute_color cursor-pointer #{'active' if v.id in attrib_set else ''}"
             >
                 <input type="checkbox"
                        name="attribute_value"
+                       class="cursor-pointer"
                        t-att-value="'%s-%s' % (a.id, v.id)"
                        t-att-checked="'checked' if v.id in attrib_set else None"
                        t-att-title="v.name"
@@ -1226,7 +1227,7 @@
                             </div>
                             <div
                                 t-elif="a.display_type == 'color'"
-                                t-attf-class="{{'pt-1 pb-3' if isMobile else 'mb-3'}}"
+                                t-attf-class="d-flex flex-wrap gap-2 {{'pt-1 pb-3' if isMobile else 'mb-3'}}"
                             >
                                 <t t-call="website_sale.filter_color_attributes"/>
                             </div>
@@ -1974,7 +1975,7 @@
                          "
                          t-att-data-view-track="view_track and '1' or '0'"
                 >
-                    <div class="o_wsale_content_contained container d-flex flex-wrap align-items-center py-2 mb-lg-2">
+                    <div class="o_wsale_content_contained container d-flex flex-wrap align-items-center py-3">
                         <div class="d-flex align-items-center flex-grow-1">
                             <ol class="o_wsale_breadcrumb breadcrumb m-0 p-0">
                                 <li class="breadcrumb-item d-none d-lg-inline-block">
@@ -2252,10 +2253,15 @@
 
     <template id="website_sale.product_title">
         <div
-            class="o_wsale_product_details_content_section o_wsale_product_details_content_section_title mb-4"
+            t-attf-class="o_wsale_product_details_content_section o_wsale_product_details_content_section_title {{'mb-3' if not product.description_ecommerce else ''}}"
         >
             <t t-set="base_url" t-value="website.get_base_url()"/>
-            <h1 class="h3" t-field="product.name">Product Name</h1>
+            <h1
+                t-attf-class="h3 {{'mb-3' if not product.description_ecommerce and not is_view_active('website_sale.product_comment') else ''}}"
+                t-field="product.name"
+            >
+                Product Name
+            </h1>
             <t t-if="is_view_active('website_sale.product_comment')">
                 <a
                     href="#o_product_page_reviews"
@@ -2275,7 +2281,7 @@
             </t>
             <div
                 t-field="product.description_ecommerce"
-                t-attf-class="oe_structure text-muted {{not product.description_ecommerce and 'mb-0'}}"
+                t-attf-class="oe_structure mb-3 text-muted"
                 placeholder="A detailed, formatted description to promote your product on this page. Use '/' to discover more features."
             />
             <t
@@ -2321,7 +2327,7 @@
             </div>
             <div
                 id="product_option_block"
-                t-attf-class="d-flex d-empty-none flex-wrap gap-2 {{'' if is_50_pc and not (is_view_active('website_sale.cta_wrapper_boxed') or is_view_active('website_sale.cta_wrapper_large')) else ' w-100'}}"
+                t-attf-class="d-flex d-empty-none flex-wrap gap-2 w-100 {{'w-sm-auto' if is_50_pc and not (is_view_active('website_sale.cta_wrapper_boxed') or is_view_active('website_sale.cta_wrapper_large')) else ''}}"
             />
         </div>
     </template>
@@ -2613,7 +2619,7 @@
         <xpath expr="//div[@id='product_option_block']" position="before">
             <a
                 role="button"
-                t-attf-class="btn btn-outline-primary o_we_buy_now {{'w-100' if is_view_active('website_sale.cta_wrapper_boxed') or is_view_active('website_sale.cta_wrapper_large') else ''}} {{'flex-grow-1' if not is_50_pc else ''}}"
+                t-attf-class="btn btn-outline-primary o_we_buy_now w-100 {{'' if is_view_active('website_sale.cta_wrapper_boxed') or is_view_active('website_sale.cta_wrapper_large') or not is_50_pc else 'w-sm-auto'}} {{'flex-grow-1' if not is_50_pc else ''}}"
                 href="#"
             >
                 <i class="fa fa-bolt me-2"/>
@@ -2648,17 +2654,17 @@
     <template id="product_price">
         <div
             name="product_price"
-            t-attf-class="product_price {{'' if is_view_active('website_sale.cta_wrapper_boxed') else 'mt-2'}} {{'d-none' if combination_info['prevent_zero_price_sale'] else 'd-inline-block'}}"
+            t-attf-class="product_price {{'d-none' if combination_info['prevent_zero_price_sale'] else 'd-inline-block'}}"
         >
             <div
                 name="product_price_container"
-                class="css_editable_mode_hidden d-flex align-items-center justify-content-end gap-2 flex-wrap h4 mb-0 text-wrap"
+                class="css_editable_mode_hidden d-flex align-items-baseline justify-content-end gap-2 flex-wrap h5 mb-0 text-wrap"
             >
                 <span class="oe_price"
                       style="white-space: nowrap;"
                       t-out="combination_info['price']"
                       t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
-                <span t-attf-class="text-muted oe_default_price ms-1 h5 {{'' if combination_info['has_discounted_price'] else 'd-none'}}"
+                <span t-attf-class="text-muted oe_default_price mb-0 h6 {{'' if combination_info['has_discounted_price'] else 'd-none'}}"
                       style="text-decoration: line-through; white-space: nowrap;"
                       t-out="combination_info['list_price']"
                       t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"
@@ -2668,7 +2674,7 @@
                 <del
                     name="product_price_strikethrough"
                     t-if="combination_info.get('compare_list_price') and (combination_info['compare_list_price'] &gt; combination_info['price'])"
-                    class="text-muted ms-1 h5 oe_compare_list_price"
+                    class="text-muted ms-1 h6 oe_compare_list_price"
                 >
                     <bdi dir="inherit">
                     <span t-out="combination_info['compare_list_price']"
@@ -2679,7 +2685,7 @@
             <div
                 t-if="editable"
                 name="product_list_price_container"
-                class="css_non_editable_mode_hidden decimal_precision h4"
+                class="css_non_editable_mode_hidden decimal_precision h5"
                 t-att-data-precision="str(website.currency_id.decimal_places)"
             >
                 <span t-field="product.list_price"

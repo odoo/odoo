@@ -1,39 +1,44 @@
 .css_attribute_color {
-    --o-wsale-css-attribute-color__height: 1.6rem;
-    --o-wsale-css-attribute-color__border-width: .25rem;
+    --o-wsale-css-attribute-color__size: 1.6rem;
+
+    @include media-breakpoint-down(sm) {
+        --o-wsale-css-attribute-color__size: 2rem;
+    }
 
     position: relative;
     display: inline-block;
-    height: calc(var(--o-wsale-css-attribute-color__height) - var(--o-wsale-css-attribute-color__border-width));
-    width: calc(var(--o-wsale-css-attribute-color__height) - var(--o-wsale-css-attribute-color__border-width));
-    border: var(--o-wsale-css-attribute-color__border-width) solid var(--body-bg);
+    height: var(--o-wsale-css-attribute-color__size);
+    width: var(--o-wsale-css-attribute-color__size);
+    border: $border-width solid var(--o-wsale-attribute-color-border-color, #{$border-color});
     border-radius: 50%;
     transition: $transition-base;
-    outline: $border-width solid var(--o-wsale-css-attribute-color__outline-color, transparent);
-    outline-offset: calc(var(--o-wsale-css-attribute-color__border-width) * -0.5) ;
-    box-shadow: inset 0 0 0 $border-width $border-color;
-    box-sizing: content-box;
 
     input {
         opacity: 0;
     }
 
+    &:hover, &.active, &.active:hover {
+        box-shadow: inset 0 0 0 ($border-width * 2) $body-bg;
+    }
+
     &:hover {
-        --o-wsale-css-attribute-color__outline-color: var(--body-color);
-        outline-offset: $border-width * -1;
+        // Let borders color adapt according to body and CCs. Also, set a fallback
+        // value for browsers that don't support the color-mix function (used by
+        // 'fade-currentColor').
+        --o-wsale-attribute-color-border-color: #{o-color('600')};
+        --o-wsale-attribute-color-border-color: #{fade-currentColor(60%)};
     }
 
     &.active, &.active:hover {
-        --o-wsale-css-attribute-color__outline-color: #{map-get($theme-colors, 'primary')};
-        outline-offset: $border-width * -1;
+        --o-wsale-attribute-color-border-color: #{$primary};
     }
 
     &:has(input:focus-visible)::before {
         @include o-position-absolute($top: 50%, $left: 50%);
 
         content:" ";
-        width: 160%;
-        height: 160%;
+        width: 140%;
+        height: 140%;
         border-radius: 100%;
         z-index: -1;
         background-color: $focus-ring-color;
