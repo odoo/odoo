@@ -19,6 +19,21 @@ _logger = logging.getLogger(__name__)
 _ref_company_registry = {
     'jp': '7000012050002',
     'dk': '58403288',
+
+    # Using the same placeholder value for France and all its overseas territories/collectivities
+    'fr': '33417522101010',
+    'pf': '33417522101010',
+    'mf': '33417522101010',
+    'mq': '33417522101010',
+    'nc': '33417522101010',
+    're': '33417522101010',
+    'gf': '33417522101010',
+    'gp': '33417522101010',
+    'tf': '33417522101010',
+    'bl': '33417522101010',
+    'pm': '33417522101010',
+    'yt': '33417522101010',
+    'wf': '33417522101010',
 }
 
 
@@ -320,7 +335,6 @@ class ResPartner(models.Model):
     fiscal_country_codes = fields.Char(compute='_compute_fiscal_country_codes')
     fiscal_country_group_codes = fields.Json(compute='_compute_fiscal_country_group_codes')
     partner_vat_placeholder = fields.Char(compute='_compute_partner_vat_placeholder')
-    partner_company_registry_placeholder = fields.Char(compute='_compute_partner_company_registry_placeholder')
     duplicate_bank_partner_ids = fields.Many2many(related="bank_ids.duplicate_bank_partner_ids")
 
     @api.depends('company_id')
@@ -1007,13 +1021,13 @@ class ResPartner(models.Model):
             partner.partner_vat_placeholder = placeholder
 
     @api.depends('country_id')
-    def _compute_partner_company_registry_placeholder(self):
+    def _compute_company_registry_placeholder(self):
         """ Provides a dynamic placeholder on the company registry field for countries that may need it.
         Add your country and the value you want in the _ref_company_registry map.
         """
         for partner in self:
             country_code = partner.country_id.code or ''
-            partner.partner_company_registry_placeholder = _ref_company_registry.get(country_code.lower(), '')
+            partner.company_registry_placeholder = _ref_company_registry.get(country_code.lower(), '')
 
     def _compute_account_move_count(self):
         # retrieve all children partners and prefetch 'parent_id' on them
