@@ -242,11 +242,12 @@ export class OrderSummary extends Component {
                     return line;
                 }
             }
-            const data = selectedLine.serialize();
+            const data = selectedLine.serializeForORM({ keepCommands: true });
             delete data.uuid;
             newLine = this.pos.models["pos.order.line"].create(
                 {
                     ...data,
+                    order_id: selectedLine.order_id,
                     refunded_orderline_id: selectedLine.refunded_orderline_id,
                 },
                 false,
