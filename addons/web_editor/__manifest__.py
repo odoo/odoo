@@ -11,7 +11,6 @@ Odoo Web Editor widget.
 """,
     'depends': ['bus', 'web', 'html_editor'],
     'data': [
-        'security/ir.model.access.csv',
         'data/editor_assets.xml',
         'views/editor.xml',
         'views/snippets.xml',
