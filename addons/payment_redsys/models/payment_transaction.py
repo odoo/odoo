@@ -45,9 +45,9 @@ class PaymentTransaction(models.Model):
                 provider_code, prefix=prefix, separator=separator, **kwargs
             )
 
-        # Generate the prefix as a part of the current datetime (up to the month). This leaves just
-        # enough room for the separator and the suffix in case of collisions.
-        prefix = fields.Datetime.now().strftime('%m%d%H%M%S')
+        # Generate the prefix as the timestamp of the current time (10 chars).
+        # This leaves just enough room for the separator and the suffix in case of collisions.
+        prefix = str(int(fields.Datetime.now().timestamp()))[-10:]
 
         return super()._compute_reference(provider_code, prefix=prefix, separator='S', **kwargs)
 
