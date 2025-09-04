@@ -63,15 +63,11 @@
                             <field name="user_id" domain="[('share', '=', False)]" widget="many2one_avatar_user"/>
                             <field name="active" invisible="1"/>
                             <field name="has_conditional_questions" invisible="1"/>
+                            <field name="lang_ids" widget="many2many_tags" placeholder="All installed languages"
+                                   options="{'no_quick_create': True, 'no_create_edit': True, 'no_open': True}"/>
                         </group>
                         <group class="ps-3 ps-md-0 ps-lg-3">
                             <field name="restrict_user_ids" widget="many2many_tags_avatar"/>
-                        </group>
-                    </group>
-                    <group>
-                        <group colspan="4">
-                            <field name="lang_ids" widget="many2many_tags" placeholder="All installed languages"
-                                   options="{'no_quick_create': True, 'no_create_edit': True, 'no_open': True}"/>
                         </group>
                     </group>
                     <notebook>
@@ -398,42 +394,6 @@
         <field name="path">surveys</field>
         <field name="res_model">survey.survey</field>
         <field name="view_mode">kanban,list,form,activity</field>
-        <field name="help" type="html">
-            <p>
-                No Survey Found
-            </p><p>
-                Pick a sample or <a action="action_load_sample_custom" class="o_survey_load_sample">Start from scratch</a>.
-            </p>
-            <div class="row mb-4 w-100 px-5 justify-content-center">
-                <div class="col-md-3 p-2 flex-row o_survey_load_sample survey_sample_card card rounded m-3 flex-wrap cursor-pointer" action="action_load_sample_survey">
-                    <div class="col-lg-4 p-3">
-                        <img src="/survey/static/src/img/survey_sample_survey.png" class="img-fluid"/>
-                    </div>
-                    <div class="col-lg-8 p-3 text-start">
-                        <h3>Survey</h3>
-                        <p>Gather feedbacks from your employees and customers</p>
-                    </div>
-                </div>
-                <div class="col-md-3 p-2 flex-row o_survey_load_sample survey_sample_card card rounded m-3 flex-wrap cursor-pointer" action="action_load_sample_assessment">
-                    <div class="col-lg-4 p-3">
-                        <img src="/survey/static/src/img/survey_sample_assessment.png" class="img-fluid"/>
-                    </div>
-                    <div class="col-lg-8 p-3 text-start">
-                        <h3>Assessment</h3>
-                        <p>Handle quiz &amp; certifications</p>
-                    </div>
-                </div>
-                <div class="col-md-3 p-2 flex-row o_survey_load_sample survey_sample_card card rounded m-3 flex-wrap cursor-pointer" action="action_load_sample_live_session">
-                    <div class="col-lg-4 p-3">
-                        <img src="/survey/static/src/img/survey_sample_live_session.png" class="img-fluid"/>
-                    </div>
-                    <div class="col-lg-8 p-3 text-start">
-                        <h3>Live Session</h3>
-                        <p>Make your presentations more fun by sharing questions live</p>
-                    </div>
-                </div>
-            </div>
-        </field>
     </record>
 
     <record id="survey_survey_view_graph" model="ir.ui.view">
