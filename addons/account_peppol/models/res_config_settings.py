@@ -81,6 +81,24 @@ class ResConfigSettings(models.TransientModel):
         network, i.e. receive documents from other Peppol participants.
         """
         self.ensure_one()
+        company = self.company_id
+        edi_identification = self.account_peppol_edi_user._get_proxy_identification(company, 'peppol')
+        if (
+            not company.account_peppol_migration_key
+            and (participant_info := company.partner_id._get_participant_info(edi_identification)) is not None
+            and company.partner_id._check_peppol_participant_exists(participant_info, edi_identification, check_company=True)
+        ):
+            self.account_peppol_edi_user._peppol_send_recovery_mail()
+            return {
+                'type': 'ir.actions.client',
+                'tag': 'display_notification',
+                'params': {
+                    'title': _("Recovery Mail sent"),
+                    'type': 'success',
+                    'message': _("Mail is sent to the mail of the database user"),
+                    'next': {'type': 'ir.actions.act_window_close'},
+                }
+            }
         self.account_peppol_edi_user._peppol_register_sender_as_receiver()
         if self.account_peppol_proxy_state == 'smp_registration':
             return {

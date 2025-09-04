@@ -345,10 +345,6 @@ class AccountEdiProxyClientUser(models.Model):
             peppol_state_translated = dict(company._fields['account_peppol_proxy_state'].selection)[company.account_peppol_proxy_state]
             raise UserError(
                 _('Cannot register a user with a %s application', peppol_state_translated))
-
-        edi_identification = self._get_proxy_identification(company, 'peppol')
-        self._check_company_on_peppol(company, edi_identification)
-
         self._call_peppol_proxy(
             endpoint='/api/peppol/1/register_sender_as_receiver',
             params={
@@ -362,6 +358,10 @@ class AccountEdiProxyClientUser(models.Model):
         company.account_peppol_proxy_state = 'smp_registration'
 
         self.env.ref('account_peppol.ir_cron_peppol_get_participant_status')._trigger(at=fields.Datetime.now() + timedelta(hours=1))
+
+    def _peppol_send_recovery_mail(self):
+        self.ensure_one()
+        self._call_peppol_proxy(endpoint='/api/peppol/1/send_user_transfer_email')
 
     def _peppol_deregister_participant(self):
         self.ensure_one()

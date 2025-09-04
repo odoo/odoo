@@ -109,11 +109,6 @@ class PeppolRegistration(models.TransientModel):
                     'message': _("The endpoint number might not be correct. "
                                 "Please check if you entered the right identification number."),
                 }
-            if not wizard.smp_registration:
-                peppol_warnings['company_on_another_smp'] = {
-                    'message': _("Your company is already registered on another Access Point for receiving invoices."
-                                 "We will register you as a sender only.")
-                }
             wizard.peppol_warnings = peppol_warnings or False
 
     @api.depends('peppol_eas', 'peppol_endpoint')
