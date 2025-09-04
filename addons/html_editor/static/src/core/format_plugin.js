@@ -248,7 +248,7 @@ export class FormatPlugin extends Plugin {
     }
 
     formatSelection(formatName, options) {
-        this.delegateTo("format_selection_handlers", formatName, options);
+        this.dispatchTo("format_selection_handlers", formatName, options);
         if (this._formatSelection(formatName, options) && !options?.removeFormat) {
             this.dependencies.history.addStep();
         }
