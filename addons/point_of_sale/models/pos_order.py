@@ -111,6 +111,9 @@ class PosOrder(models.Model):
 
             del order['uuid']
             del order['access_token']
+            if order.get('state') == 'paid':
+                # The "paid" state will be assigned later by `_process_saved_order`
+                order['state'] = pos_order.state
             pos_order.write(order)
 
         for model_name, mapping in record_uuid_mapping.items():
