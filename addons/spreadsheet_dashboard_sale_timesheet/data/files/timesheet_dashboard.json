@@ -1,5 +1,5 @@
 {
-  "version": "18.4.14",
+  "version": "18.5.10",
   "sheets": [
     {
       "id": "sheet1",
@@ -48,185 +48,12 @@
       "cells": {
         "A7": "[Time Billed by Week](odoo://view/{\"viewType\":\"graph\",\"action\":{\"domain\":[[\"project_id\",\"!=\",false]],\"context\":{\"group_by\":[\"date:week\"],\"graph_measure\":\"billable_time\",\"graph_mode\":\"line\",\"graph_groupbys\":[\"date:week\"]},\"modelName\":\"timesheets.analysis.report\",\"views\":[[false,\"pivot\"],[false,\"graph\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Timesheets by Billing Type\"})",
         "A23": "[Top Projects](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[\"&\",[\"project_id\",\"!=\",false],[\"project_id\",\"!=\",false]],\"context\":{\"group_by\":[\"project_id\"],\"pivot_measures\":[\"unit_amount\",\"billable_time\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"project_id\"]},\"modelName\":\"timesheets.analysis.report\",\"views\":[[false,\"pivot\"],[false,\"graph\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Top Projects\"})",
-        "A24": "=_t(\"Project\")",
-        "A25": "=PIVOT.HEADER(1,\"#project_id\",1)",
-        "A26": "=PIVOT.HEADER(1,\"#project_id\",2)",
-        "A27": "=PIVOT.HEADER(1,\"#project_id\",3)",
-        "A28": "=PIVOT.HEADER(1,\"#project_id\",4)",
-        "A29": "=PIVOT.HEADER(1,\"#project_id\",5)",
-        "A30": "=PIVOT.HEADER(1,\"#project_id\",6)",
-        "A31": "=PIVOT.HEADER(1,\"#project_id\",7)",
-        "A32": "=PIVOT.HEADER(1,\"#project_id\",8)",
-        "A33": "=PIVOT.HEADER(1,\"#project_id\",9)",
-        "A34": "=PIVOT.HEADER(1,\"#project_id\",10)",
-        "A36": "[Top Departments](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[\"&\",[\"project_id\",\"!=\",false],[\"department_id\",\"!=\",false]],\"context\":{\"group_by\":[\"department_id\"],\"pivot_measures\":[\"unit_amount\",\"billable_time\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"department_id\"]},\"modelName\":\"timesheets.analysis.report\",\"views\":[[false,\"pivot\"],[false,\"graph\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Top Departments\"})",
-        "A37": "=_t(\"Department\")",
-        "A38": "=PIVOT.HEADER(3,\"#department_id\",1)",
-        "A39": "=PIVOT.HEADER(3,\"#department_id\",2)",
-        "A40": "=PIVOT.HEADER(3,\"#department_id\",3)",
-        "A41": "=PIVOT.HEADER(3,\"#department_id\",4)",
-        "A42": "=PIVOT.HEADER(3,\"#department_id\",5)",
-        "A43": "=PIVOT.HEADER(3,\"#department_id\",6)",
-        "A44": "=PIVOT.HEADER(3,\"#department_id\",7)",
-        "A45": "=PIVOT.HEADER(3,\"#department_id\",8)",
-        "A46": "=PIVOT.HEADER(3,\"#department_id\",9)",
-        "A47": "=PIVOT.HEADER(3,\"#department_id\",10)",
-        "B24": "=_t(\"Hours spent\")",
-        "B25": "=PIVOT.VALUE(1,\"unit_amount\",\"#project_id\",1)",
-        "B26": "=PIVOT.VALUE(1,\"unit_amount\",\"#project_id\",2)",
-        "B27": "=PIVOT.VALUE(1,\"unit_amount\",\"#project_id\",3)",
-        "B28": "=PIVOT.VALUE(1,\"unit_amount\",\"#project_id\",4)",
-        "B29": "=PIVOT.VALUE(1,\"unit_amount\",\"#project_id\",5)",
-        "B30": "=PIVOT.VALUE(1,\"unit_amount\",\"#project_id\",6)",
-        "B31": "=PIVOT.VALUE(1,\"unit_amount\",\"#project_id\",7)",
-        "B32": "=PIVOT.VALUE(1,\"unit_amount\",\"#project_id\",8)",
-        "B33": "=PIVOT.VALUE(1,\"unit_amount\",\"#project_id\",9)",
-        "B34": "=PIVOT.VALUE(1,\"unit_amount\",\"#project_id\",10)",
-        "B37": "=_t(\"Hours spent\")",
-        "B38": "=PIVOT.VALUE(3,\"unit_amount\",\"#department_id\",1)",
-        "B39": "=PIVOT.VALUE(3,\"unit_amount\",\"#department_id\",2)",
-        "B40": "=PIVOT.VALUE(3,\"unit_amount\",\"#department_id\",3)",
-        "B41": "=PIVOT.VALUE(3,\"unit_amount\",\"#department_id\",4)",
-        "B42": "=PIVOT.VALUE(3,\"unit_amount\",\"#department_id\",5)",
-        "B43": "=PIVOT.VALUE(3,\"unit_amount\",\"#department_id\",6)",
-        "B44": "=PIVOT.VALUE(3,\"unit_amount\",\"#department_id\",7)",
-        "B45": "=PIVOT.VALUE(3,\"unit_amount\",\"#department_id\",8)",
-        "B46": "=PIVOT.VALUE(3,\"unit_amount\",\"#department_id\",9)",
-        "B47": "=PIVOT.VALUE(3,\"unit_amount\",\"#department_id\",10)",
-        "C24": "=_t(\"Hours billed\")",
-        "C25": "=PIVOT.VALUE(1,\"billable_time\",\"#project_id\",1)",
-        "C26": "=PIVOT.VALUE(1,\"billable_time\",\"#project_id\",2)",
-        "C27": "=PIVOT.VALUE(1,\"billable_time\",\"#project_id\",3)",
-        "C28": "=PIVOT.VALUE(1,\"billable_time\",\"#project_id\",4)",
-        "C29": "=PIVOT.VALUE(1,\"billable_time\",\"#project_id\",5)",
-        "C30": "=PIVOT.VALUE(1,\"billable_time\",\"#project_id\",6)",
-        "C31": "=PIVOT.VALUE(1,\"billable_time\",\"#project_id\",7)",
-        "C32": "=PIVOT.VALUE(1,\"billable_time\",\"#project_id\",8)",
-        "C33": "=PIVOT.VALUE(1,\"billable_time\",\"#project_id\",9)",
-        "C34": "=PIVOT.VALUE(1,\"billable_time\",\"#project_id\",10)",
-        "C37": "=_t(\"Hours billed\")",
-        "C38": "=PIVOT.VALUE(3,\"billable_time\",\"#department_id\",1)",
-        "C39": "=PIVOT.VALUE(3,\"billable_time\",\"#department_id\",2)",
-        "C40": "=PIVOT.VALUE(3,\"billable_time\",\"#department_id\",3)",
-        "C41": "=PIVOT.VALUE(3,\"billable_time\",\"#department_id\",4)",
-        "C42": "=PIVOT.VALUE(3,\"billable_time\",\"#department_id\",5)",
-        "C43": "=PIVOT.VALUE(3,\"billable_time\",\"#department_id\",6)",
-        "C44": "=PIVOT.VALUE(3,\"billable_time\",\"#department_id\",7)",
-        "C45": "=PIVOT.VALUE(3,\"billable_time\",\"#department_id\",8)",
-        "C46": "=PIVOT.VALUE(3,\"billable_time\",\"#department_id\",9)",
-        "C47": "=PIVOT.VALUE(3,\"billable_time\",\"#department_id\",10)",
-        "D24": "=_t(\"Billable rate\")",
-        "D25": "=IFERROR(C25/B25)",
-        "D26": "=IFERROR(C26/B26)",
-        "D27": "=IFERROR(C27/B27)",
-        "D28": "=IFERROR(C28/B28)",
-        "D29": "=IFERROR(C29/B29)",
-        "D30": "=IFERROR(C30/B30)",
-        "D31": "=IFERROR(C31/B31)",
-        "D32": "=IFERROR(C32/B32)",
-        "D33": "=IFERROR(C33/B33)",
-        "D34": "=IFERROR(C34/B34)",
-        "D37": "=_t(\"Billable rate\")",
-        "D38": "=IFERROR(C38/B38)",
-        "D39": "=IFERROR(C39/B39)",
-        "D40": "=IFERROR(C40/B40)",
-        "D41": "=IFERROR(C41/B41)",
-        "D42": "=IFERROR(C42/B42)",
-        "D43": "=IFERROR(C43/B43)",
-        "D44": "=IFERROR(C44/B44)",
-        "D45": "=IFERROR(C45/B45)",
-        "D46": "=IFERROR(C46/B46)",
-        "D47": "=IFERROR(C47/B47)",
+        "A24": "=PIVOT(1, 10, FALSE, FALSE)",
+        "A37": "=PIVOT(3, 10, FALSE, FALSE)",
         "F23": "[Top Tasks](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[\"&\",[\"project_id\",\"!=\",false],[\"task_id\",\"!=\",false]],\"context\":{\"group_by\":[\"task_id\"],\"pivot_measures\":[\"unit_amount\",\"billable_time\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"task_id\"]},\"modelName\":\"timesheets.analysis.report\",\"views\":[[false,\"pivot\"],[false,\"graph\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Top Tasks\"})",
-        "F24": "=_t(\"Task\")",
-        "F25": "=PIVOT.HEADER(2,\"#task_id\",1)",
-        "F26": "=PIVOT.HEADER(2,\"#task_id\",2)",
-        "F27": "=PIVOT.HEADER(2,\"#task_id\",3)",
-        "F28": "=PIVOT.HEADER(2,\"#task_id\",4)",
-        "F29": "=PIVOT.HEADER(2,\"#task_id\",5)",
-        "F30": "=PIVOT.HEADER(2,\"#task_id\",6)",
-        "F31": "=PIVOT.HEADER(2,\"#task_id\",7)",
-        "F32": "=PIVOT.HEADER(2,\"#task_id\",8)",
-        "F33": "=PIVOT.HEADER(2,\"#task_id\",9)",
-        "F34": "=PIVOT.HEADER(2,\"#task_id\",10)",
+        "F24": "=PIVOT(2, 10, FALSE, FALSE)",
         "F36": "[Top Employees](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[\"&\",[\"project_id\",\"!=\",false],[\"employee_id\",\"!=\",false]],\"context\":{\"group_by\":[\"employee_id\"],\"pivot_measures\":[\"unit_amount\",\"billable_time\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"employee_id\"]},\"modelName\":\"timesheets.analysis.report\",\"views\":[[false,\"pivot\"],[false,\"graph\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Top Employees\"})",
-        "F37": "=_t(\"Employee\")",
-        "F38": "=PIVOT.HEADER(4,\"#employee_id\",1)",
-        "F39": "=PIVOT.HEADER(4,\"#employee_id\",2)",
-        "F40": "=PIVOT.HEADER(4,\"#employee_id\",3)",
-        "F41": "=PIVOT.HEADER(4,\"#employee_id\",4)",
-        "F42": "=PIVOT.HEADER(4,\"#employee_id\",5)",
-        "F43": "=PIVOT.HEADER(4,\"#employee_id\",6)",
-        "F44": "=PIVOT.HEADER(4,\"#employee_id\",7)",
-        "F45": "=PIVOT.HEADER(4,\"#employee_id\",8)",
-        "F46": "=PIVOT.HEADER(4,\"#employee_id\",9)",
-        "F47": "=PIVOT.HEADER(4,\"#employee_id\",10)",
-        "G24": "=_t(\"Hours spent\")",
-        "G25": "=PIVOT.VALUE(2,\"unit_amount\",\"#task_id\",1)",
-        "G26": "=PIVOT.VALUE(2,\"unit_amount\",\"#task_id\",2)",
-        "G27": "=PIVOT.VALUE(2,\"unit_amount\",\"#task_id\",3)",
-        "G28": "=PIVOT.VALUE(2,\"unit_amount\",\"#task_id\",4)",
-        "G29": "=PIVOT.VALUE(2,\"unit_amount\",\"#task_id\",5)",
-        "G30": "=PIVOT.VALUE(2,\"unit_amount\",\"#task_id\",6)",
-        "G31": "=PIVOT.VALUE(2,\"unit_amount\",\"#task_id\",7)",
-        "G32": "=PIVOT.VALUE(2,\"unit_amount\",\"#task_id\",8)",
-        "G33": "=PIVOT.VALUE(2,\"unit_amount\",\"#task_id\",9)",
-        "G34": "=PIVOT.VALUE(2,\"unit_amount\",\"#task_id\",10)",
-        "G37": "=_t(\"Hours spent\")",
-        "G38": "=PIVOT.VALUE(4,\"unit_amount\",\"#employee_id\",1)",
-        "G39": "=PIVOT.VALUE(4,\"unit_amount\",\"#employee_id\",2)",
-        "G40": "=PIVOT.VALUE(4,\"unit_amount\",\"#employee_id\",3)",
-        "G41": "=PIVOT.VALUE(4,\"unit_amount\",\"#employee_id\",4)",
-        "G42": "=PIVOT.VALUE(4,\"unit_amount\",\"#employee_id\",5)",
-        "G43": "=PIVOT.VALUE(4,\"unit_amount\",\"#employee_id\",6)",
-        "G44": "=PIVOT.VALUE(4,\"unit_amount\",\"#employee_id\",7)",
-        "G45": "=PIVOT.VALUE(4,\"unit_amount\",\"#employee_id\",8)",
-        "G46": "=PIVOT.VALUE(4,\"unit_amount\",\"#employee_id\",9)",
-        "G47": "=PIVOT.VALUE(4,\"unit_amount\",\"#employee_id\",10)",
-        "H24": "=_t(\"Hours billed\")",
-        "H25": "=PIVOT.VALUE(2,\"billable_time\",\"#task_id\",1)",
-        "H26": "=PIVOT.VALUE(2,\"billable_time\",\"#task_id\",2)",
-        "H27": "=PIVOT.VALUE(2,\"billable_time\",\"#task_id\",3)",
-        "H28": "=PIVOT.VALUE(2,\"billable_time\",\"#task_id\",4)",
-        "H29": "=PIVOT.VALUE(2,\"billable_time\",\"#task_id\",5)",
-        "H30": "=PIVOT.VALUE(2,\"billable_time\",\"#task_id\",6)",
-        "H31": "=PIVOT.VALUE(2,\"billable_time\",\"#task_id\",7)",
-        "H32": "=PIVOT.VALUE(2,\"billable_time\",\"#task_id\",8)",
-        "H33": "=PIVOT.VALUE(2,\"billable_time\",\"#task_id\",9)",
-        "H34": "=PIVOT.VALUE(2,\"billable_time\",\"#task_id\",10)",
-        "H37": "=_t(\"Hours billed\")",
-        "H38": "=PIVOT.VALUE(4,\"billable_time\",\"#employee_id\",1)",
-        "H39": "=PIVOT.VALUE(4,\"billable_time\",\"#employee_id\",2)",
-        "H40": "=PIVOT.VALUE(4,\"billable_time\",\"#employee_id\",3)",
-        "H41": "=PIVOT.VALUE(4,\"billable_time\",\"#employee_id\",4)",
-        "H42": "=PIVOT.VALUE(4,\"billable_time\",\"#employee_id\",5)",
-        "H43": "=PIVOT.VALUE(4,\"billable_time\",\"#employee_id\",6)",
-        "H44": "=PIVOT.VALUE(4,\"billable_time\",\"#employee_id\",7)",
-        "H45": "=PIVOT.VALUE(4,\"billable_time\",\"#employee_id\",8)",
-        "H46": "=PIVOT.VALUE(4,\"billable_time\",\"#employee_id\",9)",
-        "H47": "=PIVOT.VALUE(4,\"billable_time\",\"#employee_id\",10)",
-        "I24": "=_t(\"Billable rate\")",
-        "I25": "=IFERROR(H25/G25)",
-        "I26": "=IFERROR(H26/G26)",
-        "I27": "=IFERROR(H27/G27)",
-        "I28": "=IFERROR(H28/G28)",
-        "I29": "=IFERROR(H29/G29)",
-        "I30": "=IFERROR(H30/G30)",
-        "I31": "=IFERROR(H31/G31)",
-        "I32": "=IFERROR(H32/G32)",
-        "I33": "=IFERROR(H33/G33)",
-        "I34": "=IFERROR(H34/G34)",
-        "I37": "=_t(\"Billable rate\")",
-        "I38": "=IFERROR(H38/G38)",
-        "I39": "=IFERROR(H39/G39)",
-        "I40": "=IFERROR(H40/G40)",
-        "I41": "=IFERROR(H41/G41)",
-        "I42": "=IFERROR(H42/G42)",
-        "I43": "=IFERROR(H43/G43)",
-        "I44": "=IFERROR(H44/G44)",
-        "I45": "=IFERROR(H45/G45)",
-        "I46": "=IFERROR(H46/G46)",
-        "I47": "=IFERROR(H47/G47)"
+        "F37": "=PIVOT(4, 10, FALSE, FALSE)"
       },
       "styles": {
         "A7": 1,
@@ -240,24 +67,14 @@
         "F37": 2,
         "A25:D34": 3,
         "A38:D47": 3,
-        "F25:H33": 3,
-        "I25:I34": 3,
+        "F25:I34": 3,
         "F38:I47": 3,
         "B24:D24": 4,
         "B37:D37": 4,
         "G24:I24": 4,
         "G37:I37": 4
       },
-      "formats": {
-        "D25:D31": 1,
-        "D33:D34": 1,
-        "D38:D44": 1,
-        "I25:I33": 1,
-        "I38:I47": 1,
-        "D32": 2,
-        "D45:D47": 2,
-        "I34": 2
-      },
+      "formats": {},
       "borders": {
         "A23:D23": 1,
         "A36:D36": 1,
@@ -321,7 +138,8 @@
             "baseline": "Data!E5",
             "baselineDescr": { "text": "since last period" },
             "keyValue": "Data!D5",
-            "humanize": false
+            "humanize": false,
+            "chartId": "14907ee1-177b-4dda-97d7-223b1b00abe5"
           },
           "offset": { "x": 0, "y": 9 },
           "col": 0,
@@ -342,7 +160,8 @@
             "baseline": "Data!E6",
             "baselineDescr": { "text": "since last period" },
             "keyValue": "Data!D6",
-            "humanize": false
+            "humanize": false,
+            "chartId": "c484c691-bb4a-4a9d-8a25-8464162ee96a"
           },
           "offset": { "x": 210, "y": 9 },
           "col": 0,
@@ -363,7 +182,8 @@
             "baseline": "Data!E8",
             "baselineDescr": { "text": "last period" },
             "keyValue": "Data!D8",
-            "humanize": false
+            "humanize": false,
+            "chartId": "0b033641-2a0f-4db7-893d-f14fbb320b94"
           },
           "offset": { "x": 420, "y": 9 },
           "col": 0,
@@ -396,11 +216,14 @@
               "orderBy": []
             },
             "type": "odoo_line",
-            "dataSets": [],
+            "dataSets": [
+              {}
+            ],
             "verticalAxisPosition": "left",
             "stacked": false,
             "cumulatedStart": false,
             "fillArea": true,
+            "chartId": "39c6667b-b74a-478e-87e9-75c22de5ea1f",
             "fieldMatching": {
               "fb3700b0-4ee9-4086-86ac-6c62a7d33d37": { "chain": "date", "type": "date", "offset": 0 },
               "65e4bccf-3035-47a0-a268-9a4e5b48037f": { "chain": "project_id", "type": "many2one" },
@@ -412,6 +235,63 @@
           "offset": { "x": 0, "y": 178 },
           "col": 0,
           "row": 0
+        },
+        {
+          "id": "06cfdf4c-cd29",
+          "col": 0,
+          "row": 35,
+          "offset": { "x": 0, "y": 8 },
+          "width": 478,
+          "height": 405,
+          "tag": "carousel",
+          "data": {
+            "chartDefinitions": {
+              "683ee3e0-6ce4": {
+                "title": {},
+                "background": "#FFFFFF",
+                "legendPosition": "top",
+                "metaData": {
+                  "groupBy": ["department_id"],
+                  "measure": "billable_time",
+                  "order": null,
+                  "resModel": "timesheets.analysis.report",
+                  "mode": "bar"
+                },
+                "searchParams": {
+                  "context": {},
+                  "domain": [
+                    ["project_id", "!=", false]
+                  ],
+                  "groupBy": ["department_id"],
+                  "orderBy": []
+                },
+                "type": "odoo_treemap",
+                "actionXmlId": "sale_timesheet.timesheet_action_billing_report",
+                "dataSets": [
+                  {}
+                ]
+              }
+            },
+            "items": [
+              { "type": "chart", "chartId": "683ee3e0-6ce4" },
+              { "type": "carouselDataView", "title": "Top 10" }
+            ],
+            "fieldMatching": {
+              "683ee3e0-6ce4": {
+                "fb3700b0-4ee9-4086-86ac-6c62a7d33d37": { "chain": "date", "type": "date" },
+                "65e4bccf-3035-47a0-a268-9a4e5b48037f": { "chain": "project_id", "type": "many2one" },
+                "22a76320-0363-4391-9121-65e1db51b671": { "chain": "task_id", "type": "many2one" },
+                "541de762-4a6c-435e-a5ff-e94d393cf6df": { "chain": "department_id", "type": "many2one" },
+                "4788ea63-ee8f-4082-a118-a26b4b6f1a71": { "chain": "employee_id", "type": "many2one" }
+              }
+            },
+            "title": {
+              "text": "Top Departments",
+              "fontSize": 21,
+              "color": "#01666B",
+              "bold": true
+            }
+          }
         }
       ],
       "tables": [
@@ -569,7 +449,7 @@
     "5": { "bold": true },
     "6": { "fillColor": "#f2f2f2" }
   },
-  "formats": { "1": "0%", "2": "0.00%" },
+  "formats": { "1": "0%" },
   "borders": {
     "1": {
       "bottom": { "style": "thin", "color": "#CCCCCC" }
@@ -620,11 +500,27 @@
       ],
       "id": "1",
       "measures": [
-        { "id": "unit_amount", "fieldName": "unit_amount" },
-        { "id": "billable_time", "fieldName": "billable_time" }
+        {
+          "id": "unit_amount",
+          "fieldName": "unit_amount",
+          "userDefinedName": "Hours spent"
+        },
+        {
+          "id": "billable_time",
+          "fieldName": "billable_time",
+          "userDefinedName": "Hours billed"
+        },
+        {
+          "id": "Billable rate:sum",
+          "fieldName": "Billable rate",
+          "aggregator": "sum",
+          "userDefinedName": "Billable rate",
+          "computedBy": { "sheetId": "sheet1", "formula": "=IFERROR(billable_time/unit_amount)" },
+          "format": "0%"
+        }
       ],
       "model": "timesheets.analysis.report",
-      "name": "Timesheets Analysis by Project",
+      "name": "Project",
       "sortedColumn": {
         "measure": "billable_time",
         "order": "desc",
@@ -653,11 +549,29 @@
       ],
       "id": "2",
       "measures": [
-        { "id": "unit_amount", "fieldName": "unit_amount" },
-        { "id": "billable_time", "fieldName": "billable_time" }
+        {
+          "id": "unit_amount",
+          "fieldName": "unit_amount",
+          "userDefinedName": "Hours spent",
+          "format": ""
+        },
+        {
+          "id": "billable_time",
+          "fieldName": "billable_time",
+          "userDefinedName": "Hours billed",
+          "format": ""
+        },
+        {
+          "id": "Billable rate:sum",
+          "fieldName": "Billable rate",
+          "aggregator": "sum",
+          "userDefinedName": "Billable rate",
+          "computedBy": { "sheetId": "sheet1", "formula": "=IFERROR(billable_time/unit_amount)" },
+          "format": "0%"
+        }
       ],
       "model": "timesheets.analysis.report",
-      "name": "Timesheets Analysis by Task",
+      "name": "Task",
       "sortedColumn": {
         "measure": "billable_time",
         "order": "desc",
@@ -686,11 +600,27 @@
       ],
       "id": "3",
       "measures": [
-        { "id": "unit_amount", "fieldName": "unit_amount" },
-        { "id": "billable_time", "fieldName": "billable_time" }
+        {
+          "id": "unit_amount",
+          "fieldName": "unit_amount",
+          "userDefinedName": "Hours spent"
+        },
+        {
+          "id": "billable_time",
+          "fieldName": "billable_time",
+          "userDefinedName": "Hours billed"
+        },
+        {
+          "id": "Billable rate:sum",
+          "fieldName": "Billable rate",
+          "aggregator": "sum",
+          "userDefinedName": "Billable rate",
+          "computedBy": { "sheetId": "sheet1", "formula": "=IFERROR(billable_time/unit_amount)" },
+          "format": "0%"
+        }
       ],
       "model": "timesheets.analysis.report",
-      "name": "Timesheets Analysis by Department",
+      "name": "Department",
       "sortedColumn": {
         "measure": "billable_time",
         "order": "desc",
@@ -719,11 +649,27 @@
       ],
       "id": "4",
       "measures": [
-        { "id": "unit_amount", "fieldName": "unit_amount" },
-        { "id": "billable_time", "fieldName": "billable_time" }
+        {
+          "id": "unit_amount",
+          "fieldName": "unit_amount",
+          "userDefinedName": "Hours spent"
+        },
+        {
+          "id": "billable_time",
+          "fieldName": "billable_time",
+          "userDefinedName": "Hours billed"
+        },
+        {
+          "id": "Billable rate:sum",
+          "fieldName": "Billable rate",
+          "aggregator": "sum",
+          "userDefinedName": "Billable rate",
+          "computedBy": { "sheetId": "sheet1", "formula": "=IFERROR(billable_time/unit_amount)" },
+          "format": "0%"
+        }
       ],
       "model": "timesheets.analysis.report",
-      "name": "Timesheets Analysis by Employee",
+      "name": "Employee",
       "sortedColumn": {
         "measure": "billable_time",
         "order": "desc",

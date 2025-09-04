@@ -1,5 +1,5 @@
 {
-  "version": "18.4.14",
+  "version": "18.5.10",
   "sheets": [
     {
       "id": "sheet1",
@@ -36,73 +36,8 @@
         "A7": "[Best Sellers by Revenue](odoo://view/{\"viewType\":\"graph\",\"action\":{\"domain\":[[\"state\", \"not in\", [\"draft\", \"sent\", \"cancel\"]]],\"context\":{\"group_by\":[\"product_id\"],\"graph_measure\":\"price_subtotal\",\"graph_mode\":\"bar\",\"graph_groupbys\":[\"product_id\"]},\"modelName\":\"sale.report\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Best Sellers by Revenue\"})",
         "A27": "[Best Sellers by Units Sold](odoo://view/{\"viewType\":\"graph\",\"action\":{\"domain\":[[\"state\", \"not in\", [\"draft\", \"sent\", \"cancel\"]]],\"context\":{\"group_by\":[\"product_id\"],\"graph_measure\":\"__count\",\"graph_mode\":\"bar\",\"graph_groupbys\":[\"product_id\"]},\"modelName\":\"sale.report\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Sales Analysis\"})",
         "A47": "[Best Selling Products](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[[\"state\", \"not in\", [\"draft\", \"sent\", \"cancel\"]]],\"context\":{\"group_by\":[\"product_id\"],\"pivot_measures\":[\"__count\",\"price_subtotal\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"product_id\"]},\"modelName\":\"sale.report\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Sales Analysis\"})",
-        "A48": "=_t(\"Product\")",
-        "A49": "=PIVOT.HEADER(1,\"#product_id\",1)",
-        "A50": "=PIVOT.HEADER(1,\"#product_id\",2)",
-        "A51": "=PIVOT.HEADER(1,\"#product_id\",3)",
-        "A52": "=PIVOT.HEADER(1,\"#product_id\",4)",
-        "A53": "=PIVOT.HEADER(1,\"#product_id\",5)",
-        "A54": "=PIVOT.HEADER(1,\"#product_id\",6)",
-        "A55": "=PIVOT.HEADER(1,\"#product_id\",7)",
-        "A56": "=PIVOT.HEADER(1,\"#product_id\",8)",
-        "A57": "=PIVOT.HEADER(1,\"#product_id\",9)",
-        "A58": "=PIVOT.HEADER(1,\"#product_id\",10)",
-        "B48": "=_t(\"Units\")",
-        "B49": "=PIVOT.VALUE(1,\"product_uom_qty\",\"#product_id\",1)",
-        "B50": "=PIVOT.VALUE(1,\"product_uom_qty\",\"#product_id\",2)",
-        "B51": "=PIVOT.VALUE(1,\"product_uom_qty\",\"#product_id\",3)",
-        "B52": "=PIVOT.VALUE(1,\"product_uom_qty\",\"#product_id\",4)",
-        "B53": "=PIVOT.VALUE(1,\"product_uom_qty\",\"#product_id\",5)",
-        "B54": "=PIVOT.VALUE(1,\"product_uom_qty\",\"#product_id\",6)",
-        "B55": "=PIVOT.VALUE(1,\"product_uom_qty\",\"#product_id\",7)",
-        "B56": "=PIVOT.VALUE(1,\"product_uom_qty\",\"#product_id\",8)",
-        "B57": "=PIVOT.VALUE(1,\"product_uom_qty\",\"#product_id\",9)",
-        "B58": "=PIVOT.VALUE(1,\"product_uom_qty\",\"#product_id\",10)",
-        "C48": "=_t(\"Revenue\")",
-        "C49": "=PIVOT.VALUE(1,\"price_subtotal\",\"#product_id\",1)",
-        "C50": "=PIVOT.VALUE(1,\"price_subtotal\",\"#product_id\",2)",
-        "C51": "=PIVOT.VALUE(1,\"price_subtotal\",\"#product_id\",3)",
-        "C52": "=PIVOT.VALUE(1,\"price_subtotal\",\"#product_id\",4)",
-        "C53": "=PIVOT.VALUE(1,\"price_subtotal\",\"#product_id\",5)",
-        "C54": "=PIVOT.VALUE(1,\"price_subtotal\",\"#product_id\",6)",
-        "C55": "=PIVOT.VALUE(1,\"price_subtotal\",\"#product_id\",7)",
-        "C56": "=PIVOT.VALUE(1,\"price_subtotal\",\"#product_id\",8)",
-        "C57": "=PIVOT.VALUE(1,\"price_subtotal\",\"#product_id\",9)",
-        "C58": "=PIVOT.VALUE(1,\"price_subtotal\",\"#product_id\",10)",
-        "E47": "[Best Selling Categories](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[[\"state\", \"not in\", [\"draft\", \"sent\", \"cancel\"]]],\"context\":{\"group_by\":[\"categ_id\"],\"pivot_measures\":[\"__count\",\"price_subtotal\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"categ_id\"]},\"modelName\":\"sale.report\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Sales Analysis\"})",
-        "E48": "=_t(\"Category\")",
-        "E49": "=PIVOT.HEADER(2,\"#categ_id\",1)",
-        "E50": "=PIVOT.HEADER(2,\"#categ_id\",2)",
-        "E51": "=PIVOT.HEADER(2,\"#categ_id\",3)",
-        "E52": "=PIVOT.HEADER(2,\"#categ_id\",4)",
-        "E53": "=PIVOT.HEADER(2,\"#categ_id\",5)",
-        "E54": "=PIVOT.HEADER(2,\"#categ_id\",6)",
-        "E55": "=PIVOT.HEADER(2,\"#categ_id\",7)",
-        "E56": "=PIVOT.HEADER(2,\"#categ_id\",8)",
-        "E57": "=PIVOT.HEADER(2,\"#categ_id\",9)",
-        "E58": "=PIVOT.HEADER(2,\"#categ_id\",10)",
-        "F48": "=_t(\"Units\")",
-        "F49": "=PIVOT.VALUE(2,\"product_uom_qty\",\"#categ_id\",1)",
-        "F50": "=PIVOT.VALUE(2,\"product_uom_qty\",\"#categ_id\",2)",
-        "F51": "=PIVOT.VALUE(2,\"product_uom_qty\",\"#categ_id\",3)",
-        "F52": "=PIVOT.VALUE(2,\"product_uom_qty\",\"#categ_id\",4)",
-        "F53": "=PIVOT.VALUE(2,\"product_uom_qty\",\"#categ_id\",5)",
-        "F54": "=PIVOT.VALUE(2,\"product_uom_qty\",\"#categ_id\",6)",
-        "F55": "=PIVOT.VALUE(2,\"product_uom_qty\",\"#categ_id\",7)",
-        "F56": "=PIVOT.VALUE(2,\"product_uom_qty\",\"#categ_id\",8)",
-        "F57": "=PIVOT.VALUE(2,\"product_uom_qty\",\"#categ_id\",9)",
-        "F58": "=PIVOT.VALUE(2,\"product_uom_qty\",\"#categ_id\",10)",
-        "G48": "=_t(\"Revenue\")",
-        "G49": "=PIVOT.VALUE(2,\"price_subtotal\",\"#categ_id\",1)",
-        "G50": "=PIVOT.VALUE(2,\"price_subtotal\",\"#categ_id\",2)",
-        "G51": "=PIVOT.VALUE(2,\"price_subtotal\",\"#categ_id\",3)",
-        "G52": "=PIVOT.VALUE(2,\"price_subtotal\",\"#categ_id\",4)",
-        "G53": "=PIVOT.VALUE(2,\"price_subtotal\",\"#categ_id\",5)",
-        "G54": "=PIVOT.VALUE(2,\"price_subtotal\",\"#categ_id\",6)",
-        "G55": "=PIVOT.VALUE(2,\"price_subtotal\",\"#categ_id\",7)",
-        "G56": "=PIVOT.VALUE(2,\"price_subtotal\",\"#categ_id\",8)",
-        "G57": "=PIVOT.VALUE(2,\"price_subtotal\",\"#categ_id\",9)",
-        "G58": "=PIVOT.VALUE(2,\"price_subtotal\",\"#categ_id\",10)"
+        "A48": "=PIVOT(1, 10, FALSE, FALSE)",
+        "E48": "=PIVOT(2, 10, FALSE, FALSE)"
       },
       "styles": {
         "A7": 1,
@@ -161,8 +96,7 @@
               "measure": "price_subtotal",
               "order": "DESC",
               "resModel": "sale.report",
-              "mode": "bar",
-              "cumulatedStart": false
+              "mode": "bar"
             },
             "searchParams": {
               "comparison": null,
@@ -180,9 +114,20 @@
               "orderBy": []
             },
             "type": "odoo_bar",
-            "dataSets": [],
+            "dataSets": [
+              {}
+            ],
             "verticalAxisPosition": "left",
             "stacked": true,
+            "axesDesign": {
+              "x": {
+                "title": { "text": "Product" }
+              },
+              "y": {
+                "title": { "text": "Revenue" }
+              }
+            },
+            "chartId": "e35856cf-9090-489b-b055-2d441380d954",
             "fieldMatching": {
               "a6c3274b-e53c-4c6b-90a8-bc3e3d109f52": { "chain": "date", "type": "datetime", "offset": 0 },
               "36814ad9-adac-4aba-a5ad-df595a306ef7": { "chain": "product_id", "type": "many2one" },
@@ -207,8 +152,7 @@
               "measure": "product_uom_qty",
               "order": "DESC",
               "resModel": "sale.report",
-              "mode": "bar",
-              "cumulatedStart": false
+              "mode": "bar"
             },
             "searchParams": {
               "comparison": null,
@@ -226,9 +170,20 @@
               "orderBy": []
             },
             "type": "odoo_bar",
-            "dataSets": [],
+            "dataSets": [
+              {}
+            ],
             "verticalAxisPosition": "left",
             "stacked": true,
+            "axesDesign": {
+              "x": {
+                "title": { "text": "Product" }
+              },
+              "y": {
+                "title": { "text": "Unit sold" }
+              }
+            },
+            "chartId": "d0171069-d2cd-4c2c-a686-cd7515e93bb5",
             "fieldMatching": {
               "a6c3274b-e53c-4c6b-90a8-bc3e3d109f52": { "chain": "date", "type": "datetime", "offset": 0 },
               "36814ad9-adac-4aba-a5ad-df595a306ef7": { "chain": "product_id", "type": "many2one" },
@@ -254,7 +209,8 @@
             "baseline": "Data!C2",
             "baselineDescr": { "text": "sold" },
             "keyValue": "Data!B2",
-            "humanize": false
+            "humanize": false,
+            "chartId": "5f383918-4073-4f19-9cc9-603216c953ad"
           },
           "offset": { "x": 0, "y": 12 },
           "col": 0,
@@ -275,11 +231,67 @@
             "baseline": "Data!C3",
             "baselineDescr": { "text": "sold" },
             "keyValue": "Data!B3",
-            "humanize": false
+            "humanize": false,
+            "chartId": "ec57f69b-f2b1-4dfc-990c-91ab61b526bf"
           },
           "offset": { "x": 459, "y": 12 },
           "col": 0,
           "row": 0
+        },
+        {
+          "id": "8ee8675a-7e31",
+          "col": 3,
+          "row": 46,
+          "offset": { "x": 49, "y": 8 },
+          "width": 476,
+          "height": 365,
+          "tag": "carousel",
+          "data": {
+            "chartDefinitions": {
+              "779aed3e-b442": {
+                "title": {},
+                "background": "#FFFFFF",
+                "legendPosition": "top",
+                "metaData": {
+                  "groupBy": ["categ_id"],
+                  "measure": "price_subtotal",
+                  "order": null,
+                  "resModel": "sale.report",
+                  "mode": "bar"
+                },
+                "searchParams": {
+                  "context": {
+                    "group_by": []
+                  },
+                  "domain": "[\"&\", (\"state\", \"!=\", \"cancel\"), \"&\", (\"state\", \"not in\", (\"draft\", \"cancel\", \"sent\")), (\"product_tmpl_id.recurring_invoice\", \"!=\", True)]",
+                  "groupBy": ["categ_id"],
+                  "orderBy": []
+                },
+                "type": "odoo_treemap",
+                "actionXmlId": "sale.action_order_report_all",
+                "dataSets": [
+                  {}
+                ]
+              }
+            },
+            "items": [
+              { "type": "chart", "chartId": "779aed3e-b442" },
+              { "type": "carouselDataView", "title": "Top 10" }
+            ],
+            "fieldMatching": {
+              "779aed3e-b442": {
+                "a6c3274b-e53c-4c6b-90a8-bc3e3d109f52": { "chain": "date", "type": "datetime" },
+                "36814ad9-adac-4aba-a5ad-df595a306ef7": { "chain": "product_id", "type": "many2one" },
+                "edaf4d0c-df4b-48bc-b61a-48a07e8afd91": { "chain": "categ_id", "type": "many2one" }
+              }
+            },
+            "title": {
+              "text": "Best Selling Categories",
+              "bold": true,
+              "fontSize": 21,
+              "color": "#01666B"
+            }
+          }
         }
       ],
       "tables": [
@@ -425,12 +437,19 @@
       ],
       "id": "1",
       "measures": [
-        { "id": "product_uom_qty", "fieldName": "product_uom_qty" },
-        { "id": "__count", "fieldName": "__count" },
-        { "id": "price_subtotal", "fieldName": "price_subtotal" }
+        {
+          "id": "product_uom_qty",
+          "fieldName": "product_uom_qty",
+          "userDefinedName": "Units"
+        },
+        {
+          "id": "price_subtotal",
+          "fieldName": "price_subtotal",
+          "userDefinedName": "Revenue"
+        }
       ],
       "model": "sale.report",
-      "name": "Sales Analysis by Product Variant",
+      "name": "Product",
       "sortedColumn": {
         "measure": "price_subtotal",
         "order": "desc",
@@ -461,12 +480,19 @@
       ],
       "id": "2",
       "measures": [
-        { "id": "product_uom_qty", "fieldName": "product_uom_qty" },
-        { "id": "__count", "fieldName": "__count" },
-        { "id": "price_subtotal", "fieldName": "price_subtotal" }
+        {
+          "id": "product_uom_qty",
+          "fieldName": "product_uom_qty",
+          "userDefinedName": "Units"
+        },
+        {
+          "id": "price_subtotal",
+          "fieldName": "price_subtotal",
+          "userDefinedName": "Revenue"
+        }
       ],
       "model": "sale.report",
-      "name": "Sales Analysis by Product Category",
+      "name": "Category",
       "sortedColumn": {
         "measure": "price_subtotal",
         "order": "desc",

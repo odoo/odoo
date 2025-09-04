@@ -1,5 +1,5 @@
 {
-  "version": "18.4.14",
+  "version": "18.5.10",
   "sheets": [
     {
       "id": "a7cd7db1-9407-4895-82f2-7657102c7688",
@@ -81,30 +81,9 @@
         "A32": "=ODOO.LIST(1,8,\"name\")",
         "A33": "=ODOO.LIST(1,9,\"name\")",
         "A34": "=ODOO.LIST(1,10,\"name\")",
-        "A36": "[Top Countries](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[\"&\",[\"state\",\"not in\",[\"draft\",\"cancel\"]],\"&\",[\"country_id\",\"!=\",false],[\"move_type\",\"in\",[\"out_invoice\",\"out_refund\"]]],\"context\":{\"group_by\":[\"country_id\"],\"pivot_measures\":[\"price_subtotal\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"country_id\"]},\"modelName\":\"account.invoice.report\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"list\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Invoices Analysis\"})",
-        "A37": "=_t(\"Country\")",
-        "A38": "=PIVOT.HEADER(2,\"#country_id\",1)",
-        "A39": "=PIVOT.HEADER(2,\"#country_id\",2)",
-        "A40": "=PIVOT.HEADER(2,\"#country_id\",3)",
-        "A41": "=PIVOT.HEADER(2,\"#country_id\",4)",
-        "A42": "=PIVOT.HEADER(2,\"#country_id\",5)",
-        "A43": "=PIVOT.HEADER(2,\"#country_id\",6)",
-        "A44": "=PIVOT.HEADER(2,\"#country_id\",7)",
-        "A45": "=PIVOT.HEADER(2,\"#country_id\",8)",
-        "A46": "=PIVOT.HEADER(2,\"#country_id\",9)",
-        "A47": "=PIVOT.HEADER(2,\"#country_id\",10)",
+        "A37": "=PIVOT(2, 10, FALSE, FALSE)",
         "A49": "[Top Products](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[\"&\",[\"state\",\"not in\",[\"draft\",\"cancel\"]],\"&\",[\"product_id\",\"!=\",false],[\"move_type\",\"in\",[\"out_invoice\",\"out_refund\"]]],\"context\":{\"group_by\":[\"product_id\"],\"pivot_measures\":[\"price_subtotal\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"product_id\"]},\"modelName\":\"account.invoice.report\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"list\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Invoices Analysis\"})",
-        "A50": "=_t(\"Product\")",
-        "A51": "=PIVOT.HEADER(3,\"#product_id\",1)",
-        "A52": "=PIVOT.HEADER(3,\"#product_id\",2)",
-        "A53": "=PIVOT.HEADER(3,\"#product_id\",3)",
-        "A54": "=PIVOT.HEADER(3,\"#product_id\",4)",
-        "A55": "=PIVOT.HEADER(3,\"#product_id\",5)",
-        "A56": "=PIVOT.HEADER(3,\"#product_id\",6)",
-        "A57": "=PIVOT.HEADER(3,\"#product_id\",7)",
-        "A58": "=PIVOT.HEADER(3,\"#product_id\",8)",
-        "A59": "=PIVOT.HEADER(3,\"#product_id\",9)",
-        "A60": "=PIVOT.HEADER(3,\"#product_id\",10)",
+        "A50": "=PIVOT(3, 10, FALSE, FALSE)",
         "B24": "=ODOO.LIST.HEADER(1, \"user_id\", _t(\"Salesperson\"))",
         "B25": "=ODOO.LIST(1,1,\"user_id\")",
         "B26": "=ODOO.LIST(1,2,\"user_id\")",
@@ -116,28 +95,6 @@
         "B32": "=ODOO.LIST(1,8,\"user_id\")",
         "B33": "=ODOO.LIST(1,9,\"user_id\")",
         "B34": "=ODOO.LIST(1,10,\"user_id\")",
-        "B37": "=_t(\"Amount\")",
-        "B38": "=PIVOT.VALUE(2,\"price_subtotal\",\"#country_id\",1)",
-        "B39": "=PIVOT.VALUE(2,\"price_subtotal\",\"#country_id\",2)",
-        "B40": "=PIVOT.VALUE(2,\"price_subtotal\",\"#country_id\",3)",
-        "B41": "=PIVOT.VALUE(2,\"price_subtotal\",\"#country_id\",4)",
-        "B42": "=PIVOT.VALUE(2,\"price_subtotal\",\"#country_id\",5)",
-        "B43": "=PIVOT.VALUE(2,\"price_subtotal\",\"#country_id\",6)",
-        "B44": "=PIVOT.VALUE(2,\"price_subtotal\",\"#country_id\",7)",
-        "B45": "=PIVOT.VALUE(2,\"price_subtotal\",\"#country_id\",8)",
-        "B46": "=PIVOT.VALUE(2,\"price_subtotal\",\"#country_id\",9)",
-        "B47": "=PIVOT.VALUE(2,\"price_subtotal\",\"#country_id\",10)",
-        "B50": "=_t(\"Amount\")",
-        "B51": "=PIVOT.VALUE(3,\"price_subtotal\",\"#product_id\",1)",
-        "B52": "=PIVOT.VALUE(3,\"price_subtotal\",\"#product_id\",2)",
-        "B53": "=PIVOT.VALUE(3,\"price_subtotal\",\"#product_id\",3)",
-        "B54": "=PIVOT.VALUE(3,\"price_subtotal\",\"#product_id\",4)",
-        "B55": "=PIVOT.VALUE(3,\"price_subtotal\",\"#product_id\",5)",
-        "B56": "=PIVOT.VALUE(3,\"price_subtotal\",\"#product_id\",6)",
-        "B57": "=PIVOT.VALUE(3,\"price_subtotal\",\"#product_id\",7)",
-        "B58": "=PIVOT.VALUE(3,\"price_subtotal\",\"#product_id\",8)",
-        "B59": "=PIVOT.VALUE(3,\"price_subtotal\",\"#product_id\",9)",
-        "B60": "=PIVOT.VALUE(3,\"price_subtotal\",\"#product_id\",10)",
         "C24": "=ODOO.LIST.HEADER(1, \"payment_state\", _t(\"Status\"))",
         "C25": "=ODOO.LIST(1,1,\"payment_state\")",
         "C26": "=ODOO.LIST(1,2,\"payment_state\")",
@@ -149,28 +106,6 @@
         "C32": "=ODOO.LIST(1,8,\"payment_state\")",
         "C33": "=ODOO.LIST(1,9,\"payment_state\")",
         "C34": "=ODOO.LIST(1,10,\"payment_state\")",
-        "C37": "=_t(\"Ratio\")",
-        "C38": "=iferror(if(B38,B38/PIVOT.VALUE(2,\"price_subtotal\"),\"\"),\"\")",
-        "C39": "=iferror(if(B39,B39/PIVOT.VALUE(2,\"price_subtotal\"),\"\"),\"\")",
-        "C40": "=iferror(if(B40,B40/PIVOT.VALUE(2,\"price_subtotal\"),\"\"),\"\")",
-        "C41": "=iferror(if(B41,B41/PIVOT.VALUE(2,\"price_subtotal\"),\"\"),\"\")",
-        "C42": "=iferror(if(B42,B42/PIVOT.VALUE(2,\"price_subtotal\"),\"\"),\"\")",
-        "C43": "=iferror(if(B43,B43/PIVOT.VALUE(2,\"price_subtotal\"),\"\"),\"\")",
-        "C44": "=iferror(if(B44,B44/PIVOT.VALUE(2,\"price_subtotal\"),\"\"),\"\")",
-        "C45": "=iferror(if(B45,B45/PIVOT.VALUE(2,\"price_subtotal\"),\"\"),\"\")",
-        "C46": "=iferror(if(B46,B46/PIVOT.VALUE(2,\"price_subtotal\"),\"\"),\"\")",
-        "C47": "=iferror(if(B48,B48/PIVOT.VALUE(2,\"price_subtotal\"),\"\"),\"\")",
-        "C50": "=_t(\"Ratio\")",
-        "C51": "=iferror(if(B51,B51/PIVOT.VALUE(3,\"price_subtotal\"),\"\"))",
-        "C52": "=iferror(if(B52,B52/PIVOT.VALUE(3,\"price_subtotal\"),\"\"))",
-        "C53": "=iferror(if(B53,B53/PIVOT.VALUE(3,\"price_subtotal\"),\"\"))",
-        "C54": "=iferror(if(B54,B54/PIVOT.VALUE(3,\"price_subtotal\"),\"\"))",
-        "C55": "=iferror(if(B55,B55/PIVOT.VALUE(3,\"price_subtotal\"),\"\"))",
-        "C56": "=iferror(if(B56,B56/PIVOT.VALUE(3,\"price_subtotal\"),\"\"))",
-        "C57": "=iferror(if(B57,B57/PIVOT.VALUE(3,\"price_subtotal\"),\"\"))",
-        "C58": "=iferror(if(B58,B58/PIVOT.VALUE(3,\"price_subtotal\"),\"\"))",
-        "C59": "=iferror(if(B59,B59/PIVOT.VALUE(3,\"price_subtotal\"),\"\"))",
-        "C60": "=iferror(if(B60,B60/PIVOT.VALUE(3,\"price_subtotal\"),\"\"))",
         "D24": "=ODOO.LIST.HEADER(1, \"partner_id\", _t(\"Customer\"))",
         "D25": "=ODOO.LIST(1,1,\"partner_id\")",
         "D26": "=ODOO.LIST(1,2,\"partner_id\")",
@@ -182,30 +117,9 @@
         "D32": "=ODOO.LIST(1,8,\"partner_id\")",
         "D33": "=ODOO.LIST(1,9,\"partner_id\")",
         "D34": "=ODOO.LIST(1,10,\"partner_id\")",
-        "E36": "[Top Categories](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[\"&\",[\"state\",\"not in\",[\"draft\",\"cancel\"]],\"&\",[\"product_categ_id\",\"!=\",false],[\"move_type\",\"in\",[\"out_invoice\",\"out_refund\"]]],\"context\":{\"group_by\":[\"product_categ_id\"],\"pivot_measures\":[\"price_subtotal\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"product_categ_id\"]},\"modelName\":\"account.invoice.report\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"list\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Invoices Analysis\"})",
-        "E37": "=_t(\"Top Categories\")",
-        "E38": "=PIVOT.HEADER(1,\"#product_categ_id\",1)",
-        "E39": "=PIVOT.HEADER(1,\"#product_categ_id\",2)",
-        "E40": "=PIVOT.HEADER(1,\"#product_categ_id\",3)",
-        "E41": "=PIVOT.HEADER(1,\"#product_categ_id\",4)",
-        "E42": "=PIVOT.HEADER(1,\"#product_categ_id\",5)",
-        "E43": "=PIVOT.HEADER(1,\"#product_categ_id\",6)",
-        "E44": "=PIVOT.HEADER(1,\"#product_categ_id\",7)",
-        "E45": "=PIVOT.HEADER(1,\"#product_categ_id\",8)",
-        "E46": "=PIVOT.HEADER(1,\"#product_categ_id\",9)",
-        "E47": "=PIVOT.HEADER(1,\"#product_categ_id\",10)",
+        "E37": "=PIVOT(1, 10, FALSE, FALSE)",
         "E49": "[Top Salespeople](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[\"&\",[\"state\",\"not in\",[\"draft\",\"cancel\"]],\"&\",[\"invoice_user_id\",\"!=\",false],[\"move_type\",\"in\",[\"out_invoice\",\"out_refund\"]]],\"context\":{\"group_by\":[\"invoice_user_id\"],\"pivot_measures\":[\"price_subtotal\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"invoice_user_id\"]},\"modelName\":\"account.invoice.report\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"list\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Invoices Analysis\"})",
-        "E50": "=_t(\"Salesperson\")",
-        "E51": "=PIVOT.HEADER(4,\"#invoice_user_id\",1)",
-        "E52": "=PIVOT.HEADER(4,\"#invoice_user_id\",2)",
-        "E53": "=PIVOT.HEADER(4,\"#invoice_user_id\",3)",
-        "E54": "=PIVOT.HEADER(4,\"#invoice_user_id\",4)",
-        "E55": "=PIVOT.HEADER(4,\"#invoice_user_id\",5)",
-        "E56": "=PIVOT.HEADER(4,\"#invoice_user_id\",6)",
-        "E57": "=PIVOT.HEADER(4,\"#invoice_user_id\",7)",
-        "E58": "=PIVOT.HEADER(4,\"#invoice_user_id\",8)",
-        "E59": "=PIVOT.HEADER(4,\"#invoice_user_id\",9)",
-        "E60": "=PIVOT.HEADER(4,\"#invoice_user_id\",10)",
+        "E50": "=PIVOT(4, 10, FALSE, FALSE)",
         "F24": "=ODOO.LIST.HEADER(1, \"invoice_date\", _t(\"Date\"))",
         "F25": "=ODOO.LIST(1,1,\"invoice_date\")",
         "F26": "=ODOO.LIST(1,2,\"invoice_date\")",
@@ -217,28 +131,6 @@
         "F32": "=ODOO.LIST(1,8,\"invoice_date\")",
         "F33": "=ODOO.LIST(1,9,\"invoice_date\")",
         "F34": "=ODOO.LIST(1,10,\"invoice_date\")",
-        "F37": "=_t(\"Amount\")",
-        "F38": "=PIVOT.VALUE(1,\"price_subtotal\",\"#product_categ_id\",1)",
-        "F39": "=PIVOT.VALUE(1,\"price_subtotal\",\"#product_categ_id\",2)",
-        "F40": "=PIVOT.VALUE(1,\"price_subtotal\",\"#product_categ_id\",3)",
-        "F41": "=PIVOT.VALUE(1,\"price_subtotal\",\"#product_categ_id\",4)",
-        "F42": "=PIVOT.VALUE(1,\"price_subtotal\",\"#product_categ_id\",5)",
-        "F43": "=PIVOT.VALUE(1,\"price_subtotal\",\"#product_categ_id\",6)",
-        "F44": "=PIVOT.VALUE(1,\"price_subtotal\",\"#product_categ_id\",7)",
-        "F45": "=PIVOT.VALUE(1,\"price_subtotal\",\"#product_categ_id\",8)",
-        "F46": "=PIVOT.VALUE(1,\"price_subtotal\",\"#product_categ_id\",9)",
-        "F47": "=PIVOT.VALUE(1,\"price_subtotal\",\"#product_categ_id\",10)",
-        "F50": "=_t(\"Amount\")",
-        "F51": "=PIVOT.VALUE(4,\"price_subtotal\",\"#invoice_user_id\",1)",
-        "F52": "=PIVOT.VALUE(4,\"price_subtotal\",\"#invoice_user_id\",2)",
-        "F53": "=PIVOT.VALUE(4,\"price_subtotal\",\"#invoice_user_id\",3)",
-        "F54": "=PIVOT.VALUE(4,\"price_subtotal\",\"#invoice_user_id\",4)",
-        "F55": "=PIVOT.VALUE(4,\"price_subtotal\",\"#invoice_user_id\",5)",
-        "F56": "=PIVOT.VALUE(4,\"price_subtotal\",\"#invoice_user_id\",6)",
-        "F57": "=PIVOT.VALUE(4,\"price_subtotal\",\"#invoice_user_id\",7)",
-        "F58": "=PIVOT.VALUE(4,\"price_subtotal\",\"#invoice_user_id\",8)",
-        "F59": "=PIVOT.VALUE(4,\"price_subtotal\",\"#invoice_user_id\",9)",
-        "F60": "=PIVOT.VALUE(4,\"price_subtotal\",\"#invoice_user_id\",10)",
         "G24": "=ODOO.LIST.HEADER(1, \"amount_untaxed_signed\", _t(\"Amount\"))",
         "G25": "=ODOO.LIST(1,1,\"amount_untaxed_signed\")",
         "G26": "=ODOO.LIST(1,2,\"amount_untaxed_signed\")",
@@ -249,29 +141,7 @@
         "G31": "=ODOO.LIST(1,7,\"amount_untaxed_signed\")",
         "G32": "=ODOO.LIST(1,8,\"amount_untaxed_signed\")",
         "G33": "=ODOO.LIST(1,9,\"amount_untaxed_signed\")",
-        "G34": "=ODOO.LIST(1,10,\"amount_untaxed_signed\")",
-        "G37": "=_t(\"Ratio\")",
-        "G38": "=iferror(if(F38,F38/PIVOT.VALUE(1,\"price_subtotal\"),\"\"),\"\")",
-        "G39": "=iferror(if(F39,F39/PIVOT.VALUE(1,\"price_subtotal\"),\"\"),\"\")",
-        "G40": "=iferror(if(F40,F40/PIVOT.VALUE(1,\"price_subtotal\"),\"\"),\"\")",
-        "G41": "=iferror(if(F41,F41/PIVOT.VALUE(1,\"price_subtotal\"),\"\"),\"\")",
-        "G42": "=iferror(if(F42,F42/PIVOT.VALUE(1,\"price_subtotal\"),\"\"),\"\")",
-        "G43": "=iferror(if(F43,F43/PIVOT.VALUE(1,\"price_subtotal\"),\"\"),\"\")",
-        "G44": "=iferror(if(F44,F44/PIVOT.VALUE(1,\"price_subtotal\"),\"\"),\"\")",
-        "G45": "=iferror(if(F45,F45/PIVOT.VALUE(1,\"price_subtotal\"),\"\"),\"\")",
-        "G46": "=iferror(if(F46,F46/PIVOT.VALUE(1,\"price_subtotal\"),\"\"),\"\")",
-        "G47": "=iferror(if(F48,F48/PIVOT.VALUE(1,\"price_subtotal\"),\"\"),\"\")",
-        "G50": "=_t(\"Ratio\")",
-        "G51": "=iferror(if(F51,F51/PIVOT.VALUE(4,\"price_subtotal\"),\"\"),\"\")",
-        "G52": "=iferror(if(F52,F52/PIVOT.VALUE(4,\"price_subtotal\"),\"\"),\"\")",
-        "G53": "=iferror(if(F53,F53/PIVOT.VALUE(4,\"price_subtotal\"),\"\"),\"\")",
-        "G54": "=iferror(if(F54,F54/PIVOT.VALUE(4,\"price_subtotal\"),\"\"),\"\")",
-        "G55": "=iferror(if(F55,F55/PIVOT.VALUE(4,\"price_subtotal\"),\"\"),\"\")",
-        "G56": "=iferror(if(F56,F56/PIVOT.VALUE(4,\"price_subtotal\"),\"\"),\"\")",
-        "G57": "=iferror(if(F57,F57/PIVOT.VALUE(4,\"price_subtotal\"),\"\"),\"\")",
-        "G58": "=iferror(if(F58,F58/PIVOT.VALUE(4,\"price_subtotal\"),\"\"),\"\")",
-        "G59": "=iferror(if(F59,F59/PIVOT.VALUE(4,\"price_subtotal\"),\"\"),\"\")",
-        "G60": "=iferror(if(F60,F60/PIVOT.VALUE(4,\"price_subtotal\"),\"\"),\"\")"
+        "G34": "=ODOO.LIST(1,10,\"amount_untaxed_signed\")"
       },
       "styles": {
         "A7": 1,
@@ -393,11 +263,14 @@
               "orderBy": []
             },
             "type": "odoo_line",
-            "dataSets": [],
+            "dataSets": [
+              {}
+            ],
             "verticalAxisPosition": "left",
             "stacked": false,
             "cumulatedStart": false,
             "fillArea": true,
+            "chartId": "5ea5dd7f-9f83-4482-a2bb-2ec72ab35912",
             "fieldMatching": {
               "757a1b4b-e339-4879-beb6-9851050387cf": { "chain": "invoice_date", "type": "date", "offset": 0 },
               "8051befe-619f-4fe7-b788-d34584297bad": { "chain": "country_id", "type": "many2one" },
@@ -425,7 +298,8 @@
             "baseline": "Data!C11",
             "baselineDescr": { "text": "unpaid" },
             "keyValue": "Data!C1",
-            "humanize": false
+            "humanize": false,
+            "chartId": "1aeea7b2-900b-4067-b8ad-3e4772c54028"
           },
           "offset": { "x": 0, "y": 11 },
           "col": 0,
@@ -446,7 +320,8 @@
             "baseline": "Data!C3",
             "baselineDescr": { "text": "Invoices" },
             "keyValue": "Data!C2",
-            "humanize": false
+            "humanize": false,
+            "chartId": "bdfb27d0-5902-4a2a-9b7e-514a6625578c"
           },
           "offset": { "x": 210, "y": 11 },
           "col": 0,
@@ -466,11 +341,155 @@
             "background": "#FEF2F2",
             "baselineDescr": { "text": "in current year" },
             "keyValue": "Data!C10",
-            "humanize": false
+            "humanize": false,
+            "chartId": "b1673523-d139-47fb-b5ea-9e4f969aacb6"
           },
           "offset": { "x": 419, "y": 11 },
           "col": 0,
           "row": 0
+        },
+        {
+          "id": "3dcbe095-d696",
+          "col": 0,
+          "row": 35,
+          "offset": { "x": 0, "y": 10 },
+          "width": 475,
+          "height": 361,
+          "tag": "carousel",
+          "data": {
+            "chartDefinitions": {
+              "df11f2ab-ef26": {
+                "title": {},
+                "background": "#FFFFFF",
+                "legendPosition": "left",
+                "metaData": {
+                  "groupBy": ["country_id"],
+                  "measure": "price_subtotal",
+                  "order": null,
+                  "resModel": "account.invoice.report",
+                  "mode": "bar"
+                },
+                "searchParams": {
+                  "context": {
+                    "group_by": ["invoice_date:month"]
+                  },
+                  "domain": [
+                    "&",
+                    [
+                      "state",
+                      "not in",
+                      ["draft", "cancel"]
+                    ],
+                    "&",
+                    ["country_id", "!=", false],
+                    [
+                      "move_type",
+                      "in",
+                      ["out_invoice", "out_refund"]
+                    ]
+                  ],
+                  "groupBy": ["country_id"],
+                  "orderBy": []
+                },
+                "type": "odoo_geo",
+                "actionXmlId": "account.action_account_invoice_report_all",
+                "dataSets": [
+                  {}
+                ],
+                "colorScale": "blues"
+              }
+            },
+            "items": [
+              { "type": "chart", "chartId": "df11f2ab-ef26", "title": "Map" },
+              { "type": "carouselDataView", "title": "Top 10" }
+            ],
+            "fieldMatching": {
+              "df11f2ab-ef26": {
+                "757a1b4b-e339-4879-beb6-9851050387cf": { "chain": "invoice_date", "type": "date" },
+                "8051befe-619f-4fe7-b788-d34584297bad": { "chain": "country_id", "type": "many2one" },
+                "17277380-12d8-4a83-b133-3532e5618c43": { "chain": "product_categ_id", "type": "many2one" },
+                "accd0cbe-12c9-4cab-93a1-afa5080dd635": { "chain": "product_id", "type": "many2one" },
+                "02acc7f7-b282-4ce9-bf38-6abfb72be6aa": { "chain": "invoice_user_id", "type": "many2one" }
+              }
+            },
+            "title": {
+              "text": "Top Countries",
+              "fontSize": 21,
+              "bold": true,
+              "color": "#01666B"
+            }
+          }
+        },
+        {
+          "id": "2e7a07fe-04a0",
+          "col": 4,
+          "row": 35,
+          "offset": { "x": 0, "y": 10 },
+          "width": 475,
+          "height": 361,
+          "tag": "carousel",
+          "data": {
+            "chartDefinitions": {
+              "fb077836-59ce": {
+                "title": {},
+                "background": "#FFFFFF",
+                "legendPosition": "top",
+                "metaData": {
+                  "groupBy": ["product_categ_id"],
+                  "measure": "price_subtotal",
+                  "order": null,
+                  "resModel": "account.invoice.report",
+                  "mode": "bar"
+                },
+                "searchParams": {
+                  "context": {
+                    "group_by": ["invoice_date:month"]
+                  },
+                  "domain": [
+                    "&",
+                    [
+                      "state",
+                      "not in",
+                      ["draft", "cancel"]
+                    ],
+                    "&",
+                    ["country_id", "!=", false],
+                    [
+                      "move_type",
+                      "in",
+                      ["out_invoice", "out_refund"]
+                    ]
+                  ],
+                  "groupBy": ["product_categ_id"],
+                  "orderBy": []
+                },
+                "type": "odoo_treemap",
+                "actionXmlId": "account.action_account_invoice_report_all",
+                "dataSets": [
+                  {}
+                ]
+              }
+            },
+            "items": [
+              { "type": "chart", "chartId": "fb077836-59ce" },
+              { "type": "carouselDataView", "title": "Top 10" }
+            ],
+            "fieldMatching": {
+              "fb077836-59ce": {
+                "757a1b4b-e339-4879-beb6-9851050387cf": { "chain": "invoice_date", "type": "date" },
+                "8051befe-619f-4fe7-b788-d34584297bad": { "chain": "country_id", "type": "many2one" },
+                "17277380-12d8-4a83-b133-3532e5618c43": { "chain": "product_categ_id", "type": "many2one" },
+                "accd0cbe-12c9-4cab-93a1-afa5080dd635": { "chain": "product_id", "type": "many2one" },
+                "02acc7f7-b282-4ce9-bf38-6abfb72be6aa": { "chain": "invoice_user_id", "type": "many2one" }
+              }
+            },
+            "title": {
+              "text": "Top Categories",
+              "fontSize": 21,
+              "color": "#01666B",
+              "bold": true
+            }
+          }
         }
       ],
       "tables": [
@@ -692,7 +711,21 @@
       ],
       "id": "1",
       "measures": [
-        { "id": "price_subtotal", "fieldName": "price_subtotal" }
+        {
+          "id": "price_subtotal",
+          "fieldName": "price_subtotal",
+          "userDefinedName": "Amount"
+        },
+        {
+          "id": "Ratio:sum",
+          "fieldName": "Ratio",
+          "aggregator": "sum",
+          "userDefinedName": "Ratio",
+          "computedBy": {
+            "sheetId": "a7cd7db1-9407-4895-82f2-7657102c7688",
+            "formula": "=iferror(if(price_subtotal, price_subtotal/PIVOT.VALUE(1, \"price_subtotal\"), \"\"), \"\")"
+          }
+        }
       ],
       "model": "account.invoice.report",
       "name": "Top Categories",
@@ -736,10 +769,24 @@
       ],
       "id": "2",
       "measures": [
-        { "id": "price_subtotal", "fieldName": "price_subtotal" }
+        {
+          "id": "price_subtotal",
+          "fieldName": "price_subtotal",
+          "userDefinedName": "Amount"
+        },
+        {
+          "id": "Ratio:sum",
+          "fieldName": "Ratio",
+          "aggregator": "sum",
+          "userDefinedName": "Ratio",
+          "computedBy": {
+            "sheetId": "a7cd7db1-9407-4895-82f2-7657102c7688",
+            "formula": "=iferror(if(price_subtotal, price_subtotal/PIVOT.VALUE(2, \"price_subtotal\"), \"\"), \"\")"
+          }
+        }
       ],
       "model": "account.invoice.report",
-      "name": "Top Countries",
+      "name": "Country",
       "sortedColumn": {
         "measure": "price_subtotal",
         "order": "desc",
@@ -780,10 +827,24 @@
       ],
       "id": "3",
       "measures": [
-        { "id": "price_subtotal", "fieldName": "price_subtotal" }
+        {
+          "id": "price_subtotal",
+          "fieldName": "price_subtotal",
+          "userDefinedName": "Amount"
+        },
+        {
+          "id": "Ratio:sum",
+          "fieldName": "Ratio",
+          "aggregator": "sum",
+          "userDefinedName": "Ratio",
+          "computedBy": {
+            "sheetId": "a7cd7db1-9407-4895-82f2-7657102c7688",
+            "formula": "=iferror(if(price_subtotal, price_subtotal/PIVOT.VALUE(3, \"price_subtotal\"), \"\"))"
+          }
+        }
       ],
       "model": "account.invoice.report",
-      "name": "Top Products",
+      "name": "Product",
       "sortedColumn": {
         "measure": "price_subtotal",
         "order": "desc",
@@ -824,10 +885,24 @@
       ],
       "id": "4",
       "measures": [
-        { "id": "price_subtotal", "fieldName": "price_subtotal" }
+        {
+          "id": "price_subtotal",
+          "fieldName": "price_subtotal",
+          "userDefinedName": "Amount"
+        },
+        {
+          "id": "Ratio:sum",
+          "fieldName": "Ratio",
+          "aggregator": "sum",
+          "userDefinedName": "Ratio",
+          "computedBy": {
+            "sheetId": "a7cd7db1-9407-4895-82f2-7657102c7688",
+            "formula": "=iferror(if(price_subtotal, price_subtotal/PIVOT.VALUE(4, \"price_subtotal\"), \"\"), \"\")"
+          }
+        }
       ],
       "model": "account.invoice.report",
-      "name": "Top Salespeople",
+      "name": "Salesperson",
       "sortedColumn": {
         "measure": "price_subtotal",
         "order": "desc",

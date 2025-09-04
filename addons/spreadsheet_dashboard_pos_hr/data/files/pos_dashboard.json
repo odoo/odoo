@@ -1,5 +1,5 @@
 {
-  "version": "18.4.14",
+  "version": "18.5.10",
   "sheets": [
     {
       "id": "sheet1",
@@ -82,52 +82,8 @@
         "A34": "=ODOO.LIST(1,9,\"session_id\")",
         "A35": "=ODOO.LIST(1,10,\"session_id\")",
         "A37": "[Top Sessions](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[],\"context\":{\"group_by\":[\"session_id\"],\"pivot_measures\":[\"order_id\",\"price_total\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"session_id\"]},\"modelName\":\"report.pos.order\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Orders Analysis\"})",
-        "A38": "=_t(\"Session\")",
-        "A39": "=PIVOT.HEADER(1,\"#session_id\",1)",
-        "A40": "=PIVOT.HEADER(1,\"#session_id\",2)",
-        "A41": "=PIVOT.HEADER(1,\"#session_id\",3)",
-        "A42": "=PIVOT.HEADER(1,\"#session_id\",4)",
-        "A43": "=PIVOT.HEADER(1,\"#session_id\",5)",
-        "A44": "=PIVOT.HEADER(1,\"#session_id\",6)",
-        "A45": "=PIVOT.HEADER(1,\"#session_id\",7)",
-        "A46": "=PIVOT.HEADER(1,\"#session_id\",8)",
-        "A47": "=PIVOT.HEADER(1,\"#session_id\",9)",
-        "A48": "=PIVOT.HEADER(1,\"#session_id\",10)",
         "A50": "[Top Responsibles](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[[\"user_id\",\"!=\",false]],\"context\":{\"group_by\":[\"user_id\"],\"pivot_measures\":[\"order_id\",\"price_total\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"user_id\"]},\"modelName\":\"report.pos.order\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Orders Analysis\"})",
-        "A51": "=_t(\"Responsible\")",
-        "A52": "=PIVOT.HEADER(3,\"#user_id\",1)",
-        "A53": "=PIVOT.HEADER(3,\"#user_id\",2)",
-        "A54": "=PIVOT.HEADER(3,\"#user_id\",3)",
-        "A55": "=PIVOT.HEADER(3,\"#user_id\",4)",
-        "A56": "=PIVOT.HEADER(3,\"#user_id\",5)",
-        "A57": "=PIVOT.HEADER(3,\"#user_id\",6)",
-        "A58": "=PIVOT.HEADER(3,\"#user_id\",7)",
-        "A59": "=PIVOT.HEADER(3,\"#user_id\",8)",
-        "A60": "=PIVOT.HEADER(3,\"#user_id\",9)",
-        "A61": "=PIVOT.HEADER(3,\"#user_id\",10)",
-        "B38": "=_t(\"Orders\")",
-        "B39": "=PIVOT.VALUE(1,\"order_id\",\"#session_id\",1)",
-        "B40": "=PIVOT.VALUE(1,\"order_id\",\"#session_id\",2)",
-        "B41": "=PIVOT.VALUE(1,\"order_id\",\"#session_id\",3)",
-        "B42": "=PIVOT.VALUE(1,\"order_id\",\"#session_id\",4)",
-        "B43": "=PIVOT.VALUE(1,\"order_id\",\"#session_id\",5)",
-        "B44": "=PIVOT.VALUE(1,\"order_id\",\"#session_id\",6)",
-        "B45": "=PIVOT.VALUE(1,\"order_id\",\"#session_id\",7)",
-        "B46": "=PIVOT.VALUE(1,\"order_id\",\"#session_id\",8)",
-        "B47": "=PIVOT.VALUE(1,\"order_id\",\"#session_id\",9)",
-        "B48": "=PIVOT.VALUE(1,\"order_id\",\"#session_id\",10)",
-        "B51": "=_t(\"Orders\")",
-        "B52": "=PIVOT.VALUE(3,\"order_id\",\"#user_id\",1)",
-        "B53": "=PIVOT.VALUE(3,\"order_id\",\"#user_id\",2)",
-        "B54": "=PIVOT.VALUE(3,\"order_id\",\"#user_id\",3)",
-        "B55": "=PIVOT.VALUE(3,\"order_id\",\"#user_id\",4)",
-        "B56": "=PIVOT.VALUE(3,\"order_id\",\"#user_id\",5)",
-        "B57": "=PIVOT.VALUE(3,\"order_id\",\"#user_id\",6)",
-        "B58": "=PIVOT.VALUE(3,\"order_id\",\"#user_id\",7)",
-        "B59": "=PIVOT.VALUE(3,\"order_id\",\"#user_id\",8)",
-        "B60": "=PIVOT.VALUE(3,\"order_id\",\"#user_id\",9)",
-        "B61": "=PIVOT.VALUE(3,\"order_id\",\"#user_id\",10)",
-        "C25": "=ODOO.LIST.HEADER(1, \"date_order\", _t(\"Date\"))",
+        "C25": "=ODOO.LIST.HEADER(1, \"date_order\")",
         "C26": "=ODOO.LIST(1,1,\"date_order\")",
         "C27": "=ODOO.LIST(1,2,\"date_order\")",
         "C28": "=ODOO.LIST(1,3,\"date_order\")",
@@ -138,29 +94,7 @@
         "C33": "=ODOO.LIST(1,8,\"date_order\")",
         "C34": "=ODOO.LIST(1,9,\"date_order\")",
         "C35": "=ODOO.LIST(1,10,\"date_order\")",
-        "C38": "=_t(\"Revenue\")",
-        "C39": "=PIVOT.VALUE(1,\"price_total\",\"#session_id\",1)",
-        "C40": "=PIVOT.VALUE(1,\"price_total\",\"#session_id\",2)",
-        "C41": "=PIVOT.VALUE(1,\"price_total\",\"#session_id\",3)",
-        "C42": "=PIVOT.VALUE(1,\"price_total\",\"#session_id\",4)",
-        "C43": "=PIVOT.VALUE(1,\"price_total\",\"#session_id\",5)",
-        "C44": "=PIVOT.VALUE(1,\"price_total\",\"#session_id\",6)",
-        "C45": "=PIVOT.VALUE(1,\"price_total\",\"#session_id\",7)",
-        "C46": "=PIVOT.VALUE(1,\"price_total\",\"#session_id\",8)",
-        "C47": "=PIVOT.VALUE(1,\"price_total\",\"#session_id\",9)",
-        "C48": "=PIVOT.VALUE(1,\"price_total\",\"#session_id\",10)",
-        "C51": "=_t(\"Revenue\")",
-        "C52": "=PIVOT.VALUE(3,\"price_total\",\"#user_id\",1)",
-        "C53": "=PIVOT.VALUE(3,\"price_total\",\"#user_id\",2)",
-        "C54": "=PIVOT.VALUE(3,\"price_total\",\"#user_id\",3)",
-        "C55": "=PIVOT.VALUE(3,\"price_total\",\"#user_id\",4)",
-        "C56": "=PIVOT.VALUE(3,\"price_total\",\"#user_id\",5)",
-        "C57": "=PIVOT.VALUE(3,\"price_total\",\"#user_id\",6)",
-        "C58": "=PIVOT.VALUE(3,\"price_total\",\"#user_id\",7)",
-        "C59": "=PIVOT.VALUE(3,\"price_total\",\"#user_id\",8)",
-        "C60": "=PIVOT.VALUE(3,\"price_total\",\"#user_id\",9)",
-        "C61": "=PIVOT.VALUE(3,\"price_total\",\"#user_id\",10)",
-        "D25": "=ODOO.LIST.HEADER(1, \"config_id\", _t(\"Point of Sale\"))",
+        "D25": "=ODOO.LIST.HEADER(1, \"config_id\")",
         "D26": "=ODOO.LIST(1,1,\"config_id\")",
         "D27": "=ODOO.LIST(1,2,\"config_id\")",
         "D28": "=ODOO.LIST(1,3,\"config_id\")",
@@ -182,31 +116,8 @@
         "E33": "=ODOO.LIST(1,8,\"employee_id\")",
         "E34": "=ODOO.LIST(1,9,\"employee_id\")",
         "E35": "=ODOO.LIST(1,10,\"employee_id\")",
-        "E37": "[Top Points of Sale](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[],\"context\":{\"group_by\":[\"config_id\"],\"pivot_measures\":[\"order_id\",\"price_total\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"config_id\"]},\"modelName\":\"report.pos.order\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Orders Analysis\"})",
-        "E38": "=_t(\"Point of Sale\")",
-        "E39": "=PIVOT.HEADER(2,\"#config_id\",1)",
-        "E40": "=PIVOT.HEADER(2,\"#config_id\",2)",
-        "E41": "=PIVOT.HEADER(2,\"#config_id\",3)",
-        "E42": "=PIVOT.HEADER(2,\"#config_id\",4)",
-        "E43": "=PIVOT.HEADER(2,\"#config_id\",5)",
-        "E44": "=PIVOT.HEADER(2,\"#config_id\",6)",
-        "E45": "=PIVOT.HEADER(2,\"#config_id\",7)",
-        "E46": "=PIVOT.HEADER(2,\"#config_id\",8)",
-        "E47": "=PIVOT.HEADER(2,\"#config_id\",9)",
-        "E48": "=PIVOT.HEADER(2,\"#config_id\",10)",
         "E50": "[Top Products](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[[\"product_id\",\"!=\",false]],\"context\":{\"group_by\":[\"product_id\"],\"pivot_measures\":[\"order_id\",\"price_total\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"product_id\"]},\"modelName\":\"report.pos.order\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Orders Analysis\"})",
-        "E51": "=_t(\"Product\")",
-        "E52": "=PIVOT.HEADER(4,\"#product_id\",1)",
-        "E53": "=PIVOT.HEADER(4,\"#product_id\",2)",
-        "E54": "=PIVOT.HEADER(4,\"#product_id\",3)",
-        "E55": "=PIVOT.HEADER(4,\"#product_id\",4)",
-        "E56": "=PIVOT.HEADER(4,\"#product_id\",5)",
-        "E57": "=PIVOT.HEADER(4,\"#product_id\",6)",
-        "E58": "=PIVOT.HEADER(4,\"#product_id\",7)",
-        "E59": "=PIVOT.HEADER(4,\"#product_id\",8)",
-        "E60": "=PIVOT.HEADER(4,\"#product_id\",9)",
-        "E61": "=PIVOT.HEADER(4,\"#product_id\",10)",
-        "F25": "=ODOO.LIST.HEADER(1, \"partner_id\", _t(\"Customer\"))",
+        "F25": "=ODOO.LIST.HEADER(1, \"partner_id\")",
         "F26": "=ODOO.LIST(1,1,\"partner_id\")",
         "F27": "=ODOO.LIST(1,2,\"partner_id\")",
         "F28": "=ODOO.LIST(1,3,\"partner_id\")",
@@ -217,29 +128,7 @@
         "F33": "=ODOO.LIST(1,8,\"partner_id\")",
         "F34": "=ODOO.LIST(1,9,\"partner_id\")",
         "F35": "=ODOO.LIST(1,10,\"partner_id\")",
-        "F38": "=_t(\"Orders\")",
-        "F39": "=PIVOT.VALUE(2,\"order_id\",\"#config_id\",1)",
-        "F40": "=PIVOT.VALUE(2,\"order_id\",\"#config_id\",2)",
-        "F41": "=PIVOT.VALUE(2,\"order_id\",\"#config_id\",3)",
-        "F42": "=PIVOT.VALUE(2,\"order_id\",\"#config_id\",4)",
-        "F43": "=PIVOT.VALUE(2,\"order_id\",\"#config_id\",5)",
-        "F44": "=PIVOT.VALUE(2,\"order_id\",\"#config_id\",6)",
-        "F45": "=PIVOT.VALUE(2,\"order_id\",\"#config_id\",7)",
-        "F46": "=PIVOT.VALUE(2,\"order_id\",\"#config_id\",8)",
-        "F47": "=PIVOT.VALUE(2,\"order_id\",\"#config_id\",9)",
-        "F48": "=PIVOT.VALUE(2,\"order_id\",\"#config_id\",10)",
-        "F51": "=_t(\"Orders\")",
-        "F52": "=PIVOT.VALUE(4,\"order_id\",\"#product_id\",1)",
-        "F53": "=PIVOT.VALUE(4,\"order_id\",\"#product_id\",2)",
-        "F54": "=PIVOT.VALUE(4,\"order_id\",\"#product_id\",3)",
-        "F55": "=PIVOT.VALUE(4,\"order_id\",\"#product_id\",4)",
-        "F56": "=PIVOT.VALUE(4,\"order_id\",\"#product_id\",5)",
-        "F57": "=PIVOT.VALUE(4,\"order_id\",\"#product_id\",6)",
-        "F58": "=PIVOT.VALUE(4,\"order_id\",\"#product_id\",7)",
-        "F59": "=PIVOT.VALUE(4,\"order_id\",\"#product_id\",8)",
-        "F60": "=PIVOT.VALUE(4,\"order_id\",\"#product_id\",9)",
-        "F61": "=PIVOT.VALUE(4,\"order_id\",\"#product_id\",10)",
-        "G25": "=ODOO.LIST.HEADER(1, \"amount_total\", _t(\"Total\"))",
+        "G25": "=ODOO.LIST.HEADER(1, \"amount_total\")",
         "G26": "=ODOO.LIST(1,1,\"amount_total\")",
         "G27": "=ODOO.LIST(1,2,\"amount_total\")",
         "G28": "=ODOO.LIST(1,3,\"amount_total\")",
@@ -250,28 +139,10 @@
         "G33": "=ODOO.LIST(1,8,\"amount_total\")",
         "G34": "=ODOO.LIST(1,9,\"amount_total\")",
         "G35": "=ODOO.LIST(1,10,\"amount_total\")",
-        "G38": "=_t(\"Revenue\")",
-        "G39": "=PIVOT.VALUE(2,\"price_total\",\"#config_id\",1)",
-        "G40": "=PIVOT.VALUE(2,\"price_total\",\"#config_id\",2)",
-        "G41": "=PIVOT.VALUE(2,\"price_total\",\"#config_id\",3)",
-        "G42": "=PIVOT.VALUE(2,\"price_total\",\"#config_id\",4)",
-        "G43": "=PIVOT.VALUE(2,\"price_total\",\"#config_id\",5)",
-        "G44": "=PIVOT.VALUE(2,\"price_total\",\"#config_id\",6)",
-        "G45": "=PIVOT.VALUE(2,\"price_total\",\"#config_id\",7)",
-        "G46": "=PIVOT.VALUE(2,\"price_total\",\"#config_id\",8)",
-        "G47": "=PIVOT.VALUE(2,\"price_total\",\"#config_id\",9)",
-        "G48": "=PIVOT.VALUE(2,\"price_total\",\"#config_id\",10)",
-        "G51": "=_t(\"Revenue\")",
-        "G52": "=PIVOT.VALUE(4,\"price_total\",\"#product_id\",1)",
-        "G53": "=PIVOT.VALUE(4,\"price_total\",\"#product_id\",2)",
-        "G54": "=PIVOT.VALUE(4,\"price_total\",\"#product_id\",3)",
-        "G55": "=PIVOT.VALUE(4,\"price_total\",\"#product_id\",4)",
-        "G56": "=PIVOT.VALUE(4,\"price_total\",\"#product_id\",5)",
-        "G57": "=PIVOT.VALUE(4,\"price_total\",\"#product_id\",6)",
-        "G58": "=PIVOT.VALUE(4,\"price_total\",\"#product_id\",7)",
-        "G59": "=PIVOT.VALUE(4,\"price_total\",\"#product_id\",8)",
-        "G60": "=PIVOT.VALUE(4,\"price_total\",\"#product_id\",9)",
-        "G61": "=PIVOT.VALUE(4,\"price_total\",\"#product_id\",10)"
+        "A38": "=PIVOT(1, 10, FALSE, FALSE)",
+        "A51": "=PIVOT(3, 10, FALSE, FALSE)",
+        "E38": "=PIVOT(2, 10, FALSE, FALSE)",
+        "E51": "=PIVOT(4, 10, FALSE, FALSE)"
       },
       "styles": {
         "A7": 1,
@@ -375,7 +246,8 @@
             "baseline": "Data!E2",
             "baselineDescr": { "text": "since last period" },
             "keyValue": "Data!D2",
-            "humanize": false
+            "humanize": false,
+            "chartId": "cfee1ef1-ac54-4e9f-bdde-0162652de2cf"
           },
           "offset": { "x": 0, "y": 9 },
           "col": 0,
@@ -396,7 +268,8 @@
             "baseline": "Data!E3",
             "baselineDescr": { "text": "since last period" },
             "keyValue": "Data!D3",
-            "humanize": false
+            "humanize": false,
+            "chartId": "d141cc35-0b60-4e91-b736-5c1453fea925"
           },
           "offset": { "x": 217, "y": 9 },
           "col": 0,
@@ -417,7 +290,8 @@
             "baseline": "Data!E4",
             "baselineDescr": { "text": "since last period" },
             "keyValue": "Data!D4",
-            "humanize": false
+            "humanize": false,
+            "chartId": "615fb94e-8098-456e-9f71-7799b82f04c4"
           },
           "offset": { "x": 426, "y": 9 },
           "col": 0,
@@ -456,11 +330,19 @@
               "orderBy": []
             },
             "type": "odoo_line",
-            "dataSets": [],
+            "dataSets": [
+              {}
+            ],
             "verticalAxisPosition": "left",
             "stacked": false,
             "cumulatedStart": false,
+            "axesDesign": {
+              "y": {
+                "title": { "text": "Orders" }
+              }
+            },
             "fillArea": true,
+            "chartId": "e012bf45-55dc-4c46-b069-bc090a467d73",
             "fieldMatching": {
               "ff0e1a26-3d4c-48b6-85a6-2777b522bb52": { "chain": "date", "type": "datetime", "offset": 0 },
               "b2ea6617-2767-4a88-bb69-ca205c8d8ff8": { "chain": "session_id", "type": "many2one" },
@@ -472,6 +354,63 @@
           "offset": { "x": 0, "y": 178 },
           "col": 0,
           "row": 0
+        },
+        {
+          "id": "1af57ebe-c6ef",
+          "col": 3,
+          "row": 36,
+          "offset": { "x": 98, "y": 7 },
+          "width": 452,
+          "height": 365,
+          "tag": "carousel",
+          "data": {
+            "chartDefinitions": {
+              "5b457a5e-a023": {
+                "title": {},
+                "background": "#FFFFFF",
+                "legendPosition": "top",
+                "metaData": {
+                  "groupBy": ["config_id"],
+                  "measure": "price_total",
+                  "order": null,
+                  "resModel": "report.pos.order",
+                  "mode": "bar"
+                },
+                "searchParams": {
+                  "context": {
+                    "group_by": []
+                  },
+                  "domain": [
+                    ["state", "!=", "cancel"]
+                  ],
+                  "groupBy": ["config_id"],
+                  "orderBy": []
+                },
+                "type": "odoo_sunburst",
+                "actionXmlId": "point_of_sale.action_report_pos_order_all",
+                "dataSets": []
+              }
+            },
+            "items": [
+              { "type": "chart", "chartId": "5b457a5e-a023", "title": "Sunburst" },
+              { "type": "carouselDataView", "title": "Top 10" }
+            ],
+            "fieldMatching": {
+              "5b457a5e-a023": {
+                "ff0e1a26-3d4c-48b6-85a6-2777b522bb52": { "chain": "date", "type": "datetime" },
+                "b2ea6617-2767-4a88-bb69-ca205c8d8ff8": { "chain": "session_id", "type": "many2one" },
+                "c63f2c18-e213-4d37-bbee-f72eed4f6a81": { "chain": "config_id", "type": "many2one" },
+                "67147662-1091-4723-a818-6ce393d39ef8": { "chain": "user_id", "type": "many2one" },
+                "9508017b-f441-4787-8339-40bdc1af3b46": { "chain": "product_tmpl_id", "type": "many2one" }
+              }
+            },
+            "title": {
+              "text": "Top Points of Sale",
+              "fontSize": 21,
+              "color": "#01666B",
+              "bold": true
+            }
+          }
         }
       ],
       "tables": [
@@ -676,11 +615,15 @@
       ],
       "id": "1",
       "measures": [
-        { "id": "order_id", "fieldName": "order_id" },
-        { "id": "price_total", "fieldName": "price_total" }
+        { "id": "order_id", "fieldName": "order_id", "userDefinedName": "Orders" },
+        {
+          "id": "price_total",
+          "fieldName": "price_total",
+          "userDefinedName": "Revenue"
+        }
       ],
       "model": "report.pos.order",
-      "name": "Point of Sale Analysis by Session",
+      "name": "Session",
       "sortedColumn": {
         "measure": "price_total",
         "order": "desc",
@@ -713,11 +656,15 @@
       ],
       "id": "2",
       "measures": [
-        { "id": "order_id", "fieldName": "order_id" },
-        { "id": "price_total", "fieldName": "price_total" }
+        { "id": "order_id", "fieldName": "order_id", "userDefinedName": "Orders" },
+        {
+          "id": "price_total",
+          "fieldName": "price_total",
+          "userDefinedName": "Revenue"
+        }
       ],
       "model": "report.pos.order",
-      "name": "Point of Sale Analysis by Point of Sale",
+      "name": "Point of Sale",
       "sortedColumn": {
         "measure": "price_total",
         "order": "desc",
@@ -752,11 +699,15 @@
       ],
       "id": "3",
       "measures": [
-        { "id": "order_id", "fieldName": "order_id" },
-        { "id": "price_total", "fieldName": "price_total" }
+        { "id": "order_id", "fieldName": "order_id", "userDefinedName": "Orders" },
+        {
+          "id": "price_total",
+          "fieldName": "price_total",
+          "userDefinedName": "Revenue"
+        }
       ],
       "model": "report.pos.order",
-      "name": "Point of Sale Analysis by User",
+      "name": "Responsible",
       "sortedColumn": {
         "measure": "price_total",
         "order": "desc",
@@ -791,11 +742,15 @@
       ],
       "id": "4",
       "measures": [
-        { "id": "order_id", "fieldName": "order_id" },
-        { "id": "price_total", "fieldName": "price_total" }
+        { "id": "order_id", "fieldName": "order_id", "userDefinedName": "Orders" },
+        {
+          "id": "price_total",
+          "fieldName": "price_total",
+          "userDefinedName": "Revenue"
+        }
       ],
       "model": "report.pos.order",
-      "name": "Point of Sale Analysis by Product",
+      "name": "Product",
       "sortedColumn": {
         "measure": "price_total",
         "order": "desc",
@@ -934,7 +889,9 @@
       ],
       "id": "1",
       "name": "Orders by Total",
-      "fieldMatching": {}
+      "fieldMatching": {
+        "ff0e1a26-3d4c-48b6-85a6-2777b522bb52": { "offset": 0 }
+      }
     }
   },
   "listNextId": 2,
