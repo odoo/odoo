@@ -1,9 +1,9 @@
-import { KanbanHeader } from "@web/views/kanban/kanban_header";
+import { RottingKanbanHeader } from "@mail/js/rotting_mixin/rotting_kanban_header";
 import { ProjectTaskGroupConfigMenu } from "./project_task_group_config_menu";
 
-export class ProjectTaskKanbanHeader extends KanbanHeader {
+export class ProjectTaskKanbanHeader extends RottingKanbanHeader {
     static components = {
-        ...KanbanHeader.components,
+        ...RottingKanbanHeader.components,
         GroupConfigMenu: ProjectTaskGroupConfigMenu,
     };
 }

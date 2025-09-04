@@ -24,6 +24,7 @@
                 <list string="Stages">
                     <field name="sequence" widget="handle"/>
                     <field name="name"/>
+                    <field name="rotting_threshold_days" optional="hide"/>
                     <field name="fold"/>
                     <field name="hired_stage"/>
                 </list>
@@ -73,6 +74,7 @@
                                 </span>
                             </span>
                             <field name="job_ids" widget="many2many_tags"/>
+                            <field name="rotting_threshold_days" invisible="hired_stage"/>
                         </group>
                     </group>
                     <group name="tooltips" string="Tooltips">
