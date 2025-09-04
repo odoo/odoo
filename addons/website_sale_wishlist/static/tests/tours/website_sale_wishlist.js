@@ -2,7 +2,6 @@ import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 
 registry.category("web_tour.tours").add('shop_wishlist', {
-    url: '/shop?search=Customizable Desk',
     steps: () => [
         {
             content: "hover card && click on add to wishlist",
@@ -20,7 +19,14 @@ registry.category("web_tour.tours").add('shop_wishlist', {
         },
         {
             content: "remove first item in whishlist",
-            trigger: '.o_wish_rm:first',
+            trigger: ".o_wish_rm:first",
+            run: "click",
+        },
+        {
+            trigger: ".container:contains(Your wishlist is empty!)",
+        },
+        {
+            trigger: "a[href='/shop']",
             run: "click",
             expectUnloadPage: true,
         },
@@ -104,7 +110,7 @@ registry.category("web_tour.tours").add('shop_wishlist', {
         },
         {
             content: "Clicking on the Continue Shopping",
-            trigger: "button:contains(\"Continue Shopping\")",
+            trigger: ".modal button:contains(add to cart)",
             run: "click",
             expectUnloadPage: true,
         },
@@ -202,6 +208,9 @@ registry.category("web_tour.tours").add('shop_wishlist', {
             run: "click",
         },
         {
+            trigger: ".my_wish_quantity:contains(2)",
+        },
+        {
             content: "Select Bottle with third variant from /product",
             trigger: "input.js_variant_change[data-value_name=black]:not(:visible)",
             run: "click",
@@ -217,9 +226,10 @@ registry.category("web_tour.tours").add('shop_wishlist', {
         {
             content: "Check that wishlist contains 3 items and go to wishlist",
             trigger: '.my_wish_quantity:contains(3)',
-            run: function () {
-                window.location.href = '/shop/wishlist';
-            },
+        },
+        {
+            trigger: "a[href='/shop/wishlist']",
+            run: "click",
             expectUnloadPage: true,
         },
         {
@@ -233,9 +243,10 @@ registry.category("web_tour.tours").add('shop_wishlist', {
         {
             content: "Check wishlist contains third variant, then go to login",
             trigger: '#o_comparelist_table .oe_product_cart a:contains("black")',
-            run: function () {
-                window.location.href = "/web/login";
-            },
+        },
+        {
+            trigger: "a[href='/web/login']",
+            run: "click",
             expectUnloadPage: true,
         },
         {
@@ -309,9 +320,10 @@ registry.category("web_tour.tours").add('shop_wishlist', {
         {
             content: "Check product added to wishlist and go to login",
             trigger: '.my_wish_quantity:contains(1)',
-            run: function () {
-                window.location.href = "/web/login";
-            },
+        },
+        {
+            trigger: "a[href='/web/login']",
+            run: "click",
             expectUnloadPage: true,
         },
         {
@@ -351,9 +363,6 @@ registry.category("web_tour.tours").add('shop_wishlist', {
             expectUnloadPage: true,
         },
         {
-            trigger: ".js_sale",
-        },
-        {
             content: "Check that there is no wishlist button from /shop",
             trigger: '.oe_product_cart:contains("Bottle"):not(:has(.o_add_wishlist))',
         },
@@ -371,9 +380,7 @@ registry.category("web_tour.tours").add('shop_wishlist', {
         {
             content: "Go to '/shop?search=Customizable Desk'",
             trigger: 'body',
-            run: function () {
-                window.location.href = '/shop?search=Customizable Desk '
-            },
+            run: "goToUrl /shop?search=Customizable Desk",
             expectUnloadPage: true,
         },
         {
@@ -399,13 +406,8 @@ registry.category("web_tour.tours").add('shop_wishlist', {
         },
         {
             content: "Search the product Customizable Desk'",
-            trigger: 'form.o_wsale_products_searchbar_form input',
-            run: function () {
-                document.querySelector(
-                    'form.o_wsale_products_searchbar_form input[name="search"]'
-                ).value = "Customizable Desk";
-                document.querySelector("form.o_wsale_products_searchbar_form button").click();
-            },
+            trigger: 'form.o_wsale_products_searchbar_form input[name="search"]',
+            run: "edit Customizable Desk && press Enter",
             expectUnloadPage: true,
         },
         {
@@ -422,17 +424,19 @@ registry.category("web_tour.tours").add('shop_wishlist', {
             content: "Remove the product from the wishlist",
             trigger: '.o_wish_rm',
             run: "click",
+        },
+        {
+            trigger: ".container:contains(Your wishlist is empty!)",
+        },
+        {
+            trigger: "a[href='/shop']",
+            run: "click",
             expectUnloadPage: true,
         },
         {
             content: "Search the product Customizable Desk'",
-            trigger: 'form.o_wsale_products_searchbar_form input',
-            run: function () {
-                document.querySelector(
-                    'form.o_wsale_products_searchbar_form input[name="search"]'
-                ).value = "Customizable Desk";
-                document.querySelector("form.o_wsale_products_searchbar_form button").click();
-            },
+            trigger: 'form.o_wsale_products_searchbar_form input[name="search"]',
+            run: "edit Customizable Desk && press Enter",
             expectUnloadPage: true,
         },
         {
