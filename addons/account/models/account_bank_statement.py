@@ -28,7 +28,7 @@ class AccountBankStatement(models.Model):
 
     date = fields.Date(
         compute='_compute_date_index', store=True,
-        index=True,
+        index=True, readonly=False
     )
 
     # The internal index of the first line of a statement, it is used for sorting the statements
