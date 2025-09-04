@@ -1,5 +1,5 @@
+import { AddProductOption } from "@html_builder/plugins/add_product_option";
 import { Plugin } from "@html_editor/plugin";
-import { AddProductOption } from "../options/add_product_option";
 import { withSequence } from "@html_editor/utils/resource";
 import { BEGIN } from "@html_builder/utils/option_sequence";
 import { registry } from "@web/core/registry";
