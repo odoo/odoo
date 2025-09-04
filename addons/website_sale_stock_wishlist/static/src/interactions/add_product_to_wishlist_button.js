@@ -3,8 +3,6 @@ import {
     AddProductToWishlistButton
 } from '@website_sale_wishlist/interactions/add_product_to_wishlist_button';
 
-// TODO(loti): this doesn't work since interactions aren't restarted when the "save for later"
-// button is appended to the template. It will be fixed once the variant mixin has been removed.
 patch(AddProductToWishlistButton.prototype, {
     /**
      * Remove wishlist indication when adding a product to the wishlist.

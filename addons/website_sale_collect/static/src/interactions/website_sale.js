@@ -3,10 +3,12 @@ import { WebsiteSale } from '@website_sale/interactions/website_sale';
 
 patch(WebsiteSale.prototype, {
     /**
-     * Trigger a state update of the ClickAndCollectAvailability component when the combination info
-     * is updated.
+     * Override of `website_sale` to trigger a state update of the ClickAndCollectAvailability
+     * component when the combination info is updated.
      *
-     * @override
+     * @param {Event} ev
+     * @param {Element} parent
+     * @param {Object} combination
      */
     _onChangeCombination(ev, parent, combination) {
         super._onChangeCombination(...arguments);

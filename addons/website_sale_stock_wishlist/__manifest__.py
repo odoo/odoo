@@ -19,11 +19,6 @@ Allow the user to select if he wants to receive email notifications when a produ
             'website_sale_stock_wishlist/static/src/interactions/**/*',
             'website_sale_stock_wishlist/static/src/scss/**/*',
             'website_sale_stock_wishlist/static/src/xml/**/*',
-            (
-                'before',
-                'website_sale/static/src/interactions/website_sale.js',
-                'website_sale_stock_wishlist/static/src/js/variant_mixin.js',
-            ),
         ],
     },
     'auto_install': True,
