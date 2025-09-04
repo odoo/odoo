@@ -603,6 +603,9 @@ export class SurveyForm extends Interaction {
     async nextScreen(nextScreenPromise, options) {
         const selectorsToFadeout = [".o_survey_form_content"];
         if (options.isFinish && !this.nextScreenResult?.has_skipped_questions) {
+            // Fade out the top title
+            document.querySelector('.o_survey_main_title_fade')?.classList.replace("opacity-100", "opacity-0");
+            
             selectorsToFadeout.push(".breadcrumb", ".o_survey_timer");
             cookie.delete(`survey_${this.options.surveyToken}`);
         }
@@ -674,6 +677,11 @@ export class SurveyForm extends Interaction {
             this.el.querySelector(".o_survey_finished")
         ) {
             options.isFinish = true;
+        }
+
+        // Force recompute the title's display condition and fade it in
+        if (this.options.isStartScreen && this.options.questionsLayout !== 'page_per_question') {
+            document.querySelector('.o_survey_main_title_fade')?.classList.replace("opacity-0", "opacity-100");
         }
 
         if (this.options.isStartScreen || (options && options.initTimer)) {
