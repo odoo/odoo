@@ -3,7 +3,6 @@
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.http import request
-from odoo.tools import float_round
 
 
 class ProductProduct(models.Model):
@@ -169,9 +168,16 @@ class ProductProduct(models.Model):
             'image': f'{base_url}{website.image_url(self, "image_1920")}',
             'offers': {
                 '@type': 'Offer',
-                'price': float_round(request.pricelist._get_product_price(
-                    self, quantity=1, target_currency=website.currency_id
-                ), 2),
+                'price': website.currency_id.round(
+                    request.pricelist._get_product_price(
+                        self,
+                        quantity=1,
+                        target_currency=website.currency_id,
+                        apply_taxes=True,
+                        website=website,
+                        fiscal_position=request.fiscal_position._value,
+                    ),
+                ),
                 'priceCurrency': website.currency_id.name,
             },
         }

@@ -59,6 +59,32 @@ class TestWebsiteSaleProductTemplate(WebsiteSaleCommon):
             markup_data = product_template._to_markup_data(self.website)
         self.assertEqual(markup_data['@type'], 'Product')
 
+    def test_markup_data_uses_taxes_excluded_price_when_configured_on_website(self):
+        self.env['res.config.settings'].create({
+            'show_line_subtotals_tax_selection': 'tax_excluded'
+        }).execute()
+        with MockRequest(self.website.env, website=self.website):
+            markup_data = self.product._to_markup_data(self.website)
+            self.assertEqual(
+                markup_data['offers']['price'],
+                self.website.currency_id.round(self.product.base_unit_price),
+            )
+
+    def test_markup_data_uses_taxes_included_price_when_configured_on_website(self):
+        self.env['res.config.settings'].create({
+            'show_line_subtotals_tax_selection': 'tax_included'
+        }).execute()
+        self.product.price_extra = 10
+        with MockRequest(self.website.env, website=self.website):
+            product_tmpl = self.product.product_tmpl_id
+            markup_data = self.product._to_markup_data(self.website)
+            self.assertEqual(
+                markup_data['offers']['price'],
+                self.website.currency_id.round(
+                    self.product.base_unit_price * (1 + product_tmpl.taxes_id[0].amount / 100)
+                ),
+            )
+
     def test_remove_archived_products_from_cart(self):
         """Archived products shouldn't appear in carts"""
         self.product.action_archive()
