@@ -2,6 +2,7 @@ import { loadPDFJSAssets } from "@web/core/utils/pdfjs";
 
 export async function generatePdfThumbnail(pdfUrl, options = { height: 256, width: 256 }) {
     let initialWorkerSrc = false,
+        isPdfValid,
         pdf,
         thumbnail;
     try {
@@ -23,7 +24,9 @@ export async function generatePdfThumbnail(pdfUrl, options = { height: 256, widt
             pdf = await globalThis.pdfjsLib.getDocument(pdfUrl).promise;
         }
     } catch (_error) {
-        if (
+        if (_error.status === 415) {
+            isPdfValid = false;
+        } else if (
             _error.name !== "UnexpectedResponseException" &&
             _error.status &&
             _error.status !== 403
@@ -35,6 +38,7 @@ export async function generatePdfThumbnail(pdfUrl, options = { height: 256, widt
         globalThis.pdfjsLib.GlobalWorkerOptions.workerSrc = initialWorkerSrc;
     }
     if (pdf) {
+        isPdfValid = true;
         const page = await pdf.getPage(1);
         // Render first page onto a canvas
         const viewPort = page.getViewport({ scale: 1 });
@@ -48,5 +52,5 @@ export async function generatePdfThumbnail(pdfUrl, options = { height: 256, widt
         }).promise;
         thumbnail = canvas.toDataURL("image/jpeg").replace("data:image/jpeg;base64,", "");
     }
-    return { thumbnail, pdfEnabled: true };
+    return { isPdfValid, thumbnail, pdfEnabled: true };
 }
