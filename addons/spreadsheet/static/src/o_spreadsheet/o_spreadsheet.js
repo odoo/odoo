@@ -87600,7 +87600,7 @@ class Model extends EventBus {
     handlers = [];
     uiHandlers = [];
     coreHandlers = [];
-    constructor(data = {}, config = {}, stateUpdateMessages = [], uuidGenerator = new UuidGenerator(), verboseImport = true) {
+    constructor(data = {}, config = {}, stateUpdateMessages = [], uuidGenerator = new UuidGenerator(), verboseImport = false) {
         const start = performance.now();
         console.debug("##### Model creation #####");
         super();
