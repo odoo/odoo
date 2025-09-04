@@ -4,7 +4,7 @@ from odoo import models, fields
 class SmsTwilioNumber(models.Model):
     _name = 'sms.twilio.number'
     _description = 'Twilio Number'
-    _order = 'sequence'
+    _order = 'sequence, id'
 
     company_id = fields.Many2one(
         'res.company', string='Company',
