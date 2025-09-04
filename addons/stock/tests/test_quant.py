@@ -1382,6 +1382,71 @@ class TestStockQuant(TestStockCommon):
             'lot_id': False,
         }])
 
+    def test_quants_search_last_count_date(self):
+        """
+        Test that the 'last_count_date' filter works correctly on stock quants with different operators.
+        """
+        self.storable_product = self.env['product.product'].create({
+            'name': 'Test Product',
+            'type': 'consu',
+            'is_storable': True,
+        })
+        self.product_lot = self.env['product.product'].create({
+            'name': 'Test Lot Product',
+            'type': 'consu',
+            'is_storable': True,
+            'tracking': 'lot',
+        })
+        self.product_serial = self.env['product.product'].create({
+            'name': 'Test Serial Product',
+            'type': 'consu',
+            'is_storable': True,
+            'tracking': 'serial',
+        })
+        self.env['stock.quant']._update_available_quantity(self.storable_product, self.stock_location, 1)
+        products = [self.storable_product, self.product_lot, self.product_serial]
+        lot = self.env['stock.lot'].create({
+            'name': 'LOT-001',
+            'product_id': self.product_lot.id,
+        })
+        serial = self.env['stock.lot'].create({
+            'name': 'SN-001',
+            'product_id': self.product_serial.id,
+        })
+        lots = [False, lot, serial]
+        dates = [datetime.today() + timedelta(days=1), datetime.today() - timedelta(days=1), datetime.today()]
+
+        self.env['stock.quant']._update_available_quantity(self.product_lot, self.stock_location, 1)
+        self.env['stock.quant']._update_available_quantity(self.product_serial, self.stock_location, 1)
+
+        for i in range(len(products)):
+            move = self.env['stock.move'].create({
+                'product_id': products[i].id,
+                'product_uom_qty': 1,
+                'location_id': self.stock_location.id,
+                'location_dest_id': self.stock_location.id,
+                'is_inventory': True,
+            })
+
+            move._action_confirm()
+            move._action_assign()
+            move.picked = True
+            move._action_done()
+            move.move_line_ids.write({
+                'lot_id': lots[i],
+                'date': dates[i],
+            })
+
+        self.env.cr.flush()
+        today = datetime.today().date()
+
+        result_eq = self.env['stock.quant'].search_count([('last_count_date', '=', today)])
+        self.assertEqual(result_eq, 2)
+        result_lt = self.env['stock.quant'].search_count([('last_count_date', '<', today)])
+        self.assertEqual(result_lt, 2)
+        result_gt = self.env['stock.quant'].search_count([('last_count_date', '>', today)])
+        self.assertEqual(result_gt, 1)
+
 
 class TestStockQuantRemovalStrategy(TestStockCommon):
 
