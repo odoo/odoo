@@ -8,7 +8,6 @@
                 <field name="production_id"/>
                 <field name="workcenter_id"/>
                 <field name="product_id"/>
-                <field name="finished_lot_ids"/>
                 <filter string="To Do" name="ready" domain="[('state','=','ready')]"/>
                 <filter string="Blocked" name="blocked" domain="[('state','=','blocked')]"/>
                 <filter string="In Progress" name="progress" domain="[('state','=','progress')]"/>
@@ -77,7 +76,6 @@
                 <field name="product_id" optional="show"/>
                 <field name="qty_remaining" optional="show" string="Quantity"/>
                 <field name="qty_ready" optional="hide" groups="base.group_no_one"/>
-                <field name="finished_lot_ids" optional="hide" string="Lot/Serial"/>
                 <field name="date_start" optional="hide" readonly="state in ['progress', 'done', 'cancel']"/>
                 <field name="date_finished" optional="hide" readonly="state in ['progress', 'done', 'cancel']"/>
                 <field name="duration_expected" widget="float_time" sum="expected duration" readonly="state in ['cancel', 'done']"/>
@@ -155,7 +153,6 @@
                 <field name="company_id" invisible="1"/>
                 <field name="product_tracking" invisible="1"/>
                 <field name="product_id" invisible="1"/>
-                <field name="finished_lot_ids" invisible="1"/>
                 <group>
                     <group>
                         <field name="name" readonly="state in ['cancel', 'done']" force_save="1"/>
@@ -165,7 +162,6 @@
                         <field name="product_id" readonly="1"/>
                         <field name="qty_remaining" string="Quantity" readonly="1" invisible="state == 'done'"/>
                         <field name="qty_produced" string="Produced Quantity" groups="base.group_no_one" readonly="state == 'done' or product_tracking == 'serial'"/>
-                        <field name="finished_lot_ids" readonly="1" widget="many2many_tags" options="{'on_tag_click': 'open_form'}"/>
                     </group>
                 </group>
                 <group>
@@ -271,7 +267,6 @@
                 <field name="workcenter_id"/>
                 <field name="production_id"/>
                 <field name="product_id"/>
-                <field name="finished_lot_ids"/>
                 <field name="product_variant_attributes"/>
                 <field name="move_raw_ids" string="Component" filter_domain="[('move_raw_ids.product_id', 'ilike', self)]"/>
                 <filter string="In Progress" name="progress" domain="[('state', '=', 'progress')]"/>
@@ -361,7 +356,7 @@
                         </div>
                         <footer>
                             <h5>
-                                <field name="product_id"/>, <field name="qty_production" class="ms-1"/> <field name="uom_id" groups="uom.group_uom"/><t t-if="record.finished_lot_ids.value">, </t> <field t-if="record.finished_lot_ids.value" name="finished_lot_ids" class="ms-1"/>
+                                <field name="product_id"/>, <field name="qty_production" class="ms-1"/> <field name="uom_id" groups="uom.group_uom"/>
                             </h5>
                             <div class="o_kanban_workorder_status d-flex ms-auto" t-if="record.state.raw_value == 'progress'">
                                 <span t-if="record.working_state.raw_value != 'blocked' and record.working_user_ids.raw_value.length > 0" class="fa fa-play fs-6" role="img" aria-label="Is running" title="Is running"/>

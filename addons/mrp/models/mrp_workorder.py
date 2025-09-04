@@ -111,10 +111,6 @@ class MrpWorkorder(models.Model):
     move_line_ids = fields.One2many(
         'stock.move.line', 'workorder_id', 'Moves to Track',
         help="Inventory moves for which you must scan a lot number at this work order")
-    finished_lot_ids = fields.Many2many(
-        'stock.lot', string='Lot/Serial Numbers', related='production_id.lot_producing_ids',
-        domain="[('product_id', '=', product_id), ('company_id', '=', company_id)]",
-        readonly=False, check_company=True)
     time_ids = fields.One2many(
         'mrp.workcenter.productivity', 'workorder_id', copy=False)
     is_user_working = fields.Boolean(
@@ -463,13 +459,6 @@ class MrpWorkorder(models.Model):
             domain=[('time_type', 'in', ['leave', 'other'])]
         )
         return interval['hours'] * 60
-
-    @api.onchange('finished_lot_ids')
-    def _onchange_finished_lot_ids(self):
-        if self.production_id:
-            res = self.production_id._can_produce_serial_numbers(sns=self.finished_lot_ids)
-            if res is not True:
-                return res
 
     def write(self, vals):
         values = vals

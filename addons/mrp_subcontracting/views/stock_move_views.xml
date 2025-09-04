@@ -87,7 +87,6 @@
                     <field name="uom_id" invisible="1"/>
                     <field name="product_uom_qty" invisible="1" readonly="state == 'done'"/>
                     <group>
-                        <field name="order_finished_lot_ids"/>
                         <field name="uom_id" groups="uom.group_uom" widget="many2one_uom"/>
                         <field name="quantity" string="Total Consumed" readonly="1"/>
                     </group>
@@ -119,9 +118,6 @@
         <field name="priority">1000</field>
         <field name="inherit_id" ref="mrp_subcontracting_move_form_view" />
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='order_finished_lot_ids']" position="attributes">
-                <attribute name="options">{'no_open': True}</attribute>
-            </xpath>
             <xpath expr="//list" position="attributes">
                 <attribute name="no_open">1</attribute>
             </xpath>
@@ -151,21 +147,9 @@
                 <field name="state" column_invisible="True" force_save="1"/>
                 <field name="raw_material_production_id" column_invisible="True"/>
                 <field name="product_id" required="1" readonly="state == 'done'"/>
-                <field name="order_finished_lot_ids"/>
                 <field name="quantity" string="Consumed" readonly="1"/>
                 <field name="uom_id" groups="uom.group_uom" widget="many2one_uom"/>
             </list>
         </field>
     </record>
-    <record id="view_move_search" model="ir.ui.view">
-        <field name="name">stock.move.search</field>
-        <field name="model">stock.move</field>
-        <field name="inherit_id" ref="stock.view_move_search" />
-        <field name="arch" type="xml">
-            <xpath expr="//field[@name='partner_id']" position="after">
-                <field name="order_finished_lot_ids"/>
-            </xpath>
-        </field>
-    </record>
-
 </odoo>
