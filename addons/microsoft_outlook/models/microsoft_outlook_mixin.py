@@ -15,6 +15,9 @@ from odoo.tools.urls import urljoin as url_join
 
 _logger = logging.getLogger(__name__)
 
+OUTLOOK_TOKEN_REQUEST_TIMEOUT = 5
+OUTLOOK_TOKEN_VALIDITY_THRESHOLD = OUTLOOK_TOKEN_REQUEST_TIMEOUT + 5
+
 
 class MicrosoftOutlookMixin(models.AbstractModel):
     _name = 'microsoft.outlook.mixin'
@@ -102,7 +105,7 @@ class MicrosoftOutlookMixin(models.AbstractModel):
                 response = requests.get(
                     url_join(outlook_iap_endpoint, '/api/mail_oauth/1/outlook'),
                     params={'db_uuid': db_uuid, 'callback_url': callback_url},
-                    timeout=3)
+                    timeout=OUTLOOK_TOKEN_REQUEST_TIMEOUT)
                 response.raise_for_status()
             except requests.exceptions.RequestException as e:
                 _logger.error('Can not contact IAP: %s.', e)
@@ -183,7 +186,7 @@ class MicrosoftOutlookMixin(models.AbstractModel):
                 'grant_type': grant_type,
                 **values,
             },
-            timeout=10,
+            timeout=OUTLOOK_TOKEN_REQUEST_TIMEOUT,
         )
 
         if not response.ok:
@@ -213,7 +216,7 @@ class MicrosoftOutlookMixin(models.AbstractModel):
         response = requests.get(
             url_join(outlook_iap_endpoint, '/api/mail_oauth/1/outlook_access_token'),
             params={'refresh_token': refresh_token, 'db_uuid': db_uuid},
-            timeout=3,
+            timeout=OUTLOOK_TOKEN_REQUEST_TIMEOUT,
         )
 
         if not response.ok:
@@ -243,7 +246,7 @@ class MicrosoftOutlookMixin(models.AbstractModel):
         now_timestamp = int(time.time())
         if not self.microsoft_outlook_access_token \
            or not self.microsoft_outlook_access_token_expiration \
-           or self.microsoft_outlook_access_token_expiration < now_timestamp:
+           or self.microsoft_outlook_access_token_expiration - OUTLOOK_TOKEN_VALIDITY_THRESHOLD < now_timestamp:
             if not self.microsoft_outlook_refresh_token:
                 raise UserError(_('Please connect with your Outlook account before using it.'))
             (
