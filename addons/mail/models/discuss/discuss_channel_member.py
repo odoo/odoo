@@ -559,16 +559,15 @@ class DiscussChannelMember(models.Model):
             last seen message.
         """
         self.ensure_one()
-        if self.seen_message_id.id >= message.id:
-            return
-        self.fetched_message_id = max(self.fetched_message_id.id, message.id)
-        self.seen_message_id = message.id
-        self.last_seen_dt = fields.Datetime.now()
+        bus_channel = self._bus_channel()
+        if self.seen_message_id.id < message.id:
+            self.fetched_message_id = max(self.fetched_message_id.id, message.id)
+            self.seen_message_id = message.id
+            self.last_seen_dt = fields.Datetime.now()
+            if self.channel_id.channel_type in self.channel_id._types_allowing_seen_infos():
+                bus_channel = self.channel_id
         if not notify:
             return
-        bus_channel = self._bus_channel()
-        if self.channel_id.channel_type in self.channel_id._types_allowing_seen_infos():
-            bus_channel = self.channel_id
         Store(
             self,
             [
@@ -585,9 +584,8 @@ class DiscussChannelMember(models.Model):
             separator should be displayed.
         """
         self.ensure_one()
-        if message_id == self.new_message_separator:
-            return
-        self.new_message_separator = message_id
+        if message_id != self.new_message_separator:
+            self.new_message_separator = message_id
         # sudo: bus.bus: reading non-sensitive last id
         bus_last_id = self.env["bus.bus"].sudo()._bus_last_id()
         Store(
