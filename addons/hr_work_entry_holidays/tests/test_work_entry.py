@@ -241,7 +241,6 @@ class TestWorkeEntryHolidaysWorkEntry(TestWorkEntryHolidaysBase):
             'state': 'open',
             'wage': 1000,
             'resource_calendar_id': self.calendar_40h.id,
-            'work_entry_source': 'attendance',
             'date_generated_from': datetime(2023, 2, 1, 0, 0),
             'date_generated_to': datetime(2023, 2, 28, 23, 59),
         })
