@@ -65,5 +65,4 @@ class TestWebsiteRedirect(TransactionCase):
             self.env['website.rewrite'].refresh_routes()
             pages = self.env.ref('website.default_website')._enumerate_pages()
             urls = [url['loc'] for url in pages]
-            self.assertIn('/website/info', urls)
             self.assertNotIn('/test', urls)

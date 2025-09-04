@@ -323,19 +323,7 @@ class Website(Home):
         response.headers['Cache-Control'] = 'public, max-age=%s' % http.STATIC_CACHE_LONG
         return response
 
-    def sitemap_website_info(env, rule, qs):
-        website = env['website'].get_current_website()
-        if not (
-            website.is_view_active('website.website_info')
-            and website.is_view_active('website.show_website_info')
-        ):
-            # avoid 404 or blank page in sitemap
-            return False
-
-        if not qs or qs.lower() in '/website/info':
-            yield {'loc': '/website/info'}
-
-    @http.route('/website/info', type='http', auth="public", website=True, sitemap=sitemap_website_info, readonly=True, list_as_website_content=_lt("Website Information"))
+    @http.route('/website/info', type='http', auth="public", website=True, sitemap=False, readonly=True, list_as_website_content=_lt("Website Information"))
     def website_info(self, **kwargs):
         Module = request.env['ir.module.module'].sudo()
         apps = Module.search([('state', '=', 'installed'), ('application', '=', True)])

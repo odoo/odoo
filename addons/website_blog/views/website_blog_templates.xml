@@ -422,4 +422,14 @@ list of filtered posts (by date or tag).
 </feed>
 </template>
 
+<!-- Robots.txt -->
+<template id="robots" inherit_id="website.robots">
+    <xpath expr="//t[@id='robots_module_rules']" position="inside">
+<t t-translation="off">
+User-agent: *
+Disallow: /blog/*/feed
+</t>
+    </xpath>
+</template>
+
 </odoo>
