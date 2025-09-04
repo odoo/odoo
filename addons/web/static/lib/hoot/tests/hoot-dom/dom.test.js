@@ -809,7 +809,7 @@ describe(parseUrl(import.meta.url), () => {
             ).toEqualNodes(".o_data_row:last-child button");
         });
 
-        test("select :contains & :value", async () => {
+        test("select :contains & :value & nested :has", async () => {
             await mountForTest(/* xml */ `
                 <select class="configurator_select form-select form-select-lg">
                     <option value="217" selected="">Metal</option>
@@ -824,6 +824,9 @@ describe(parseUrl(import.meta.url), () => {
             expectSelector(`.configurator_select:value(217)`).toEqualNodes("select");
             expectSelector(`.configurator_select:value(218)`).toEqualNodes("");
             expectSelector(`.configurator_select:value(Metal)`).toEqualNodes("");
+            expectSelector(
+                `.configurator_select:has(option:value(217)):has(option:contains(Metal))`
+            ).toEqualNodes("select");
         });
 
         test("invalid selectors", async () => {
@@ -831,10 +834,6 @@ describe(parseUrl(import.meta.url), () => {
 
             expect(() => $$`[colspan=1]`).toThrow(); // missing quotes
             expect(() => $$`[href=/]`).toThrow(); // missing quotes
-            expect(
-                () =>
-                    $$`_o_wblog_posts_loop:has(span:has(i.fa-calendar-o):has(a[href="/blog?search=a"])):has(span:has(i.fa-search):has(a[href^="/blog?date_begin"]))`
-            ).toThrow(); // nested :has statements
         });
 
         test("queryAllRects", async () => {
