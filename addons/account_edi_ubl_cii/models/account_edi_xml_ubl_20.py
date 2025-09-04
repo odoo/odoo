@@ -1070,6 +1070,10 @@ class AccountEdiXmlUbl_20(models.AbstractModel):
         rounding_line_vals, rounding_logs = self._import_rounding_amount(invoice, tree, './{*}LegalMonetaryTotal/{*}PayableRoundingAmount', document_type=invoice.move_type, qty_factor=qty_factor)
         line_vals = allowance_charges_line_vals + invoice_line_vals + rounding_line_vals
 
+        if (invoice.company_id.extract_single_line_per_tax and not invoice.env.context.get('ungroup_invoice_lines')) or invoice.env.context.get('group_invoice_lines'):
+            # group amls with the same tax id into one aml, with the total amount
+            line_vals = invoice._get_lines_vals_group_by_tax(line_vals, invoice.partner_id, invoice_values['invoice_date'], invoice.currency_id)
+
         invoice_values = {
             **invoice_values,
             'invoice_line_ids': [Command.create(line_value) for line_value in line_vals],

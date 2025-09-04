@@ -304,6 +304,9 @@ class ResCompany(models.Model):
         help="During perpetual valuation, this account will hold the price difference between the standard price and the bill price.",
     )
 
+    # Group invoice lines per tax
+    extract_single_line_per_tax = fields.Boolean(string="Single Invoice Line Per Tax", default=True)
+
     def get_next_batch_payment_communication(self):
         '''
         When in need of a batch payment communication reference (several invoices paid at the same time)

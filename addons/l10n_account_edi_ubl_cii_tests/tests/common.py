@@ -54,6 +54,7 @@ class TestUBLCommon(AccountTestInvoicingCommon):
             'include_base_amount': True,
             'sequence': 2,
         })
+        cls.company.extract_single_line_per_tax = False
 
     def assert_same_invoice(self, invoice1, invoice2, **invoice_kwargs):
         self.assertEqual(len(invoice1.invoice_line_ids), len(invoice2.invoice_line_ids))

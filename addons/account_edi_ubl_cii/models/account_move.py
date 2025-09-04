@@ -2,8 +2,10 @@ from contextlib import suppress
 from base64 import b64decode
 import binascii
 from lxml import etree
+from collections import defaultdict
 
 from odoo import _, api, fields, models, Command
+from odoo.exceptions import UserError
 from odoo.tools.mimetypes import guess_mimetype
 
 
@@ -32,6 +34,103 @@ class AccountMove(models.Model):
             'url': f'/account/download_invoice_documents/{",".join(map(str, self.ids))}/ubl?allow_fallback=true',
             'target': 'download',
         }
+
+    def action_group_ungroup_lines_by_tax(self):
+        """
+        This action allows the user to reload an imported move, grouping or not lines by tax
+        """
+        self.ensure_one()
+        self._check_move_for_group_ungroup_lines_by_tax()
+
+        # Check if lines looks like they're grouped
+        tax_ids = [str(line.tax_ids.ids) for line in self.line_ids if line.tax_ids]
+        lines_grouped = len(set(tax_ids)) == len(tax_ids)
+
+        old_amount_untaxed, old_amount_total = self.amount_untaxed, self.amount_total
+
+        attachments = self.env['ir.attachment'].search(
+            [
+                ('res_model', '=', 'account.move'),
+                ('res_id', '=', self.id),
+            ],
+            order='create_date',
+        )
+        if not attachments:
+            raise UserError(_("Cannot find the origin XML, try by importing it again"))
+
+        files_data = self._to_files_data(attachments)
+        files_data.extend(self._unwrap_attachments(files_data))
+
+        file_data_groups = self._group_files_data_into_groups_of_mixed_types(files_data)
+
+        success = False
+        for file_data_group in file_data_groups:
+            self.invoice_line_ids = [Command.clear()]
+            self.with_context(ungroup_invoice_lines=lines_grouped, group_invoice_lines=not lines_grouped)._extend_with_attachments(file_data_group)
+            if self.amount_untaxed == old_amount_untaxed and self.amount_total == old_amount_total:
+                success = True
+                self._message_log(body=_("Ungrouped lines from origin file") if lines_grouped else _("Grouped lines by tax"))
+                break
+
+        if not success:
+            raise UserError(_("Cannot find the origin XML, try by importing it again"))
+
+    def _check_move_for_group_ungroup_lines_by_tax(self):
+        if self.state != 'draft':
+            raise UserError(_("You can only (un)group lines of a draft invoice"))
+
+    @api.model
+    def _get_lines_vals_group_by_tax(self, lines_vals, partner_id, date, currency):
+        """
+        This method group the lines in lines_vals by tax.
+        lines_vals can either be a list of vals dict(s) to create lines or account.move.line record(s)
+        :param lines_vals: list of dict or account.move.line records
+        :param partner_id: the partner of the move related to the lines
+        :param date: the date of the move in str format
+        :param currency: the currency of the move related to lines
+        :return: a list of dict vals line grouped by tax
+        """
+
+        def _get_attr(line, attr, default):
+            # Line is a record or a dict
+            if attr in line:
+                return line[attr]
+            return default
+
+        # squash amls with same tax id into one aml, with the total amount
+        taxes = dict()  # store taxes refs to not browse on it each iteration
+        line_vals_to_squash = defaultdict(list)
+        for line in lines_vals:
+            if currency.is_zero(_get_attr(line, 'price_unit', 0.0)):
+                continue
+            line_tax_ids = _get_attr(line, 'tax_ids', False)
+            is_record = not isinstance(line_tax_ids, list)
+
+            if not line_tax_ids:
+                tax_ref = '[]'
+            elif is_record:
+                tax_ref = str(line_tax_ids.ids)
+            elif all(isinstance(tax_id, int) for tax_id in line_tax_ids):
+                tax_ref = str(line_tax_ids)
+            else:
+                # unhandled scheme for tax_ids
+                return lines_vals
+
+            tax_ids = taxes.get(tax_ref)
+            if tax_ids is None:
+                tax_ids = taxes[tax_ref] = line_tax_ids or self.env['account.tax'] if is_record else self.env['account.tax'].browse(line_tax_ids)
+            line_vals_to_squash[tax_ids].append(line)
+
+        res = [{
+            'name': " - ".join([partner_id.name, date] + ([tax.name for tax in tax_ids] or [_("Untaxed")])),
+            'price_unit': sum(
+                _get_attr(line, 'price_unit', 0.0) * _get_attr(line, 'quantity', 0.0) - _get_attr(line, 'price_unit', 0.0) * _get_attr(line, 'quantity', 0.0) * _get_attr(line, 'discount', 0.0) / 100
+                for line in lines
+            ),
+            'quantity': 1,
+            'tax_ids': tax_ids.ids
+        } for tax_ids, lines in line_vals_to_squash.items()]
+        return res
 
     # -------------------------------------------------------------------------
     # BUSINESS

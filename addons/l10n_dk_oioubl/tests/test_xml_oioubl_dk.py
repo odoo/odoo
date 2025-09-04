@@ -21,6 +21,7 @@ class TestUBLDK(TestUBLCommon, TestAccountMoveSendCommon):
             'vat': 'DK12345674',
             'phone': '+45 32 12 34 56',
             'street': 'Paradisæblevej, 10',
+            'extract_single_line_per_tax': False,
         })
         cls.env['res.partner.bank'].create({
             'acc_type': 'iban',
