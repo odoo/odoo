@@ -15,6 +15,7 @@ class LayoutColumnOptionPlugin extends Plugin {
                 OptionComponent: LayoutColumnOption,
                 selector: "section.s_features_grid, section.s_process_steps",
                 applyTo: ":scope > *:has(> .row), :scope > .s_allow_columns",
+                name: "layoutColumnOption",
             }),
         ],
         on_cloned_handlers: this.onCloned.bind(this),
