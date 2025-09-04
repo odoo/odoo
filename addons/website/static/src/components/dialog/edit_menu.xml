@@ -9,7 +9,7 @@
             </label>
             <div class="col-md-9">
                 <input type="text" t-on-input="onTitleInput" t-model="state.name"
-                    class="form-control" t-att-class="{ 'is-invalid': state.missingName }" t-ref="autofocus"/>
+                    class="form-control" t-att-class="{ 'is-invalid': state.invalidName }" t-ref="autofocus"/>
             </div>
         </div>
         <div t-if="!props.isMegaMenu" class="mb-3 row">
@@ -19,8 +19,8 @@
             <div class="col-md-9">
                 <div class="position-relative" t-att-class="{ 'o_page_not_found': state.pageNotFound }">
                     <input id="url_input" t-on-input="onUrlInput" t-ref="url-input" type="text"
-                        t-model="state.url" class="form-control"/>
-                    <i t-if="state.pageNotFound"
+                        t-model="state.url" class="form-control" t-att-class="{ 'is-invalid': state.invalidUrl }"/>
+                    <i t-if="state.pageNotFound and !state.invalidUrl"
                         class="fa fa-info-circle text-warning position-absolute top-50 end-0 translate-middle-y me-2"
                         data-tooltip="Page not found" data-tooltip-position="top" data-tooltip-delay="0">
                     </i>
