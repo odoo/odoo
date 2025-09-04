@@ -1,4 +1,3 @@
-import { waitFor } from "@odoo/hoot-dom";
 import { registry } from "@web/core/registry";
 import { stepUtils } from "@web_tour/tour_utils";
 
@@ -91,7 +90,6 @@ const clickOnTheEvent = {
         const custom = document.querySelector(".o_cw_custom_highlight");
         if (custom) {
             custom.click();
-            await waitFor(".o_cw_popover", { timeout: 8000 });
         }
     },
 };
@@ -99,6 +97,9 @@ const clickOnTheEvent = {
 registry.category("web_tour.tours").add("test_calendar_delete_tour", {
     steps: () => [
         clickOnTheEvent,
+        {
+            trigger: ".o_cw_popover",
+        },
         {
             content: "Delete the event",
             trigger: ".o_cw_popover_delete",
@@ -115,6 +116,9 @@ registry.category("web_tour.tours").add("test_calendar_delete_tour", {
 registry.category("web_tour.tours").add("test_calendar_decline_tour", {
     steps: () => [
         clickOnTheEvent,
+        {
+            trigger: ".o_cw_popover",
+        },
         {
             content: "Delete the event",
             trigger: ".o_cw_popover_delete",

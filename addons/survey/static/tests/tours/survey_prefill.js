@@ -1,4 +1,3 @@
-import { queryFirst, queryOne } from "@odoo/hoot-dom";
 import { registry } from "@web/core/registry";
 
 registry.category("web_tour.tours").add('test_survey_prefill', {
@@ -65,108 +64,65 @@ registry.category("web_tour.tours").add('test_survey_prefill', {
         content: 'Click on the previous page name in the breadcrumb',
         trigger: 'ol.breadcrumb a:first',
         run: "click",
-    }, {
-        trigger: 'div.js_question-wrapper:contains("How many times did you order products on our website?") input',
-        run: function () {
-            const inputQ3 = queryFirst(
-                'div.js_question-wrapper:contains("How many times did you order products on our website?") input'
-            );
-            if (inputQ3.value === "42.0") {
-                queryOne(".o_survey_title").classList.add("prefilled");
-            }
-        }
-    }, {
-        trigger: '.o_survey_title.prefilled',
-        run: function () {
-            // check that all the answers are prefilled in Page 1
-            var inputQ1 = queryOne('div.js_question-wrapper:contains("Where do you live?") input');
-            if (inputQ1.value !== 'Grand-Rosiere') {
-                return;
-            }
-
-            var inputQ2 = queryOne('div.js_question-wrapper:contains("When is your date of birth?") input');
-            if (inputQ2.value !== '05/05/1980') {
-                return;
-            }
-
-            var inputQ3 = queryOne('div.js_question-wrapper:contains("How frequently do you buy products online?") label:contains("Once a week") input');
-            if (!inputQ3.checked) {
-                return;
-            }
-
-            var inputQ4 = queryOne('div.js_question-wrapper:contains("How many times did you order products on our website?") input');
-            if (inputQ4.value !== '42.0') {
-                return;
-            }
-            document.querySelector(".o_survey_title").classList.add("tour_success");
-        }
-    }, {
-        trigger: '.o_survey_title.tour_success',
-        run: "click",
-    }, {
-        content: 'Click on Next Page',
-        trigger: 'button[value="next"]',
-        run: "click",
-    }, {
-        trigger: 'div.js_question-wrapper:contains("Do you have any other comments, questions, or concerns") textarea',
-        run: function () {
-            var inputQ3 = queryOne('div.js_question-wrapper:contains("Do you have any other comments, questions, or concerns") textarea');
-            if (inputQ3.value === "Is the prefill working?") {
-                document.querySelector('.o_survey_title').classList.add('prefilled2');
-            }
-        }
-    }, {
-        trigger: '.o_survey_title.prefilled2',
-        run: function () {
-            // check that all the answers are prefilled in Page 2
-            const input1Q1 = queryOne('div.js_question-wrapper:contains("Which of the following words would you use to describe our products") label:contains("High quality") input');
-            if (!input1Q1.checked) {
-                return;
-            }
-
-            const input2Q1 = queryOne('div.js_question-wrapper:contains("Which of the following words would you use to describe our products") label:contains("Good value for money") input');
-            if (!input2Q1.checked) {
-                return;
-            }
-
-            const input1Q2 = queryOne('div.js_question-wrapper:contains("What do your think about our new eCommerce") tr:contains("The new layout and design is fresh and up-to-date") input:first');
-            if (!input1Q2.checked) {
-                return;
-            }
-
-            const input2Q2 = queryOne('div.js_question-wrapper:contains("What do your think about our new eCommerce") tr:contains("It is easy to find the product that I want") input:eq(2)');
-            if (!input2Q2.checked) {
-                return;
-            }
-
-            const input3Q2 = queryOne('div.js_question-wrapper:contains("What do your think about our new eCommerce") tr:contains("The tool to compare the products is useful to make a choice") input:eq(3)');
-            if (!input3Q2.checked) {
-                return;
-            }
-
-            const input4Q2 = queryOne('div.js_question-wrapper:contains("What do your think about our new eCommerce") tr:contains("The checkout process is clear and secure") input:eq(2)');
-            if (!input4Q2.checked) {
-                return;
-            }
-
-            const input5Q2 = queryOne('div.js_question-wrapper:contains("What do your think about our new eCommerce") tr:contains("I have added products to my wishlist") input:last');
-            if (!input5Q2.checked) {
-                return;
-            }
-
-            const inputQ3 = queryOne('div.js_question-wrapper:contains("Do you have any other comments, questions, or concerns") textarea');
-            if (inputQ3.value !== "Is the prefill working?") {
-                return;
-            }
-
-            const inputQ4 = queryOne('div.js_question-wrapper:contains("How would you rate your experience on our website") label:contains("4") input');
-            if (!inputQ4.checked) {
-                return;
-            }
-
-            document.querySelector(".o_survey_title").classList.add("tour_success_2");
-        }
-    }, {
-        trigger: '.o_survey_title.tour_success_2',
-    }
-]});
+        },
+        {
+            content: "check survey is prefilled",
+            trigger:
+                'div.js_question-wrapper:contains("How many times did you order products on our website?") input:value(42)',
+        },
+        {
+            trigger: `div.js_question-wrapper:contains("Where do you live?") input:value(Grand-Rosiere)`,
+        },
+        {
+            trigger: `div.js_question-wrapper:contains("When is your date of birth?") input:value(05/05/1980)`,
+        },
+        {
+            trigger: `div.js_question-wrapper:contains("How frequently do you buy products online?) label:contains("Once a week") input:hidden:checked`,
+        },
+        {
+            trigger: ".o_survey_title",
+            run: "click",
+        },
+        {
+            content: "Click on Next Page",
+            trigger: 'button[value="next"]',
+            run: "click",
+        },
+        {
+            trigger:
+                'div.js_question-wrapper:contains("Do you have any other comments, questions, or concerns") textarea:value(Is the prefill working?)',
+        },
+        {
+            trigger:
+                'div.js_question-wrapper:contains("Which of the following words would you use to describe our products") label:contains("High quality") input:hidden:checked',
+        },
+        {
+            trigger:
+                'div.js_question-wrapper:contains("Which of the following words would you use to describe our products") label:contains("Good value for money") input:hidden:checked',
+        },
+        {
+            trigger:
+                'div.js_question-wrapper:contains("What do your think about our new eCommerce") tr:contains("The new layout and design is fresh and up-to-date") input:first:hidden:checked',
+        },
+        {
+            trigger:
+                'div.js_question-wrapper:contains("What do your think about our new eCommerce") tr:contains("It is easy to find the product that I want") input:eq(2):hidden:checked',
+        },
+        {
+            trigger:
+                'div.js_question-wrapper:contains("What do your think about our new eCommerce") tr:contains("The tool to compare the products is useful to make a choice") input:eq(3):hidden:checked',
+        },
+        {
+            trigger:
+                'div.js_question-wrapper:contains("What do your think about our new eCommerce") tr:contains("The checkout process is clear and secure") input:eq(2):hidden:checked',
+        },
+        {
+            trigger:
+                'div.js_question-wrapper:contains("What do your think about our new eCommerce") tr:contains("I have added products to my wishlist") input:last:hidden:checked',
+        },
+        {
+            trigger:
+                'div.js_question-wrapper:contains("How would you rate your experience on our website") label:contains("4") input:hidden:checked',
+        },
+    ],
+});

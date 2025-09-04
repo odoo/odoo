@@ -1,4 +1,3 @@
-import { queryOne } from "@odoo/hoot-dom";
 import * as Numpad from "@point_of_sale/../tests/generic_helpers/numpad_util";
 import { negate } from "@point_of_sale/../tests/generic_helpers/utils";
 
@@ -13,7 +12,7 @@ export function table({ name, withClass = "", withoutClass, run = () => {}, numO
     return {
         content: `Check table with attributes: ${JSON.stringify(arguments[0])}`,
         trigger,
-        run: typeof run === "string" ? run : () => run(trigger),
+        run: typeof run === "string" ? run : (helpers) => run(helpers, trigger),
     };
 }
 export const clickTable = (name) => table({ name, run: "click" });
@@ -22,10 +21,10 @@ export const selectedTableIs = (name) => table({ name, withClass: ".selected" })
 export const ctrlClickTable = (name) =>
     table({
         name,
-        run: (trigger) => {
-            queryOne(trigger).dispatchEvent(
-                new MouseEvent("click", { bubbles: true, ctrlKey: true })
-            );
+        run: (helpers, trigger) => {
+            helpers
+                .queryOne(trigger)
+                .dispatchEvent(new MouseEvent("click", { bubbles: true, ctrlKey: true }));
         },
     });
 export function clickFloor(name) {
@@ -175,7 +174,6 @@ export function addFloor(floorName) {
 
 import { TourHelpers } from "@web_tour/js/tour_automatic/tour_helpers";
 import { patch } from "@web/core/utils/patch";
-import * as hoot from "@odoo/hoot-dom";
 
 patch(TourHelpers.prototype, {
     async drag_multiple_and_then_drop(...drags) {
@@ -185,9 +183,10 @@ patch(TourHelpers.prototype, {
             await new Promise((resolve) => setTimeout(resolve, this.delay));
         };
         const element = this.anchor;
-        const { drop, moveTo } = await hoot.drag(element);
+        const { drag } = odoo.loader.modules.get("@odoo/hoot-dom");
+        const { drop, moveTo } = await drag(element);
         await dragEffectDelay();
-        await hoot.hover(element, {
+        await this.hover(element, {
             position: {
                 top: 20,
                 left: 20,
@@ -197,7 +196,7 @@ patch(TourHelpers.prototype, {
         await dragEffectDelay();
         for (const [selector, options] of drags) {
             console.log("Selector", selector, options);
-            const target = await hoot.waitFor(selector, {
+            const target = await this.waitFor(selector, {
                 visible: true,
                 timeout: 500,
             });

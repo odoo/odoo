@@ -3,7 +3,6 @@ import { stepUtils } from "@web_tour/tour_utils";
 import tourUtils from "@sale/js/tours/tour_utils";
 
 import { markup } from "@odoo/owl";
-import { queryText } from "@odoo/hoot-dom";
 
 registry.category("web_tour.tours").add('sale_timesheet_tour', {
     url: '/odoo',
@@ -118,7 +117,7 @@ registry.category("web_tour.tours").add('sale_timesheet_tour', {
 }, {
     trigger: 'div[name="order_line"]',
     content: 'Check if the quantity delivered is equal to 1 hour.',
-    run: function () {
+    run({ queryFirst }) {
         const header = this.anchor.querySelectorAll("thead > tr");
         if (!header || header.length === 0)
             console.error('No Sales Order Item is found in the Sales Order.');
@@ -129,8 +128,8 @@ registry.category("web_tour.tours").add('sale_timesheet_tour', {
             if (th.dataset && th.dataset.name === 'qty_delivered')
                 index = i;
         }
-        const qtyDelivered = queryText(`tbody > tr:first-child > td.o_data_cell:eq(${index})`, { root: this.anchor });
-        if (qtyDelivered !== "1.00")
+        const qtyDelivered = queryFirst(`tbody > tr:first-child > td.o_data_cell:eq(${index})`, { root: this.anchor });
+        if (qtyDelivered.textContent !== "1.00")
             console.error('The quantity delivered on this Sales Order Item should be equal to 1.00 hour. qtyDelivered = ' + qtyDelivered);
     },
 }, {

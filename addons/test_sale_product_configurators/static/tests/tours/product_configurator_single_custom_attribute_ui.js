@@ -1,4 +1,3 @@
-import { queryOne } from "@odoo/hoot-dom";
 import { registry } from "@web/core/registry";
 import { stepUtils } from "@web_tour/tour_utils";
 import configuratorTourUtils from "@sale/js/tours/product_configurator_tour_utils";
@@ -16,7 +15,7 @@ registry.category("web_tour.tours").add('sale_product_configurator_single_custom
         tourUtils.editConfiguration(),
         {
             trigger: 'table.o_sale_product_configurator_table tr:has(td>div[name="o_sale_product_configurator_name"] *:contains("Customizable Desk (TEST)")) td>div[name="ptal"]:has(div>label:contains("product attribute")) input[type="text"]',
-            run: function () {
+            run({ queryOne }) {
                 // check custom value initialized
                 if (
                     queryOne(

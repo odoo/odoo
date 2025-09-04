@@ -1,6 +1,4 @@
 import { reactive } from "@odoo/owl";
-import { waitFor } from "@odoo/hoot-dom";
-
 import { registry } from "@web/core/registry";
 import { getOrigin } from "@web/core/utils/urls";
 import { click, inputFiles } from "@web/../tests/utils";
@@ -78,7 +76,7 @@ registry.category("web_tour.tours").add("discuss_channel_public_tour.js", {
         },
         {
             trigger: '.o-mail-AttachmentContainer:not(.o-isUploading)[title="image.png"]',
-            async run() {
+            async run({ waitFor }) {
                 /** @type {import("models").Store} */
                 const store = odoo.__WOWL_DEBUG__.root.env.services["mail.store"];
                 if (store.self_guest) {

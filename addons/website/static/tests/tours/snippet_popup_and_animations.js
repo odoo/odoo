@@ -1,6 +1,5 @@
 /** @odoo-module */
 
-import { waitUntil } from "@odoo/hoot-dom";
 import {
     clickOnEditAndWaitEditMode,
     clickOnElement,
@@ -88,11 +87,12 @@ registerWebsitePreviewTour("snippet_popup_and_animations", {
         content: "Wait for the page to be scrolled to the top.",
         trigger: ":iframe .s_three_columns .row > .o_animating:last-child",
         isActive: [`:iframe .s_three_columns .row > .o_animating:last-child`],
-        run: (helpers) =>
-            waitUntil(
-                () => !helpers.anchor.classList.contains(`o_animating`),
+        async run({ waitUntil, anchor }) {
+            await waitUntil(
+                () => !anchor.classList.contains(`o_animating`),
                 { timeout: 10000 }
-            ),
+            );
+        }
     },
     {
         content: "Close the Cookies Bar.",
@@ -137,11 +137,12 @@ registerWebsitePreviewTour("snippet_popup_and_animations", {
         content: "Wait until the column is no longer animated/visible.",
         trigger: ":iframe .s_three_columns .row > .o_animating:last-child",
         isActive: [`:iframe .s_three_columns .row > .o_animating:last-child`],
-        run: (helpers) =>
-            waitUntil(
-                () => !helpers.anchor.classList.contains(`o_animating`),
+        async run({ anchor, waitUntil }) {
+            await waitUntil(
+                () => !anchor.classList.contains(`o_animating`),
                 { timeout: 10000 }
-            ),
+            );
+        }
     },
     {
         content: "Close the Popup",
