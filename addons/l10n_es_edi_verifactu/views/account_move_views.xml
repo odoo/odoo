@@ -98,6 +98,7 @@
                                    readonly="state != 'draft'"/>
                             <field name="l10n_es_edi_verifactu_substituted_entry_id" invisible="not l10n_es_edi_verifactu_substituted_entry_id"/>
                             <field name="reversed_entry_id" invisible="not reversed_entry_id"/>
+                            <field name="l10n_es_edi_verifactu_available_clave_regimens" invisible="1"/> <!--needed for the dynamic_selection widget-->
                             <field name="l10n_es_edi_verifactu_clave_regimen"
                                    readonly="state != 'draft'"
                                    widget="dynamic_selection"
