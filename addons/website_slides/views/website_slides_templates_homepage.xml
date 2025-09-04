@@ -166,7 +166,7 @@
                 <!-- No action: remain on same URL -->
                 <t t-set="display_description" t-valuef="true"/>
                 <t t-set="display_detail" t-valuef="false"/>
-                <t t-set="placeholder">Search courses</t>
+                <t t-set="placeholder">Search courses or contents</t>
                 <t t-set="search" t-value="original_search or search_term"/>
                 <input type="hidden" name="my" t-attf-value="#{1 if search_my else 0}"/>
                 <input t-if="search_slide_category" type="hidden" name="slide_category" t-att-value="search_slide_category" />
@@ -212,7 +212,7 @@
                     <!-- No action: remain on same URL -->
                     <t t-set="display_description" t-valuef="true"/>
                     <t t-set="display_detail" t-valuef="false"/>
-                    <t t-set="placeholder">Search courses</t>
+                    <t t-set="placeholder">Search courses or contents</t>
                     <t t-set="search" t-value="original_search or search_term"/>
                     <input type="hidden" name="my" t-attf-value="#{1 if search_my else 0}"/>
                     <input t-if="search_slide_category" type="hidden" name="slide_category" t-att-value="search_slide_category" />
@@ -253,25 +253,42 @@
 <template id="courses_search_results">
     <div class="container o_wslides_home_main pb-5">
         <t t-call="website_slides.courses_search_tags"/>
-        <div t-if="not channels and not search_term and not search_slide_category and not search_my and not search_tags">
+        <div t-if="not channels and not search_term and not search_slide_category and not search_my and not search_tags and not grouped_slides_by_category">
             <p class="h2">No Course created yet.</p>
             <p groups="website_slides.group_website_slides_officer">Click on "New" in the top-right corner to write your first course.</p>
         </div>
-        <div t-elif="search_term and not channels" class="alert alert-info mb-5">
-            No course was found matching your search <code><t t-out="search_term"/></code>.
-        </div>
-        <div t-elif="not channels" class="alert alert-info mb-5">
-            No course was found matching your search.
+        <div t-elif="not search_count" class="alert alert-info mb-5">
+            No course or other content was found matching your search <code><t t-esc="search_term"/></code>.
         </div>
         <t t-else="">
             <div t-if="original_search" class="alert alert-warning mb-5">
                 No results found for '<span t-out="original_search"/>'. Showing results for '<span t-out="search_term"/>'.
             </div>
             <div class="row mx-n2">
-                <t t-foreach="channels" t-as="channel">
-                    <div class="col-12 col-sm-6 col-md-4 col-lg-3 px-2 d-flex">
-                        <t t-call="website_slides.course_card"/>
+                <t t-if="channels">
+                    <t t-if="search">
+                        <div class="d-flex align-items-center justify-content-between border-bottom pb-2 mb-3">
+                            <h3 class="m-0">Course</h3>
+                        </div>
+                    </t>
+                    <t t-foreach="channels" t-as="channel">
+                        <div class="col-12 col-sm-6 col-md-4 col-lg-3 px-2 d-flex">
+                            <t t-call="website_slides.course_card"/>
+                        </div>
+                    </t>
+                </t>
+                <t t-foreach="grouped_slides_by_category.items()" t-as="categorized_slide">
+                    <t t-set="category" t-value="categorized_slide[0]"/>
+                    <t t-set="slide_categories" t-value="categorized_slide[1]"/>
+                    <div class="d-flex align-items-center justify-content-between border-bottom pb-2 mb-3">
+                        <h3 class="m-0" t-out="category"/>
                     </div>
+                    <t t-foreach="slide_categories" t-as="slide">
+                        <div class="col-12 col-sm-6 col-md-4 col-lg-3 px-2 mb-3 d-flex">
+                            <t t-set="channel" t-value="slide.channel_id"/>
+                            <t t-call="website_slides.lesson_card"/>
+                        </div>
+                    </t>
                 </t>
             </div>
         </t>

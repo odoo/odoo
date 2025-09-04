@@ -450,10 +450,35 @@ class WebsiteSlides(WebsiteProfile):
         options = self._get_slide_channel_search_options(**search_args)
         search = post.get('search')
         order = self._channel_order_by_criterion.get(post.get('sorting'))
-        search_count, details, fuzzy_search_term = request.website._search_with_fuzzy(
-            "slide_channels_only", search, limit=page * page_size if page else 1000, order=order, options=options)
-        channels_all = details[0].get('results', request.env['slide.channel'])
-        channels = channels_all[(page - 1) * page_size:page * page_size] if page else channels_all
+        channel_progress = grouped_slides_by_category = {}
+
+        if search and not slug_tags:
+            search_count, search_details, fuzzy_search_term = request.website._search_with_fuzzy(
+                'slides', search, limit=page * page_size if page else 1000, order=order or '', options=options)
+            channels_all = search_details[0].get('results', request.env['slide.channel'])
+            slides_all = search_details[1].get('results', request.env['slide.slide'])
+            total_channel_page = len(channels_all) // page_size
+            channels = channels_all[(page - 1) * page_size:page * page_size] if page else channels_all
+            slides = slides_all[(page - total_channel_page - 1) * page_size:page * page_size] if page else slides_all
+
+            grouped_slides_by_category = slides.grouped('slide_category')
+            # Don't show contents because tags are related to courses
+            if options['tag'] is not None:
+                slides, grouped_slides_by_category = self.env['slide.slide'], {}
+
+            # Get selection value label as key to be used by the XML displaying
+            for (key, label) in self.env['slide.slide']._fields['slide_category'].selection:
+                if key in grouped_slides_by_category:
+                    grouped_slides_by_category[label] = grouped_slides_by_category[key]
+                    del grouped_slides_by_category[key]
+            for channel in slides.channel_id:
+                channel_progress = channel_progress | self._get_channel_progress(channel, include_quiz=True)
+        else:
+            search_count, search_details, fuzzy_search_term = request.website._search_with_fuzzy(
+                'slide_channels_only', search, limit=page * page_size if page else 1000, order=order or '', options=options)
+            channels_all = search_details[0].get('results', request.env['slide.channel'])
+            channels = channels_all[(page - 1) * page_size:page * page_size] if page else channels_all
+
         tag_groups = request.env['slide.channel.tag.group'].search(
             ['&', ('tag_ids', '!=', False), ('website_published', '=', True)])
         if slug_tags:
@@ -469,7 +494,10 @@ class WebsiteSlides(WebsiteProfile):
             compute_channels_my=not self._has_slide_channel_search(**search_args)))
         render_values.update({
             'channels': channels,
+            'channel_progress': channel_progress,
+            'grouped_slides_by_category': grouped_slides_by_category,
             'tag_groups': tag_groups,
+            'search': search,
             'search_term': fuzzy_search_term or search,
             'original_search': fuzzy_search_term and search,
             'search_slide_category': slide_category,
