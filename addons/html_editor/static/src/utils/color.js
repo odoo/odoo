@@ -239,6 +239,10 @@ export function hasColor(element, mode) {
     const style = element.style;
     const parent = element.parentNode;
     const classRegex = mode === "color" ? TEXT_CLASSES_REGEX : BG_CLASSES_REGEX;
+    if (element.classList.contains("btn")) {
+        // Ignore style applied on buttons from color detection
+        return false;
+    }
     if (isColorGradient(style["background-image"])) {
         if (element.classList.contains("text-gradient")) {
             if (mode === "color") {
