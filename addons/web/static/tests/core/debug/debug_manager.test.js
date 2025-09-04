@@ -492,12 +492,29 @@ describe("DebugMenu", () => {
 
             name = fields.Char();
             raw = fields.Binary();
+            parent_id = fields.Many2one({ relation: "custom" });
+            properties = fields.Properties({
+                string: "Properties",
+                definition_record: "parent_id",
+                definition_record_field: "definitions",
+            });
+            definitions = fields.PropertiesDefinition({
+                string: "Definitions",
+            });
 
             _records = [
                 {
                     id: 1,
                     name: "custom1",
                     raw: "<raw>",
+                    properties: [
+                        {
+                            name: "bd6404492c244cff",
+                            string: "test",
+                            type: "char",
+                        },
+                    ],
+                    definitions: [{ name: "xphone_prop_1", string: "P1", type: "boolean" }],
                 },
             ];
         }
@@ -518,16 +535,24 @@ describe("DebugMenu", () => {
         await contains(".dropdown-menu .dropdown-item:contains(/^Data/)").click();
         expect(".modal").toHaveCount(1);
         const data = queryText(".modal-body pre");
-        expect(data).not.toMatch(/"raw"/, { message: "binary fields should not be displayed" });
-        const lines = data.split("\n");
-        expect(lines.shift()).toMatch(/\{$/);
-        expect(lines.shift()).toMatch(/"create_date": "\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}"/);
-        expect(lines.shift()).toMatch(/"display_name": "custom1"/);
-        expect(lines.shift()).toMatch(/"id": 1/);
-        expect(lines.shift()).toMatch(/"name": "custom1"/);
-        expect(lines.shift()).toMatch(/"write_date": "\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}"/);
-        expect(lines.shift()).toMatch(/\}$/);
-        expect(lines).toBeEmpty();
+        const modalObj = JSON.parse(data);
+        expect(modalObj).toInclude("create_date");
+        expect(modalObj).toInclude("write_date");
+        expect(modalObj).not.toInclude("raw");
+        const expectedObj = {
+            display_name: "custom1",
+            id: 1,
+            name: "custom1",
+            properties: false,
+            definitions: [
+                {
+                    name: "xphone_prop_1",
+                    string: "P1",
+                    type: "boolean",
+                },
+            ],
+        };
+        expect(modalObj).toMatchObject(expectedObj);
     });
 
     test("view metadata: basic rendering", async () => {
