@@ -22,9 +22,7 @@
         <BuilderTextInput action="'setMark'" default="''" t-if="isActiveItem('form_required_opt') || isActiveItem('form_optional_opt')"/>
     </BuilderRow>
     <BuilderRow label.translate="Labels Width">
-        <BuilderNumberInput
-            styleAction="'width'"
-            unit="'px'" applyTo="'.s_website_form_label'"/>
+        <BuilderNumberInput action="'setFormLabelsWidth'" unit="'px'" default="null"/>
     </BuilderRow>
     <BuilderRow label.translate="On Success">
         <BuilderSelect preview="false" action="'onSuccess'">
@@ -155,9 +153,12 @@
                 <i class="fa fa-eye-slash"/>
             </BuilderButton>
             <BuilderButton title.translate="Top" actionValue="'top'" iconImg="'/website/static/src/img/snippets_options/pos_top.svg'"/>
-            <BuilderButton title.translate="Left" actionValue="'left'" iconImg="'/website/static/src/img/snippets_options/pos_left.svg'"/>
-            <BuilderButton title.translate="Right" actionValue="'right'" iconImg="'/website/static/src/img/snippets_options/pos_right.svg'"/>
+            <BuilderButton id="'label_position_left_opt'" title.translate="Left" actionValue="'left'" iconImg="'/website/static/src/img/snippets_options/pos_left.svg'"/>
+            <BuilderButton id="'label_position_right_opt'" title.translate="Right" actionValue="'right'" iconImg="'/website/static/src/img/snippets_options/pos_right.svg'"/>
         </BuilderButtonGroup>
+    </BuilderRow>
+    <BuilderRow t-if="isActiveItem('label_position_right_opt') || isActiveItem('label_position_left_opt')" label.translate="Label Width" level="1">
+        <BuilderNumberInput styleAction="'width'" applyTo="'.s_website_form_label'" unit="'px'"/>
     </BuilderRow>
     <BuilderRow label.translate="Required">
         <BuilderCheckbox t-if="!domState.elClassList.includes('s_website_form_model_required')"
