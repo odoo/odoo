@@ -119,7 +119,7 @@ test("hint should only Be display for focused empty block element", async () => 
     expect(getContent(el)).toBe(
         `<p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p>`
     );
-    editor.shared.dom.setTag({ tagName: "H1" });
+    editor.shared.dom.setBlock({ tagName: "H1" });
     await animationFrame();
     // @todo @phoenix: getContent does not place the selection when anchor is BR
     expect(el.innerHTML).toBe(`<h1 o-we-hint-text="Heading 1" class="o-we-hint"><br></h1>`);
