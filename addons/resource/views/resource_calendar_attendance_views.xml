@@ -12,8 +12,8 @@
                 <field name="dayofweek"/>
                 <field name="day_period"/>
                 <field name="duration_hours" force_save="1" column_invisible="not parent.duration_based"/>
-                <field name="hour_from" widget="float_time" readonly="duration_based"/>
-                <field name="hour_to" widget="float_time" readonly="duration_based"/>
+                <field name="hour_from" widget="float_time" column_invisible="parent.duration_based"/>
+                <field name="hour_to" widget="float_time" column_invisible="parent.duration_based"/>
                 <field name="duration_days" optional="show" readonly="1"/>
                 <field name="week_type" readonly="1" force_save="1" optional="hide"/>
             </list>
