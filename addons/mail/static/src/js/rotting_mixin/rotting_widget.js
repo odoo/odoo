@@ -40,7 +40,7 @@ export class KanbanRottingField extends Component {
         });
 
         this.title = getRottingDaysTitle(
-            this.env.model.config.resModel,
+            this.props.record.model.config.resModel,
             this.props.record.data.rotting_days
         );
     }
