@@ -107,7 +107,7 @@ class BaseString(Field[str | typing.Literal[False]]):
             s = value.decode()
         else:
             # provide ``context`` in case the ``value`` is a lazy translation object
-            context = record.env.context  # noqa: F841
+            context = {'lang': record.env.context.get('lang')}  # noqa: F841
             s = str(value)
         value = s[:self.size]
         if validate and callable(self.translate):

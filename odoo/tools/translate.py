@@ -505,13 +505,13 @@ def _get_uid(frame) -> int | None:
 
 
 def _get_lang(frame, default_lang='') -> str:
-    # get from: context.get('lang')
-    if 'context' in frame.f_locals and isinstance((local_context := frame.f_locals['context']), dict):
-        return local_context.get('lang') or 'en_US'
-    # get from: kwargs['context'].get('lang'),
+    # get from: context['lang']
+    if 'context' in frame.f_locals and isinstance((local_context := frame.f_locals['context']), dict) and 'lang' in local_context:
+        return local_context['lang'] or 'en_US'
+    # get from: kwargs['context']['lang'],
     if (kwargs := frame.f_locals.get('kwargs')) and isinstance(kwargs, dict) \
-        and 'context' in kwargs and isinstance((local_context := kwargs['context']), dict):
-        return local_context.get('lang') or 'en_US'
+        and 'context' in kwargs and isinstance((local_context := kwargs['context']), dict) and 'lang' in local_context:
+        return local_context['lang'] or 'en_US'
     # get from: self.env.context.get('lang')
     if isinstance((local_env := getattr((frame.f_locals.get('self')), 'env', None)), odoo.api.Environment):
         return local_env.context.get('lang') or 'en_US'
