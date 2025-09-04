@@ -245,6 +245,18 @@ class HrCandidate(models.Model):
 
         if vals.get("company_id") and not self.env.context.get('do_not_propagate_company', False):
             self.applicant_ids.with_context(do_not_propagate_company=True).write({"company_id": vals["company_id"]})
+
+        if 'partner_name' in vals:
+
+            activities_to_update_sudo = self.env['mail.activity'].sudo().search([
+                '|',
+                '&', ('res_model', '=', 'hr.candidate'), ('res_id', 'in', self.ids),
+                '&', ('res_model', '=', 'hr.applicant'), ('res_id', 'in', self.applicant_ids.ids)
+            ])
+
+            if activities_to_update_sudo:
+                activities_to_update_sudo._compute_res_name()
+
         return res
 
     def action_open_similar_candidates(self):
