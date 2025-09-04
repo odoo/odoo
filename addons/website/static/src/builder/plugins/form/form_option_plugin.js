@@ -46,6 +46,8 @@ import { FormOption } from "./form_option";
 import { isSmallInteger } from "@html_builder/utils/utils";
 import { localization } from "@web/core/l10n/localization";
 import { formatDate } from "@web/core/l10n/dates";
+import { StyleAction } from "@html_builder/core/core_builder_action_plugin";
+import { isVisible } from "@web/core/utils/ui";
 
 const { DateTime } = luxon;
 
@@ -171,6 +173,7 @@ export class FormOptionPlugin extends Plugin {
             SetDefaultErrorMessageAction,
             SetRequirementComparatorAction,
             SetMultipleFilesAction,
+            SetFormLabelsWidthAction,
         },
         force_not_editable_selector: ".s_website_form form",
         force_editable_selector: [
@@ -1541,6 +1544,43 @@ class SetMultipleFilesAction extends BuilderAction {
     static id = "setMultipleFiles";
     apply({ editingElement }) {
         editingElement.multiple = editingElement.dataset.maxFilesNumber > 1;
+    }
+}
+class SetFormLabelsWidthAction extends StyleAction {
+    static id = "setFormLabelsWidth";
+    static dependencies = ["builderActions"];
+    apply({ editingElement, value }) {
+        const setLabelWidthValue = (el) =>
+            this.dependencies.builderActions.getAction("styleAction").apply({
+                editingElement: el,
+                params: {
+                    mainParam: "width",
+                },
+                value: value,
+            });
+        for (const labelEl of editingElement.querySelectorAll(".s_website_form_label")) {
+            setLabelWidthValue(labelEl);
+        }
+    }
+    getValue({ editingElement }) {
+        const getLabelWidthValue = (el) =>
+            this.dependencies.builderActions.getAction("styleAction").getValue({
+                editingElement: el,
+                params: {
+                    mainParam: "width",
+                },
+            });
+        // Each field now has its own label width. The global option only
+        // considers visible labels. If any label has a width different from
+        // the others, the global option input will appear empty to reflect the
+        // inconsistent values.
+        const labelWidthValues = [...editingElement.querySelectorAll(".s_website_form_label")]
+            .filter(isVisible)
+            .map(getLabelWidthValue);
+        if (new Set(labelWidthValues).size === 1) {
+            return labelWidthValues[0];
+        }
+        return null;
     }
 }
 
