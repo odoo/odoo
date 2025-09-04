@@ -138,6 +138,7 @@
         'views/snippets/s_kickoff.xml',
         'views/snippets/s_discovery.xml',
         'views/snippets/s_bento_banner.xml',
+        'views/snippets/s_disclaimer.xml',
         'views/snippets/s_striped.xml',
         'views/snippets/s_intro_pill.xml',
         'views/snippets/s_big_number.xml',
