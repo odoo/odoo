@@ -453,6 +453,9 @@ export class BlockTab extends Component {
         // a draggable snippet, so it becomes a simple HTML code.
         if (snippetEl.classList.contains("o_snippet_drop_in_only")) {
             snippetEl.classList.remove("o_snippet_drop_in_only");
+            if (snippetEl.classList.length === 0) {
+                snippetEl.removeAttribute("class");
+            }
             delete snippetEl.dataset.snippet;
             delete snippetEl.dataset.name;
         }

@@ -1,0 +1,179 @@
+<odoo>
+<template id="s_text_block" name="Text">
+    <section class="s_text_block o_mail_snippet_general pt24 pb24" style="padding-left: 15px; padding-right: 15px;">
+        <div class="container s_allow_columns">
+            <p>Great stories have a <strong>personality</strong>. Consider telling a great story that provides personality. Writing a story with personality for potential clients will assist with making a relationship connection. This shows up in small quirks like word choices or phrases. Write from your point of view, not from someone else's experience.</p>
+            <p>Great stories are <strong>for everyone</strong> even when only written <strong>for just one person</strong>. If you try to write with a wide, general audience in mind, your story will sound fake and lack emotion. No one will be interested. Write for one person. If it’s genuine for the one, it’s genuine for the rest.</p>
+        </div>
+    </section>
+</template>
+
+<template id="s_link_list" name="Link List">
+    <section class="s_link_list o_mail_snippet_general pt40 pb32">
+        <div class="container s_allow_columns">
+            <div class="row">
+                <div class="offset-md-1 col-md-10">
+                    <h3>DON'T MISS THIS</h3>
+                    <ul>
+                        <li>
+                            <a href="#" target="_blank" data-original-title="" title="">10 Books To Read in 2022</a>
+                        </li>
+                        <li>
+                            <a href="#" target="_blank" data-original-title="" title="">Find Out Who's Employee Of The Month</a>
+                        </li>
+                        <li>
+                            <a href="#" target="_blank" data-original-title="" title="">Why You Need Two Types of Content Strategists</a>
+                        </li>
+                        <li>
+                            <a href="#" target="_blank" data-original-title="" title="">7 Ways to Nurture Creativity</a>
+                        </li>
+                        <li>
+                            <a href="#" target="_blank" data-original-title="" title="">Infographic: Our Company Throughout The Generations</a>
+                        </li>
+                        <li>
+                            <a href="#" target="_blank" data-original-title="" title="">7 Unexpected Signs You're Good At Your Job</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+</template>
+<template id="s_schedule" name="Schedule">
+    <section class="s_schedule o_mail_snippet_general">
+        <div class="s_title o_mail_snippet_general pb0 pt8" data-snippet="s_title" data-name="Title">
+            <div class="container s_allow_columns">
+                <div class="row">
+                    <div class="offset-md-2 col-md-8">
+                        <div class="s_title o_mail_snippet_general pb0 pt0" data-snippet="s_title" data-name="Title">
+                            <div class="container s_allow_columns">
+                                <h3 class="text-center">Schedule</h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="s_hr o_mail_snippet_general pb16 pt4" data-snippet="s_hr" data-name="Separator">
+            <hr class="s_hr_1px s_hr_solid w-50 mx-auto"/>
+        </div>
+        <div class="s_text_block o_mail_snippet_general px-3 pt8 pb32" data-snippet="s_text_block" data-name="Text">
+            <div class="container s_allow_columns">
+                <table class="mx-auto">
+                    <tr style="vertical-align:top">
+                        <td style="text-align: right;" class="p-2">
+                            <p><strong>8h:</strong></p>
+                        </td>
+                        <td class="p-2">
+                            <p><strong>Welcome</strong></p>
+                        </td>
+                    </tr>
+                    <tr style="vertical-align:top">
+                        <td style="text-align: right;" class="p-2">
+                            <p><strong>18h30:</strong></p>
+                        </td>
+                        <td class="p-2">
+                            <p><strong>[speaker] &amp; [speaker]'s conference</strong></p>
+                            <ul>
+                                <li>Interactive Odoo demo</li>
+                                <li>Best practices to digitize your company</li>
+                            </ul>
+                        </td>
+                    </tr>
+                    <tr style="vertical-align:top">
+                        <td style="text-align: right;" class="p-2">
+                            <p><strong>19h00:</strong></p>
+                        </td>
+                        <td class="p-2">
+                            <p><strong>Table Ronde</strong></p>
+                            <ul>
+                                <li>Business Case</li>
+                                <li>Client Testimonials</li>
+                            </ul>
+                        </td>
+                    </tr>
+                    <tr style="vertical-align:top">
+                        <td style="text-align: right;" class="p-2">
+                            <p><strong>19h30: </strong></p>
+                        </td>
+                        <td class="p-2">
+                            <p><strong>Networking: Walking Dinner &amp; Drinks</strong></p>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </section>
+</template>
+
+<template id="s_pricelist_boxed" name="Pricelist Boxed">
+    <section class="s_pricelist_boxed o_mail_snippet_general pt72 pb72 o_colored_level" data-scroll-background-ratio="1">
+        <div class="container">
+            <div class="row">
+                <div class="offset-md-2 col-md-8 px-3 px-md-5 pt48 pb48 o_cc o_cc1" data-name="Menu">
+                    <div class="row">
+                        <div class="col-md-12" data-name="Menu Heading">
+                            <h2 style="text-align:center;">Our Menu</h2>
+                            <p style="text-align:center;">Savor our fresh, local cuisine with a modern twist.<br/>Deliciously crafted for every taste!</p>
+                        </div>
+                        <div class="s_pricelist_boxed_section col-md-12 pt48" data-name="Menu Section">
+                            <h3>✽&#160;&#160;Pizzas</h3>
+                            <ul class="list-unstyled m-0">
+                                <t t-call="mass_mailing.s_pricelist_boxed_item">
+                                    <t t-set="name">Margherita</t>
+                                    <t t-set="price">$12.00</t>
+                                    <t t-set="description">Classic pizza with fresh mozzarella, San Marzano tomatoes, and basil leaves, drizzled with extra virgin olive oil.</t>
+                                </t>
+                                <t t-call="mass_mailing.s_pricelist_boxed_item">
+                                    <t t-set="name">Quattro Stagioni</t>
+                                    <t t-set="price">$14.50</t>
+                                    <t t-set="description">A delicious mix of four toppings: mushrooms, artichokes, ham, and olives, all on a bed of mozzarella and tomato sauce.</t>
+                                </t>
+                                <t t-call="mass_mailing.s_pricelist_boxed_item">
+                                    <t t-set="name">Diavola</t>
+                                    <t t-set="price">$13.50</t>
+                                    <t t-set="description">Spicy pepperoni paired with fiery chili flakes, mozzarella, and tomato sauce for a flavorful kick.</t>
+                                </t>
+                            </ul>
+                        </div>
+                        <div class="s_pricelist_boxed_section col-md-12 pt48" data-name="Menu Section">
+                            <h3>✽&#160;&#160;Pastas</h3>
+                            <ul class="list-unstyled m-0">
+                                <t t-call="mass_mailing.s_pricelist_boxed_item">
+                                    <t t-set="name">Spaghetti Carbonara</t>
+                                    <t t-set="price">$15.00</t>
+                                    <t t-set="description">Traditional Roman dish with creamy egg, crispy pancetta, and Pecorino Romano, topped with black pepper.</t>
+                                </t>
+                                <t t-call="mass_mailing.s_pricelist_boxed_item">
+                                    <t t-set="name">Penne all'Arrabbiata</t>
+                                    <t t-set="price">$13.00</t>
+                                    <t t-set="description">Penne pasta tossed in a spicy tomato and garlic sauce with a hint of chili peppers, finished with fresh parsley.</t>
+                                </t>
+                                <t t-call="mass_mailing.s_pricelist_boxed_item">
+                                    <t t-set="name">Lasagna al Forno</t>
+                                    <t t-set="price">$16.00</t>
+                                    <t t-set="description">Layers of pasta, rich meat ragu, béchamel sauce, and melted mozzarella, baked to perfection.</t>
+                                </t>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</template>
+
+<template id="s_pricelist_boxed_item">
+    <li class="s_pricelist_boxed_item mt-4" data-name="Menu Item">
+        <p class="s_pricelist_boxed_item_title d-flex align-items-baseline fw-bold">
+            <span class="d-flex flex-grow-1 align-items-center">
+                <span t-out="name" class="s_pricelist_boxed_item_name"/>
+                <span class="s_pricelist_boxed_item_line flex-grow-1 ms-2 border-top"/>
+            </span>
+            <span t-out="price" class="s_pricelist_boxed_item_price ms-auto ps-3"/>
+        </p>
+        <p t-if="description" t-out="description" class="s_pricelist_boxed_item_description d-block mt-2 pe-5 text-muted o_small"/>
+    </li>
+</template>
+
+</odoo>
