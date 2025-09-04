@@ -190,7 +190,7 @@ class PosController(PortalAccount):
 
         # Set the proper context in case of unauthenticated user accessing
         # from the main company website
-        pos_order = pos_order.with_company(pos_order.company_id)
+        pos_order = pos_order.with_company(pos_order.company_id).with_context(allowed_company_ids=pos_order.company_id.ids)
 
         # If the order was already invoiced, return the invoice directly by forcing the access token so that the non-connected user can see it.
         if pos_order.account_move and pos_order.account_move.is_sale_document():
