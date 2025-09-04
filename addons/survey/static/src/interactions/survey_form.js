@@ -341,6 +341,13 @@ export class SurveyForm extends Interaction {
         );
     }
 
+    removeTimer() {
+        if (this.timerEl) {
+            this.services["public.interactions"].stopInteractions(this.timerEl);
+            this.timerEl.remove();
+        }
+    }
+
     replaceContent(content, locationEl) {
         const parser = new DOMParser();
         const contentEls = parser.parseFromString(content, "text/html").body.children;
@@ -682,8 +689,8 @@ export class SurveyForm extends Interaction {
             this.initTimer();
             this.options.isStartScreen = false;
         } else {
-            if (this.options.sessionInProgress && this.timerEl) {
-                this.timerEl.remove();
+            if (this.options.sessionInProgress) {
+                this.removeTimer();
             }
         }
         if (options && options.isFinish && !result.has_skipped_questions) {
@@ -691,9 +698,7 @@ export class SurveyForm extends Interaction {
                 this.showBreadcrumb = false;
                 this.breadcrumbEl.replaceChildren();
             }
-            if (this.timerEl) {
-                this.timerEl.remove();
-            }
+            this.removeTimer();
         } else {
             this.updateBreadcrumb();
         }
@@ -1085,9 +1090,7 @@ export class SurveyForm extends Interaction {
     }
 
     initTimer() {
-        if (this.timerEl) {
-            this.timerEl.remove();
-        }
+        this.removeTimer();
         const timerDataEl = this.el.querySelector(".o_survey_form_content_data");
         if (!timerDataEl) {
             return;
