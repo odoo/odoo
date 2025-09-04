@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import base64
 import io
 import logging
 import zipfile
@@ -8,9 +9,10 @@ from werkzeug.exceptions import NotFound, UnsupportedMediaType
 
 from odoo import _, http
 from odoo.addons.mail.controllers.thread import ThreadController
-from odoo.exceptions import AccessError
+from odoo.exceptions import AccessError, UserError
 from odoo.http import request, content_disposition
 from odoo.addons.mail.tools.discuss import add_guest_to_context, Store
+from odoo.tools.misc import file_open
 from odoo.tools.pdf import PdfReadError, extract_page
 
 logger = logging.getLogger(__name__)
@@ -131,7 +133,7 @@ class AttachmentController(ThreadController):
         type="jsonrpc",
     )
     @add_guest_to_context
-    def mail_attachement_update_thumbnail(self, attachment_id, thumbnail, access_token=None):
+    def mail_attachement_update_thumbnail(self, attachment_id, thumbnail=None, access_token=None):
         """Updates the thumbnail of an attachment."""
         attachment = request.env["ir.attachment"].browse(int(attachment_id)).exists()
         if not attachment or (
@@ -141,6 +143,11 @@ class AttachmentController(ThreadController):
             raise request.not_found()
         # sudo: ir.attachment: access check is done above, sudo necessary for guests
         attachment_sudo = attachment.sudo()
+        if attachment_sudo.mimetype != "application/pdf":
+            raise UserError(request.env._("Only PDF files can have thumbnail."))
+        if not thumbnail:
+            with file_open("web/static/img/mimetypes/unknown.svg") as unknown_svg:
+                thumbnail = base64.b64encode(unknown_svg.read().encode())
         attachment_sudo.thumbnail = thumbnail
         Store(bus_channel=attachment_sudo).add(attachment_sudo, ["has_thumbnail"]).bus_send()
 

@@ -111,13 +111,13 @@ export class Attachment extends FileModelMixin(Record) {
     }
 
     async setPdfThumbnail() {
-        const { thumbnail } = await generatePdfThumbnail(
+        const { isPdfValid, thumbnail } = await generatePdfThumbnail(
             url(
                 `/mail/attachment/pdf_first_page/${this.id}`,
                 assignDefined({}, { access_token: this.ownership_token })
             )
         );
-        if (thumbnail) {
+        if (isPdfValid !== undefined) {
             rpc(
                 `/mail/attachment/update_thumbnail`,
                 assignDefined(
