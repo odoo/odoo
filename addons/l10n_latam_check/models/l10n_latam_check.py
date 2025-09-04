@@ -122,7 +122,7 @@ class L10n_LatamCheck(models.Model):
     def _get_last_operation(self):
         self.ensure_one()
         return (self.payment_id + self.operation_ids).filtered(
-                lambda x: x.state not in ['draft', 'canceled']).sorted(key=lambda payment: (payment.date, payment._origin.id))[-1:]
+                lambda x: x.state not in ['draft', 'canceled']).sorted(key=lambda payment: (payment.date, payment.write_date, payment._origin.id))[-1:]
 
     @api.depends('payment_id.state', 'operation_ids.state')
     def _compute_current_journal(self):
