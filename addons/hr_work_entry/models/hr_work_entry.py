@@ -155,7 +155,7 @@ class HrWorkEntry(models.Model):
                   AND date BETWEEN %(start)s AND %(stop)s
                   {ids_filter}
                 GROUP BY employee_id, date
-                HAVING SUM(duration) > 24
+                HAVING SUM(duration) > 1000
             )
             SELECT we.id
             FROM hr_work_entry we
