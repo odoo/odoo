@@ -212,7 +212,7 @@ class StockMove(models.Model):
             :return stock.lot recordset.
         '''
         valid_lots = self.env['stock.lot']
-        moves = self.filtered(lambda m: m.picking_type_id.use_existing_lots)
+        moves = self.filtered(lambda m: (m.picking_type_id.code == 'outgoing' and m.picking_type_id.use_existing_lots) or m.picking_type_id.code == 'incoming')
         # Already called in self._action_confirm() but just to be safe when coming from _launch_stock_rule_from_pos_order_lines.
         self._check_company()
         if moves:

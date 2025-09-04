@@ -2566,6 +2566,100 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
         self.env.invalidate_all()
         order_line.with_user(user).with_company(branch)._compute_total_cost(None)
 
+    def test_default_selection_of_lot_ids_in_refund_picking_move_ids(self):
+        """
+        Ensure that the refund picking move lines correctly inherit
+        the lot_ids from the original picking move lines.
+        """
+        self.pos_config.write({'ship_later': True})
+        self.pos_config.open_ui()
+        current_session = self.pos_config.current_session_id
+
+        # Prepare tracked product
+        self.tracked_product = self.env['product.product'].create({
+            'name': 'Product A',
+            'type': 'product',
+            'tracking': 'lot',
+        })
+
+        # Create a lot for the tracked product
+        lot = self.env['stock.lot'].create({
+            'name': '1001',
+            'product_id': self.tracked_product.id,
+        })
+
+        # Add stock for the lot in the warehouse location
+        quant = self.env['stock.quant'].with_context(inventory_mode=True).create({
+            'product_id': self.tracked_product.id,
+            'inventory_quantity': 5,
+            'location_id': self.company_data['default_warehouse'].lot_stock_id.id,
+            'lot_id': lot.id,
+        })
+        quant.action_apply_inventory()
+
+        # Create a POS order with the tracked product and lot
+        pos_order = self.PosOrder.create({
+            'company_id': self.env.company.id,
+            'session_id': current_session.id,
+            'pricelist_id': self.partner1.property_product_pricelist.id,
+            'partner_id': self.partner1.id,
+            'lines': [
+                Command.create({
+                    'name': "OL/0001",
+                    'product_id': self.tracked_product.id,
+                    'price_unit': 1.15,
+                    'qty': 1.0,
+                    'price_subtotal': 1.15,
+                    'price_subtotal_incl': 1.15,
+                    'pack_lot_ids': [[0, 0, {'lot_name': '1001'}]],
+                })
+            ],
+            'amount_tax': 1.15,
+            'amount_total': 1.15,
+            'amount_paid': 1.15,
+            'amount_return': 0,
+            'shipping_date': fields.Date.today(),
+            'last_order_preparation_change': '{}',
+        })
+
+        # Register payment for the order
+        self.PosMakePayment.with_context(active_id=pos_order.id, active_ids=[pos_order.id]).create({
+            'amount': 1.15,
+            'payment_method_id': self.cash_payment_method.id,
+        }).check()
+
+        # Validate that the delivery picking has the expected lot
+        picking_lot_ids = pos_order.picking_ids.move_ids.lot_ids
+        self.assertEqual(len(picking_lot_ids), 1, "Original picking should contain exactly 1 lot")
+        self.assertEqual(picking_lot_ids[0], lot, "Original picking lot should match the ordered lot")
+
+        # Validate the delivery
+        pos_order.picking_ids[0].button_validate()
+
+        # Refund the POS order
+        refund_action = pos_order.refund()
+        refund_order = self.PosOrder.browse(refund_action['res_id'])
+        refund_order.write({'shipping_date': fields.Date.today()})
+
+        # Ensure refund total is negative of the original order
+        self.assertEqual(
+            pos_order.amount_total,
+            -1 * refund_order.amount_total,
+            "Refund amount should be the negative of the original order"
+        )
+
+        # Register payment for the refund
+        self.PosMakePayment.with_context(active_id=refund_order.id, active_ids=refund_order.ids).create({
+            'amount': refund_order.amount_total,
+            'payment_method_id': self.cash_payment_method.id,
+        }).check()
+
+        # Validate that refund picking reused the same lot
+        refund_lot_ids = refund_order.picking_ids.move_ids.lot_ids
+        self.assertEqual(len(refund_lot_ids), 1, "Refund picking should contain exactly 1 lot")
+        self.assertEqual(refund_lot_ids[0], lot, "Refund picking lot should match the original lot")
+        self.assertEqual(picking_lot_ids, refund_lot_ids, "Refund picking lots should equal original picking lots")
+
     def test_split_payment_linked_to_accounting_partner(self):
         self.bank_payment_method.write({'split_transactions': True})
         self.pos_config.open_ui()
