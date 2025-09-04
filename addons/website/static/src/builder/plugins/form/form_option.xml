@@ -100,7 +100,7 @@
                 <BuilderSelectItem actionValue="'url'">Url</BuilderSelectItem>
                 <BuilderSelectItem actionValue="'integer'">Number</BuilderSelectItem>
                 <BuilderSelectItem actionValue="'float'">Decimal Number</BuilderSelectItem>
-                <BuilderSelectItem actionValue="'boolean'">Checkbox</BuilderSelectItem>
+                <BuilderSelectItem actionValue="'boolean'" id="'custom_field_boolean_opt'">Checkbox</BuilderSelectItem>
                 <BuilderSelectItem actionValue="'one2many'">Multiple Checkboxes</BuilderSelectItem>
                 <BuilderSelectItem actionValue="'selection'">Radio Buttons</BuilderSelectItem>
                 <BuilderSelectItem actionValue="'many2one'">Selection</BuilderSelectItem>
@@ -164,7 +164,15 @@
             id="'link_state_to_country_opt'" applyTo="'.s_website_form_input'"/>
     </BuilderRow>
     <BuilderRow label.translate="Description">
-        <BuilderCheckbox action="'toggleDescription'" preview="false"/>
+        <!-- Use position options only when the target field is a "Checkbox" -->
+        <BuilderSelect t-if="isActiveItem('custom_field_boolean_opt')" action="'setDescription'">
+            <BuilderSelectItem actionValue="'none'">None</BuilderSelectItem>
+            <BuilderSelectItem actionValue="'top'">Top (Inline)</BuilderSelectItem>
+            <BuilderSelectItem actionValue="'center'">Center (Inline)</BuilderSelectItem>
+            <BuilderSelectItem actionValue="'stacked'">Stacked</BuilderSelectItem>
+            <BuilderSelectItem actionValue="'wrap'">Wrap</BuilderSelectItem>
+        </BuilderSelect>
+        <BuilderCheckbox t-else="" action="'setDescription'" preview="false"/>
     </BuilderRow>
     <BuilderRow label.translate="Placeholder">
         <BuilderTextInput attributeAction="'placeholder'"
