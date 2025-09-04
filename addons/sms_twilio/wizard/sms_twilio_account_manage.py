@@ -77,6 +77,7 @@ class SmsTwilioAccountManage(models.TransientModel):
         composer = self.env['sms.composer'].create({
             'body': _("This is a test SMS from Odoo"),
             'composition_mode': 'numbers',
+            'numbers': self.test_number,
         })
         sms_su = composer._action_send_sms()[0]
 
