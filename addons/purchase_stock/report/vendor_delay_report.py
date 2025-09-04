@@ -44,7 +44,7 @@ FROM   stock_move m
          ON pt.id = p.product_tmpl_id
        JOIN uom_uom pt_uom
          ON pt_uom.id = pt.uom_id
-       JOIN product_category pc
+       LEFT JOIN product_category pc
          ON pc.id = pt.categ_id
        LEFT JOIN stock_move_line ml
          ON ml.move_id = m.id
