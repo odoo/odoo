@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates xml:space="preserve">
+
+<t t-name="purchase_stock.ReplenishAutoComplete" t-inherit="web.AutoComplete">
+    <xpath expr="">
+    </xpath>
+</t>
+
+<t t-name="purchase_stock.ReplenishMany2XAutocomplete" t-inherit="web.Many2XAutocomplete">
+    <xpath expr="//AutoComplete" position="replace">
+        <ReplenishAutoComplete t-else=""
+            value="props.value"
+            id="props.id"
+            placeholder="props.placeholder"
+            autocomplete="'off'"
+            sources="sources"
+            autoSelect="props.autoSelect"
+            onSelect.bind="onSelect"
+            onInput.bind="onInput"
+            onChange.bind="onChange"
+            dropdown="props.dropdown"
+            autofocus="props.autofocus"
+            resetOnSelect="props.value === ''"
+            onCancel.bind="onCancel"
+        />
+    </xpath>
+</t>
+
+</templates>
