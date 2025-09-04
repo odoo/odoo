@@ -485,7 +485,7 @@ export function parseServerValue(field, value) {
         case "selection": {
             if (value === false) {
                 // process selection: convert false to 0, if 0 is a valid key
-                const hasKey0 = field.selection.find((option) => option[0] === 0);
+                const hasKey0 = Array.isArray(field.selection) && field.selection.find(option => option[0] === 0);
                 return hasKey0 ? 0 : value;
             }
             return value;

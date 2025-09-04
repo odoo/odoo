@@ -53,10 +53,17 @@ export class SelectionField extends Component {
         switch (this.type) {
             case "many2one":
                 return [...this.specialData.data];
-            case "selection":
-                return this.props.record.fields[this.props.name].selection.filter(
-                    (option) => option[0] !== false && option[1] !== ""
-                );
+            case "selection": {
+                const field = this.props.record.fields[this.props.name];
+                if (field && Array.isArray(field.selection)) {
+                    return field.selection.filter(
+                        (option) =>
+                            Array.isArray(option) && option.length >= 2 &&
+                            option[0] !== false && option[1] !== ""
+                    );
+                }
+                return [];
+            }
             default:
                 return [];
         }
@@ -67,10 +74,15 @@ export class SelectionField extends Component {
                 return this.props.record.data[this.props.name]
                     ? this.props.record.data[this.props.name].display_name
                     : "";
-            case "selection":
-                return this.props.record.data[this.props.name] !== false
-                    ? this.options.find((o) => o[0] === this.props.record.data[this.props.name])[1]
-                    : "";
+            case "selection": {
+                if (this.props.record.data[this.props.name] !== false) {
+                    const match = this.options.find(
+                        (o) => Array.isArray(o) && o[0] === this.props.record.data[this.props.name]
+                    );
+                    return match ? match[1] : "";
+                }
+                return "";
+            }
             default:
                 return "";
         }
