@@ -396,6 +396,16 @@ class HrEmployee(models.Model):
                                              "Please select a date outside existing contracts",
                                              format_date_abbr(self.env, date)))
 
+    @api.onchange('private_phone')
+    def _onchange_private_phone_validation(self):
+        if self.private_phone:
+            self.private_phone = self._phone_format(fname="private_phone", force_format="INTERNATIONAL") or self.private_phone
+
+    @api.onchange('emergency_phone')
+    def _onchange_emergency_phone_validation(self):
+        if self.emergency_phone:
+            self.emergency_phone = self._phone_format(fname="emergency_phone", force_format="INTERNATIONAL") or self.emergency_phone
+
     @api.onchange('contract_template_id')
     def _onchange_contract_template_id(self):
         if self.contract_template_id:
