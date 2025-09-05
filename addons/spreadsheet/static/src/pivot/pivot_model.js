@@ -515,6 +515,21 @@ export class OdooPivotModel extends PivotModel {
     }
 
     /**
+     * @override
+     */
+    _sanitizeLabel(value, groupBy, config) {
+        const { metaData } = config;
+        const fieldName = groupBy.split(":")[0];
+        if (fieldName && metaData.fields[fieldName]) {
+            const fields = fieldName.split(".");
+            if (fields.length > 1 && fields.at(-1) === "id" && Array.isArray(value)) {
+                return value[0];
+            }
+        }
+        return super._sanitizeLabel(value, groupBy, config);
+    }
+
+    /**
      * Check if the given field is used as col group by
      */
     _isCol(nameWithGranularity) {
