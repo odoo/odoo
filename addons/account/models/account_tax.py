@@ -3235,22 +3235,6 @@ class AccountTax(models.Model):
         }
 
     @api.model
-    def _has_taxes_to_exclude(self, base_lines):
-        """ Detect if there is at least one tax that is not affected by the discount in the base lines passed
-        as parameter.
-
-        [!] Mirror of the same method in account_tax.js.
-        PLZ KEEP BOTH METHODS CONSISTENT WITH EACH OTHERS.
-
-        :param base_lines:  A list of base lines generated using the '_prepare_base_line_for_taxes_computation' method.
-        :return:            A boolean.
-        """
-        return any(
-            any(not tax_data['tax']._can_be_discounted() for tax_data in base_line['tax_details']['taxes_data'])
-            for base_line in base_lines
-        )
-
-    @api.model
     def _reduce_base_lines_with_grouping_function(self, base_lines, grouping_function=None):
         """ Create the new base lines that will get the discount.
         Since they no longer contain fixed taxes, we can remove the quantity and aggregate them depending on
@@ -3445,6 +3429,108 @@ class AccountTax(models.Model):
                     base_line = target_factor['base_line']
                     base_line['manual_tax_amounts'][tax_id_str][f'tax_amount{delta_suffix}'] += amount_to_distribute
 
+    @api.model
+    def _partition_base_lines_taxes(self, base_lines, partition_function):
+        """ Partition the taxes of base lines passed as parameter.
+
+        [!] Mirror of the same method in account_tax.js.
+        PLZ KEEP BOTH METHODS CONSISTENT WITH EACH OTHERS.
+
+        :param base_lines:              The base lines.
+        :param partition_function:      A function taking <base_line, tax_data> as parameter and returning
+                                        True if the tax has to be kept or not.
+        :return:                        A tuple <base_lines_partition_taxes, has_taxes_to_exclude> where
+            * base_lines_partition_taxes:   A list of tuple <base_line, taxes_to_keep, taxes_to_exclude>
+            * has_taxes_to_exclude:         A boolean indicating if at least one tax to exclude has been found.
+        """
+        has_taxes_to_exclude = False
+        base_lines_partition_taxes = []
+        for base_line in base_lines:
+            tax_details = base_line['tax_details']
+            taxes_data = tax_details['taxes_data']
+            taxes_to_keep = self.env['account.tax']
+            taxes_to_exclude = self.env['account.tax']
+            for tax_data in taxes_data:
+                tax = tax_data['tax']
+                if partition_function(base_line, tax_data):
+                    taxes_to_keep += tax_data['tax']
+                else:
+                    taxes_to_exclude += tax_data['tax']
+            if taxes_to_exclude:
+                has_taxes_to_exclude = True
+            base_lines_partition_taxes.append((base_line, taxes_to_keep, taxes_to_exclude))
+        return base_lines_partition_taxes, has_taxes_to_exclude
+
+    @api.model
+    def _prepare_discountable_base_lines(self, base_lines, company, exclude_function=None):
+        """ Prepare base lines on which we can compute all kind of discount.
+        This method remove all part of base lines / taxes that are not eligible for a discount.
+        Those taxes are given by the '_can_be_discounted' method giving False if not discountable.
+
+        [!] Mirror of the same method in account_tax.js.
+        PLZ KEEP BOTH METHODS CONSISTENT WITH EACH OTHERS.
+
+        :param base_lines:          A list of base lines generated using the '_prepare_base_line_for_taxes_computation' method.
+        :param company:             The company of the base lines.
+        :param exclude_function:    An optional function taking a base line and a tax_data as parameter and returning
+                                    a boolean indicating if the tax_data has to be exclude from the computation.
+        :return:                    The base lines that are discountable.
+        """
+        def partition_function(base_line, tax_data):
+            tax = tax_data['tax']
+            return tax._can_be_discounted() and (not exclude_function or not exclude_function(base_line, tax_data))
+
+        base_lines_partition_taxes, has_taxes_to_exclude = self._partition_base_lines_taxes(base_lines, partition_function)
+        if not has_taxes_to_exclude:
+            return base_lines
+
+        # Exclude non-discountable taxes.
+        discountable_base_lines = []
+        for base_line, taxes_to_keep, taxes_to_exclude in base_lines_partition_taxes:
+            tax_details = base_line['tax_details']
+            taxes_data = tax_details['taxes_data']
+
+            if any(
+                tax_data['tax'] in taxes_to_exclude
+                and tax_data['tax'].price_include
+                and tax_data['tax'].include_base_amount
+                for tax_data in taxes_data
+            ):
+                # When the removed tax affect the base of the others, we had to remove the tax amount applied
+                # on those taxes too.
+                discountable_base_line = self._prepare_base_line_for_taxes_computation(
+                    base_line,
+                    price_unit=tax_details['raw_total_excluded_currency'],
+                    quantity=1.0,
+                    discount=0.0,
+                    tax_ids=taxes_to_keep,
+                    special_mode='total_excluded',
+                )
+                self._add_tax_details_in_base_line(discountable_base_line, company)
+                taxes_data_for_price_unit = discountable_base_line['tax_details']['taxes_data']
+            else:
+                taxes_data_for_price_unit = [
+                    tax_data
+                    for tax_data in taxes_data
+                    if tax_data['tax'] in taxes_to_keep
+                ]
+
+            price_unit = tax_details['raw_total_excluded_currency'] + sum(
+                tax_data['raw_tax_amount_currency']
+                for tax_data in taxes_data_for_price_unit
+                if tax_data['tax'].price_include and tax_data['tax'] in taxes_to_keep
+            )
+            discountable_base_lines.append(self._prepare_base_line_for_taxes_computation(
+                base_line,
+                price_unit=price_unit,
+                quantity=1.0,
+                discount=0.0,
+                tax_ids=taxes_to_keep,
+            ))
+        self._add_tax_details_in_base_lines(discountable_base_lines, company)
+        self._round_base_lines_tax_details(discountable_base_lines, company)
+        return discountable_base_lines
+
     # -------------------------------------------------------------------------
     # GLOBAL DISCOUNT
     # -------------------------------------------------------------------------
@@ -3478,50 +3564,7 @@ class AccountTax(models.Model):
             return []
 
         currency = base_lines[0]['currency_id']
-
-        # Exclude non-discountable taxes.
-        discountable_base_lines = base_lines
-        if self._has_taxes_to_exclude(base_lines):
-            discountable_base_lines = []
-            for base_line in base_lines:
-                tax_details = base_line['tax_details']
-                taxes_data = tax_details['taxes_data']
-                taxes = base_line['tax_ids'].filtered(lambda tax: tax._can_be_discounted())
-
-                if any(
-                    tax_data['tax'] not in taxes
-                    and tax_data['tax'].price_include
-                    and tax_data['tax'].include_base_amount
-                    for tax_data in taxes_data
-                ):
-                    # When the removed tax affect the base of the others, we had to remove the tax amount applied
-                    # on those taxes too.
-                    discountable_base_line = self._prepare_base_line_for_taxes_computation(
-                        base_line,
-                        price_unit=tax_details['raw_total_excluded_currency'],
-                        quantity=1.0,
-                        discount=0.0,
-                        tax_ids=taxes,
-                        special_mode='total_excluded',
-                    )
-                    self._add_tax_details_in_base_line(discountable_base_line, company)
-                    taxes_data_for_price_unit = discountable_base_line['tax_details']['taxes_data']
-                else:
-                    taxes_data_for_price_unit = taxes_data
-
-                discountable_base_lines.append(self._prepare_base_line_for_taxes_computation(
-                    base_line,
-                    price_unit=tax_details['raw_total_excluded_currency'] + sum(
-                        tax_data['raw_tax_amount_currency']
-                        for tax_data in taxes_data_for_price_unit
-                        if tax_data['tax'].price_include and tax_data['tax'] in taxes
-                    ),
-                    quantity=1.0,
-                    discount=0.0,
-                    tax_ids=taxes,
-                ))
-            self._add_tax_details_in_base_lines(discountable_base_lines, company)
-            self._round_base_lines_tax_details(discountable_base_lines, company)
+        discountable_base_lines = self._prepare_discountable_base_lines(base_lines, company)
 
         # Compute the total discount amount to reach.
         base_lines_totals = self._compute_subset_base_lines_total(discountable_base_lines, company)
@@ -3584,6 +3627,80 @@ class AccountTax(models.Model):
     # -------------------------------------------------------------------------
 
     @api.model
+    def _prepare_base_lines_for_down_payment(
+        self,
+        base_lines,
+        company,
+        exclude_function=None,
+    ):
+        """ Prepare base lines on which we can compute down payments.
+        This method wrap all part of base lines / taxes that are not eligible for a down payment into the base amount.
+
+        :param base_lines:          A list of base lines generated using the '_prepare_base_line_for_taxes_computation' method.
+        :param company:             The company of the base lines.
+        :param exclude_function:    An optional function taking a base line and a tax_data as parameter and returning
+                                    a boolean indicating if the tax_data has to be exclude from the computation.
+        :return:                    The negative base lines representing the global discount.
+        """
+        def partition_function(base_line, tax_data):
+            tax = tax_data['tax']
+            return tax._can_be_discounted() and (not exclude_function or not exclude_function(base_line, tax_data))
+
+        base_lines_partition_taxes, has_taxes_to_exclude = self._partition_base_lines_taxes(base_lines, partition_function)
+        if not has_taxes_to_exclude:
+            return base_lines
+
+        base_lines_for_dp = []
+        for base_line, taxes_to_keep, taxes_to_exclude in base_lines_partition_taxes:
+            taxes = base_line['tax_ids']
+            tax_details = base_line['tax_details']
+            taxes_data = tax_details['taxes_data']
+
+            # Split the taxes in multiple batch of taxes, one per sub base line.
+            new_taxes = self.env['account.tax']
+            new_base_lines_for_dp = []
+            for i, tax_data in enumerate(taxes_data):
+                tax = tax_data['tax']
+                if tax in taxes_to_keep:
+                    new_taxes += tax
+                elif not tax.price_include:
+                    # The tax is standalone and can just be extracted as a fixed amount.
+                    new_base_lines_for_dp.append(self._prepare_base_line_for_taxes_computation(
+                        base_line,
+                        price_unit=tax_data['tax_amount_currency'],
+                        quantity=1.0,
+                        discount=0.0,
+                        tax_ids=tax_data['taxes'].filtered(lambda tax: tax in taxes_to_keep),
+                    ))
+                else:
+                    continue
+
+            if new_base_lines_for_dp:
+                if new_taxes:
+                    price_unit_after_discount = base_line['price_unit'] * (1 - (base_line['discount'] / 100.0))
+                    new_base_lines_for_dp.append(self._prepare_base_line_for_taxes_computation(
+                        base_line,
+                        price_unit=base_line['quantity'] * price_unit_after_discount,
+                        quantity=1.0,
+                        discount=0.0,
+                        tax_ids=new_taxes,
+                    ))
+            else:
+                # The base line can be used as raw since it doesn't contain taxes to be excluded.
+                price_unit_after_discount = base_line['price_unit'] * (1 - (base_line['discount'] / 100.0))
+                new_base_lines_for_dp.append(self._prepare_base_line_for_taxes_computation(
+                    base_line,
+                    price_unit=base_line['quantity'] * price_unit_after_discount,
+                    quantity=1.0,
+                    discount=0.0,
+                    tax_ids=new_taxes,
+                ))
+            base_lines_for_dp += new_base_lines_for_dp
+        self._add_tax_details_in_base_lines(base_lines_for_dp, company)
+        self._round_base_lines_tax_details(base_lines_for_dp, company)
+        return base_lines_for_dp
+
+    @api.model
     def _prepare_down_payment_lines(
         self,
         base_lines,
@@ -3612,61 +3729,10 @@ class AccountTax(models.Model):
             return []
 
         currency = base_lines[0]['currency_id']
-
-        # Exclude non-discountable taxes.
-        discountable_base_lines = base_lines
-        if self._has_taxes_to_exclude(base_lines):
-            discountable_base_lines = []
-            for base_line in base_lines:
-                taxes = base_line['tax_ids']
-                tax_details = base_line['tax_details']
-                taxes_data = tax_details['taxes_data']
-
-                # Split the taxes in multiple batch of taxes, one per sub base line.
-                new_taxes = self.env['account.tax']
-                new_discountable_base_lines = []
-                for i, tax_data in enumerate(taxes_data):
-                    tax = tax_data['tax']
-                    if tax._can_be_discounted():
-                        new_taxes += tax
-                    elif not tax.price_include:
-                        # The tax is standalone and can just be extracted as a fixed amount.
-                        new_discountable_base_lines.append(self._prepare_base_line_for_taxes_computation(
-                            base_line,
-                            price_unit=tax_data['tax_amount_currency'],
-                            quantity=1.0,
-                            discount=0.0,
-                            tax_ids=tax_data['taxes'].filtered(lambda tax: tax._can_be_discounted()),
-                        ))
-                    else:
-                        continue
-
-                if new_discountable_base_lines:
-                    if new_taxes:
-                        price_unit_after_discount = base_line['price_unit'] * (1 - (base_line['discount'] / 100.0))
-                        new_discountable_base_lines.append(self._prepare_base_line_for_taxes_computation(
-                            base_line,
-                            price_unit=base_line['quantity'] * price_unit_after_discount,
-                            quantity=1.0,
-                            discount=0.0,
-                            tax_ids=new_taxes,
-                        ))
-                else:
-                    # The base line can be used as raw since it doesn't contain taxes to be excluded.
-                    price_unit_after_discount = base_line['price_unit'] * (1 - (base_line['discount'] / 100.0))
-                    new_discountable_base_lines.append(self._prepare_base_line_for_taxes_computation(
-                        base_line,
-                        price_unit=base_line['quantity'] * price_unit_after_discount,
-                        quantity=1.0,
-                        discount=0.0,
-                        tax_ids=new_taxes,
-                    ))
-                discountable_base_lines += new_discountable_base_lines
-            self._add_tax_details_in_base_lines(discountable_base_lines, company)
-            self._round_base_lines_tax_details(discountable_base_lines, company)
+        base_lines_for_dp = self._prepare_base_lines_for_down_payment(base_lines, company)
 
         # Compute the total discount amount to reach.
-        base_lines_totals = self._compute_subset_base_lines_total(discountable_base_lines, company)
+        base_lines_totals = self._compute_subset_base_lines_total(base_lines_for_dp, company)
         total_included_currency = base_lines_totals['base_amount_currency'] + base_lines_totals['tax_amount_currency']
         total_included = base_lines_totals['base_amount'] + base_lines_totals['tax_amount']
         rate = base_lines_totals['rate']
@@ -3692,7 +3758,7 @@ class AccountTax(models.Model):
 
         # Apply the percentage to each line.
         new_base_lines = []
-        for base_line in discountable_base_lines:
+        for base_line in base_lines_for_dp:
             new_base_line = self._prepare_base_line_for_taxes_computation(
                 base_line,
                 computation_key=computation_key,
