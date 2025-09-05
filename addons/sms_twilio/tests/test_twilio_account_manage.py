@@ -36,7 +36,7 @@ class TestSmsTwilio(MockSmsTwilio, TransactionCase):
         for twilio_error, notif_params in zip(
             (False, "wrong_number_format"),
             ({}, {
-                'message': 'sms_number_format: None',
+                'message': 'Wrong Number Format: Wrong Number Format',
                 'type': 'danger',
             }),
             strict=True,
