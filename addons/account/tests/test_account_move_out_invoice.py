@@ -4619,3 +4619,41 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
         })
         values = invoice._get_invoice_portal_extra_values()
         self.assertIn('payment_state', values)
+
+    def test_invoice_epd_cash_rounding_amount(self):
+        """
+        This test checks the correct calculation of early payment discount on an
+        invoice having also cash discount applied
+        """
+        tax = self.env['account.tax'].create({
+            'name': '8.1%',
+            'type_tax_use': 'sale',
+            'amount': 8.1,
+        })
+        self.cash_rounding_a.rounding_method = 'HALF-UP'
+        payment_terms = self.env['account.payment.term'].create({
+            'name': "2/7 Net 30",
+            'company_id': self.company_data['company'].id,
+            'discount_percentage': 2,
+            'discount_days': 7,
+            'early_discount': True,
+        })
+
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'invoice_payment_term_id': payment_terms.id,
+            'invoice_cash_rounding_id': self.cash_rounding_a.id,
+            'invoice_line_ids': [Command.create({
+                'name': 'test line',
+                'price_unit': 50.00,
+                'tax_ids': [Command.set(tax.ids)],
+            })],
+        })
+        invoice.action_post()
+        invoice = invoice.with_context(active_model='account.move', active_id=invoice.id)
+        discounted_amount = invoice.invoice_payment_term_id._get_amount_due_after_discount(
+            total_amount=invoice.amount_total,
+            untaxed_amount=invoice.amount_tax,
+        )
+        self.assertEqual(discounted_amount, 52.95)
