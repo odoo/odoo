@@ -111,10 +111,35 @@
                             name="operations"
                             invisible="type not in ('normal', 'phantom')"
                             groups="mrp.group_mrp_routings">
-                                <field name="operation_ids"
-                                    invisible="type not in ('normal', 'phantom')"
-                                    groups="mrp.group_mrp_routings"
-                                    context="{'bom_id_invisible': True, 'default_bom_id': id, 'list_view_ref': 'mrp.mrp_routing_workcenter_bom_tree_view'}"/>
+                                <field name="operation_ids" invisible="operation_ids.length == 0" 
+                                context="{'bom_id_invisible': True, 'default_bom_id': id, 'list_view_ref': 'mrp.mrp_routing_workcenter_bom_tree_view', 'target': 'new'}"/>
+                                <div invisible="operation_ids.length != 0">
+                                    <div class="o_mrp_routing_image bill_of_material position-relative">
+                                        <img class="position-absolute" src="/mrp/static/img/routing_shopfloor.png" alt="Shop Floor"/>
+                                        <div class="separator position-relative"/>
+                                        <span class="o_annotation o_annotation_1 o_annotation_end position-absolute">Time Clock</span>
+                                        <span class="o_annotation o_annotation_2 o_annotation_end position-absolute">Quality Control</span>
+                                        <span class="o_annotation o_annotation_3 o_annotation_start position-absolute">Feedback Loop</span>
+                                        <span class="o_annotation o_annotation_4 o_annotation_start position-absolute">Register Materials</span>
+                                        <span class="o_annotation o_annotation_5 o_annotation_start position-absolute">Select Operator</span>
+                                        <div class="o_text position-absolute">
+                                            <p>
+                                                No Operations Yet !
+                                            </p>
+                                            <p>
+                                                Run your Shop Floor with work orders for each operation defined on your bill of material.
+                                            </p>
+                                            <p>
+                                                Each operation can have multiple steps (scan products, view instructions) or even quality checks.
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="d-flex justify-content-center" invisible="operation_ids.length != 0">
+                                    <button name="action_open_operation_form" type="object" class="btn btn-primary">
+                                        <span class="o_stat_text">Add Operation</span>
+                                    </button>
+                                </div>
                         </page>
                         <page string="By-products"
                             name="by_products"
