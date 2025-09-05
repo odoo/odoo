@@ -49,10 +49,6 @@ export class MailActivity extends models.ServerModel {
         const MailActivityType = this.env["mail.activity.type"];
         /** @type {import("mock_models").MailTemplate} */
         const MailTemplate = this.env["mail.template"];
-        /** @type {import("mock_models").ResPartner} */
-        const ResPartner = this.env["res.partner"];
-        /** @type {import("mock_models").ResUsers} */
-        const ResUsers = this.env["res.users"];
         store._add_record_fields(
             this,
             fields.filter((f) => !["activity_type_id"].includes(f))
@@ -81,8 +77,6 @@ export class MailActivity extends models.ServerModel {
             if (data.summary) {
                 data.display_name = data.summary;
             }
-            const [user] = ResUsers.browse(activity.user_id);
-            data.persona = mailDataHelpers.Store.one(ResPartner.browse(user.partner_id));
             store._add_record_fields(this.browse(activity.id), data);
         }
     }
@@ -108,6 +102,12 @@ export class MailActivity extends models.ServerModel {
             "res_model",
             "state",
             "summary",
+            mailDataHelpers.Store.one(
+                "user_id",
+                makeKwArgs({
+                    fields: [mailDataHelpers.Store.one("partner_id")],
+                })
+            ),
         ];
     }
 
