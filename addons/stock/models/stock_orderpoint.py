@@ -135,7 +135,7 @@ class StockWarehouseOrderpoint(models.Model):
         if not orderpoints_to_compute:
             return
 
-        horizon_date = fields.Date.today() + relativedelta.relativedelta(days=orderpoints_to_compute.get_horizon_days())
+        horizon_date = fields.Date.today() + relativedelta.relativedelta(days=self.get_horizon_days())
         _, domain_move_in, domain_move_out = orderpoints_to_compute.product_id._get_domain_locations()
         domain_move_in = Domain.AND([
             [('product_id', 'in', orderpoints_to_compute.product_id.ids)],
@@ -151,23 +151,23 @@ class StockWarehouseOrderpoint(models.Model):
         ])
 
         Move = self.env['stock.move'].with_context(active_test=False)
-        incoming_moves_by_product_date = Move._read_group(domain_move_in, ['product_id', 'date:day'], ['product_qty:sum'])
-        outgoing_moves_by_product_date = Move._read_group(domain_move_out, ['product_id', 'date:day'], ['product_qty:sum'])
+        incoming_moves_by_product_date = Move._read_group(domain_move_in, ['product_id', 'location_dest_id', 'date:day'], ['product_qty:sum'])
+        outgoing_moves_by_product_date = Move._read_group(domain_move_out, ['product_id', 'location_id', 'date:day'], ['product_qty:sum'])
 
         moves_by_product_dict = {}
-        for product, in_date, in_qty in incoming_moves_by_product_date:
-            if not moves_by_product_dict.get(product.id):
-                moves_by_product_dict[product.id] = defaultdict(float)
-            moves_by_product_dict[product.id][in_date.date()] += in_qty
-        for product, out_date, out_qty in outgoing_moves_by_product_date:
-            if not moves_by_product_dict.get(product.id):
-                moves_by_product_dict[product.id] = defaultdict(float)
-            moves_by_product_dict[product.id][out_date.date()] -= out_qty
+        for product, location, in_date, in_qty in incoming_moves_by_product_date:
+            if not moves_by_product_dict.get((product.id, location.id)):
+                moves_by_product_dict[(product.id, location.id)] = defaultdict(float)
+            moves_by_product_dict[(product.id, location.id)][in_date.date()] += in_qty
+        for product, location, out_date, out_qty in outgoing_moves_by_product_date:
+            if not moves_by_product_dict.get((product.id, location.id)):
+                moves_by_product_dict[(product.id, location.id)] = defaultdict(float)
+            moves_by_product_dict[(product.id, location.id)][out_date.date()] -= out_qty
 
         for orderpoint in orderpoints_to_compute:
             qty_on_hand_at_date = orderpoint.qty_on_hand
             tentative_deadline = horizon_date
-            for move_date, move_qty in sorted(moves_by_product_dict.get(orderpoint.product_id.id, {}).items()):
+            for move_date, move_qty in sorted(moves_by_product_dict.get((orderpoint.product_id.id, orderpoint.location_id.id), {}).items()):
                 qty_on_hand_at_date += move_qty
                 if qty_on_hand_at_date < orderpoint.product_min_qty:
                     tentative_deadline = move_date - relativedelta.relativedelta(days=orderpoint.lead_days)
@@ -180,8 +180,8 @@ class StockWarehouseOrderpoint(models.Model):
         for orderpoint in orderpoints_to_compute.with_context(bypass_delay_description=True):
             values = orderpoint._get_lead_days_values()
             lead_days, dummy = orderpoint.rule_ids._get_lead_days(orderpoint.product_id, **values)
-            orderpoint.lead_horizon_date = fields.Date.today() + relativedelta.relativedelta(days=lead_days['total_delay'])
-            orderpoint.lead_days = lead_days['total_delay'] - orderpoint.get_horizon_days()
+            orderpoint.lead_horizon_date = fields.Date.today() + relativedelta.relativedelta(days=lead_days['total_delay'] + lead_days['horizon_time'])
+            orderpoint.lead_days = lead_days['total_delay']
         (self - orderpoints_to_compute).lead_horizon_date = False
         (self - orderpoints_to_compute).lead_days = 0
 
@@ -727,7 +727,7 @@ class StockWarehouseOrderpoint(models.Model):
                             origin = orderpoint.name
                         if orderpoint.product_uom.compare(orderpoint.qty_to_order, 0.0) == 1:
                             date = orderpoint._get_orderpoint_procurement_date()
-                            global_horizon_days = orderpoint.get_horizon_days()
+                            global_horizon_days = orderpoint._get_horizon_days()
                             if global_horizon_days:
                                 date -= relativedelta.relativedelta(days=int(global_horizon_days))
                             values = orderpoint._prepare_procurement_values(date=date)
@@ -804,11 +804,18 @@ class StockWarehouseOrderpoint(models.Model):
             qty_to_order = replenishment_multiple._compute_quantity(qty_to_order, self.product_id.uom_id)
         return qty_to_order
 
+    @api.model
     def get_horizon_days(self):
-        """ Return the value for Horizon. This can be (in order of priority):
-        - the value set in context in the replenishment view
-        - the value set on the company of the all the records in self. In multi-company, it will take the biggest value.
-        - the value set on the company of the user if all else fail.
-        """
-        max_company_horizon_days = max(self.company_id.mapped('horizon_days')) if self.company_id else 0
-        return self.env.context.get('global_horizon_days', max_company_horizon_days or self.env.company.horizon_days)
+        """ Public method to get the horizon_days. It will return either the current context or the horizon_days
+        set on the company of the user.
+
+        Checking the RR in multi-company is not recommended since different companies may have different horizon
+        configurations. For this reason, this function returns the horizon_days of the company of the user if
+        no context is found."""
+        return self.env.context.get('global_horizon_days', self.env.company.horizon_days)
+
+    def _get_horizon_days(self):
+        """ Private method to get the horizon_days. It will return either the current context or the horizon_days
+        set on the company of the record calling the function. """
+        self.ensure_one()
+        return self.env.context.get('global_horizon_days', self.company_id.horizon_days)
