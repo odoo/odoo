@@ -20,7 +20,24 @@
                                     <td>Field:</td>
                                     <td><t t-esc="field.label"/></td>
                                 </tr>
-                                <tr>
+                                <t t-if="field.fieldNode?.type === 'many2many'">
+                                    <tr t-if="props.changes[field.name].add.length">
+                                        <td><span>Add</span>: </td>
+                                        <td>
+                                            <div class="o_field_many2many_tags">
+                                            <TagsList tags="getTagProps(props.changes[field.name].add, field)"/>                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr t-if="props.changes[field.name].remove.length">
+                                        <td><span>Remove</span>: </td>
+                                        <td>
+                                            <div class="o_field_many2many_tags">
+                                                <TagsList tags="getTagProps(props.changes[field.name].remove, field)"/>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </t>
+                                <tr t-else="">
                                     <td>Update to:</td>
                                     <td style="pointer-events: none;">
                                         <span t-if="isValueEmpty(field)">None</span>
