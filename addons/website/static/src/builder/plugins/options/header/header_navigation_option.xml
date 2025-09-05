@@ -17,8 +17,10 @@
         'website.template_header_search_align_center',
         'website.template_header_sales_one_align_center',
         'website.template_header_sales_two_align_center',
+        'website.template_header_sales_three_align_center',
         'website.template_header_sales_four_align_center',
         'website.template_header_sidebar_align_center',
+        'website.template_header_vertical_align_center',
     ]"/>
 
     <t t-set="align_right_views" t-value="[
@@ -29,8 +31,10 @@
         'website.template_header_search_align_right',
         'website.template_header_sales_one_align_right',
         'website.template_header_sales_two_align_right',
+        'website.template_header_sales_three_align_right',
         'website.template_header_sales_four_align_right',
         'website.template_header_sidebar_align_right',
+        'website.template_header_vertical_align_right',
     ]"/>
 
     <BuilderRow label.translate="Desktop Menu" tooltip.translate="Change the burger button position/menu items alignment">
@@ -39,16 +43,16 @@
             website.template_header_sidebar => Sidebar Position
         -->
         <BuilderButtonGroup action="'websiteConfig'" t-if="hasSomeViews(['website.template_header_hamburger', 'website.template_header_sidebar'])">
-            <BuilderButton 
-                icon="'fa-long-arrow-left'" 
+            <BuilderButton
+                icon="'fa-long-arrow-left'"
                 actionParam="{
                     views: [],
                     vars: { 'hamburger-position': 'left' }
                 }"/>
-            <BuilderButton 
-                icon="'fa-long-arrow-right'" 
+            <BuilderButton
+                icon="'fa-long-arrow-right'"
                 actionParam="{
-                    views: ['website.template_header_hamburger_align_right'],
+                    views: ['website.template_header_hamburger_align_right', 'website.template_header_sidebar_position_right'],
                     vars: { 'hamburger-position': 'right' }
                 }"/>
         </BuilderButtonGroup>
@@ -68,28 +72,20 @@
 
     <BuilderRow label.translate="Mobile Menu">
         <BuilderButtonGroup action="'websiteConfig'">
-            <BuilderButton icon="'fa-long-arrow-left'" 
+            <BuilderButton icon="'fa-long-arrow-left'"
                 actionParam="{
                     views: ['website.template_header_mobile_position_left'],
                     vars: { 'hamburger-position-mobile': 'left' }
                 }"/>
-            <BuilderButton 
-                icon="'fa-long-arrow-right'" 
+            <BuilderButton
+                icon="'fa-long-arrow-right'"
                 actionParam="{
                     views: [],
                     vars: { 'hamburger-position-mobile': 'right' }
                 }"/>
         </BuilderButtonGroup>
-        
-        <!-- Reason why we disable this option for those templates
-            website.template_header_sales_three => Forced Right Alignment
-            website.template_header_vertical => Forced Center Alignment
-        -->
-        <t t-set="excludedViewsMobileAlign" t-value="[
-            'website.template_header_sales_three',
-            'website.template_header_vertical',
-        ]"/>
-        <BuilderSelect action="'websiteConfig'" t-if="!hasSomeViews(excludedViewsMobileAlign)">
+
+        <BuilderSelect action="'websiteConfig'">
             <BuilderSelectItem
                 actionParam="{
                     views: [],
