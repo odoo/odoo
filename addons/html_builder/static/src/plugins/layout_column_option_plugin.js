@@ -1,6 +1,5 @@
 import { BuilderAction } from "@html_builder/core/builder_action";
 import { getFirstItem, getNbColumns, getRow } from "@html_builder/utils/column_layout_utils";
-import { isMobileView } from "@html_builder/utils/utils";
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
 import { withSequence } from "@html_editor/utils/resource";
@@ -16,6 +15,7 @@ class LayoutColumnOptionPlugin extends Plugin {
                 OptionComponent: LayoutColumnOption,
                 selector: "section.s_features_grid, section.s_process_steps",
                 applyTo: ":scope > *:has(> .row), :scope > .s_allow_columns",
+                name: "layoutColumnOption",
             }),
         ],
         on_cloned_handlers: this.onCloned.bind(this),
@@ -25,9 +25,8 @@ class LayoutColumnOptionPlugin extends Plugin {
     };
     onCloned({ cloneEl }) {
         const cloneElClassList = cloneEl.classList;
-        const offsetClasses = [...cloneElClassList].filter((cls) =>
-            cls.match(/^offset-(lg-)?([0-9]{1,2})$/)
-        );
+        const offsetRegex = new RegExp(`^offset-(${this.config.mobileBreakpoint}-)?([0-9]{1,2})$`);
+        const offsetClasses = [...cloneElClassList].filter((cls) => cls.match(offsetRegex));
         cloneElClassList.remove(...offsetClasses);
     }
 }
@@ -49,7 +48,7 @@ export class ChangeColumnCountAction extends BuilderAction {
             rowEl = document.createElement("div");
             const columnEl = document.createElement("div");
             rowEl.classList.add("row");
-            columnEl.classList.add("col-lg-12");
+            columnEl.classList.add(`col-${this.config.mobileBreakpoint}-12`);
             columnEl.append(...editingElement.children);
             rowEl.append(columnEl);
             editingElement.append(rowEl);
@@ -59,7 +58,11 @@ export class ChangeColumnCountAction extends BuilderAction {
             prevNbColumns = 0;
         } else {
             columnEls = rowEl.children;
-            prevNbColumns = getNbColumns(columnEls, isMobileView(this.editable));
+            prevNbColumns = getNbColumns(
+                columnEls,
+                this.config.isMobileView(this.editable),
+                this.config.mobileBreakpoint
+            );
         }
 
         if (nbColumns === prevNbColumns) {
@@ -91,7 +94,13 @@ export class ChangeColumnCountAction extends BuilderAction {
     }
     isApplied({ editingElement, value }) {
         const columnEls = getRow(editingElement)?.children;
-        return getNbColumns(columnEls, isMobileView(this.editable)) === value;
+        return (
+            getNbColumns(
+                columnEls,
+                this.config.isMobileView(this.editable),
+                this.config.mobileBreakpoint
+            ) === value
+        );
     }
     /**
      * Resizes the columns for the mobile or desktop view.
@@ -101,12 +110,12 @@ export class ChangeColumnCountAction extends BuilderAction {
      * @param {integer} nbColumns - the number of wanted columns
      */
     _resizeColumns(columnEls, nbColumns) {
-        const isMobile = isMobileView(this.editable);
+        const isMobile = this.config.isMobileView(this.editable);
         const itemSize = Math.floor(12 / nbColumns) || 1;
         const firstItem = getFirstItem(columnEls, isMobile);
         const firstItemOffset = Math.floor((12 - itemSize * nbColumns) / 2);
 
-        const resolutionModifier = isMobile ? "" : "-lg";
+        const resolutionModifier = isMobile ? "" : `-${this.config.mobileBreakpoint}`;
         const replacingRegex =
             // (?!\S): following char cannot be a non-space character
             new RegExp(`(?:^|\\s+)(col|offset)${resolutionModifier}(-\\d{1,2})?(?!\\S)`, "g");
@@ -118,8 +127,14 @@ export class ChangeColumnCountAction extends BuilderAction {
                 columnEl.classList.add(`offset${resolutionModifier}-${firstItemOffset}`);
             }
             const hasMobileOffset = columnEl.className.match(/(^|\s+)offset-\d{1,2}(?!\S)/);
-            const hasDesktopOffset = columnEl.className.match(/(^|\s+)offset-lg-[1-9][0-1]?(?!\S)/);
-            columnEl.classList.toggle("offset-lg-0", hasMobileOffset && !hasDesktopOffset);
+            const desktopOffsetRegexp = new RegExp(
+                `(^|\\s+)offset-${this.config.mobileBreakpoint}-[1-9][0-1]?(?!\\S)`
+            );
+            const hasDesktopOffset = columnEl.className.match(desktopOffsetRegexp);
+            columnEl.classList.toggle(
+                `offset-${this.config.mobileBreakpoint}-0`,
+                hasMobileOffset && !hasDesktopOffset
+            );
         }
     }
 }

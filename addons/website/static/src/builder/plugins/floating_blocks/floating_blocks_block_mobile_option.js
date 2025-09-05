@@ -1,5 +1,4 @@
 import { BaseOptionComponent, useDomState } from "@html_builder/core/utils";
-import { isMobileView } from "@html_builder/utils/utils";
 
 export class FloatingBlocksBlockMobileOption extends BaseOptionComponent {
     static template = "website.FloatingBlocksBlockMobileOption";
@@ -7,7 +6,7 @@ export class FloatingBlocksBlockMobileOption extends BaseOptionComponent {
     setup() {
         super.setup();
         this.state = useDomState((editingElement) => ({
-            isMobileView: isMobileView(editingElement),
+            isMobileView: this.env.editor.config.isMobileView(editingElement),
         }));
     }
 }

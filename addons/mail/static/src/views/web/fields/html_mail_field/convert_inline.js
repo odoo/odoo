@@ -33,12 +33,11 @@ function commonParentGet(node1, node2, root = undefined) {
 //--------------------------------------------------------------------------
 
 const RE_COL_MATCH = /(^| )col(-[\w\d]+)*( |$)/;
-const RE_COMMAS_OUTSIDE_PARENTHESES = /,(?![^(]*?\))/g;
 const RE_OFFSET_MATCH = /(^| )offset(-[\w\d]+)*( |$)/;
 const RE_PADDING_MATCH = /[ ]*padding[^;]*;/g;
 const RE_PADDING = /([\d.]+)/;
 const RE_WHITESPACE = /[\s\u200b]*/;
-const SELECTORS_IGNORE = /(^\*$|:hover|:before|:after|:active|:link|::|'|\([^(),]+[,(])|@page/;
+const SELECTORS_IGNORE = /(^\*$|:hover|:before|:after|:active|:link|::|')|@page/; // :not(:has) should be legal
 const CONVERT_INLINE_BLACKLIST_CLASSES = ["o_mail_redirect"];
 // CSS properties relating to font, which Outlook seem to have trouble inheriting.
 const FONT_PROPERTIES_TO_INHERIT = [
@@ -66,6 +65,11 @@ export const TABLE_STYLES = {
     "text-align": "inherit",
     "font-size": "unset",
     "line-height": "inherit",
+};
+
+export const BASIC_THEME_TABLE_STYLES = {
+    "background-color": "transparent",
+    color: "inherit",
 };
 
 const GROUPED_STYLES = {
@@ -99,7 +103,13 @@ const GROUPED_STYLES = {
  * @param {HTMLElement} element
  */
 export function addTables(element) {
+    const isInBasicTheme = Boolean(element.querySelector(".o_layout.o_basic_theme"));
     for (const snippet of element.querySelectorAll(".o_mail_snippet_general, .o_layout")) {
+        if (isInBasicTheme) {
+            for (const [property, value] of Object.entries(BASIC_THEME_TABLE_STYLES)) {
+                snippet.style.setProperty(property, value);
+            }
+        }
         // Convert all snippets and the mailing itself into table > tr > td
         const table = _createTable(snippet.attributes);
 
@@ -118,7 +128,7 @@ export function addTables(element) {
             const padding = "34px"; // This is what's needed to align the content with Apple Mail's header.
             style.textContent =
                 `@media{@media{.o_basic_theme div.o_apple_wrapper_padding{padding:${snippet.style.padding};}}}` +
-                `@media(min-width:961px){@media{@media{.o_basic_theme div.o_apple_wrapper_padding{padding-left:${padding};}}}}`;
+                `@media(min-width:737px){@media{@media{.o_basic_theme div.o_apple_wrapper_padding{padding-left:${padding};}}}}`;
             div.before(style);
         }
         table.appendChild(row);
@@ -1253,7 +1263,7 @@ export function formatTables(element) {
  */
 export function getCSSRules(doc) {
     const cssRules = [];
-    for (const sheet of doc.styleSheets) {
+    for (const sheet of [...doc.styleSheets, ...doc.adoptedStyleSheets]) {
         // try...catch because browser may not able to enumerate rules for cross-domain sheets
         let rules;
         try {
@@ -1267,7 +1277,7 @@ export function getCSSRules(doc) {
             const conditionText = rule.conditionText;
             const minWidthMatch = conditionText && conditionText.match(/\(min-width *: *(\d+)/);
             const minWidth = minWidthMatch && +(minWidthMatch[1] || "0");
-            if (minWidth && minWidth >= 992) {
+            if (minWidth && minWidth >= 768) {
                 // Large min-width media queries should be included.
                 // eg., .container has a default max-width for all screens.
                 let mediaRules;
@@ -1281,7 +1291,7 @@ export function getCSSRules(doc) {
             for (const subRule of subRules) {
                 const selectorText = subRule.selectorText || "";
                 // Split selectors, making sure not to split at commas in parentheses.
-                for (const selector of selectorText.split(RE_COMMAS_OUTSIDE_PARENTHESES)) {
+                for (const selector of splitSelectorAroundCommasOutsideParentheses(selectorText)) {
                     if (selector && !SELECTORS_IGNORE.test(selector)) {
                         cssRules.push({ selector: selector.trim(), rawRule: subRule });
                         if (selector === "body") {
@@ -1617,6 +1627,10 @@ function _computeStyleAndSpecificityOnRules(cssRules) {
                 Object.assign(cssRule, {
                     style,
                     specificity: _computeSpecificity(cssRule.selector),
+                });
+            } else {
+                Object.assign(cssRule, {
+                    specificity: 0,
                 });
             }
         }
@@ -1990,4 +2004,49 @@ function removeBlacklistedStyles(rule, node) {
         styles[key] = value;
     }
     return styles;
+}
+
+export function splitSelectorAroundCommasOutsideParentheses(selector) {
+    if (selector.indexOf(",") === -1) {
+        return [selector].filter(Boolean);
+    }
+    const result = [];
+    let start = 0;
+    let depth = 0;
+    let inString;
+    for (let i = 0; i < selector.length; i++) {
+        const char = selector[i];
+        if (inString) {
+            if (char === inString && selector[i - 1] !== "\\") {
+                inString = undefined;
+            }
+            continue;
+        }
+        switch (char) {
+            case "'":
+            case '"':
+                inString = char;
+                break;
+            case "(":
+                depth++;
+                break;
+            case ")":
+                depth--;
+                if (depth < 0) {
+                    return [selector];
+                }
+                break;
+            case ",":
+                if (depth === 0) {
+                    result.push(selector.slice(start, i));
+                    start = i + 1;
+                }
+                break;
+        }
+    }
+    if (depth > 0) {
+        return [selector];
+    }
+    result.push(selector.slice(start));
+    return result.filter(Boolean);
 }

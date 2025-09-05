@@ -55,7 +55,11 @@ export class SetGridLayoutAction extends BuilderAction {
         if (isGrid(editingElement)) {
             return;
         }
-        toggleGridMode(editingElement, this.dependencies.selection.preserveSelection);
+        toggleGridMode(
+            editingElement,
+            this.dependencies.selection.preserveSelection,
+            this.config.mobileBreakpoint
+        );
     }
     isApplied({ editingElement }) {
         return isGrid(editingElement);
@@ -78,7 +82,7 @@ export class SetColumnLayoutAction extends BuilderAction {
             // Reloading the images.
             reloadLazyImages(columnEl);
             // Removing the grid properties.
-            convertToNormalColumn(columnEl);
+            convertToNormalColumn(columnEl, this.config.mobileBreakpoint);
         }
         // Removing the grid properties.
         delete rowEl.dataset.rowCount;

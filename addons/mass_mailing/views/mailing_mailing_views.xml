@@ -260,23 +260,13 @@
                         <notebook>
                             <page string="Mail Body" name="mail_body">
                                 <div class="position-relative">
-                                    <field name="body_arch" class="o_mail_body" widget="mass_mailing_html"
+                                    <field name="body_arch" class="o_mail_body_mailing" widget="mass_mailing_html"
                                         options="{
-                                            'snippets': 'mass_mailing.email_designer_snippets',
-                                            'cssEdit': 'mass_mailing.iframe_css_assets_edit',
-                                            'inline-field': 'body_html',
+                                            'inline_field': 'body_html',
                                             'dynamic_placeholder': true,
                                             'dynamic_placeholder_model_reference_field': 'mailing_model_real',
-                                            'cssReadonly': 'mass_mailing.iframe_css_assets_edit'
-                                    }" readonly="state in ('sending', 'done')"/>
+                                        }" readonly="state in ('sending', 'done')"/>
                                     <field name="is_body_empty" invisible="1"/>
-                                    <div class="o_view_nocontent oe_read_only" invisible="not is_body_empty or state in ('sending', 'done')">
-                                        <div class="o_nocontent_help">
-                                            <p class="o_view_nocontent_smiling_face">
-                                                This mailing has no selected design (yet!).
-                                            </p>
-                                        </div>
-                                    </div>
                                 </div>
                             </page>
                             <page string="A/B Tests" name="ab_testing">

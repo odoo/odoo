@@ -1,5 +1,4 @@
 import { renderToElement } from "@web/core/utils/render";
-import { isMobileView } from "@html_builder/utils/utils";
 import {
     addBackgroundGrid,
     getGridProperties,
@@ -24,7 +23,18 @@ export const sizingGrid = {
 };
 
 export class BuilderOverlay {
-    constructor(overlayTarget, { iframe, overlayContainer, history, hasOverlayOptions, next }) {
+    constructor(
+        overlayTarget,
+        {
+            iframe,
+            overlayContainer,
+            history,
+            hasOverlayOptions,
+            next,
+            isMobileView,
+            mobileBreakpoint,
+        }
+    ) {
         this.history = history;
         this.next = next;
         this.hasOverlayOptions = hasOverlayOptions;
@@ -43,6 +53,8 @@ export class BuilderOverlay {
             `.e:not(.o_grid_handle), .w:not(.o_grid_handle)`
         );
         this.gridHandles = this.handlesWrapperEl.querySelectorAll(".o_grid_handle");
+        this.isMobileView = isMobileView;
+        this.mobileBreakpoint = mobileBreakpoint;
 
         this.initHandles();
         this.initSizing();
@@ -91,7 +103,7 @@ export class BuilderOverlay {
         }
 
         if (this.overlayTarget.parentNode?.classList.contains("row")) {
-            const isMobile = isMobileView(this.overlayTarget);
+            const isMobile = this.isMobileView(this.overlayTarget);
             const isGridOn = this.overlayTarget.classList.contains("o_grid_item");
             const isGrid = !isMobile && isGridOn;
             // Hiding/showing the correct resize handles if we are in grid mode
@@ -222,7 +234,7 @@ export class BuilderOverlay {
     }
 
     getSizingXConfig() {
-        const resolutionModifier = this.isMobile ? "" : "lg-";
+        const resolutionModifier = this.isMobile ? "" : `${this.mobileBreakpoint}-`;
         const rowWidth = this.overlayTarget.closest(".row").getBoundingClientRect().width;
         const valuesE = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
         const valuesW = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
@@ -241,7 +253,7 @@ export class BuilderOverlay {
     }
 
     onResizeX(compass, initialClasses, currentIndex) {
-        const resolutionModifier = this.isMobile ? "" : "lg-";
+        const resolutionModifier = this.isMobile ? "" : `${this.mobileBreakpoint}-`;
         // (?!\S): following char cannot be a non-space character
         const offsetRegex = new RegExp(`(?:^|\\s+)offset-${resolutionModifier}(\\d{1,2})(?!\\S)`);
         const colRegex = new RegExp(`(?:^|\\s+)col-${resolutionModifier}(\\d{1,2})(?!\\S)`);
@@ -268,16 +280,18 @@ export class BuilderOverlay {
 
             // Add/remove the `offset-lg-0` class when needed.
             if (this.isMobile && offset === 0) {
-                this.overlayTarget.classList.remove("offset-lg-0");
+                this.overlayTarget.classList.remove(`offset-${this.mobileBreakpoint}-0`);
             } else {
                 const className = this.overlayTarget.className;
-                const hasDesktopClass = !!className.match(/(^|\s+)offset-lg-\d{1,2}(?!\S)/);
+                const hasDesktopClass = !!className.match(
+                    new RegExp(`(^|\\s+)offset-${this.mobileBreakpoint}-\\d{1,2}(?!\\S)`)
+                );
                 const hasMobileClass = !!className.match(/(^|\s+)offset-\d{1,2}(?!\S)/);
                 if (
                     (this.isMobile && offset > 0 && !hasDesktopClass) ||
                     (!this.isMobile && offset === 0 && hasMobileClass)
                 ) {
-                    this.overlayTarget.classList.add("offset-lg-0");
+                    this.overlayTarget.classList.add(`offset-${this.mobileBreakpoint}-0`);
                 }
             }
         } else if (initialOffset > 0) {
@@ -318,12 +332,12 @@ export class BuilderOverlay {
                 cssProperty: "grid-row-end",
             },
             w: {
-                classes: valuesW.map((v) => "g-col-lg-" + (columnEnd - v)),
+                classes: valuesW.map((v) => `g-col-${this.mobileBreakpoint}-` + (columnEnd - v)),
                 values: valuesW.map((v) => (gridProp.columnSize + gridProp.columnGap) * (v - 1)),
                 cssProperty: "grid-column-start",
             },
             e: {
-                classes: valuesE.map((v) => "g-col-lg-" + (v - columnStart)),
+                classes: valuesE.map((v) => `g-col-${this.mobileBreakpoint}-` + (v - columnStart)),
                 values: valuesE.map((v) => (gridProp.columnSize + gridProp.columnGap) * (v - 1)),
                 cssProperty: "grid-column-end",
             },
@@ -389,7 +403,10 @@ export class BuilderOverlay {
 
         if (compass === "w" || compass === "e") {
             const numberColumns = style.gridColumnEnd - style.gridColumnStart;
-            this.replaceSizingClass(/\s*(g-col-lg-)([0-9-]+)/g, `g-col-lg-${numberColumns}`);
+            this.replaceSizingClass(
+                new RegExp(`\\s*(g-col-${this.mobileBreakpoint}-)([0-9-]+)`, "g"),
+                `g-col-${this.mobileBreakpoint}-${numberColumns}`
+            );
         }
     }
 
@@ -473,7 +490,7 @@ export class BuilderOverlay {
 
         const handleEl = ev.currentTarget;
         const isGridHandle = handleEl.classList.contains("o_grid_handle");
-        this.isMobile = isMobileView(this.overlayTarget);
+        this.isMobile = this.isMobileView(this.overlayTarget);
 
         // If we are in grid mode, add a background grid and place it in front
         // of the other elements.

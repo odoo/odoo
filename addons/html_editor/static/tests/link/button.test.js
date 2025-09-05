@@ -1,5 +1,5 @@
 import { describe, expect, test } from "@odoo/hoot";
-import { click, queryOne, queryAll, select, waitFor, waitForNone } from "@odoo/hoot-dom";
+import { click, queryOne, queryAll, select, waitFor, waitForNone, edit } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
 import { setupEditor } from "../_helpers/editor";
 import { cleanLinkArtifacts, unformat } from "../_helpers/format";
@@ -137,7 +137,10 @@ describe("Custom button style", () => {
         await click(".o_color_button[data-color='#00FF00']");
         await animationFrame();
 
-        await click(".custom-border-picker");
+        await click("input.custom-border-size");
+        await edit("1");
+
+        await click(waitFor(".custom-border-picker"));
         await animationFrame();
         await click(".o_color_button[data-color='#0000FF']");
         await animationFrame();

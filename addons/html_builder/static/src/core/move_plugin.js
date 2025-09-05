@@ -6,30 +6,12 @@ import {
     fillRemovedItemGap,
     removeMobileOrders,
 } from "@html_builder/utils/column_layout_utils";
-import { isElementInViewport, isMobileView } from "@html_builder/utils/utils";
+import { isElementInViewport } from "@html_builder/utils/utils";
 import { scrollTo } from "@html_builder/utils/scrolling";
-
-export function getVisibleSibling(target, direction) {
-    const siblingEls = [...target.parentNode.children];
-    const visibleSiblingEls = siblingEls.filter(
-        (el) => window.getComputedStyle(el).display !== "none"
-    );
-    const targetMobileOrder = target.style.order;
-    // On mobile, if the target has a mobile order (which is independent
-    // from desktop), consider these orders instead of the DOM order.
-    if (targetMobileOrder && isMobileView(target)) {
-        visibleSiblingEls.sort((a, b) => parseInt(a.style.order) - parseInt(b.style.order));
-    }
-    const targetIndex = visibleSiblingEls.indexOf(target);
-    const siblingIndex = direction === "prev" ? targetIndex - 1 : targetIndex + 1;
-    if (siblingIndex === -1 || siblingIndex === visibleSiblingEls.length) {
-        return false;
-    }
-    return visibleSiblingEls[siblingIndex];
-}
 
 export class MovePlugin extends Plugin {
     static id = "move";
+    static dependencies = ["visibility"];
     resources = {
         has_overlay_options: { hasOption: (el) => this.isMovable(el) },
         get_overlay_buttons: withSequence(0, {
@@ -95,7 +77,7 @@ export class MovePlugin extends Plugin {
             const columnEls = [...rowEl.children];
             const orderedColumnEls = columnEls.filter((el) => el.style.order);
             if (orderedColumnEls.length && orderedColumnEls.length !== columnEls.length) {
-                removeMobileOrders(orderedColumnEls);
+                removeMobileOrders(orderedColumnEls, this.config.mobileBreakpoint);
             }
         }
     }
@@ -121,8 +103,14 @@ export class MovePlugin extends Plugin {
             const isVertical =
                 this.overlayTarget.matches(this.verticalMove.selector) &&
                 !this.overlayTarget.matches(this.verticalMove.exclude);
-            const previousSiblingEl = getVisibleSibling(this.overlayTarget, "prev");
-            const nextSiblingEl = getVisibleSibling(this.overlayTarget, "next");
+            const previousSiblingEl = this.dependencies.visibility.getVisibleSibling(
+                this.overlayTarget,
+                "prev"
+            );
+            const nextSiblingEl = this.dependencies.visibility.getVisibleSibling(
+                this.overlayTarget,
+                "next"
+            );
 
             if (previousSiblingEl) {
                 const direction = isVertical ? "up" : "left";
@@ -188,11 +176,11 @@ export class MovePlugin extends Plugin {
         }
 
         // Remove all the mobile orders in the new snippet.
-        removeMobileOrders(parentEl.children);
+        removeMobileOrders(parentEl.children, this.config.mobileBreakpoint);
     }
 
     areArrowsHidden() {
-        const isMobile = isMobileView(this.overlayTarget);
+        const isMobile = this.config.isMobileView(this.overlayTarget);
         const isGridItem = this.overlayTarget.classList.contains("o_grid_item");
         const siblingsEl = [...this.overlayTarget.parentNode.children];
         const visibleSiblingEl = siblingsEl.find(
@@ -210,7 +198,7 @@ export class MovePlugin extends Plugin {
      * @param {String} direction "prev" or "next"
      */
     onMoveClick(direction) {
-        const isMobile = isMobileView(this.overlayTarget);
+        const isMobile = this.config.isMobileView(this.overlayTarget);
         let hasMobileOrder = !!this.overlayTarget.style.order;
         const parentEl = this.overlayTarget.parentNode;
         const siblingEls = parentEl.children;
@@ -221,14 +209,17 @@ export class MovePlugin extends Plugin {
         // mobile view, the mobile order is reset.
         const isColumn = parentEl.classList.contains("row");
         if (isMobile && isColumn && !hasMobileOrder) {
-            addMobileOrders(siblingEls);
+            addMobileOrders(siblingEls, this.config.mobileBreakpoint);
             hasMobileOrder = true;
         } else if (!isMobile && hasMobileOrder) {
-            removeMobileOrders(siblingEls);
+            removeMobileOrders(siblingEls, this.config.mobileBreakpoint);
             hasMobileOrder = false;
         }
 
-        const siblingEl = getVisibleSibling(this.overlayTarget, direction);
+        const siblingEl = this.dependencies.visibility.getVisibleSibling(
+            this.overlayTarget,
+            direction
+        );
         if (hasMobileOrder) {
             // Swap the mobile orders.
             const currentOrder = this.overlayTarget.style.order;
