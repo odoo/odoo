@@ -3052,6 +3052,34 @@ class AccountTax(models.Model):
         return results
 
     @api.model
+    def _fix_base_lines_tax_details_on_manual_tax_amounts(self, base_lines, company, filter_function=None):
+        """ Store the tax details into manual_tax_amounts to fix the results.
+
+        [!] Mirror of the same method in account_tax.js.
+        PLZ KEEP BOTH METHODS CONSISTENT WITH EACH OTHERS.
+
+        :param base_lines:      A list of base lines generated using the '_prepare_base_line_for_taxes_computation' method.
+        :param company:         The company owning the base lines.
+        :param filter_function: An optional function taking <base_line, tax_data> as parameter and telling which tax will be considered.
+        """
+        for base_line in base_lines:
+            taxes_data = base_line['tax_details']['taxes_data']
+            if not taxes_data:
+                continue
+
+            base_line['manual_tax_amounts'] = {}
+            for tax_data in taxes_data:
+                if filter_function and not filter_function(base_line, tax_data):
+                    continue
+                tax = tax_data['tax']
+                base_line['manual_tax_amounts'][str(tax.id)] = {
+                    'tax_amount_currency': tax_data['tax_amount_currency'],
+                    'tax_amount': tax_data['tax_amount'],
+                    'base_amount_currency': tax_data['base_amount_currency'],
+                    'base_amount': tax_data['base_amount'],
+                }
+
+    @api.model
     def _split_base_line(self, base_line, company, target_factors, populate_function=None):
         """ Split a base lines into multiple ones. When computing taxes, the results should be
         exactly the same with a single base_line or after the split.
@@ -3350,25 +3378,6 @@ class AccountTax(models.Model):
             * tax_amount:                       The expected tax amount for the base lines expressed in company currency.
         """
         currency = base_lines[0]['currency_id']
-        for base_line in base_lines:
-            taxes_data = base_line['tax_details']['taxes_data']
-            if not taxes_data:
-                continue
-            first_batch = taxes_data[0]['batch']
-            base_line['manual_tax_amounts'] = {}
-            for tax_data in taxes_data:
-                if tax_data['is_reverse_charge']:
-                    continue
-
-                tax = tax_data['tax']
-                tax_amounts = {
-                    'tax_amount_currency': tax_data['tax_amount_currency'],
-                    'tax_amount': tax_data['tax_amount'],
-                }
-                if tax in first_batch:
-                    tax_amounts['base_amount_currency'] = tax_data['base_amount_currency']
-                    tax_amounts['base_amount'] = tax_data['base_amount']
-                base_line['manual_tax_amounts'][str(tax.id)] = tax_amounts
 
         # Smooth distribution of the delta base amount accross the base line, starting at the biggest one.
         sorted_base_lines = sorted(
@@ -3411,7 +3420,7 @@ class AccountTax(models.Model):
                 for tax_data in taxes_data:
                     tax = tax_data['tax']
                     if tax in first_batch:
-                        base_line['manual_tax_amounts'][str(tax.id)][f'base_amount{delta_suffix}'] += amount_to_distribute
+                        tax_data[f'base_amount{delta_suffix}'] += amount_to_distribute
                     else:
                         break
 
@@ -3427,7 +3436,6 @@ class AccountTax(models.Model):
                 target_factors = [
                     {
                         'factor': abs(tax_data['tax_amount_currency'] / current_tax_amounts['tax_amount_currency']),
-                        'base_line': base_line,
                         'tax_data': tax_data,
                     }
                     for base_line in sorted_base_lines
@@ -3440,8 +3448,13 @@ class AccountTax(models.Model):
                     target_factors=target_factors,
                 )
                 for target_factor, amount_to_distribute in zip(target_factors, amounts_to_distribute):
-                    base_line = target_factor['base_line']
-                    base_line['manual_tax_amounts'][tax_id_str][f'tax_amount{delta_suffix}'] += amount_to_distribute
+                    tax_data = target_factor['tax_data']
+                    tax_data[f'tax_amount{delta_suffix}'] += amount_to_distribute
+
+        self._fix_base_lines_tax_details_on_manual_tax_amounts(
+            base_lines=base_lines,
+            company=company,
+        )
 
     @api.model
     def _partition_base_lines_taxes(self, base_lines, partition_function):
@@ -3895,6 +3908,11 @@ class AccountTax(models.Model):
                     tax_details_2=sub_base_line['tax_details'],
                 )
 
+        self._fix_base_lines_tax_details_on_manual_tax_amounts(
+            base_lines=[base_line for base_line in base_lines if base_line['discount_base_lines']],
+            company=company,
+        )
+
     @api.model
     def _dispatch_return_of_merchandise_lines(self, base_lines, company):
         """ Dispatch the return of merchandise lines present inside the base_lines passed as parameter across the others under the
@@ -4009,6 +4027,11 @@ class AccountTax(models.Model):
                     tax_details_2=sub_base_line['tax_details'],
                 )
                 base_line['quantity'] += sub_base_line['quantity']
+
+        self._fix_base_lines_tax_details_on_manual_tax_amounts(
+            base_lines=[base_line for base_line in base_lines if base_line['return_of_merchandise_base_lines']],
+            company=company,
+        )
 
     # -------------------------------------------------------------------------
     # END HELPERS IN BOTH PYTHON/JAVASCRIPT (account_tax.js)
