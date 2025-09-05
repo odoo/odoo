@@ -45,13 +45,21 @@ class TestSmsTwilio(MockSmsTwilio):
     def test_send_sms_composer_partner(self):
         for partner, twilio_error, exp_notif_status, exp_failure_type, exp_failure_reason, exp_to_delete in [
             (self.valid_partner, False, "pending", False, False, True),
+            # twilio specific issues
+            (
+                self.invalid_partner, "twilio_acc_unverified", "exception", "sms_acc",
+                "Unverified recipient on Trial Account", False
+            ), (
+                self.invalid_partner, "twilio_callback", "exception", "twilio_callback",
+                "Twilio StatusCallback URL is incorrect", False
+            ),
             # check some error code support
             (
                 self.invalid_partner, "wrong_number_format", "exception", "sms_number_format",
-                "The number you're trying to reach is not correctly formatted.", False
+                "The number you're trying to reach is not correctly formatted", False
             ), (
                 self.invalid_partner, "sms_number_missing", "exception", "sms_number_missing",
-                "A 'To' phone number is required.", False
+                "A 'To' phone number is required", False
             ),
         ]:
             with self.subTest(partner=partner, number=partner.phone, twilio_error=twilio_error):
