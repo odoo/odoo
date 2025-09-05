@@ -1,7 +1,7 @@
 import { patch } from "@web/core/utils/patch";
 import * as spreadsheet from "@odoo/o-spreadsheet";
 import { useService } from "@web/core/utils/hooks";
-import { navigateToOdooMenu } from "../odoo_chart/odoo_chart_helpers";
+import { navigateToOdoolinkFromChart } from "../odoo_chart/odoo_chart_helpers";
 
 patch(spreadsheet.components.FigureComponent.prototype, {
     setup() {
@@ -16,22 +16,21 @@ patch(spreadsheet.components.FigureComponent.prototype, {
         }
         return this.env.model.getters.getChartIdFromFigureId(this.props.figureUI.id);
     },
-    async navigateToOdooMenu(newWindow) {
-        const menu = this.env.model.getters.getChartOdooMenu(this.chartId);
-        await navigateToOdooMenu(menu, this.actionService, this.notificationService, newWindow);
+    async navigateToOdooLink(newWindow) {
+        await navigateToOdoolinkFromChart(this.env, this.chartId, newWindow);
     },
-    get hasOdooMenu() {
-        return this.chartId && this.env.model.getters.getChartOdooMenu(this.chartId) !== undefined;
+    get hasOdooLink() {
+        return this.env.model.getters.getChartOdooLink(this.chartId) !== undefined;
     },
     async onClick() {
         try {
             const definition = this.env.model.getters.getChartDefinition(this.chartId);
             if (
                 this.env.isDashboard() &&
-                this.hasOdooMenu &&
+                this.hasOdooLink &&
                 (definition.type === "scorecard" || definition.type === "gauge")
             ) {
-                await this.navigateToOdooMenu();
+                await this.navigateToOdooLink();
             }
         } catch {
             // Throws if the figure isn't a chart
