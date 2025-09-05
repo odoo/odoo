@@ -616,7 +616,8 @@ export class SelfOrder extends Reactive {
                 {
                     order: this.currentOrder.serializeForORM(),
                     access_token: this.access_token,
-                    table_identifier: this.currentOrder?.table_id?.identifier || tableIdentifier,
+                    table_identifier:
+                        this.currentOrder?.self_ordering_table_id?.identifier || tableIdentifier,
                 }
             );
             const result = this.models.connectNewData(data);

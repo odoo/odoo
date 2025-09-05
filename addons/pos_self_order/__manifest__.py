@@ -29,7 +29,7 @@
     "assets": {
         # Assets
         'web.assets_unit_tests': [
-            'pos_self_order/static/tests/unit/data/**/*'
+            'pos_self_order/static/tests/unit/**/*',
         ],
         'point_of_sale._assets_pos': [
             'pos_self_order/static/src/overrides/**/*',

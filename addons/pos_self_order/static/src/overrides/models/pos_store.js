@@ -8,7 +8,7 @@ patch(PosStore.prototype, {
                 ["company_id", "=", this.config.company_id.id],
                 ["state", "=", "draft"],
                 ["source", "in", ["kiosk", "mobile"]],
-                ["table_id", "=", false],
+                ["self_ordering_table_id", "=", false],
             ]);
         }
 

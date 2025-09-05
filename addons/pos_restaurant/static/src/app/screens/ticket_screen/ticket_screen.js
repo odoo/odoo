@@ -14,6 +14,9 @@ patch(TicketScreen.prototype, {
             TipScreen: "TIPPING",
         });
     },
+    getTableTag(order) {
+        return order.table_id?.table_number;
+    },
     getTable(order) {
         const table = order.getTable();
         if (table) {

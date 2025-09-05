@@ -9,7 +9,6 @@ class PosOrderLine(models.Model):
     _inherit = "pos.order.line"
 
     combo_id = fields.Many2one('product.combo', string='Combo reference')
-    self_ordering_table_id = fields.Many2one('restaurant.table', string='Table reference', readonly=True)
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -36,6 +35,7 @@ class PosOrder(models.Model):
     _inherit = "pos.order"
 
     table_stand_number = fields.Char(string="Table Stand Number")
+    self_ordering_table_id = fields.Many2one('restaurant.table', string='Table reference', readonly=True)
     source = fields.Selection(selection_add=[
         ('mobile', 'Self-Order Mobile'),
         ('kiosk', 'Self-Order Kiosk')
