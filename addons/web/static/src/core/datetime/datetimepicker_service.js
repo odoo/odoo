@@ -3,7 +3,7 @@ import { areDatesEqual, formatDate, formatDateTime, parseDate, parseDateTime } f
 import { makePopover } from "../popover/popover_hook";
 import { registry } from "../registry";
 import { ensureArray, zip, zipWith } from "../utils/arrays";
-import { deepCopy, shallowEqual } from "../utils/objects";
+import { shallowEqual } from "../utils/objects";
 import { DateTimePicker } from "./datetime_picker";
 import { DateTimePickerPopover } from "./datetime_picker_popover";
 
@@ -32,9 +32,16 @@ import { DateTimePickerPopover } from "./datetime_picker_popover";
  * @typedef {{ el: T | null }} OwlRef
  */
 
-/** @type {typeof shallowEqual} */
-const arePropsEqual = (obj1, obj2) =>
-    shallowEqual(obj1, obj2, (a, b) => areDatesEqual(a, b) || shallowEqual(a, b));
+/**
+ * @param {Record<string, any>} props
+ */
+function stringifyProps(props) {
+    const copy = {};
+    for (const [key, value] of Object.entries(props)) {
+        copy[key] = JSON.stringify(value);
+    }
+    return copy;
+}
 
 const FOCUS_CLASSNAME = "text-primary";
 
@@ -82,31 +89,36 @@ export const datetimePickerService = {
                  * Wrapper method on the "onApply" callback to only call it when the
                  * value has changed, and set other internal variables accordingly.
                  */
-                const apply = () => {
-                    const valueCopy = deepCopy(pickerProps.value);
-                    if (areDatesEqual(lastAppliedValue, valueCopy)) {
+                const apply = async () => {
+                    const { value } = pickerProps;
+                    const stringValue = JSON.stringify(value);
+                    if (
+                        stringValue === lastAppliedStringValue ||
+                        stringValue === stringProps.value
+                    ) {
                         return;
                     }
 
-                    inputsChanged = ensureArray(pickerProps.value).map(() => false);
+                    lastAppliedStringValue = stringValue;
+                    inputsChanged = ensureArray(value).map(() => false);
 
-                    hookParams.onApply?.(pickerProps.value);
-                    lastAppliedValue = valueCopy;
+                    await hookParams.onApply?.(value);
+
+                    stringProps.value = stringValue;
                 };
 
                 const computeBasePickerProps = () => {
-                    const nextInitialProps = markValuesRaw(hookParams.pickerProps);
-                    const propsCopy = deepCopy(nextInitialProps);
+                    const nextProps = markValuesRaw(hookParams.pickerProps);
+                    const nextStringProps = stringifyProps(nextProps);
 
-                    if (lastInitialProps && arePropsEqual(lastInitialProps, propsCopy)) {
+                    if (shallowEqual(stringProps, nextStringProps)) {
                         return;
                     }
 
-                    lastInitialProps = propsCopy;
-                    lastAppliedValue = propsCopy.value;
-                    inputsChanged = ensureArray(lastInitialProps.value).map(() => false);
+                    stringProps = nextStringProps;
+                    inputsChanged = ensureArray(nextProps.value).map(() => false);
 
-                    for (const [key, value] of Object.entries(nextInitialProps)) {
+                    for (const [key, value] of Object.entries(nextProps)) {
                         if (pickerProps[key] !== value && !areDatesEqual(pickerProps[key], value)) {
                             pickerProps[key] = value;
                         }
@@ -458,14 +470,14 @@ export const datetimePickerService = {
                 let allowOnClose = true;
                 /** @type {boolean[]} */
                 let inputsChanged = [];
-                /** @type {DateTimePickerProps | null} */
-                let lastInitialProps = null;
-                /** @type {DateTimePickerProps["value"] | null}*/
-                let lastAppliedValue = null;
+                /** Used to prevent multiple "apply" calls */
+                let lastAppliedStringValue = "";
                 let lastIsRange = pickerProps.range;
                 /** @type {(() => void) | null} */
                 let restoreTargetMargin = null;
                 let shouldFocus = false;
+                /** @type {Partial<DateTimePickerProps>} */
+                let stringProps = {};
 
                 return {
                     state: pickerProps,
