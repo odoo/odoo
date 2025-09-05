@@ -219,6 +219,9 @@ class StockMove(models.Model):
                 and self.location_dest_id.id == subcontracting_location.id
         )
 
+    def _can_create_lot(self):
+        return super()._can_create_lot() or self.env.context.get('force_lot_m2o')
+
     def _sync_subcontracting_productions(self):
         """
             Enforce the relationship between subcontracting receipt moves and their respective subcontracting productions.
@@ -233,19 +236,18 @@ class StockMove(models.Model):
                   This ensures there will always be a production available for splitting.
         """
         for move in self:
+            productions = move._get_subcontract_production()
             if move.has_tracking == 'none':
-                mo = move._get_subcontract_production()
-                if mo and mo.product_uom_id.compare(mo.product_qty, move.quantity) != 0:
+                if productions and productions.product_uom_id.compare(productions.product_qty, move.quantity) != 0:
                     self.sudo().env['change.production.qty'].with_context(skip_activity=True).create([{
-                        'mo_id': mo.id,
+                        'mo_id': productions.id,
                         'product_qty': move.quantity or move.product_uom_qty,
                     }]).change_prod_qty()
-                    mo.action_assign()
+                    productions.action_assign()
             else:
-                productions = move._get_subcontract_production()
                 if not productions:
                     continue
-                qty_by_lot = dict(move.move_line_ids._read_group([('move_id', '=', move.id)], ['lot_id'], ['quantity:sum']))
+                qty_by_lot = dict(move.move_line_ids._read_group([('move_id', '=', move.id)], ['lot_id'], ['quantity_product_uom:sum']))
                 open_mo = productions.filtered(lambda p: not p.lot_producing_ids and not p._has_been_recorded())
                 if open_mo and qty_by_lot:
                     # No MOs created yet for the lots, split them from the default 'open' MO
