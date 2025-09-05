@@ -249,8 +249,8 @@ class ThreadedWSGIServerReloadable(LoggingBaseWSGIServerMixIn, werkzeug.serving.
         to be able to get the thread object which is instantiated
         and set its start time as an attribute
         """
-        t = threading.Thread(target = self.process_request_thread,
-                             args = (request, client_address))
+        t = threading.Thread(target=self.process_request_thread,
+                             args=(request, client_address,))  # noqa: COM819
         t.daemon = self.daemon_threads
         t.type = 'http'
         t.start_time = time.time()
