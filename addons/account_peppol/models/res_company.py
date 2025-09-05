@@ -93,6 +93,9 @@ class ResCompany(models.Model):
     peppol_external_provider = fields.Char(tracking=True)
     peppol_can_send = fields.Boolean(compute='_compute_peppol_can_send')
     peppol_parent_company_id = fields.Many2one(comodel_name='res.company', compute='_compute_peppol_parent_company_id')
+    # IAP-driven metadata with additive keys
+    peppol_metadata = fields.Json(string='Peppol Metadata')
+    peppol_metadata_updated_at = fields.Datetime(string='Peppol meta updated at')
 
     # -------------------------------------------------------------------------
     # HELPER METHODS
