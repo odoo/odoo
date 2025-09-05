@@ -5,6 +5,17 @@ import { MultiSelectionButtons } from "@web/views/view_components/multi_selectio
 
 export class WorkEntryCalendarMultiSelectionButtons extends MultiSelectionButtons {
     static template = "hr_work_entry.WorkEntryCalendarMultiSelectionButtons";
+    static props = {
+        reactive: {
+            type: Object,
+            shape: {
+                ...MultiSelectionButtons.props.reactive.shape,
+                userFavoritesWorkEntries: Array,
+                onQuickReplace: Function,
+                onQuickReset: Function,
+            },
+        }
+    };
     static components = {
         ...MultiSelectionButtons.components,
         Popover: WorkEntryMultiCreatePopover,
