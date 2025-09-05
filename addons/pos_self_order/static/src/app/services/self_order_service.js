@@ -71,7 +71,7 @@ export class SelfOrder extends Reactive {
 
         this.initData();
         if (this.config.self_ordering_mode === "kiosk") {
-            this.initKioskData();
+            await this.initKioskData();
         } else {
             await this.initMobileData();
         }
@@ -514,10 +514,12 @@ export class SelfOrder extends Reactive {
             }
         }
     }
-    initKioskData() {
+    async initKioskData() {
         if (this.session && this.access_token) {
             this.ordering = true;
         }
+
+        await this.config.cacheReceiptLogo();
 
         window.addEventListener("click", (event) => {
             clearTimeout(this.idleTimout);
