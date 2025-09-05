@@ -13,6 +13,13 @@ from dateutil.relativedelta import relativedelta
 class StockPicking(models.Model):
     _inherit = 'stock.picking'
 
+    show_subcontracting_details_visible = fields.Boolean(compute='_compute_show_subcontracting_details_visible')
+
+    @api.depends('move_ids.show_subcontracting_details_visible')
+    def _compute_show_subcontracting_details_visible(self):
+        for picking in self:
+            picking.show_subcontracting_details_visible = any(m.show_subcontracting_details_visible for m in picking.move_ids)
+
     @api.depends('picking_type_id', 'partner_id')
     def _compute_location_id(self):
         super()._compute_location_id()
@@ -25,6 +32,12 @@ class StockPicking(models.Model):
                 and picking.partner_id.property_stock_subcontractor:
                 picking.location_dest_id = picking.partner_id.property_stock_subcontractor
 
+    @api.depends('move_ids.is_subcontract', 'move_ids.has_tracking')
+    def _compute_show_lots_text(self):
+        super()._compute_show_lots_text()
+        for picking in self:
+            if any(move.is_subcontract and move.has_tracking != 'none' for move in picking.move_ids):
+                picking.show_lots_text = False
 
     # -------------------------------------------------------------------------
     # Action methods
@@ -44,12 +57,37 @@ class StockPicking(models.Model):
 
         return res
 
-    @api.depends('move_ids.is_subcontract', 'move_ids.has_tracking')
-    def _compute_show_lots_text(self):
-        super()._compute_show_lots_text()
-        for picking in self:
-            if any(move.is_subcontract and move.has_tracking != 'none' for move in picking.move_ids):
-                picking.show_lots_text = False
+    def action_show_subcontract_details(self):
+        productions = self._get_subcontract_production().filtered(lambda m: m.state != 'cancel')
+        ctx = {"mrp_subcontracting": True}
+        if self.env.user._is_portal():
+            form_view_id = self.env.ref('mrp_subcontracting.mrp_production_subcontracting_portal_form_view')
+            ctx.update(no_breadcrumbs=False)
+        else:
+            form_view_id = self.env.ref('mrp_subcontracting.mrp_production_subcontracting_form_view')
+        action = {
+            'type': 'ir.actions.act_window',
+            'res_model': 'mrp.production',
+            'target': 'current',
+            'context': ctx
+        }
+        if len(productions) > 1:
+            action.update({
+                'name': _('Subcontracting MOs'),
+                'views': [
+                    (self.env.ref('mrp_subcontracting.mrp_production_subcontracting_tree_view').id, 'list'),
+                    (form_view_id.id, 'form'),
+                ],
+                'domain': [('id', 'in', productions.ids)],
+            })
+        elif len(productions) == 1:
+            action.update({
+                'views': [(form_view_id.id, 'form')],
+                'res_id': productions.id,
+            })
+        else:
+            return {}
+        return action
 
     # -------------------------------------------------------------------------
     # Subcontract helpers
