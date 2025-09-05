@@ -91,11 +91,8 @@ export class Plugin {
     }
 
     /**
-     * Execute the functions registered under resourceId with the given
-     * arguments.
-     *
-     * This function is meant to enhance code readability by clearly expressing
-     * its intent.
+     * Execute all the callbacks registered under resourceId (which ends with
+     * "_handlers" by convention) with the given arguments.
      *
      * This function can be thought as an event dispatcher, calling the handlers
      * with `args` as the payload.
@@ -113,22 +110,30 @@ export class Plugin {
     }
 
     /**
-     * Execute a series of functions until one of them returns a truthy value.
+     * Execute a series of callbacks registered under resourceId (which ends
+     * with "_overrides" by convention) until one of them returns a truthy
+     * value, and returns whether this happened.
      *
-     * This function is meant to enhance code readability by clearly expressing
-     * its intent.
+     * Warning: not all callbacks will necessarily be run. Consider using
+     * {@link dispatchTo} instead if all callbacks must be executed.
      *
-     * A command "delegates" its execution to one of the overriding functions,
-     * which return a truthy value to signal it has been handled.
+     * Semantically, this function indicates that, even though there's code to
+     * handle an operation the default way, it can be **delegated** to a
+     * callback that handles a specific case, in which case it **overrides**
+     * that default behavior.
      *
-     * It is the the caller's responsability to stop the execution when this
+     * The registered "_overrides" callbacks must return a truthy value to
+     * signal the operation has been handled.
+     *
+     * It is the caller's responsibility to stop the execution when this
      * function returns true.
      *
      * Example:
      * ```js
-     * if (this.delegateTo("my_command_overrides", arg1, arg2)) {
+     * if (this.delegateTo("some_operation_overrides", arg1, arg2)) {
      *   return;
      * }
+     * // code that does some operation the default way - executed unless overridden
      * ```
      *
      * @param {string} resourceId
