@@ -53,14 +53,17 @@
     <t t-call="mass_mailing.DesignTextOption">
         <t t-set="label">Heading 1</t>
         <t t-set="prefix" t-value="`--h1-`"/>
+        <t t-set="marginPrefix" t-value="prefix"/>
     </t>
     <t t-call="mass_mailing.DesignTextOption">
         <t t-set="label">Heading 2</t>
         <t t-set="prefix" t-value="`--h2-`"/>
+        <t t-set="marginPrefix" t-value="prefix"/>
     </t>
     <t t-call="mass_mailing.DesignTextOption">
         <t t-set="label">Heading 3</t>
         <t t-set="prefix" t-value="`--h3-`"/>
+        <t t-set="marginPrefix" t-value="prefix"/>
     </t>
 </t>
 
@@ -68,6 +71,7 @@
     <t t-call="mass_mailing.DesignTextOption">
         <t t-set="label">Text</t>
         <t t-set="prefix" t-value="`--text-`"/>
+        <t t-set="marginPrefix" t-value="`--text-container-`"/>
     </t>
 </t>
 
@@ -84,6 +88,9 @@
             <BuilderNumberInput actionParam="{ variable: `${prefix}font-size` }" unit="'px'" saveUnit="'px'" default="0"/>
             <BuilderColorPicker noTransparency="true" title.translate="Text Color" enabledTabs="['solid', 'custom']"
                 actionParam="{ variable: `${prefix}color` }"/>
+        </BuilderRow>
+        <BuilderRow t-if="marginPrefix" label.translate="Margin" level="1">
+            <BuilderNumberInput title.translate="Bottom" unit="'px'" saveUnit="'px'" actionParam="{ variable: `${marginPrefix}margin-bottom` }" default="0"/>
         </BuilderRow>
         <BuilderRow>
             <FontFamilyPicker action="'mass_mailing.CustomizeMailingVariable'" actionParam="{variable: `${prefix}font-family`}"/>
