@@ -101,11 +101,16 @@ class TestImLivechatChannel(TestImLivechatCommon, TestGetOperator):
         self.assertEqual(self.livechat_channel.review_link, "https://www.odoo.com")
 
     def test_ongoing_session_count(self):
-        livechat_channel = self.livechat_channel
-        session_1 = self._create_conversation(livechat_channel, livechat_channel.user_ids[0])
-        session_2 = self._create_conversation(livechat_channel, livechat_channel.user_ids[0])
-        self.assertEqual(livechat_channel.ongoing_session_count, 2)
-        session_1.livechat_end_dt = Datetime.now() - timedelta(minutes=4)
+        self.authenticate(None, None)
+        john = self._create_operator("fr_FR")
+        livechat_channel = self.env["im_livechat.channel"].create(
+            {"name": "Livechat Channel", "user_ids": [john.id]},
+        )
+        data = self.make_jsonrpc_request(
+            "/im_livechat/get_session",
+            {"channel_id": livechat_channel.id},
+        )
+        channel = self.env["discuss.channel"].browse(data["channel_id"])
         self.assertEqual(livechat_channel.ongoing_session_count, 1)
-        session_2.livechat_end_dt = Datetime.now() - timedelta(minutes=2)
+        channel.livechat_end_dt = Datetime.now() - timedelta(minutes=2)
         self.assertEqual(livechat_channel.ongoing_session_count, 0)

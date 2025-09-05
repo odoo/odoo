@@ -73,17 +73,21 @@ class ResUsers(models.Model):
             # sudo - res.users: checking if user is in call is allowed if the user is member of a live chat channel.
             user.livechat_is_in_call = user.sudo().is_in_call if user.livechat_channel_ids else None
 
+    @api.depends_context("im_livechat_channel_id")
     @api.depends("livechat_channel_ids.channel_ids.livechat_end_dt", "partner_id")
     def _compute_livechat_ongoing_session_count(self):
+        domain = [
+            ("channel_id.livechat_end_dt", "=", False),
+            ("member_id", "!=", False),
+            ("partner_id", "in", self.partner_id.ids),
+            ("channel_id.last_interest_dt", ">=", "-15M"),
+        ]
+        if channel_id := self.env.context.get('im_livechat_channel_id'):
+            domain.append(("session_livechat_channel_id", "=", channel_id))
         count_by_partner = dict(
             self.env["im_livechat.channel.member.history"]._read_group(
-                [
-                    ("channel_id.livechat_end_dt", "=", False),
-                    ("partner_id", "in", self.partner_id.ids),
-                ],
-                ["partner_id"],
-                ["__count"],
-            )
+                domain, ["partner_id"], ["__count"],
+            ),
         )
         for user in self:
             user.livechat_ongoing_session_count = count_by_partner.get(user.partner_id, 0)
