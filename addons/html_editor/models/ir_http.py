@@ -3,6 +3,7 @@ from odoo.http import request
 
 CONTEXT_KEYS = ['editable', 'edit_translations', 'translatable']
 
+
 class IrHttp(models.AbstractModel):
     _inherit = "ir.http"
 

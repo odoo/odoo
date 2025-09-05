@@ -167,9 +167,9 @@ class IrQweb(models.AbstractModel):
         return super()._get_template_cache_keys() + ['snippet_lang']
 
 
-#------------------------------------------------------
+# ------------------------------------------------------
 # QWeb fields
-#------------------------------------------------------
+# ------------------------------------------------------
 
 
 class IrQwebField(models.AbstractModel):
@@ -381,7 +381,7 @@ class IrQwebFieldDatetime(models.AbstractModel):
                 utc = pytz.utc
 
                 dt = user_tz.localize(dt).astimezone(utc)
-            except Exception:
+            except Exception:  # noqa: BLE001
                 logger.warning(
                     "Failed to convert the value for a field of the model"
                     " %s back from the user's timezone (%s) to UTC",
@@ -415,7 +415,7 @@ class IrQwebFieldSelection(models.AbstractModel):
             if value == v:
                 return k
 
-        raise ValueError(u"No value found for label %s in selection %s" % (
+        raise ValueError("No value found for label %s in selection %s" % (
                          value, selection))
 
 
@@ -521,7 +521,7 @@ class IrQwebFieldImage(models.AbstractModel):
                 image.load()
                 f.seek(0)
                 return base64.b64encode(f.read())
-        except Exception:
+        except Exception:  # noqa: BLE001
             logger.exception("Failed to load local image %r", url)
             return None
 
@@ -539,7 +539,9 @@ class IrQwebFieldImage(models.AbstractModel):
             image = I.open(io.BytesIO(req.content))
             # force a complete load of the image data to validate it
             image.load()
-        except Exception:
+        # We're catching all exceptions because Pillow's exceptions are
+        # directly inheriting from Exception.
+        except Exception:  # noqa: BLE001
             logger.warning("Failed to load remote image %r", url, exc_info=True)
             return None
 
@@ -639,12 +641,13 @@ def html_to_text(element):
         '\n',
         ''.join(_realize_padding(output)).strip())
 
-_PADDED_BLOCK = set('p h1 h2 h3 h4 h5 h6'.split())
+
+_PADDED_BLOCK = {"p", "h1", "h2", "h3", "h4", "h5", "h6"}
 # https://developer.mozilla.org/en-US/docs/HTML/Block-level_elements minus p
-_MISC_BLOCK = set((
-    'address article aside audio blockquote canvas dd dl div figcaption figure'
-    ' footer form header hgroup hr ol output pre section tfoot ul video'
-).split())
+_MISC_BLOCK = {"address", "article", "aside", "audio", "blockquote", "canvas",
+               "dd", "dl", "div", "figcaption", "figure", "footer", "form",
+               "header", "hgroup", "hr", "ol", "output", "pre", "section", "tfoot",
+               "ul", "video"}
 
 
 def _collapse_whitespace(text):
