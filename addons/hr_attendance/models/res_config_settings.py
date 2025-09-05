@@ -19,9 +19,18 @@ class ResConfigSettings(models.TransientModel):
     attendance_from_systray = fields.Boolean(related="company_id.attendance_from_systray", readonly=False)
     attendance_overtime_validation = fields.Selection(related="company_id.attendance_overtime_validation", readonly=False)
     auto_check_out = fields.Boolean(related="company_id.auto_check_out", readonly=False)
+    single_check_in = fields.Boolean(related="company_id.single_check_in", readonly=False)
     auto_check_out_tolerance = fields.Float(related="company_id.auto_check_out_tolerance", readonly=False)
     absence_management = fields.Boolean(related="company_id.absence_management", readonly=False)
     attendance_device_tracking = fields.Boolean(related="company_id.attendance_device_tracking", readonly=False)
+
+    @api.onchange("auto_check_out", "single_check_in")
+    def _onchange_auto_checkout_single_checkin(self):
+        for company in self:
+            if not company.auto_check_out:
+                company.single_check_in = False
+            elif company.single_check_in:
+                company.auto_check_out = True
 
     @api.model
     def get_values(self):

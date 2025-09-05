@@ -48,6 +48,7 @@ class HrAttendance(http.Controller):
                 'use_pin': employee.company_id.attendance_kiosk_use_pin,
                 'display_overtime': employee.company_id.hr_attendance_display_overtime,
                 'device_tracking_enabled': employee.company_id.attendance_device_tracking,
+                'single_checkin_enabled': employee.company_id._is_single_checkin_enabled(),
             }
         return response
 
@@ -233,7 +234,7 @@ class HrAttendance(http.Controller):
                                                   latitude=latitude,
                                                   longitude=longitude,
                                                   device_tracking_enabled=employee.company_id.attendance_device_tracking)
-        employee._attendance_action_change(geo_ip_response)
+        employee.with_context(is_from_systray_check_in_out=True)._attendance_action_change(geo_ip_response)
         return self._get_employee_info_response(employee)
 
     @http.route('/hr_attendance/attendance_user_data', type="jsonrpc", auth="user", readonly=True)

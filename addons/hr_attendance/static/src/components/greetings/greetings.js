@@ -18,6 +18,7 @@ export class KioskGreetings extends Component {
         this.attendance = this.props.employeeData.attendance;
         this.check_in_time = this.formatDateTime(this.attendance.check_in && deserializeDateTime(this.attendance.check_in));
         this.check_out_time = this.formatDateTime(this.attendance.check_out && deserializeDateTime(this.attendance.check_out));
+        this.single_checkin_enabled = this.props.employeeData.single_checkin_enabled;
         this.kiosk_delay = setTimeout(() => {
             this.props.kioskReturn(true)
         }, this.props.employeeData.kiosk_delay)

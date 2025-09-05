@@ -3,6 +3,7 @@ from datetime import date, datetime
 from freezegun import freeze_time
 
 from odoo import Command
+from odoo.exceptions import UserError
 from odoo.tests import Form, new_test_user
 from odoo.tests.common import tagged, TransactionCase
 
@@ -966,3 +967,42 @@ class TestHrAttendanceOvertime(TransactionCase):
     def test_overtime_rule_combined(self):
         # TODO
         pass
+
+    @freeze_time("2025-02-01 23:00:00")
+    def test_single_checkin_system(self):
+        # ==========================================================================================================
+        # Once an employee checked in he shouldn't be able to do checkout/checkin again
+        # ==========================================================================================================
+        self.company.write({
+            'auto_check_out': True,
+            'auto_check_out_tolerance': 1,
+            'single_check_in': True,
+        })
+        attendance_pending = self.env['hr.attendance'].create({
+            'employee_id': self.employee.id,
+            'check_in': datetime(2025, 2, 1, 14, 0),
+        })
+
+        # employee already checked-in
+        self.assertEqual(self.employee.attendance_state, 'checked_in')
+        self.assertEqual(attendance_pending.check_out, False)
+
+        # employee trying to checkout from kiosk, attendance check_out should not be updated
+        self.employee._attendance_action_change()
+        self.assertEqual(attendance_pending.check_out, False)
+
+        # user trying to checkout from systray, attendance check_out should not be updated and a UserError should be thrown
+        with self.assertRaises(UserError):
+            self.employee.with_context(is_from_systray_check_in_out=True)._attendance_action_change()
+        self.assertEqual(attendance_pending.check_out, False)
+
+        # auto checkout ran, checkout time should be updated
+        self.env['hr.attendance']._cron_auto_check_out()
+        self.assertEqual(attendance_pending.check_out, datetime(2025, 2, 1, 15, 0))
+
+        # employee check-in next day, should be able to checkin
+        with freeze_time('2025-02-02'):
+            self.assertEqual(self.employee.attendance_state, 'checked_out')
+            self.employee._attendance_action_change()
+            self.assertEqual(self.employee.attendance_state, 'checked_in')
+            self.assertEqual(self.employee.last_check_out, False)

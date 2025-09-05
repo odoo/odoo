@@ -36,6 +36,7 @@ class ResCompany(models.Model):
         ('by_manager', 'Approved by Manager'),
     ], string='Extra Hours Validation', default='no_validation')
     auto_check_out = fields.Boolean(string="Automatic Check Out", default=False)
+    single_check_in = fields.Boolean(string="Single Check-In Attendance System", default=False)
     auto_check_out_tolerance = fields.Float(default=2, export_string_translation=False)
     absence_management = fields.Boolean(string="Absence Management", default=False)
     attendance_device_tracking = fields.Boolean(string="Device & Location Tracking", default=True)
@@ -44,6 +45,11 @@ class ResCompany(models.Model):
     def _compute_attendance_kiosk_url(self):
         for company in self:
             company.attendance_kiosk_url = url_join(self.env['res.company'].get_base_url(), '/hr_attendance/%s' % company.attendance_kiosk_key)
+
+    @api.depends("auto_check_out", "single_check_in")
+    def _is_single_checkin_enabled(self):
+        self.ensure_one()
+        return self.single_check_in and self.auto_check_out
 
     # ---------------------------------------------------------
     # ORM Overrides
