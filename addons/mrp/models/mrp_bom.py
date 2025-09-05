@@ -48,6 +48,7 @@ class MrpBom(models.Model):
         help="Unit of Measure (Unit of Measure) is the unit of measurement for the inventory control")
     sequence = fields.Integer('Sequence')
     operation_ids = fields.One2many('mrp.routing.workcenter', 'bom_id', 'Operations', copy=True)
+    operation_count = fields.Integer('Operations Count', compute='_compute_operation_count')
     ready_to_produce = fields.Selection([
         ('all_available', ' When all components are available'),
         ('asap', 'When components for 1st operation are available')], string='Manufacturing Readiness',
@@ -316,6 +317,11 @@ class MrpBom(models.Model):
             if self.env.context.get('display_bom_uom_qty') and (bom.product_qty > 1 or bom.product_uom_id != bom.product_tmpl_id.uom_id):
                 display_name += f" ({bom.product_qty} {bom.product_uom_id.name})"
             bom.display_name = _('%(display_name)s', display_name=display_name)
+
+    @api.depends('operation_ids')
+    def _compute_operation_count(self):
+        for bom in self:
+            bom.operation_count = len(bom.operation_ids)
 
     def action_compute_bom_days(self):
         company_id = self.env.context.get('default_company_id', self.env.company.id)
@@ -624,6 +630,19 @@ class MrpBom(models.Model):
         if orderpoint.qty_to_order < bom_qty:
             orderpoint.qty_to_order = bom_qty
         return orderpoint.action_stock_replenishment_info()
+
+    def action_open_operation_form(self):
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'view_mode': 'form',
+            'res_model': 'mrp.routing.workcenter',
+            'context': {
+                'default_bom_id': self.id,
+                'search_default_bom_id': self.id,
+                'bom_id_invisible': True,
+            },
+        }
 
 
 class MrpBomLine(models.Model):

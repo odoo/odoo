@@ -25,17 +25,17 @@ class MrpRoutingWorkcenter(models.Model):
         index=True, ondelete='cascade', required=True, check_company=True)
     company_id = fields.Many2one('res.company', 'Company', related='bom_id.company_id')
     time_mode = fields.Selection([
-        ('auto', 'Compute based on tracked time'),
-        ('manual', 'Set duration manually')], string='Duration Computation',
+        ('manual', 'Fixed'),
+        ('auto', 'Computed')], string='Duration Computation',
         default='manual', tracking=True)
     time_mode_batch = fields.Integer('Based on', default=10)
     time_computed_on = fields.Char('Computed on last', compute='_compute_time_computed_on')
     time_cycle_manual = fields.Float(
         'Manual Duration', default=60, tracking=True,
         help="Time in minutes:"
-        "- In manual mode, time used"
-        "- In automatic mode, supposed first time when there aren't any work orders yet")
-    time_cycle = fields.Float('Duration', compute="_compute_time_cycle")
+        "- In fixed mode, time used"
+        "- In computed mode, supposed first time when there aren't any work orders yet")
+    time_cycle = fields.Float('Cycles', compute="_compute_time_cycle")
     workorder_count = fields.Integer("# Work Orders", compute="_compute_workorder_count")
     workorder_ids = fields.One2many('mrp.workorder', 'operation_id', string="Work Orders")
     possible_bom_product_template_attribute_value_ids = fields.Many2many(related='bom_id.possible_product_template_attribute_value_ids')
@@ -57,11 +57,11 @@ class MrpRoutingWorkcenter(models.Model):
     cycle_number = fields.Integer("Repetitions", compute="_compute_time_cycle")
     time_total = fields.Float('Total Duration', compute="_compute_time_cycle")
     show_time_total = fields.Boolean('Show Total Duration?', compute="_compute_time_cycle")
-    cost_mode = fields.Selection([('actual', 'Based on Actual resources'), ('estimated', 'Based on Estimated resources')],
-                                 string='Cost Computation', default='actual', tracking=True,
+    cost_mode = fields.Selection([('actual', 'Actual time'), ('estimated', 'Theorical time')],
+                                 string='Cost based on', default='actual', tracking=True,
                                  help="Determines the way Odoo calculates the cost of the operation:\n"
-                                 "- Based on Actual resources: the cost will be calculated based on tracked time and real employee costs.\n"
-                                 "- Based on Estimated resources: the cost will be calculated based on estimated time and costs.")
+                                 "- Based on Actual time: the cost will be calculated based on tracked time and real employee costs.\n"
+                                 "- Based on Estimated time: the cost will be calculated based on estimated time and costs.")
     cost = fields.Float('Cost', compute="_compute_cost")
 
     @api.depends('time_mode', 'time_mode_batch')
@@ -202,3 +202,10 @@ class MrpRoutingWorkcenter(models.Model):
             return False
 
         return self.env['mrp.bom']._skip_for_no_variant(product, self.bom_product_template_attribute_value_ids, never_attribute_values)
+
+    def action_open_operation_form(self):
+        return {
+            'type': 'ir.actions.act_window',
+            'view_mode': 'form',
+            'res_model': 'mrp.routing.workcenter',
+        }

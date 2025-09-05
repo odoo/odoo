@@ -1,0 +1,153 @@
+div.o_mrp_routing_form div.o_field_integer.o_small_integer {
+    &, input {
+        max-width: 2rem;
+    }
+}
+
+.o_mrp_routing_image {
+    @extend %o-nocontent-init-image;
+
+    overflow: hidden;
+    min-width: 650px;
+    margin-top: 50px;
+
+    background: url('/mrp/static/img/routing.svg') no-repeat top left;
+
+    @include media-breakpoint-down(md) {
+        margin-left: 22rem;
+    }
+
+    img {
+        width: 260px;
+    }
+
+    div.separator {
+        background-color: gray;
+    }
+
+    .o_annotation {
+        color: gray;
+    }
+    .o_annotation:before {
+        content: "";
+        @include o-position-absolute($top: 50%);
+        border: $border-width * 2 solid gray;
+        width: 2rem;
+    }
+    .o_annotation_end:before {
+        right: 105%;
+        border-top-left-radius: $border-radius-lg;
+        border-bottom: none;
+        border-right: none;
+    }
+    .o_annotation_start:before {
+        left: 105%;
+        border-top-right-radius: $border-radius-lg;
+        border-bottom: none;
+        border-left: none;
+    }
+    .o_annotation_1 {
+        top: 0;
+        &:before {
+            height: 7rem;
+        }
+    }
+    .o_annotation_2 {
+        &:before {
+            height: 4rem;
+        }
+    }
+    .o_annotation_3 {
+        &:before {
+            height: 4rem;
+        }
+    }
+    .o_annotation_4 {
+        &:before {
+            height: 4rem;
+        }
+    }
+    .o_annotation_5 {
+        &:before {
+            height: 3rem;
+        }
+    }
+
+    .o_text {
+        color: gray;
+        margin: auto;
+    }
+}
+.o_mrp_routing_image.bill_of_material {
+    min-height: 300px;
+    img {
+        left: 180px;
+        top: 60px;
+    }
+    // div.separator {
+    //     left: 490px;
+    //     top: 40px;
+    //     height: 250px;
+    //     width: 2px;
+    // }
+    .o_annotation_1 {
+        left: 323px;
+    }
+    .o_annotation_2 {
+        top: 27px;
+        left: 360px;
+    }
+    .o_annotation_3 {
+        top: 40px;
+        left: 133px;
+    }
+    .o_annotation_4 {
+        top: 70px;
+        left: 90px;
+    }
+    .o_annotation_5 {
+        top: 97px;
+        left: 58px;
+    }
+    .o_text {
+        left: 510px;
+        top: 80px;
+    }
+}
+.o_mrp_routing_image.settings {
+    min-height: 600px;
+    img {
+        left: 179px;
+        top: 61px;
+    }
+    div.separator {
+        left: 125px;
+        top: 300px;
+        height: 2px;
+        width: 350px;
+    }
+    .o_annotation_1 {
+        left: 325px;
+    }
+    .o_annotation_2 {
+        top: 29px;
+        left: 360px;
+    }
+    .o_annotation_3 {
+        top: 35px;
+        left: 120px;
+    }
+    .o_annotation_4 {
+        top: 65px;
+        left: 70px;
+    }
+    .o_annotation_5 {
+        top: 95px;
+        left: 45px;
+    }
+    .o_text {
+        left: 15%;
+        top: 55%;
+        right: 25%;
+    }
+}
