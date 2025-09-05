@@ -723,6 +723,21 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
                 'email': {'count': 1, 'label': 'by Email'},
             })
 
+    def test_invoice_multi_child_contact(self):
+        """ Test bulk invoice sending will retrieve info from the main partner. """
+        self.partner_a.write({'invoice_sending_method': 'manual'})
+        partner = self.env['res.partner'].create({
+            'type': 'invoice',
+            'email': 'child@example.com',
+            'parent_id': self.partner_a.id
+        })
+        invoice1 = self.init_invoice("out_invoice", amounts=[1000], partner=partner, post=True)
+        invoice2 = self.init_invoice("out_invoice", amounts=[1000], partner=partner, post=True)
+        wizard = self.create_send_and_print(invoice1 + invoice2)
+        self.assertEqual(wizard.summary_data, {
+            'manual': {'count': 2, 'label': 'Manually'}
+        })
+
     def test_invoice_mail_attachments_widget(self):
         invoice = self.init_invoice("out_invoice", amounts=[1000], post=True)
 
