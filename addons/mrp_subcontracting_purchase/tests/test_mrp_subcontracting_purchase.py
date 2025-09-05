@@ -502,12 +502,12 @@ class MrpSubcontractingPurchaseTest(TestMrpSubcontractingCommon):
         self.bom.produce_delay = 3
         self.bom.days_to_prepare_mo = 4
         delays, _ = rule._get_lead_days(self.finished, supplierinfo=seller)
-        self.assertEqual(delays['total_delay'], seller.delay + self.env.company.days_to_purchase + self.env.company.horizon_days)
+        self.assertEqual(delays['total_delay'], seller.delay + self.env.company.days_to_purchase)
         # Case 2 Vendor lead time < Manufacturing lead time + DTPMO
         self.bom.produce_delay = 5
         self.bom.days_to_prepare_mo = 6
         delays, _ = rule._get_lead_days(self.finished, supplierinfo=seller)
-        self.assertEqual(delays['total_delay'], self.bom.produce_delay + self.bom.days_to_prepare_mo + self.env.company.days_to_purchase + self.env.company.horizon_days)
+        self.assertEqual(delays['total_delay'], self.bom.produce_delay + self.bom.days_to_prepare_mo + self.env.company.days_to_purchase)
 
     def test_subcontracting_lead_days_on_overview(self):
         """Test on the BOM overview, the lead days and resupply availability are
