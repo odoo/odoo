@@ -1,7 +1,14 @@
-import { expect, test } from "@odoo/hoot";
+import { beforeEach, expect, test, describe } from "@odoo/hoot";
 import { setSelection } from "./_helpers/selection";
 import { click, hover, queryOne, waitFor, waitForNone } from "@odoo/hoot-dom";
-import { contains, defineModels, fields, models, mountView } from "@web/../tests/web_test_helpers";
+import {
+    contains,
+    defineModels,
+    fields,
+    models,
+    mountView,
+    patchWithCleanup,
+} from "@web/../tests/web_test_helpers";
 import { animationFrame } from "@odoo/hoot-mock";
 import { unformat } from "./_helpers/format";
 import { Plugin } from "@html_editor/plugin";
@@ -9,6 +16,10 @@ import { Component, onMounted, onWillUnmount, xml } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { setupEditor } from "./_helpers/editor";
 import { MAIN_PLUGINS } from "@html_editor/plugin_sets";
+import { parseHTML } from "@html_editor/utils/html";
+import { closestScrollableY } from "@web/core/utils/scrolling";
+import { Wysiwyg } from "@html_editor/wysiwyg";
+import { insertText } from "./_helpers/user_actions";
 
 class Test extends models.Model {
     name = fields.Char();
@@ -27,6 +38,7 @@ class Test extends models.Model {
                 </tbody></table>
                 ${"<p>text</p>".repeat(50)}`),
         },
+        { id: 3, name: "Test", txt: "<p>text</p>" },
     ];
 }
 
@@ -90,6 +102,156 @@ test("Toolbar should not overflow scroll container", async () => {
     await animationFrame();
 
     expect(toolbar).toBeVisible();
+});
+
+test.tags("desktop");
+test("Toolbar should be visible after scroll bar is added", async () => {
+    await mountView({
+        type: "form",
+        resId: 3,
+        resModel: "test",
+        arch: `
+            <form>
+                <field name="name"/>
+                <field name="txt" widget="html" options="{'height': 300}"/>
+            </form>`,
+    });
+
+    // At this point there's no scroll bar around the editable
+    const p = queryOne(".odoo-editor-editable p");
+
+    // Add text: this creates a vertical scroll bar in the editable
+    const morePs = parseHTML(document, "<p>more text</p>".repeat(20));
+    p.after(...morePs.childNodes);
+
+    // Select first paragraph
+    setSelection({ anchorNode: p, anchorOffset: 0, focusNode: p, focusOffset: 1 });
+
+    // Toolbar should be visible
+    const toolbar = await waitFor(".o-we-toolbar");
+    expect(toolbar).toBeVisible();
+});
+
+test.tags("desktop");
+test("Toolbar should not overflow scroll container at the bottom", async () => {
+    await mountView({
+        type: "form",
+        resId: 1,
+        resModel: "test",
+        arch: `
+            <form>
+                <field name="name"/>
+                <field name="txt" widget="html" options="{'height': 300}"/>
+            </form>`,
+    });
+    const lastP = queryOne(".odoo-editor-editable p:last-child");
+    // Scroll down to bottom
+    lastP.scrollIntoView();
+
+    // Select last paragraph
+    setSelection({ anchorNode: lastP, anchorOffset: 0, focusNode: lastP, focusOffset: 1 });
+
+    // Toolbar should be visible
+    const toolbar = await waitFor(".o-we-toolbar");
+    expect(toolbar).toBeVisible();
+
+    // Scroll up so that toolbar overflows the bottom of the editable
+    const scrollableElement = closestScrollableY(lastP);
+    scrollableElement.scrollTop -= 100;
+
+    // Toolbar should be hidden
+    await waitFor(".o-we-toolbar:not(:visible)");
+    expect(toolbar).not.toBeVisible();
+});
+
+test.tags("desktop");
+test("Toolbar visibility should be updated when editable is resized", async () => {
+    await mountView({
+        type: "form",
+        resId: 1,
+        resModel: "test",
+        arch: `
+            <form>
+                <field name="name"/>
+                <field name="txt" widget="html" options="{'height': 300}"/>
+            </form>`,
+    });
+
+    const lastP = queryOne(".odoo-editor-editable p:last-child");
+    // Scroll down to bottom
+    lastP.scrollIntoView();
+
+    // Select last paragraph
+    setSelection({ anchorNode: lastP, anchorOffset: 0, focusNode: lastP, focusOffset: 1 });
+
+    // Toolbar should be visible
+    const toolbar = await waitFor(".o-we-toolbar");
+    expect(toolbar).toBeVisible();
+
+    // Resize editable (which is the scroll container)
+    const editable = queryOne(".odoo-editor-editable");
+    editable.style.height = "150px";
+
+    // Toolbar now overflows the bottom of the container and should be hidden
+    await waitFor(".o-we-toolbar:not(:visible)");
+    expect(toolbar).not.toBeVisible();
+});
+
+describe("powerbox", () => {
+    let editor;
+    beforeEach(() =>
+        patchWithCleanup(Wysiwyg.prototype, {
+            setup() {
+                super.setup();
+                editor = this.editor;
+            },
+        })
+    );
+
+    test.tags("desktop");
+    test("Powerbox should be visible in a editable with small height", async () => {
+        await mountView({
+            type: "form",
+            resId: 3,
+            resModel: "test",
+            arch: `
+            <form>
+                <field name="name"/>
+                <field name="txt" widget="html" options="{'height': 100}"/>
+            </form>`,
+        });
+
+        // Put cursor at end of first paragraph an insert "/"
+        setSelection({ anchorNode: queryOne(".odoo-editor-editable p"), anchorOffset: 1 });
+        insertText(editor, "/");
+
+        // Powerbox should be visible
+        const powerbox = await waitFor(".o-we-powerbox");
+        expect(powerbox).toBeVisible();
+    });
+
+    test.tags("desktop");
+    test("Powerbox should be visible in a editable with small height (2)", async () => {
+        await mountView({
+            type: "form",
+            resId: 1,
+            resModel: "test",
+            arch: `
+            <form>
+                <field name="name"/>
+                <field name="txt" widget="html" options="{'height': 100}"/>
+            </form>`,
+        });
+
+        // Put cursor at end of third paragraph an insert "/"
+        const thirdP = queryOne(".odoo-editor-editable p:nth-child(3)");
+        setSelection({ anchorNode: thirdP, anchorOffset: 1 });
+        insertText(editor, "/");
+
+        // Powerbox should be visible
+        const powerbox = await waitFor(".o-we-powerbox");
+        expect(powerbox).toBeVisible();
+    });
 });
 
 test.tags("desktop");
