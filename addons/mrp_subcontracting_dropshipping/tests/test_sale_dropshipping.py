@@ -348,10 +348,10 @@ class TestSaleDropshippingFlows(TestMrpSubcontractingCommon):
             'seller_ids': [(0, 0, {'partner_id': self.supplier.id})],
         })
         product.product_tmpl_id.categ_id = self.env.ref('product.product_category_all')
+        self._setup_category_stock_journals()
         product.product_tmpl_id.categ_id.property_cost_method = 'standard'
         product.product_tmpl_id.categ_id.property_valuation = 'real_time'
         product.product_tmpl_id.invoice_policy = 'order'
-        self._setup_category_stock_journals()
         sale_order = self.env['sale.order'].create({
             'partner_id': self.customer.id,
             'picking_policy': 'direct',
