@@ -17,7 +17,7 @@ def add_stripped_items_before(node, spec, extract):
     text = spec.text or ''
 
     before_text = ''
-    prev = node.getprevious()
+    prev = next((n for n in node.itersiblings(preceding=True) if not (n.tag == etree.ProcessingInstruction and n.target == "apply-inheritance-specs-node-removal")), None)
     if prev is None:
         parent = node.getparent()
         result = parent.text and RSTRIP_REGEXP.search(parent.text)
