@@ -19,6 +19,13 @@ class IrMail_Server(models.Model):
 
     owner_user_id = fields.Many2one('res.users', 'Owner')
 
+    # Store the current time, and the number of emails we sent
+    # Each minute, the time and the count will be reset
+    # Used to throttle the number of emails we send for the personal
+    # mail servers.
+    owner_limit_time = fields.Datetime('Owner Limit Time')
+    owner_limit_count = fields.Integer('Owner Limit Count')
+
     _unique_owner_user_id = models.Constraint(
         "UNIQUE(owner_user_id)",
         "owner_user_id must be unique",
@@ -90,3 +97,10 @@ class IrMail_Server(models.Model):
                 raise UserError(_('The server "%s" cannot be forced as it belongs to a user and is archived.', mail_server.display_name))
             if mail_server.owner_user_id.outgoing_mail_server_id != mail_server:
                 raise UserError(_('The server "%s" cannot be forced as the owner does not use it anymore.', mail_server.display_name))
+
+    def _get_personal_mail_servers_limit(self):
+        """Return the number of email we can send in 1 minutes for this outgoing server.
+
+        0 fallbacks to 30 to avoid blocking servers.
+        """
+        return int(self.env['ir.config_parameter'].sudo().get_param('mail.server.personal.limit.minutes')) or 30

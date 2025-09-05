@@ -35,6 +35,9 @@ class IrConfig_Parameter(models.Model):
     #    50 by default;
     # * 'mail.render.cron.limit': used in cron involving rendering of content
     #   and/or templates, like event mail scheduler cron. Defaults to 1000;
+    # * 'mail.server.personal.limit.minutes': used when sending email using
+    #   personal mail servers, maximum number of emails that can be sent in
+    #   one minute
 
     # Mail Gateway
     #   * 'mail.gateway.loop.minutes' and 'mail.gateway.loop.threshold': block
@@ -74,6 +77,11 @@ class IrConfig_Parameter(models.Model):
     #   * 'mail.use_twilio_rtc_servers', 'mail.sfu_server_url' and 'mail.
     #     sfu_server_key': rtc server usage and configuration;
     #   * 'discuss.tenor_api_key': used for gif fetch service;
+    #   * 'mail.server.outlook.iap.endpoint': URL of the IAP endpoint
+    #     for outlook oauth server
+    #   * 'mail.server.gmail.iap.endpoint': URL of the IAP endpoint
+    #     for gmail oauth server
+
     _inherit = 'ir.config_parameter'
 
     @api.model

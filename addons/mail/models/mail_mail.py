@@ -11,6 +11,7 @@ import re
 import smtplib
 from collections import defaultdict
 
+from datetime import timedelta
 from dateutil.parser import parse
 
 from odoo import _, api, fields, models, modules, SUPERUSER_ID, tools
@@ -76,6 +77,7 @@ class MailMail(models.Model):
         # generic
         ("unknown", "Unknown error"),
         # mail
+        ("mail_spam", "Detected As Spam"),
         ("mail_email_invalid", "Invalid email address"),
         ("mail_email_missing", "Missing email"),
         ("mail_from_invalid", "Invalid from address"),
@@ -575,6 +577,94 @@ class MailMail(models.Model):
             for batch_ids in tools.split_every(batch_size, record_ids):
                 yield mail_server_id, alias_domain_id, smtp_from, batch_ids
 
+    def _split_by_delayed_batch(self, mail_server):
+        """To not flag personal email servers as spam, we throttle them at X emails / minutes."""
+        if not mail_server or not mail_server.owner_user_id:
+            return self
+
+        MAX_SEND = mail_server._get_personal_mail_servers_limit()
+
+        current_minute = datetime.datetime.now().replace(second=0, microsecond=0)
+        server_limit_minute = (
+            mail_server.owner_limit_time
+            if mail_server.owner_limit_time
+            else current_minute - timedelta(minutes=1)
+        )
+
+        if server_limit_minute < current_minute:
+            # Server limit is old, we can send up to the limit
+            server_limit_minute = current_minute
+            mail_server.owner_limit_time = current_minute
+            mail_server.owner_limit_count = 0
+
+        elif server_limit_minute > current_minute:
+            # Should not happen except if we manually write on the field
+            mail_server.owner_limit_time = current_minute
+            mail_server.owner_limit_count = 0
+            _logger.error(
+                "Mail: invalid owner_limit_time %s > %s for %s",
+                server_limit_minute,
+                current_minute,
+                mail_server.name,
+            )
+
+        # Send the oldest mails in priority if the CRON is late
+        to_send = self.browse()
+        to_delay = self.browse()
+        notifs = self.env['mail.notification'].sudo().search([
+            ('notification_type', '=', 'email'),
+            ('mail_mail_id', 'in', self.ids),
+            ('notification_status', 'not in', ('sent', 'canceled'))
+        ])
+        for mail in self.sorted(lambda k: (k.create_date, k.id)):
+            if mail_server.owner_limit_count >= MAX_SEND:
+                to_delay |= mail
+            elif mail_server.owner_limit_count + (len(mail.recipient_ids) or 1) > MAX_SEND:
+                # Because we split for each recipient, if we want to
+                # respect the limit we have to create new mails
+                # (the first one keep the email_to and the email_cc
+                # so it might send 2 emails instead of 1,
+                # see `_prepare_outgoing_list`)
+                to_keep = MAX_SEND - mail_server.owner_limit_count
+                recipient_ids = mail.recipient_ids
+                new_mail = mail.with_user(mail.create_uid).sudo().copy({
+                    'headers': mail.headers,
+                    'mail_message_id': mail.mail_message_id.id,
+                    'recipient_ids': recipient_ids[:to_keep].ids,
+                })
+                mail.write({
+                    'recipient_ids': recipient_ids[to_keep:],
+                    'email_cc': False,
+                    'email_to': False,
+                })
+                mail_server.owner_limit_count += to_keep or 1
+                notifs.filtered(lambda n: n.mail_mail_id == mail and n.res_partner_id in recipient_ids[:to_keep]).mail_mail_id = new_mail
+                to_send |= new_mail
+                to_delay |= mail
+            else:
+                to_send |= mail
+                mail_server.owner_limit_count += len(mail.recipient_ids) or 1
+
+        # Delay if necessary
+        if to_delay:
+            owner_limit_count = mail_server.owner_limit_count
+            for mail in to_delay:
+                if owner_limit_count < MAX_SEND:
+                    owner_limit_count += len(mail.recipient_ids) or 1
+                else:
+                    owner_limit_count = len(mail.recipient_ids) or 1
+                    server_limit_minute += timedelta(minutes=1)
+
+                mail.scheduled_date = server_limit_minute
+
+            self.env.ref('mail.ir_cron_mail_scheduler_action')._trigger(
+                min(to_delay.mapped('scheduled_date')) + timedelta(seconds=59))
+
+        _logger.info(
+            "Mail: personal server %s: %s emails about to be sent / %s emails delayed",
+            mail_server.name, len(to_send), len(to_delay))
+        return to_send
+
     def send_after_commit(self):
         """Queues the email to be sent after the commit of the current cursor.
 
@@ -616,6 +706,14 @@ class MailMail(models.Model):
             :return: True
         """
         for mail_server_id, alias_domain_id, smtp_from, batch_ids in self._split_by_mail_configuration():
+            mail_server = self.env["ir.mail_server"].browse(mail_server_id)
+
+            if mail_server and mail_server.owner_user_id:
+                # Throttle the sending that use personal mail servers
+                batch_ids = self.browse(batch_ids)._split_by_delayed_batch(mail_server).ids
+                if not batch_ids:
+                    continue
+
             smtp_session = None
             try:
                 smtp_session = self.env['ir.mail_server']._connect__(mail_server_id=mail_server_id, smtp_from=smtp_from)
@@ -629,7 +727,6 @@ class MailMail(models.Model):
                     batch.write({'state': 'exception', 'failure_reason': tools.exception_to_unicode(exc)})
                     batch._postprocess_sent_message(success_pids=[], success_emails=[], failure_type="mail_smtp")
             else:
-                mail_server = self.env['ir.mail_server'].browse(mail_server_id)
                 self.browse(batch_ids)._send(
                     auto_commit=auto_commit,
                     raise_exception=raise_exception,
@@ -840,6 +937,11 @@ class MailMail(models.Model):
                         failure_type = "mail_from_invalid"
                     elif error_code in (IrMailServer.NO_FOUND_FROM, IrMailServer.NO_FOUND_SMTP_FROM):
                         failure_type = "mail_from_missing"
+
+                if isinstance(e, MailDeliveryException) and "OutboundSpamException" in str(e):
+                    # OutboundSpamException: Outlook spam error
+                    failure_type = "mail_spam"
+
                 # generic (unknown) error as fallback
                 if not failure_reason:
                     failure_reason = tools.exception_to_unicode(e)

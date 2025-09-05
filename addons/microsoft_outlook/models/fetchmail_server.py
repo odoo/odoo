@@ -23,12 +23,6 @@ class FetchmailServer(models.Model):
             'the permissions.')
         super(FetchmailServer, self - outlook_servers)._compute_server_type_info()
 
-    @api.depends('server_type')
-    def _compute_is_microsoft_outlook_configured(self):
-        outlook_servers = self.filtered(lambda server: server.server_type == 'outlook')
-        (self - outlook_servers).is_microsoft_outlook_configured = False
-        super(FetchmailServer, outlook_servers)._compute_is_microsoft_outlook_configured()
-
     @api.constrains('server_type', 'is_ssl')
     def _check_use_microsoft_outlook_service(self):
         for server in self:

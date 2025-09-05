@@ -132,7 +132,7 @@ class ResUsers(models.Model):
         mail_servers = self.env['ir.mail_server'].sudo().search(fields.Domain.AND([
             [('from_filter', 'ilike', '_@_')],
             fields.Domain.OR([[
-                ('from_filter', '=', user.email),
+                ('from_filter', '=', user.email_normalized),
                 ('smtp_user', '=', user.email),
                 ('owner_user_id', '=', user._origin.id),
             ] for user in self]),
@@ -141,11 +141,12 @@ class ResUsers(models.Model):
         for user in self:
             server = mail_servers.get(user) or self.env['ir.mail_server']
             user.outgoing_mail_server_id = server.id
-            user.outgoing_mail_server_type = self._get_personal_server_type(server)
-
-    @api.model
-    def _get_personal_server_type(self, smtp_server):
-        return 'default'
+            type_options = self._fields['outgoing_mail_server_type']._selection
+            user.outgoing_mail_server_type = (
+                server.smtp_authentication
+                if server.smtp_authentication in type_options
+                else 'default'
+            )
 
     # ------------------------------------------------------------
     # CRUD
@@ -204,8 +205,8 @@ class ResUsers(models.Model):
         if vals.get('email'):
             previous_email_by_user = {
                 user: user.email
-                for user in self.filtered(lambda user: bool(email_normalize(user.email)))
-                if email_normalize(user.email) != email_normalize(vals['email'])
+                for user in self.filtered(lambda user: bool(user.email_normalized))
+                if user.email_normalized != email_normalize(vals['email'])
             }
         if 'notification_type' in vals:
             user_notification_type_modified = self.filtered(lambda user: user.notification_type != vals['notification_type'])
