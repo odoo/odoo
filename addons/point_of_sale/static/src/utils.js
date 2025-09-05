@@ -1,5 +1,5 @@
 import { session } from "@web/session";
-
+import { getDataURLFromFile } from "@web/core/utils/urls";
 /*
  * comes from o_spreadsheet.js
  * https://stackoverflow.com/questions/105034/create-guid-uuid-in-javascript
@@ -174,3 +174,9 @@ export function isValidEmail(email) {
 }
 
 export const LONG_PRESS_DURATION = session.test_mode ? 100 : 1000;
+
+export async function getImageDataUrl(imageUrl) {
+    const res = await fetch(imageUrl);
+    const blob = await res.blob();
+    return await getDataURLFromFile(blob);
+}
