@@ -1315,21 +1315,6 @@ class SessionStore(typing.Generic[S]):
         :type identifiers: iterable
         :return: the identifiers which are not present on the filesystem
         :rtype: set
-
-        Note 1:
-        Working with identifiers 42 characters long means that
-        we don't have to work with the entire sid session,
-        while maintaining sufficient entropy to avoid collisions.
-        See details in ``generate_key``.
-
-        Note 2:
-        Scans the session store for inactive (GC'd) sessions.
-        Works even if GC is done externally (not via ``vacuum()``).
-        Performance is acceptable for an infrequent background job:
-            - listing ``directories``: 1-5s on SSD
-            - iterating sessions:
-                - 25k on standard SSD: ~1.5 min
-                - 2M on RAID10 SSD: ~25s
         """
         # There are a lot of session files.
         # Use the param ``identifiers`` to select the necessary directories.
