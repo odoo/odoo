@@ -10,3 +10,25 @@
         }
     }
 }
+
+/*                 Quick-Edit Form View
+ **********************************************************/
+
+.modal-dialog:has(.o_calendar_event_form_quick_create) {
+    --modal-width: 450px;
+}
+
+.o_calendar_event_form_quick_create {
+    .o_form_nosheet {
+        padding: 0;
+        > div {
+            margin-top: 0.5rem;
+            margin-left: 5px;
+            margin-right: 5px;
+        }
+    }
+    i.fa {
+        text-align: center;
+        min-width: 2rem;
+    }
+}

@@ -58,13 +58,7 @@ export class AttendeeCalendarController extends CalendarController {
         return {
             ...props,
             size: "md",
-            goToFullEvent: (contextData) => {
-                const fullContext = {
-                    ...props.context,
-                    ...contextData,
-                };
-                this.goToFullEvent(false, fullContext);
-            },
+            context: { ...props.context, ...this.props.context },
             onRecordSaved: () => onDialogClosed(),
         };
     }

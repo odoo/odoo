@@ -67,7 +67,7 @@ export class FormViewDialog extends Component {
             preventCreate: this.props.preventCreate,
             preventEdit: this.props.preventEdit,
             discardRecord: this.discardRecord.bind(this),
-            saveRecord: async (record, { saveAndNew }) => {
+            saveRecord: async (record, params) => {
                 let saved;
                 if (this.props.onRecordSave) {
                     saved = await this.props.onRecordSave(record);
@@ -79,13 +79,7 @@ export class FormViewDialog extends Component {
                     }
                 }
                 if (saved) {
-                    if (saveAndNew) {
-                        this.currentResId = false;
-                        const context = this.props.nextRecordsContext || this.props.context || {};
-                        await record.model.load({ resId: false, context });
-                    } else {
-                        this.props.close();
-                    }
+                    await this.onRecordSaved(record, params);
                 }
                 return saved;
             },
@@ -97,6 +91,21 @@ export class FormViewDialog extends Component {
                 await this.props.removeRecord();
                 this.props.close();
             };
+        }
+    }
+
+    /**
+     * overridable method defining what to do on save
+     * @param {*} record, record that was saved
+     * @param {*} params, additional parameters passed to "save"
+     */
+    async onRecordSaved(record, params) {
+        if (params?.saveAndNew) {
+            this.currentResId = false;
+            const context = this.props.nextRecordsContext || this.props.context || {};
+            await record.model.load({ resId: false, context });
+        } else {
+            this.props.close();
         }
     }
 
