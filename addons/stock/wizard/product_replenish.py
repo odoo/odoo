@@ -95,7 +95,7 @@ class ProductReplenish(models.TransientModel):
             raise UserError(_("You need to select a route to replenish your products"))
         try:
             now = self.env.cr.now()
-            self.env['procurement.group'].with_context(clean_context(self.env.context)).run([
+            self.env['procurement.group'].with_context(clean_context(self.env.context | self._additional_replenishment_context())).run([
                 self.env['procurement.group'].Procurement(
                     self.product_id,
                     self.quantity,
