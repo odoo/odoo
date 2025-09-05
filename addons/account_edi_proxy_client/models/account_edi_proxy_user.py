@@ -93,7 +93,7 @@ class Account_Edi_Proxy_ClientUser(models.Model):
         '''
         return False
 
-    def _make_request(self, url, params=False, auth_type: Literal['hmac', 'asymmetric'] = 'hmac', request_timeout=DEFAULT_TIMEOUT):
+    def _make_request(self, url, params=False, *, auth_type: Literal['hmac', 'asymmetric'] = 'hmac'):
         ''' Make a request to proxy and handle the generic elements of the reponse (errors, new refresh token).
         '''
         payload = {
@@ -111,7 +111,7 @@ class Account_Edi_Proxy_ClientUser(models.Model):
             response = requests.post(
                 url,
                 json=payload,
-                timeout=request_timeout,
+                timeout=DEFAULT_TIMEOUT,
                 headers={'content-type': 'application/json'},
                 auth=OdooEdiProxyAuth(user=self, auth_type=auth_type)).json()
         except (ValueError, requests.exceptions.ConnectionError, requests.exceptions.MissingSchema, requests.exceptions.Timeout, requests.exceptions.HTTPError):
@@ -130,7 +130,7 @@ class Account_Edi_Proxy_ClientUser(models.Model):
             if error_code == 'refresh_token_expired':
                 self._renew_token()
                 self.env.cr.commit()  # We do not want to lose it if in the _make_request below something goes wrong
-                return self._make_request(url, params, request_timeout)
+                return self._make_request(url, params, auth_type='hmac')
             if error_code == 'no_such_user':
                 # This error is also raised if the user didn't exchange data and someone else claimed the edi_identificaiton.
                 self.sudo().active = False
