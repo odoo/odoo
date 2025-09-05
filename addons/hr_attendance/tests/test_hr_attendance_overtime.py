@@ -144,12 +144,12 @@ class TestHrAttendanceOvertime(TransactionCase):
             'check_out': datetime(2021, 1, 4, 22, 0)
         })
 
-        overtime = self.env['hr.attendance.overtime.line'].search([('employee_id', '=', self.employee.id), ('date', '=', date(2021, 1, 4))])
+        overtime = self.env['hr.attendance.overtime'].search([('employee_id', '=', self.employee.id), ('date', '=', date(2021, 1, 4))])
         self.assertFalse(overtime, 'No overtime record should exist for that employee')
 
         checkin_am.write({'check_out': datetime(2021, 1, 4, 12, 0)})
         # TODO naja: should work after negative works
-        # overtime = self.env['hr.attendance.overtime.line'].search([('employee_id', '=', self.employee.id), ('date', '=', date(2021, 1, 4))])
+        # overtime = self.env['hr.attendance.overtime'].search([('employee_id', '=', self.employee.id), ('date', '=', date(2021, 1, 4))])
         # self.assertTrue(overtime, 'An overtime record should be created')
         # self.assertEqual(overtime.duration, -4)
 
@@ -160,7 +160,7 @@ class TestHrAttendanceOvertime(TransactionCase):
         self.assertEqual(overtime.duration, 0, 'Overtime duration should be 0 when an attendance has not been checked out.')
         checkin_pm.write({'check_out': datetime(2021, 1, 4, 18, 0)})
         # self.assertTrue(overtime.exists(), 'Overtime should not be deleted')
-        overtime = self.env['hr.attendance.overtime.line'].search([('employee_id', '=', self.employee.id), ('date', '=', date(2021, 1, 4))])
+        overtime = self.env['hr.attendance.overtime'].search([('employee_id', '=', self.employee.id), ('date', '=', date(2021, 1, 4))])
         self.assertAlmostEqual(overtime.duration, 1)
         self.assertAlmostEqual(self.employee.total_overtime, 1)
 
@@ -178,7 +178,7 @@ class TestHrAttendanceOvertime(TransactionCase):
             'check_out': datetime(2021, 1, 2, 11, 0)
         })
 
-        overtime = self.env['hr.attendance.overtime.line'].search([('employee_id', '=', self.employee.id), ('date', '=', date(2021, 1, 2))])
+        overtime = self.env['hr.attendance.overtime'].search([('employee_id', '=', self.employee.id), ('date', '=', date(2021, 1, 2))])
         self.assertTrue(overtime, 'Overtime should be created')
         self.assertEqual(overtime.duration, 3, 'Should have 3 hours of overtime')
         self.assertEqual(self.employee.total_overtime, 3, 'Should still have 3 hours of overtime')
@@ -283,13 +283,13 @@ class TestHrAttendanceOvertime(TransactionCase):
                 'check_out': datetime(2021, 1, 4, 17, 5),
             }
         ])
-        overtime = self.env['hr.attendance.overtime.line'].search([('employee_id', '=', self.employee.id)])
+        overtime = self.env['hr.attendance.overtime'].search([('employee_id', '=', self.employee.id)])
         self.assertFalse(overtime, 'No overtime should be counted because of the threshold.')
 
         self.ruleset.rule_ids[0].employer_tolerance = 4 / 60  # 10 minutes
         self.ruleset.action_regenerate_overtimes()
 
-        overtime = self.env['hr.attendance.overtime.line'].search([('employee_id', '=', self.employee.id)])
+        overtime = self.env['hr.attendance.overtime'].search([('employee_id', '=', self.employee.id)])
         self.assertTrue(overtime, 'Overtime entry should exist since the threshold has been lowered.')
         self.assertAlmostEqual(overtime.duration, 10 / 60, msg='Overtime should be equal to 10 minutes.')
 
@@ -380,7 +380,7 @@ class TestHrAttendanceOvertime(TransactionCase):
         self.assertAlmostEqual(attendance.overtime_hours, 4, 2)
 
         # Total overtime for that day : 4 hours
-        overtime_1 = self.env['hr.attendance.overtime.line'].search([('employee_id', '=', self.employee.id),
+        overtime_1 = self.env['hr.attendance.overtime'].search([('employee_id', '=', self.employee.id),
                                                               ('date', '=', datetime(2023, 1, 2))])
         self.assertAlmostEqual(overtime_1.duration, 4, 2)
 
@@ -410,7 +410,7 @@ class TestHrAttendanceOvertime(TransactionCase):
         # 21:00 -> 23:00 should contain 2 hours of overtime
         self.assertAlmostEqual(m_attendance_3.overtime_hours, 2, 2)
 
-        overtime_2 = self.env['hr.attendance.overtime.line'].search([('employee_id', '=', self.employee.id),
+        overtime_2 = self.env['hr.attendance.overtime'].search([('employee_id', '=', self.employee.id),
                                                                 ('date', '=', datetime(2023, 1, 3))])
         # Total overtime for that day : 5 hours
         self.assertEqual(sum(overtime_2.mapped('duration')), 5)
@@ -445,7 +445,7 @@ class TestHrAttendanceOvertime(TransactionCase):
         self.assertAlmostEqual(early_attendance.overtime_hours, 5)
 
         # Total overtime for that day : 5 hours
-        overtime_record = self.env['hr.attendance.overtime.line'].search([('employee_id', '=', self.europe_employee.id),
+        overtime_record = self.env['hr.attendance.overtime'].search([('employee_id', '=', self.europe_employee.id),
                                                               ('date', '=', datetime(2024, 5, 28))])
         self.assertAlmostEqual(overtime_record.duration, 5)
 
@@ -463,7 +463,7 @@ class TestHrAttendanceOvertime(TransactionCase):
         self.assertAlmostEqual(early_attendance2.overtime_hours, 4)
 
         # Total overtime for the 29th (not the 30th): 5 hours
-        overtime_record2 = self.env['hr.attendance.overtime.line'].search([('employee_id', '=', self.europe_employee.id),
+        overtime_record2 = self.env['hr.attendance.overtime'].search([('employee_id', '=', self.europe_employee.id),
                                                               ('date', '=', datetime(2024, 5, 29))])
         self.assertAlmostEqual(overtime_record2.duration, 4)
 
@@ -795,7 +795,7 @@ class TestHrAttendanceOvertime(TransactionCase):
             'check_out': datetime(2023, 1, 3, 12, 0)
         })
 
-        overtime = self.env['hr.attendance.overtime.line'].search([
+        overtime = self.env['hr.attendance.overtime'].search([
             ('employee_id', '=', self.employee.id),
         ])
         overtime.action_approve()
@@ -874,7 +874,7 @@ class TestHrAttendanceOvertime(TransactionCase):
             'check_out': datetime(2025, 8, 20, 14, 0),
         })
 
-        overtimes = self.env['hr.attendance.overtime.line'].search([
+        overtimes = self.env['hr.attendance.overtime'].search([
             ('employee_id', '=', self.employee.id),
         ])
         self._check_overtimes(overtimes, [
@@ -943,7 +943,7 @@ class TestHrAttendanceOvertime(TransactionCase):
             } for day in range(19, 22)]
         ])
 
-        overtimes = self.env['hr.attendance.overtime.line'].search([
+        overtimes = self.env['hr.attendance.overtime'].search([
             ('employee_id', '=', self.employee.id),
         ])
 

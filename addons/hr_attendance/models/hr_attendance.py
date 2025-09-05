@@ -77,7 +77,7 @@ class HrAttendance(models.Model):
                                 readonly=True,
                                 default='manual')
     expected_hours = fields.Float(compute="_compute_expected_hours", store=True, aggregator="sum")
-    linked_overtime_ids = fields.Many2many('hr.attendance.overtime.line', compute='_compute_linked_overtime_ids', readonly=False)
+    linked_overtime_ids = fields.Many2many('hr.attendance.overtime', compute='_compute_linked_overtime_ids', readonly=False)
 
     @api.model
     def _attendance_date(self, check_in, employee):
@@ -124,7 +124,7 @@ class HrAttendance(models.Model):
         for attendance in self:
             overtimes = mapped_overtimes.get(
                 (attendance.employee_id, attendance.date),
-                self.env['hr.attendance.overtime.line'],
+                self.env['hr.attendance.overtime'],
             )
             if not overtimes:
                 attendance.overtime_status = False
@@ -145,7 +145,7 @@ class HrAttendance(models.Model):
         for a in all_attendances:
             attendances_by_employee_and_date[a.employee_id, a.date] |= a
 
-        overtime_durations = self.env['hr.attendance.overtime.line']._read_group(
+        overtime_durations = self.env['hr.attendance.overtime']._read_group(
             domain,
             groupby=['employee_id', 'date:day'],
             aggregates=['duration:sum']
@@ -171,7 +171,7 @@ class HrAttendance(models.Model):
             attendances_by_employee_and_date[a.employee_id, a.date] |= a
 
         domain = Domain.AND([domain, [('status', '=', 'approved')]])
-        overtime_durations = self.env['hr.attendance.overtime.line']._read_group(
+        overtime_durations = self.env['hr.attendance.overtime']._read_group(
             domain,
             groupby=['employee_id', 'date:day'],
             aggregates=['manual_duration:sum']
@@ -189,7 +189,7 @@ class HrAttendance(models.Model):
 
     @api.depends('check_in', 'check_out', 'employee_id')
     def _compute_linked_overtime_ids(self):
-        all_linked_overtimes = self.env['hr.attendance.overtime.line']._read_group([
+        all_linked_overtimes = self.env['hr.attendance.overtime']._read_group([
                 ('date', 'in', self.mapped('date')),
                 ('employee_id', 'in', self.employee_id.ids),
             ],
@@ -337,7 +337,7 @@ class HrAttendance(models.Model):
             attendance_domain = self._get_overtimes_to_update_domain()
 
         Rule = self.env['hr.attendance.overtime.rule']
-        self.env['hr.attendance.overtime.line'].search(attendance_domain).unlink()
+        self.env['hr.attendance.overtime'].search(attendance_domain).unlink()
         all_attendances = (self | self.env['hr.attendance'].search(attendance_domain)).filtered('check_out')
 
         employee_dates = {employee: [] for employee in all_attendances.employee_id}
@@ -364,7 +364,7 @@ class HrAttendance(models.Model):
                 overtime_vals_list.extend(
                     ruleset.rule_ids._generate_overtime_vals(employee, attendances, version_map)
                 )
-        self.env['hr.attendance.overtime.line'].create(overtime_vals_list)
+        self.env['hr.attendance.overtime'].create(overtime_vals_list)
         self.env.add_to_compute(self._fields['overtime_hours'], all_attendances)
 
     @api.model_create_multi
@@ -586,7 +586,7 @@ class HrAttendance(models.Model):
             return resources | self.env['hr.employee'].search(employee_name_domain & employee_domain)
 
     def _linked_overtimes(self):
-        return self.env['hr.attendance.overtime.line'].search([
+        return self.env['hr.attendance.overtime'].search([
             ('date', 'in', self.mapped('date')),
             ('employee_id', 'in', self.employee_id.ids),
         ])
@@ -666,7 +666,7 @@ class HrAttendance(models.Model):
         if not companies:
             return
 
-        checked_in_employees = self.env['hr.attendance.overtime.line'].search([('date', '=', yesterday)]).employee_id
+        checked_in_employees = self.env['hr.attendance.overtime'].search([('date', '=', yesterday)]).employee_id
 
         technical_attendances_vals = []
         absent_employees = self.env['hr.employee'].search([('id', 'not in', checked_in_employees.ids),

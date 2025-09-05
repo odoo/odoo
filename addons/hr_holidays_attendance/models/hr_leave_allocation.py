@@ -23,7 +23,6 @@ class HrLeaveAllocation(models.Model):
         return res
 
     overtime_deductible = fields.Boolean(compute='_compute_overtime_deductible')
-    #overtime_id = fields.Many2one('hr.attendance.overtime', string='Extra Hours', groups='hr_holidays.group_hr_holidays_user')
     employee_overtime = fields.Float(related='employee_id.total_overtime', groups='base.group_user')
 
     @api.depends('holiday_status_id')
@@ -39,13 +38,6 @@ class HrLeaveAllocation(models.Model):
             if allocation.overtime_deductible:
                 if deductible[allocation.employee_id] < 0:
                     raise ValidationError(_('The employee does not have enough overtime hours to request this leave.'))
-                # if not allocation.overtime_id:
-                #     allocation.sudo().overtime_id = self.env['hr.attendance.overtime.line'].sudo().create({
-                #         'employee_id': allocation.employee_id.id,
-                #         'date': allocation.date_from,
-                #         'adjustment': True,
-                #         'duration': -1 * duration,
-                #     })
         return res
 
     def write(self, vals):

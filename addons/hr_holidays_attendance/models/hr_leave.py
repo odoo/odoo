@@ -37,7 +37,7 @@ class HrLeave(models.Model):
     def _get_deductible_employee_overtime(self, employees):
         # return dict {employee: number of hours}
         diff_by_employee = defaultdict(lambda: 0)
-        for employee, hours in self.env['hr.attendance.overtime.line'].sudo()._read_group(
+        for employee, hours in self.env['hr.attendance.overtime'].sudo()._read_group(
             domain=[
                 ('compensable_as_leave', '=', True),
                 ('employee_id', 'in', employees.ids),

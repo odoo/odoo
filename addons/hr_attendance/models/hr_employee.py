@@ -44,7 +44,7 @@ class HrEmployee(models.Model):
     hours_last_month_display = fields.Char(
         compute='_compute_hours_last_month', groups="hr.group_hr_user")
     overtime_ids = fields.One2many(
-        'hr.attendance.overtime.line', 'employee_id', groups="hr_attendance.group_hr_attendance_officer,hr.group_hr_user")
+        'hr.attendance.overtime', 'employee_id', groups="hr_attendance.group_hr_attendance_officer,hr.group_hr_user")
     total_overtime = fields.Float(compute='_compute_total_overtime', compute_sudo=True)
     display_extra_hours = fields.Boolean(related='company_id.hr_attendance_display_overtime')
 
@@ -80,7 +80,7 @@ class HrEmployee(models.Model):
     @api.depends('overtime_ids.manual_duration', 'overtime_ids', 'overtime_ids.status')
     def _compute_total_overtime(self):
         mapped_validated_overtimes = dict(
-            self.env['hr.attendance.overtime.line']._read_group(
+            self.env['hr.attendance.overtime']._read_group(
             domain=[('status', '=', 'approved')],
             groupby=['employee_id'],
             aggregates=['manual_duration:sum']

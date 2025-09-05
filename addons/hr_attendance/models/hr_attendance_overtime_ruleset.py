@@ -10,6 +10,7 @@ class HrAttendanceOvertimeRuleset(models.Model):
     name = fields.Char(required=True)
     description = fields.Html()
     rule_ids = fields.One2many('hr.attendance.overtime.rule', 'ruleset_id')
+    company_id = fields.Many2one('res.company', "Company", default=lambda self: self.env.company)
     country_id = fields.Many2one(
         'res.country',
         default=lambda self: self.env.company.country_id,
