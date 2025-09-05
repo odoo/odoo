@@ -368,6 +368,12 @@
     </ul>
 </template>
 
+<template id="navbar_nav_wrapper" name="Navbar Nav Wrapper">
+    <div t-attf-class="d-flex w-100 #{_wrapper_class}">
+        <t t-out="0"/>
+    </div>
+</template>
+
 <!-- Header templates -->
 
 <!-- "mobile" template -->
@@ -410,9 +416,9 @@
                             limit.f="0"/>
                         <!-- Navbar -->
                         <li>
-                            <t t-call="website.navbar_nav"
-                                    is_vertical_nav.f="True"
-                                    _no_autohide_menu_mobile.f="True">
+                            <t t-set="is_vertical_nav" t-valuef="True"/>
+                            <t t-call="website.navbar_nav" _no_autohide_menu_mobile.f="True">
+                                <t t-set="offcanvas_is_leftside" t-valuef=""/>
                                 <!-- Menu -->
                                 <t t-foreach="website.menu_id.child_id" t-as="submenu">
                                     <t t-call="website.submenu"
@@ -474,6 +480,9 @@
     </xpath>
     <xpath expr="//div[hasclass('o_main_nav')]//button" position="attributes">
         <attribute name="class" add="me-2" separator=" "/>
+    </xpath>
+    <xpath expr="//t[@t-set='offcanvas_is_leftside']" position="attributes">
+        <attribute name="t-valuef">True</attribute>
     </xpath>
 </template>
 
@@ -571,7 +580,7 @@
 
 <template id="template_header_default_align_right" inherit_id="website.template_header_default" active="False">
     <xpath expr="//t[@t-call='website.navbar_nav']" position="attributes">
-        <attribute name="_nav_class.f">mx-auto</attribute>
+        <attribute name="_nav_class.f">ms-auto</attribute>
     </xpath>
 </template>
 
@@ -614,10 +623,9 @@
                                 limit.f="0"/>
                             <!-- Navbar -->
                             <li>
-                                <t t-call="website.navbar_nav"
-                                    is_vertical_nav.f="True"
-                                    offcanvas_is_leftside.f="True"
-                                    _nav_class.f="mt-3">
+                                <t t-set="is_vertical_nav" t-valuef="True"/>
+                                <t t-call="website.navbar_nav" _nav_class.f="mt-3">
+                                    <t t-set="offcanvas_is_leftside" t-valuef="True"/>
                                     <!-- Menu -->
                                     <t t-foreach="website.menu_id.child_id" t-as="submenu">
                                         <t t-call="website.submenu"
@@ -669,8 +677,8 @@
     <xpath expr="//div[@id='top_menu_collapse']" position="attributes" >
         <attribute name="class" add="offcanvas-end" remove="offcanvas-start" separator=" "/>
     </xpath>
-    <xpath expr="//t[@t-call='website.navbar_nav']" position="attributes">
-        <attribute name="offcanvas_is_leftside.f" add="False" remove="True"/>
+    <xpath expr="//t[@t-set='offcanvas_is_leftside']" position="attributes">
+        <attribute name="t-valuef"/>
     </xpath>
     <xpath expr="//t[@t-call='portal.user_dropdown']" position="attributes">
         <attribute name="_dropdown_menu_class.f"/>
@@ -767,13 +775,16 @@
         <attribute name="_div_class.f">mt-2 border-top pt-2 text-end o_border_contrast</attribute>
     </xpath>
     <xpath expr="//t[@t-call='website.navbar_nav']" position="attributes">
-        <attribute name="_nav_class.f">d-flex align-items-center mx-auto border-end px-2 o_border_contrast</attribute>
+        <attribute name="_nav_class.f">d-flex align-items-center mx-auto border-end o_border_contrast</attribute>
     </xpath>
 </template>
 
 <template id="template_header_stretch_align_right" inherit_id="website.template_header_stretch" active="False">
     <xpath expr="//t[@t-call='website.placeholder_header_social_links']" position="inside">
         <attribute name="_div_class.f">d-flex align-items-center ms-auto o_border_contrast</attribute>
+    </xpath>
+    <xpath expr="//t[@t-call='website.navbar_nav']" position="attributes">
+        <attribute name="_nav_class.f">d-flex align-items-center ms-auto border-end o_border_contrast</attribute>
     </xpath>
     <xpath expr="//ul[hasclass('o_header_stretch_elts')]" position="attributes">
         <attribute name="class" remove="ps-2" separator=" "/>
@@ -822,7 +833,7 @@
                         <t t-call="website.placeholder_header_call_to_action"/>
                     </ul>
                 </div>
-                <div class="d-flex justify-content-center w-100">
+                <t t-call="website.navbar_nav_wrapper" _wrapper_class.f="justify-content-start">
                     <!-- Navbar -->
                     <t t-call="website.navbar_nav"
                         _nav_class.f="pb-0">
@@ -833,10 +844,22 @@
                                 link_class.f="nav-link"/>
                         </t>
                     </t>
-                </div>
+                </t>
             </div>
         </t>
         <t t-call="website.template_header_mobile"/>
+    </xpath>
+</template>
+
+<template id="template_header_vertical_align_center" inherit_id="website.template_header_vertical" active="False">
+    <xpath expr="//t[@t-call='website.navbar_nav_wrapper']" position="attributes">
+        <attribute name="_wrapper_class.f">justify-content-center</attribute>
+    </xpath>
+</template>
+
+<template id="template_header_vertical_align_right" inherit_id="website.template_header_vertical" active="False">
+    <xpath expr="//t[@t-call='website.navbar_nav_wrapper']" position="attributes">
+        <attribute name="_wrapper_class.f">justify-content-end</attribute>
     </xpath>
 </template>
 
@@ -906,9 +929,6 @@
 </template>
 
 <template id="template_header_search_align_center" inherit_id="website.template_header_search" active="False">
-    <xpath expr="//div[hasclass('o_grid_header_3_cols')]" position="attributes">
-        <attribute name="class" add="o_grid_header_3_cols_fixed" remove="o_grid_header_3_cols_fixed" separator=" "/>
-    </xpath>
     <xpath expr="//t[@t-call='website.navbar_nav']" position="attributes">
         <attribute name="_nav_class.f">order-1 justify-content-center mx-auto w-100 px-4</attribute>
     </xpath>
@@ -921,9 +941,6 @@
 </template>
 
 <template id="template_header_search_align_right" inherit_id="website.template_header_search" active="False">
-    <xpath expr="//div[hasclass('o_grid_header_3_cols')]" position="attributes">
-        <attribute name="class" add="o_grid_header_3_cols_fixed" remove="o_grid_header_3_cols_fixed" separator=" "/>
-    </xpath>
     <xpath expr="//t[@t-call='website.navbar_nav']" position="attributes">
         <attribute name="_nav_class.f">order-2 justify-content-end ms-auto w-100 ps-4</attribute>
     </xpath>
@@ -1163,9 +1180,7 @@
                                 _dropdown_menu_class.f="dropdown-menu-end"/>
                         </ul>
                         <!-- Navbar -->
-                        <t t-call="website.navbar_nav"
-                                _nav_class.f="justify-content-end">
-
+                        <t t-call="website.navbar_nav" _nav_class.f="justify-content-start">
                             <!-- Menu -->
                             <t t-foreach="website.menu_id.child_id" t-as="submenu">
                                 <t t-call="website.submenu"
@@ -1180,6 +1195,18 @@
         <t t-call="website.template_header_mobile"
             _txt_elt_content.f="list"
             _extra_navbar_classes.f="o_header_force_no_radius"/>
+    </xpath>
+</template>
+
+<template id="template_header_sales_three_align_center" inherit_id="website.template_header_sales_three" active="False">
+    <xpath expr="//t[@t-call='website.navbar_nav']" position="attributes">
+        <attribute name="_nav_class.f">justify-content-center</attribute>
+    </xpath>
+</template>
+
+<template id="template_header_sales_three_align_right" inherit_id="website.template_header_sales_three" active="False">
+    <xpath expr="//t[@t-call='website.navbar_nav']" position="attributes">
+        <attribute name="_nav_class.f">justify-content-end</attribute>
     </xpath>
 </template>
 
@@ -1303,10 +1330,9 @@
                                 limit.f="0"/>
                             <!-- Navbar -->
                             <li>
-                                <t t-call="website.navbar_nav"
-                                    is_vertical_nav.f="True"
-                                    offcanvas_is_leftside.f="True"
-                                    _no_autohide_menu_mobile.f="True">
+                                <t t-set="is_vertical_nav" t-valuef="True"/>
+                                <t t-call="website.navbar_nav" _no_autohide_menu_mobile.f="True">
+                                    <t t-set="offcanvas_is_leftside" t-valuef="True"/>
                                     <!-- Menu -->
                                     <t t-foreach="website.menu_id.child_id" t-as="submenu">
                                         <t t-call="website.submenu"
@@ -1355,6 +1381,12 @@
         <t t-call="website.template_header_mobile"
             _txt_elt_content.f="phone_mail"
             _side.f="offcanvas-start"/>
+    </xpath>
+</template>
+
+<template id="template_header_sidebar_position_right" inherit_id="website.template_header_sidebar" active="False">
+    <xpath expr="//t[@t-set='offcanvas_is_leftside']" position="attributes">
+        <attribute name="t-valuef"/>
     </xpath>
 </template>
 
