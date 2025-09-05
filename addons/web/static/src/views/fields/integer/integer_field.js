@@ -16,6 +16,8 @@ export class IntegerField extends Component {
         humanReadable: { type: Boolean, optional: true },
         decimals: { type: Number, optional: true },
         inputType: { type: String, optional: true },
+        min: { type: Number, optional: true },
+        max: { type: Number, optional: true },
         step: { type: Number, optional: true },
     };
     static defaultProps = {
@@ -114,6 +116,8 @@ export const integerField = {
             options?.enable_formatting !== undefined ? Boolean(options.enable_formatting) : true,
         humanReadable: !!options.human_readable,
         inputType: options.type,
+        min: options.min,
+        max: options.max,
         step: options.step,
         decimals: options.decimals || 0,
     }),

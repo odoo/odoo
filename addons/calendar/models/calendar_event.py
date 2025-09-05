@@ -148,6 +148,11 @@ class CalendarEvent(models.Model):
          ('private', 'Private'),
          ('confidential', 'Only internal users')], 'Privacy',
         help="People to whom this event will be visible.")
+    effective_privacy = fields.Selection(
+        [('public', 'Public'), ('private', 'Private'), ('confidential', 'Only internal users')],
+        'Effective Privacy', help="Whether the event is private, considering the user privacy",
+        compute="_compute_effective_privacy"
+    )
     show_as = fields.Selection(
         [('free', 'Available'),
          ('busy', 'Busy')], 'Show as', default='busy', required=True,
@@ -322,6 +327,11 @@ class CalendarEvent(models.Model):
             event.invalid_email_partner_ids = event.partner_ids.filtered(
                 lambda a: not (a.email and single_email_re.match(a.email))
             )
+
+    @api.depends('privacy', 'user_id')
+    def _compute_effective_privacy(self):
+        for event in self:
+            event.effective_privacy = event.privacy or event.sudo().user_id.calendar_default_privacy
 
     def _compute_is_highlighted(self):
         if self.env.context.get('active_model') == 'res.partner':
