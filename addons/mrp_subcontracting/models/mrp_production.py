@@ -128,6 +128,8 @@ class MrpProduction(models.Model):
         move = self._get_subcontract_move()
         if not move:
             return False
+        if move.state == 'done':
+            raise UserError(_("The subcontracted goods have already been received."))
         if all(l.lot_id for l in move.move_line_ids):
             move.move_line_ids.create({
                 'product_id': move.product_id.id,
