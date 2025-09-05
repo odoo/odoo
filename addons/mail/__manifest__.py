@@ -207,7 +207,6 @@ For more specific needs, you may also assign custom-defined actions
         ],
         'mail.assets_public': [
             'web/static/lib/jquery/jquery.js',
-            'web/static/lib/odoo_ui_icons/style.css',
             ('include', 'web._assets_helpers'),
             ('include', 'web._assets_backend_helpers'),
             'web/static/src/scss/pre_variables.scss',
@@ -216,7 +215,7 @@ For more specific needs, you may also assign custom-defined actions
             'web/static/lib/bootstrap/scss/_maps.scss',
             ('include', 'web._assets_bootstrap_backend'),
             'web/static/src/scss/bootstrap_overridden.scss',
-            'web/static/src/libs/fontawesome/css/font-awesome.css',
+            ('include', 'web.icons_fonts'),
             'web/static/src/scss/animation.scss',
             'web/static/src/webclient/webclient.scss',
             'web/static/src/scss/mimetypes.scss',
