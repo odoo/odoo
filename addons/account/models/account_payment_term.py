@@ -66,7 +66,16 @@ class AccountPaymentTerm(models.Model):
                 discount_amount_currency = (total_amount - untaxed_amount) * percentage
             else:
                 discount_amount_currency = total_amount * percentage
-            return self.currency_id.round(total_amount - discount_amount_currency)
+            amount_due = self.currency_id.round(total_amount - discount_amount_currency)
+            if self.env.context.get('active_model') == 'account.move' and (active_id := self.env.context.get('active_id')):
+                move = self.env['account.move'].browse(active_id)
+                cash_rounding = move.invoice_cash_rounding_id
+                currency = move.currency_id
+                if cash_rounding:
+                    cash_rounding_difference = cash_rounding.compute_difference(currency, amount_due)
+                    if not currency.is_zero(cash_rounding_difference):
+                        amount_due = self.currency_id.round(amount_due + cash_rounding_difference)
+            return amount_due
         return total_amount
 
     @api.depends('company_id')
