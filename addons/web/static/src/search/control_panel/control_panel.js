@@ -41,6 +41,7 @@ const STICKY_CLASS = "o_mobile_sticky";
 
 export class ControlPanel extends Component {
     static template = "web.ControlPanel";
+    static smallDeviceEmbeddedActionsTemplate = "web.embeddedActionsDropdown";
     static components = {
         Pager,
         SearchBar,
