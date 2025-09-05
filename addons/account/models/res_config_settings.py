@@ -207,6 +207,9 @@ class ResConfigSettings(models.TransientModel):
     income_account_id = fields.Many2one(related='company_id.income_account_id', readonly=False)
     expense_account_id = fields.Many2one(related='company_id.expense_account_id', readonly=False)
 
+    # Group invoice lines per tax
+    extract_single_line_per_tax = fields.Boolean(related='company_id.extract_single_line_per_tax', readonly=False)
+
     @api.depends('country_code')
     def _compute_is_account_peppol_eligible(self):
         # we want to show Peppol settings only to customers that are eligible for Peppol,
