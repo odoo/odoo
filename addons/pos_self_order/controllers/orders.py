@@ -28,9 +28,15 @@ class PosSelfOrderController(http.Controller):
         if device_type == 'kiosk':
             order['floating_order_name'] = f"Table tracker {order['table_stand_number']}" if order.get('table_stand_number') else tracking_number
 
+        if not order.get('floating_order_name') and table:
+            floating_order_name = f"Self-order T {table.table_number}"
+        elif not order.get('floating_order_name'):
+            floating_order_name = f"Self-order {tracking_number}"
+
         prefix = 'K' if device_type == 'kiosk' else 'S'
         order['pos_reference'] = pos_reference
         order['source'] = 'kiosk' if device_type == 'kiosk' else 'mobile'
+        order['floating_order_name'] = order.get('floating_order_name') or floating_order_name
         order['tracking_number'] = f"{prefix}{tracking_number}"
         order['user_id'] = request.session.uid
         order['date_order'] = str(fields.Datetime.now())

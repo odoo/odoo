@@ -21,8 +21,8 @@ export const setupPosEnv = async () => {
     return store;
 };
 
-export const getFilledOrder = async (store) => {
-    const order = store.addNewOrder();
+export const getFilledOrder = async (store, data = {}) => {
+    const order = store.addNewOrder(data);
     const product1 = store.models["product.template"].get(5);
     const product2 = store.models["product.template"].get(6);
     const date = DateTime.now();

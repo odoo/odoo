@@ -20,4 +20,7 @@ patch(TicketScreen.prototype, {
             return _t("Ongoing");
         }
     },
+    getTableTag(order) {
+        return super.getTableTag(order) || order?.self_ordering_table_id?.table_number;
+    },
 });

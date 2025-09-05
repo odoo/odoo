@@ -132,6 +132,7 @@
                                         'position-relative m-0': isKanban,
                                         'position-absolute': pos.floorPlanStyle !== 'kanban',
                                         'selected': state.selectedTableIds.includes(table.id),
+                                        'occupied': isOccupied,
                                     }"
                                     t-attf-class="tableId-{{table.id}}"
                                     t-attf-style="

@@ -166,7 +166,7 @@ export class CartPage extends Component {
                 table.table_number
             );
         } else {
-            this.selfOrder.currentOrder.table_id = table;
+            this.selfOrder.currentOrder.self_ordering_table_id = table;
         }
     }
 
