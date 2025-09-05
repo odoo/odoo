@@ -426,10 +426,9 @@ class StockRule(models.Model):
                     for rule in delaying_rules
                 ]
         # Check if there's a horizon set
-        max_company_horizon_days = max(self.company_id.mapped('horizon_days')) if self.company_id else 0
-        global_horizon_days = self.env.context.get('global_horizon_days', max_company_horizon_days or self.env.company.horizon_days)
+        global_horizon_days = self.env['stock.warehouse.orderpoint'].get_horizon_days()
         if global_horizon_days:
-            delays['total_delay'] += global_horizon_days
+            delays['horizon_time'] += global_horizon_days
             if not bypass_delay_description:
                 delay_description.append((_('Time Horizon'), _('+ %d day(s)', global_horizon_days)))
         return delays, delay_description
