@@ -691,14 +691,14 @@
     <template id="survey_progression" name="Survey: Progression">
         <t t-if="len(page_ids) > 1 and not survey.has_conditional_questions">
             <t t-set="percentage" t-value="round(100*(page_number/len(page_ids)))"/>
-            <t t-if="survey.progression_mode == 'percent'">
-                <span class="o_survey_progress_percent" t-esc="percentage"/> % completed
-            </t>
-            <t t-else="">
-                <span class="o_survey_progress_number" t-esc="page_number"/> of <span t-esc="len(page_ids)"/>
-                <span t-if="survey.questions_layout == 'page_per_question'">answered</span>
-                <span t-else="">pages</span>
-            </t>
+            <span t-if="survey.progression_mode == 'percent'">
+                <t t-esc="percentage"/>% completed
+            </span>
+            <span t-else="">
+                <t t-esc="page_number"/> of <t t-esc="len(page_ids)"/>
+                <t t-if="survey.questions_layout == 'page_per_question'">answered</t>
+                <t t-else="">pages</t>
+            </span>
             <div class="o_survey_progress progress flex-grow-1">
                 <div class="progress-bar bg-primary" t-att-style="'width: ' + str(percentage) + '%'"/>
             </div>
