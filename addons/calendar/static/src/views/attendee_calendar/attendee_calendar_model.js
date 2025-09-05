@@ -118,7 +118,7 @@ export class AttendeeCalendarModel extends CalendarModel {
             eventIds,
         ]);
         const currentPartnerId = user.partnerId;
-        if (!isEveryoneFilterActive) {
+        if (!isEveryoneFilterActive && attendeeFilters) {
             const activeAttendeeIds = new Set(
                 attendeeFilters.filters
                     .filter((filter) => filter.type !== "all" && filter.value && filter.active)

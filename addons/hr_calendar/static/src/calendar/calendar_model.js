@@ -22,10 +22,10 @@ patch(AttendeeCalendarModel.prototype, {
             return [];
         }
         const attendeeFilters = data.filterSections.partner_ids;
-        const activeAttendeeIds = attendeeFilters.filters
+        const activeAttendeeIds = (attendeeFilters?.filters || [])
             .filter((filter) => filter.type !== "all" && filter.value && filter.active)
             .map((filter) => filter.value);
-        const allFilter = attendeeFilters.filters.find((filter) => filter.type === "all");
+        const allFilter = attendeeFilters?.filters.find((filter) => filter.type === "all");
         return this.orm.call("res.partner", "get_working_hours_for_all_attendees", [
             activeAttendeeIds,
             serializeDate(data.range.start),
