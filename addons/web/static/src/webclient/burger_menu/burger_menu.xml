@@ -27,7 +27,7 @@
               <!-- -->
               <t t-if="isUserMenuUnfolded">
                   <MobileSwitchCompanyMenu t-if="Object.values(company.allowedCompanies).length > 1" />
-                  <BurgerUserMenu/>
+                  <BurgerUserMenu onMenuClicked.bind="_closeBurger"/>
               </t>
               <!-- Current App Sections -->
                 <ul t-if="!isUserMenuUnfolded" class="ps-0 mb-0">
