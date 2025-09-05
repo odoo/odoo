@@ -1,26 +1,36 @@
 .o_colorlist {
-    button {
-        border: 1px solid $dropdown-bg;
-        box-shadow: 0 0 0 1px $gray-500;
-        width: 22px;
-        height: 17px;
-    }
-    .o_colorlist_selected {
-        box-shadow: 0 0 0 2px $o-brand-odoo !important;
-    }
-}
+    grid-template-columns: repeat(auto-fit, $o-bubble-color-size-xl);
 
-// Set all the colors but the "no-color" one
-@for $size from 2 through length($o-colors) {
-    .o_colorlist_item_color_#{$size - 1} {
-        $-bg: adjust-color(nth($o-colors, $size), $lightness: 25%, $saturation: 15%);
-        $-color: adjust-color(nth($o-colors, $size), $lightness: -40%, $saturation: -15%);
-        @include o-print-color($-bg, background-color, bg-opacity);
-        @include o-print-color($-color, color, text-opacity);
+    :not(.o_field_widget) > & {
+        justify-content: center;
     }
-}
 
-// Set the "no-color", a red bar on white background
-.o_colorlist_item_color_0 {
-    background: linear-gradient(45deg, rgba($dropdown-bg, 0) 0%, rgba($dropdown-bg, 0) 48%, $danger 48%, $danger 52%, rgba($dropdown-bg, 0) 52%, rgba($dropdown-bg, 0) 100%);
+    > button {
+        aspect-ratio: 1;
+
+        // No Color
+        &.o_colorlist_item_color_0 {
+            background: transparent;
+            box-shadow: inset 0 0 0 1px $gray-500;
+        }
+
+        // Set all the colors but the "no-color" one
+        @for $size from 2 through length($o-colors) {
+            &.o_colorlist_item_color_#{$size - 1} {
+                @include o-print-color(nth($o-colors, $size), background-color, bg-opacity);
+                @include o-print-color(#FFF, color, text-opacity);
+            }
+        }
+
+        &.active {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            &::after {
+                font: normal normal normal 1em/1 FontAwesome;
+                content: "\f00c";
+            }
+        }
+    }
 }
