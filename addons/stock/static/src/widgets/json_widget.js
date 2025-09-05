@@ -80,6 +80,9 @@ export class ReplenishmentGraphWidget extends JsonPopOver {
     get orderingPeriod() {
         return this.jsonValue["ordering_period"];
     }
+    get qtiesAreTheSame() {
+        return this.productMinQty === this.productMaxQty;
+    }
     get leadTime() {
         return this.jsonValue["lead_time"];
     }
@@ -94,7 +97,8 @@ export class ReplenishmentGraphWidget extends JsonPopOver {
 
     getScatterGraphConfig() {
         const dashLine = (ctx, value) => ctx.p1.raw.x === this.jsonValue['x_axis_vals'].slice(-1)[0] ? value : undefined;
-        const showYTick = (value) => value === this.productMinQty || value === this.productMaxQty ? value : '';
+        const pushYLabels = (ticks) => ticks.push({value: this.productMinQty}, {value: this.productMaxQty});
+        const showYLabel = (tick) => tick === this.productMinQty || tick === this.productMaxQty ? tick : '';
         const labels = this.jsonValue['x_axis_vals'];
         const maxLineColor = getColor(1, cookie.get("color_scheme"), "odoo");
         const minLineColor = getColor(2, cookie.get("color_scheme"), "odoo");
@@ -136,8 +140,10 @@ export class ReplenishmentGraphWidget extends JsonPopOver {
                 scales: {
                     y: {
                         grid: {display: false},
+                        beforeTickToLabelConversion: data => pushYLabels(data.ticks),
                         ticks: {
-                            callback: value => showYTick(value),
+                            autoSkip: false,
+                            callback: tick => showYLabel(tick),
                         },
                         suggestedMax: this.productMaxQty * 1.1,
                         suggestedMin: this.productMinQty * 0.9,

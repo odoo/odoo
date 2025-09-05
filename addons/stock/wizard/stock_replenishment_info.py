@@ -173,7 +173,7 @@ class StockReplenishmentInfo(models.TransientModel):
             if replenishment_report.product_max_qty < replenishment_report.product_min_qty:
                 replenishment_report.product_max_qty = replenishment_report.product_min_qty
             average_stock = replenishment_report.product_min_qty + ((replenishment_report.product_max_qty - replenishment_report.product_min_qty) / 2)
-            lead_time = lead_days.get('total_delay', 0) - replenishment_report.orderpoint_id.get_horizon_days()
+            lead_time = lead_days.get('total_delay', 0)
             daily_demand = ((quantity_out - quantity_returned) / (date_to - date_from).days) * (replenishment_report.percent_factor / 100)
 
             ordering_period, graph_data = replenishment_report._prepare_graph_data(daily_demand=daily_demand)
