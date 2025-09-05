@@ -128,8 +128,7 @@ class MrpProduction(models.Model):
         move = self._get_subcontract_move()
         if not move:
             return False
-        empty_line = move.move_line_ids.filtered(lambda l: not l.lot_id)
-        if not empty_line:
+        if all(l.lot_id for l in move.move_line_ids):
             move.move_line_ids.create({
                 'product_id': move.product_id.id,
                 'move_id': move.id,
