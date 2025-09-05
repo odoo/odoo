@@ -1732,6 +1732,37 @@ export const accountTaxHelpers = {
      * [!] Mirror of the same method in account_tax.py.
      * PLZ KEEP BOTH METHODS CONSISTENT WITH EACH OTHERS.
      */
+    fix_base_lines_tax_details_on_manual_tax_amounts(
+        base_lines,
+        company,
+        { filter_function = null } = {}
+    ) {
+        for (const base_line of base_lines) {
+            const taxes_data = base_line.tax_details.taxes_data;
+            if (!taxes_data.length) {
+                continue;
+            }
+
+            base_line.manual_tax_amounts = {};
+            for (const tax_data of taxes_data) {
+                if (filter_function && !filter_function(base_line, tax_data)) {
+                    continue;
+                }
+                const tax = tax_data.tax;
+                base_line.manual_tax_amounts[tax.id.toString()] = {
+                    tax_amount_currency: tax_data.tax_amount_currency,
+                    tax_amount: tax_data.tax_amount,
+                    base_amount_currency: tax_data.base_amount_currency,
+                    base_amount: tax_data.base_amount,
+                };
+            }
+        }
+    },
+
+    /**
+     * [!] Mirror of the same method in account_tax.py.
+     * PLZ KEEP BOTH METHODS CONSISTENT WITH EACH OTHERS.
+     */
     compute_subset_base_lines_total(base_lines, company) {
         let base_amount_currency = 0.0;
         let tax_amount_currency = 0.0;
@@ -1863,30 +1894,6 @@ export const accountTaxHelpers = {
         target_tax_amounts_mapping
     ) {
         const currency = base_lines[0].currency_id;
-        for (const base_line of base_lines) {
-            const taxes_data = base_line.tax_details.taxes_data;
-            if (!taxes_data.length) {
-                continue;
-            }
-            const first_batch = taxes_data[0].batch;
-            base_line.manual_tax_amounts = {};
-            for (const tax_data of taxes_data) {
-                if (tax_data.is_reverse_charge) {
-                    continue;
-                }
-
-                const tax = tax_data.tax;
-                const tax_amounts = {
-                    tax_amount_currency: tax_data.tax_amount_currency,
-                    tax_amount: tax_data.tax_amount,
-                };
-                if (first_batch.includes(tax)) {
-                    tax_amounts.base_amount_currency = tax_data.base_amount_currency;
-                    tax_amounts.base_amount = tax_data.base_amount;
-                }
-                base_line.manual_tax_amounts[tax.id.toString()] = tax_amounts;
-            }
-        }
 
         // Smooth distribution of the delta accross the base line, starting at the biggest one.
         const sorted_base_lines = base_lines.sort((base_line_1, base_line_2) => {
@@ -1940,9 +1947,7 @@ export const accountTaxHelpers = {
                 for (const tax_data of taxes_data) {
                     const tax = tax_data.tax;
                     if (first_batch.includes(tax)) {
-                        base_line.manual_tax_amounts[tax.id.toString()][
-                            `base_amount${delta_suffix}`
-                        ] += amount_to_distribute;
+                        tax_data[`base_amount${delta_suffix}`] += amount_to_distribute;
                     } else {
                         break;
                     }
@@ -1969,7 +1974,6 @@ export const accountTaxHelpers = {
                                     tax_data.tax_amount_currency /
                                         current_tax_amounts.tax_amount_currency
                                 ),
-                                base_line: base_line,
                                 tax_data: tax_data,
                             });
                         }
@@ -1983,12 +1987,13 @@ export const accountTaxHelpers = {
                 for (let i = 0; i < target_factors.length; i++) {
                     const target_factor = target_factors[i];
                     const amount_to_distribute = amounts_to_distribute[i];
-                    const base_line = target_factor.base_line;
-                    base_line.manual_tax_amounts[tax_id_str][`tax_amount${delta_suffix}`] +=
-                        amount_to_distribute;
+                    const tax_data = target_factor.tax_data;
+                    tax_data[`tax_amount${delta_suffix}`] += amount_to_distribute;
                 }
             }
         }
+
+        this.fix_base_lines_tax_details_on_manual_tax_amounts(base_lines, company);
     },
 
     /**
