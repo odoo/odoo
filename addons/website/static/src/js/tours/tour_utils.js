@@ -117,11 +117,11 @@ export function changeImage(snippet, position = "bottom") {
     By default, prevents the step from being active if a palette is opened.
     Set allowPalette to true to select options within a palette.
 */
-export function changeOption(optionName, weName = '', optionTooltipLabel = '', position = "bottom", allowPalette = false) {
+export function changeOption(blockName, actionId = '', optionTooltipLabel = '', position = "bottom", allowPalette = false) {
     const noPalette = allowPalette ? "" : !document.querySelector(".o_popover .o_font_color_selector") && ".o_customize_tab";
-    const option_block = `${noPalette} [data-container-title='${optionName}']`;
+    const option_block = `${noPalette} [data-container-title='${blockName}']`;
     return {
-        trigger: `${option_block} ${weName}, ${option_block} [data-action-id="${weName}"]`,
+        trigger: `${option_block} ${actionId}, ${option_block} [data-action-id="${actionId}"]`,
         content: markup(_t("<b>Click</b> on this option to change the %s of the block.", optionTooltipLabel)),
         tooltipPosition: position,
         run: "click",
