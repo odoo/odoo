@@ -6,7 +6,7 @@ import os
 import re
 import textwrap
 import uuid
-from collections import OrderedDict
+from collections import OrderedDict, defaultdict
 from contextlib import closing
 from subprocess import Popen, PIPE
 
@@ -17,7 +17,7 @@ from odoo import release
 from odoo.api import SUPERUSER_ID
 from odoo.http import request
 from odoo.tools import OrderedSet, misc, profiler
-from odoo.tools.constants import SCRIPT_EXTENSIONS, STYLE_EXTENSIONS
+from odoo.tools.constants import SCRIPT_EXTENSIONS, STYLE_EXTENSIONS, BINARY_EXTENSIONS
 from odoo.tools.json import scriptsafe as json
 from odoo.tools.misc import file_open, file_path
 
@@ -45,18 +45,20 @@ class AssetsBundle(object):
 
     TRACKED_BUNDLES = ['web.assets_web']
 
-    def __init__(self, name, files, external_assets=(), env=None, css=True, js=True, debug_assets=False, rtl=False, assets_params=None, autoprefix=False):
+    def __init__(self, name, files, external_assets=(), env=None, css=True, js=True, binary=False, debug_assets=False, rtl=False, assets_params=None, autoprefix=False):
         """
         :param name: bundle name
         :param files: files to be added to the bundle
         :param css: if css is True, the stylesheets files are added to the bundle
         :param js: if js is True, the javascript files are added to the bundle
+        :param binary: if binary is True, the bundle IS the first file of the bundle
         """
         self.name = name
         self.env = request.env if env is None else env
         self.javascripts = []
         self.templates = []
         self.stylesheets = []
+        self.binaries = []
         self.css_errors = []
         self.files = files
         self.rtl = rtl
@@ -64,6 +66,7 @@ class AssetsBundle(object):
         self.autoprefix = autoprefix
         self.has_css = css
         self.has_js = js
+        self.has_binary = binary
         self._checksum_cache = {}
         self.is_debug_assets = debug_assets
         self.external_assets = [
@@ -71,6 +74,7 @@ class AssetsBundle(object):
             for url in external_assets
             if (css and url.rpartition('.')[2] in STYLE_EXTENSIONS) or (js and url.rpartition('.')[2] in SCRIPT_EXTENSIONS)
         ]
+        css_urls = None
 
         # asset-wide html "media" attribute
         for f in files:
@@ -81,11 +85,24 @@ class AssetsBundle(object):
                 'inline': f['content'],
                 'last_modified': None if self.is_debug_assets else f.get('last_modified'),
             }
-            if css:
+            if css and not binary and extension in STYLE_EXTENSIONS:
+                if css_urls is None and self.binaries:
+                    # Required binaries must be BEFORE *css inside bundle
+                    css_urls = {}
+                    definition_bundles = defaultdict(list)
+                    for bin in self.binaries:
+                        definition_bundles[bin.definition_bundle].append(bin)
+                    for definition_bundle, bins in definition_bundles.items():
+                        links = self.env['ir.qweb'].with_context(**self.assets_params)._get_asset_links(definition_bundle, binary=True)
+                        for link, bin in zip(links, bins):
+                            css_urls.setdefault(bin.name, link)
+
                 css_params = {
                     'rtl': self.rtl,
                     'autoprefix': self.autoprefix,
+                    'css_urls': css_urls or {},
                 }
+
                 if extension == 'sass':
                     self.stylesheets.append(SassStylesheetAsset(self, **params, **css_params))
                 elif extension == 'scss':
@@ -99,12 +116,23 @@ class AssetsBundle(object):
                     self.javascripts.append(JavascriptAsset(self, **params))
                 elif extension == 'xml':
                     self.templates.append(XMLAsset(self, **params))
+            if (css or binary) and extension in BINARY_EXTENSIONS:
+                self.binaries.append(BinaryAsset(self, definition_bundle=f['definition_bundle'], **params))
+                # Mapping needs to be recomputed upon encountering new binaries
+                css_urls = None
+        if self.has_binary and not self.binaries:
+            _logger.warning("Binary asset bundles requires a binary file: %r", BINARY_EXTENSIONS)
 
     def get_links(self):
         """
         :returns a list of tuple. a tuple can be (url, None) or (None, inlineContent)
         """
         response = []
+
+        if self.has_binary:
+            for bin in self.binaries:
+                response.append(self.get_link(bin.extension))
+            return response
 
         if self.has_css and self.stylesheets:
             response.append(self.get_link('css'))
@@ -129,9 +157,14 @@ class AssetsBundle(object):
         """
         if asset_type not in self._checksum_cache:
             if asset_type == 'css':
-                assets = self.stylesheets
+                assets = self.stylesheets + self.binaries
             elif asset_type == 'js':
                 assets = self.javascripts + self.templates
+            elif self.has_binary:
+                for binary in self.binaries:
+                    if binary.extension == asset_type:
+                        assets = [binary]
+                        break
             else:
                 raise ValueError(f'Asset type {asset_type} not known')
 
@@ -208,7 +241,8 @@ class AssetsBundle(object):
                                else: the url contains a version equal to that of the self.get_version(type)
                                 => web/assets/self.get_version(type)/name.extension.
         """
-        unique = ANY_UNIQUE if ignore_version else self.get_version('css' if self.is_css(extension) else 'js')
+        extension_type = extension.split('.')[-1]
+        unique = ANY_UNIQUE if ignore_version else self.get_version('css' if self.is_css(extension) else extension_type if extension_type in BINARY_EXTENSIONS else 'js')
         url_pattern = self.get_asset_url(
             unique=unique,
             extension=extension,
@@ -264,7 +298,7 @@ class AssetsBundle(object):
 
         :return the ir.attachment records for a given bundle.
         """
-        assert extension in ('js', 'min.js', 'js.map', 'css', 'min.css', 'css.map', 'xml', 'min.xml')
+        assert self.has_binary or extension in ('js', 'min.js', 'js.map', 'css', 'min.css', 'css.map', 'xml', 'min.xml')
         ira = self.env['ir.attachment']
 
         # Set user direction in name to store two bundles
@@ -273,12 +307,17 @@ class AssetsBundle(object):
         # (this applies to css bundles only)
         fname = '%s.%s' % (self.name, extension)
         mimetype = (
-            'text/css' if extension in ['css', 'min.css'] else
-            'text/xml' if extension in ['xml', 'min.xml'] else
-            'application/json' if extension in ['js.map', 'css.map'] else
+            'font/woff' if extension in ('woff', 'min.woff') else
+            'font/woff2' if extension in ('woff2', 'min.woff2') else
+            'text/css' if extension in ('css', 'min.css') else
+            'text/xml' if extension in ('xml', 'min.xml') else
+            'application/json' if extension in ('js.map', 'css.map') else
             'application/javascript'
         )
-        unique = self.get_version('css' if self.is_css(extension) else 'js')
+        unique = self.get_version(
+            extension.rsplit('.')[-1] if self.has_binary else
+            'css' if self.is_css(extension) else 'js'
+        )
         url = self.get_asset_url(
             unique=unique,
             extension=extension,
@@ -290,7 +329,7 @@ class AssetsBundle(object):
             'res_id': False,
             'type': 'binary',
             'public': True,
-            'raw': content.encode('utf8'),
+            'raw': content if self.has_binary else content.encode('utf8'),
             'url': url,
         }
         attachment = ira.with_user(SUPERUSER_ID).create(values)
@@ -707,6 +746,19 @@ css_error_message {
         error = f"{error}This error occurred while compiling the bundle {self.name!r} containing:"
         return error
 
+    def bin(self, extension):
+        for binary in self.binaries:
+            base_ext = binary.extension
+            if base_ext != extension:
+                continue
+            is_minified = not self.is_debug_assets
+            extension = f'min.{base_ext}' if is_minified else base_ext
+            attachments = self.get_attachments(extension)
+            if attachments:
+                return attachments
+            return self.save_attachment(extension, binary._fetch_content())
+        return self.env['ir.attachment']
+
 
 class WebAsset(object):
     _content = None
@@ -912,14 +964,16 @@ class XMLAsset(WebAsset):
 
 
 class StylesheetAsset(WebAsset):
+    rx_full_url = re.compile(r"""\burl\(['"]?(.*?)['"]?\)""")
     rx_import = re.compile(r"""@import\s+('|")(?!'|"|/|https?://)""", re.U)
     rx_url = re.compile(r"""(?<!")url\s*\(\s*('|"|)(?!'|"|/|https?://|data:|#{str)""", re.U)
     rx_sourceMap = re.compile(r'(/\*# sourceMappingURL=.*)', re.U)
     rx_charset = re.compile(r'(@charset "[^"]+";)', re.U)
 
-    def __init__(self, *args, rtl=False, autoprefix=False, **kw):
+    def __init__(self, *args, rtl=False, autoprefix=False, css_urls=None, **kw):
         self.rtl = rtl
         self.autoprefix = autoprefix
+        self.css_urls = css_urls
         super().__init__(*args, **kw)
 
     @property
@@ -935,6 +989,15 @@ class StylesheetAsset(WebAsset):
     def _fetch_content(self):
         try:
             content = super()._fetch_content()
+            if self.css_urls:
+                def map_url(matched):
+                    plain_url = matched[1].split('?')[0]
+                    asset_url = self.css_urls.get(plain_url)
+                    if asset_url:
+                        asset_url = asset_url.replace('"', '%22')
+                        return 'url("%s")' % asset_url
+                    return matched.group()
+                content = re.sub(self.rx_full_url, map_url, content)
             web_dir = os.path.dirname(self.url)
 
             if self.rx_import:
@@ -1085,3 +1148,30 @@ class LessStylesheetAsset(PreprocessedCSS):
         except IOError:
             lessc = 'lessc'
         return [lessc, '-', '--no-js', '--no-color']
+
+
+class BinaryAsset(WebAsset):
+    def __init__(self, bundle, definition_bundle, **kwargs):
+        super().__init__(bundle, **kwargs)
+        self.extension = '' if '.' not in self._filename else self._filename.split('.')[-1]
+        self.definition_bundle = definition_bundle
+
+    def _fetch_content(self):
+        try:
+            self.stat()
+            if self._filename:
+                with file_open(self._filename, 'rb', filter_ext=BINARY_EXTENSIONS) as fp:
+                    return fp.read()
+            else:
+                return self._ir_attach.raw
+        except OSError as exc:
+            raise AssetNotFound('File %s does not exist.' % self.name) from exc
+        except Exception as exc:  # noqa: BLE001
+            raise AssetError('Could not get content for %s.' % self.name) from exc
+
+    @property
+    def bundle_version(self):
+        return self.bundle.get_version('binary')
+
+    def with_header(self, content=None):
+        return content
