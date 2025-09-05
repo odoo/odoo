@@ -56,10 +56,11 @@ class HrLeave(models.Model):
                 continue
             employee = leave.employee_id.sudo()
             duration = leave.number_of_hours
-            if duration > employee.total_overtime:
-                if employee.user_id == self.env.user:
-                    raise ValidationError(_('You do not have enough extra hours to request this leave'))
-                raise ValidationError(_('The employee does not have enough extra hours to request this leave.'))
+            leave_type = leave.holiday_status_id
+            remaining_overtime = employee.total_overtime - duration
+            excess_limit = leave_type.max_allowed_negative if leave_type.allows_negative else 0
+            if remaining_overtime < -excess_limit:
+                raise ValidationError(_('This leave request exceeds the allowed negative leave balance cap'))
             if not leave.sudo().overtime_id:
                 leave.sudo().overtime_id = self.env['hr.attendance.overtime'].sudo().create({
                     'employee_id': employee.id,
