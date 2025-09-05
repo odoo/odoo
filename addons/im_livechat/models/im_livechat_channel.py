@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from collections import defaultdict
 from datetime import timedelta
 import random
 import re
@@ -7,6 +8,7 @@ from urllib.parse import urlparse
 
 from odoo import api, Command, fields, models, _
 from odoo.exceptions import AccessError, ValidationError
+from odoo.fields import Domain
 from odoo.addons.bus.websocket import WebsocketConnectionHandler
 from odoo.addons.mail.tools.discuss import Store
 
@@ -86,23 +88,21 @@ class Im_LivechatChannel(models.Model):
         "CHECK(max_sessions > 0)", "Concurrent session number should be greater than zero."
     )
 
+    def web_read(self, specification: dict[str, dict]) -> list[dict]:
+        user_context = specification.get("user_ids", {}).get("context", {})
+        if len(self) == 1 and user_context.pop("add_livechat_channel_ctx", None):
+            user_context["im_livechat_channel_id"] = self.id
+        return super().web_read(specification)
+
     def _are_you_inside(self):
         for channel in self:
             channel.are_you_inside = self.env.user in channel.user_ids
 
     @api.depends("channel_ids.livechat_end_dt")
     def _compute_ongoing_sessions_count(self):
-        count_by_channel = dict(
-            self.env["discuss.channel"]._read_group(
-                [
-                    ("channel_type", "=", "livechat"),
-                    ("livechat_end_dt", "=", False),
-                    ("livechat_channel_id", "in", self.ids),
-                ],
-                ["livechat_channel_id"],
-                ["__count"],
-            )
-        )
+        count_by_channel = defaultdict(int)
+        for key, count in self._get_ongoing_session_count_by_agent_livechat_channel().items():
+            count_by_channel[key[1]] += count
         for channel in self:
             channel.ongoing_session_count = count_by_channel.get(channel, 0)
 
@@ -113,13 +113,15 @@ class Im_LivechatChannel(models.Model):
         "user_ids.livechat_ongoing_session_count",
     )
     def _compute_remaining_session_capacity(self):
+        count = self._get_ongoing_session_count_by_agent_livechat_channel()
         for channel in self:
-            total_capacity = channel.max_sessions * len(channel.user_ids)
-            capacity = total_capacity - sum(channel.user_ids.mapped("livechat_ongoing_session_count"))
+            users = channel.user_ids
             if channel.block_assignment_during_call:
-                users_in_call = channel.user_ids.filtered(lambda u: u.livechat_is_in_call)
-                for user in users_in_call:
-                    capacity -= channel.max_sessions - user.livechat_ongoing_session_count
+                users = users.filtered(lambda u: not u.livechat_is_in_call)
+            total_capacity = channel.max_sessions * len(users)
+            capacity = total_capacity - sum(
+                count.get((user.partner_id, channel), 0) for user in users
+            )
             channel.remaining_session_capacity = max(capacity, 0)
 
     @api.depends(
@@ -147,28 +149,22 @@ class Im_LivechatChannel(models.Model):
                 )
 
     def _get_available_operators_by_livechat_channel(self, users=None):
-        """Return a dictionary mapping each livechat channel in self to the users that are available
-        for that livechat channel, according to the user status and the optional limit of concurrent
-        sessions of the livechat channel.
-        When users are provided, each user is attempted to be mapped for each livechat channel.
-        Otherwise, only the users of each respective livechat channel are considered.
+        """Return a dictionary mapping each livechat channel in ``self`` to the users that are
+        available for that livechat channel, according to the user status and the optional
+        limit of concurrent sessions of the livechat channel.
+
+        When ``users`` are provided, each user is attempted to be mapped for each livechat
+        channel. Otherwise, only the users of each respective livechat channel are considered.
+
+        :param users: Optional list of users to consider. Every agent in ``self`` will be
+         considered if omitted.
+
         """
         counts = {}
         if livechat_channels := self.filtered(lambda c: c.max_sessions_mode == "limited"):
-            possible_users = users if users is not None else livechat_channels.user_ids
-            limited_users = possible_users.filtered(lambda user: "online" in user.im_status)
-            counts = {
-                (partner, livechat_channels): count
-                for (partner, livechat_channels, count) in self.env["discuss.channel"]._read_group(
-                    [
-                        ("livechat_operator_id", "in", limited_users.partner_id.ids),
-                        ("livechat_end_dt", "=", False),
-                        ("last_interest_dt", ">=", fields.Datetime.now() - timedelta(minutes=15)),
-                    ],
-                    groupby=["livechat_operator_id", "livechat_channel_id"],
-                    aggregates=["__count"],
-                )
-            }
+            counts = livechat_channels._get_ongoing_session_count_by_agent_livechat_channel(
+                users, filter_online=True
+            )
 
         def is_available(user, channel):
             return (
@@ -188,6 +184,37 @@ class Im_LivechatChannel(models.Model):
                 lambda user, livechat_channel=livechat_channel: is_available(user, livechat_channel)
             )
         return operators_by_livechat_channel
+
+    def _get_ongoing_session_count_by_agent_livechat_channel(self, users=None, filter_online=False):
+        """Return a dictionary mapping each ``(user, livechat_channel)`` pair to the number of
+        ongoing livechat sessions.
+
+        :param users: List of users to consider for the session count.
+        :param filter_online: If ``True``, only online agents will be considered.
+        :type filter_online: bool
+        :returns: A dictionary mapping ``(partner_id, livechat_channel_id)`` to the session count.
+        :rtype: dict
+
+        """
+        user_domain = Domain(False)
+        for channel in self:
+            active_users = users if users is not None else channel.user_ids
+            if filter_online:
+                active_users = active_users.filtered(lambda u: "online" in u.im_status)
+            user_domain |= Domain(
+                [
+                    ("partner_id", "in", active_users.partner_id.ids),
+                    ("channel_id.livechat_channel_id", "in", channel.ids),
+                ]
+            )
+        counts = self.env["discuss.channel.member"]._read_group(
+            Domain("channel_id.livechat_end_dt", "=", False)
+            & Domain("channel_id.last_interest_dt", ">=", "-15M")
+            & user_domain,
+            groupby=["partner_id", "channel_id.livechat_channel_id"],
+            aggregates=["__count"],
+        )
+        return {(partner, channel): count for (partner, channel, count) in counts}
 
     @api.depends('rule_ids.chatbot_script_id')
     def _compute_chatbot_script_count(self):
@@ -385,11 +412,11 @@ class Im_LivechatChannel(models.Model):
 
         # 1) only consider operators in the list to choose from
         operator_statuses = [
-            s for s in operator_statuses if s['livechat_operator_id'] in set(operators.partner_id.ids)
+            s for s in operator_statuses if s['partner_id'] in set(operators.partner_id.ids)
         ]
 
         # 2) try to select an inactive op, i.e. one w/ no active status (no recent chat)
-        active_op_partner_ids = {s['livechat_operator_id'] for s in operator_statuses}
+        active_op_partner_ids = {s['partner_id'] for s in operator_statuses}
         candidates = operators.filtered(lambda o: o.partner_id.id not in active_op_partner_ids)
         if candidates:
             return random.choice(candidates)
@@ -397,7 +424,7 @@ class Im_LivechatChannel(models.Model):
         # 3) otherwise select least active ops, based on status ordering (count + in_call)
         best_status = operator_statuses[0]
         best_status_op_partner_ids = {
-            s['livechat_operator_id']
+            s['partner_id']
             for s in operator_statuses
             if (s['count'], s['in_call']) == (best_status['count'], best_status['in_call'])
         }
@@ -445,26 +472,33 @@ class Im_LivechatChannel(models.Model):
                   JOIN discuss_channel_member member ON (member.id = s.channel_member_id)
                   GROUP BY member.partner_id
             )
-            SELECT COUNT(DISTINCT c.id), COALESCE(rtc.nbr, 0) > 0 as in_call, c.livechat_operator_id
-            FROM discuss_channel c
-            LEFT OUTER JOIN mail_message m ON c.id = m.res_id AND m.model = 'discuss.channel'
-            LEFT OUTER JOIN operator_rtc_session rtc ON rtc.partner_id = c.livechat_operator_id
-            WHERE c.channel_type = 'livechat' AND c.create_date > ((now() at time zone 'UTC') - interval '24 hours')
+            SELECT COUNT(DISTINCT h.channel_id), COALESCE(rtc.nbr, 0) > 0 as in_call, h.partner_id
+            FROM im_livechat_channel_member_history h
+            LEFT OUTER JOIN discuss_channel c ON h.channel_id = c.id
+            LEFT OUTER JOIN mail_message m ON h.channel_id = m.res_id AND m.model = 'discuss.channel'
+            LEFT OUTER JOIN operator_rtc_session rtc ON rtc.partner_id = h.partner_id
+            WHERE c.create_date > ((now() at time zone 'UTC') - interval '24 hours')
             AND (
                 c.livechat_end_dt IS NULL
                 OR m.create_date > ((now() at time zone 'UTC') - interval '30 minutes')
             )
-            AND c.livechat_operator_id in %s
-            GROUP BY c.livechat_operator_id, rtc.nbr
-            ORDER BY COUNT(DISTINCT c.id) < 2 OR rtc.nbr IS NULL DESC, COUNT(DISTINCT c.id) ASC, rtc.nbr IS NULL DESC""",
+            AND h.partner_id in %s
+            GROUP BY h.partner_id, rtc.nbr
+            ORDER BY COUNT(DISTINCT h.channel_id) < 2 OR rtc.nbr IS NULL DESC,
+                     COUNT(DISTINCT h.channel_id) ASC,
+                     rtc.nbr IS NULL DESC""",
             (tuple(users.partner_id.ids),)
         )
         operator_statuses = self.env.cr.dictfetchall()
         # Try to match the previous operator
         if previous_operator_id in users.partner_id.ids:
             previous_operator_status = next(
-                (status for status in operator_statuses if status['livechat_operator_id'] == previous_operator_id),
-                None
+                (
+                    status
+                    for status in operator_statuses
+                    if status['partner_id'] == previous_operator_id
+                ),
+                None,
             )
             if not previous_operator_status or previous_operator_status['count'] < 2 or not previous_operator_status['in_call']:
                 previous_operator_user = next(
