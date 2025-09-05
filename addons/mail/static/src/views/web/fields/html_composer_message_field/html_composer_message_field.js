@@ -6,6 +6,7 @@ import { HtmlMailField, htmlMailField } from "../html_mail_field/html_mail_field
 import { MentionPlugin } from "./mention_plugin";
 import { ContentExpandablePlugin } from "./content_expandable_plugin";
 import { fillEmpty } from "@html_editor/utils/dom";
+import { markup } from "@odoo/owl";
 
 export class HtmlComposerMessageField extends HtmlMailField {
     setup() {
@@ -19,14 +20,8 @@ export class HtmlComposerMessageField extends HtmlMailField {
                 const emailAddSignature = Boolean(
                     this.editor.editable.querySelector(".o-signature-container")
                 );
-                const elContent = this.getNoSignatureElContent();
-                // Temporarily Put the content in the DOM to be able to extract innerText newLines.
-                this.editor.editable.after(elContent);
-                // TODO: the following legacy regex may not have the desired effect as it
-                // agglomerates multiple newLines together.
-                const composerText = elContent.innerText.replace(/(\t|\n)+/g, "\n");
-                elContent.remove();
-                ev.detail.onSaveContent({ composerText, emailAddSignature });
+                const composerHtml = markup(this.getNoSignatureElContent().innerHTML);
+                ev.detail.onSaveContent({ composerHtml, emailAddSignature });
             });
             useBus(this.env.fullComposerBus, "ATTACHMENT_REMOVED", (ev) => {
                 const attachmentElements = this.editor.editable.querySelectorAll(

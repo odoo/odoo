@@ -162,7 +162,9 @@ export class TourStepAutomatic extends TourStep {
 
     get elementIsInModal() {
         if (this.hasAction) {
-            const overlays = hoot.queryFirst(".popover, .o-we-command, .o_notification");
+            const overlays = hoot.queryFirst(
+                ".popover, .o-we-command, .o-we-toolbar, .o_notification"
+            );
             const modal = hoot.queryFirst(".modal:visible:not(.o_inactive_modal):last");
             if (modal && !overlays && !this.trigger.startsWith("body")) {
                 return (

@@ -9,7 +9,7 @@ export class Composer extends Record {
     clear() {
         this.attachments.length = 0;
         this.replyToMessage = undefined;
-        this.composerHtml = markup("<p><br></p>");
+        this.composerHtml = markup("<div class='o-paragraph'><br></div>");
         Object.assign(this.selection, {
             start: 0,
             end: 0,
@@ -62,10 +62,10 @@ export class Composer extends Record {
             }
         },
     });
-    composerHtml = fields.Html(markup("<p><br></p>"), {
+    composerHtml = fields.Html(markup("<div class='o-paragraph'><br></div>"), {
         compute() {
             if (this.syncHtmlWithMessage) {
-                return this.message.body || markup("<p><br></p>");
+                return this.message.body || markup("<div class='o-paragraph'><br></div>");
             }
             return this.composerHtml;
         },

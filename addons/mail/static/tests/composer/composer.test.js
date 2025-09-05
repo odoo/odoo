@@ -1337,7 +1337,9 @@ test("composer reply-to message is restored on thread change", async () => {
         browser.localStorage.getItem(
             store.Thread.get({ model: "discuss.channel", id: channelId }).composer.localId
         )
-    ).toBe('{"emailAddSignature":true,"replyToMessageId":1,"composerText":""}');
+    ).toBe(
+        '{"emailAddSignature":true,"replyToMessageId":1,"composerHtml":["markup","<div class=\'o-paragraph\'><br></div>"]}'
+    );
 });
 
 test("composer reply-to message is restored page reload", async () => {
@@ -1436,7 +1438,7 @@ test("html composer: send a message with styling", async () => {
         editable: document.querySelector(".o-mail-Composer-html.odoo-editor-editable"),
     };
     await htmlInsertText(editor, "Hello");
-    await tripleClick(editor.editable.querySelector("p"));
+    await tripleClick(editor.editable.querySelector("div.o-paragraph"));
     await press("Control+b");
     await click(".o-mail-Composer-send:enabled");
     await click(".o-mail-Message[data-persistent] strong:contains(Hello)");

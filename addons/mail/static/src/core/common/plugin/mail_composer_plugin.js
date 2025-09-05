@@ -6,7 +6,7 @@ import { withSequence } from "@html_editor/utils/resource";
 
 export class MailComposerPlugin extends Plugin {
     static id = "mail.composer";
-    static dependencies = ["hint"];
+    static dependencies = ["hint", "selection"];
     resources = {
         hints: [
             withSequence(1, {

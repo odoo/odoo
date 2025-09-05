@@ -6,7 +6,6 @@ import { MessageConfirmDialog } from "@mail/core/common/message_confirm_dialog";
 import { NavigableList } from "@mail/core/common/navigable_list";
 import { MAIL_PLUGINS, MAIL_SMALL_UI_PLUGINS } from "@mail/core/common/plugin/plugin_sets";
 import { useSuggestion } from "@mail/core/common/suggestion_hook";
-import { prettifyMessageContent } from "@mail/utils/common/format";
 import { useSelection } from "@mail/utils/common/hooks";
 import { isDragSourceExternalFile } from "@mail/utils/common/misc";
 
@@ -38,6 +37,7 @@ import {
     createElementWithContent,
     htmlJoin,
     isHtmlEmpty,
+    isMarkup,
     setElementContent,
 } from "@web/core/utils/html";
 import { FileUploader } from "@web/views/fields/file_handler";
@@ -594,14 +594,8 @@ export class Composer extends Component {
             }
         }
         const attachmentIds = this.props.composer.attachments.map((attachment) => attachment.id);
-        const body = this.props.composer.composerText;
-        const validMentions = this.store.getMentionsFromText(body, {
-            mentionedChannels: this.props.composer.mentionedChannels,
-            mentionedPartners: this.props.composer.mentionedPartners,
-            mentionedRoles: this.props.composer.mentionedRoles,
-        });
-        let default_body = await prettifyMessageContent(body, { validMentions });
-        if (!default_body) {
+        let default_body = this.props.composer.composerHtml;
+        if (isHtmlEmpty(default_body)) {
             const composer = toRaw(this.props.composer);
             // Reset signature when recovering an empty body.
             composer.emailAddSignature = true;
@@ -899,7 +893,7 @@ export class Composer extends Component {
     saveContent() {
         const composer = toRaw(this.props.composer);
         const saveContentToLocalStorage = ({
-            composerText,
+            composerHtml,
             emailAddSignature,
             replyToMessageId,
         }) => {
@@ -908,7 +902,7 @@ export class Composer extends Component {
                 JSON.stringify({
                     emailAddSignature,
                     replyToMessageId,
-                    composerText,
+                    composerHtml: isMarkup(composerHtml) ? ["markup", composerHtml] : composerHtml,
                 })
             );
         };
@@ -918,7 +912,7 @@ export class Composer extends Component {
             });
         } else {
             saveContentToLocalStorage({
-                composerText: composer.composerText,
+                composerHtml: composer.composerHtml,
                 emailAddSignature: true,
                 replyToMessageId: composer.replyToMessage?.id,
             });
@@ -936,9 +930,9 @@ export class Composer extends Component {
         if (!config) {
             return;
         }
-        if (config.composerText) {
+        if (!isHtmlEmpty(config.composerHtml)) {
             composer.emailAddSignature = config.emailAddSignature;
-            composer.composerText = config.composerText;
+            composer.composerHtml = config.composerHtml;
         }
         if (Number.isInteger(config.replyToMessageId)) {
             composer.replyToMessage = this.store["mail.message"].insert(config.replyToMessageId);
