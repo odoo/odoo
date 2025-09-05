@@ -348,4 +348,4 @@ class StockRule(models.Model):
         return res
 
     def _get_partner_id(self, values, rule):
-        return values.get("supplierinfo_name") or (values.get("group_id") and values.get("group_id").partner_id)
+        return values.get("supplierinfo_name") or self.env.context.get('preferred_supplier_name')

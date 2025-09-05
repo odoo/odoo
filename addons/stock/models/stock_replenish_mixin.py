@@ -29,3 +29,6 @@ class ProductReplenishMixin(models.AbstractModel):
             ('rule_ids.location_src_id', '!=', stock_location_inter_company_id),
             ('rule_ids.location_dest_id', '!=', stock_location_inter_company_id)
         ]
+
+    def _additional_replenishment_context(self):
+        return {}
