@@ -13,7 +13,7 @@ from odoo.tools import mute_logger
 
 
 @tagged('mass_mailing', 'mass_mailing_sms')
-class TestMassSMSInternals(TestMassSMSCommon, MockSmsTwilioApi):
+class TestMassSMSInternals(TestMassSMSCommon):
 
     @users('user_marketing')
     def test_mass_sms_domain(self):
@@ -284,32 +284,6 @@ class TestMassSMSInternals(TestMassSMSCommon, MockSmsTwilioApi):
             with self.mock_mail_gateway(), self.assertRaises(Exception):
                 mailing_test.action_send_sms()
 
-    def test_mass_sms_test_button_twilio(self):
-        """ Test the testing tool when twilio is activated on company """
-        self._setup_sms_twilio(self.user_marketing.company_id)
-
-        mailing = self.env['mailing.mailing'].create({
-            'name': 'TestButton',
-            'subject': 'Subject {{ object.name }}',
-            'preview': 'Preview {{ object.name }}',
-            'state': 'draft',
-            'mailing_type': 'sms',
-            'body_plaintext': 'Hello {{ object.name }}',
-            'mailing_model_id': self.env['ir.model']._get('res.partner').id,
-        })
-        mailing_test = self.env['mailing.sms.test'].with_user(self.user_marketing).create({
-            'numbers': '+32456001122',
-            'mailing_id': mailing.id,
-        })
-
-        with self.with_user('user_marketing'):
-            with self.mock_sms_twilio_gateway():
-                mailing_test.action_send_sms()
-
-        self.assertSMS(
-            self.env["res.partner"], '+32456001122', 'outgoing',
-        )
-
 
 @tagged('mass_mailing', 'mass_mailing_sms')
 class TestMassSMS(TestMassSMSCommon):
@@ -461,26 +435,68 @@ class TestMassSMSTwilio(TestMassSMSCommon, MockSmsTwilioApi):
         super().setUpClass()
         cls._setup_sms_twilio(cls.user_admin.company_id)
 
-    @users('user_marketing')
-    def test_mass_sms(self):
-        mailing = self.env['mailing.mailing'].browse(self.mailing_sms.ids)
-        mailing.write({
+        cls.mailing_sms.write({
             'body_plaintext': 'This is a mass SMS',
             'sms_template_id': False,
             'sms_force_send': True,
             'sms_allow_unsubscribe': False,
         })
+        cls.records_fail = cls.env['mail.test.sms'].create([
+            {
+                'name': 'MassSMSTest- No Number',
+                'phone_nbr': False,
+            }, {
+                'name': 'MassSMSTest- Invalid Number',
+                'phone_nbr': '1234',
+            },
+        ])
+        cls.records += cls.records_fail
+        cls.records_numbers += [False, '1234']
+
+    @users('user_marketing')
+    def test_mass_sms(self):
+        """ Test SMS marketing using twilio """
+        mailing = self.env['mailing.mailing'].browse(self.mailing_sms.ids)
 
         with self.mock_sms_twilio_gateway():
             mailing.action_send_sms()
 
+        exp_failure_types = [False] * 10 + ['sms_number_missing', 'sms_number_format']
         self.assertSMSTraces(
             [{
+                'failure_type': exp_failure_types[i],
                 'partner': record.customer_id,
                 'number': self.records_numbers[i],
-                'trace_status': 'pending',
+                'trace_status': 'pending' if record not in self.records_fail else 'cancel',
                 'content': 'This is a mass SMS',
             } for i, record in enumerate(self.records)],
             mailing,
             self.records,
         )
+
+    @users('user_marketing')
+    def test_mass_sms_twilio_issue(self):
+        """ Test specific propagation / update to trace failure_type from twilio
+        errors """
+        for error_type, exp_failure_type in [
+            ("twilio_acc_unverified", "sms_acc"),
+            ("twilio_callback", "twilio_callback"),
+        ]:
+            with self.subTest(error_type=error_type):
+                mailing = self.env['mailing.mailing'].browse(self.mailing_sms.ids).copy()
+
+                with self.mock_sms_twilio_gateway(error_type=error_type):
+                    mailing.action_send_sms()
+
+                exp_failure_types = [exp_failure_type] * 10 + ['sms_number_missing', 'sms_number_format']
+                self.assertSMSTraces(
+                    [{
+                        'failure_type': exp_failure_types[i],
+                        'partner': record.customer_id,
+                        'number': self.records_numbers[i],
+                        'trace_status': 'error' if record not in self.records_fail else 'cancel',
+                        'content': 'This is a mass SMS',
+                    } for i, record in enumerate(self.records)],
+                    mailing,
+                    self.records,
+                )

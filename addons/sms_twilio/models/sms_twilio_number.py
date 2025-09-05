@@ -4,9 +4,12 @@ from odoo import models, fields
 class SmsTwilioNumber(models.Model):
     _name = 'sms.twilio.number'
     _description = 'Twilio Number'
-    _order = 'sequence'
+    _order = 'sequence, id'
 
-    company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.company)
+    company_id = fields.Many2one(
+        'res.company', string='Company',
+        required=True, ondelete='cascade',
+        default=lambda self: self.env.company)
     sequence = fields.Integer(default=1)
     number = fields.Char(string='Twilio Number', required=True)
     country_id = fields.Many2one("res.country", string='Country', required=True)
