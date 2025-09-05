@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="pos_self_order.TableQrTicket">
+        <div class="pos-receipt p-2">
+            <ReceiptHeader order="props.order" />
+            <div class="pt-3"/>
+
+            <div class="gap-2 d-flex flex-row pt-3 justify-content-center" style="font-size: 75%;">
+                <div class="pt-1">
+                    <img id="posqrcode" t-att-src="qrCode" class="pos-receipt-logo m-0 w-100"/>
+                </div>
+            </div>
+
+            <div t-if="props.order.config.receipt_footer" class="pos-receipt-center-align pt-3 text-center" style="white-space:pre-line">
+                <t t-esc="props.order.config.receipt_footer" />
+            </div>
+
+            <t t-set="company" t-value="props.order.company" />
+            <div class="d-flex gap-2 pt-3 justify-content-center">
+                <!-- Left: Company Address -->
+                <div class="w-50 text-break text-middle" style="font-size: 75%;">
+                    <div t-out="company.name"/>
+                    <div>
+                        <t t-if="company.street" t-out="company.street"/>
+                        <t t-if="company.city" t-out="', ' + company.city"/>
+                        <t t-if="company.state_id?.code" t-out="', ' + company.state_id.code"/>
+                        <t t-if="company.zip" t-out="', ' +  company.zip"/>
+                    </div>
+                </div>
+
+                <!-- Right: Contact Info -->
+                <div class="w-50 text-break text-end" style="font-size: 75%;">
+                    <div>
+                        <div t-if="company.vat" t-out="vatText"/>
+                        <div t-if="company.phone">
+                            Tel: <t t-out="company.phone"/>
+                        </div>
+                        <div t-if="company.email" t-out="company.email"/>
+                        <div t-if="company.website" t-out="company.website"/>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pos-receipt-order-data text-center pt-3">
+                <span>Powered by <b> Odoo </b></span>
+            </div>
+        </div>
+    </t>
+
+</templates>

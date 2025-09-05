@@ -347,6 +347,7 @@ export class SelfOrder extends Reactive {
 
             return (
                 isDraft ||
+                // isDraft && !isDynamicQrOrder ||
                 (isPaid && isZeroAmount && isKiosk) ||
                 (isPaid && this.router.activeSlot === "confirmation")
             );
@@ -549,6 +550,16 @@ export class SelfOrder extends Reactive {
                         (t) => t.identifier === tableIdentifier
                     );
                 }
+                const orderUuid = this.router.orderUuid;
+                if (orderUuid) {
+                    if (tableIdentifier) {
+                        this.router.deleteTableIdentifier();
+                    }
+                    const order = this.models["pos.order"].find((o) => o.uuid === orderUuid);
+                    if (order) {
+                        this.currentTable = order.table_id;
+                    }
+                }
 
                 this.ordering = true;
             }
@@ -644,6 +655,7 @@ export class SelfOrder extends Reactive {
 
     async getUserDataFromServer(tokens = []) {
         const tableIdentifier = this.router.getTableIdentifier([]);
+        const orderUuid = this.router.orderUuid;
         const dbAccessToken = this.models["pos.order"]
             .filter((o) => o.state === "draft" && typeof o.id === "number")
             .map((order) => ({
@@ -660,7 +672,7 @@ export class SelfOrder extends Reactive {
         }));
 
         const accessTokens = [...dbAccessToken, ...argTokens];
-        if (Object.keys(accessTokens).length === 0 && !tableIdentifier) {
+        if (Object.keys(accessTokens).length === 0 && !tableIdentifier && !orderUuid) {
             return;
         }
 
@@ -669,6 +681,7 @@ export class SelfOrder extends Reactive {
                 access_token: this.access_token,
                 order_access_tokens: accessTokens,
                 table_identifier: tableIdentifier,
+                order_uuid: orderUuid,
             });
             this.selectedOrderUuid = null;
             const result = this.models.connectNewData(data);

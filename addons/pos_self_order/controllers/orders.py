@@ -168,13 +168,19 @@ class PosSelfOrderController(http.Controller):
         pos_order.remove_from_ui([pos_order.id])
 
     @http.route('/pos-self-order/get-user-data', auth='public', type='jsonrpc', website=True)
-    def get_orders_by_access_token(self, access_token, order_access_tokens, table_identifier=None):
+    def get_orders_by_access_token(self, access_token, order_access_tokens, table_identifier=None, order_uuid=None):
         pos_config = self._verify_pos_config(access_token)
         session = pos_config.current_session_id
         table = pos_config.env["restaurant.table"].search([('identifier', '=', table_identifier)], limit=1)
 
-        if not table_identifier:
+        if not table_identifier and not order_uuid:
             domain = Domain.FALSE
+        elif order_uuid:
+            domain = Domain([
+                ('uuid', '=', order_uuid),
+                ('state', '=', 'draft'),
+                ('access_token', 'not in', [data.get('access_token') for data in order_access_tokens])
+            ])
         else:
             domain = Domain([
                 ('table_id', '=', table.id),

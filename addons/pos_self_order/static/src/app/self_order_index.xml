@@ -7,7 +7,7 @@
         <div t-if="selfOrder.rpcLoading">
             <LoadingOverlay />
         </div>
-        <Router t-if="selfIsReady" pos_config_id="selfOrder.config.id">
+        <Router t-if="selfIsReady" pos_config_id="selfOrder.config.id" guardFn="routerGuard.bind(this)">
             <t t-set-slot="default" route="`/pos-self/${selfOrder.config.id}`">
                 <LandingPage />
             </t>

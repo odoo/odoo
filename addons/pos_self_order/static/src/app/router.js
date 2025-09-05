@@ -20,7 +20,14 @@ function parseParams(matches, paramSpecs) {
 }
 
 export class Router extends Component {
-    static props = { slots: Object, pos_config_id: Number };
+    static props = {
+        slots: Object,
+        pos_config_id: Number,
+        guardFn: {
+            type: Function,
+            optional: true,
+        },
+    };
     static template = xml`<t t-slot="{{activeSlot}}" t-props="slotProps"/>`;
 
     setup() {
@@ -33,12 +40,14 @@ export class Router extends Component {
         for (const [routeName, slot] of Object.entries(this.props.slots)) {
             const route = slot.route;
             const paramStrings = route.match(/\{\w+:\w+\}/g);
+            const loader = slot.loader;
 
             if (!paramStrings) {
                 this.routes[routeName] = {
                     route,
                     paramSpecs: [],
                     regex: new RegExp(`${lgPrefixRegex}${route}$`),
+                    loader: loader,
                 };
                 continue;
             }
@@ -55,7 +64,7 @@ export class Router extends Component {
                     .join("([^/]+)")}$`
             );
 
-            this.routes[routeName] = { route, paramSpecs, regex };
+            this.routes[routeName] = { route, paramSpecs, regex, loader };
         }
 
         this.router.registerRoutes(this.routes);
@@ -68,9 +77,19 @@ export class Router extends Component {
     matchURL() {
         const path = this.router.path;
 
-        for (const [routeName, { paramSpecs, regex }] of Object.entries(this.routes)) {
+        if (this.props.guardFn && !this.props.guardFn(this.router)) {
+            this.router.isBlocked = true;
+            this.activeSlot = "default";
+            return;
+        }
+
+        for (const [routeName, { paramSpecs, regex, loader }] of Object.entries(this.routes)) {
             const match = path.match(regex);
             if (match) {
+                if (loader) {
+                    loader(parseParams, this.router);
+                }
+
                 const parsedParams = parseParams(match.slice(2), paramSpecs);
                 this.router.activeSlot = routeName;
                 this.activeSlot = routeName;

@@ -20,6 +20,11 @@ export class SelfOrderRouter extends Reactive {
         });
     }
 
+    get orderUuid() {
+        const url = new URL(browser.location.href);
+        return url.searchParams.get("order_uuid");
+    }
+
     addTableIdentifier(table) {
         const url = new URL(browser.location.href);
         url.searchParams.set("table_identifier", table.identifier);
