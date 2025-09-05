@@ -49,7 +49,7 @@
                                             </td>
                                             <td class="align-middle">
                                                 <div class="fw-bolder"><t t-esc="order.partner_id?.name"></t></div>
-                                                <div t-if="usePreset" t-attf-class="badge rounded o_colorlist_item_color_{{order.preset_id?.color}}" style="font-size: 0.75rem !important;">
+                                                <div id="order-tags" t-if="usePreset" t-attf-class="badge rounded o_colorlist_item_color_{{order.preset_id?.color}}" style="font-size: 0.75rem !important;">
                                                     <t t-esc="order.preset_id?.name"></t>
                                                 </div>
                                             </td>

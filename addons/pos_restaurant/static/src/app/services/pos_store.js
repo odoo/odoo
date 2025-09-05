@@ -657,7 +657,11 @@ patch(PosStore.prototype, {
         }
     },
     getTableOrders(tableId) {
-        return this.getOpenOrders().filter((order) => order.table_id?.id === tableId);
+        const table = this.models["restaurant.table"].get(tableId);
+        if (!table) {
+            return [];
+        }
+        return table.getOrders();
     },
     async unsetTable() {
         const order = this.getOrder();
@@ -675,10 +679,13 @@ patch(PosStore.prototype, {
         }
     },
     getActiveOrdersOnTable(table) {
-        return this.models["pos.order"].filter((o) => o.table_id?.id === table.id && !o.finalized);
+        if (!table) {
+            return [];
+        }
+        return table.getOrders().filter((o) => !o.finalized);
     },
     tableHasOrders(table) {
-        return Boolean(table.getOrder());
+        return Boolean(table.getOrders().length);
     },
     getTableFromElement(el) {
         return this.models["restaurant.table"].get(

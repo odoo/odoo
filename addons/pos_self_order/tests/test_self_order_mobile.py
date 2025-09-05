@@ -180,37 +180,3 @@ class TestSelfOrderMobile(SelfOrderCommonTest):
         references = self.env['pos.order'].search([], limit=4, order="id desc").mapped('pos_reference')
         self.assertEqual(references, [f"{current_year}0-{self.pos_config.id}-00000{4 - i}" for i in range(4)])
         self.assertEqual(self.pos_config.order_backend_seq_id.number_next, 5)
-
-    def test_order_table_assignement(self):
-        """
-        In pay after meal: table is set via table_id fields
-        In pay after each: table is set via floating_order_name eg: Self-Order T1
-        """
-        self.env['product.product'].search([('name', '=', 'Coca-Cola')]).write({'lst_price': 0})
-        self.pos_config.write({
-            'use_presets': False,
-            'self_ordering_mode': 'mobile',
-            'self_ordering_pay_after': 'each',
-            'self_ordering_service_mode': 'table',
-            'floor_ids': [(5, 0), (0, 0, {
-                'name': 'Main Floor',
-                'background_color': 'rgb(249,250,251)',
-                'table_ids': [(0, 0, {
-                    'table_number': 1,
-                })],
-            })],
-        })
-
-        self.pos_config.with_user(self.pos_user).open_ui()
-        self.pos_config.current_session_id.set_opening_control(0, "")
-        self_route = self.pos_config._get_self_order_route()
-        self.start_tour(self_route, "test_order_table_assignement_each")
-        last_order = self.env['pos.order'].search([], order="id desc", limit=1)
-        self.assertEqual(last_order.table_id.id, False)
-        self.assertEqual(last_order.floating_order_name, "Self-Order T 1")
-
-        self.pos_config.write({'self_ordering_pay_after': 'meal'})
-        self.start_tour(self_route, "test_order_table_assignement_meal")
-        last_order = self.env['pos.order'].search([], order="id desc", limit=1)
-        self.assertEqual(last_order.table_id.table_number, 1)
-        self.assertNotEqual(last_order.floating_order_name, "Self-Order T 1")

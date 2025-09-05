@@ -11,6 +11,12 @@
         <xpath expr="//SearchBar" position="before">
             <button class="settle-tips btn btn-lg btn-primary" t-if="state.filter == 'TIPPING'" t-on-click="settleTips">Settle</button>
         </xpath>
+         <xpath expr="//div[@id='order-tags']" position="after">
+            <t t-set="tableTag" t-value="getTableTag(order)"/>
+            <div t-if="tableTag" t-attf-class="badge rounded o_colorlist_item_color_1 ms-1" style="font-size: 0.75rem !important;">
+                Table <t t-esc="tableTag" />
+            </div>
+        </xpath>
     </t>
 
     <t t-name="pos_restaurant.TipCell">
