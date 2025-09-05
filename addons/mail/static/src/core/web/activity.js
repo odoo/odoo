@@ -11,6 +11,8 @@ import { _t } from "@web/core/l10n/translation";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { useService } from "@web/core/utils/hooks";
 import { FileUploader } from "@web/views/fields/file_handler";
+import { useFileViewer } from "@web/core/file_viewer/file_viewer_hook";
+import { createDocumentFragmentFromContent } from "@web/core/utils/html";
 
 /**
  * @typedef {Object} Props
@@ -27,11 +29,13 @@ export class Activity extends Component {
     setup() {
         super.setup();
         this.storeService = useService("mail.store");
-        this.state = useState({ showDetails: false });
+        this.state = useState({ showDetails: false , fileModel: {}});
         this.markDonePopover = usePopover(ActivityMarkAsDone, { position: "right" });
         this.avatarCard = usePopover(AvatarCardPopover);
+        this.fileViewer = useFileViewer();
         onMounted(() => {
             this.updateDelayAtNight();
+            this.processActivityImage();
         });
         onWillUnmount(() => browser.clearTimeout(this.updateDelayMidnightTimeout));
         this.attachmentUploader = useAttachmentUploader(this.thread);
@@ -105,6 +109,23 @@ export class Activity extends Component {
         this.props.activity.remove();
         await this.env.services.orm.unlink("mail.activity", [this.props.activity.id]);
         this.props.onActivityChanged(thread);
+    }
+
+    processActivityImage() {
+        const img = createDocumentFragmentFromContent(this.props.activity.note).querySelector("img");
+        let fileModel = {} ;
+        if (img) {
+            const imgName = img.src ? decodeURIComponent(img.src.split('/').pop().split('?')[0]) : '';
+            fileModel = {
+                isImage: true,
+                isViewable: true,
+                name: imgName,
+                defaultSource: img.src,
+                downloadUrl: img.src,
+            };
+            this.state.fileModel = fileModel;
+        }
+        return fileModel;
     }
 
     get thread() {

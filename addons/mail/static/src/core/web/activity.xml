@@ -43,7 +43,7 @@
                     </tbody>
                 </table>
             </div>
-            <div t-if="props.activity.note" class="o-mail-Activity-note text-break" t-out="props.activity.note"/>
+            <div t-if="props.activity.note" class="o-mail-Activity-note text-break" t-att-class="state.fileModel.name ? 'o-viewable' : ''" t-att-title="state.fileModel.name" tabindex="0" t-on-click="() => fileViewer.open(state.fileModel)" t-out="props.activity.note"/>
             <div t-if="props.activity.mail_template_ids?.length > 0" class="o-mail-Activity-mailTemplates">
                 <ActivityMailTemplate activity="props.activity" onActivityChanged="props.onActivityChanged"/>
             </div>

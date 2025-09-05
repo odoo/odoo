@@ -18,7 +18,9 @@
     </p>
     <t t-if="activity.note and activity.note != '&lt;p&gt;&lt;br&gt;&lt;/p&gt;'"><!-- <p></br></p> -->
         <div class="o_mail_note_title fw-bold">Original note:</div>
-        <div t-field="activity.note"/>
+            <div class="o_mail_activity_note_content">
+                <div t-field="activity.note"/>
+            </div>
     </t>
     <div t-if="feedback">
         <div class="fw-bold">Feedback:</div>
