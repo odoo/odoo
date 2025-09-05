@@ -3,9 +3,10 @@
 
 from datetime import datetime as dt, time
 from datetime import timedelta as td
+from dateutil.relativedelta import relativedelta
 from json import loads
 
-from odoo import SUPERUSER_ID, Command
+from odoo import SUPERUSER_ID, Command, fields
 from odoo.fields import Date
 from odoo.tests import Form, tagged, freeze_time
 from odoo.tests.common import TransactionCase
@@ -1447,6 +1448,60 @@ class TestReorderingRule(TransactionCase):
             [("product_id", "=", self.product_01.id)])
         self.assertTrue(po_line)
         self.assertEqual(po_line.order_id.currency_id, foreign_currency)
+
+    def test_partners_validity_dates(self):
+        """ In the case where a product has an expired partner and a current partner, the only partner a purchase
+        order should take into account is the current partner.
+        """
+        warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
+        route_mto = self.env.ref('stock.route_warehouse0_mto')
+        route_mto.active = True
+        route_buy = self.env.ref('purchase_stock.route_warehouse0_buy')
+        supplier = self.env["res.partner"].create({
+            "name": "John",
+        })
+        uom_unit = self.env.ref("uom.product_uom_unit")
+        product = self.env['product.product'].create({
+            'name': 'Usb Keyboard',
+            'purchase_ok': True,
+            'is_storable': True,
+            "uom_id": uom_unit.id,
+            'seller_ids': [Command.create({
+                'company_id': self.env.company.id,
+                'partner_id': self.partner.id,
+                'date_start': fields.Date.today() - relativedelta(days=2),
+                'date_end': fields.Date.today() - relativedelta(days=1),
+            }), Command.create({
+                'company_id': self.env.company.id,
+                'partner_id': supplier.id,
+                'date_start': fields.Date.today() - relativedelta(days=2),
+                'date_end': fields.Date.today() + relativedelta(days=1),
+            })],
+            'route_ids': [Command.link(route_mto.id), Command.link(route_buy.id)]
+        })
+        proc_group = self.env["procurement.group"].create({
+            "partner_id": supplier.id
+        })
+
+        procurement = self.env["procurement.group"].Procurement(
+            product, 1, uom_unit,
+            supplier.property_stock_customer,
+            "Test default vendor",
+            "/",
+            self.env.company,
+            {
+                "warehouse_id": warehouse,
+                "date_planned": dt.today(),
+                "group_id": proc_group,
+                "route_ids": [],
+            }
+        )
+        self.env["procurement.group"].run([procurement])
+        po_line = self.env["purchase.order.line"].search([("product_id", "=", product.id)])
+
+        self.assertTrue(po_line)
+        po = self.env['purchase.order'].search([('product_id', '=', product.id)], limit=1)
+        self.assertEqual(po.partner_id.id, supplier.id)
 
     def test_intercompany_reordering_rules(self):
         """
