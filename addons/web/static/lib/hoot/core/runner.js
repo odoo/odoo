@@ -526,7 +526,11 @@ export class Runner {
             try {
                 result = fn();
             } catch (err) {
-                error = String(err);
+                if (err instanceof HootError) {
+                    throw err;
+                } else {
+                    error = String(err);
+                }
             }
         }
         this.suiteStack.pop();
@@ -1798,7 +1802,12 @@ export class Runner {
         safePrevent(ev);
 
         // Log error
-        logger.error(error);
+        if (this.dry || error.global) {
+            // Stringify the error to avoid logging whole traceback on CI
+            logger.logGlobalError(String(error));
+        } else {
+            logger.error(error);
+        }
     }
 
     /**
