@@ -368,10 +368,13 @@ class CalendarEvent(models.Model):
                 meeting.start_date = False
                 meeting.stop_date = False
 
-    @api.depends('stop', 'start')
+    @api.depends('allday', 'start', 'stop', 'start_date', 'stop_date')
     def _compute_duration(self):
         for event in self:
-            event.duration = self._get_duration(event.start, event.stop)
+            if not event.allday:
+                event.duration = self._get_duration(event.start, event.stop)
+            else:
+                event.duration = self._get_duration(event.start_date, event.stop_date + timedelta(days=1))
 
     @api.depends('start', 'duration')
     def _compute_stop(self):

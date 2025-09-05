@@ -385,6 +385,9 @@ export class CalendarModel extends Model {
 
         if (this.meta.fieldMapping.date_delay) {
             if (this.meta.scale !== "month" || !options.moved) {
+                if (partialRecord.isAllDay) {
+                    end = end.plus({ days: 1})
+                }
                 data[this.meta.fieldMapping.date_delay] = end.diff(start, "hours").hours;
             }
         }
