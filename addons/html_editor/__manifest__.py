@@ -29,6 +29,7 @@ This addon provides an extensible, maintainable editor.
             'html_editor/static/src/others/dynamic_placeholder_plugin.js',
             'html_editor/static/src/backend/**/*',
             'html_editor/static/src/fields/**/*',
+            'html_editor/static/lib/vkbeautify/**/*',
         ],
         'html_editor.assets_editor': [
             'web/static/lib/dompurify/DOMpurify.js',
