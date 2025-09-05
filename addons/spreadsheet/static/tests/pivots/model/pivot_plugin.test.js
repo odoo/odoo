@@ -1015,6 +1015,34 @@ test("pivot grouped by ID displays values correctly", async () => {
     expect(getCellValue(model, "A1")).toBe("Raoul");
 });
 
+test("pivot grouped by ID in a chain displays values correctly", async () => {
+    const spreadsheetData = {
+        pivots: {
+            1: {
+                type: "ODOO",
+                rows: [{ fieldName: "product_id.id" }],
+                columns: [],
+                domain: [],
+                measures: [
+                    {
+                        id: "probability:sum",
+                        fieldName: "probability",
+                        aggregator: "sum",
+                    },
+                ],
+                model: "partner",
+            },
+        },
+    };
+
+    const { model } = await createModelWithDataSource({ spreadsheetData });
+
+    setCellContent(model, "A1", `=PIVOT.HEADER(1,"#product_id.id",1)`);
+    await waitForDataLoaded(model);
+
+    expect(getCellValue(model, "A1")).toBe(37);
+});
+
 test("PIVOT.HEADER grouped by date field without value", async function () {
     const { model, pivotId } = await createSpreadsheetWithPivot({
         arch: /* xml */ `
