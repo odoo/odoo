@@ -391,10 +391,25 @@ export class DynamicList extends DataPoint {
             const vals = editedRecord._getChanges();
             save = () => this.model.orm.webSave(this.resModel, resIds, vals, kwargs);
         }
+
+        const _changes = Object.assign(changes);
+        for (const fieldName in changes) {
+            if (this.fields[fieldName].type === "many2many") {
+                const list = changes[fieldName];
+                _changes[fieldName] = {
+                    add: list._commands
+                        .filter((command) => command[0] === x2ManyCommands.LINK)
+                        .map((command) => list._cache[command[1]]),
+                    remove: list._commands
+                        .filter((command) => command[0] === x2ManyCommands.UNLINK)
+                        .map((command) => list._cache[command[1]]),
+                };
+            }
+        }
         discardInvalidRecords();
 
         // ask confirmation
-        canProceed = await this.model.hooks.onAskMultiSaveConfirmation(changes, validRecords);
+        canProceed = await this.model.hooks.onAskMultiSaveConfirmation(_changes, validRecords);
         if (canProceed === false) {
             selectedRecords.forEach((record) => record._discard());
             this.leaveEditMode({ discard: true });
