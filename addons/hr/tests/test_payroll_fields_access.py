@@ -79,7 +79,8 @@ class TestPayrollFieldsAccess(TransactionCase):
             'new_bike',
             'new_bike_model_id',
             'originated_offer_id',
-            'structure_id'
+            'structure_id',
+            'l10n_hk_mpf_manulife_account',
         ]
         missing_group_field_names = [
             f_name
