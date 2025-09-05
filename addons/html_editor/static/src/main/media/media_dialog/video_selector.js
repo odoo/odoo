@@ -5,6 +5,7 @@ import { debounce } from "@web/core/utils/timing";
 
 import { Component, useState, useRef, onMounted, status } from "@odoo/owl";
 import { Switch } from "@html_editor/components/switch/switch";
+import { closestElement } from "@html_editor/utils/dom_traversal";
 
 class VideoOption extends Component {
     static template = "html_editor.VideoOption";
@@ -159,7 +160,9 @@ export class VideoSelector extends Component {
                     if (!src.startsWith("https:") && !src.startsWith("http:")) {
                         this.state.urlInput = "https:" + this.state.urlInput;
                     }
-                    this.state.isVertical = this.props.media.dataset.isVertical === "true";
+                    this.state.isVertical =
+                        closestElement(this.props.media, ".media_iframe_video")?.dataset
+                            .isVertical === "true";
                     await this.syncOptionsWithUrl();
                     if (status(this) === "destroyed") {
                         return;
