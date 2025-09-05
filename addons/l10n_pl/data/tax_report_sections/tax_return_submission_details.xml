@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="tax_return_submission_details" model="account.report">
+        <field name="name">Tax Return Submission Details</field>
+        <field name="name@pl">Szczegóły złożenia deklaracji podatkowej</field>
+        <field name="column_ids">
+            <record id="tax_return_submission_details_col_1" model="account.report.column">
+                <field name="name">Amount / Value</field>
+                <field name="name@pl">Kwota / Wartość</field>
+                <field name="expression_label">value</field>
+            </record>
+        </field>
+        <field name="line_ids">
+              <record id="input_repayment_amount" model="account.report.line">
+                <field name="name">Repayment Amount</field>
+                <field name="name@pl">Kwota zwrotu</field>
+                <field name="expression_ids">
+                    <record id="expression_repayment_amount" model="account.report.expression">
+                        <field name="label">value</field>
+                        <field name="engine">external</field>
+                        <field name="formula">sum</field>
+                        <field name="subformula">editable;rounding=2</field>
+                    </record>
+                </field>
+              </record>
+              <record id="input_future_tax" model="account.report.line">
+                  <field name="name">Credit the tax repayment amount towards future tax obligations</field>
+                  <field name="name@pl">Zaliczyć kwotę zwrotu na poczet przyszłych zobowiązań podatkowych</field>
+                  <field name="expression_ids">
+                    <record id="expression_future_tax" model="account.report.expression">
+                        <field name="label">value</field>
+                        <field name="engine">external</field>
+                        <field name="formula">sum</field>
+                        <field name="figure_type">boolean</field>
+                        <field name="subformula">editable</field>
+                    </record>
+                </field>
+                <field name="children_ids">
+                      <record id="input_future_tax_amount" model="account.report.line">
+                        <field name="name">Amount to credit</field>
+                        <field name="name@pl">Kwota do zaliczenia</field>
+                        <field name="expression_ids">
+                            <record id="expression_future_tax_amount" model="account.report.expression">
+                                <field name="label">value</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable;rounding=2</field>
+                            </record>
+                        </field>
+                      </record>
+                    <record id="input_future_tax_type" model="account.report.line">
+                        <field name="name">Type of future tax liability</field>
+                        <field name="name@pl">Rodzaj przyszłego zobowiązania podatkowego</field>
+                        <field name="expression_ids">
+                            <record id="expression_future_tax_type" model="account.report.expression">
+                                <field name="label">value</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable</field>
+                                <field name= "figure_type">string</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+              </record>
+            <record id="input_paid_before_deadline" model="account.report.line">
+                <field name="name">Tax liability has been paid in full before deadline?</field>
+                <field name="name@pl">Czy podatek został zapłacony przed terminem?</field>
+                <field name="expression_ids">
+                    <record id="expression_paid_before_deadline" model="account.report.expression">
+                        <field name="label">value</field>
+                        <field name="engine">external</field>
+                        <field name="formula">sum</field>
+                        <field name="figure_type">boolean</field>
+                        <field name="subformula">editable</field>
+                    </record>
+                </field>
+            </record>
+
+        </field>
+    </record>
+</odoo>

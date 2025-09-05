@@ -1,0 +1,640 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo auto_sequence="1">
+    <record id="tax_report_data" model="account.report">
+        <field name="name">Tax Report Data</field>
+        <field name="name@pl">Raporty Podatkowe</field>
+        <field name="country_id" ref="base.pl"/>
+        <field name="allow_foreign_vat" eval="True"/>
+        <field name="availability_condition">country</field>
+        <field name="column_ids">
+             <record id="tax_report_base" model="account.report.column">
+                <field name="name">Base</field>
+                <field name="name@pl">Podstawa</field>
+                <field name="expression_label">base</field>
+            </record>
+            <record id="tax_report_tax" model="account.report.column">
+                <field name="name">Tax</field>
+                <field name="name@pl">Podatek</field>
+                <field name="expression_label">tax</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="account_tax_report_line_razem_c" model="account.report.line">
+                <field name="name">Total C</field>
+                <field name="name@pl">Podstawa - Razem C</field>
+                <field name="aggregation_formula" eval="False"/>
+                <field name="hierarchy_level">0</field>
+                <field name="expression_ids">
+                     <record id="account_tax_report_line_aggregation_base" model="account.report.expression">
+                        <field name="label">base</field>
+                        <field name="engine">aggregation</field>
+                         <field name="formula">PLTAXC_01_10.base + PLTAXC_02_11.base + PLTAXC_03_13.base + PLTAXC_04_15.base + PLTAXC_05_17.base + PLTAXC_06_19.base + PLTAXC_07_21.base + PLTAXC_08_22.base + PLTAXC_09_23.base + PLTAXC_10_25.base + PLTAXC_11_27.base + PLTAXC_11a_29.base + PLTAXC_12_31.base + PLTAXC_13_32.base + PLTAXC_14_38.base</field>
+                    </record>
+                     <record id="account_tax_report_line_aggregation_tax" model="account.report.expression">
+                        <field name="label">tax</field>
+                        <field name="engine">aggregation</field>
+                         <field name="formula">PLTAXC_04_15.tax + PLTAXC_05_17.tax + PLTAXC_06_19.tax + PLTAXC_09_23.tax + PLTAXC_10_25.tax + PLTAXC_11_27.tax + PLTAXC_11a_29.tax + PLTAXC_13_32.tax + PLTAXC_14_38.tax + PLTAXC_15_36.tax + PLTAXC_16_39.tax + PLTAXC_17_40.tax - PLTAXC_16_39.tax</field>
+                    </record>
+                </field>
+                <field name="children_ids">
+                    <record id="account_tax_report_line_kraj_zwolnione" model="account.report.line">
+                        <field name="name">Supply of goods/services, domestic, exempt</field>
+                        <field name="name@pl">Dostawa towarów/usług, kraj, zwolnione</field>
+                        <field name="code">PLTAXC_01_10</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_kraj_zwolnione_tag" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">K_10</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_poza_kraj" model="account.report.line">
+                        <field name="name">Supply of goods/services, out of the country</field>
+                        <field name="name@pl">Dostawa towarów/usług, poza kraj</field>
+                        <field name="code">PLTAXC_02_11</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_poza_kraj_tag" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">K_11</field>
+                            </record>
+                        </field>
+                        <field name="children_ids">
+                            <record id="account_tax_report_line_uslugi_art_100_1_4" model="account.report.line">
+                                <field name="name">Services included in art. 100.1.4</field>
+                                <field name="name@pl">W tym usługi art 100.1.4</field>
+                                <field name="code">PLTAXC_02a_12</field>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_uslugi_art_100_1_4_tag" model="account.report.expression">
+                                        <field name="label">base</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">K_12</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_tax_report_line_triangular_buyer_2nd_payer" model="account.report.line">
+                                <field name="name">Triangular transaction 2. VAT payer</field>
+                                <field name="name@pl">Transakcja trójstronna 2. płatnik VAT</field>
+                                <field name="code">PLTAXC_02a_12_Triangular</field>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_triangular_buyer_2nd_payer_tag" model="account.report.expression">
+                                        <field name="label">base</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">Triangular Purchase</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_uslugi_kraj_0" model="account.report.line">
+                        <field name="name">Supply of goods/services, domestic, 0%</field>
+                        <field name="name@pl">Dostawa towarów/usług, kraj, 0%</field>
+                        <field name="code">PLTAXC_03_13</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_uslugi_kraj_0_tag" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">K_13</field>
+                            </record>
+                        </field>
+                        <field name="children_ids">
+                            <record id="account_tax_report_line_towary_art_129" model="account.report.line">
+                                <field name="name">Goods under art. 129</field>
+                                <field name="name@pl">W tym towary art 129</field>
+                                <field name="code">PLTAXC_03_14</field>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_towary_art_129_tag" model="account.report.expression">
+                                        <field name="label">base</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">K_14</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_kraj_5" model="account.report.line">
+                        <field name="name">Supply of goods/services, domestic, 5%</field>
+                        <field name="name@pl">Dostawa towarów/usług, kraj, 5%</field>
+                        <field name="code">PLTAXC_04_15</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_kraj_5_tag" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">K_15</field>
+                            </record>
+                            <record id="account_tax_report_line_podatek_kraj_5_tag" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">K_16</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_kraj_8" model="account.report.line">
+                        <field name="name">Supply of goods/services, domestic, 8%</field>
+                        <field name="name@pl">Dostawa towarów/usług, kraj, 8%</field>
+                        <field name="code">PLTAXC_05_17</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_kraj_8_tag" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">K_17</field>
+                            </record>
+                            <record id="account_tax_report_line_podatek_kraj_8_tag" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">K_18</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_kraj_23" model="account.report.line">
+                        <field name="name">Supply of goods/services, domestic, 23%</field>
+                        <field name="name@pl">Dostawa towarów/usług, kraj, 23%</field>
+                        <field name="code">PLTAXC_06_19</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_kraj_23_tag" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">K_19</field>
+                            </record>
+                             <record id="account_tax_report_line_podatek_kraj_23_tag" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">K_20</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_dostawa_towarow" model="account.report.line">
+                        <field name="name">Intra-Community supply of goods</field>
+                        <field name="name@pl">Wew-wspól dostawa towarów</field>
+                        <field name="code">PLTAXC_07_21</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_dostawa_towarow_tag" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">K_21</field>
+                            </record>
+                        </field>
+                        <field name="children_ids">
+                            <record id="account_tax_report_line_intracom_procedure_i_42" model="account.report.line">
+                                <field name="name">- under customs procedure 42</field>
+                                <field name="name@pl">- w ramach procedury celnej 42</field>
+                                <field name="code">PLTAXC_07_21_I42</field>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_intracom_procedure_i_42_tag" model="account.report.expression">
+                                        <field name="label">base</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">I_42</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_tax_report_line_intracom_procedure_i_63" model="account.report.line">
+                                <field name="name">- under customs procedure 63</field>
+                                <field name="name@pl">- w ramach procedury celnej 63</field>
+                                <field name="code">PLTAXC_07_21_I63</field>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_intracom_procedure_i_63_tag" model="account.report.expression">
+                                        <field name="label">base</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">I_63</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_eksport_towarow" model="account.report.line">
+                        <field name="name">Export of goods</field>
+                        <field name="name@pl">Eksport towarów</field>
+                        <field name="code">PLTAXC_08_22</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_eksport_towarow_tag" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">K_22</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_nabycie_towarow" model="account.report.line">
+                        <field name="name">Intra-Community acquisition of goods</field>
+                        <field name="name@pl">Wewn-wspól. nabycie towarów</field>
+                        <field name="code">PLTAXC_09_23</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_nabycie_towarow_tag" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">K_23</field>
+                            </record>
+                            <record id="account_tax_report_line_podatek_nabycie_towarow_tag" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">K_24</field>
+                            </record>
+                            <record id="account_tax_report_line_podatek_nabycie_towarow_formula" model="account.report.expression">
+                                <field name="label">formula</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">PLTAXC_09_23.tax + PLTAXC_10_35.tax</field>
+                            </record>
+                        </field>
+                        <field name="children_ids">
+                            <record id="account_tax_report_line_triangular_2nd_payer" model="account.report.line">
+                                <field name="name">Triangular transaction 2. VAT payer</field>
+                                <field name="name@pl">Transakcja trójstronna 2. płatnik VAT</field>
+                                <field name="code">PLTAXC_09_23_Triangular</field>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_triangular_2nd_payer_tag" model="account.report.expression">
+                                        <field name="label">base</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">Triangular Sale</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_art_33a" model="account.report.line">
+                        <field name="name">Import of goods under art. 33a</field>
+                        <field name="name@pl">Import towarów art. 33a</field>
+                        <field name="code">PLTAXC_10_25</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_art_33a_tag" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">K_25</field>
+                            </record>
+                            <record id="account_tax_report_line_podatek_art_33a_tag" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">K_26</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_import_uslug" model="account.report.line">
+                        <field name="name">Importation of services</field>
+                        <field name="name@pl">Import usług</field>
+                        <field name="code">PLTAXC_11_27</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_import_uslug_tag" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">K_27</field>
+                            </record>
+                            <record id="account_tax_report_line_podatek_import_uslug_tag" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">K_28</field>
+                            </record>
+                        </field>
+                        <field name="children_ids">
+                            <record id="account_tax_report_line_art_28b" model="account.report.line">
+                                <field name="name">Acquisition under art. 28b</field>
+                                <field name="name@pl">W tym nabycie wg art 28b</field>
+                                <field name="code">PLTAXC_11a_29</field>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_art_28b_tag" model="account.report.expression">
+                                        <field name="label">base</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">K_29</field>
+                                    </record>
+                                    <record id="account_tax_report_line_podatek_art_28b_tag" model="account.report.expression">
+                                        <field name="label">tax</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">K_30</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_podatnik_nabywca" model="account.report.line">
+                        <field name="name">Supply of goods, taxable person acquiring</field>
+                        <field name="name@pl">Dostawa towarów, podatnik nabywca</field>
+                        <field name="code">PLTAXC_12_31</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_podatnik_nabywca_tag" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">K_31</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_supply_of_gold_services" model="account.report.line">
+                        <field name="name">Reverse Charge - Goods (Art. 17.1.5)</field>
+                        <field name="name@pl">Odwrotne obciążenie - towary (art. 17.1.5)</field>
+                        <field name="code">PLTAXC_13_32</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_supply_of_gold_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">K_32</field>
+                            </record>
+                             <record id="account_tax_report_line_supply_of_gold_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">K_33</field>
+                            </record>
+                        </field>
+                    </record>
+
+                    <record id="account_tax_report_line_supply_of_under_17" model="account.report.line">
+                        <field name="name">Reverse Charge - Goods &amp; Services (Art. 17.1.7-8)</field>
+                        <field name="name@pl">Odwrotne obciążenie - towary i usługi (art. 17.1.7-8)</field>
+                        <field name="code">PLTAXC_14_38</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_supply_of_emission_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">K_34</field>
+                            </record>
+                             <record id="account_tax_report_line_supply_of_emission_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">K_35</field>
+                            </record>
+                        </field>
+                    </record>
+
+                    <record id="account_tax_report_line_podatek_nalezny_spis" model="account.report.line">
+                        <field name="name">Output Tax from Physical Inventory (Art. 14.5)</field>
+                        <field name="name@pl">Podatek należny ze spisu z natury (art. 14.5)</field>
+                        <field name="code">PLTAXC_15_36</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_podatek_nalezny_spis_tag" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">K_36</field>
+                            </record>
+                        </field>
+                    </record>
+
+                    <record id="account_tax_report_line_zwrot_kas" model="account.report.line">
+                        <field name="name">Return for Cash Registers (Art. 111.6)</field>
+                        <field name="name@pl">Zwrot za kasy rejestrujące (art. 111.6)</field>
+                        <field name="code">PLTAXC_16_39</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_zwrot_kas_tag" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">K_37</field>
+                            </record>
+                        </field>
+                    </record>
+
+                    <record id="account_tax_report_line_podatek_nalezny_srodki_transportu" model="account.report.line">
+                        <field name="name">Output Tax - IC Acquisition of Transport (Art. 103.3-4)</field>
+                        <field name="name@pl">Podatek należny - WNT środków transportu (art. 103.3-4)</field>
+                        <field name="code">PLTAXC_17_40</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_podatek_nalezny_srodki_transportu_tag" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">K_38</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_tax_report_line_razem_d" model="account.report.line">
+                <field name="name">Total D</field>
+                <field name="name@pl">Razem D</field>
+                <field name="aggregation_formula" eval="False"/>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="account_tax_report_line_uslug_s_trwale" model="account.report.line">
+                        <field name="name">Basis - Acquisition of goods and services, fixed assets</field>
+                        <field name="name@pl">Nabycie towarów i usług ś.trwałe</field>
+                        <field name="code">PLTAXD_02_40</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_uslug_s_trwale_tag" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">K_40</field>
+                            </record>
+                            <record id="account_tax_report_line_podatek_s_trwale_tag" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">K_41</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_uslug_pozostalych" model="account.report.line">
+                        <field name="name">Purchase of other goods and services</field>
+                        <field name="name@pl">Nabycie towarów i usług pozostałych</field>
+                        <field name="code">PLTAXD_02_42</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_uslug_pozostalych_tag" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">K_42</field>
+                            </record>
+                            <record id="account_tax_report_line_podatek_uslug_pozostalych_tag" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">K_43</field>
+                            </record>
+                        </field>
+                    </record>
+                     <record id="account_tax_report_line_podatek_deklaracji" model="account.report.line">
+                                <field name="name">Surplus from previous declaration</field>
+                                <field name="name@pl">Nadwyżka z poprzedniej deklaracji</field>
+                                <field name="code">PLTAXC_39</field>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_podatek_deklaracji_applied_carryover" model="account.report.expression">
+                                        <field name="label">_applied_carryover_balance</field>
+                                        <field name="engine">external</field>
+                                        <field name="formula">most_recent</field>
+                                        <field name="date_scope">previous_return_period</field>
+                                    </record>
+                                    <record id="account_tax_report_line_podatek_deklaracji_tag" model="account.report.expression">
+                                        <field name="label">tag</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">K_39</field>
+                                    </record>
+                                    <record id="account_tax_report_line_podatek_deklaracji_balance" model="account.report.expression">
+                                        <field name="label">tax</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">PLTAXC_39.tag + PLTAXC_39._applied_carryover_balance</field>
+                                    </record>
+                                </field>
+                            </record>
+                    <record id="account_tax_report_line_podatek_s_trwalych" model="account.report.line">
+                        <field name="name">Adjustment of input tax on acquisition of fixed assets</field>
+                        <field name="name@pl">Korekta naliczonego od nabycia ś.trwałych</field>
+                        <field name="code">PLTAXD_02_44</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_podatek_s_trwalych_tag" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">K_44</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_podatek_pozostalych_nabyc" model="account.report.line">
+                        <field name="name">Adjustment of input tax on other acquisitions</field>
+                        <field name="name@pl">Korekta naliczonego od pozostałych nabyć</field>
+                        <field name="code">PLTAXD_02_45</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_podatek_pozostalych_nabyc_tag" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">K_45</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_korekta_art89b1" model="account.report.line">
+                        <field name="name">Input tax adjustments under art. 89b sec 1</field>
+                        <field name="name@pl">Korekty podatku naliczonego art. 89b ust. 1</field>
+                        <field name="code">PLTAXD_02_46</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_korekta_art89b1_tag" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">K_46</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_korekta_art89b4" model="account.report.line">
+                        <field name="name">Input tax adjustments under art. 89b sec 4</field>
+                        <field name="name@pl">Korekty podatku naliczonego art. 89b ust. 4</field>
+                        <field name="code">PLTAXD_02_47</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_korekta_art89b4_tag" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">K_47</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+                <field name="expression_ids">
+                    <record id="account_tax_report_line_razem_d_formula" model="account.report.expression">
+                        <field name="label">base</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">PLTAXD_02_40.base + PLTAXD_02_42.base</field>
+                    </record>
+                    <record id="account_tax_report_line_podatek_razem_d_formula" model="account.report.expression">
+                        <field name="label">tax</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">PLTAXD_02_40.tax + PLTAXD_02_42.tax + PLTAXC_39.tax + PLTAXD_02_44.tax + PLTAXD_02_45.tax + PLTAXD_02_46.tax + PLTAXD_02_47.tax</field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_tax_report_line_do_przeniesienia" model="account.report.line">
+                <field name="name">To be carried over</field>
+                <field name="name@pl">Do przeniesienia</field>
+                <field name="code">PLTAX</field>
+                <field name="aggregation_formula" eval="False"/>
+                <field name="hierarchy_level">0</field>
+                <field name="expression_ids">
+                    <record id="account_tax_report_line_do_przeniesienia_formula" model="account.report.expression">
+                        <field name="label">tax</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">PLTAX_49.tax + PLTAX_50.tax</field>
+                    </record>
+                    <record id="tax_report_line_do_przeniesienia_carryover" model="account.report.expression">
+                        <field name="label">_carryover_balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">PLTAX.tax</field>
+                        <field name="subformula">if_above(EUR(0))</field>
+                        <field name="carryover_target">PLTAXC_39._applied_carryover_balance</field>
+                    </record>
+                </field>
+                <field name="children_ids">
+                    <record id="account_tax_report_line_podatek_razem_c" model="account.report.line">
+                        <field name="name">Total C</field>
+                        <field name="name@pl">Razem C</field>
+                        <field name="code">PLTAXC</field>
+                        <field name="aggregation_formula" eval="False"/>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_podatek_razem_c_formula" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">PLTAXC_12_33.tax + PLTAXC_01_34.tax</field>
+                            </record>
+                        </field>
+                        <field name="children_ids">
+                            <record id="account_tax_report_line_podatek_nabycie_towarow" model="account.report.line">
+                                <field name="name">Intra-Community acquisition of goods</field>
+                                <field name="name@pl">Wewn. wspól. nabycie towarów</field>
+                                <field name="code">PLTAXC_09_24</field>
+                                <field name="children_ids">
+                                    <record id="account_tax_report_line_podatek_transp_termin" model="account.report.line">
+                                        <field name="name">Inter-Community acquisition of means of transport</field>
+                                        <field name="name@pl">Wewn. wspól. nabycie środk. transp. termin</field>
+                                        <field name="code">PLTAXC_10_35</field>
+                                        <field name="expression_ids">
+                                            <record id="account_tax_report_line_podatek_transp_termin_tag" model="account.report.expression">
+                                                <field name="label">tax</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">K_35</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_tax_report_line_podatek_art_14_5" model="account.report.line">
+                                <field name="name">From physical inventory under art. 14.5</field>
+                                <field name="name@pl">Ze spisu z natury art 14.5</field>
+                                <field name="code">PLTAXC_12_33</field>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_podatek_art_14_5_tag" model="account.report.expression">
+                                        <field name="label">tax</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">K_33</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_tax_report_line_kasy_rejestrujace" model="account.report.line">
+                                <field name="name">Expenditure on cash registers</field>
+                                <field name="name@pl">Wydatek na kasy rejestrujące</field>
+                                <field name="code">PLTAXC_01_34</field>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_kasy_rejestrujace_tag" model="account.report.expression">
+                                        <field name="label">tax</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">K_34</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_tax_report_line_wewnątrzwspólnotowe_103_5a" model="account.report.line">
+                                <field name="name">Intra-Community acquisition of goods under art. 103 sec. 5a</field>
+                                <field name="name@pl">Wewn. wspól. nabycie towarów art. 103 ust. 5a</field>
+                                <field name="code">PLTAXC_01_36</field>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_wewnątrzwspólnotowe_103_5a_tag" model="account.report.expression">
+                                        <field name="label">tax</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">K_36</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_podatek_okresie" model="account.report.line">
+                        <field name="name">Expenditure on cash registers to be reimbursed in the period</field>
+                        <field name="name@pl">Wydatek na kasy do zwrotu w tym okresie</field>
+                        <field name="code">PLTAX_49</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_podatek_okresie_tag" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable;rounding=2</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_zaniechaniem_poboru" model="account.report.line">
+                        <field name="name">Subject to non-collection</field>
+                        <field name="name@pl">Objęty zaniechaniem poboru</field>
+                        <field name="code">PLTAX_50</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_zaniechaniem_poboru_tag" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable;rounding=2</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
+</odoo>
