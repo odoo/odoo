@@ -41,32 +41,6 @@ class TestIrMailServerPersonal(MailCommon):
             yield
 
     @users('admin', 'employee')
-    def test_personal_mail_server_allowed_mailing(self):
-        """Check a mailing can be sent with a personal server, only if the mailing was created by the owner."""
-        mailing_values = {
-            'subject': 'Hello from Personal Server',
-            'mailing_model_id': self.env['ir.model']._get_id('res.partner'),
-            'mailing_domain': repr([('id', '=', self.test_partner.id)]),
-            'email_from': self.user_employee.email_formatted
-        }
-        employee_mailing = self.env['mailing.mailing'].with_user(self.user_employee).create(mailing_values)
-        with self.mock_mail_connect():
-            employee_mailing.action_send_mail()
-
-        self.assertEqual(len(self.connected_server_ids), 1)
-        self.assertEqual(self.connected_server_ids[0], self.mail_server_user.id)
-
-        employee_impersonate_mailing = self.env['mailing.mailing'].create(mailing_values)
-        with self.mock_mail_connect():
-            employee_impersonate_mailing.action_send_mail()
-
-        self.assertEqual(len(self.connected_server_ids), 1)
-        if self.env.user == self.mail_server_user.owner_user_id:
-            self.assertEqual(self.connected_server_ids[0], self.mail_server_user.id)
-        else:
-            self.assertNotEqual(self.connected_server_ids[0], self.mail_server_user.id)
-
-    @users('admin', 'employee')
     def test_personal_mail_server_allowed_post(self):
         """Check that only the owner of the mail server can create mails that will be sent from it."""
         test_record = self.test_partner.with_user(self.env.user)

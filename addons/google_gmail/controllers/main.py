@@ -10,7 +10,7 @@ from werkzeug.exceptions import Forbidden
 from odoo import _, http
 from odoo.exceptions import UserError
 from odoo.http import request
-from odoo.tools import consteq
+from odoo.tools import consteq, email_normalize
 from odoo.addons.google_gmail.models.google_gmail_mixin import GMAIL_TOKEN_REQUEST_TIMEOUT
 
 _logger = logging.getLogger(__name__)
@@ -53,6 +53,20 @@ class GoogleGmailController(http.Controller):
 
         return self._check_email_and_redirect_to_gmail_record(access_token, expiration, refresh_token, record_sudo)
 
+    @http.route('/google_gmail/iap_confirm', type='http', auth='user')
+    def google_gmail_iap_callback(self, model, rec_id, csrf_token, access_token, refresh_token, expiration):
+        """Receive back the refresh token and access token from IAP.
+
+        The authentication process with IAP is done in 4 steps;
+        1. User database make a request to `<IAP>/api/mail_oauth/1/gmail`
+        2. User browser is redirected to the URL we received from IAP
+        3. User browser is redirected to `<IAP>/api/mail_oauth/1/gmail_callback`
+           with the authorization_code
+        4. User browser is redirected to `<DB>/google_gmail/iap_confirm`
+        """
+        record = self._get_gmail_record(model, rec_id, csrf_token)
+        return self._check_email_and_redirect_to_gmail_record(access_token, expiration, refresh_token, record)
+
     def _get_gmail_record(self, model_name, rec_id, csrf_token):
         """Return the record after checking the CSRF token."""
         model = request.env[model_name]
@@ -89,7 +103,7 @@ class GoogleGmailController(http.Controller):
 
             response = response.json()
 
-            if not response.get('verified_email') or response.get('email') != record[record._email_field]:
+            if not response.get('verified_email') or email_normalize(response.get('email')) != email_normalize(record[record._email_field]):
                 _logger.error('Google Gmail: Invalid email address: %r != %s.', response, record[record._email_field])
                 return request.render('google_gmail.google_gmail_oauth_error', {
                     'error': _(
