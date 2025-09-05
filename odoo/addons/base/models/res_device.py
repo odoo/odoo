@@ -1,11 +1,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from contextlib import nullcontext
-from datetime import datetime
+from datetime import datetime, timedelta
 import logging
 
 from odoo import api, fields, models, tools
-from odoo.http import GeoIP, request, root, STORED_SESSION_BYTES
+from odoo.http import GeoIP, get_session_max_inactivity, request, root, STORED_SESSION_BYTES
 from odoo.tools import SQL, OrderedSet, unique
 from odoo.tools.translate import _
 from .res_users import check_identity
@@ -137,24 +137,34 @@ class ResDeviceLog(models.Model):
             Set the field ``revoked`` to ``True`` for ``res.device.log``
             for which the session file no longer exists on the filesystem.
         """
-        device_logs_by_session_identifier = {}
-        for session_identifier, device_logs in self.env['res.device.log']._read_group(
-            domain=[('revoked', '=', False)],
-            groupby=['session_identifier'],
-            aggregates=['id:recordset'],
-        ):
-            device_logs_by_session_identifier[session_identifier] = device_logs
+        batch_size = 100_000
+        offset = 0
 
-        revoked_session_identifiers = root.session_store.get_missing_session_identifiers(
-            device_logs_by_session_identifier.keys()
-        )
-        device_logs_to_revoke = self.env['res.device.log'].concat(*map(
-            device_logs_by_session_identifier.get,
-            revoked_session_identifiers
-        ))
-        # Initial run may take 5-10 minutes due to many non-revoked sessions,
-        # marking them enables index use on ``revoked IS NOT TRUE``.
-        device_logs_to_revoke.sudo().write({'revoked': True})
+        while True:
+            candidate_device_log_ids = self.env['res.device.log'].search_fetch(
+                [
+                    ('revoked', '=', False),
+                    ('last_activity', '<', datetime.now() - timedelta(seconds=get_session_max_inactivity(self.env))),
+                ],
+                ['session_identifier'],
+                order='id',
+                limit=batch_size,
+                offset=offset,
+            )
+            if not candidate_device_log_ids:
+                break
+            offset += batch_size
+            revoked_session_identifiers = root.session_store.get_missing_session_identifiers(
+                set(candidate_device_log_ids.mapped('session_identifier'))
+            )
+            if not revoked_session_identifiers:
+                continue
+            to_revoke = candidate_device_log_ids.filtered(
+                lambda candidate: candidate.session_identifier in revoked_session_identifiers
+            )
+            to_revoke.write({'revoked': True})
+            self.env.cr.commit()
+            offset -= len(to_revoke)
 
 
 class ResDevice(models.Model):
