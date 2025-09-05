@@ -1,4 +1,4 @@
-import { Component, onWillRender, reactive, toRaw, useEffect, useRef, useState } from "@odoo/owl";
+import { Component, onWillRender, toRaw, useEffect, useRef, useState } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
@@ -14,7 +14,23 @@ import { MultiCreatePopover } from "./multi_create_popover";
 
 export class MultiSelectionButtons extends Component {
     static template = "web.MultiSelectionButtons";
-    static props = { reactive: Object };
+    static props = {
+        reactive: {
+            type: Object,
+            shape: {
+                onAdd: Function,
+                onCancel: Function,
+                onDelete: Function,
+                nbSelected: Number,
+                multiCreateView: String,
+                resModel: String,
+                context: Object,
+                showMultiCreateTimeRange: Boolean,
+                visible: Boolean,
+                multiCreateValues: { type: Object, optional: true },
+            },
+        },
+    };
     static components = {
         Popover: MultiCreatePopover,
     };
@@ -185,44 +201,4 @@ export class MultiSelectionButtons extends Component {
             cancel: () => {},
         });
     }
-}
-
-/**
- * @param {Object} params
- * @param {Function} params.onAdd
- * @param {Function} params.onCancel
- * @param {Function} params.onDelete
- * @param {number} params.nbSelected
- * @param {string} params.multiCreateView
- * @param {string} params.resModel
- * @param {Object} [params.multiCreateValues]
- * @param {boolean} [params.showMultiCreateTimeRange=false]
- * @param {boolean} [params.visible=false]
- * @param {Object} [params.context={}]
- * @returns {Object}
- */
-export function useMultiSelectionButtons({
-    onAdd,
-    onCancel,
-    onDelete,
-    nbSelected,
-    multiCreateView,
-    resModel,
-    multiCreateValues,
-    showMultiCreateTimeRange,
-    visible,
-    context,
-}) {
-    return reactive({
-        onCancel,
-        onAdd,
-        onDelete,
-        nbSelected,
-        multiCreateView,
-        resModel,
-        multiCreateValues,
-        visible: Boolean(visible),
-        showMultiCreateTimeRange: Boolean(showMultiCreateTimeRange),
-        context: context || {},
-    });
 }
