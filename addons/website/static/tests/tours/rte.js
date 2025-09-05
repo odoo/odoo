@@ -5,7 +5,7 @@ import {
     goToTheme,
     registerWebsitePreviewTour,
 } from "@website/js/tours/tour_utils";
-import { setSelection } from '@web_editor/js/editor/odoo-editor/src/utils/utils';
+import { setSelection } from "@html_editor/../tests/_helpers/selection";
 import { whenReady } from "@odoo/owl";
 import { editorsWeakMap } from "@html_editor/../tests/tours/helpers/editor";
 
