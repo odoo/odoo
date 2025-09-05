@@ -945,6 +945,9 @@ Please change the quantity done or the rounding precision in your settings.""",
         (moves_to_unreserve - moves_not_to_recompute)._recompute_state()
         return True
 
+    def _can_create_lot(self):
+        return self.picking_type_id.use_existing_lots
+
     def _generate_serial_numbers(self, next_serial, next_serial_count=False, location_id=False):
         """ This method will generate `lot_name` from a string (field
         `next_serial`) and create a move line for each generated `lot_name`.
@@ -957,7 +960,7 @@ Please change the quantity done or the rounding precision in your settings.""",
             raise ValidationError(_("The number of Serial Numbers to generate must be greater than zero."))
         lot_names = self.env['stock.lot'].generate_lot_names(next_serial, count)
         field_data = [{'lot_name': lot_name['lot_name'], 'quantity': 1} for lot_name in lot_names]
-        if self.picking_type_id.use_existing_lots or self.env.context.get('force_lot_m2o'):
+        if self._can_create_lot():
             self._create_lot_ids_from_move_line_vals(field_data, self.product_id.id, self.company_id.id)
         move_lines_commands = self._generate_serial_move_line_commands(field_data)
         self.move_line_ids = move_lines_commands
@@ -970,7 +973,7 @@ Please change the quantity done or the rounding precision in your settings.""",
         lot_ids = self.env['stock.lot'].search([
             ('product_id', '=', product_id),
             '|', ('company_id', '=', company_id), ('company_id', '=', False),
-            ('name', 'in', list(lot_names)),
+            ('name', 'in', lot_names),
         ])
         lot_id_names = set(lot_ids.mapped('name'))
         lot_names = [lot_name for lot_name in lot_names if lot_name not in lot_id_names]  # lot_names not found to create
