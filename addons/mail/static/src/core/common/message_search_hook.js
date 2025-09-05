@@ -72,7 +72,12 @@ export function useMessageSearch(thread) {
             if (this.searchTerm) {
                 this.searching = true;
                 const data = await sequential(() =>
-                    store.searchMessagesInThread(this.searchTerm, this.thread, before)
+                    store.searchMessagesInThread(
+                        this.searchTerm,
+                        this.thread,
+                        before,
+                        this.is_notification
+                    )
                 );
                 if (!data) {
                     return;
@@ -98,6 +103,8 @@ export function useMessageSearch(thread) {
             this.searching = false;
             this.searchTerm = undefined;
         },
+        /** @type {true | false | undefined} */
+        is_notification: undefined,
         loadMore: false,
         /** @type {import('@mail/core/common/message_model').Message[]} */
         messages: [],

@@ -293,12 +293,8 @@ async function discuss_channel_messages(request) {
     const MailMessage = this.env["mail.message"];
 
     const { channel_id, fetch_params = {} } = await parseRequestParams(request);
-    const domain = [
-        ["res_id", "=", channel_id],
-        ["model", "=", "discuss.channel"],
-        ["message_type", "!=", "user_notification"],
-    ];
-    const res = MailMessage._message_fetch(domain, makeKwArgs(fetch_params));
+    const channel = this.env["discuss.channel"].browse(channel_id);
+    const res = MailMessage._message_fetch([], channel, makeKwArgs(fetch_params));
     const { messages } = res;
     delete res.messages;
     if (!fetch_params.around) {
@@ -870,12 +866,8 @@ async function mail_thread_messages(request) {
     const MailMessage = this.env["mail.message"];
 
     const { fetch_params = {}, thread_id, thread_model } = await parseRequestParams(request);
-    const domain = [
-        ["res_id", "=", thread_id],
-        ["model", "=", thread_model],
-        ["message_type", "!=", "user_notification"],
-    ];
-    const res = MailMessage._message_fetch(domain, makeKwArgs(fetch_params));
+    const thread = this.env[thread_model].browse(thread_id);
+    const res = MailMessage._message_fetch([], thread, makeKwArgs(fetch_params));
     const { messages } = res;
     delete res.messages;
     MailMessage.set_message_done(messages.map((message) => message.id));
