@@ -137,11 +137,12 @@ export class CartPage extends Component {
         }
     }
 
-    generateTicketImage = async () =>
+    generateTicketImage = async (basicReceipt = false) =>
         await this.renderer.toJpeg(
             OrderReceipt,
             {
                 order: this.selfOrder.currentOrder,
+                basic_receipt: basicReceipt,
             },
             { addClass: "pos-receipt-print p-3" }
         );
@@ -149,13 +150,15 @@ export class CartPage extends Component {
     async _sendReceiptToCustomer({ action, destination, mail_template_id }) {
         const order = this.selfOrder.currentOrder;
         const fullTicketImage = await this.generateTicketImage();
-        const basicTicketImage = await this.generateTicketImage(true);
+        const basicTicketImage = this.selfOrder.config.basic_receipt
+            ? await this.generateTicketImage(true)
+            : null;
         await this.selfOrder.data.call("pos.order", action, [
             [order.id],
             destination,
             mail_template_id,
             fullTicketImage,
-            this.selfOrder.config.basic_receipt ? basicTicketImage : null,
+            basicTicketImage,
         ]);
     }
 
