@@ -24,7 +24,7 @@ class StockMove(models.Model):
                 continue
             if not move.move_line_ids or move.product_uom.is_zero(move.quantity):
                 continue
-            productions = move._get_subcontract_production()
+            productions = move._get_subcontract_production().filtered(lambda m: m.state != 'cancel')
             if not productions:
                 continue
             move.show_subcontracting_details_visible = True
