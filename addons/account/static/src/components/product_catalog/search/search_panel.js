@@ -46,7 +46,7 @@ export class AccountProductCatalogSearchPanel extends SearchPanel {
 
     onDrop(targetSecId, ev) {
         ev.preventDefault();
-        const moveSecId = ev.dataTransfer.getData('section_id');
+        const moveSecId = parseInt(ev.dataTransfer.getData('section_id'));
         if (moveSecId !== targetSecId) this.reorderSections(moveSecId, targetSecId);
     }
 
@@ -118,7 +118,6 @@ export class AccountProductCatalogSearchPanel extends SearchPanel {
     }
 
     async reorderSections(moveId, targetId) {
-        [moveId, targetId] = [parseInt(moveId), parseInt(targetId)];
         const sections = this.state.sections;
         const moveSection = sections.get(moveId);
         const targetSection = sections.get(targetId);
