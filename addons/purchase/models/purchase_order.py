@@ -841,6 +841,7 @@ class PurchaseOrder(models.Model):
                                                                                 l.product_uom_id == rfq_line.product_uom_id and
                                                                                 l.analytic_distribution == rfq_line.analytic_distribution and
                                                                                 l.discount == rfq_line.discount and
+                                                                                l._ensure_merge_compatibility(rfq_line) and
                                                                                 abs(l.date_planned - rfq_line.date_planned).total_seconds() <= 86400  # 24 hours in seconds
                                                                         )
                     if len(existing_line) > 1:
