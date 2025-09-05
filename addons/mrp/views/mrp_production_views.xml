@@ -57,7 +57,7 @@
                         decoration-danger="is_delayed"
                         decoration-bf="is_delayed"/>
                     <field name="product_id" readonly="1" optional="show"/>
-                    <field name="lot_producing_ids" optional="hide"/>
+                    <field name="lot_producing_ids" optional="hide" widget="many2many_tags"/>
                     <field name="bom_id" readonly="1" optional="hide"/>
                     <field name="activity_ids" string="Next Activity" widget="list_activity" optional="show"/>
                     <field name="origin" optional="show" readonly="state in ['cancel', 'done']"/>

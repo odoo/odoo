@@ -36,12 +36,12 @@ class StockMove(models.Model):
         subcontract_moves.show_lots_text = False
         subcontract_moves.show_lots_m2o = True
 
-    @api.depends('is_subcontract')
+    @api.depends('is_subcontract', 'has_tracking')
     def _compute_is_quantity_done_editable(self):
         done_moves = self.env['stock.move']
         for move in self:
             if move.is_subcontract:
-                move.is_quantity_done_editable = False
+                move.is_quantity_done_editable = move.has_tracking == 'none'
                 done_moves |= move
         return super(StockMove, self - done_moves)._compute_is_quantity_done_editable()
 

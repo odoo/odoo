@@ -40,3 +40,4 @@ class MrpProductionSerials(models.TransientModel):
                 'quantity': 1,
             } for lot in all_lots[1:]
         ])
+        return sbc_move.picking_id.action_show_subcontract_details()
