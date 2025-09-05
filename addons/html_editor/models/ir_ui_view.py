@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import copy
@@ -43,9 +42,9 @@ class IrUiView(models.Model):
             del attributes['contenteditable']
         return attributes
 
-    #------------------------------------------------------
+    # ------------------------------------------------------
     # Save from html
-    #------------------------------------------------------
+    # ------------------------------------------------------
 
     @api.model
     def extract_embedded_fields(self, arch):
@@ -158,9 +157,9 @@ class IrUiView(models.Model):
 
         error_callable_msg = "'translate' property of field %r is not callable"
         if not callable(field_from.translate):
-            raise ValueError(error_callable_msg % field_from)
+            raise TypeError(error_callable_msg % field_from)
         if not callable(field_to.translate):
-            raise ValueError(error_callable_msg % field_to)
+            raise TypeError(error_callable_msg % field_to)
         if not field_to.store:
             raise ValueError("Field %r is not stored" % field_to)
 
@@ -169,7 +168,7 @@ class IrUiView(models.Model):
             return
 
         lang_env = self.env.lang or 'en_US'
-        langs = set(lang for lang, _ in self.env['res.lang'].get_installed())
+        langs = {lang for lang, _ in self.env['res.lang'].get_installed()}
 
         # 1. Get translations
         records_from.flush_model([name_field_from])

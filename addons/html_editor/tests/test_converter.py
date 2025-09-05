@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import textwrap
@@ -8,7 +7,7 @@ from lxml.builder import E
 
 from odoo.tests import common
 from odoo.tests.common import BaseCase
-from odoo.addons.web_editor.models.ir_qweb_fields import html_to_text
+from odoo.addons.html_editor.models.ir_qweb_fields import html_to_text
 
 
 class TestHTMLToText(BaseCase):
@@ -116,7 +115,7 @@ class TestHTMLToText(BaseCase):
 
 class TestConvertBack(common.TransactionCase):
     def setUp(self):
-        super(TestConvertBack, self).setUp()
+        super().setUp()
         self.env = self.env(context={'inherit_branding': True})
 
     def field_rountrip_result(self, field, value, expected):
