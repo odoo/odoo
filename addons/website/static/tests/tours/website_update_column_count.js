@@ -11,6 +11,12 @@ const columnsSnippetRow = ":iframe .s_three_columns .row";
 const textImageSnippetRow = ":iframe .s_text_image .row";
 const changeFirstAndSecondColumnsMobileOrder = (snippetRowSelector, snippetName) => {
     return [{
+        content: `Scroll into view`,
+        trigger: `${snippetRowSelector} > div:nth-child(1)`,
+        run() {
+            this.anchor.scrollIntoView();
+        },
+    }, {
         content: `Click on the first column of the '${snippetName}' snippet`,
         trigger: `${snippetRowSelector} > div:nth-child(1)`,
         run: "click",

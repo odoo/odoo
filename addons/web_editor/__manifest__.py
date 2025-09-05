@@ -225,9 +225,6 @@ Odoo Web Editor widget.
             'web_editor/static/src/scss/wysiwyg.dark.scss',
             'web_editor/static/src/scss/web_editor.common.dark.scss',
         ],
-        'web.assets_frontend_minimal': [
-            'web_editor/static/src/js/frontend/loader_loading.js',
-        ],
         'web.assets_frontend': [
             ('include', 'web_editor.assets_media_dialog'),
 
@@ -239,8 +236,6 @@ Odoo Web Editor widget.
 
             'web_editor/static/src/scss/web_editor.common.scss',
             'web_editor/static/src/scss/web_editor.frontend.scss',
-
-            'web_editor/static/src/js/frontend/loadWysiwygFromTextarea.js',
         ],
         'web.report_assets_common': [
             'web_editor/static/src/js/editor/odoo-editor/src/base_style.scss',

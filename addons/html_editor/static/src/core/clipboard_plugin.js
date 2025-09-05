@@ -636,10 +636,7 @@ export class ClipboardPlugin extends Plugin {
         for (const imageFile of imageFiles) {
             const imageNode = this.document.createElement("img");
             imageNode.classList.add("img-fluid");
-            // Mark images as having to be saved as attachments.
-            if (this.config.dropImageAsAttachment) {
-                imageNode.classList.add("o_b64_image_to_save");
-            }
+            this.dispatchTo("added_image_handlers", imageNode);
             imageNode.dataset.fileName = imageFile.name;
             promises.push(
                 getImageUrl(imageFile).then((url) => {

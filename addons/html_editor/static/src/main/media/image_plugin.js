@@ -43,8 +43,9 @@ const IMAGE_SIZE = [
 
 export class ImagePlugin extends Plugin {
     static id = "image";
-    static dependencies = ["history", "link", "powerbox", "dom", "selection", "overlay"];
+    static dependencies = ["history", "dom", "selection", "overlay"];
     static shared = ["getTargetedImage", "previewImage", "resetImageTransformation"];
+    static defaultConfig = { allowImageTransform: true };
     resources = {
         user_commands: [
             {
@@ -191,9 +192,8 @@ export class ImagePlugin extends Plugin {
                 description: _t("Transform the picture (click twice to reset transformation)"),
                 Component: ImageTransformButton,
                 props: this.getImageTransformProps(),
-                isAvailable: (selection) => isHtmlContentSupported(selection),
-                isDisabled: () =>
-                    "allowImageTransform" in this.config ? !this.config.allowImageTransform : false,
+                isAvailable: (selection) =>
+                    this.config.allowImageTransform && isHtmlContentSupported(selection),
             },
             {
                 id: "image_delete",
@@ -207,8 +207,8 @@ export class ImagePlugin extends Plugin {
         post_undo_handlers: this.updateImageParams.bind(this),
         post_redo_handlers: this.updateImageParams.bind(this),
 
-        /** Overrides */
-        paste_url_overrides: this.handlePasteUrl.bind(this),
+        /** Providers */
+        paste_media_url_command_providers: this.getCommandForImageUrlPaste.bind(this),
     };
 
     setup() {
@@ -342,33 +342,21 @@ export class ImagePlugin extends Plugin {
     }
 
     /**
-     * @param {string} text
      * @param {string} url
      */
-    handlePasteUrl(text, url) {
+    getCommandForImageUrlPaste(url) {
         if (isImageUrl(url)) {
-            const restoreSavepoint = this.dependencies.history.makeSavePoint();
-            // Open powerbox with commands to embed media or paste as link.
-            // Insert URL as text, revert it later if a command is triggered.
-            this.dependencies.dom.insert(text);
-            this.dependencies.history.addStep();
-            const embedImageCommand = {
+            return {
                 title: _t("Embed Image"),
                 description: _t("Embed the image in the document."),
                 icon: "fa-image",
                 run: () => {
-                    const img = document.createElement("IMG");
+                    const img = this.document.createElement("IMG");
                     img.setAttribute("src", url);
                     this.dependencies.dom.insert(img);
                     this.dependencies.history.addStep();
                 },
             };
-            const commands = [
-                embedImageCommand,
-                this.dependencies.link.getPathAsUrlCommand(text, url),
-            ];
-            this.dependencies.powerbox.openPowerbox({ commands, onApplyCommand: restoreSavepoint });
-            return true;
         }
     }
 
