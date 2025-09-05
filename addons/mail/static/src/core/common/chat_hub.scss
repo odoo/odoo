@@ -1,17 +1,18 @@
 .o-mail-ChatHub-bubbles {
     width: $o-mail-ChatHub-bubblesWidth;
     z-index: $o-mail-NavigableList-zIndex - 1;
+    bottom: calc(#{var(--mail-ChatHub-bubbles-bottom, 0)} + #{var(--mail-ChatHub-bubbles-bottomLift, 0)});
 
     &.o-liftUp {
-        transform: translateY(-25px);
+        --mail-ChatHub-bubbles-bottomLift: 25px;
     }
 
     &.o-mobile {
         margin-right: $o-mail-ChatHub-bubblesMargin + 5px;
-        transform: translateY(-35px);
+        --mail-ChatHub-bubbles-bottomLift: 35px;
 
         body:has(.o-mail-Discuss):not(:has(.o-mail-ChatWindow)) &, body:has(.o-mail-MessagingMenu):not(:has(.o-mail-ChatWindow)) &  {
-            transform: translateY(-65px);
+            --mail-ChatHub-bubbles-bottomLift: 65px;
             z-index: $zindex-modal + 5;
         }
     }
