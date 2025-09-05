@@ -90,7 +90,7 @@ class HrLeaveGenerateMultiWizard(models.TransientModel):
             # YTI: More complex use cases could be managed later
             invalid_time_off = conflicting_leaves.filtered(lambda leave: leave.leave_type_request_unit == 'hour')
             if invalid_time_off:
-                raise UserError(self.env_('Automatic time off spliting during batch generation is not managed for ovelapping time off declared in hours. Conflicting time off:\n%s', '\n'.join(f"- {l.display_name}" for l in invalid_time_off)))
+                raise UserError(self.env._('Automatic time off splitting during batch generation is not managed for overlapping time off declared in hours. Conflicting time off:\n%s', '\n'.join(f"- {l.display_name}" for l in invalid_time_off)))
             one_day_leaves = conflicting_leaves.filtered(lambda leave: leave.request_date_from == leave.request_date_to)
             one_day_leaves.action_refuse()
             (conflicting_leaves - one_day_leaves)._split_leaves(self.date_from, self.date_to + timedelta(days=1))
