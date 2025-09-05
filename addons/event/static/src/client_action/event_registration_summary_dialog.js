@@ -165,7 +165,7 @@ export class EventRegistrationSummaryDialog extends Component {
         }
     }
 
-    async printWithLongpolling(reportId) {
+    async printWithLongpolling(reportId, uniqueId) {
         try {
             const [[ip, identifier,, printData]] = await this.orm.call("ir.actions.report", "render_and_send", [
                 reportId,
@@ -175,7 +175,7 @@ export class EventRegistrationSummaryDialog extends Component {
                 null,
                 false, // Do not use websocket
             ]);
-            const payload = { document: printData, print_id: uuid() }
+            const payload = { document: printData, print_id: uniqueId, action_unique_id: uniqueId }
             const { result } = await this.env.services.iot_longpolling.action(ip, identifier, payload, true);
             return result;
         } catch {
@@ -196,13 +196,14 @@ export class EventRegistrationSummaryDialog extends Component {
             }),
             { type: "info" }
         );
+        const uniqueId = uuid();
         if (await this.isIotBoxReachable()) {
-            const printSuccessful = await this.printWithLongpolling(reportId);
+            const printSuccessful = await this.printWithLongpolling(reportId, uniqueId);
             if (printSuccessful) {
                 return;
             }
         }
-        const printJobArguments = [reportId, [this.registration.id], null, uuid()];
+        const printJobArguments = [reportId, [this.registration.id], null, uniqueId];
         await this.env.services.iot_websocket.addJob([this.printSettings.iotPrinterId], printJobArguments);
     }
 }
