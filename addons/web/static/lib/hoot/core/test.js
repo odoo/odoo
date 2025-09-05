@@ -15,7 +15,7 @@ import { Tag } from "./tag";
 //-----------------------------------------------------------------------------
 
 const {
-    Object: { freeze: $freeze },
+    Object: { assign: $assign, freeze: $freeze },
 } = globalThis;
 
 //-----------------------------------------------------------------------------
@@ -35,8 +35,11 @@ const SHARED_RESULTS = $freeze([]);
  */
 export function testError({ name, parent }, ...message) {
     const parentString = parent ? ` (in suite ${stringify(parent.name)})` : "";
-    return new HootError(
-        `error while registering test ${stringify(name)}${parentString}: ${message.join("\n")}`
+    return $assign(
+        new HootError(
+            `error while registering test ${stringify(name)}${parentString}: ${message.join("\n")}`
+        ),
+        { global: true }
     );
 }
 
