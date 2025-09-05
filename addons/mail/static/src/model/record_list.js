@@ -351,7 +351,7 @@ export class RecordList extends Array {
                                         newRecord
                                     );
                                     if (inverse) {
-                                        newRecord[inverse].add(recordList._.owner);
+                                        newRecord[inverse].add?.(recordList._.owner);
                                     }
                                 }
                             }
