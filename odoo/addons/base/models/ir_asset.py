@@ -7,7 +7,7 @@ from werkzeug import urls
 from odoo import api, fields, models, tools
 from odoo.modules import Manifest
 from odoo.tools import misc
-from odoo.tools.constants import ASSET_EXTENSIONS, EXTERNAL_ASSET
+from odoo.tools.constants import ASSET_EXTENSIONS, EXTERNAL_ASSET, BINARY_EXTENSIONS
 
 _logger = getLogger(__name__)
 
@@ -103,9 +103,12 @@ class IrAsset(models.Model):
 
     def _parse_bundle_name(self, bundle_name, debug_assets):
         bundle_name, asset_type = bundle_name.rsplit('.', 1)
+        if asset_type in BINARY_EXTENSIONS:
+            asset_type = 'binary'
+            bundle_name = bundle_name.rsplit('.', 1)[0]
         rtl = False
         autoprefix = False
-        if not debug_assets:
+        if not debug_assets and asset_type != 'binary':
             bundle_name, min_ = bundle_name.rsplit('.', 1)
             if min_ != 'min':
                 raise ValueError("'min' expected in extension in non debug mode")
@@ -116,9 +119,9 @@ class IrAsset(models.Model):
             if bundle_name.endswith('.rtl'):
                 bundle_name = bundle_name[:-4]
                 rtl = True
-        elif asset_type != 'js':
-            raise ValueError('Only js and css assets bundle are supported for now')
-        if len(bundle_name.split('.')) != 2:
+        elif asset_type not in ('js', 'binary'):
+            raise ValueError('Only js, css and binary assets bundle are supported for now')
+        if len(bundle_name.split('.')) != 2 and asset_type != 'binary':
             raise ValueError(f'{bundle_name} is not a valid bundle name, should have two parts')
         return bundle_name, rtl, asset_type, autoprefix
 
@@ -385,7 +388,7 @@ class IrAsset(models.Model):
 
 
 class AssetPaths:
-    """ A list of asset paths (path, addon, bundle) with efficient operations. """
+    """ A list of asset paths (path, addon, bundle, last_modified) with efficient operations. """
     def __init__(self):
         self.list = []
         self.memo = set()
