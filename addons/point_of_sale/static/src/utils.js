@@ -1,6 +1,6 @@
 import { parseDateTime, deserializeDateTime } from "@web/core/l10n/dates";
 import { roundDecimals, floatIsZero } from "@web/core/utils/numbers";
-
+import { getDataURLFromFile } from "@web/core/utils/urls";
 /*
  * comes from o_spreadsheet.js
  * https://stackoverflow.com/questions/105034/create-guid-uuid-in-javascript
@@ -255,4 +255,10 @@ export function computeProductPricelistCache(service, data = []) {
     if (data.length > 0 && data[0].model.modelName === "product.product") {
         service._loadMissingPricelistItems(products);
     }
+}
+
+export async function getImageDataUrl(imageUrl) {
+    const res = await fetch(imageUrl);
+    const blob = await res.blob();
+    return await getDataURLFromFile(blob);
 }

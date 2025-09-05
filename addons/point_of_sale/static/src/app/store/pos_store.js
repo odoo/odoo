@@ -360,6 +360,7 @@ export class PosStore extends Reactive {
         }
         this.computeProductPricelistCache();
         await this.processProductAttributes();
+        await this.company.cacheReceiptLogo();
     }
     cashMove() {
         this.hardwareProxy.openCashbox(_t("Cash in / out"));

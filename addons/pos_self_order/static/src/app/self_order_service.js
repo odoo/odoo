@@ -540,6 +540,7 @@ export class SelfOrder extends Reactive {
         }
 
         this.idleTimout = false;
+        this.company.cacheReceiptLogo();
         window.addEventListener("click", (event) => {
             this.idleTimout && clearTimeout(this.idleTimout);
             this.alertTimeout && clearTimeout(this.alertTimeout);

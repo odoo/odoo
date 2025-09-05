@@ -24,4 +24,8 @@ export class ReceiptHeader extends Component {
         }
         return _t("Tax ID: %(vatId)s", { vatId: this.props.data.company.vat });
     }
+
+    get logoUrl() {
+        return this.props.data.company.receiptLogoUrl;
+    }
 }
