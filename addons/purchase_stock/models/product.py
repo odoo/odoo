@@ -1,10 +1,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models
 from odoo.fields import Domain
 from odoo.tools import formatLang
+from odoo.tools.float_utils import float_round
 
 
 class ProductTemplate(models.Model):
@@ -23,14 +25,70 @@ class ProductTemplate(models.Model):
 class ProductProduct(models.Model):
     _inherit = 'product.product'
 
-    purchase_order_line_ids = fields.One2many('purchase.order.line', 'product_id', string="PO Lines") # used to compute quantities
+    purchase_order_line_ids = fields.One2many('purchase.order.line', 'product_id', string="PO Lines")  # used to compute quantities
     monthly_demand = fields.Float(compute='_compute_monthly_demand')
+    suggested_qty = fields.Integer(compute="_compute_suggested_quantity")
+    suggest_estimated_price = fields.Float(compute='_compute_suggest_estimated_price')
 
-    @api.depends_context('monthly_demand_start_date', 'monthly_demand_limit_date', 'warehouse_id', 'suggest_based_on')
+    @api.depends("monthly_demand")
+    @api.depends_context("suggest_based_on", "suggest_days", "suggest_percent", "warehouse_id")
+    def _compute_suggested_quantity(self):
+        """ IMPROVE: computes too many time for one suggestion """
+        ctx = self.env.context
+        for product in self:
+            if not ctx.get("suggest_based_on"):
+                product.suggested_qty = 0
+                continue
+            elif ctx.get("suggest_based_on") == "actual_demand":
+                qty = - product.virtual_available * ctx.get("suggest_percent", 0) / 100
+            else:
+                monthly_ratio = ctx.get("suggest_days", 0) / (365.25 / 12)  # eg. 7 days / (365.25 days/yr / 12 mth/yr) = 0.23 months
+                qty = product.monthly_demand * monthly_ratio * ctx.get("suggest_percent", 0) / 100
+                qty -= max(product.qty_available, 0) + max(product.incoming_qty, 0)
+            product.suggested_qty = max(float_round(qty, precision_digits=0, rounding_method="UP"), 0)
+
+    @api.depends("monthly_demand")
+    @api.depends_context("suggest_based_on", "suggest_days", "suggest_percent", "warehouse_id")
+    def _compute_suggest_estimated_price(self):
+        """ IMPROVE: computes too many time for one suggestion """
+        seller_args = {
+            "partner_id": self.env['res.partner'].browse(self.env.context.get("partner_id")),
+            "params": {'order_id': self.env['purchase.order'].browse(self.env.context.get("order_id"))}
+        }
+        for product in self:
+            product.suggest_estimated_price = 0.0
+            if product.suggested_qty <= 0:
+                continue
+            # Get lowest price pricelist for suggested_qty or lowest min_qty pricelist
+            seller = product._select_seller(quantity=product.suggested_qty, **seller_args) or \
+                     product._select_seller(quantity=None, ordered_by="min_qty", **seller_args)
+
+            price = seller.price_discounted if seller else product.standard_price
+            product.suggest_estimated_price = price * product.suggested_qty
+
+    @api.depends_context('suggest_days', 'suggest_based_on', 'warehouse_id')
+    def _compute_quantities(self):
+        return super()._compute_quantities()
+
+    def _compute_quantities_dict(self, lot_id, owner_id, package_id, from_date=False, to_date=False):
+        if self.env.context.get("suggest_based_on") and "suggest_days" in self.env.context:
+            # Override to compute actual demand suggestion and update forecast on Kanban card
+            if self.env.context.get("suggest_based_on") == "actual_demand":
+                to_date = fields.Datetime.now() + relativedelta(days=self.env.context.get("suggest_days"))
+        return super()._compute_quantities_dict(
+            lot_id=lot_id,
+            owner_id=owner_id,
+            package_id=package_id,
+            from_date=from_date,  # Keeping default which fetches all past deliveries
+            to_date=to_date,
+        )
+
+    @api.depends_context('suggest_based_on', 'warehouse_id')
     def _compute_monthly_demand(self):
-        start_date = self.env.context.get('monthly_demand_start_date', fields.Datetime.now() - relativedelta(months=1))
-        limit_date = self.env.context.get('monthly_demand_limit_date', fields.Datetime.now())
+        based_on = self.env.context.get("suggest_based_on", "last_30_days")
         warehouse_id = self.env.context.get('warehouse_id')
+        start_date, limit_date = self._get_monthly_demand_range(based_on)
+
         move_domain = Domain([
             ('product_id', 'in', self.ids),
             ('state', 'in', ['assigned', 'confirmed', 'partially_available', 'done']),
@@ -49,7 +107,6 @@ class ProductProduct(models.Model):
         move_qty_by_products = self.env['stock.move']._read_group(move_domain, ['product_id'], ['product_qty:sum'])
         qty_by_product = {product.id: qty for product, qty in move_qty_by_products}
 
-        based_on = self.env.context.get("suggest_based_on", "this_month")
         factor = 1
         if based_on == "one_year":
             factor = 12
@@ -120,6 +177,33 @@ class ProductProduct(models.Model):
                         ('orderpoint_id.warehouse_id', 'in', warehouse_ids)
             ]))
         return rfq_domain & Domain.OR(domains or [Domain.TRUE])
+
+    def _get_monthly_demand_range(self, based_on):
+        start_date = limit_date = datetime.now()
+
+        if not based_on or based_on == 'actual_demand' or based_on == 'last_30_days':
+            start_date = start_date - relativedelta(days=30)  # Default monthly demand
+        elif based_on == 'one_week':
+            start_date = start_date - relativedelta(weeks=1)
+        elif based_on == 'three_months':
+            start_date = start_date - relativedelta(months=3)
+        elif based_on == 'one_year':
+            start_date = start_date - relativedelta(years=1)
+        else:  # Relative period of time.
+            today = datetime.now()
+            start_date = datetime(year=today.year - 1, month=today.month, day=1)
+
+            if based_on == 'last_year_m_plus_1':
+                start_date += relativedelta(months=1)
+            elif based_on == 'last_year_m_plus_2':
+                start_date += relativedelta(months=2)
+
+            if based_on == 'last_year_quarter':
+                limit_date = start_date + relativedelta(months=3)
+            else:
+                limit_date = start_date + relativedelta(months=1)
+
+        return start_date, limit_date
 
 
 class ProductSupplierinfo(models.Model):

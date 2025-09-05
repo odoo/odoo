@@ -7,17 +7,17 @@ class PurchaseOrderSuggest extends models.Model {
     _name = "purchase.order.suggest";
     based_on = fields.Selection({
         selection: [
-            ["actual_demand", "Actual Demand"],
+            ["actual_demand", "Forecasted"],
             ["one_week", "Last 7 days"],
-            ["one_month", "Last 30 days"],
+            ["last_30_days", "Last 30 days"],
             ["three_months", "Last 3 months"],
             ["one_year", "Last 12 months"],
             ["last_year", "Same month last year"],
-            ["last_year_2", "Next month last year"],
-            ["last_year_3", "After next month last year"],
+            ["last_year_m_plus_1", "Next month last year"],
+            ["last_year_m_plus_2", "After next month last year"],
             ["last_year_quarter", "Last year quarter"],
         ],
-        default: "one_month",
+        default: "last_30_days",
         string: "Based on",
     });
     _views = {

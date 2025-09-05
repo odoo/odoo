@@ -114,6 +114,51 @@ class PurchaseOrder(models.Model):
         action['views'] = [(kanban_view_id, view_type) if view_type == 'kanban' else (view_id, view_type) for (view_id, view_type) in action['views']]
         return action
 
+    def _get_action_add_from_catalog_extra_context(self):
+        return {
+            **super()._get_action_add_from_catalog_extra_context(),
+            'warehouse_id': self.picking_type_id.warehouse_id.id if self.picking_type_id else False,
+            'vendor_name': self.partner_id.display_name,
+            'vendor_suggest_days': self.partner_id.suggest_days,
+            'vendor_suggest_based_on': self.partner_id.suggest_based_on,
+            'vendor_suggest_percent': self.partner_id.suggest_percent,
+            'po_state': self.state,
+        }
+
+    @api.model
+    def action_purchase_order_suggest(self, purchase_order_id, product_domain, suggest_ctx):
+        """ Adds suggested products to PO, removing products with no suggested_qty, and
+        collapsing existing po_lines into at most 1 orderline. Saves suggestion params
+        (eg. number_of_days) to partner table. """
+        po = self.browse(purchase_order_id).ensure_one()
+        products = self.env['product.product'].with_context(suggest_ctx).search(product_domain)
+
+        po.partner_id.suggest_days = suggest_ctx.get('suggest_days')
+        po.partner_id.suggest_based_on = suggest_ctx.get('suggest_based_on')
+        po.partner_id.suggest_percent = suggest_ctx.get('suggest_percent')
+
+        po_lines_commands = []
+        for product in products:
+            suggest_line = self.env['purchase.order.line']._prepare_purchase_order_line(
+                product,
+                product.suggested_qty,
+                product.uom_id,
+                po.company_id,
+                po.partner_id,
+                po
+            )
+            existing_po_lines = po.order_line.filtered(lambda pol: pol.product_id == product)
+            if existing_po_lines:
+                # Collapse into 1 or 0 po line, discarding previous data in favor of suggested qtys
+                to_unlink = existing_po_lines if product.suggested_qty == 0 else existing_po_lines[:-1]
+                po_lines_commands += [Command.unlink(line.id) for line in to_unlink]
+                if product.suggested_qty > 0:
+                    po_lines_commands.append(Command.update(existing_po_lines[-1].id, suggest_line))
+            elif product.suggested_qty > 0:
+                po_lines_commands.append(Command.create(suggest_line))
+
+        po.order_line = po_lines_commands
+
     def button_approve(self, force=False):
         result = super(PurchaseOrder, self).button_approve(force=force)
         self._create_picking()
@@ -369,3 +414,19 @@ class PurchaseOrder(models.Model):
 
     def _is_display_stock_in_catalog(self):
         return True
+
+    def _get_product_catalog_order_line_info(self, product_ids, child_field=False, **kwargs):
+        """ Add suggest_ctx to env in order to trigger product.product suggest compute fields"""
+        if kwargs.get('suggest_based_on'):
+            suggest_keys = ('suggest_days', 'suggest_based_on', 'suggest_percent', 'warehouse_id')
+            suggest_ctx = {k: v for k, v in kwargs.items() if k in suggest_keys}
+            return super(PurchaseOrder, self.with_context(suggest_ctx))._get_product_catalog_order_line_info(
+                product_ids, child_field=child_field, **kwargs
+            )
+        return super()._get_product_catalog_order_line_info(product_ids, child_field=child_field, **kwargs)
+
+    def _get_product_price_and_data(self, product):
+        """ Fetch the product's data used by the purchase's catalog."""
+        res = super()._get_product_price_and_data(product)
+        res["suggested_qty"] = product.suggested_qty
+        return res

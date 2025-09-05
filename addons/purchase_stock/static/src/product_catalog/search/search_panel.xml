@@ -6,34 +6,50 @@
             <attribute name="t-call">purchase_stock.SearchPanelContent</attribute>
         </xpath>
     </t>
-    <t t-name="purchase_stock.SearchPanelContent" t-inherit="web.SearchPanelContent" t-inherit-mode="primary">
-        <xpath expr="//div[hasclass('o_search_panel')]/section" position="before">
-            <t t-call="PurchaseSuggest.SearchPanel.Header"/>
-            <t t-if="wizard.suggestToggle.isOn">
-                <div class="o_suggest_feature">
-                    <t t-call="PurchaseSuggest.SearchPanel.DaysInput"/>
-                    <t t-call="PurchaseSuggest.SearchPanel.BasedOn"/>
-                    <t t-call="PurchaseSuggest.SearchPanel.Footer"/>
-                </div>
+    <t t-name="purchase_stock.SearchPanelContent" t-inherit="product.SearchPanelContent" t-inherit-mode="primary">
+        <xpath expr="//section[hasclass('o_search_panel_sections')]" position="attributes">
+            <attribute name="class">o_search_panel_sections mt-3</attribute>
+        </xpath>
+        <xpath expr="//section[hasclass('o_search_panel_sections')]" position="before">
+            <t t-if="displaySuggest">
+                <t t-call="PurchaseSuggest.SearchPanel.Header"/>
+                <t t-if="suggest.suggestToggle.isOn">
+                    <div class="o_suggest_feature">
+                        <t t-call="PurchaseSuggest.SearchPanel.DaysInput"/>
+                        <t t-call="PurchaseSuggest.SearchPanel.BasedOn"/>
+                        <t t-call="PurchaseSuggest.SearchPanel.Footer"/>
+                    </div>
+                </t>
             </t>
         </xpath>
     </t>
     <!-- ───────────────── Header ───────────────── -->
     <t t-name="PurchaseSuggest.SearchPanel.Header">
-        <header class="pt-4 pb-2 text-uppercase cursor-default" t-att-title="tooltipTitle">
-            <i class="fa fa-lg fa-lightbulb-o text-primary me-2"/>
-            <b class="me-2">Suggest</b>
-            <button name="toggle_suggest_catalog" class="fa fa-lg bg-white border-0 text-primary"
-                t-attf-class="fa-toggle-{{wizard.suggestToggle.isOn ? 'on' : 'off'}}"
-                t-on-click.stop="onSuggestToggle"/>
-        </header>
+        <div class="d-flex pt-4 pb-2 mt-3">
+            <header class=" text-uppercase cursor-default" t-att-title="tooltipTitle">
+                <i class="fa fa-lg fa-lightbulb-o text-primary me-2"/>
+                <b class="me-2">Suggest</b>
+            </header>
+            <div class="d-flex align-items-center ms-auto">
+                <span class="me-2">Activate</span>
+                <div name="search-suggest-toggle" class="form-check form-switch mb-0">
+                    <input
+                        class="form-check-input"
+                        type="checkbox"
+                        role="switch"
+                        t-att-checked="suggest.suggestToggle.isOn? true : false"
+                        t-on-click="onSuggestToggle"
+                    />
+                </div>
+            </div>
+        </div>
     </t>
     <!-- ───────────────── “Replenish for X day(s)” ───────────────── -->
     <t t-name="PurchaseSuggest.SearchPanel.DaysInput">
         <div class="d-flex align-items-center ms-2">
             <span class="me-2 fw-bold">Replenish for</span>
             <input type="text" inputmode="numeric" class="o_PurchaseSuggestInput"
-                t-att-value="wizard.numberOfDays"
+                t-att-value="suggest.numberOfDays"
                 t-on-input="onDaysInput"/>
             <span class="ms-2">day(s)</span>
         </div>
@@ -47,7 +63,7 @@
             </div>
             <span class="m-1">x</span>
             <input type="text" inputmode="numeric" class="o_PurchaseSuggestInput"
-                t-att-value="wizard.percentFactor"
+                t-att-value="suggest.percentFactor"
                 t-on-input="onPercentFactorInput"/>
             <span>%</span>
         </div>
@@ -56,8 +72,7 @@
     <t t-name="PurchaseSuggest.SearchPanel.Footer">
         <div class="d-flex align-items-center mt-3 ms-2">
             <div class="text-info fw-bold">
-                <span class="me-1"><t t-out="wizard.currencySymbol"/></span>
-                <span name="suggest_total"><t t-out="wizard.estimatedPrice"/></span>
+                <span name="suggest_total"><t t-out="estimatedSuggestPrice"/></span>
             </div>
             <button name="suggest_add_all" class="btn btn-sm btn-primary ms-2" t-on-click="addAllProducts">
                 Add All
