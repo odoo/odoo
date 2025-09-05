@@ -16,7 +16,7 @@ class MrpProduction(models.Model):
         'stock.move.line', string="Detail Component", readonly=False,
         inverse='_inverse_move_line_raw_ids', compute='_compute_move_line_raw_ids'
     )
-    subcontracting_has_been_recorded = fields.Boolean("Has been recorded?", copy=False)
+    subcontracting_has_been_recorded = fields.Boolean("Has been recorded?", copy=False)  # TODO: remove in master
     subcontractor_id = fields.Many2one('res.partner', string="Subcontractor", help="Used to restrict access to the portal user through Record Rules")
     bom_product_ids = fields.Many2many('product.product', compute="_compute_bom_product_ids", help="List of Products used in the BoM, used to filter the list of products in the subcontracting portal view")
 
@@ -103,12 +103,6 @@ class MrpProduction(models.Model):
     def _should_postpone_date_finished(self, date_finished):
         return super()._should_postpone_date_finished(date_finished) and not self._get_subcontract_move()
 
-    def _has_been_recorded(self):
-        self.ensure_one()
-        if self.state in ('cancel', 'done'):
-            return True
-        return self.subcontracting_has_been_recorded
-
     def _has_workorders(self):
         if self.subcontractor_id:
             return False
@@ -119,7 +113,7 @@ class MrpProduction(models.Model):
         return self.move_finished_ids.move_dest_ids.filtered(lambda m: m.is_subcontract)
 
     def _get_writeable_fields_portal_user(self):
-        return ['move_line_raw_ids', 'lot_producing_ids', 'subcontracting_has_been_recorded', 'qty_producing', 'product_qty']
+        return ['move_line_raw_ids', 'lot_producing_ids', 'qty_producing', 'product_qty']
 
     def action_split_subcontracting(self):
         self.ensure_one()
