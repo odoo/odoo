@@ -110,12 +110,10 @@
 
             'html_editor/static/src/scss/bootstrap_overridden.scss',
 
-            'web/static/src/libs/fontawesome/css/font-awesome.css',
-            'web/static/lib/odoo_ui_icons/*',
+            ('include', 'web.icons_fonts'),
             'web/static/src/scss/animation.scss',
             'web/static/src/scss/mimetypes.scss',
             'web/static/src/scss/ui.scss',
-            'web/static/src/scss/fontawesome_overridden.scss',
 
             ('include', 'html_builder.assets_inside_builder_iframe'),
             ('include', 'mass_mailing.assets_mail_themes'),
