@@ -99,8 +99,10 @@ class WebManifest(http.Controller):
         })
 
     @http.route('/scoped_app', type='http', auth='public', methods=['GET'])
-    def scoped_app(self, app_id, path='', app_name=''):
+    def scoped_app(self, app_id=None, path='', app_name=''):
         """ Returns the app shortcut page to install the app given in parameters """
+        if not app_id:
+            return request.redirect('/web')
         app_name = unquote(app_name) if app_name else self._get_scoped_app_name(app_id)
         path = f"/{unquote(path)}"
         scoped_app_values = {
