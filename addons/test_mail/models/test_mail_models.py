@@ -88,6 +88,7 @@ class MailTestGateway(models.Model):
     name = fields.Char()
     email_from = fields.Char()
     custom_field = fields.Char()
+    user_id = fields.Many2one('res.users', 'Responsible')
 
     @api.model
     def message_new(self, msg_dict, custom_values=None):

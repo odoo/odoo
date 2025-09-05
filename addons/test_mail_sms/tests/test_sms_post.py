@@ -38,18 +38,6 @@ class TestSMSPost(SMSCommon, TestSMSRecipients, CronMixinCase):
         self.assertEqual(messages.subtype_id, self.env.ref('mail.mt_note'))
         self.assertSMSNotification([{'partner': self.partner_1}], '<p>Mega SMS<br/>Top moumoutte</p>', messages)
 
-    def test_message_sms_internals_resend_existingd(self):
-        with self.with_user('employee'), self.mockSMSGateway(sim_error='wrong_number_format'):
-            test_record = self.env['mail.test.sms'].browse(self.test_record.id)
-            messages = test_record._message_sms(self._test_body, partner_ids=self.partner_1.ids)
-
-        self.assertSMSNotification([{'partner': self.partner_1, 'state': 'exception', 'failure_type': 'sms_number_format'}], self._test_body, messages)
-
-        with self.with_user('employee'), self.mockSMSGateway():
-            test_record = self.env['mail.test.sms'].browse(self.test_record.id)
-            test_record._notify_thread_by_sms(messages, [{'id': self.partner_1.id, 'notif': 'sms'}], resend_existing=True)
-        self.assertSMSNotification([{'partner': self.partner_1}], self._test_body, messages)
-
     def test_message_sms_internals_sms_numbers(self):
         with self.with_user('employee'), self.mockSMSGateway():
             test_record = self.env['mail.test.sms'].browse(self.test_record.id)

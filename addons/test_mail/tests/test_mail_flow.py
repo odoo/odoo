@@ -440,7 +440,7 @@ class TestMailFlow(MailCommon, TestRecipients):
                         'mail_server_id': self.env['ir.mail_server'],
                         # notified: followers - already mailed, aka internal only
                         'notified_partner_ids': internal_partners,
-                        'parent_id': incoming_email,
+                        'parent_id': responsible_answer,
                         # same reasoning as email_to/cc
                         'partner_ids': external_partners - partner_sylvie,
                         'reply_to': formataddr((
