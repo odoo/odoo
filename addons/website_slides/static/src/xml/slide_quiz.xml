@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-name="slide.slide.quiz">
-        <div class="o_wslides_fs_quiz_container o_wslides_wrap h-100 w-100 overflow-auto pb-5">
+        <div class="o_wslides_js_quiz_container o_wslides_wrap h-100 w-100 overflow-auto pb-5">
             <div class="container">
                 <div t-if="quiz.descriptionSafe" t-out="quiz.descriptionSafe" class="mt-3" />
                 <div t-foreach="quiz.questions" t-as="question" t-key="question_index"

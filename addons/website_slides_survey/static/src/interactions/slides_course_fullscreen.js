@@ -1,7 +1,7 @@
 import { patch } from "@web/core/utils/patch";
-import { WebsiteSlidesCoursePageFullscreen } from "@website_slides/interactions/slides_course_page";
+import { WebsiteSlidesFullscreen } from "@website_slides/interactions/slides_course_fullscreen";
 
-patch(WebsiteSlidesCoursePageFullscreen.prototype, {
+patch(WebsiteSlidesFullscreen.prototype, {
     /**
      * Extend the renderSlide method so that slides of category "certification"
      * are also taken into account and rendered correctly
@@ -18,4 +18,8 @@ patch(WebsiteSlidesCoursePageFullscreen.prototype, {
         }
         return didRender;
     },
+
+    getAdditionalSlidesData(data) {
+        return { certificationId: Number(data.certificationId) };
+    }
 });

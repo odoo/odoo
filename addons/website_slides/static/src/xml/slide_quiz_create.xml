@@ -22,8 +22,7 @@
                 </div>
             </form>
             <div>
-                <t t-if="props.update" t-call="slide.quiz.update.buttons"/>
-                <t t-else="" t-call="slide.quiz.create.buttons"/>
+                <t t-call="slide.quiz.buttons"/>
                 <div class="ms-2 text-danger o_wslides_js_quiz_validation_error" t-att-class="{ 'd-none': !state.error }">
                     <i class="fa fa-close me-1"/>
                     <span class="o_wslides_js_quiz_validation_error_text"><t t-out="state.error || ''" /></span>
@@ -74,26 +73,13 @@
         </div>
     </t>
 
-    <t t-name="slide.quiz.create.buttons">
+    <t t-name="slide.quiz.buttons">
         <a
             t-on-click="onValidateQuestionClick"
             class="o_wslides_js_quiz_validate_question btn btn-primary text-white border me-1"
             role="button">
-            <span>Save</span>
-        </a>
-        <a
-            t-on-click="onCancelValidationClick"
-            class="o_wslides_js_quiz_cancel_question btn btn-light border" role="button">
-            <span>Cancel</span>
-        </a>
-    </t>
-
-    <t t-name="slide.quiz.update.buttons">
-        <a
-            t-on-click="onValidateQuestionClick"
-            class="o_wslides_js_quiz_validate_question o_wslides_js_quiz_update btn btn-primary text-white border me-1"
-            role="button">
-            <span>Update</span>
+            <span t-if="props.update">Update</span>
+            <span t-else="">Save</span>
         </a>
         <a
             t-on-click="onCancelValidationClick"

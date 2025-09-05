@@ -1,5 +1,5 @@
-import { Component, onMounted, useState, useRef, onWillDestroy } from "@odoo/owl";
-import { useService } from "@web/core/utils/hooks";
+import { Component, useEffect, useState, useRef } from "@odoo/owl";
+import { useAutofocus, useService } from "@web/core/utils/hooks";
 import { rpc } from "@web/core/network/rpc";
 import { _t } from "@web/core/l10n/translation";
 
@@ -41,20 +41,23 @@ export class WebsiteSlidesCourseQuizQuestionForm extends Component {
             ];
         }
 
-        this.inputRef = useRef("input");
+        this.inputRef = useAutofocus({ refName: "input" });
         this.formRef = useRef("form");
         this.sequenceRef = useRef("sequence");
 
-        this.bindedOnQuestionsReordered = this.onQuestionsReordered.bind(this);
-        this.bus.addEventListener("questions_reordered", this.bindedOnQuestionsReordered);
-
-        onMounted(() => {
-            this.inputRef.el.focus();
-        });
-
-        onWillDestroy(() => {
-            this.bus.removeEventListener("questions_reordered", this.bindedOnQuestionsReordered);
-        });
+        useEffect(
+            (update) => {
+                if (!update) {
+                    return;
+                }
+                const questionsReorderHandler = this.onQuestionsReordered.bind(this);
+                this.bus.addEventListener("questions_reordered", questionsReorderHandler);
+                return () => {
+                    this.bus.removeEventListener("questions_reordered", questionsReorderHandler);
+                };
+            },
+            () => [this.props.update]
+        );
     }
 
     onQuestionsReordered() {
@@ -124,9 +127,6 @@ export class WebsiteSlidesCourseQuizQuestionForm extends Component {
             const renderedQuestion = await rpc("/slides/slide/quiz/question_add_or_update", values);
             if (typeof renderedQuestion === "object" && renderedQuestion.error) {
                 this.state.error = renderedQuestion.error;
-            } else if (this.update) {
-                this.state.error = null;
-                this.props.onSave(renderedQuestion);
             } else {
                 this.state.error = null;
                 this.props.onSave(renderedQuestion);
@@ -158,15 +158,14 @@ export class WebsiteSlidesCourseQuizQuestionForm extends Component {
         for (const answerEl of formEl.querySelectorAll(".o_wslides_js_quiz_answer")) {
             const value = answerEl.querySelector(".o_wslides_js_quiz_answer_value").value;
             if (value.trim() !== "") {
-                const answer = {
+                answers.push({
                     sequence: sequence++,
                     text_value: value,
                     is_correct: answerEl.querySelector("input[type=radio]").checked,
                     comment: answerEl
                         .querySelector(".o_wslides_js_quiz_answer_comment input[type=text]")
                         .value.trim(),
-                };
-                answers.push(answer);
+                });
             }
         }
         return {

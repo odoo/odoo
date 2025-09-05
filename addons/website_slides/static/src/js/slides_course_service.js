@@ -15,13 +15,7 @@ const websiteSlidesService = {
         return object;
     },
     start() {
-        let setSlideReady;
-        let setQuizReady;
         const quizCache = {};
-        const ready = {
-            slide: new Promise((resolve) => (setSlideReady = resolve)),
-            quiz: new Promise((resolve) => (setQuizReady = resolve)),
-        };
         const data = {
             slides: [],
             // current slide
@@ -82,9 +76,10 @@ const websiteSlidesService = {
         };
         let beforeJoin = async () => {};
         let afterJoin = async () => document.location.reload();
+        let afterTogglingCompletion = () => {};
+        let collapseNextCategoryCallback = () => {};
         return {
             data,
-            ready,
             bus: new EventBus(),
             setSlides: (slides) => {
                 data.slides.length = 0;
@@ -109,7 +104,6 @@ const websiteSlidesService = {
                     }
                 }
                 Object.assign(data.slide, this.filter(slide));
-                setSlideReady();
             },
             setQuiz: (quiz, removeOld = false) => {
                 if (removeOld) {
@@ -119,7 +113,6 @@ const websiteSlidesService = {
                 }
                 Object.assign(data.quiz, this.filter(quiz));
                 quizCache[data.slide.id] = structuredClone(data.quiz);
-                setQuizReady();
             },
             setUser: (user) => {
                 Object.assign(data.user, this.filter(user));
@@ -129,6 +122,12 @@ const websiteSlidesService = {
             },
             registerAfterJoin: (f) => {
                 afterJoin = f;
+            },
+            registerAfterTogglingCompletion: (f) => {
+                afterTogglingCompletion = f;
+            },
+            registerCollapseNextCategoryCallback: (f) => {
+                collapseNextCategoryCallback = f;
             },
             joinChannel: async (channelId) => {
                 const data = await rpc("/slides/channel/join", { channel_id: channelId });
@@ -163,7 +162,34 @@ const websiteSlidesService = {
                 }
                 quizCache[data.slide.id] = structuredClone(data.quiz);
                 data.slide.hasQuestion = data.quiz.questionCount > 0;
-                setQuizReady();
+            },
+            async toggleCompletion(slide, completed = true) {
+                if (
+                    !!slide.completed === !!completed ||
+                    !data.channel.isMember ||
+                    (completed && !slide.canSelfMarkCompleted) ||
+                    (!completed && !slide.canSelfMarkUncompleted)
+                ) {
+                    // no useless RPC call
+                    return false;
+                }
+                const res = await rpc(`/slides/slide/${completed ? "set_completed" : "set_uncompleted"}`, {
+                    slide_id: slide.id,
+                });
+                data.channel.completion = res.channel_completion;
+                if (slide.id === data.slide.id) {
+                    data.slide.completed = completed;
+                }
+                const slides = data.slides.filter((s) => s.id === slide.id);
+                for (const slide of slides) {
+                    slide.completed = completed;
+                }
+                slide.completed = completed;
+
+                afterTogglingCompletion && afterTogglingCompletion(slide);
+                if (collapseNextCategoryCallback && res.next_category_id) {
+                    collapseNextCategoryCallback(res.next_category_id);
+                }
             },
         };
     },

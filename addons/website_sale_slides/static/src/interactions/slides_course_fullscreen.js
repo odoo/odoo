@@ -1,7 +1,7 @@
 import { patch } from "@web/core/utils/patch";
-import { WebsiteSlidesCoursePageFullscreen } from "@website_slides/interactions/slides_course_page";
+import { WebsiteSlidesFullscreen } from "@website_slides/interactions/slides_course_fullscreen";
 
-patch(WebsiteSlidesCoursePageFullscreen.prototype, {
+patch(WebsiteSlidesFullscreen.prototype, {
     extractChannelData() {
         const data = this.el.dataset;
         return {

@@ -7,14 +7,14 @@ export function insertHtmlContent(interaction, content, locationEl, position) {
         return;
     }
     interaction.insert(contentEls[0], locationEl, position);
-    for (let i = 1; i < contentEls.length; i++) {
-        interaction.insert(contentEls[i], contentEls[i - 1], "afterend");
+    for (const contentEl of Array.from(contentEls)) {
+        interaction.insert(contentEl, locationEl, "beforeend");
     }
 }
 
 /**
  * Helper: Get the slide dict matching the given criteria
- * @param {Array<Object>} slideList List of dict reprensenting a slide
+ * @param {Array<Object>} slideList List of dict representing a slide
  * @param {[string] : any} matcher
  */
 export function findSlide(slideList, matcher) {

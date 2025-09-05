@@ -1,15 +1,20 @@
+import { Interaction } from "@web/public/interaction";
 import { registry } from "@web/core/registry";
-import { WebsiteSlidesCoursePage } from "./slides_course_page";
-import { _t } from "@web/core/l10n/translation";
 
-export class WebsiteSlidesCourseSlidesList extends WebsiteSlidesCoursePage {
+export class WebsiteSlidesSort extends Interaction {
     static selector = ".o_wslides_slides_list";
+
+    dynamicContent = {
+        ...this.dynamicContent,
+        ".o_wslides_slide_list_category_empty": {
+            "t-att-class": (el) => ({ "d-none": !this.isCategoryEmpty(el) }),
+        },
+    }
 
     setup() {
         super.setup();
         this.orm = this.services.orm;
         this.sortable = this.services.sortable;
-        this.channelId = Number(this.el.dataset.channelId);
         this.bindedSortable = [];
         this.updateHref();
         this.bindSortable();
@@ -70,38 +75,17 @@ export class WebsiteSlidesCourseSlidesList extends WebsiteSlidesCoursePage {
      * when the slides are reordered and show/hide the
      * "Empty category" placeholder.
      */
-    checkForEmptySections() {
-        for (const el of this.el.querySelectorAll(".o_wslides_slide_list_category")) {
-            const categoryHeaderEl = el.querySelector(".o_wslides_slide_list_category_header");
-            const categorySlideCount = el.querySelectorAll(
-                ".o_wslides_slides_list_slide:not(.o_not_editable)"
-            ).length;
-            const emptyFlagContainerEl = categoryHeaderEl.querySelector(
-                ".o_wslides_slides_list_drag"
-            );
-            const emptyFlagEl = emptyFlagContainerEl.querySelector("small");
-            if (categorySlideCount === 0 && !emptyFlagEl) {
-                const smallEl = document.createElement("small");
-                smallEl.classList.add("ms-1", "text-muted", "fw-bold");
-                smallEl.textContent = _t("(empty)");
-                this.insert(smallEl, emptyFlagContainerEl);
-            } else if (categorySlideCount > 0 && emptyFlagEl) {
-                emptyFlagEl.remove();
-            }
-        }
+    isCategoryEmpty(el) {
+        const categoryHeaderEl = el.closest('.o_wslides_slide_list_category');
+        return categoryHeaderEl?.querySelectorAll('.o_wslides_slides_list_slide:not(.o_not_editable)').length == 0;
     }
 
     getSlides() {
-        const categories = [];
-        for (const el of this.el.querySelectorAll(".o_wslides_js_list_item")) {
-            categories.push(parseInt(el.dataset.slideId));
-        }
-        return categories;
+        return [...this.el.querySelectorAll(".o_wslides_js_list_item")].map((el) => parseInt(el.dataset.slideId));
     }
 
     async reorderSlides() {
         await this.waitFor(this.orm.webResequence("slide.slide", this.getSlides()));
-        this.checkForEmptySections();
     }
 
     /**
@@ -123,4 +107,4 @@ export class WebsiteSlidesCourseSlidesList extends WebsiteSlidesCoursePage {
 
 registry
     .category("public.interactions")
-    .add("website_slides.WebsiteSlidesCourseSlidesList", WebsiteSlidesCourseSlidesList);
+    .add("website_slides.WebsiteSlidesSort", WebsiteSlidesSort);
