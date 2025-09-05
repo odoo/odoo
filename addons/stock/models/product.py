@@ -123,7 +123,10 @@ class Product(models.Model):
         'location', 'warehouse', 'allowed_company_ids'
     )
     def _compute_quantities(self):
-        products = self.with_context(prefetch_fields=False).filtered(lambda p: p.type != 'service').with_context(prefetch_fields=True)
+        if not self.env.context.get('skip_products_filter'):
+            products = self.with_context(prefetch_fields=False).filtered(lambda p: p.type != 'service').with_context(prefetch_fields=True)
+        else:
+            products = self
         res = products._compute_quantities_dict(self._context.get('lot_id'), self._context.get('owner_id'), self._context.get('package_id'), self._context.get('from_date'), self._context.get('to_date'))
         for product in products:
             product.update(res[product.id])
@@ -173,17 +176,17 @@ class Product(models.Model):
         moves_in_res = {product.id: product_qty for product, product_qty in Move._read_group(domain_move_in_todo, ['product_id'], ['product_qty:sum'])}
         moves_out_res = {product.id: product_qty for product, product_qty in Move._read_group(domain_move_out_todo, ['product_id'], ['product_qty:sum'])}
         quants_res = {product.id: (quantity, reserved_quantity) for product, quantity, reserved_quantity in Quant._read_group(domain_quant, ['product_id'], ['quantity:sum', 'reserved_quantity:sum'])}
+        moves_in_res_past = defaultdict(float)
+        moves_out_res_past = defaultdict(float)
         if dates_in_the_past:
             # Calculate the moves that were done before now to calculate back in time (as most questions will be recent ones)
             domain_move_in_done = [('state', '=', 'done'), ('date', '>', to_date)] + domain_move_in_done
             domain_move_out_done = [('state', '=', 'done'), ('date', '>', to_date)] + domain_move_out_done
 
             groupby = ['product_id', 'product_uom']
-            moves_in_res_past = defaultdict(float)
             for product, uom, quantity in Move._read_group(domain_move_in_done, groupby, ['quantity:sum']):
                 moves_in_res_past[product.id] += uom._compute_quantity(quantity, product.uom_id)
 
-            moves_out_res_past = defaultdict(float)
             for product, uom, quantity in Move._read_group(domain_move_out_done, groupby, ['quantity:sum']):
                 moves_out_res_past[product.id] += uom._compute_quantity(quantity, product.uom_id)
 
@@ -191,7 +194,13 @@ class Product(models.Model):
         for product in self.with_context(prefetch_fields=False):
             origin_product_id = product._origin.id
             product_id = product.id
-            if not origin_product_id:
+            if not origin_product_id or (
+                origin_product_id not in quants_res
+                and origin_product_id not in moves_in_res
+                and origin_product_id not in moves_out_res
+                and origin_product_id not in moves_in_res_past
+                and origin_product_id not in moves_out_res_past
+                ):
                 res[product_id] = dict.fromkeys(
                     ['qty_available', 'free_qty', 'incoming_qty', 'outgoing_qty', 'virtual_available'],
                     0.0,
@@ -370,9 +379,13 @@ class Product(models.Model):
         ids = []
         # Order the search on `id` to prevent the default order on the product name which slows
         # down the search because of the join on the translation table to get the translated names.
-        for product in self.with_context(prefetch_fields=False).search([], order='id'):
+        products = self.with_context(prefetch_fields=False).search([('type', '!=', 'service')], order='id')
+        for product in products.with_context(skip_products_filter=True):
             if OPERATORS[operator](product[field], value):
                 ids.append(product.id)
+        # All services have 0.0 quantity
+        if OPERATORS[operator](0.0, value):
+            ids += self.search(['type', '=', 'service']).ids
         return [('id', 'in', ids)]
 
     def _search_qty_available_new(self, operator, value, lot_id=False, owner_id=False, package_id=False):
