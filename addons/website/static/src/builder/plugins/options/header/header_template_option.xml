@@ -11,7 +11,7 @@
                             action: 'websiteConfig',
                             actionParam: {
                                 views: ['website.template_header_default'],
-                                vars: { 'header-links-style': 'default', 'header-template': 'default' },
+                                vars: { 'header-template': 'default' },
                                 checkVars: false,
                             }
                         }
@@ -26,7 +26,7 @@
                             action: 'websiteConfig',
                             actionParam: {
                                 views: ['website.template_header_hamburger', 'website.no_autohide_menu'],
-                                vars: { 'header-links-style': 'default', 'header-template': 'hamburger' },
+                                vars: { 'header-template': 'hamburger' },
                                 checkVars: false,
                             }
                         }
@@ -40,8 +40,8 @@
                         {
                             action: 'websiteConfig',
                             actionParam: {
-                                views: ['website.header_navbar_pills_style','website.template_header_boxed'],
-                                vars: { 'header-links-style': 'pills', 'header-template': 'boxed' },
+                                views: ['website.template_header_boxed'],
+                                vars: { 'header-template': 'boxed' },
                                 checkVars: false,
                             }
                         }
@@ -56,7 +56,7 @@
                             action: 'websiteConfig',
                             actionParam: {
                                 views: ['website.template_header_stretch'],
-                                vars: { 'header-links-style': 'default', 'header-template': 'stretch' },
+                                vars: { 'header-template': 'stretch' },
                                 checkVars: false,
                             }
                         }
@@ -71,7 +71,7 @@
                             action: 'websiteConfig',
                             actionParam: {
                                 views: ['website.template_header_vertical'],
-                                vars: { 'header-links-style': 'default', 'header-template': 'vertical' },
+                                vars: { 'header-template': 'vertical' },
                                 checkVars: false,
                             }
                         }
@@ -86,7 +86,7 @@
                             action: 'websiteConfig',
                             actionParam: {
                                 views: ['website.template_header_search'],
-                                vars: { 'header-links-style': 'default', 'header-template': 'search' },
+                                vars: { 'header-template': 'search' },
                                 checkVars: false,
                             }
                         }
@@ -101,7 +101,7 @@
                             action: 'websiteConfig',
                             actionParam: {
                                 views: ['website.template_header_sales_one'],
-                                vars: { 'header-links-style': 'default', 'header-template': 'sales_one' },
+                                vars: { 'header-template': 'sales_one' },
                                 checkVars: false,
                             }
                         }
@@ -116,7 +116,7 @@
                             action: 'websiteConfig',
                             actionParam: {
                                 views: ['website.template_header_sales_two'],
-                                vars: { 'header-links-style': 'default', 'header-template': 'sales_two' },
+                                vars: { 'header-template': 'sales_two' },
                                 checkVars: false,
                             }
                         }
@@ -131,7 +131,7 @@
                             action: 'websiteConfig',
                             actionParam: {
                                 views: ['website.template_header_sales_three'],
-                                vars: { 'header-links-style': 'default', 'header-template': 'sales_three' },
+                                vars: { 'header-template': 'sales_three' },
                                 checkVars: false,
                             }
                         }
@@ -146,7 +146,7 @@
                             action: 'websiteConfig',
                             actionParam: {
                                 views: ['website.template_header_sales_four'],
-                                vars: { 'header-links-style': 'default', 'header-template': 'sales_four' },
+                                vars: { 'header-template': 'sales_four' },
                                 checkVars: false,
                             }
                         }
@@ -161,7 +161,7 @@
                             action: 'websiteConfig',
                             actionParam: {
                                 views: ['website.template_header_sidebar', 'website.no_autohide_menu'],
-                                vars: { 'header-links-style': 'default', 'header-template': 'sidebar' },
+                                vars: { 'header-template': 'sidebar' },
                                 checkVars: false,
                             }
                         }
@@ -229,17 +229,25 @@
                 }"/>
         </BuilderRow>
 
-        <BuilderRow t-if="!isActiveItem('header_sidebar_opt')" label.translate="Content Width"  level="1">
-            <BuilderButtonGroup action="'previewableWebsiteConfig'" applyTo="'#o_main_nav'">
-                <BuilderButton 
+        <t t-set="noPreviewOptionsContentWidth" t-value="[
+            'header_search_opt',
+            'header_sales_one_opt',
+            'header_sales_two_opt',
+            'header_sales_three_opt',
+            'header_sales_four_opt',
+        ]"/>
+        <BuilderRow t-if="!isActiveItem('header_sidebar_opt')" label.translate="Content Width" level="1">
+            <BuilderButtonGroup applyTo="'#o_main_nav'"
+                    action="hasSomeOptions(noPreviewOptionsContentWidth) and 'websiteConfig' or 'previewableWebsiteConfig'">
+                <BuilderButton
                     title.translate="Small"
                     iconImg="'/website/static/src/img/snippets_options/content_width_small.svg'"
                     actionParam="{ views: ['website.header_width_small'], previewClass: `o_container_small`}"/>
-                <BuilderButton 
+                <BuilderButton
                     title.translate="Regular"
                     iconImg="'/website/static/src/img/snippets_options/content_width_normal.svg'"
                     actionParam="{ views: [], previewClass: `container`}"/>
-                <BuilderButton 
+                <BuilderButton
                     title.translate="Full"
                     iconImg="'/website/static/src/img/snippets_options/content_width_full.svg'"
                     actionParam="{ views: ['website.header_width_full'], previewClass: `container-fluid`}"/>

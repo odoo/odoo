@@ -131,12 +131,7 @@
         </BuilderSelect>
     </BuilderRow>
 
-    <t t-set="excludedViewsLinkStyle" t-value="[
-        'website.template_header_hamburger',
-        'website.template_header_stretch',
-        'website.template_header_sidebar',
-    ]"/>
-    <BuilderRow label.translate="Link Style" tooltip.translate="Style of menu items" t-if="!hasSomeViews(excludedViewsLinkStyle)">
+    <BuilderRow label.translate="Link Style" tooltip.translate="Style of menu items">
         <BuilderSelect action="'websiteConfig'">
             <BuilderSelectItem
                 id="'option_header_navbar_links_default'"
