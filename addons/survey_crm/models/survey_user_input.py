@@ -1,4 +1,3 @@
-import ast
 from markupsafe import Markup, escape
 
 from odoo import fields, models, _
@@ -220,10 +219,6 @@ class SurveyUser_Input(models.Model):
         ''' Shows the lead associated, created from inputs '''
         self.ensure_one()
         action = self.env['ir.actions.act_window']._for_xml_id('crm.crm_lead_opportunities')
-        action["context"] = dict(
-            ast.literal_eval(action.get('context', '{}').strip()),  # ".strip()" prevents a crash of literal_eval which doesn't interpret the "\n" after the dictionary is closed in the string
-            create=False,
-        )
         action['views'] = [((self.env.ref('crm.crm_lead_view_form').id), 'form')]
         action['res_id'] = self.lead_id.id
         return action
