@@ -622,16 +622,17 @@ class DiscussChannelMember(models.Model):
             last seen message.
         """
         self.ensure_one()
-        if self.seen_message_id.id >= message.id:
-            return
-        self.fetched_message_id = max(self.fetched_message_id.id, message.id)
-        self.seen_message_id = message.id
-        self.last_seen_dt = fields.Datetime.now()
+        bus_channel = self._bus_channel()
+        if self.seen_message_id.id < message.id:
+            self.write({
+                "fetched_message_id": max(self.fetched_message_id.id, message.id),
+                "seen_message_id": message.id,
+                "last_seen_dt": fields.Datetime.now(),
+            })
+            if self.channel_id.channel_type in self.channel_id._types_allowing_seen_infos():
+                bus_channel = self.channel_id
         if not notify:
             return
-        bus_channel = self._bus_channel()
-        if self.channel_id.channel_type in self.channel_id._types_allowing_seen_infos():
-            bus_channel = self.channel_id
         Store(bus_channel=bus_channel).add(
             self,
             [
@@ -648,6 +649,17 @@ class DiscussChannelMember(models.Model):
         """
         self.ensure_one()
         if message_id == self.new_message_separator:
+            bus_last_id = self.env["bus.bus"].sudo()._bus_last_id()
+            Store(bus_channel=self._bus_channel()).add(
+                self,
+                [
+                    Store.One("channel_id", [], as_thread=True),
+                    "message_unread_counter",
+                    {"message_unread_counter_bus_id": bus_last_id},
+                    "new_message_separator",
+                    *self.env["discuss.channel.member"]._to_store_persona([]),
+                ],
+            ).bus_send()
             return
         self.new_message_separator = message_id
 
