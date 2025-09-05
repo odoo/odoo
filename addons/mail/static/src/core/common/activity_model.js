@@ -52,7 +52,6 @@ export class Activity extends Record {
     icon = "fa-tasks";
     mail_template_ids = fields.Many("mail.template");
     note = fields.Html("");
-    persona = fields.One("res.partner");
     /** @type {string} */
     res_model;
     /** @type {[number, string]} */
@@ -65,15 +64,14 @@ export class Activity extends Record {
     state;
     /** @type {string} */
     summary;
-    /** @type {[number, string]} */
-    user_id;
+    user_id = fields.One("res.users");
     /** @type {string} */
     write_date;
     /** @type {[number, string]} */
     write_uid;
 
     serialize() {
-        return JSON.parse(JSON.stringify(this.toData(["persona"])));
+        return JSON.parse(JSON.stringify(this.toData(["user_id"])));
     }
 }
 
