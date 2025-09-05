@@ -2,8 +2,6 @@ import { jsToPyLocale } from "@web/core/l10n/utils";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from '@web/core/registry';
 import { user } from "@web/core/user";
-import { loadBundle } from "@web/core/assets";
-import { ensureJQuery } from "@web/core/ensure_jquery";
 import { isVisible } from "@web/core/utils/ui";
 
 import { FullscreenIndication } from '../components/fullscreen_indication/fullscreen_indication';
@@ -281,10 +279,6 @@ export const websiteService = {
                         },
                     })
                 ).records;
-            },
-            async loadWysiwyg() {
-                await ensureJQuery();
-                await loadBundle('website.backend_assets_all_wysiwyg');
             },
             blockPreview(showLoader, processId) {
                 if (!blockingProcesses.length) {
