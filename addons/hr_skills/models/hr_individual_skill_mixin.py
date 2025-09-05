@@ -219,7 +219,7 @@ class HrIndividualSkillMixin(models.AbstractModel):
 
     def _compute_certification_skill_type_count(self):
         certification_skill_type_count = self.env['hr.skill.type'].search_count(domain=[('is_certification', '=', True)])
-        self.write({'certification_skill_type_count': certification_skill_type_count})
+        self.certification_skill_type_count = certification_skill_type_count
 
     #  To reset the validity period if the skill become certified or uncertified
     @api.onchange('is_certification')
