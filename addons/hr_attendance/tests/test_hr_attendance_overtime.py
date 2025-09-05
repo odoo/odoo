@@ -96,6 +96,7 @@ class TestHrAttendanceOvertime(TransactionCase):
                 })],
         })
 
+        cls.employee.ruleset_id = cls.ruleset
         cls.flexible_employee = cls.env['hr.employee'].create({
             'name': 'Flexi',
             'company_id': cls.company.id,

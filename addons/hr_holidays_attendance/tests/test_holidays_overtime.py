@@ -2,6 +2,7 @@
 
 from datetime import datetime
 
+from odoo import Command
 from odoo.tests import new_test_user
 from odoo.tests.common import TransactionCase, tagged
 
@@ -48,6 +49,31 @@ class TestHolidaysOvertime(TransactionCase):
             'allocation_validation_type': 'hr',
             'overtime_deductible': True,
         })
+
+        cls.ruleset = cls.env['hr.attendance.overtime.ruleset'].create({
+            'name': 'Ruleset schedule quantity',
+            'rule_ids': [
+                Command.create({
+                    'name': 'Rule schedule quantity',
+                    'base_off': 'quantity',
+                    'expected_hours_from_contract': True,
+                    'quantity_period': 'day',
+                }),
+                #Command.create({
+                #    'name': 'Rule leave',
+                #    'base_off': 'timing',
+                #    'timing_type': 'leave',
+                #}),
+                Command.create({
+                    'name': "Rule non working days",
+                    'base_off': 'timing',
+                    'timing_type': 'non_work_days',
+                }),
+            ],
+        })
+
+        cls.employee.ruleset_id = cls.ruleset
+        cls.employee.version_ids.sorted('date_version')[0].date_version = datetime(2020, 1, 1).date()
 
     def new_attendance(self, check_in, check_out=False):
         return self.env['hr.attendance'].sudo().create({

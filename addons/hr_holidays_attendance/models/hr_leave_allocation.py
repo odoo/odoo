@@ -34,13 +34,14 @@ class HrLeaveAllocation(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         res = super().create(vals_list)
+        deductible = self.env['hr.leave']._get_deductible_employee_overtime(res.employee_id)
         for allocation in res:
             if allocation.overtime_deductible:
-                duration = allocation.number_of_hours_display
+                duration = deductible[allocation.employee_id]
                 if duration > allocation.employee_id.sudo().total_overtime:
                     raise ValidationError(_('The employee does not have enough overtime hours to request this leave.'))
                 if not allocation.overtime_id:
-                    allocation.sudo().overtime_id = self.env['hr.attendance.overtime'].sudo().create({
+                    allocation.sudo().overtime_id = self.env['hr.attendance.overtime.line'].sudo().create({
                         'employee_id': allocation.employee_id.id,
                         'date': allocation.date_from,
                         'adjustment': True,

@@ -332,6 +332,8 @@ class HrAttendanceOvertimeRule(models.Model):
                 # TODO extract in method _get_employee_expected_hours?
                 if rule.expected_hours_from_contract:
                     schedule = version_map[employee][date].resource_calendar_id
+                    if not schedule:
+                        continue
                     expected_hours = {
                         'day': schedule.hours_per_day,
                         'week': schedule.hours_per_week,
@@ -421,7 +423,7 @@ class HrAttendanceOvertimeRule(models.Model):
 
     def _compute_information_display(self):
         timing_types = dict(self._fields['timing_type'].selection)
-        for rule in self.filtered(lambda r: r.base_off == 'quantity'):
+        for rule in self:
             if rule.base_off == 'quantity':
                 if rule.expected_hours_from_contract:
                     rule.information_display = self.env._("From Employee")
