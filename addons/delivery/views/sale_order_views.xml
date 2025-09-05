@@ -10,6 +10,18 @@
                 <!-- modified through an onchange, must be present but not readonly -->
                 <field name="recompute_delivery_price" invisible="1"/>
             </header>
+            <xpath expr="//label[@for='partner_shipping_id']" position="attributes">
+                <attribute name="invisible" add="(carrier_id and is_pickup_carrier)" separator="or"/>
+            </xpath>
+            <xpath expr="//label[@for='partner_shipping_id']" position="after">
+                <label for="partner_shipping_id" string="Pickup Point" invisible="not carrier_id or (carrier_id and not is_pickup_carrier)"/>
+            </xpath>
+            <xpath expr="//field[@name='partner_shipping_id']" position="attributes">
+                <attribute name="invisible" add="(carrier_id and is_pickup_carrier)" separator="or"/>
+            </xpath>
+            <xpath expr="//field[@name='partner_shipping_id']" position="after">
+                <field name="partner_shipping_id" invisible="not carrier_id or (carrier_id and not is_pickup_carrier)" widget="pickup_location_many2one"/>
+            </xpath>
             <div name="so_button_below_order_lines" position="inside">
                 <button
                     string="Add shipping"
