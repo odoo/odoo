@@ -21,11 +21,11 @@ registry.category("web_tour.tours").add('mass_mailing_dynamic_placeholder_tour',
             run: "edit Test Dynamic Placeholder",
         },
         {
-            trigger: ":iframe .o_mail_theme_selector_new",
+            trigger: ".o_mailing_template_preview_wrapper",
         },
         {
             content: "Pick the basic theme",
-            trigger: ':iframe #basic',
+            trigger: '.o_mailing_template_preview_wrapper [data-name="basic"]',
             run: "click",
         },
          {
@@ -44,7 +44,7 @@ registry.category("web_tour.tours").add('mass_mailing_dynamic_placeholder_tour',
         },
         {
             content: "Click on the the dynamic placeholder powerBox options",
-            trigger: '.oe-powerbox-commandName:contains("Dynamic Placeholder")',
+            trigger: '.o-we-command-name:contains("Dynamic Placeholder")',
             run: "click",
         },
         {

@@ -120,7 +120,7 @@ export class LinkPopover extends Component {
             isDocument: false,
             buttonSize: linkElement.className.match(/btn-(sm|lg)/)?.[1] || "",
             buttonShape: this.getButtonShape(),
-            customBorderSize: computedStyle.borderWidth.replace("px", "") || "1",
+            customBorderSize: computedStyle.borderWidth.replace("px", "") || "0",
             customBorderStyle: computedStyle.borderStyle || "solid",
             isImage: this.props.isImage,
             showReplaceTitleBanner: this.props.showReplaceTitleBanner,

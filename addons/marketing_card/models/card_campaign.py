@@ -249,13 +249,14 @@ class CardCampaign(models.Model):
             'name': _('Send Cards'),
             'res_model': 'mailing.mailing',
             'context': {
+                'create': False,
                 'default_subject': self.name,
                 'default_card_campaign_id': self.id,
                 'default_mailing_model_id': self.env['ir.model']._get_id(self.res_model),
                 'default_body_arch': self._action_share_get_default_body(),
             },
             'views': [[False, 'form']],
-            'target': 'new',
+            'target': 'current',
         }
 
     def _fetch_or_create_preview_card(self):
@@ -288,7 +289,7 @@ class CardCampaign(models.Model):
         # try to pick a relevant card if users try to visit during preview/test mailings
         preview_card = self._fetch_or_create_preview_card() if self else self.env['card.card']
         return f"""
-<div class="o_layout oe_unremovable oe_unmovable bg-200 o_empty_theme" data-name="Mailing">
+<div class="o_layout oe_unremovable oe_unmovable o_empty_theme" data-name="Mailing">
 <style id="design-element"></style>
 <div class="container o_mail_wrapper o_mail_regular oe_unremovable">
 <div class="row">
@@ -309,7 +310,8 @@ class CardCampaign(models.Model):
             <tr>
                 <td align="center">
                     <a href="/cards/{preview_card.id or 0}/preview" style="padding-left: 3px !important; padding-right: 3px !important">
-                        <img src="/web/image/card.campaign/{self.id or 0}/image_preview" alt="{_("Card Preview")}" class="img-fluid" style="width: 540px;"/>
+                        <img src="/web/image/card.campaign/{self.id or 0}/image_preview" alt="{_("Card Preview")}" class="img-fluid" style="width: 540px;"
+                            data-original-src="/web/image/card.campaign/{self.id or 0}/image_preview"/>
                     </a>
                 </td>
             </tr>

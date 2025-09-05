@@ -62,6 +62,12 @@ class TestEditor extends Component {
         if (this.props.onWillDestroy) {
             onWillDestroy(this.props.onWillDestroy);
         }
+        if (this.wysiwygProps.config.resources?.embedded_components) {
+            this.wysiwygProps.config.embeddedComponentInfo = {
+                app: this.__owl__.app,
+                env: this.env,
+            };
+        }
     }
 }
 

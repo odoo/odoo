@@ -1,0 +1,42 @@
+html:has(body:not(.o_mass_mailing_iframe_fullscreen)) {
+    height: auto !important;
+}
+
+body:not(.o_mass_mailing_iframe_fullscreen, .o_mass_mailing_iframe_mobile) {
+    height: auto !important;
+    .note-editable {
+        overflow: visible;
+        height: auto;
+        .o_layout {
+            min-height: 0 !important;
+        }
+    }
+}
+
+body {
+    &.o_mass_mailing_iframe_fullscreen {
+        .o_layout {
+            display: grid;
+            align-items: center;
+        }
+        .o_layout > .container {
+            padding-bottom: 2%;
+        }
+    }
+    &.o_mass_mailing_with_builder {
+        background-color: transparent;
+    }
+    .note-editable {
+        padding: 0;
+        border: none;
+    }
+    .o_mass_mailing_value ~ .o_loading_screen {
+        display: none !important;
+    }
+}
+// Smaller container
+.o_container_small {
+    @include media-breakpoint-up(lg) {
+        max-width: map-get($container-max-widths, md);
+    }
+}

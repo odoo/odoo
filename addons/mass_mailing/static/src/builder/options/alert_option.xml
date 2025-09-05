@@ -1,0 +1,14 @@
+<templates>
+    <t t-name="mass_mailing.AlertOption">
+        <BuilderRow label.translate="Size">
+            <BuilderSelect>
+                <BuilderSelectItem classAction="'s_alert_sm'">Small</BuilderSelectItem>
+                <BuilderSelectItem classAction="'s_alert_md'">Medium</BuilderSelectItem>
+                <BuilderSelectItem classAction="'s_alert_lg'">Large</BuilderSelectItem>
+            </BuilderSelect>
+        </BuilderRow>
+        <BuilderRow label.translate="Background Color">
+            <BuilderColorPicker styleAction="'background-color'" enabledTabs="['solid', 'custom']"/>
+        </BuilderRow>
+    </t>
+</templates>

@@ -11,6 +11,7 @@
     'depends': [
         'contacts',
         'mail',
+        'html_builder',
         'utm',
         'link_tracker',
         'web_editor',
@@ -57,32 +58,16 @@
         'views/mailing_templates_portal_unsubscribe.xml',
         'views/themes_templates.xml',
         'views/snippets_themes.xml',
-        'views/snippets/s_alert.xml',
-        'views/snippets/s_blockquote.xml',
-        'views/snippets/s_call_to_action.xml',
-        'views/snippets/s_coupon_code.xml',
-        'views/snippets/s_cover.xml',
-        'views/snippets/s_color_blocks_2.xml',
-        'views/snippets/s_company_team.xml',
-        'views/snippets/s_comparisons.xml',
-        'views/snippets/s_event.xml',
-        'views/snippets/s_features.xml',
-        'views/snippets/s_features_grid.xml',
-        'views/snippets/s_hr.xml',
-        'views/snippets/s_image_text.xml',
-        'views/snippets/s_masonry_block.xml',
-        'views/snippets/s_media_list.xml',
-        'views/snippets/s_numbers.xml',
-        'views/snippets/s_picture.xml',
-        'views/snippets/s_product_list.xml',
-        'views/snippets/s_rating.xml',
-        'views/snippets/s_references.xml',
-        'views/snippets/s_showcase.xml',
-        'views/snippets/s_text_block.xml',
-        'views/snippets/s_text_highlight.xml',
-        'views/snippets/s_text_image.xml',
-        'views/snippets/s_three_columns.xml',
-        'views/snippets/s_title.xml',
+        'views/snippets/mass_mailing_columns_snippets.xml',
+        'views/snippets/mass_mailing_footer_snippets.xml',
+        'views/snippets/mass_mailing_headers_snippets.xml',
+        'views/snippets/mass_mailing_headings_snippets.xml',
+        'views/snippets/mass_mailing_images_snippets.xml',
+        'views/snippets/mass_mailing_inner_snippets.xml',
+        'views/snippets/mass_mailing_marketing_snippets.xml',
+        'views/snippets/mass_mailing_masonry_snippets.xml',
+        'views/snippets/mass_mailing_people_snippets.xml',
+        'views/snippets/mass_mailing_text_snippets.xml',
     ],
     'demo': [
         'demo/utm.xml',
@@ -94,18 +79,29 @@
     ],
     'application': True,
     'assets': {
-        'mass_mailing.iframe_css_assets_edit': [
+        'mass_mailing.assets_builder': [
+            # lazy builder assets NOT applied in iframe
+            ('include', 'html_builder.assets'),
+            ('remove', 'web/static/fonts/fonts.scss'),
+            'mass_mailing/static/src/builder/**/*',
+        ],
+        'mass_mailing.assets_iframe_style': [
+            # minimal style assets required to view the mail content
+            # convert_inline ONLY uses this and inline styles.
+            # TODO EGGMAIL: reduce included bundles
             ('include', 'mass_mailing.assets_mail_themes'),
             ('include', 'web.assets_frontend'),
             ('after', 'web/static/lib/bootstrap/scss/_maps.scss', 'mass_mailing/static/src/scss/mass_mailing.ui.scss'),
             ('include', 'web_editor.backend_assets_wysiwyg'),
-            ('include', 'mass_mailing.assets_snippets_menu'),
-
+            ('include', 'web_editor.assets_snippets_menu'),
+            ('include', 'web_editor.wysiwyg_iframe_editor_assets'),
+            ('include', 'html_builder.inside_builder_style'),
             'mass_mailing/static/src/scss/mass_mailing_mail.scss',
+            'mass_mailing/static/src/iframe_assets/**/*',
+            'mass_mailing/static/src/theme_assets/**/*',
         ],
-        'mass_mailing.iframe_css_assets_readonly': [
-            'mass_mailing/static/src/scss/mass_mailing_mail.scss',
-            'mass_mailing/static/src/css/basic_theme_readonly.css'
+        'html_builder.iframe_add_dialog': [
+            'mass_mailing/static/src/builder/snippet_viewer/*.scss',
         ],
         'mass_mailing.mailing_assets': [
             'mass_mailing/static/src/scss/mailing_portal.scss',
@@ -114,22 +110,16 @@
             'mass_mailing/static/src/xml/mailing_portal_subscription_feedback.xml',
             'mass_mailing/static/src/xml/mailing_portal_subscription_form.xml',
         ],
-        'web_editor.backend_assets_wysiwyg': [
-            'mass_mailing/static/src/js/mass_mailing_wysiwyg.js',
-            'mass_mailing/static/src/scss/mass_mailing.wysiwyg.scss',
-        ],
         'web.assets_backend': [
+            'mass_mailing/static/src/fields/**/*',
+            'mass_mailing/static/src/themes/**/*',
+            'mass_mailing/static/src/iframe/**/*',
             'mass_mailing/static/src/scss/mailing_filter_widget.scss',
             'mass_mailing/static/src/scss/mass_mailing.scss',
             'mass_mailing/static/src/scss/mass_mailing_mobile.scss',
             'mass_mailing/static/src/scss/mass_mailing_mobile_preview.scss',
             'mass_mailing/static/src/js/mailing_m2o_filter.js',
-            'mass_mailing/static/src/js/mass_mailing_design_constants.js',
-            'mass_mailing/static/src/js/mass_mailing_mobile_preview.js',
-            'mass_mailing/static/src/js/mass_mailing_html_field.js',
             'mass_mailing/static/src/xml/mailing_filter_widget.xml',
-            'mass_mailing/static/src/xml/mass_mailing.xml',
-            'mass_mailing/static/src/xml/mass_mailing_mobile_preview.xml',
             'mass_mailing/static/src/js/tours/**/*',
         ],
         'web.assets_backend_lazy': [
@@ -138,41 +128,17 @@
         'mass_mailing.assets_mail_themes': [
             'mass_mailing/static/src/scss/themes/**/*',
         ],
-        'mass_mailing.assets_mail_themes_edition': [
-            ('include', 'web._assets_helpers'),
-            'web/static/src/scss/pre_variables.scss',
-            'web/static/lib/bootstrap/scss/_variables.scss',
-            'web/static/lib/bootstrap/scss/_variables-dark.scss',
-            'web/static/lib/bootstrap/scss/_maps.scss',
-            'mass_mailing/static/src/scss/mass_mailing.ui.scss',
-        ],
-        'mass_mailing.assets_wysiwyg': [
-            'mass_mailing/static/src/js/mass_mailing_snippets.js',
-            'mass_mailing/static/src/snippets/s_masonry_block/options.js',
-            'mass_mailing/static/src/snippets/s_media_list/options.js',
-            'mass_mailing/static/src/snippets/s_showcase/options.js',
-            'mass_mailing/static/src/snippets/s_rating/options.js'
-        ],
-        'mass_mailing.assets_snippets_menu': [
-            ('include', 'web_editor.assets_snippets_menu'),
-            'mass_mailing/static/src/js/snippets.editor.js',
-            'mass_mailing/static/src/xml/mass_mailing.editor.xml',
-        ],
         'web.assets_frontend': [
             'mass_mailing/static/src/js/tours/**/*',
         ],
         'web.assets_tests': [
+            'html_editor/static/tests/_helpers/selection.js',
             'mass_mailing/static/tests/tours/**/*',
         ],
-        'web.qunit_suite_tests': [
-            'mass_mailing/static/src/js/mass_mailing_snippets.js',
-            'mass_mailing/static/src/snippets/s_media_list/options.js',
-            'mass_mailing/static/src/snippets/s_showcase/options.js',
-            'mass_mailing/static/src/snippets/s_rating/options.js',
-            'mass_mailing/static/tests/mass_mailing_html_tests.js',
-        ],
         'web.assets_unit_tests': [
+            ('include', 'mass_mailing.assets_builder'),
             'mass_mailing/static/tests/mass_mailing_favourite_filter.test.js',
+            'mass_mailing/static/tests/mass_mailing_html_field.test.js',
         ],
     },
     'author': 'Odoo S.A.',

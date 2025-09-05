@@ -2,7 +2,7 @@ import { BEGIN, SNIPPET_SPECIFIC_END } from "@html_builder/utils/option_sequence
 import { Plugin } from "@html_editor/plugin";
 import { withSequence } from "@html_editor/utils/resource";
 import { registry } from "@web/core/registry";
-import { AddProductOption } from "./add_product_option";
+import { AddProductOption } from "@html_builder/plugins/add_product_option";
 
 class PriceListBoxedOptionPlugin extends Plugin {
     static id = "priceListBoxedOption";

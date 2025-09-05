@@ -263,8 +263,8 @@ export class HtmlField extends Component {
         }
 
         if (this.props.embeddedComponents) {
-            // TODO @engagement: fill this array with default/base components
             config.resources.embedded_components = [...MAIN_EMBEDDINGS];
+            config.embeddedComponentInfo = { app: this.__owl__.app, env: this.env };
         }
 
         const { sanitize_tags, sanitize } = this.props.record.fields[this.props.name];
