@@ -286,3 +286,7 @@ export function setElementContent(element, content) {
         element.textContent = content;
     }
 }
+
+export function isMarkup(content) {
+    return content instanceof Markup;
+}
