@@ -698,12 +698,14 @@ export class Store extends BaseStore {
     /**
      * @param {string} searchTerm
      * @param {Thread} thread
-     * @param {number|false} [before]
+     * @param {number} before
+     * @param {true|false|undefined} is_notification
      */
-    async searchMessagesInThread(searchTerm, thread, before = false) {
+    async searchMessagesInThread(searchTerm, thread, before, is_notification) {
         const { count, data, messages } = await rpc(thread.getFetchRoute(), {
             ...thread.getFetchParams(),
             fetch_params: {
+                is_notification,
                 search_term: await prettifyMessageContent(searchTerm), // formatted like message_post
                 before,
             },

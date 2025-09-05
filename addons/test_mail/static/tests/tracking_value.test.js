@@ -345,3 +345,33 @@ test("rendering of tracked field of type many2one: from no related record to hav
     await click(".o_form_button_save");
     await contains(".o-mail-Message-tracking", { text: "NoneMarc(Many2one)" });
 });
+
+test("Search message with filter in chatter", async () => {
+    const pyEnv = await startServer();
+    const mailTestTrackAllId = pyEnv["mail.test.track.all"].create({});
+    pyEnv["mail.message"].create({
+        body: "Hermit",
+        model: "mail.test.track.all",
+        res_id: mailTestTrackAllId,
+    });
+    await start();
+    registerArchs(archs);
+    await openFormView("mail.test.track.all", mailTestTrackAllId);
+    await click("[name=many2one_field_id] input");
+    await click("[name=many2one_field_id] .o-autocomplete--dropdown-item", { text: "Hermit" });
+    await click(".o_form_button_save");
+    // Search message with filter
+    await click("[title='Search Messages']");
+    await insertText(".o_searchview_input", "Hermit");
+    await click("button[title='Filter Messages']");
+    await click("span", { text: "Conversations" });
+    await contains(".o-mail-SearchMessageResult .o-mail-Message", { text: "Hermit" });
+
+    await click("button[title='Filter Messages']");
+    await click("span", { text: "Tracked Changes" });
+    await contains(".o-mail-SearchMessageResult .o-mail-Message", { text: "Hermit" });
+
+    await click("button[title='Filter Messages']");
+    await click("span", { text: "All" });
+    await contains(".o-mail-SearchMessageResult .o-mail-Message", { count: 2 });
+});

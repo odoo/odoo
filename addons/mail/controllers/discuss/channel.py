@@ -89,12 +89,7 @@ class ChannelController(http.Controller):
         channel = request.env["discuss.channel"].search([("id", "=", channel_id)])
         if not channel:
             raise NotFound()
-        domain = [
-            ("res_id", "=", channel_id),
-            ("model", "=", "discuss.channel"),
-            ("message_type", "!=", "user_notification"),
-        ]
-        res = request.env["mail.message"]._message_fetch(domain, **(fetch_params or {}))
+        res = request.env["mail.message"]._message_fetch(domain=None, thread=channel, **(fetch_params or {}))
         messages = res.pop("messages")
         if not request.env.user._is_public():
             messages.set_message_done()
