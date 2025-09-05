@@ -37,8 +37,8 @@ patch(PosStore.prototype, {
                 orderId,
             ]);
             const order = result["pos.order"][0];
-            await this.printReceipt({ order });
             await this.sendOrderInPreparation(order, { bypassPdis: true });
+            await this.printReceipt({ order });
         } catch {
             logPosMessage(
                 "Store",
