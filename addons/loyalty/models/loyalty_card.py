@@ -70,7 +70,7 @@ class LoyaltyCard(models.Model):
 
     def _format_points(self, points):
         self.ensure_one()
-        if self.point_name == self.program_id.currency_id.symbol:
+        if self.program_id.currency_id and self.point_name == self.program_id.currency_id.symbol:
             return format_amount(self.env, points, self.program_id.currency_id)
         if points == int(points):
             return f"{int(points)} {self.point_name or ''}"
@@ -139,7 +139,7 @@ class LoyaltyCard(models.Model):
         for program in self.program_id:
             create_comm_per_program[program] = program.communication_plan_ids.filtered(lambda c: c.trigger == 'create')
         for coupon in self:
-            if not create_comm_per_program[coupon.program_id] or not coupon._get_mail_partner():
+            if not coupon.program_id or not create_comm_per_program[coupon.program_id] or not coupon._get_mail_partner():
                 continue
             for comm in create_comm_per_program[coupon.program_id]:
                 mail_template = comm.mail_template_id

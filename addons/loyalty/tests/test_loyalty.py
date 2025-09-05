@@ -310,3 +310,9 @@ class TestLoyalty(TransactionCase):
             "Free Product - [Test Product, Test Product 2]",
             "Reward description for reward with tag should be 'Free Product - [Test Product, Test Product 2]'"
         )
+
+    def test_loyalty_card_with_no_program(self):
+        loyalty_card = Form(self.env['loyalty.card']).save()
+
+        self.assertEqual(loyalty_card.points_display, '0 ')
+        self.assertEqual(len(loyalty_card.history_ids), 0)
