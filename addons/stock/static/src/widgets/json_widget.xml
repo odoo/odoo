@@ -34,7 +34,8 @@
                 <span class="pt-2">Average Stock: <span t-out="averageStock"/> <span t-out="productUomName"/></span>
             </h6>
             <h6 class="row text-muted">
-                <span>Ordering Frequency: <span t-out="orderingPeriod"/> day(s)</span>
+                <span t-if="!qtiesAreTheSame">Ordering Frequency: <span t-out="orderingPeriod"/> day(s)</span>
+                <span t-if="qtiesAreTheSame">Ordering Frequency: On demand</span>
                 <span class="pt-2">Lead Time: <span t-out="leadTime"/> day(s)</span>
             </h6>
         </div>
