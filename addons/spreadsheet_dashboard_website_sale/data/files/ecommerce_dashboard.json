@@ -1,5 +1,5 @@
 {
-  "version": "18.4.14",
+  "version": "18.5.10",
   "sheets": [
     {
       "id": "sheet1",
@@ -34,73 +34,8 @@
       "cells": {
         "A6": "[Monthly Sales](odoo://view/{\"viewType\":\"graph\",\"action\":{\"domain\":[[\"state\",\"not in\",[\"draft\",\"cancel\",\"sent\"]]],\"context\":{\"group_by\":[],\"graph_measure\":\"price_subtotal\",\"graph_mode\":\"line\",\"graph_groupbys\":[\"date:day\"],\"graph_order\":null,\"graph_stacked\":true,\"graph_cumulated\":false},\"modelName\":\"sale.report\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Sales Analysis\"})",
         "A22": "[Top Products](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[\"&\",[\"website_id\",\"!=\",false],[\"state\",\"in\",[\"sale\",\"done\"]]],\"context\":{\"group_by\":[],\"pivot_measures\":[\"order_reference\",\"price_total\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"product_id\"]},\"modelName\":\"sale.report\",\"views\":[[false,\"pivot\"],[false,\"graph\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Online Sales Analysis\"})",
-        "A23": "=_t(\"Products\")",
-        "A24": "=PIVOT.HEADER(4,\"#product_id\",1)",
-        "A25": "=PIVOT.HEADER(4,\"#product_id\",2)",
-        "A26": "=PIVOT.HEADER(4,\"#product_id\",3)",
-        "A27": "=PIVOT.HEADER(4,\"#product_id\",4)",
-        "A28": "=PIVOT.HEADER(4,\"#product_id\",5)",
-        "A29": "=PIVOT.HEADER(4,\"#product_id\",6)",
-        "A30": "=PIVOT.HEADER(4,\"#product_id\",7)",
-        "A31": "=PIVOT.HEADER(4,\"#product_id\",8)",
-        "A32": "=PIVOT.HEADER(4,\"#product_id\",9)",
-        "A33": "=PIVOT.HEADER(4,\"#product_id\",10)",
-        "B23": "=_t(\"Units\")",
-        "B24": "=PIVOT.VALUE(4,\"order_reference\",\"#product_id\",1)",
-        "B25": "=PIVOT.VALUE(4,\"order_reference\",\"#product_id\",2)",
-        "B26": "=PIVOT.VALUE(4,\"order_reference\",\"#product_id\",3)",
-        "B27": "=PIVOT.VALUE(4,\"order_reference\",\"#product_id\",4)",
-        "B28": "=PIVOT.VALUE(4,\"order_reference\",\"#product_id\",5)",
-        "B29": "=PIVOT.VALUE(4,\"order_reference\",\"#product_id\",6)",
-        "B30": "=PIVOT.VALUE(4,\"order_reference\",\"#product_id\",7)",
-        "B31": "=PIVOT.VALUE(4,\"order_reference\",\"#product_id\",8)",
-        "B32": "=PIVOT.VALUE(4,\"order_reference\",\"#product_id\",9)",
-        "B33": "=PIVOT.VALUE(4,\"order_reference\",\"#product_id\",10)",
-        "C23": "=_t(\"Revenue\")",
-        "C24": "=PIVOT.VALUE(4,\"price_subtotal\",\"#product_id\",1)",
-        "C25": "=PIVOT.VALUE(4,\"price_subtotal\",\"#product_id\",2)",
-        "C26": "=PIVOT.VALUE(4,\"price_subtotal\",\"#product_id\",3)",
-        "C27": "=PIVOT.VALUE(4,\"price_subtotal\",\"#product_id\",4)",
-        "C28": "=PIVOT.VALUE(4,\"price_subtotal\",\"#product_id\",5)",
-        "C29": "=PIVOT.VALUE(4,\"price_subtotal\",\"#product_id\",6)",
-        "C30": "=PIVOT.VALUE(4,\"price_subtotal\",\"#product_id\",7)",
-        "C31": "=PIVOT.VALUE(4,\"price_subtotal\",\"#product_id\",8)",
-        "C32": "=PIVOT.VALUE(4,\"price_subtotal\",\"#product_id\",9)",
-        "C33": "=PIVOT.VALUE(4,\"price_subtotal\",\"#product_id\",10)",
-        "E22": "[Top Categories](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[[\"state\",\"not in\",[\"draft\",\"cancel\",\"sent\"]]],\"context\":{\"group_by\":[],\"pivot_measures\":[\"order_reference\",\"price_subtotal\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"categ_id\"]},\"modelName\":\"sale.report\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Sales Analysis\"})",
-        "E23": "=_t(\"Categories\")",
-        "E24": "=PIVOT.HEADER(1,\"#categ_id\",1)",
-        "E25": "=PIVOT.HEADER(1,\"#categ_id\",2)",
-        "E26": "=PIVOT.HEADER(1,\"#categ_id\",3)",
-        "E27": "=PIVOT.HEADER(1,\"#categ_id\",4)",
-        "E28": "=PIVOT.HEADER(1,\"#categ_id\",5)",
-        "E29": "=PIVOT.HEADER(1,\"#categ_id\",6)",
-        "E30": "=PIVOT.HEADER(1,\"#categ_id\",7)",
-        "E31": "=PIVOT.HEADER(1,\"#categ_id\",8)",
-        "E32": "=PIVOT.HEADER(1,\"#categ_id\",9)",
-        "E33": "=PIVOT.HEADER(1,\"#categ_id\",10)",
-        "F23": "=_t(\"Units\")",
-        "F24": "=PIVOT.VALUE(1,\"order_reference\",\"#categ_id\",1)",
-        "F25": "=PIVOT.VALUE(1,\"order_reference\",\"#categ_id\",2)",
-        "F26": "=PIVOT.VALUE(1,\"order_reference\",\"#categ_id\",3)",
-        "F27": "=PIVOT.VALUE(1,\"order_reference\",\"#categ_id\",4)",
-        "F28": "=PIVOT.VALUE(1,\"order_reference\",\"#categ_id\",5)",
-        "F29": "=PIVOT.VALUE(1,\"order_reference\",\"#categ_id\",6)",
-        "F30": "=PIVOT.VALUE(1,\"order_reference\",\"#categ_id\",7)",
-        "F31": "=PIVOT.VALUE(1,\"order_reference\",\"#categ_id\",8)",
-        "F32": "=PIVOT.VALUE(1,\"order_reference\",\"#categ_id\",9)",
-        "F33": "=PIVOT.VALUE(1,\"order_reference\",\"#categ_id\",10)",
-        "G23": "=_t(\"Revenue\")",
-        "G24": "=PIVOT.VALUE(1,\"price_subtotal\",\"#categ_id\",1)",
-        "G25": "=PIVOT.VALUE(1,\"price_subtotal\",\"#categ_id\",2)",
-        "G26": "=PIVOT.VALUE(1,\"price_subtotal\",\"#categ_id\",3)",
-        "G27": "=PIVOT.VALUE(1,\"price_subtotal\",\"#categ_id\",4)",
-        "G28": "=PIVOT.VALUE(1,\"price_subtotal\",\"#categ_id\",5)",
-        "G29": "=PIVOT.VALUE(1,\"price_subtotal\",\"#categ_id\",6)",
-        "G30": "=PIVOT.VALUE(1,\"price_subtotal\",\"#categ_id\",7)",
-        "G31": "=PIVOT.VALUE(1,\"price_subtotal\",\"#categ_id\",8)",
-        "G32": "=PIVOT.VALUE(1,\"price_subtotal\",\"#categ_id\",9)",
-        "G33": "=PIVOT.VALUE(1,\"price_subtotal\",\"#categ_id\",10)"
+        "A23": "=PIVOT(4, 10, FALSE, FALSE)",
+        "E23": "=PIVOT(1, 10, FALSE, FALSE)"
       },
       "styles": {
         "A6": 1,
@@ -157,7 +92,8 @@
             "baseline": "Data!E2",
             "baselineDescr": { "text": "since last period" },
             "keyValue": "Data!D2",
-            "humanize": false
+            "humanize": false,
+            "chartId": "a761d77e-17d1-4d7a-ac85-5494c07dd360"
           },
           "offset": { "x": 0, "y": 9 },
           "col": 0,
@@ -178,7 +114,8 @@
             "baseline": "Data!E3",
             "baselineDescr": { "text": "since last period" },
             "keyValue": "Data!D3",
-            "humanize": false
+            "humanize": false,
+            "chartId": "7db1cb48-a155-4984-b8dd-de155db2b65f"
           },
           "offset": { "x": 220, "y": 9 },
           "col": 0,
@@ -199,7 +136,8 @@
             "baseline": "Data!E4",
             "baselineDescr": { "text": "since last period" },
             "keyValue": "Data!D4",
-            "humanize": false
+            "humanize": false,
+            "chartId": "1bfef494-7090-4263-8e07-83f14f43c0e7"
           },
           "offset": { "x": 441, "y": 9 },
           "col": 0,
@@ -220,7 +158,8 @@
             "baseline": "Data!E5",
             "baselineDescr": { "text": "since last period" },
             "keyValue": "Data!D5",
-            "humanize": false
+            "humanize": false,
+            "chartId": "79d91c01-7aeb-4845-aa82-5a41895b74af"
           },
           "offset": { "x": 661, "y": 9 },
           "col": 0,
@@ -263,11 +202,19 @@
               "orderBy": []
             },
             "type": "odoo_line",
-            "dataSets": [],
+            "dataSets": [
+              {}
+            ],
             "verticalAxisPosition": "left",
             "stacked": false,
             "cumulatedStart": false,
+            "axesDesign": {
+              "y": {
+                "title": { "text": "Revenue" }
+              }
+            },
             "fillArea": true,
+            "chartId": "0c5e3c79-3754-41a9-83df-b185003ce0b1",
             "fieldMatching": {
               "eefac62b-900a-4197-95e9-9a4cdbb832d6": { "chain": "date", "type": "datetime", "offset": 0 },
               "70f31046-f26e-4847-b177-d09937e4b674": { "chain": "website_id", "type": "many2one" },
@@ -280,6 +227,54 @@
           "offset": { "x": 0, "y": 163 },
           "col": 0,
           "row": 0
+        },
+        {
+          "id": "05f3bc5f-1628",
+          "col": 3,
+          "row": 21,
+          "offset": { "x": 44, "y": 14 },
+          "width": 480,
+          "height": 427,
+          "tag": "carousel",
+          "data": {
+            "chartDefinitions": {
+              "a4aa175e-211f": {
+                "type": "treemap",
+                "dataSetsHaveTitle": false,
+                "dataSets": [
+                  { "dataRange": "E24:E33" }
+                ],
+                "legendPosition": "top",
+                "labelRange": "G24:G33",
+                "title": {},
+                "humanize": true
+              }
+            },
+            "items": [
+              {
+                "type": "chart",
+                "chartId": "a4aa175e-211f",
+                "carouselTitle": {
+                  "fontSize": 21,
+                  "color": "#017E84",
+                  "text": "Top Categories",
+                  "italic": false,
+                  "bold": true
+                }
+              },
+              {
+                "type": "carouselDataView",
+                "title": "Top 10",
+                "carouselTitle": {
+                  "text": "Top Categories",
+                  "bold": true,
+                  "fontSize": 21,
+                  "color": "#017E84"
+                }
+              }
+            ],
+            "fieldMatching": {}
+          }
         }
       ],
       "tables": [
@@ -407,7 +402,7 @@
       "top": { "style": "thick", "color": "#FFFFFF" }
     }
   },
-  "revisionId": "START_REVISION",
+  "revisionId": "541d641b-a200-4e30-8800-b959f943613b",
   "uniqueFigureIds": true,
   "settings": {
     "locale": {
@@ -448,11 +443,19 @@
       ],
       "id": "1",
       "measures": [
-        { "id": "order_reference", "fieldName": "order_reference" },
-        { "id": "price_subtotal", "fieldName": "price_subtotal" }
+        {
+          "id": "order_reference",
+          "fieldName": "order_reference",
+          "userDefinedName": "Units"
+        },
+        {
+          "id": "price_subtotal",
+          "fieldName": "price_subtotal",
+          "userDefinedName": "Revenue"
+        }
       ],
       "model": "sale.report",
-      "name": "Sales Analysis by Product Category",
+      "name": "Categories",
       "sortedColumn": {
         "measure": "price_subtotal",
         "order": "desc",
@@ -540,11 +543,19 @@
       ],
       "id": "4",
       "measures": [
-        { "id": "order_reference", "fieldName": "order_reference" },
-        { "id": "price_subtotal", "fieldName": "price_subtotal" }
+        {
+          "id": "order_reference",
+          "fieldName": "order_reference",
+          "userDefinedName": "Units"
+        },
+        {
+          "id": "price_subtotal",
+          "fieldName": "price_subtotal",
+          "userDefinedName": "Revenue"
+        }
       ],
       "model": "sale.report",
-      "name": "Sales Analysis by Product Variant",
+      "name": "Products",
       "sortedColumn": {
         "measure": "price_subtotal",
         "order": "desc",

@@ -1,15 +1,14 @@
 {
-  "version": "18.4.14",
+  "version": "18.5.10",
   "sheets": [
     {
       "id": "sheet1",
       "name": "Dashboard",
       "colNumber": 8,
-      "rowNumber": 82,
+      "rowNumber": 85,
       "rows": {
         "6": { "size": 38 },
-        "22": { "size": 40 },
-        "23": { "size": 21 },
+        "23": { "size": 40 },
         "24": { "size": 21 },
         "25": { "size": 21 },
         "26": { "size": 21 },
@@ -26,9 +25,9 @@
         "37": { "size": 21 },
         "38": { "size": 21 },
         "39": { "size": 21 },
-        "40": { "size": 41 },
+        "40": { "size": 21 },
         "41": { "size": 21 },
-        "42": { "size": 21 },
+        "42": { "size": 41 },
         "43": { "size": 21 },
         "44": { "size": 21 },
         "45": { "size": 21 },
@@ -43,11 +42,11 @@
         "54": { "size": 21 },
         "55": { "size": 21 },
         "56": { "size": 21 },
-        "57": { "size": 36 },
-        "58": { "size": 38 },
-        "59": { "size": 27 },
-        "60": { "size": 27 },
-        "61": { "size": 27 },
+        "57": { "size": 21 },
+        "58": { "size": 21 },
+        "59": { "size": 21 },
+        "60": { "size": 36 },
+        "61": { "size": 38 },
         "62": { "size": 27 },
         "63": { "size": 27 },
         "64": { "size": 27 },
@@ -55,9 +54,9 @@
         "66": { "size": 27 },
         "67": { "size": 27 },
         "68": { "size": 27 },
-        "69": { "size": 21 },
-        "70": { "size": 21 },
-        "71": { "size": 21 },
+        "69": { "size": 27 },
+        "70": { "size": 27 },
+        "71": { "size": 27 },
         "72": { "size": 21 },
         "73": { "size": 21 },
         "74": { "size": 21 },
@@ -67,7 +66,10 @@
         "78": { "size": 21 },
         "79": { "size": 21 },
         "80": { "size": 21 },
-        "81": { "size": 21 }
+        "81": { "size": 21 },
+        "82": { "size": 21 },
+        "83": { "size": 21 },
+        "84": { "size": 21 }
       },
       "cols": {
         "0": { "size": 332 },
@@ -77,78 +79,37 @@
         "4": { "size": 50 },
         "5": { "size": 275 },
         "6": { "size": 100 },
-        "7": { "size": 55 }
+        "7": { "size": 72 }
       },
       "merges": [],
       "cells": {
-        "A7": "Available and reserved stock qty (top locations)",
-        "A23": "Available and reserved stock qty (top products)",
-        "A41": "Ageing stock qty by category and creation date",
-        "A58": "=_t(\"Top 10 products with negative stock\")",
-        "A59": "Products",
-        "A60": "=PIVOT.HEADER(22,\"#product_id\",1)",
-        "A61": "=PIVOT.HEADER(22,\"#product_id\",2)",
-        "A62": "=PIVOT.HEADER(22,\"#product_id\",3)",
-        "A63": "=PIVOT.HEADER(22,\"#product_id\",4)",
-        "A64": "=PIVOT.HEADER(22,\"#product_id\",5)",
-        "A65": "=PIVOT.HEADER(22,\"#product_id\",6)",
-        "A66": "=PIVOT.HEADER(22,\"#product_id\",7)",
-        "A67": "=PIVOT.HEADER(22,\"#product_id\",8)",
-        "A68": "=PIVOT.HEADER(22,\"#product_id\",9)",
-        "A69": "=PIVOT.HEADER(22,\"#product_id\",10)",
-        "B59": "=PIVOT.HEADER(22,\"measure\",\"quantity\")",
-        "B60": "=PIVOT.VALUE(22,\"quantity\",\"#product_id\",1)",
-        "B61": "=PIVOT.VALUE(22,\"quantity\",\"#product_id\",2)",
-        "B62": "=PIVOT.VALUE(22,\"quantity\",\"#product_id\",3)",
-        "B63": "=PIVOT.VALUE(22,\"quantity\",\"#product_id\",4)",
-        "B64": "=PIVOT.VALUE(22,\"quantity\",\"#product_id\",5)",
-        "B65": "=PIVOT.VALUE(22,\"quantity\",\"#product_id\",6)",
-        "B66": "=PIVOT.VALUE(22,\"quantity\",\"#product_id\",7)",
-        "B67": "=PIVOT.VALUE(22,\"quantity\",\"#product_id\",8)",
-        "B68": "=PIVOT.VALUE(22,\"quantity\",\"#product_id\",9)",
-        "B69": "=PIVOT.VALUE(22,\"quantity\",\"#product_id\",10)",
-        "E7": "Available and reserved stock value (top locations)",
-        "E23": "Available and reserved stock value (top products)",
-        "E41": "Ageing stock value by product and creation date"
+        "A43": "=_t(\"Ageing stock qty by product and creation date\")",
+        "E43": "=_t(\"Ageing stock value by product and creation date\")",
+        "A62": "=PIVOT(22, 10, FALSE, FALSE)"
       },
       "styles": {
         "A6": 1,
         "A7": 2,
-        "A23": 2,
-        "A41": 2,
-        "A58": 2,
+        "A24": 2,
+        "A43": 2,
+        "A61": 2,
         "D7:E7": 2,
-        "E23": 2,
-        "E41": 2,
-        "A59": 3,
-        "A60:B69": 4,
+        "E24": 2,
+        "E43": 2,
+        "A62": 3,
+        "A63:B72": 4,
         "B7:C7": 5,
-        "B23:D23": 5,
-        "B41:D41": 5,
+        "B24:D24": 5,
+        "B43:D43": 5,
         "F7:H7": 5,
-        "F23:H23": 5,
-        "F41:H41": 5,
-        "B58:H58": 5,
-        "B59": 6,
-        "C60:H69": 7
+        "F24:H24": 5,
+        "F43:H43": 5,
+        "B61:H61": 5,
+        "B62": 6,
+        "C63:H72": 7
       },
       "formats": {},
-      "borders": {
-        "A7:C7": 1,
-        "A23:C23": 1,
-        "A41:C41": 1,
-        "A58:C58": 1,
-        "E7:H7": 1,
-        "E23:H23": 1,
-        "E41:H41": 1,
-        "A8:C8": 2,
-        "A24:C24": 2,
-        "A42:C42": 2,
-        "A59:C59": 2,
-        "E8:H8": 2,
-        "E24:H24": 2,
-        "E42:H42": 2
-      },
+      "borders": { "A43:C43": 1, "E43:H43": 1, "A44:C44": 2, "E44:H44": 2 },
       "conditionalFormats": [],
       "dataValidationRules": [],
       "figures": [
@@ -171,7 +132,8 @@
             "background": "#ECFDF5",
             "baseline": "Data!E4",
             "keyValue": "Data!B4",
-            "humanize": false
+            "humanize": false,
+            "chartId": "833374d1-d09f-4a4e-bb09-2831ceee5465"
           },
           "offset": { "x": 246, "y": 9 },
           "col": 0,
@@ -196,97 +158,10 @@
             "background": "#ECFDF5",
             "baseline": "Data!E3",
             "keyValue": "Data!B3",
-            "humanize": false
+            "humanize": false,
+            "chartId": "de7010e1-2cdc-4e19-a1de-1c7fd4795bf4"
           },
           "offset": { "x": 0, "y": 9 },
-          "col": 0,
-          "row": 0
-        },
-        {
-          "id": "0d527983-ee0f-44cb-af82-f637574a4e1e",
-          "width": 499,
-          "height": 344,
-          "tag": "chart",
-          "data": {
-            "type": "bar",
-            "dataSetsHaveTitle": true,
-            "dataSets": [
-              { "dataRange": "'Stock location Qty'!B1:B11" },
-              { "dataRange": "'Stock location Qty'!C1:C11" }
-            ],
-            "legendPosition": "top",
-            "labelRange": "'Stock location Qty'!A1:A11",
-            "title": { "text": "" },
-            "stacked": true,
-            "aggregated": false
-          },
-          "offset": { "x": 0, "y": 176 },
-          "col": 0,
-          "row": 0
-        },
-        {
-          "id": "e7f90aaf-95ec-4f1d-9b0c-ec7e4465d772",
-          "width": 501,
-          "height": 355,
-          "tag": "chart",
-          "data": {
-            "type": "bar",
-            "dataSetsHaveTitle": true,
-            "dataSets": [
-              { "dataRange": "'Stock location Qty'!F1:F11" },
-              { "dataRange": "'Stock location Qty'!G1:G11" }
-            ],
-            "legendPosition": "top",
-            "labelRange": "'Stock location Qty'!E1:E11",
-            "title": { "text": "" },
-            "stacked": true,
-            "aggregated": false
-          },
-          "offset": { "x": 0, "y": 561 },
-          "col": 0,
-          "row": 0
-        },
-        {
-          "id": "8324b219-c649-4392-9fee-a3e7f396d70c",
-          "width": 483,
-          "height": 344,
-          "tag": "chart",
-          "data": {
-            "type": "bar",
-            "dataSetsHaveTitle": true,
-            "dataSets": [
-              { "dataRange": "'Stock location Value'!B1:B12" },
-              { "dataRange": "'Stock location Value'!C1:C12" }
-            ],
-            "legendPosition": "top",
-            "labelRange": "'Stock location Value'!A1:A12",
-            "title": { "text": "" },
-            "stacked": true,
-            "aggregated": false
-          },
-          "offset": { "x": 540, "y": 176 },
-          "col": 0,
-          "row": 0
-        },
-        {
-          "id": "ebde3556-983a-475a-95f0-4edb2515b3bb",
-          "width": 482,
-          "height": 358,
-          "tag": "chart",
-          "data": {
-            "type": "bar",
-            "dataSetsHaveTitle": true,
-            "dataSets": [
-              { "dataRange": "'Stock location Value'!I1:I11" },
-              { "dataRange": "'Stock location Value'!J1:J11" }
-            ],
-            "legendPosition": "top",
-            "labelRange": "'Stock location Value'!H1:H11",
-            "title": { "text": "" },
-            "stacked": true,
-            "aggregated": false
-          },
-          "offset": { "x": 540, "y": 561 },
           "col": 0,
           "row": 0
         },
@@ -304,8 +179,7 @@
               "measure": "quantity",
               "order": null,
               "resModel": "stock.quant",
-              "mode": "bar",
-              "cumulatedStart": false
+              "mode": "bar"
             },
             "searchParams": {
               "comparison": null,
@@ -322,9 +196,60 @@
               "orderBy": []
             },
             "type": "odoo_bar",
-            "dataSets": [],
+            "dataSets": [
+              {},
+              {},
+              {},
+              {},
+              {},
+              {},
+              {},
+              {},
+              {},
+              {},
+              {},
+              {},
+              {},
+              {},
+              {},
+              {},
+              {},
+              {},
+              {},
+              {},
+              {},
+              {},
+              {},
+              {},
+              {},
+              {},
+              {},
+              {},
+              {},
+              {},
+              {},
+              {},
+              {},
+              {},
+              {},
+              {},
+              {},
+              {},
+              {},
+              {},
+              {}
+            ],
             "verticalAxisPosition": "left",
             "stacked": true,
+            "axesDesign": {
+              "x": {
+                "title": { "text": "Creation Date" }
+              },
+              "y": {
+                "title": { "text": "Stock Quantity" }
+              }
+            },
+            "chartId": "fad86b76-037f-4b7f-8afc-bc028c2536de",
             "fieldMatching": {
               "feeb0d08-4596-4e7c-b478-a3c659189cdd": { "chain": "warehouse_id", "type": "many2one" },
               "62f6d1bd-9c76-48d7-b95a-3f5d6cb505df": { "chain": "location_id", "type": "many2one" },
@@ -333,13 +258,13 @@
               "0725cf6d-c980-46a1-bd7b-bd75e34348e7": { "chain": "lot_id", "type": "many2one" }
             }
           },
-          "offset": { "x": 0, "y": 959 },
+          "offset": { "x": 0, "y": 0 },
           "col": 0,
-          "row": 0
+          "row": 43
         },
         {
           "id": "73f61914-d895-4484-b3ba-585107daeb44",
-          "width": 480,
+          "width": 498,
           "height": 335,
           "tag": "chart",
           "data": {
@@ -351,8 +276,7 @@
               "measure": "value",
               "order": null,
               "resModel": "stock.quant",
-              "mode": "bar",
-              "cumulatedStart": false
+              "mode": "bar"
             },
             "searchParams": {
               "comparison": null,
@@ -369,9 +293,60 @@
               "orderBy": []
             },
             "type": "odoo_bar",
-            "dataSets": [],
+            "dataSets": [
+              {},
+              {},
+              {},
+              {},
+              {},
+              {},
+              {},
+              {},
+              {},
+              {},
+              {},
+              {},
+              {},
+              {},
+              {},
+              {},
+              {},
+              {},
+              {},
+              {},
+              {},
+              {},
+              {},
+              {},
+              {},
+              {},
+              {},
+              {},
+              {},
+              {},
+              {},
+              {},
+              {},
+              {},
+              {},
+              {},
+              {},
+              {},
+              {},
+              {},
+              {}
+            ],
             "verticalAxisPosition": "left",
             "stacked": true,
+            "axesDesign": {
+              "x": {
+                "title": { "text": "Creation Date" }
+              },
+              "y": {
+                "title": { "text": "Stock Value" }
+              }
+            },
+            "chartId": "73f61914-d895-4484-b3ba-585107daeb44",
             "fieldMatching": {
               "feeb0d08-4596-4e7c-b478-a3c659189cdd": { "chain": "warehouse_id", "type": "many2one" },
               "62f6d1bd-9c76-48d7-b95a-3f5d6cb505df": { "chain": "location_id", "type": "many2one" },
@@ -380,9 +355,9 @@
               "0725cf6d-c980-46a1-bd7b-bd75e34348e7": { "chain": "lot_id", "type": "many2one" }
             }
           },
-          "offset": { "x": 541, "y": 959 },
-          "col": 0,
-          "row": 0
+          "offset": { "x": 36, "y": 0 },
+          "col": 3,
+          "row": 43
         },
         {
           "id": "639d221d-d74d-4762-984e-9debac4f5a82",
@@ -402,16 +377,229 @@
             "type": "scorecard",
             "background": "#EFF6FF",
             "keyValue": "Data!B5",
-            "humanize": true
+            "humanize": true,
+            "chartId": "639d221d-d74d-4762-984e-9debac4f5a82"
           },
           "offset": { "x": 492, "y": 9 },
           "col": 0,
           "row": 0
+        },
+        {
+          "id": "b2df71e9-7cf7",
+          "col": 0,
+          "row": 61,
+          "offset": { "x": 0, "y": 0 },
+          "width": 500,
+          "height": 314,
+          "tag": "carousel",
+          "data": {
+            "chartDefinitions": {
+              "07303ff1-4288": {
+                "type": "sunburst",
+                "dataSetsHaveTitle": false,
+                "dataSets": [
+                  { "dataRange": "A63:A72" }
+                ],
+                "legendPosition": "none",
+                "labelRange": "B63:B72",
+                "title": {},
+                "humanize": true
+              }
+            },
+            "items": [
+              {
+                "type": "chart",
+                "chartId": "07303ff1-4288",
+                "carouselTitle": {
+                  "text": "Top 10 products with negative stock",
+                  "bold": true,
+                  "fontSize": 21,
+                  "color": "#01666B"
+                },
+                "title": "Chart"
+              },
+              {
+                "type": "carouselDataView",
+                "carouselTitle": {
+                  "text": "Top 10 products with negative stock",
+                  "bold": true,
+                  "fontSize": 21,
+                  "color": "#01666B"
+                },
+                "title": "Top 10"
+              }
+            ],
+            "fieldMatching": {}
+          }
+        },
+        {
+          "id": "01127dd6-be32",
+          "col": 0,
+          "row": 6,
+          "offset": { "x": 0, "y": 11 },
+          "width": 1035,
+          "height": 372,
+          "tag": "carousel",
+          "data": {
+            "chartDefinitions": {
+              "0d527983-ee0f-44cb-af82-f637574a4e1e": {
+                "type": "bar",
+                "dataSetsHaveTitle": true,
+                "dataSets": [
+                  { "dataRange": "'Stock location Qty'!B1:B11" },
+                  { "dataRange": "'Stock location Qty'!C1:C11" }
+                ],
+                "legendPosition": "top",
+                "labelRange": "'Stock location Qty'!A1:A11",
+                "title": {},
+                "stacked": true,
+                "aggregated": false,
+                "axesDesign": {
+                  "x": {
+                    "title": { "text": "Top Locations" }
+                  },
+                  "y": {
+                    "title": { "text": "Stock Quantity" }
+                  }
+                },
+                "humanize": true
+              },
+              "e7f90aaf-95ec-4f1d-9b0c-ec7e4465d772": {
+                "type": "bar",
+                "dataSetsHaveTitle": true,
+                "dataSets": [
+                  { "dataRange": "'Stock location Qty'!F1:F11" },
+                  { "dataRange": "'Stock location Qty'!G1:G11" }
+                ],
+                "legendPosition": "top",
+                "labelRange": "'Stock location Qty'!E1:E11",
+                "title": {},
+                "stacked": true,
+                "aggregated": false,
+                "axesDesign": {
+                  "x": {
+                    "title": { "text": "Top Products" }
+                  },
+                  "y": {
+                    "title": { "text": "Stock Quantity" }
+                  }
+                },
+                "humanize": true
+              }
+            },
+            "items": [
+              {
+                "type": "chart",
+                "chartId": "0d527983-ee0f-44cb-af82-f637574a4e1e",
+                "carouselTitle": {
+                  "text": "Available & Reserved Stock Quantity",
+                  "bold": true,
+                  "fontSize": 21,
+                  "color": "#01666B"
+                },
+                "title": "Top Locations"
+              },
+              {
+                "type": "chart",
+                "chartId": "e7f90aaf-95ec-4f1d-9b0c-ec7e4465d772",
+                "carouselTitle": {
+                  "text": "Available & Reserved Stock Quantity",
+                  "bold": true,
+                  "fontSize": 21,
+                  "color": "#01666B"
+                },
+                "title": "Top Products"
+              }
+            ],
+            "fieldMatching": {}
+          }
+        },
+        {
+          "id": "c8d9f32a-11d4",
+          "col": 0,
+          "row": 23,
+          "offset": { "x": 0, "y": 10 },
+          "width": 1035,
+          "height": 388,
+          "tag": "carousel",
+          "data": {
+            "chartDefinitions": {
+              "8324b219-c649-4392-9fee-a3e7f396d70c": {
+                "type": "bar",
+                "dataSetsHaveTitle": true,
+                "dataSets": [
+                  { "dataRange": "'Stock location Value'!B1:B12" },
+                  { "dataRange": "'Stock location Value'!C1:C12" }
+                ],
+                "legendPosition": "top",
+                "labelRange": "'Stock location Value'!A1:A12",
+                "title": {},
+                "stacked": true,
+                "aggregated": false,
+                "axesDesign": {
+                  "x": {
+                    "title": { "text": "Top Locations" }
+                  },
+                  "y": {
+                    "title": { "text": "Stock Value" }
+                  }
+                },
+                "humanize": true
+              },
+              "ebde3556-983a-475a-95f0-4edb2515b3bb": {
+                "type": "bar",
+                "dataSetsHaveTitle": true,
+                "dataSets": [
+                  { "dataRange": "'Stock location Value'!I1:I11" },
+                  { "dataRange": "'Stock location Value'!J1:J11" }
+                ],
+                "legendPosition": "top",
+                "labelRange": "'Stock location Value'!H1:H11",
+                "title": {},
+                "stacked": true,
+                "aggregated": false,
+                "axesDesign": {
+                  "x": {
+                    "title": { "text": "Top Products" }
+                  },
+                  "y": {
+                    "title": { "text": "Stock Value" }
+                  }
+                },
+                "humanize": true
+              }
+            },
+            "items": [
+              {
+                "type": "chart",
+                "chartId": "8324b219-c649-4392-9fee-a3e7f396d70c",
+                "carouselTitle": {
+                  "text": "Available & Reserved Stock Value",
+                  "bold": true,
+                  "fontSize": 21,
+                  "color": "#01666B"
+                },
+                "title": "Top Locations"
+              },
+              {
+                "type": "chart",
+                "chartId": "ebde3556-983a-475a-95f0-4edb2515b3bb",
+                "carouselTitle": {
+                  "text": "Available & Reserved Stock Value",
+                  "bold": true,
+                  "fontSize": 21,
+                  "color": "#01666B"
+                },
+                "title": "Top Products"
+              }
+            ],
+            "fieldMatching": {}
+          }
         }
       ],
       "tables": [
         {
-          "range": "A58:B69",
+          "range": "A61:B72",
           "type": "static",
           "config": {
             "hasFilters": false,
@@ -426,7 +614,7 @@
           }
         },
         {
-          "range": "A58:C69",
+          "range": "A61:C72",
           "type": "static",
           "config": {
             "hasFilters": false,
@@ -870,7 +1058,7 @@
       "top": { "style": "thin", "color": "#CCCCCC" }
     }
   },
-  "revisionId": "ac18891f-8749-4112-b6bf-1c5d232845a1",
+  "revisionId": "393aa446-793c-44a2-ad70-d569397e60c0",
   "uniqueFigureIds": true,
   "settings": {
     "locale": {
@@ -1192,7 +1380,7 @@
       "rows": [
         { "fieldName": "product_id" }
       ],
-      "name": "Inventory by Location",
+      "name": "Products",
       "actionXmlId": "stock.dashboard_open_quants",
       "formulaId": "22",
       "fieldMatching": {
