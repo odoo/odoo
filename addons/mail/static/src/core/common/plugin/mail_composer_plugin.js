@@ -6,7 +6,7 @@ import { withSequence } from "@html_editor/utils/resource";
 
 export class MailComposerPlugin extends Plugin {
     static id = "mail.composer";
-    static dependencies = ["hint", "selection"];
+    static dependencies = ["hint", "input", "selection"];
     resources = {
         hints: [
             withSequence(1, {
@@ -27,6 +27,7 @@ export class MailComposerPlugin extends Plugin {
                 return [];
             }
         },
+        input_handlers: this.config.composerPluginDependencies.onInput.bind(this),
     };
 
     setup() {
