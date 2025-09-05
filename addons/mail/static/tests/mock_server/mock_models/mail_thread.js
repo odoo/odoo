@@ -137,11 +137,13 @@ export class MailThread extends models.ServerModel {
             );
         }
         email_from ||= false;
+        const message_type = kwargs.message_type || "notification";
         const values = unmakeKwArgs({
             ...kwargs,
             author_id,
             author_guest_id,
             email_from,
+            message_type,
             subtype_id: MailMessageSubtype._filter([
                 ["subtype_xmlid", "=", kwargs.subtype_xmlid || "mail.mt_note"],
             ])[0]?.id,

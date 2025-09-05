@@ -8,6 +8,7 @@ import {
     models,
     serverState,
 } from "@web/../tests/web_test_helpers";
+import { Domain } from "@web/core/domain";
 
 /** @typedef {import("@web/core/domain").DomainListRepr} DomainListRepr */
 
@@ -453,20 +454,76 @@ export class MailMessage extends models.ServerModel {
      * @param {number} [limit=30]
      * @returns {Object[]}
      */
-    _message_fetch(domain, search_term, before, after, around, limit) {
+    _message_fetch(domain, thread, search_term, is_notification, before, after, around, limit) {
+        /** @type {import("mock_models").IrAttachment} */
+        const IrAttachment = this.env["ir.attachment"];
+        /** @type {import("mock_models").MailMessageSubtype} */
+        const MailMessageSubtype = this.env["mail.message.subtype"];
+        /** @type {import("mock_models").MailTrackingValue} */
+        const MailTrackingValue = this.env["mail.tracking.value"];
         ({
             domain,
+            thread,
             search_term,
+            is_notification,
             before,
             after,
             around,
             limit = 30,
-        } = getKwArgs(arguments, "domain", "search_term", "before", "after", "around", "limit"));
-
+        } = getKwArgs(
+            arguments,
+            "domain",
+            "thread",
+            "search_term",
+            "is_notification",
+            "before",
+            "after",
+            "around",
+            "limit"
+        ));
         const res = {};
+        if (thread) {
+            domain = domain.concat([
+                ["res_id", "=", parseInt(thread[0].id)],
+                ["model", "=", thread._name],
+                ["message_type", "!=", "user_notification"],
+            ]);
+        }
+        if (is_notification === true) {
+            domain.push(["message_type", "=", "notification"]);
+        } else if (is_notification === false) {
+            domain.push(["message_type", "!=", "notification"]);
+        }
         if (search_term) {
+            domain = new Domain(domain || []);
             search_term = search_term.replace(" ", "%");
-            domain.push(["body", "ilike", search_term]);
+            const subtypeIds = MailMessageSubtype.search([["description", "ilike", search_term]]);
+            const irAttachmentIds = IrAttachment.search([["name", "ilike", search_term]]);
+            let message_domain = Domain.or([
+                [["body", "ilike", search_term]],
+                [["attachment_ids", "in", irAttachmentIds]],
+                [["subject", "ilike", search_term]],
+                [["subtype_ids", "in", subtypeIds]],
+            ]);
+            if (thread && is_notification !== false) {
+                const messageIds = this.search([
+                    ["res_id", "=", parseInt(thread[0].id)],
+                    ["model", "=", thread._name],
+                ]);
+                const trackingValueDomain = Domain.and([
+                    [["mail_message_id", "in", messageIds]],
+                    this._get_tracking_values_domain(search_term),
+                ]).toList();
+                const trackingValueIds = MailTrackingValue.search(trackingValueDomain);
+                const trackingMessageIds = this.search([
+                    ["tracking_value_ids", "in", trackingValueIds],
+                ]);
+                message_domain = Domain.or([
+                    message_domain,
+                    new Domain([["id", "in", trackingMessageIds]]),
+                ]);
+            }
+            domain = Domain.and([domain, message_domain]).toList();
             res.count = this.search_count(domain);
         }
         if (around !== undefined) {
@@ -494,6 +551,43 @@ export class MailMessage extends models.ServerModel {
         messages.length = Math.min(messages.length, limit);
         res.messages = messages;
         return res;
+    }
+
+    _get_tracking_values_domain(search_term) {
+        let numeric_term = false;
+        const epsilon = 1e-9;
+        numeric_term = parseFloat(search_term);
+        const field_names = [
+            "old_value_char",
+            "new_value_char",
+            "old_value_text",
+            "new_value_text",
+            "old_value_datetime",
+            "new_value_datetime",
+        ];
+        let domain = Domain.or(
+            field_names.map((field_name) => new Domain([[field_name, "ilike", search_term]]))
+        );
+        if (numeric_term) {
+            const float_domain = Domain.or(
+                ["old_value_float", "new_value_float"].map(
+                    (fieldName) =>
+                        new Domain([
+                            [fieldName, ">=", numeric_term - epsilon],
+                            [fieldName, "<=", numeric_term + epsilon],
+                        ])
+                )
+            );
+            domain = Domain.or([domain, float_domain]);
+        }
+        if (Number.isInteger(numeric_term)) {
+            domain = Domain.or([
+                domain,
+                new Domain([["old_value_integer", "=", numeric_term]]),
+                new Domain([["new_value_integer", "=", numeric_term]]),
+            ]);
+        }
+        return domain;
     }
 
     /**

@@ -13,12 +13,12 @@
                         <ul class="mb-0 list-unstyled">
                             <t name="trackingValues" t-foreach="message.trackingValues" t-as="trackingValue" t-key="trackingValue.id">
                                 <li class="o-mail-Message-tracking mb-1" role="group">
-                                    <span class="o-mail-Message-trackingOld text-muted fw-bold" t-esc="formatTrackingOrNone(trackingValue.fieldInfo, trackingValue.oldValue)"/>
+                                    <span class="o-mail-Message-trackingOld text-muted fw-bold" t-out="formatTrackingOrNone(trackingValue.fieldInfo, trackingValue.oldValue)"/>
                                     <t t-if="!trackingValue.fieldInfo.isPropertyField">
                                         <i class="o-mail-Message-trackingSeparator fa fa-long-arrow-right mx-2 text-600"/>
-                                        <span class="o-mail-Message-trackingNew me-1 fw-bold text-info" t-esc="formatTrackingOrNone(trackingValue.fieldInfo, trackingValue.newValue)"/>
+                                        <span class="o-mail-Message-trackingNew me-1 fw-bold text-info" t-out="formatTrackingOrNone(trackingValue.fieldInfo, trackingValue.newValue)"/>
                                     </t>
-                                    <span class="o-mail-Message-trackingField ms-1 fst-italic text-muted">(<t t-esc="trackingValue.fieldInfo.changedField"/>)</span>
+                                    <span class="o-mail-Message-trackingField ms-1 fst-italic text-muted">(<t t-out="props.messageSearch?.highlight(trackingValue.fieldInfo.changedField) ?? trackingValue.fieldInfo.changedField"/>)</span>
                                 </li>
                             </t>
                         </ul>
