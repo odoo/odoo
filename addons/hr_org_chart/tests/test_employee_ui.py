@@ -1,3 +1,4 @@
+from odoo import Command
 from odoo.tests import HttpCase, tagged
 
 from odoo.addons.hr.tests.common import TestHrCommon
@@ -8,6 +9,7 @@ class TestEmployeeUi(TestHrCommon, HttpCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        cls.res_users_hr_officer.write({'group_ids': [Command.link(cls.env.ref('hr_payroll.group_hr_payroll_user').id)]})
         cls.employee_georges, cls.employee_paul, cls.employee_pierre = cls.env['hr.employee'].with_user(cls.res_users_hr_officer).create([
             {'name': 'Georges'},
             {'name': 'Paul'},
