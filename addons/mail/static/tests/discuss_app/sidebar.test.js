@@ -1171,10 +1171,10 @@ test("Update channel data via bus notification", async () => {
     const env2 = await start({ asTab: true });
     await openDiscuss(channelId, { target: env1 });
     await openDiscuss(channelId, { target: env2 });
-    await contains(".o-mail-DiscussSidebarChannel", { text: "Sales", target: env1 });
-    await insertText(".o-mail-Discuss-threadName", "test", { target: env1 });
+    await contains(`${env1.selector} .o-mail-DiscussSidebarChannel`, { text: "Sales" });
+    await insertText(`${env1.selector} .o-mail-Discuss-threadName`, "test");
     await triggerHotkey("Enter");
-    await contains(".o-mail-DiscussSidebarChannel", { text: "Salestest", target: env2 });
+    await contains(`${env2.selector} .o-mail-DiscussSidebarChannel`, { text: "Salestest" });
 });
 
 test("sidebar: show loading on initial opening", async () => {
@@ -1249,12 +1249,12 @@ test("Sidebar compact is crosstab synced", async () => {
     const env2 = await start({ asTab: true });
     await openDiscuss(channelId, { target: env1 });
     await openDiscuss(channelId, { target: env2 });
-    await contains(".o-mail-DiscussSidebar:not(.o-compact)", { target: env1 });
-    await contains(".o-mail-DiscussSidebar:not(.o-compact)", { target: env2 });
-    await click(".o-mail-DiscussSidebar [title='Options']", { target: env1 });
-    await click(".dropdown-item:contains('Collapse panel')", { target: env1 });
-    await contains(".o-mail-DiscussSidebar.o-compact", { target: env1 });
-    await contains(".o-mail-DiscussSidebar.o-compact", { target: env2 });
+    await contains(`${env1.selector} .o-mail-DiscussSidebar:not(.o-compact)`);
+    await contains(`${env2.selector} .o-mail-DiscussSidebar:not(.o-compact)`);
+    await click(`${env1.selector} .o-mail-DiscussSidebar [title='Options']`);
+    await click(`${env1.selector} .dropdown-item:contains('Collapse panel')`);
+    await contains(`${env1.selector} .o-mail-DiscussSidebar.o-compact`);
+    await contains(`${env2.selector} .o-mail-DiscussSidebar.o-compact`);
 });
 
 test("Redirect to the thread containing the starred message and highlight the message", async () => {
