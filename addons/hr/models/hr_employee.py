@@ -20,6 +20,11 @@ from odoo.addons.hr.models.hr_version import format_date_abbr
 from odoo.addons.mail.tools.discuss import Store
 from odoo.tools.float_utils import float_is_zero
 
+# This sentinel object, when in the context, provides read access to the
+# model 'hr.employee' in certain situations, like when setting a many2many
+# field for users that don't have access to `hr.employee`.
+_ALLOW_READ_HR_EMPLOYEE = object()
+
 
 class HrEmployee(models.Model):
     """
@@ -1076,6 +1081,16 @@ class HrEmployee(models.Model):
         public = self.env['hr.employee.public'].browse(self._ids)
         public.fetch(field_names)
         self._copy_cache_from(public, field_names)
+
+    def _check_access(self, operation):
+        # This method override provides read access to 'hr.employee' in some
+        # situations, like setting a many2many field to comodel 'hr.employee'.
+        # Since Odoo 19, one must have read access to the comodel to modify the
+        # relation.
+        if operation == 'read' and self.env.context.get('_allow_read_hr_employee') is _ALLOW_READ_HR_EMPLOYEE:
+            return None
+
+        return super()._check_access(operation)
 
     def _check_private_fields(self, field_names):
         """ Check whether ``field_names`` contain private fields. """
