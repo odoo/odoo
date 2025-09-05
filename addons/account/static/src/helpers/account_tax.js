@@ -1642,7 +1642,7 @@ export const accountTaxHelpers = {
     },
 
     // -------------------------------------------------------------------------
-    // GLOBAL DISCOUNT
+    // ADVANCED LINES MANIPULATION HELPERS
     // -------------------------------------------------------------------------
 
     /**
@@ -1651,6 +1651,72 @@ export const accountTaxHelpers = {
      */
     can_be_discounted(tax) {
         return !["fixed", "code"].includes(tax.amount_type);
+    },
+
+    /**
+     * [!] Mirror of the same method in account_tax.py.
+     * PLZ KEEP BOTH METHODS CONSISTENT WITH EACH OTHERS.
+     */
+    merge_tax_details(tax_details_1, tax_details_2) {
+        const results = {};
+        for (const prefix of ["raw_", ""]) {
+            for (const field of ["total_excluded", "total_included"]) {
+                for (const suffix of ["_currency", ""]) {
+                    const key = `${prefix}${field}${suffix}`;
+                    results[key] = tax_details_1[key] + tax_details_2[key];
+                }
+            }
+        }
+        for (const suffix of ["_currency", ""]) {
+            const field = `delta_total_excluded${suffix}`;
+            results[field] = tax_details_1[field] + tax_details_2[field];
+        }
+
+        const agg_taxes_data = {};
+        for (const tax_details of [tax_details_1, tax_details_2]) {
+            for (const tax_data of tax_details.taxes_data) {
+                const tax = tax_data.tax;
+                const tax_id_str = tax.id.toString();
+                if (tax_id_str in agg_taxes_data[tax]) {
+                    const agg_tax_data = agg_taxes_data[tax_id_str];
+                    for (const prefix of ["raw_", ""]) {
+                        for (const suffix of ["_currency", ""]) {
+                            for (const field of ["base_amount", "tax_amount"]) {
+                                const field_with_prefix = `${prefix}${field}${suffix}`;
+                                agg_tax_data[field_with_prefix] += tax_data[field_with_prefix];
+                            }
+                        }
+                    }
+                } else {
+                    agg_taxes_data[tax_id_str] = { ...tax_data };
+                }
+            }
+        }
+        results.taxes_data = Object.values(agg_taxes_data);
+
+        // In case there is some taxes that are in tax_details_1 but not on tax_details_2,
+        // we have to shift manually the base amount. It happens with fixed taxes in which the base
+        // is meaningless but still used in the computations.
+        const taxes_data_in_2 = new Set(tax_details_2.taxes_data.map((td) => td.tax.id));
+        const not_discountable_taxes_data = new Set(
+            tax_details_1.taxes_data
+                .filter((td) => !taxes_data_in_2.has(td.tax.id))
+                .map((td) => td.tax.id)
+        );
+        for (const tax_data of results.taxes_data) {
+            if (not_discountable_taxes_data.has(tax_data.tax.id)) {
+                for (const suffix of ["_currency", ""]) {
+                    for (const prefix of ["raw_", ""]) {
+                        tax_data[`${prefix}base_amount${suffix}`] +=
+                            tax_details_2[`${prefix}total_excluded${suffix}`];
+                    }
+                    tax_data[`base_amount${suffix}`] +=
+                        tax_details_2[`delta_total_excluded${suffix}`];
+                }
+            }
+        }
+
+        return results;
     },
 
     /**
@@ -1916,6 +1982,10 @@ export const accountTaxHelpers = {
         }
     },
 
+    // -------------------------------------------------------------------------
+    // GLOBAL DISCOUNT
+    // -------------------------------------------------------------------------
+
     /**
      * [!] Mirror of the same method in account_tax.py.
      * PLZ KEEP BOTH METHODS CONSISTENT WITH EACH OTHERS.
@@ -2075,6 +2145,10 @@ export const accountTaxHelpers = {
         );
         return reduced_base_lines;
     },
+
+    // -------------------------------------------------------------------------
+    // DOWN PAYMENT
+    // -------------------------------------------------------------------------
 
     /**
      * [!] Mirror of the same method in account_tax.py.
