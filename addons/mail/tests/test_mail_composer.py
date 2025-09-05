@@ -332,6 +332,35 @@ class TestMailComposerUI(MailCommon, HttpCase):
         self.assertEqual(len(re.findall(signature_pattern, message_3.body)), 0)
         self.assertTrue(message_3.email_add_signature)
 
+    def test_mail_html_composer_test_tour(self):
+        template_data = [
+            {
+                'name': 'Test template',
+                'partner_to': '{{ object.id }}',
+            },
+            {
+                'name': 'Test template for admin',
+                'user_id': self.env.ref('base.user_admin').id,
+            },
+        ]
+        self.env['mail.template'].create([
+            {
+                **data,
+                'auto_delete': True,
+                'lang': '{{ object.lang }}',
+                'model_id': self.env['ir.model']._get_id('res.partner'),
+            }
+            for data in template_data
+        ])
+        partner = self.env["res.partner"].create({"name": "Jane", "email": "jane@example.com"})
+        partner.message_subscribe(partner_ids=[self.user_admin.partner_id.id])
+        with self.mock_mail_app():
+            self.start_tour(
+                f"/odoo/res.partner/{partner.id}",
+                "mail/static/tests/tours/mail_html_composer_test_tour.js",
+                login=self.user_employee.login,
+            )
+
     def test_send_attachment_without_body(self):
         self.start_tour("/odoo/discuss", "create_thread_for_attachment_without_body",login="admin")
 
