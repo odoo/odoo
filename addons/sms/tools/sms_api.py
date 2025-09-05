@@ -18,7 +18,7 @@ class SmsApiBase:
 
     def _get_sms_api_error_messages(self):
         """Return a mapping of `_send_sms_batch` errors to an error message."""
-        raise NotImplementedError()
+        return {}
 
     def _send_sms_batch(self, messages, delivery_reports_url=False):
         raise NotImplementedError()
@@ -91,7 +91,8 @@ class SmsApi(SmsApiBase):  # TODO RIGR in master: rename SmsApi to SmsApiIAP, an
             _('Register now.')
         )
 
-        return {
+        error_dict = super()._get_sms_api_error_messages()
+        error_dict.update({
             'unregistered': _("You don't have an eligible IAP account."),
             'insufficient_credit': ' '.join([_("You don't have enough credits on your IAP account."), buy_credits]),
             'wrong_number_format': _("The number you're trying to reach is not correctly formatted."),
@@ -99,4 +100,5 @@ class SmsApi(SmsApiBase):  # TODO RIGR in master: rename SmsApi to SmsApiIAP, an
             'country_not_supported': _("The destination country is not supported."),
             'incompatible_content': _("The content of the message violates rules applied by our providers."),
             'registration_needed': ' '.join([_("Country-specific registration required."), register_now]),
-        }
+        })
+        return error_dict

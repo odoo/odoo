@@ -183,7 +183,7 @@ class TestMailingSMSTest(TestMassMailCommon, MockSmsTwilioApi):
             (False, 'outgoing', '<ul><li>Test SMS successfully sent to +32456001122</li></ul>'),
             (
                 'wrong_number_format', 'outgoing',  # not sure why outgoing but hey
-                "<ul><li>Test SMS could not be sent to +32456001122: The number you're trying to reach is not correctly formatted.</li></ul>"
+                "<ul><li>Test SMS could not be sent to +32456001122: The number you're trying to reach is not correctly formatted</li></ul>"
             ),
         ]:
             with self.subTest(error_type=error_type):
