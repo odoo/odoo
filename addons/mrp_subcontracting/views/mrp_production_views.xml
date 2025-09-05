@@ -11,13 +11,13 @@
                 <attribute name="js_class">subcontracting_production_form</attribute>
             </xpath>
             <xpath expr="//header" position="replace">
-                <field name="state" invisible="1"/>
+                <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,done"/>
             </xpath>
             <xpath expr="//div[@name='button_box']" position="replace"/>
             <xpath expr="//div[hasclass('oe_title')]" position="replace"/>
             <xpath expr="//div[@name='qty']" position="replace">
                 <div class="o_row g-0 d-flex" name="qty">
-                    <field name="product_qty"/>
+                    <field name="product_qty" readonly="state == 'done'"/>
                 </div>
             </xpath>
             <xpath expr="//button[@name='action_generate_bom']" position="replace"/>
@@ -80,6 +80,10 @@
         <field name="inherit_id" ref="mrp.mrp_production_tree_view" />
         <field name="arch" type="xml">
             <xpath expr="//header" position="replace"/>
+            <xpath expr="//list" position="attributes">
+                <attribute name="create">0</attribute>
+                <attribute name="js_class">subcontracting_production_list</attribute>
+            </xpath>
             <xpath expr="//field[@name='name']" position="after">
                 <field name="incoming_picking"/>
             </xpath>
