@@ -10,20 +10,20 @@
             <t t-set-slot="footer">
                 <button
                     name="sale_product_configurator_confirm_button"
-                    class="btn btn-primary"
+                    class="btn btn-primary order-2 order-md-1"
                     t-on-click="onConfirm"
                     t-att-disabled="!isPossibleConfiguration()">
                     Confirm
                 </button>
                 <button
                     name="sale_product_configurator_cancel_button"
-                    class="btn btn-secondary"
+                    class="btn btn-secondary order-2 order-md-1"
                     t-on-click="onDiscard"
                 >
                     Cancel
                 </button>
                 <h6
-                    class="o_configurator_price_total d-none d-sm-inline-block ms-3 mb-0 mt-0"
+                    class="o_configurator_price_total order-1 order-md-2 d-block d-sm-inline-block w-100 w-md-auto text-end ms-md-3 mb-0"
                     name="sale_product_configurator_list_total"
                 >
                     <t t-out="totalMessage"/>
