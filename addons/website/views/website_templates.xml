@@ -430,11 +430,9 @@
                             </t>
                         </li>
                         <!-- Text element -->
-                        <t t-call="website.placeholder_header_text_element"
-                            _div_class.f="mt-2"/>
+                        <t t-call="website.placeholder_header_text_element" _div_class.f="mt-2"/>
                         <!-- Social -->
-                        <t t-call="website.placeholder_header_social_links"
-                            _div_class.f="mt-2 border-top pt-2 o_border_contrast"/>
+                        <t t-call="website.placeholder_header_social_links" _div_class.f="mt-2"/>
                     </ul>
                     <ul class="navbar-nav gap-2 mt-3 w-100">
                         <!-- Language Selector -->
@@ -491,10 +489,10 @@
         <attribute name="_nav_class.f">text-center</attribute>
     </xpath>
     <xpath expr="//t[@t-call='website.placeholder_header_text_element']" position="attributes">
-        <attribute name="_div_class.f">align-items-center mt-2 border-top pt-2 text-center o_border_contrast</attribute>
+        <attribute name="_div_class.f">mt-2 text-center</attribute>
     </xpath>
     <xpath expr="//t[@t-call='website.placeholder_header_social_links']" position="attributes">
-        <attribute name="_div_class.f">mt-2 border-top pt-2 text-center o_border_contrast</attribute>
+        <attribute name="_div_class.f">mt-2 text-center</attribute>
     </xpath>
     <xpath expr="//t[@t-call='website.submenu']" position="attributes">
         <attribute name="dropdown_toggler_classes.f"/>
@@ -507,10 +505,10 @@
         <attribute name="_nav_class.f">text-end</attribute>
     </xpath>
     <xpath expr="//t[@t-call='website.placeholder_header_text_element']" position="attributes">
-        <attribute name="_div_class.f">align-items-end mt-2 border-top pt-2 text-end o_border_contrast</attribute>
+        <attribute name="_div_class.f">mt-2 text-end</attribute>
     </xpath>
     <xpath expr="//t[@t-call='website.placeholder_header_social_links']" position="attributes">
-        <attribute name="_div_class.f">mt-2 border-top pt-2 text-end o_border_contrast</attribute>
+        <attribute name="_div_class.f">mt-2 text-end</attribute>
     </xpath>
     <xpath expr="//t[@t-call='website.submenu']" position="attributes">
         <attribute name="dropdown_toggler_classes.f"/>
@@ -641,8 +639,7 @@
                                 _txt_elt_content.f="phone_mail"
                                 _div_class.f="mt-2"/>
                             <!-- Social -->
-                            <t t-call="website.placeholder_header_social_links"
-                                _div_class.f="mt-2 border-top pt-2 o_border_contrast"/>
+                            <t t-call="website.placeholder_header_social_links" _div_class.f="mt-2"/>
                         </ul>
                         <ul class="navbar-nav gap-2 mt-3 w-100">
                             <!-- Language Selector -->
@@ -687,25 +684,25 @@
 
 <template id="template_header_hamburger_mobile_align_center" inherit_id="website.template_header_hamburger" active="False">
     <xpath expr="//t[@t-call='website.navbar_nav']" position="attributes">
-        <attribute name="_nav_class.f">my-3 text-center</attribute>
+        <attribute name="_nav_class.f">mt-3 text-center</attribute>
     </xpath>
     <xpath expr="//t[@t-call='website.placeholder_header_text_element']" position="attributes">
-        <attribute name="_div_class.f">mt-2 border-top pt-2 text-center o_border_contrast</attribute>
+        <attribute name="_div_class.f">mt-2 text-center</attribute>
     </xpath>
     <xpath expr="//t[@t-call='website.placeholder_header_social_links']" position="attributes">
-        <attribute name="_div_class.f">mt-2 border-top pt-2 text-center o_border_contrast</attribute>
+        <attribute name="_div_class.f">mt-2 text-center</attribute>
     </xpath>
 </template>
 
 <template id="template_header_hamburger_mobile_align_right" inherit_id="website.template_header_hamburger" active="False">
     <xpath expr="//t[@t-call='website.navbar_nav']" position="attributes">
-        <attribute name="_nav_class.f">my-3 text-end</attribute>
+        <attribute name="_nav_class.f">mt-3 text-end</attribute>
     </xpath>
     <xpath expr="//t[@t-call='website.placeholder_header_text_element']" position="attributes">
-        <attribute name="_div_class.f">mt-2 border-top pt-2 text-end o_border_contrast</attribute>
+        <attribute name="_div_class.f">mt-2 text-end</attribute>
     </xpath>
     <xpath expr="//t[@t-call='website.placeholder_header_social_links']" position="attributes">
-        <attribute name="_div_class.f">mt-2 border-top pt-2 text-end o_border_contrast</attribute>
+        <attribute name="_div_class.f">mt-2 text-end</attribute>
     </xpath>
 </template>
 
@@ -1348,8 +1345,7 @@
                                 _txt_elt_content.f="phone_mail"
                                 _div_class.f="mt-2"/>
                             <!-- Social -->
-                            <t t-call="website.placeholder_header_social_links"
-                                _div_class.f="mt-2 border-top pt-2 o_border_contrast"/>
+                            <t t-call="website.placeholder_header_social_links" _div_class.f="mt-2"/>
                         </ul>
                         <ul class="navbar-nav gap-2 mt-3 w-100">
                             <!-- Language Selector -->
@@ -1395,10 +1391,10 @@
         <attribute name="_nav_class.f">text-center</attribute>
     </xpath>
     <xpath expr="//t[@t-call='website.placeholder_header_text_element']" position="attributes">
-        <attribute name="_div_class.f">mt-2 border-top pt-2 o_border_contrast text-center</attribute>
+        <attribute name="_div_class.f">mt-2 text-center</attribute>
     </xpath>
     <xpath expr="//t[@t-call='website.placeholder_header_social_links']" position="attributes">
-        <attribute name="_div_class.f">mt-2 border-top pt-2 o_border_contrast text-center</attribute>
+        <attribute name="_div_class.f">mt-2 text-center</attribute>
     </xpath>
     <xpath expr="//t[@t-call='website.submenu']" position="attributes">
         <attribute name="dropdown_toggler_classes.f"/>
@@ -1411,10 +1407,10 @@
         <attribute name="_nav_class.f">text-end</attribute>
     </xpath>
     <xpath expr="//t[@t-call='website.placeholder_header_text_element']" position="attributes">
-        <attribute name="_div_class.f">mt-2 border-top pt-2 o_border_contrast text-end</attribute>
+        <attribute name="_div_class.f">mt-2 text-end</attribute>
     </xpath>
     <xpath expr="//t[@t-call='website.placeholder_header_social_links']" position="attributes">
-        <attribute name="_div_class.f">mt-2 border-top pt-2 o_border_contrast text-end</attribute>
+        <attribute name="_div_class.f">mt-2 text-end</attribute>
     </xpath>
     <xpath expr="//t[@t-call='website.submenu']" position="attributes">
         <attribute name="dropdown_toggler_classes.f"/>
@@ -1427,8 +1423,7 @@
     <xpath expr="//header//nav" position="replace">
         <div t-attf-class="#{header_content_width} py-3 px-0">
             <t t-call="website.navbar"
-                _navbar_classes.f="o_full_border d-none d-lg-block rounded-pill px-3 shadow-sm">
-
+                    _navbar_classes.f="o_full_border d-none d-lg-block rounded-pill px-4 shadow-sm">
                 <div id="o_main_nav" t-attf-class="#{header_content_width} o_main_nav">
                     <!-- Brand -->
                     <t t-call="website.placeholder_header_brand"
