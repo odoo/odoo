@@ -107,17 +107,21 @@
                                             placeholder='e.g "www.youtube.com/watch?v=ebBez6bcSEc"'
                                             widget="url"/>
                                         <field name="document_google_url" invisible="source_type != 'external' or slide_category != 'document'" readonly="source_type != 'external' or slide_category != 'document'"
+                                            required="slide_category == 'document' and source_type == 'external'"
                                             placeholder='e.g "https://drive.google.com/file/..."'
                                             widget="url"/>
                                         <field name="image_google_url" invisible="source_type != 'external' or slide_category != 'infographic'" readonly="source_type != 'external' or slide_category != 'infographic'"
+                                            required="slide_category == 'infographic' and source_type == 'external'"
                                             placeholder='e.g "https://drive.google.com/file/..."'
                                             widget="url"/>
                                         <field name="document_binary_content" string="" options="{'accepted_file_extensions': '.pdf'}"
                                             invisible="source_type == 'external' or slide_category != 'document'"
-                                            readonly="source_type == 'external' or slide_category != 'document'"/>
+                                            readonly="source_type == 'external' or slide_category != 'document'"
+                                            required="slide_category == 'document' and source_type == 'local_file'"/>
                                         <field name="image_binary_content" string="" options="{'accepted_file_extensions': 'image/*'}"
                                             invisible="source_type == 'external' or slide_category != 'infographic'"
-                                            readonly="source_type == 'external' or slide_category != 'infographic'"/>
+                                            readonly="source_type == 'external' or slide_category != 'infographic'"
+                                            required="slide_category == 'infographic' and source_type == 'local_file'"/>
                                     </group>
                                     <group name="related_details">
                                         <field name="user_id" string="Responsible" domain="[('share', '=', False)]" widget="many2one_avatar"/>
