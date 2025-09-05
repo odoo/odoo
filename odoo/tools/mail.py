@@ -778,14 +778,22 @@ def email_split_tuples(text):
 
     return list(map(_parse_based_on_spaces, valid_pairs))
 
+
 def email_split(text):
     """ Return a list of the email addresses found in ``text`` """
     return [email for (name, email) in email_split_tuples(text)]
+
 
 def email_split_and_format(text):
     """ Return a list of email addresses found in ``text``, formatted using
     formataddr. """
     return [formataddr((name, email)) for (name, email) in email_split_tuples(text)]
+
+
+def email_split_and_normalize(text):
+    """ Same as 'email_split' but normalized email """
+    return [(name, _normalize_email(email)) for (name, email) in email_split_tuples(text)]
+
 
 def email_split_and_format_normalize(text):
     """ Same as 'email_split_and_format' but normalizing email. """
