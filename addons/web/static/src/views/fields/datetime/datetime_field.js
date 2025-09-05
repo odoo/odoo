@@ -139,7 +139,7 @@ export class DateTimeField extends Component {
             onChange: () => {
                 this.state.range = this.isRange(this.state.value);
             },
-            onApply: () => {
+            onApply: async () => {
                 const toUpdate = {};
                 if (Array.isArray(this.state.value)) {
                     // Value is already a range
@@ -156,7 +156,7 @@ export class DateTimeField extends Component {
                 }
 
                 if (Object.keys(toUpdate).length) {
-                    this.props.record.update(toUpdate);
+                    await this.props.record.update(toUpdate);
                 }
             },
         });
