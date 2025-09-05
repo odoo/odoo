@@ -5,6 +5,7 @@ from threading import Thread, Event
 from odoo.addons.iot_drivers.main import drivers, iot_devices
 from odoo.addons.iot_drivers.event_manager import event_manager
 from odoo.addons.iot_drivers.tools.helpers import toggleable
+from odoo.tools.lru import LRU
 
 _logger = logging.getLogger(__name__)
 
@@ -26,6 +27,7 @@ class Driver(Thread):
         self.data = {'value': '', 'result': ''}  # TODO: deprecate "value"?
         self._actions = {}
         self._stopped = Event()
+        self._recent_action_ids = LRU(256)
 
     def __init_subclass__(cls):
         super().__init_subclass__()
@@ -47,6 +49,9 @@ class Driver(Thread):
         :param dict data: the action method name and the parameters to be passed to it
         :return: the result of the action method
         """
+        if self._check_if_action_is_duplicate(data.get('action_unique_id')):
+            return
+
         action = data.get('action', '')
         session_id = data.get('session_id')
         if session_id:
@@ -61,6 +66,15 @@ class Driver(Thread):
         # printers handle their own events (low on paper, etc.)
         if self.device_type != "printer":
             event_manager.device_changed(self, response)
+
+    def _check_if_action_is_duplicate(self, action_unique_id):
+        if not action_unique_id:
+            return False
+        if action_unique_id in self._recent_action_ids:
+            _logger.warning("Duplicate action %s received, ignoring", action_unique_id)
+            return True
+        self._recent_action_ids[action_unique_id] = action_unique_id
+        return False
 
     def disconnect(self):
         self._stopped.set()
