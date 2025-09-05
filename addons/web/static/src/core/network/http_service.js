@@ -5,6 +5,9 @@ function checkResponseStatus(response) {
     if (response.status === 502) {
         throw new Error("Failed to fetch");
     }
+    if (response.status === 413) {
+        throw new Error("Content too large");
+    }
 }
 
 export async function get(route, readMethod = "json") {

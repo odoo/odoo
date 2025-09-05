@@ -452,7 +452,7 @@ export class Form extends Interaction {
             .catch(error => {
                 this.updateStatus(
                     "error",
-                    error.status && error.status === 413 ? _t("Uploaded file is too large.") : "",
+                    error.message && error.message === 'Content too large' ? _t("Uploaded file is too large.") : "",
                 );
             });
     }
