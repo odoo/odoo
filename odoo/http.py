@@ -997,6 +997,28 @@ class FilesystemSessionStore(sessions.FilesystemSessionStore):
     def is_valid_key(self, key):
         return _base64_urlsafe_re.match(key) is not None
 
+    def get_missing_session_identifiers(self, identifiers):
+        """
+            :param identifiers: session identifiers whose file existence must be checked
+                                identifiers are a part session sid (first 42 chars)
+            :type identifiers: iterable
+            :return: the identifiers which are not present on the filesystem
+            :rtype: set
+        """
+        # There are a lot of session files.
+        # Use the param ``identifiers`` to select the necessary directories.
+        # In the worst case, we have 4096 directories (64^2).
+        identifiers = set(identifiers)
+        directories = {
+            os.path.normpath(os.path.join(self.path, identifier[:2]))
+            for identifier in identifiers
+        }
+        # Remove the identifiers for which a file is present on the filesystem.
+        for directory in directories:
+            with contextlib.suppress(OSError), os.scandir(directory) as session_files:
+                identifiers.difference_update(sf.name[:42] for sf in session_files)
+        return identifiers
+
     def delete_from_identifiers(self, identifiers):
         files_to_unlink = []
         for identifier in identifiers:
