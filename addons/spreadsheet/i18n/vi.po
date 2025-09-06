@@ -1,24 +1,27 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* spreadsheet
+# * spreadsheet
 #
 # Translators:
 # Thi Huong Nguyen, 2025
 # Wil Odoo, 2025
 #
+# "Thi Huong Nguyen (thng)" <thng@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-08-21 18:40+0000\n"
-"PO-Revision-Date: 2025-02-20 10:06+0000\n"
-"Last-Translator: Wil Odoo, 2025\n"
-"Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
+"POT-Creation-Date: 2025-09-05 18:39+0000\n"
+"PO-Revision-Date: 2025-09-06 10:41+0000\n"
+"Last-Translator: \"Thi Huong Nguyen (thng)\" <thng@odoo.com>\n"
+"Language-Team: Vietnamese <https://translate.odoo.com/projects/odoo-s18-2/"
+"spreadsheet/vi/>\n"
 "Language: vi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1689,12 +1692,6 @@ msgstr "Không thể ẩn tất cả các cột của một trang tính."
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Cannot hide all the rows of a sheet."
 msgstr "Không thể ẩn tất cả các hàng của một trang tính."
-
-#. module: spreadsheet
-#. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-msgid "Cannot multiply matrices : incompatible matrices size."
-msgstr "Không thể nhân ma trận: kích thước ma trận không tương thích."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3771,16 +3768,6 @@ msgstr "Hàm [[FUNCTION_NAME]] cần criteria_range có cùng danh mục."
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Function [[FUNCTION_NAME]] expects number values for %s, but got a %s."
 msgstr "Hàm [[FUNCTION_NAME]] cần các giá trị số cho %s, nhưng nhận được %s."
-
-#. module: spreadsheet
-#. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-msgid ""
-"Function [[FUNCTION_NAME]] invert matrix error, only square matrices are "
-"invertible"
-msgstr ""
-"Hàm [[FUNCTION_NAME]] lỗi ma trận nghịch đảo, chỉ có ma trận vuông là nghịch "
-"đảo"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -8190,6 +8177,14 @@ msgstr "Số cộng đầu tiên."
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid ""
+"The first and second arguments of [[FUNCTION_NAME]] must be non-empty "
+"matrices."
+msgstr ""
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "The first column index of the columns to be returned."
 msgstr "Chỉ mục cột đầu tiên của các cột được trả về."
 
@@ -9894,7 +9889,7 @@ msgstr "Không được để trống tên trang tính."
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "The single period within life for which to calculate depreciation."
-msgstr "Kỳ duy nhất trong số kỳ khấu hao cần tính khấu hao."
+msgstr "Kỳ duy nhất trong vòng đời dùng để tính khấu hao."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -10520,12 +10515,6 @@ msgstr "Giá trị của tài sản vào cuối kỳ tính khấu hao."
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "The value or values to be appended using delimiter."
 msgstr "Giá trị hoặc các giá trị được nối thêm bằng dấu phân cách."
-
-#. module: spreadsheet
-#. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-msgid "The value should be a scalar or a 1x1 matrix"
-msgstr "Giá trị phải là ma trận 1x1 hoặc vô hướng"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -11902,14 +11891,16 @@ msgstr "[[FUNCTION_NAME]] xác định giá trị hàng nằm ngoài phạm vi %
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-msgid "[[FUNCTION_NAME]] expects non-empty ranges for both parameters."
-msgstr "[[FUNCTION_NAME]] cần phạm vi không trống cho cả hai tham số."
+msgid "[[FUNCTION_NAME]] expects number values."
+msgstr "[[FUNCTION_NAME]] cần giá trị số."
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-msgid "[[FUNCTION_NAME]] expects number values."
-msgstr "[[FUNCTION_NAME]] cần giá trị số."
+msgid ""
+"[[FUNCTION_NAME]] expects the provided values of %(argName)s to be a non-"
+"empty matrix."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -11940,12 +11931,6 @@ msgstr "[[FUNCTION_NAME]] có kích thước phạm vi không khớp."
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "[[FUNCTION_NAME]] has no valid input data."
 msgstr "[[FUNCTION_NAME]] không có dữ liệu đầu vào hợp lệ."
-
-#. module: spreadsheet
-#. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-msgid "[[FUNCTION_NAME]] needs at least two values for both parameters."
-msgstr "[[FUNCTION_NAME]] cần ít nhất hai giá trị cho cả hai tham số."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -12177,3 +12162,22 @@ msgstr "hôm qua"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "zero"
 msgstr "0"
+
+#~ msgid "Cannot multiply matrices : incompatible matrices size."
+#~ msgstr "Không thể nhân ma trận: kích thước ma trận không tương thích."
+
+#~ msgid ""
+#~ "Function [[FUNCTION_NAME]] invert matrix error, only square matrices are "
+#~ "invertible"
+#~ msgstr ""
+#~ "Hàm [[FUNCTION_NAME]] lỗi ma trận nghịch đảo, chỉ có ma trận vuông là "
+#~ "nghịch đảo"
+
+#~ msgid "The value should be a scalar or a 1x1 matrix"
+#~ msgstr "Giá trị phải là ma trận 1x1 hoặc vô hướng"
+
+#~ msgid "[[FUNCTION_NAME]] expects non-empty ranges for both parameters."
+#~ msgstr "[[FUNCTION_NAME]] cần phạm vi không trống cho cả hai tham số."
+
+#~ msgid "[[FUNCTION_NAME]] needs at least two values for both parameters."
+#~ msgstr "[[FUNCTION_NAME]] cần ít nhất hai giá trị cho cả hai tham số."
