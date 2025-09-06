@@ -270,6 +270,22 @@ class SMSCase(MockSMS):
         self.assertEqual(notifications.mapped('res_partner_id'), partners)
 
         for recipient_info in recipients_info:
+            # sanity check
+            extra_keys = recipient_info.keys() - {
+                # notification
+                'failure_reason',
+                'failure_type',
+                'state',
+                # sms
+                'sms_fields_values',
+                # recipient
+                'number',
+                'partner',
+                'recipient_check_sms',
+            }
+            if extra_keys:
+                raise ValueError(f'Unsupported values: {extra_keys}')
+
             partner = recipient_info.get('partner', self.env['res.partner'])
             number = recipient_info.get('number')
             state = recipient_info.get('state', 'pending')
@@ -288,20 +304,24 @@ class SMSCase(MockSMS):
             self.assertEqual(notif.author_id, notif.mail_message_id.author_id, 'SMS: Message and notification should have the same author')
             for field_name, expected_value in (mail_message_values or {}).items():
                 self.assertEqual(notif.mail_message_id[field_name], expected_value)
+            if 'failure_reason' in recipient_info:
+                self.assertEqual(notif.failure_reason, recipient_info['failure_reason'])
             if state not in {'process', 'sent', 'ready', 'canceled', 'pending'}:
                 self.assertEqual(notif.failure_type, recipient_info['failure_type'])
-            if check_sms:
+
+            if recipient_info.get('recipient_check_sms', check_sms):
+                fields_values = recipient_info.get('sms_fields_values') or {}
                 if state in {'process', 'pending', 'sent'}:
                     if sent_unlink:
                         self.assertSMSIapSent([number], content=content)
                     else:
-                        self.assertSMS(partner, number, state, content=content)
+                        self.assertSMS(partner, number, state, content=content, fields_values=fields_values)
                 elif state == 'ready':
-                    self.assertSMS(partner, number, 'outgoing', content=content)
+                    self.assertSMS(partner, number, 'outgoing', content=content, fields_values=fields_values)
                 elif state == 'exception':
-                    self.assertSMS(partner, number, 'error', failure_type=recipient_info['failure_type'], content=content)
+                    self.assertSMS(partner, number, 'error', failure_type=recipient_info['failure_type'], content=content, fields_values=fields_values)
                 elif state == 'canceled':
-                    self.assertSMS(partner, number, 'canceled', failure_type=recipient_info['failure_type'], content=content)
+                    self.assertSMS(partner, number, 'canceled', failure_type=recipient_info['failure_type'], content=content, fields_values=fields_values)
                 else:
                     raise NotImplementedError('Not implemented')
 
