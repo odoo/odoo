@@ -28,7 +28,8 @@ class TestSubcontractingBasic(TransactionCase):
         Not reusing the existing routes and operation types"""
         wh_original = self.env['stock.warehouse'].search([], limit=1)
         wh_copy = wh_original.copy(default={'name': 'Dummy Warehouse (copy)', 'code': 'Dummy'})
-
+        wh_original.buy_to_resupply = False
+        wh_original.manufacture_to_resupply = False
         # Check if warehouse routes got RECREATED (instead of reused)
         route_types = [
             "route_ids",
@@ -96,25 +97,11 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
         # Check the created manufacturing order
         mo = self.env['mrp.production'].search([('bom_id', '=', self.bom.id)])
         self.assertEqual(len(mo), 1)
-        self.assertEqual(len(mo.picking_ids), 0)
+        self.assertEqual(len(mo.picking_ids), 1)
         wh = picking_receipt.picking_type_id.warehouse_id
         self.assertEqual(mo.picking_type_id, wh.subcontracting_type_id)
         self.assertFalse(mo.picking_type_id.active)
 
-        # Create a RR
-        self.env['stock.warehouse.orderpoint'].create({
-            'name': 'xxx',
-            'product_id': self.comp1.id,
-            'product_min_qty': 0,
-            'product_max_qty': 0,
-            'location_id': self.env.user.company_id.subcontracting_location_id.id,
-        })
-
-        # Run the scheduler and check the created picking
-        self.env['stock.rule'].run_scheduler()
-        picking = self.env['stock.picking'].search([('product_id', '=', self.comp1.id)])
-        self.assertEqual(len(picking), 1)
-        self.assertEqual(picking.picking_type_id, wh.subcontracting_resupply_type_id)
         picking_receipt.move_ids.quantity = 1
         picking_receipt.move_ids.picked = True
         picking_receipt.button_validate()
@@ -284,6 +271,8 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
         mto_route.active = True
         manufacture_route = self.env['stock.route'].search([('name', '=', 'Manufacture')])
         self.comp2.write({'route_ids': [(6, None, [manufacture_route.id, mto_route.id])]})
+        picking_type_in = self.env.ref('stock.picking_type_in')
+        self.env.ref('mrp_subcontracting.route_resupply_subcontractor_mto').active = False
 
         orderpoint_form = Form(self.env['stock.warehouse.orderpoint'])
         orderpoint_form.product_id = self.comp2
@@ -294,7 +283,7 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
 
         # Create a receipt picking from the subcontractor
         picking_form = Form(self.env['stock.picking'])
-        picking_form.picking_type_id = self.env.ref('stock.picking_type_in')
+        picking_form.picking_type_id = picking_type_in
         picking_form.partner_id = self.subcontractor_partner1
         with picking_form.move_ids.new() as move:
             move.product_id = self.finished
@@ -309,18 +298,15 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
         mo = self.env['mrp.production'].search([('bom_id', '=', self.bom.id)])
         self.assertEqual(mo.state, 'confirmed')
 
-        picking_delivery = mo.picking_ids
-        self.assertFalse(picking_delivery)
-
-        move = self.env['stock.move'].search([
+        moves = self.env['stock.move'].search([
             ('product_id', '=', self.comp2.id),
             ('location_id', '=', warehouse.lot_stock_id.id),
             ('location_dest_id', '=', self.env.company.subcontracting_location_id.id)
         ])
-        self.assertTrue(move)
-        picking_delivery = move.picking_id
+        self.assertTrue(moves)
+        picking_delivery = moves.picking_id
         self.assertTrue(picking_delivery)
-        self.assertEqual(move.product_uom_qty, 11.0)
+        self.assertEqual(sum(moves.mapped('product_uom_qty')), 11.0)
 
         # As well as a manufacturing order for `self.comp2`
         comp2mo = self.env['mrp.production'].search([('bom_id', '=', self.comp2_bom.id)])
@@ -998,25 +984,10 @@ class TestSubcontractingTracking(TransactionCase):
         # Check the created manufacturing order
         mo = self.env['mrp.production'].search([('bom_id', '=', self.bom_tracked.id)])
         self.assertEqual(len(mo), 1)
-        self.assertEqual(len(mo.picking_ids), 0)
+        self.assertEqual(len(mo.picking_ids), 1)
         wh = picking_receipt.picking_type_id.warehouse_id
         self.assertEqual(mo.picking_type_id, wh.subcontracting_type_id)
         self.assertFalse(mo.picking_type_id.active)
-
-        # Create a RR
-        self.env['stock.warehouse.orderpoint'].create({
-            'name': 'xxx',
-            'product_id': self.comp1_sn.id,
-            'product_min_qty': 0,
-            'product_max_qty': 0,
-            'location_id': self.env.user.company_id.subcontracting_location_id.id,
-        })
-
-        # Run the scheduler and check the created picking
-        self.env['stock.rule'].run_scheduler()
-        picking = self.env['stock.picking'].search([('product_id', '=', self.comp1_sn.id)])
-        self.assertEqual(len(picking), 1)
-        self.assertEqual(picking.picking_type_id, wh.subcontracting_resupply_type_id)
 
         lot_id = self.env['stock.lot'].create({
             'name': 'lot1',
@@ -1121,7 +1092,7 @@ class TestSubcontractingTracking(TransactionCase):
         # Check the created manufacturing order
         mo = self.env['mrp.production'].search([('bom_id', '=', self.bom_tracked.id)])
         self.assertEqual(len(mo), 1)
-        self.assertEqual(len(mo.picking_ids), 0)
+        self.assertEqual(len(mo.picking_ids), 1)
         wh = picking_receipt.picking_type_id.warehouse_id
         self.assertEqual(mo.picking_type_id, wh.subcontracting_type_id)
         self.assertFalse(mo.picking_type_id.active)

@@ -1125,6 +1125,7 @@ class TestPointOfSaleFlow(CommonPosTest):
         if self.env['ir.module.module']._get('purchase').state != 'installed':
             self.skipTest("Purchase module is required for this test to run")
 
+        self.env['stock.route'].search([('name', '=', 'Buy')]).warehouse_ids = self.env['stock.warehouse'].search([])
         self.ten_dollars_with_15_incl.write({
             'seller_ids': [Command.create({
                 'partner_id': self.partner_stva.id,

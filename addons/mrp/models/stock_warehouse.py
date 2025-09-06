@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, _
+from odoo import api, Command, fields, models, _
 from odoo.exceptions import ValidationError, UserError
 from odoo.tools import split_every
 
@@ -10,7 +10,8 @@ class StockWarehouse(models.Model):
     _inherit = 'stock.warehouse'
 
     manufacture_to_resupply = fields.Boolean(
-        'Manufacture to Resupply', default=True,
+        'Manufacture to Resupply', compute='_compute_manufacture_to_resupply',
+        inverse='_inverse_manufacture_to_resupply', default=True,
         help="When products are manufactured, they can be manufactured in this warehouse.")
     manufacture_pull_id = fields.Many2one(
         'stock.rule', 'Manufacture Rule', copy=False)
@@ -40,6 +41,31 @@ class StockWarehouse(models.Model):
 
     pbm_loc_id = fields.Many2one('stock.location', 'Picking before Manufacturing Location', check_company=True)
     sam_loc_id = fields.Many2one('stock.location', 'Stock after Manufacturing Location', check_company=True)
+
+    def _compute_manufacture_to_resupply(self):
+        for warehouse in self:
+            manufacture_route = warehouse.manufacture_pull_id.route_id
+            warehouse.manufacture_to_resupply = bool(manufacture_route.product_selectable or manufacture_route.warehouse_ids.filtered(lambda w: w.id == warehouse.id))
+
+    def _inverse_manufacture_to_resupply(self):
+        for warehouse in self:
+            manufacture_route = warehouse.manufacture_pull_id.route_id
+            if not manufacture_route:
+                manufacture_route = self.env['stock.rule'].search([
+                    ('action', '=', 'manufacture'), ('warehouse_id', '=', warehouse.id)]).route_id
+            if not manufacture_route:
+                continue
+            if warehouse.manufacture_to_resupply:
+                manufacture_route.warehouse_ids = [Command.link(warehouse.id)]
+            else:
+                manufacture_route.warehouse_ids = [Command.unlink(warehouse.id)]
+
+    def _create_or_update_route(self):
+        manufacture_route = self._find_or_create_global_route('mrp.route_warehouse0_manufacture', _('Manufacture'))
+        for warehouse in self:
+            if warehouse.manufacture_to_resupply:
+                manufacture_route.warehouse_ids = [Command.link(warehouse.id)]
+        return super()._create_or_update_route()
 
     def get_rules_dict(self):
         result = super(StockWarehouse, self).get_rules_dict()
