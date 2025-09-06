@@ -4,7 +4,7 @@ from freezegun import freeze_time
 from markupsafe import Markup
 
 from odoo import Command, fields
-from odoo.tests import new_test_user, tagged
+from odoo.tests import new_test_user, tagged, users
 from odoo.addons.im_livechat.tests.common import TestImLivechatCommon, TestGetOperatorCommon
 from odoo.addons.mail.tests.common import MailCase
 
@@ -203,6 +203,7 @@ class TestDiscussChannel(TestImLivechatCommon, TestGetOperatorCommon, MailCase):
         self.assertFalse(has_joined)
         self.assertNotIn(jane.partner_id, chat.channel_member_ids.partner_id)
 
+    @users("michel")
     def test_livechat_conversation_history(self):
         """Test livechat conversation history formatting"""
         def _convert_attachment_to_html(attachment):
@@ -219,7 +220,6 @@ class TestDiscussChannel(TestImLivechatCommon, TestGetOperatorCommon, MailCase):
                 "<div data-embedded='file' data-oe-protected='true' contenteditable='false' data-embedded-props='%s'/>",
             ) % json.dumps({"fileData": attachment_data})
 
-        self.authenticate(self.operators[0].login, self.password)
         channel = self.env["discuss.channel"].create(
             {
                 "name": "test",
@@ -240,7 +240,8 @@ class TestDiscussChannel(TestImLivechatCommon, TestGetOperatorCommon, MailCase):
         channel_history = channel.with_user(self.visitor_user)._get_channel_history()
         self.assertEqual(
             channel_history,
-            "Operator Here<br/>%(attachment_1)s<br/>Visitor Here<br/>%(attachment_2)s<br/>"
+            "<br/><strong>Michel Operator:</strong><br/>Operator Here<br/>%(attachment_1)s<br/>"
+            "<br/><strong>Rajesh:</strong><br/>Visitor Here<br/>%(attachment_2)s<br/>"
             % {
                 "attachment_1": _convert_attachment_to_html(attachment1),
                 "attachment_2": _convert_attachment_to_html(attachment2),
