@@ -7,19 +7,25 @@ from odoo import api, fields, models
 from odoo.fields import Domain
 from odoo.tools import formatLang
 from odoo.tools.float_utils import float_round
+from odoo.exceptions import UserError
 
 
 class ProductTemplate(models.Model):
     _inherit = 'product.template'
 
-    @api.model
-    def _get_buy_route(self):
-        buy_route = self.env.ref('purchase_stock.route_warehouse0_buy', raise_if_not_found=False)
-        if buy_route:
-            return self.env['stock.route'].search([('id', '=', buy_route.id)]).ids
-        return []
+    @api.constrains('route_ids', 'purchase_ok')
+    def _check_buy_route(self):
+        non_purchasable_products = self.filtered(lambda product: not product.purchase_ok)
+        if not non_purchasable_products:
+            return
 
-    route_ids = fields.Many2many(default=lambda self: self._get_buy_route())
+        buy_routes = self.env['stock.rule'].search([
+            ('action', '=', 'buy'),
+            ('picking_type_id.code', '=', 'incoming'),
+            ('active', '=', True),
+        ]).route_id
+        if buy_routes and any(buy_routes & product.route_ids for product in non_purchasable_products):
+            raise UserError(self.env._("The 'Buy' route cannot be assigned to a product that is not purchasable. Enable 'Can be Purchased' boolean to use this route."))
 
 
 class ProductProduct(models.Model):

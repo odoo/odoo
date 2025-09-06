@@ -480,6 +480,7 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
         description should be based on the correct seller
         """
         self.env.user.write({'company_id': self.company_data['company'].id})
+        self.env['stock.route'].search([('name', '=', 'Buy')]).warehouse_ids = self.env['stock.warehouse'].search([])
 
         product = self.env['product.product'].create({
             'name': 'Super Product',
@@ -668,6 +669,7 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
         influence the destination of the delivery, if the stock picking type
         is more precise than the orderpoint.
         """
+        self.env['stock.route'].search([('name', '=', 'Buy')]).warehouse_ids = self.env['stock.warehouse'].search([])
         product = self.env['product.product'].create({
             'name': 'Super product',
             'is_storable': True,

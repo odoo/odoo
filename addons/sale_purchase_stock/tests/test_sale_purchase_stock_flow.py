@@ -14,6 +14,7 @@ class TestSalePurchaseStockFlow(TransactionCase):
         super(TestSalePurchaseStockFlow, cls).setUpClass()
         cls.mto_route = cls.env.ref('stock.route_warehouse0_mto')
         cls.buy_route = cls.env.ref('purchase_stock.route_warehouse0_buy')
+        cls.buy_route.product_selectable = True
         cls.mto_route.active = True
 
         cls.customer_location = cls.env.ref('stock.stock_location_customers')

@@ -70,6 +70,13 @@ class StockRule(models.Model):
                 procurements_without_kit.append(procurement)
         return super().run(procurements_without_kit, raise_user_error=raise_user_error)
 
+    def _filter_warehouse_routes(self, product, warehouses, route):
+        if any(rule.action == 'manufacture' for rule in route.rule_ids):
+            if product.bom_ids:
+                return super()._filter_warehouse_routes(product, warehouses, route)
+            return False
+        return super()._filter_warehouse_routes(product, warehouses, route)
+
     @api.model
     def _run_manufacture(self, procurements):
         new_productions_values_by_company = defaultdict(lambda: defaultdict(list))
