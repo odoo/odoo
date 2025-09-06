@@ -1,26 +1,27 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* mrp_account
-# 
+#
 # Translators:
 # Servisi RAM d.o.o. <support@servisiram.hr>, 2024
 # Sven ServisiRAM <sven@servisiram.hr>, 2024
 # Bole <bole@dajmi5.com>, 2024
 # Martin Trigaux, 2024
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:55+0000\n"
+"POT-Creation-Date: 2025-09-05 18:39+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Martin Trigaux, 2024\n"
 "Language-Team: Croatian (https://app.transifex.com/odoo/teams/41243/hr/)\n"
+"Language: hr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: hr\n"
-"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
 
 #. module: mrp_account
 #: model_terms:ir.ui.view,arch_db:mrp_account.report_wip
@@ -39,6 +40,12 @@ msgid "%s - Labour"
 msgstr ""
 
 #. module: mrp_account
+#. odoo-python
+#: code:addons/mrp_account/models/stock_move.py:0
+msgid "%s - Unbuild Cost Difference"
+msgstr ""
+
+#. module: mrp_account
 #: model_terms:ir.ui.view,arch_db:mrp_account.report_wip
 msgid "2023-08-15"
 msgstr "2023-08-15"
@@ -52,6 +59,11 @@ msgstr "<span class=\"o_stat_text\">Proizvodnja</span>"
 #: model_terms:ir.ui.view,arch_db:mrp_account.mrp_production_form_view_inherited
 msgid "<span class=\"o_stat_text\">Valuation</span>"
 msgstr "<span class=\"o_stat_text\"> Vrednovanje </span>"
+
+#. module: mrp_account
+#: model_terms:ir.ui.view,arch_db:mrp_account.mrp_production_form_view_inherited
+msgid "<span class=\"o_stat_text\">WIP</span>"
+msgstr ""
 
 #. module: mrp_account
 #: model_terms:ir.ui.view,arch_db:mrp_account.report_wip
@@ -223,8 +235,22 @@ msgid "Discard"
 msgstr "Odbaci"
 
 #. module: mrp_account
+#: model:ir.model.fields,field_description:mrp_account.field_account_analytic_account__display_name
+#: model:ir.model.fields,field_description:mrp_account.field_account_analytic_applicability__display_name
+#: model:ir.model.fields,field_description:mrp_account.field_account_analytic_line__display_name
+#: model:ir.model.fields,field_description:mrp_account.field_account_move__display_name
+#: model:ir.model.fields,field_description:mrp_account.field_account_move_line__display_name
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting__display_name
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting_line__display_name
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_production__display_name
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_workcenter__display_name
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_workcenter_productivity__display_name
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_workorder__display_name
+#: model:ir.model.fields,field_description:mrp_account.field_product_category__display_name
+#: model:ir.model.fields,field_description:mrp_account.field_product_product__display_name
+#: model:ir.model.fields,field_description:mrp_account.field_product_template__display_name
+#: model:ir.model.fields,field_description:mrp_account.field_report_mrp_report_mo_overview__display_name
+#: model:ir.model.fields,field_description:mrp_account.field_stock_move__display_name
 msgid "Display Name"
 msgstr "Naziv za prikaz"
 
@@ -249,8 +275,22 @@ msgid "Extra Unit Cost"
 msgstr "Dodatni trošak po jedinici"
 
 #. module: mrp_account
+#: model:ir.model.fields,field_description:mrp_account.field_account_analytic_account__id
+#: model:ir.model.fields,field_description:mrp_account.field_account_analytic_applicability__id
+#: model:ir.model.fields,field_description:mrp_account.field_account_analytic_line__id
+#: model:ir.model.fields,field_description:mrp_account.field_account_move__id
+#: model:ir.model.fields,field_description:mrp_account.field_account_move_line__id
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting__id
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting_line__id
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_production__id
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_workcenter__id
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_workcenter_productivity__id
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_workorder__id
+#: model:ir.model.fields,field_description:mrp_account.field_product_category__id
+#: model:ir.model.fields,field_description:mrp_account.field_product_product__id
+#: model:ir.model.fields,field_description:mrp_account.field_product_template__id
+#: model:ir.model.fields,field_description:mrp_account.field_report_mrp_report_mo_overview__id
+#: model:ir.model.fields,field_description:mrp_account.field_stock_move__id
 msgid "ID"
 msgstr "ID"
 
@@ -342,8 +382,7 @@ msgstr "Analitička stavka PN"
 #. module: mrp_account
 #. odoo-python
 #: code:addons/mrp_account/wizard/mrp_wip_accounting.py:0
-msgid ""
-"Please make sure the total credit amount equals the total debit amount."
+msgid "Please make sure the total credit amount equals the total debit amount."
 msgstr ""
 
 #. module: mrp_account
@@ -440,16 +479,18 @@ msgstr ""
 #. module: mrp_account
 #: model:ir.model.fields,help:mrp_account.field_mrp_workcenter__expense_account_id
 msgid ""
-"The expense is accounted for when the manufacturing order is marked as done."
-" If not set, it is the expense account of the final product that will be "
-"used instead."
+"The expense is accounted for when the manufacturing order is marked as done. "
+"If not set, it is the expense account of the final product that will be used "
+"instead."
 msgstr ""
 
 #. module: mrp_account
 #: model:ir.model.fields,help:mrp_account.field_product_category__property_stock_account_production_cost_id
 msgid ""
-"This account will be used as a valuation counterpart for both components and final products for manufacturing orders.\n"
-"                If there are any workcenter/employee costs, this value will remain on the account once the production is completed."
+"This account will be used as a valuation counterpart for both components and "
+"final products for manufacturing orders.\n"
+"                If there are any workcenter/employee costs, this value will "
+"remain on the account once the production is completed."
 msgstr ""
 
 #. module: mrp_account
@@ -477,6 +518,17 @@ msgstr ""
 #. odoo-python
 #: code:addons/mrp_account/wizard/mrp_wip_accounting.py:0
 msgid "WIP - Overhead"
+msgstr ""
+
+#. module: mrp_account
+#. odoo-python
+#: code:addons/mrp_account/models/mrp_production.py:0
+msgid "WIP Entries of %s"
+msgstr ""
+
+#. module: mrp_account
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_production__wip_move_count
+msgid "WIP Journal Entry Count"
 msgstr ""
 
 #. module: mrp_account
@@ -511,6 +563,11 @@ msgid "Wc Analytic Account Line"
 msgstr "RN stavka analitike"
 
 #. module: mrp_account
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_production__wip_move_ids
+msgid "Wip Move"
+msgstr ""
+
+#. module: mrp_account
 #: model:ir.model,name:mrp_account.model_mrp_account_wip_accounting
 msgid "Wizard to post Manufacturing WIP account move"
 msgstr ""
@@ -519,11 +576,6 @@ msgstr ""
 #: model:ir.model,name:mrp_account.model_mrp_workcenter
 msgid "Work Center"
 msgstr "Radni centar"
-
-#. module: mrp_account
-#: model:ir.model,name:mrp_account.model_mrp_routing_workcenter
-msgid "Work Center Usage"
-msgstr "Korištenje radnog centra"
 
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_mrp_workorder
@@ -557,3 +609,6 @@ msgstr "Log produktivnosti radnog centra"
 #: code:addons/mrp_account/models/mrp_workorder.py:0
 msgid "[WC] %s"
 msgstr "[RC] %s"
+
+#~ msgid "Work Center Usage"
+#~ msgstr "Korištenje radnog centra"

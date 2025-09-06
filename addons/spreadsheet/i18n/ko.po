@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-08-22 18:39+0000\n"
+"POT-Creation-Date: 2025-09-05 18:40+0000\n"
 "PO-Revision-Date: 2025-05-06 12:04+0000\n"
 "Last-Translator: Sarah Park, 2025\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
@@ -1700,12 +1700,6 @@ msgstr "시트의 모든 열을 숨길 수는 없습니다."
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Cannot hide all the rows of a sheet."
 msgstr "시트의 모든 행을 숨길 수는 없습니다."
-
-#. module: spreadsheet
-#. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-msgid "Cannot multiply matrices : incompatible matrices size."
-msgstr "행렬을 곱할 수 없음: 호환되지 않는 행렬 크기입니다."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3761,14 +3755,6 @@ msgstr ""
 msgid "Function [[FUNCTION_NAME]] expects number values for %s, but got a %s."
 msgstr ""
 "함수 [[FUNCTION_NAME]]는 %s에 대한 숫자 값을 예측했으나 %s를 계산했습니다."
-
-#. module: spreadsheet
-#. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-msgid ""
-"Function [[FUNCTION_NAME]] invert matrix error, only square matrices are "
-"invertible"
-msgstr "함수 [[FUNCTION_NAME]] 반전 행렬 오류, 정사각형 행렬만 반전 가능"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -8288,6 +8274,14 @@ msgstr "첫 번째 추가."
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid ""
+"The first and second arguments of [[FUNCTION_NAME]] must be non-empty "
+"matrices."
+msgstr ""
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "The first case to be checked against expression."
 msgstr "표현식에 대해 확인해야 할 첫 번째 사례입니다."
 
@@ -10598,12 +10592,6 @@ msgstr "구분 기호를 사용하여 값을 추가할 수 있습니다."
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-msgid "The value should be a scalar or a 1x1 matrix"
-msgstr "값은 스칼라 또는 1x1 행렬이어야 합니다."
-
-#. module: spreadsheet
-#. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "The value the function returns if logical_expression is FALSE."
 msgstr "logical_expression이 FALSE인 경우 반환되는 함수의 값."
 
@@ -12004,14 +11992,16 @@ msgstr "[[FUNCTION_NAME]] 가 평가하는 범위에서 행의 값 %s이 벗어�
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-msgid "[[FUNCTION_NAME]] expects non-empty ranges for both parameters."
-msgstr "[[FUNCTION_NAME]] 두 매개변수에 대해 비어있지 않은 범위가 필요합니다."
+msgid "[[FUNCTION_NAME]] expects number values."
+msgstr "[[FUNCTION_NAME]] 에는 숫자 값이 필요합니다."
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-msgid "[[FUNCTION_NAME]] expects number values."
-msgstr "[[FUNCTION_NAME]] 에는 숫자 값이 필요합니다."
+msgid ""
+"[[FUNCTION_NAME]] expects the provided values of %(argName)s to be a non-"
+"empty matrix."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -12042,13 +12032,6 @@ msgstr "[[FUNCTION_NAME]] 의 범위 크기가 일치하지 않습니다."
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "[[FUNCTION_NAME]] has no valid input data."
 msgstr "[[FUNCTION_NAME]] 에 올바른 입력 데이터가 없습니다."
-
-#. module: spreadsheet
-#. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-msgid "[[FUNCTION_NAME]] needs at least two values for both parameters."
-msgstr ""
-"[[FUNCTION_NAME]] 은 두 매개변수에 대해 최소 두 개의 값을 필요로 합니다."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -12285,3 +12268,22 @@ msgstr "어제"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "zero"
 msgstr "0"
+
+#~ msgid "Cannot multiply matrices : incompatible matrices size."
+#~ msgstr "행렬을 곱할 수 없음: 호환되지 않는 행렬 크기입니다."
+
+#~ msgid ""
+#~ "Function [[FUNCTION_NAME]] invert matrix error, only square matrices are "
+#~ "invertible"
+#~ msgstr "함수 [[FUNCTION_NAME]] 반전 행렬 오류, 정사각형 행렬만 반전 가능"
+
+#~ msgid "The value should be a scalar or a 1x1 matrix"
+#~ msgstr "값은 스칼라 또는 1x1 행렬이어야 합니다."
+
+#~ msgid "[[FUNCTION_NAME]] expects non-empty ranges for both parameters."
+#~ msgstr ""
+#~ "[[FUNCTION_NAME]] 두 매개변수에 대해 비어있지 않은 범위가 필요합니다."
+
+#~ msgid "[[FUNCTION_NAME]] needs at least two values for both parameters."
+#~ msgstr ""
+#~ "[[FUNCTION_NAME]] 은 두 매개변수에 대해 최소 두 개의 값을 필요로 합니다."
