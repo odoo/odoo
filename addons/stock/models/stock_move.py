@@ -2335,7 +2335,7 @@ Please change the quantity done or the rounding precision in your settings.""",
                 ]
                 if picking_type_code:
                     domain.append(('picking_type_id.code', '=', picking_type_code))
-                rule = self.env['stock.rule']._search_rule(False, move.packaging_uom_id, product_id, move.warehouse_id, domain)
+                rule = self.env['stock.rule']._search_rule(False, move.packaging_uom_id, product_id, move.warehouse_id or move.picking_type_id.warehouse_id, domain)
                 if rule:
                     break
                 location = location.location_id

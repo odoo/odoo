@@ -5,6 +5,7 @@ import logging
 from collections import defaultdict, OrderedDict
 from dateutil.relativedelta import relativedelta
 from typing import NamedTuple
+from functools import partial
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
@@ -508,7 +509,8 @@ class StockRule(models.Model):
             valid_route_ids |= set(packaging_routes.ids)
         valid_route_ids |= set((product_id.route_ids | product_id.categ_id.total_route_ids).ids)
         if warehouse_ids:
-            valid_route_ids |= set(warehouse_ids.route_ids.ids)
+            filter_function = partial(self._filter_warehouse_routes, product_id, warehouse_ids)
+            valid_route_ids |= set(warehouse_ids.route_ids.filtered(filter_function).ids)
         if valid_route_ids:
             domain &= Domain('route_id', 'in', list(valid_route_ids))
         res = self.env["stock.rule"]._read_group(
@@ -521,6 +523,9 @@ class StockRule(models.Model):
         for group in res:
             rule_dict[group[0].id, group[2].id][group[1].id] = group[3].sorted(lambda rule: (rule.route_sequence, rule.sequence))[0]
         return rule_dict
+
+    def _filter_warehouse_routes(self, product, warehouses, route):
+        return route
 
     def _search_rule(self, route_ids, packaging_uom_id, product_id, warehouse_id, domain):
         """ First find a rule among the ones defined on the procurement
@@ -573,7 +578,7 @@ class StockRule(models.Model):
 
         def extract_rule(rule_dict, route_ids, warehouse_id, location_dest_id):
             rule = self.env['stock.rule']
-            for route_id in sorted(route_ids, key=lambda r: r.sequence):
+            for route_id in sorted(route_ids, key=lambda r: (r not in product_id.route_ids, r.sequence)):
                 sub_dict = rule_dict.get((location_dest_id.id, route_id.id))
                 if not sub_dict:
                     continue

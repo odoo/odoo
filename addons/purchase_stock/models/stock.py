@@ -3,7 +3,7 @@
 from collections import defaultdict
 from dateutil import relativedelta
 
-from odoo import api, fields, models, _
+from odoo import api, Command, fields, models, _
 from odoo.fields import Domain
 
 
@@ -41,9 +41,34 @@ class StockPicking(models.Model):
 class StockWarehouse(models.Model):
     _inherit = 'stock.warehouse'
 
-    buy_to_resupply = fields.Boolean('Buy to Resupply', default=True,
-                                     help="When products are bought, they can be delivered to this warehouse")
+    buy_to_resupply = fields.Boolean(
+        'Buy to Resupply', compute='_compute_buy_to_resupply',
+        inverse="_inverse_buy_to_resupply", default=True,
+        help="When products are bought, they can be delivered to this warehouse")
     buy_pull_id = fields.Many2one('stock.rule', 'Buy rule', copy=False)
+
+    def _compute_buy_to_resupply(self):
+        for warehouse in self:
+            buy_route = warehouse.buy_pull_id.route_id
+            warehouse.buy_to_resupply = bool(buy_route.product_selectable or buy_route.warehouse_ids.filtered(lambda w: w.id == warehouse.id))
+
+    def _inverse_buy_to_resupply(self):
+        for warehouse in self:
+            buy_route = warehouse.buy_pull_id.route_id
+            if not buy_route:
+                buy_route = self.env['stock.rule'].search([
+                    ('action', '=', 'buy'), ('warehouse_id', '=', warehouse.id)]).route_id
+            if warehouse.buy_to_resupply:
+                buy_route.warehouse_ids = [Command.link(warehouse.id)]
+            else:
+                buy_route.warehouse_ids = [Command.unlink(warehouse.id)]
+
+    def _create_or_update_route(self):
+        purchase_route = self._find_or_create_global_route('purchase_stock.route_warehouse0_buy', _('Buy'))
+        for warehouse in self:
+            if warehouse.buy_to_resupply:
+                purchase_route.warehouse_ids = [Command.link(warehouse.id)]
+        return super()._create_or_update_route()
 
     def _generate_global_route_rules_values(self):
         rules = super()._generate_global_route_rules_values()
@@ -219,6 +244,13 @@ class StockWarehouseOrderpoint(models.Model):
         result['domain'] = "[('id','in',%s)]" % (purchase_ids.ids)
 
         return result
+
+    def _filter_warehouse_routes(self, product, warehouses, route):
+        if any(rule.action == 'buy' for rule in route.rule_ids):
+            if product.seller_ids:
+                return super()._filter_warehouse_routes(product, warehouses, route)
+            return False
+        return super()._filter_warehouse_routes(product, warehouses, route)
 
     def _get_default_route(self):
         route_ids = self.env['stock.rule'].search([

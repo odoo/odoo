@@ -290,17 +290,18 @@ class TestMrpReplenish(TestMrpCommon):
             'product_min_qty': 10,
             'product_max_qty': 50,
         })
+        self.product_4.bom_ids.active = False
         self.assertTrue(orderpoint.show_supply_warning)
+
+        # Archive the boms linked to the product
+        self.product_4.with_context(active_test=False).bom_ids.active = True
+        orderpoint.invalidate_recordset(fnames=['rule_ids', 'show_supply_warning'])
+        self.assertFalse(orderpoint.show_supply_warning)
 
         # Add a manufacture route to the product
         self.product_4.route_ids |= self.route_manufacture
         orderpoint.invalidate_recordset(fnames=['show_supply_warning'])
         self.assertFalse(orderpoint.show_supply_warning)
-
-        # Archive the boms linked to the product
-        self.product_4.bom_ids.active = False
-        orderpoint.invalidate_recordset(fnames=['show_supply_warning'])
-        self.assertTrue(orderpoint.show_supply_warning)
 
     def test_set_bom_on_orderpoint(self):
         """ Test that action_set_bom_on_orderpoint correctly sets a bom on selected orderpoint. """

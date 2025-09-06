@@ -43,7 +43,7 @@ class StockWarehouse(models.Model):
         return res
 
     def get_rules_dict(self):
-        result = super(StockWarehouse, self).get_rules_dict()
+        result = super().get_rules_dict()
         subcontract_location_id = self._get_subcontracting_location()
         for warehouse in self:
             result[warehouse.id].update({
