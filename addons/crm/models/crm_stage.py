@@ -22,33 +22,20 @@ class CrmStage(models.Model):
     _rec_name = 'name'
     _order = "sequence, name, id"
 
-    @api.model
-    def default_get(self, fields):
-        """ As we have lots of default_team_id in context used to filter out
-        leads and opportunities, we pop this key from default of stage creation.
-        Otherwise stage will be created for a given team only which is not the
-        standard behavior of stages. """
-        if 'default_team_id' in self.env.context:
-            ctx = dict(self.env.context)
-            ctx.pop('default_team_id')
-            self = self.with_context(ctx)
-        return super().default_get(fields)
-
     name = fields.Char('Stage Name', required=True, translate=True)
     sequence = fields.Integer('Sequence', default=1, help="Used to order stages. Lower is better.")
     is_won = fields.Boolean('Is Won Stage?')
     rotting_threshold_days = fields.Integer('Days to rot', default=0, help='Highlight opportunities that haven\'t been updated for this many days. \
         Set to 0 to disable. Changing this parameter will not affect the rotting status/date of resources last updated before this change.')
     requirements = fields.Text('Requirements', help="Enter here the internal requirements for this stage (ex: Offer sent to customer). It will appear as a tooltip over the stage's name.")
-    team_id = fields.Many2one('crm.team', string='Sales Team', ondelete="set null",
-        help='Specific team that uses this stage. Other teams will not be able to see or use this stage.')
+    team_ids = fields.Many2many('crm.team', string='Sales Teams', ondelete='restrict')
     fold = fields.Boolean('Folded in Pipeline',
         help='This stage is folded in the kanban view when there are no records in that stage to display.')
     # This field for interface only
     team_count = fields.Integer('team_count', compute='_compute_team_count')
     color = fields.Integer(string='Color', export_string_translation=False)
 
-    @api.depends('team_id')
+    @api.depends('team_ids')
     def _compute_team_count(self):
         self.team_count = self.env['crm.team'].search_count([])
 

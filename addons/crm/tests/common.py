@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from ast import literal_eval
+from collections import defaultdict
 from contextlib import contextmanager
 from datetime import timedelta
 from unittest.mock import patch
@@ -99,28 +100,28 @@ class TestCrmCommon(TestSalesCommon, MailCase):
         cls.stage_team1_1 = cls.env['crm.stage'].create({
             'name': 'New',
             'sequence': 1,
-            'team_id': cls.sales_team_1.id,
+            'team_ids': [cls.sales_team_1.id],
         })
         cls.stage_team1_2 = cls.env['crm.stage'].create({
             'name': 'Proposition',
             'sequence': 5,
-            'team_id': cls.sales_team_1.id,
+            'team_ids': [cls.sales_team_1.id],
         })
         cls.stage_team1_won = cls.env['crm.stage'].create({
             'name': 'Won',
             'sequence': 70,
-            'team_id': cls.sales_team_1.id,
+            'team_ids': [cls.sales_team_1.id],
             'is_won': True,
         })
         cls.stage_gen_1 = cls.env['crm.stage'].create({
             'name': 'Generic stage',
             'sequence': 3,
-            'team_id': False,
+            'team_ids': False,
         })
         cls.stage_gen_won = cls.env['crm.stage'].create({
             'name': 'Generic Won',
             'sequence': 30,
-            'team_id': False,
+            'team_ids': False,
             'is_won': True,
         })
 
@@ -315,7 +316,7 @@ class TestCrmCommon(TestSalesCommon, MailCase):
 
     def _create_leads_batch(self, lead_type='lead', count=10, email_dup_count=0,
                             partner_count=0, partner_ids=None, user_ids=None,
-                            country_ids=None, probabilities=None, suffix=''):
+                            country_ids=None, probabilities=None, suffix='', additional_lead_values=defaultdict(None)):
         """ Helper tool method creating a batch of leads, useful when dealing
         with batch processes. Please update me.
 
@@ -333,6 +334,7 @@ class TestCrmCommon(TestSalesCommon, MailCase):
             'name': f'TestLead{suffix}_{x:04d}',
             'type': lead_type if lead_type else types[x % 2],
             'priority': '%s' % (x % 3),
+            **additional_lead_values,
         } for x in range(count)]
 
         # generate customer information
@@ -580,7 +582,7 @@ class TestLeadConvertCommon(TestCrmCommon):
         cls.stage_team_convert_1 = cls.env['crm.stage'].create({
             'name': 'New',
             'sequence': 1,
-            'team_id': cls.sales_team_convert.id,
+            'team_ids': [cls.sales_team_convert.id],
         })
 
         cls.lead_1.write({'date_open': Datetime.from_string('2020-01-15 11:30:00')})

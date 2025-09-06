@@ -9,7 +9,7 @@
                 <field name="name"/>
                 <field name="sequence"/>
                 <field name="is_won"/>
-                <field name="team_id"/>
+                <field name="team_ids"/>
             </search>
         </field>
     </record>
@@ -23,7 +23,7 @@
                 <field name="sequence" widget="handle"/>
                 <field name="name" readonly="1"/>
                 <field name="is_won"/>
-                <field name="team_id"/>
+                <field name="team_ids" widget="many2many_tags"/>
                 <field name="rotting_threshold_days" optional="hide"/>
                 <field name="color" optional="hide" widget="color_picker"/>
             </list>
@@ -47,7 +47,8 @@
                         <group>
                             <field name="fold"/>
                             <field name="color" widget="color_picker"/>
-                            <field name="team_id" options='{"no_open": True, "no_create": True}' invisible="team_count &lt;= 1" context="{'kanban_view_ref': 'sales_team.crm_team_view_kanban'}"/>
+                            <field name="team_ids" widget="many2many_tags" placeholder="Shared with all teams"
+                                options='{"no_open": True, "no_create": True}' invisible="team_count &lt;= 1" context="{'kanban_view_ref': 'sales_team.crm_team_view_kanban'}"/>
                         </group>
                         <group>
                             <field name="is_won"/>
