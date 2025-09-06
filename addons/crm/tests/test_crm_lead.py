@@ -11,7 +11,7 @@ from odoo.addons.crm.models.crm_lead import PARTNER_FIELDS_TO_SYNC, PARTNER_ADDR
 from odoo.addons.crm.tests.common import TestCrmCommon, INCOMING_EMAIL
 from odoo.addons.mail.tests.common_tracking import MailTrackingDurationMixinCase
 from odoo.addons.phone_validation.tools.phone_validation import phone_format
-from odoo.exceptions import UserError, ValidationError
+from odoo.exceptions import UserError
 from odoo.tests import Form, tagged, users
 from odoo.tools import mute_logger
 
@@ -296,7 +296,7 @@ class TestCRMLead(TestCrmCommon):
         stage_team1_won2 = self.env['crm.stage'].create({
             'name': 'Won2',
             'sequence': 75,
-            'team_id': self.sales_team_1.id,
+            'team_ids': [self.sales_team_1.id],
             'is_won': True,
         })
         won_lead = self.lead_team_1_won.with_env(self.env)

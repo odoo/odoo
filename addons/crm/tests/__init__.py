@@ -13,6 +13,7 @@ from . import test_crm_lead_multicompany
 from . import test_crm_lead_smart_calendar
 from . import test_crm_ui
 from . import test_crm_pls
+from . import test_crm_rainbowman
 from . import test_digest
 from . import test_performances
 from . import test_res_partner
