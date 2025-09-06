@@ -33,7 +33,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-08-22 18:39+0000\n"
+"POT-Creation-Date: 2025-09-05 18:40+0000\n"
 "PO-Revision-Date: 2025-08-18 12:31+0000\n"
 "Last-Translator: \"Jessica Tuulia Sade Jäkärä (jtsj)\" <jtsj@odoo.com>\n"
 "Language-Team: Finnish <https://translate.odoo.com/projects/odoo-18/"
@@ -1702,12 +1702,6 @@ msgstr "Arkiston kaikkia sarakkeita ei voi piilottaa."
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Cannot hide all the rows of a sheet."
 msgstr "Ei voi piilottaa kaikkia arkin rivejä."
-
-#. module: spreadsheet
-#. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-msgid "Cannot multiply matrices : incompatible matrices size."
-msgstr "Ei voi kertoa matriiseja : matriisien koko ei ole yhteensopiva."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3722,16 +3716,6 @@ msgstr ""
 msgid "Function [[FUNCTION_NAME]] expects number values for %s, but got a %s."
 msgstr ""
 "Funktio [[FUNCTION_NAME]] odottaa lukuarvoja arvolle %s, mutta sai arvon %s."
-
-#. module: spreadsheet
-#. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-msgid ""
-"Function [[FUNCTION_NAME]] invert matrix error, only square matrices are "
-"invertible"
-msgstr ""
-"Funktio [[FUNCTION_NAME]] invertoi matriisivirhe, vain neliömatriisit ovat "
-"invertoitavissa"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -8010,6 +7994,14 @@ msgstr "Ensimmäinen lisäys."
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid ""
+"The first and second arguments of [[FUNCTION_NAME]] must be non-empty "
+"matrices."
+msgstr ""
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "The first column index of the columns to be returned."
 msgstr "Palautettavien sarakkeiden ensimmäinen sarakeindeksi."
 
@@ -10373,12 +10365,6 @@ msgstr "Arvo tai arvot, jotka liitetään käyttämällä erotinmerkkiä."
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-msgid "The value should be a scalar or a 1x1 matrix"
-msgstr "Arvon on oltava skalaari tai 1x1-matriisi"
-
-#. module: spreadsheet
-#. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "The value the function returns if logical_expression is FALSE."
 msgstr "Arvo, jonka funktio palauttaa, jos logical_expression on FALSE."
 
@@ -11691,14 +11677,16 @@ msgstr "[[FUNCTION_NAME]] evaluoi alueen ulkopuolisen rivin arvon %s."
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-msgid "[[FUNCTION_NAME]] expects non-empty ranges for both parameters."
-msgstr "[[FUNCTION_NAME]] odottaa molemmilta parametreilta ei-tyhjiä alueita."
+msgid "[[FUNCTION_NAME]] expects number values."
+msgstr "[[FUNCTION_NAME]] odottaa lukuarvoja."
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-msgid "[[FUNCTION_NAME]] expects number values."
-msgstr "[[FUNCTION_NAME]] odottaa lukuarvoja."
+msgid ""
+"[[FUNCTION_NAME]] expects the provided values of %(argName)s to be a non-"
+"empty matrix."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -11729,13 +11717,6 @@ msgstr "[[FUNCTION_NAME]] ei vastaa toisiaan."
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "[[FUNCTION_NAME]] has no valid input data."
 msgstr "[[FUNCTION_NAME]] ei ole kelvollisia syöttötietoja."
-
-#. module: spreadsheet
-#. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-msgid "[[FUNCTION_NAME]] needs at least two values for both parameters."
-msgstr ""
-"[[FUNCTION_NAME]] tarvitsee vähintään kaksi arvoa molemmille parametreille."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -11957,3 +11938,25 @@ msgstr "eilen"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "zero"
 msgstr "nolla"
+
+#~ msgid "Cannot multiply matrices : incompatible matrices size."
+#~ msgstr "Ei voi kertoa matriiseja : matriisien koko ei ole yhteensopiva."
+
+#~ msgid ""
+#~ "Function [[FUNCTION_NAME]] invert matrix error, only square matrices are "
+#~ "invertible"
+#~ msgstr ""
+#~ "Funktio [[FUNCTION_NAME]] invertoi matriisivirhe, vain neliömatriisit "
+#~ "ovat invertoitavissa"
+
+#~ msgid "The value should be a scalar or a 1x1 matrix"
+#~ msgstr "Arvon on oltava skalaari tai 1x1-matriisi"
+
+#~ msgid "[[FUNCTION_NAME]] expects non-empty ranges for both parameters."
+#~ msgstr ""
+#~ "[[FUNCTION_NAME]] odottaa molemmilta parametreilta ei-tyhjiä alueita."
+
+#~ msgid "[[FUNCTION_NAME]] needs at least two values for both parameters."
+#~ msgstr ""
+#~ "[[FUNCTION_NAME]] tarvitsee vähintään kaksi arvoa molemmille "
+#~ "parametreille."

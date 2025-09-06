@@ -1,25 +1,26 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* sms
-# 
+#
 # Translators:
 # Lyall Kindmurr, 2024
 # Wil Odoo, 2024
 # Larisa_nexterp, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-04-07 20:37+0000\n"
+"POT-Creation-Date: 2025-09-05 18:40+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Larisa_nexterp, 2025\n"
 "Language-Team: Romanian (https://app.transifex.com/odoo/teams/41243/ro/)\n"
+"Language: ro\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ro\n"
-"Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?2:1));\n"
+"Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?"
+"2:1));\n"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__recipient_invalid_count
@@ -103,10 +104,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_view_form
 msgid ""
 "<span class=\"o_stat_text\">Add</span>\n"
-"                                <span class=\"o_stat_text\">Context Action</span>"
+"                                <span class=\"o_stat_text\">Context Action</"
+"span>"
 msgstr ""
 "<span class=\"o_stat_text\">Adăugare</span>\n"
-"                                <span class=\"o_stat_text\">Acțiune Context</span>"
+"                                <span class=\"o_stat_text\">Acțiune Context</"
+"span>"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_view_form
@@ -117,46 +120,58 @@ msgstr "<span class=\"o_stat_text\">Previzualizare</span>"
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_view_form
 msgid ""
 "<span class=\"o_stat_text\">Remove</span>\n"
-"                                <span class=\"o_stat_text\">Context Action</span>"
+"                                <span class=\"o_stat_text\">Context Action</"
+"span>"
 msgstr ""
 "<span class=\"o_stat_text\">Eliminare</span>\n"
-"                                <span class=\"o_stat_text\">Acțiune Context</span>"
+"                                <span class=\"o_stat_text\">Acțiune Context</"
+"span>"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_preview_form
-msgid "<span class=\"text-warning\" invisible=\"not no_record\">No records</span>"
+msgid ""
+"<span class=\"text-warning\" invisible=\"not no_record\">No records</span>"
 msgstr ""
-"<span class=\"text-warning\" invisible=\"not no_record\">Nicio "
-"înregistrare</span>"
+"<span class=\"text-warning\" invisible=\"not no_record\">Nicio înregistrare</"
+"span>"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.ir_actions_server_view_form
 msgid ""
 "<span invisible=\"sms_method != 'sms'\">\n"
-"                                The message will be sent as an SMS to the recipients of the template\n"
-"                                and will not appear in the messaging history.\n"
+"                                The message will be sent as an SMS to the "
+"recipients of the template\n"
+"                                and will not appear in the messaging "
+"history.\n"
 "                            </span>\n"
 "                            <span invisible=\"sms_method != 'note'\">\n"
-"                                The SMS will not be sent, it will only be posted as an\n"
+"                                The SMS will not be sent, it will only be "
+"posted as an\n"
 "                                internal note in the messaging history.\n"
 "                            </span>\n"
 "                            <span invisible=\"sms_method != 'comment'\">\n"
-"                                The SMS will be sent as an SMS to the recipients of the\n"
-"                                template and it will also be posted as an internal note\n"
+"                                The SMS will be sent as an SMS to the "
+"recipients of the\n"
+"                                template and it will also be posted as an "
+"internal note\n"
 "                                in the messaging history.\n"
 "                            </span>"
 msgstr ""
 "<span invisible=\"sms_method != 'sms'\">\n"
-"                                Mesajul va fi trimis ca SMS către destinatarii șablonului\n"
+"                                Mesajul va fi trimis ca SMS către "
+"destinatarii șablonului\n"
 "                                și nu va apărea în istoricul mesajelor.\n"
 "                            </span>\n"
 "                            <span invisible=\"sms_method != 'note'\">\n"
-"                                SMS-ul nu va fi trimis, va fi postat doar ca\n"
+"                                SMS-ul nu va fi trimis, va fi postat doar "
+"ca\n"
 "                                notă internă în istoricul mesajelor.\n"
 "                            </span>\n"
 "                            <span invisible=\"sms_method != 'comment'\">\n"
-"                                SMS-ul va fi trimis ca SMS către destinatarii\n"
-"                                șablonului și va fi postat și ca notă internă\n"
+"                                SMS-ul va fi trimis ca SMS către "
+"destinatarii\n"
+"                                șablonului și va fi postat și ca notă "
+"internă\n"
 "                                în istoricul mesajelor.\n"
 "                            </span>"
 
@@ -339,6 +354,11 @@ msgstr "Alegeți numele expeditorului"
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
 msgid "Close"
 msgstr "Închide"
+
+#. module: sms
+#: model:ir.model,name:sms.model_res_company
+msgid "Companies"
+msgstr ""
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__composition_mode
@@ -538,8 +558,7 @@ msgstr ""
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_sms_template__template_fs
-msgid ""
-"File from where the template originates. Used to reset broken template."
+msgid "File from where the template originates. Used to reset broken template."
 msgstr ""
 "Fișierul din care provine șablonul. Utilizat pentru a reseta șabloanele "
 "defecte."
@@ -644,11 +663,11 @@ msgstr "Dacă este bifat, unele mesaje au o eroare de livrare."
 #. module: sms
 #: model:ir.model.fields,help:sms.field_res_partner__phone_sanitized_blacklisted
 msgid ""
-"If the sanitized phone number is on the blacklist, the contact won't receive"
-" mass mailing sms anymore, from any list"
+"If the sanitized phone number is on the blacklist, the contact won't receive "
+"mass mailing sms anymore, from any list"
 msgstr ""
-"Dacă numărul de telefon dezinfectat se află pe lista neagră, contactul nu va"
-" mai primi SMS-uri de tip mailing în masă, din nicio listă"
+"Dacă numărul de telefon dezinfectat se află pe lista neagră, contactul nu va "
+"mai primi SMS-uri de tip mailing în masă, din nicio listă"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.mail_resend_message_view_form
@@ -902,8 +921,8 @@ msgstr "Număr de mesaje cu eroare de livrare"
 #. module: sms
 #: model:ir.model.fields,help:sms.field_sms_composer__res_ids_count
 msgid ""
-"Number of recipients that will receive the SMS if sent in mass mode, without"
-" applying the Active Domain value"
+"Number of recipients that will receive the SMS if sent in mass mode, without "
+"applying the Active Domain value"
 msgstr ""
 "Numărul de destinatari care vor primi SMS-ul dacă este trimis în mod masiv, "
 "fără a aplica valoarea domeniului activ"
@@ -918,13 +937,13 @@ msgstr "Optat pentru excludere"
 msgid ""
 "Optional translation language (ISO code) to select when sending out an "
 "email. If not set, the english version will be used. This should usually be "
-"a placeholder expression that provides the appropriate language, e.g. {{ "
-"object.partner_id.lang }}."
+"a placeholder expression that provides the appropriate language, e.g. "
+"{{ object.partner_id.lang }}."
 msgstr ""
-"Limbă de traducere opțională (cod ISO) de selectat la trimiterea unui "
-"e-mail. Dacă nu este setată, se va folosi versiunea în engleză. De obicei, "
-"aceasta ar trebui să fie o expresie de tip placeholder care furnizează limba"
-" potrivită, ex: {{ object.partner_id.lang }}."
+"Limbă de traducere opțională (cod ISO) de selectat la trimiterea unui e-"
+"mail. Dacă nu este setată, se va folosi versiunea în engleză. De obicei, "
+"aceasta ar trebui să fie o expresie de tip placeholder care furnizează limba "
+"potrivită, ex: {{ object.partner_id.lang }}."
 
 #. module: sms
 #: model:ir.model,name:sms.model_sms_sms
@@ -953,8 +972,8 @@ msgid ""
 "Phone number of the recipient. If changed, it will be recorded on "
 "recipient's profile."
 msgstr ""
-"Numărul de telefon al destinatarului. Dacă este modificat, va fi înregistrat"
-" pe profilul destinatarului."
+"Numărul de telefon al destinatarului. Dacă este modificat, va fi înregistrat "
+"pe profilul destinatarului."
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_res_partner__phone_mobile_search
@@ -1590,22 +1609,29 @@ msgid ""
 "- 'Update a Record': update the values of a record\n"
 "- 'Create Activity': create an activity (Discuss)\n"
 "- 'Send Email': post a message, a note or send an email (Discuss)\n"
-"- 'Send SMS': send SMS, log them on documents (SMS)- 'Add/Remove Followers': add or remove followers to a record (Discuss)\n"
+"- 'Send SMS': send SMS, log them on documents (SMS)- 'Add/Remove Followers': "
+"add or remove followers to a record (Discuss)\n"
 "- 'Create Record': create a new record with new values\n"
 "- 'Execute Code': a block of Python code that will be executed\n"
-"- 'Send Webhook Notification': send a POST request to an external system, also known as a Webhook\n"
-"- 'Execute Existing Actions': define an action that triggers several other server actions\n"
+"- 'Send Webhook Notification': send a POST request to an external system, "
+"also known as a Webhook\n"
+"- 'Execute Existing Actions': define an action that triggers several other "
+"server actions\n"
 msgstr ""
 "Tipul acțiunii serverului. Sunt disponibile următoarele valori:\n"
 "- 'Actualizează o înregistrare': actualizează valorile unei înregistrări\n"
 "- 'Creează activitate': creează o activitate (Discuții)\n"
-"- 'Trimite e-mail': postează un mesaj, o notă sau trimite un e-mail (Discuții)\n"
+"- 'Trimite e-mail': postează un mesaj, o notă sau trimite un e-mail "
+"(Discuții)\n"
 "- 'Trimite SMS': trimite SMS-uri, loghează-le pe documente (SMS)\n"
-"- 'Adaugă/Elimină urmăritori': adaugă sau elimină urmăritori la o înregistrare (Discuții)\n"
+"- 'Adaugă/Elimină urmăritori': adaugă sau elimină urmăritori la o "
+"înregistrare (Discuții)\n"
 "- 'Creează înregistrare': creează o nouă înregistrare cu valori noi\n"
 "- 'Execută cod': un bloc de cod Python care va fi executat\n"
-"- 'Trimite notificare Webhook': trimite o cerere POST către un sistem extern, cunoscut și ca Webhook\n"
-"- 'Execută acțiuni existente': definește o acțiune care declanșează mai multe alte acțiuni de server\n"
+"- 'Trimite notificare Webhook': trimite o cerere POST către un sistem "
+"extern, cunoscut și ca Webhook\n"
+"- 'Execută acțiuni existente': definește o acțiune care declanșează mai "
+"multe alte acțiuni de server\n"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_sms__uuid
@@ -1647,15 +1673,18 @@ msgid ""
 "'comment': generated by user input e.g. through discuss or composer\n"
 "'email_outgoing': generated by a mailing\n"
 "'notification': generated by system e.g. tracking messages\n"
-"'auto_comment': generated by automated notification mechanism e.g. acknowledgment\n"
+"'auto_comment': generated by automated notification mechanism e.g. "
+"acknowledgment\n"
 "'user_notification': generated for a specific recipient"
 msgstr ""
 "Folosit pentru a clasifica generatorul de mesaje\n"
 "„email”: generat de un e-mail primit, de exemplu prin mailgateway\n"
-"„comment”: generat de o contribuție a utilizatorului, de exemplu, prin intermediul discuss sau composer\n"
+"„comment”: generat de o contribuție a utilizatorului, de exemplu, prin "
+"intermediul discuss sau composer\n"
 "„email_outgoing”: generat de o trimitere\n"
 "„notification”: generat de sistem, de exemplu mesaje de urmărire\n"
-"„auto_comment”: generat de un mecanism automat de notificare, de exemplu o confirmare de primire\n"
+"„auto_comment”: generat de un mecanism automat de notificare, de exemplu o "
+"confirmare de primire\n"
 "„user_notification”: generat pentru un anumit destinatar"
 
 #. module: sms
@@ -1749,8 +1778,7 @@ msgstr "Ați încercat de prea multe ori. Vă rugăm să încercați mai târziu
 msgid ""
 "Your SMS Text Message must include at least one non-whitespace character"
 msgstr ""
-"Mesajul dvs. SMS trebuie să conțină cel puțin un caracter care nu este "
-"spațiu"
+"Mesajul dvs. SMS trebuie să conțină cel puțin un caracter care nu este spațiu"
 
 #. module: sms
 #. odoo-python
@@ -1771,11 +1799,15 @@ msgstr ""
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_account_sender_view_form
 msgid ""
-"Your sender name must be between 3 and 11 characters long and only contain alphanumeric characters.\n"
-"                        It must fit your company name, and you aren't allowed to modify it once you registered one, choose it carefully."
+"Your sender name must be between 3 and 11 characters long and only contain "
+"alphanumeric characters.\n"
+"                        It must fit your company name, and you aren't "
+"allowed to modify it once you registered one, choose it carefully."
 msgstr ""
-"Numele expeditorului trebuie să aibă între 3 și 11 caractere și să conțină doar caractere alfanumerice.\n"
-"                        Trebuie să corespundă numelui companiei dvs., iar după înregistrare nu mai poate fi modificat, alegeți-l cu atenție."
+"Numele expeditorului trebuie să aibă între 3 și 11 caractere și să conțină "
+"doar caractere alfanumerice.\n"
+"                        Trebuie să corespundă numelui companiei dvs., iar "
+"după înregistrare nu mai poate fi modificat, alegeți-l cu atenție."
 
 #. module: sms
 #. odoo-python
@@ -1820,8 +1852,7 @@ msgid ""
 "recipients have an invalid phone number and will not receive this text "
 "message."
 msgstr ""
-"destinatarii au un număr de telefon nevalid și nu vor primi acest mesaj "
-"text."
+"destinatarii au un număr de telefon nevalid și nu vor primi acest mesaj text."
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_preview_form

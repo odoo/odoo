@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-08-22 18:39+0000\n"
+"POT-Creation-Date: 2025-09-05 18:40+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Raymond Yu <cl_yu@hotmail.com>, 2025\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/"
@@ -1602,12 +1602,6 @@ msgstr "无法隐藏工作表的所有列。"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Cannot hide all the rows of a sheet."
 msgstr "无法隐藏工作表的所有行。"
-
-#. module: spreadsheet
-#. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-msgid "Cannot multiply matrices : incompatible matrices size."
-msgstr "无法进行矩阵乘法运算：矩阵大小不兼容。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3576,14 +3570,6 @@ msgstr "函数 [[FUNCTION_NAME]] 希望 criteria_range 具有相同的维度"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Function [[FUNCTION_NAME]] expects number values for %s, but got a %s."
 msgstr "函数 [[FUNCTION_NAME]] 期望值为 %s，但得到的是 %s。"
-
-#. module: spreadsheet
-#. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-msgid ""
-"Function [[FUNCTION_NAME]] invert matrix error, only square matrices are "
-"invertible"
-msgstr "函数 [[FUNCTION_NAME]] 逆矩阵错误，只有正方形矩阵可逆"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -7757,6 +7743,14 @@ msgstr "第一个补充。"
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid ""
+"The first and second arguments of [[FUNCTION_NAME]] must be non-empty "
+"matrices."
+msgstr ""
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "The first column index of the columns to be returned."
 msgstr "要返回的列的第一列索引。"
 
@@ -10022,12 +10016,6 @@ msgstr "要使用分隔符追加的一个或多个值。"
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-msgid "The value should be a scalar or a 1x1 matrix"
-msgstr "值应该是标量或 1x1 矩阵"
-
-#. module: spreadsheet
-#. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "The value the function returns if logical_expression is FALSE."
 msgstr "如果 logical_expression 为 FALSE，函数返回的值。"
 
@@ -11300,14 +11288,16 @@ msgstr "[[FUNCTION_NAME]]评估为一个超出范围的行值%s。"
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-msgid "[[FUNCTION_NAME]] expects non-empty ranges for both parameters."
-msgstr "[[FUNCTION_NAME]]希望两个参数的范围都不是空的。"
+msgid "[[FUNCTION_NAME]] expects number values."
+msgstr "[[FUNCTION_NAME]] 希望得到数字值。"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-msgid "[[FUNCTION_NAME]] expects number values."
-msgstr "[[FUNCTION_NAME]] 希望得到数字值。"
+msgid ""
+"[[FUNCTION_NAME]] expects the provided values of %(argName)s to be a non-"
+"empty matrix."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -11338,12 +11328,6 @@ msgstr "[[FUNCTION_NAME]]有不匹配的范围大小。"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "[[FUNCTION_NAME]] has no valid input data."
 msgstr "[[FUNCTION_NAME]] 没有有效的输入数据。"
-
-#. module: spreadsheet
-#. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-msgid "[[FUNCTION_NAME]] needs at least two values for both parameters."
-msgstr "[[FUNCTION_NAME]] 的两个参数至少需要两个值。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -11562,3 +11546,20 @@ msgstr "昨天"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "zero"
 msgstr "零"
+
+#~ msgid "Cannot multiply matrices : incompatible matrices size."
+#~ msgstr "无法进行矩阵乘法运算：矩阵大小不兼容。"
+
+#~ msgid ""
+#~ "Function [[FUNCTION_NAME]] invert matrix error, only square matrices are "
+#~ "invertible"
+#~ msgstr "函数 [[FUNCTION_NAME]] 逆矩阵错误，只有正方形矩阵可逆"
+
+#~ msgid "The value should be a scalar or a 1x1 matrix"
+#~ msgstr "值应该是标量或 1x1 矩阵"
+
+#~ msgid "[[FUNCTION_NAME]] expects non-empty ranges for both parameters."
+#~ msgstr "[[FUNCTION_NAME]]希望两个参数的范围都不是空的。"
+
+#~ msgid "[[FUNCTION_NAME]] needs at least two values for both parameters."
+#~ msgstr "[[FUNCTION_NAME]] 的两个参数至少需要两个值。"

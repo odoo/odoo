@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-08-22 18:39+0000\n"
+"POT-Creation-Date: 2025-09-05 18:40+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Abe Manyo, 2025\n"
 "Language-Team: Indonesian (https://app.transifex.com/odoo/teams/41243/id/)\n"
@@ -1677,12 +1677,6 @@ msgstr "Tidak dapat menyembunyikan semua kolom pada sheet."
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Cannot hide all the rows of a sheet."
 msgstr "Tidak dapat menyembunyikan semua baris pada sheet."
-
-#. module: spreadsheet
-#. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-msgid "Cannot multiply matrices : incompatible matrices size."
-msgstr "Tidak dapat mengkali matriks : ukuran matriks tidak kompatibel."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3698,16 +3692,6 @@ msgid "Function [[FUNCTION_NAME]] expects number values for %s, but got a %s."
 msgstr ""
 "Fungsi [[FUNCTION_NAME]] mengharapkan nilai nomor untuk %s, tapi mendapatkan "
 "%s."
-
-#. module: spreadsheet
-#. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-msgid ""
-"Function [[FUNCTION_NAME]] invert matrix error, only square matrices are "
-"invertible"
-msgstr ""
-"Function [[FUNCTION_NAME]] invers matriks error, hanya matriks persegi yang "
-"bisa diinvers (atau \"hanya berlaku pada matriks persegi\")"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -7986,6 +7970,14 @@ msgstr "Addendum pertama."
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid ""
+"The first and second arguments of [[FUNCTION_NAME]] must be non-empty "
+"matrices."
+msgstr ""
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "The first column index of the columns to be returned."
 msgstr "Indeks kolom pertama dari kolom-kolom yang akan dikembalikkan."
 
@@ -10356,12 +10348,6 @@ msgstr "Value atau value-value yang akan di-append menggunakan delimiter."
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-msgid "The value should be a scalar or a 1x1 matrix"
-msgstr "Value harus merupakan scalar atau matriks 1x1"
-
-#. module: spreadsheet
-#. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "The value the function returns if logical_expression is FALSE."
 msgstr "Value yang fungsi kembalikkan bila logical_expression adalah FALSE."
 
@@ -11682,16 +11668,16 @@ msgstr "[[FUNCTION_NAME]] mengevaluasi ke value baris yang di luar batas %s."
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-msgid "[[FUNCTION_NAME]] expects non-empty ranges for both parameters."
-msgstr ""
-"[[FUNCTION_NAME]] mengharapkan range yang tidak kosong untuk masing-masing "
-"parameter."
+msgid "[[FUNCTION_NAME]] expects number values."
+msgstr "[[FUNCTION_NAME]] mengharapkan value angka."
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-msgid "[[FUNCTION_NAME]] expects number values."
-msgstr "[[FUNCTION_NAME]] mengharapkan value angka."
+msgid ""
+"[[FUNCTION_NAME]] expects the provided values of %(argName)s to be a non-"
+"empty matrix."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -11724,14 +11710,6 @@ msgstr "[[FUNCTION_NAME]] memiliki ukuran range yang tidak cocok."
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "[[FUNCTION_NAME]] has no valid input data."
 msgstr "[[FUNCTION_NAME]] tidak memiliki input data yang valid."
-
-#. module: spreadsheet
-#. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-msgid "[[FUNCTION_NAME]] needs at least two values for both parameters."
-msgstr ""
-"[[FUNCTION_NAME]] membutuhkan setidaknya dua value untuk masing-masing "
-"parameter."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -11950,3 +11928,26 @@ msgstr "kemarin"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "zero"
 msgstr "zero"
+
+#~ msgid "Cannot multiply matrices : incompatible matrices size."
+#~ msgstr "Tidak dapat mengkali matriks : ukuran matriks tidak kompatibel."
+
+#~ msgid ""
+#~ "Function [[FUNCTION_NAME]] invert matrix error, only square matrices are "
+#~ "invertible"
+#~ msgstr ""
+#~ "Function [[FUNCTION_NAME]] invers matriks error, hanya matriks persegi "
+#~ "yang bisa diinvers (atau \"hanya berlaku pada matriks persegi\")"
+
+#~ msgid "The value should be a scalar or a 1x1 matrix"
+#~ msgstr "Value harus merupakan scalar atau matriks 1x1"
+
+#~ msgid "[[FUNCTION_NAME]] expects non-empty ranges for both parameters."
+#~ msgstr ""
+#~ "[[FUNCTION_NAME]] mengharapkan range yang tidak kosong untuk masing-"
+#~ "masing parameter."
+
+#~ msgid "[[FUNCTION_NAME]] needs at least two values for both parameters."
+#~ msgstr ""
+#~ "[[FUNCTION_NAME]] membutuhkan setidaknya dua value untuk masing-masing "
+#~ "parameter."

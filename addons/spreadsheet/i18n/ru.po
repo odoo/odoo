@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-08-22 18:39+0000\n"
+"POT-Creation-Date: 2025-09-05 18:40+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Anastasiia Koroleva, 2025\n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
@@ -1698,12 +1698,6 @@ msgstr "Невозможно скрыть все столбцы листа."
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Cannot hide all the rows of a sheet."
 msgstr "Невозможно скрыть все строки листа."
-
-#. module: spreadsheet
-#. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-msgid "Cannot multiply matrices : incompatible matrices size."
-msgstr "Невозможно перемножить матрицы: размер матриц несовместим."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3710,16 +3704,6 @@ msgstr ""
 msgid "Function [[FUNCTION_NAME]] expects number values for %s, but got a %s."
 msgstr ""
 "Функция [[FUNCTION_NAME]] ожидает числовые значения для %s, но получила %s."
-
-#. module: spreadsheet
-#. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-msgid ""
-"Function [[FUNCTION_NAME]] invert matrix error, only square matrices are "
-"invertible"
-msgstr ""
-"Ошибка обращения функции [[FUNCTION_NAME]]: обратное преобразование возможно "
-"только для квадратных матриц"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -8014,6 +7998,14 @@ msgstr "Первое слагаемое."
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid ""
+"The first and second arguments of [[FUNCTION_NAME]] must be non-empty "
+"matrices."
+msgstr ""
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "The first column index of the columns to be returned."
 msgstr "Индекс первого столбца возвращаемых столбцов."
 
@@ -10400,12 +10392,6 @@ msgstr "Значение или значения, которые будут до
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-msgid "The value should be a scalar or a 1x1 matrix"
-msgstr "Значение должно быть скалярным или матрицей 1x1"
-
-#. module: spreadsheet
-#. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "The value the function returns if logical_expression is FALSE."
 msgstr ""
 "Значение, которое возвращает функция, если логическое_выражение равно FALSE."
@@ -11739,14 +11725,16 @@ msgstr ""
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-msgid "[[FUNCTION_NAME]] expects non-empty ranges for both parameters."
-msgstr "[[FUNCTION_NAME]] ожидает непустые диапазоны для обоих параметров."
+msgid "[[FUNCTION_NAME]] expects number values."
+msgstr "[[FUNCTION_NAME]] ожидает числовые значения."
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-msgid "[[FUNCTION_NAME]] expects number values."
-msgstr "[[FUNCTION_NAME]] ожидает числовые значения."
+msgid ""
+"[[FUNCTION_NAME]] expects the provided values of %(argName)s to be a non-"
+"empty matrix."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -11779,14 +11767,6 @@ msgstr "[[FUNCTION_NAME]] не совпадают размеры диапазо�
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "[[FUNCTION_NAME]] has no valid input data."
 msgstr "[[FUNCTION_NAME]] нет корректных входных данных."
-
-#. module: spreadsheet
-#. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-msgid "[[FUNCTION_NAME]] needs at least two values for both parameters."
-msgstr ""
-"Функции [[FUNCTION_NAME]] нужно как минимум два значения для каждого из "
-"параметров."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -12011,3 +11991,24 @@ msgstr "вчера"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "zero"
 msgstr "ноль"
+
+#~ msgid "Cannot multiply matrices : incompatible matrices size."
+#~ msgstr "Невозможно перемножить матрицы: размер матриц несовместим."
+
+#~ msgid ""
+#~ "Function [[FUNCTION_NAME]] invert matrix error, only square matrices are "
+#~ "invertible"
+#~ msgstr ""
+#~ "Ошибка обращения функции [[FUNCTION_NAME]]: обратное преобразование "
+#~ "возможно только для квадратных матриц"
+
+#~ msgid "The value should be a scalar or a 1x1 matrix"
+#~ msgstr "Значение должно быть скалярным или матрицей 1x1"
+
+#~ msgid "[[FUNCTION_NAME]] expects non-empty ranges for both parameters."
+#~ msgstr "[[FUNCTION_NAME]] ожидает непустые диапазоны для обоих параметров."
+
+#~ msgid "[[FUNCTION_NAME]] needs at least two values for both parameters."
+#~ msgstr ""
+#~ "Функции [[FUNCTION_NAME]] нужно как минимум два значения для каждого из "
+#~ "параметров."

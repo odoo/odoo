@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-08-22 18:39+0000\n"
+"POT-Creation-Date: 2025-09-05 18:40+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Rasareeyar Lappiam, 2025\n"
 "Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
@@ -1600,12 +1600,6 @@ msgstr "ไม่สามารถซ่อนคอลัมน์ทั้ง
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Cannot hide all the rows of a sheet."
 msgstr "ไม่สามารถซ่อนแถวทั้งหมดของแผ่นงานได้"
-
-#. module: spreadsheet
-#. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-msgid "Cannot multiply matrices : incompatible matrices size."
-msgstr "ไม่สามารถคูณเมทริกซ์ : ขนาดเมทริกซ์ที่เข้ากันไม่ได้"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3576,16 +3570,6 @@ msgstr "ฟังก์ชัน [[FUNCTION_NAME]] คาดว่า criteria_r
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Function [[FUNCTION_NAME]] expects number values for %s, but got a %s."
 msgstr "ฟังก์ชัน [[FUNCTION_NAME]] ต้องการค่าตัวเลขสำหรับ %s แต่ได้รับ %s"
-
-#. module: spreadsheet
-#. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-msgid ""
-"Function [[FUNCTION_NAME]] invert matrix error, only square matrices are "
-"invertible"
-msgstr ""
-"ฟังก์ชัน [[FUNCTION_NAME]] ข้อผิดพลาดเมทริกซ์กลับด้าน "
-"เฉพาะเมทริกซ์จัตุรัสเท่านั้นที่สามารถกลับด้านได้"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -7784,6 +7768,14 @@ msgstr "การเพิ่มครั้งแรก"
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid ""
+"The first and second arguments of [[FUNCTION_NAME]] must be non-empty "
+"matrices."
+msgstr ""
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "The first column index of the columns to be returned."
 msgstr "ดัชนีคอลัมน์แรกของคอลัมน์ที่จะถูกส่งกลับ"
 
@@ -10046,12 +10038,6 @@ msgstr "ค่าหรือค่าที่จะต่อท้ายโด
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-msgid "The value should be a scalar or a 1x1 matrix"
-msgstr "ค่าควรเป็นสเกลาร์หรือเมทริกซ์ 1x1"
-
-#. module: spreadsheet
-#. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "The value the function returns if logical_expression is FALSE."
 msgstr "ค่าที่ฟังก์ชันส่งคืนหาก logic_expression เป็น FALSE"
 
@@ -11324,14 +11310,16 @@ msgstr "[[FUNCTION_NAME]] ประเมินค่าแถวที่อย
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-msgid "[[FUNCTION_NAME]] expects non-empty ranges for both parameters."
-msgstr "[[FUNCTION_NAME]] คาดว่าช่วงที่ไม่ว่างเปล่าสำหรับพารามิเตอร์ทั้งสอง"
+msgid "[[FUNCTION_NAME]] expects number values."
+msgstr "[[FUNCTION_NAME]] ต้องการค่าตัวเลข"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-msgid "[[FUNCTION_NAME]] expects number values."
-msgstr "[[FUNCTION_NAME]] ต้องการค่าตัวเลข"
+msgid ""
+"[[FUNCTION_NAME]] expects the provided values of %(argName)s to be a non-"
+"empty matrix."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -11362,12 +11350,6 @@ msgstr "[[FUNCTION_NAME]] มีขนาดช่วงไม่ตรงกั
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "[[FUNCTION_NAME]] has no valid input data."
 msgstr "[[FUNCTION_NAME]] ไม่มีการป้อนข้อมูลที่ถูกต้อง"
-
-#. module: spreadsheet
-#. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-msgid "[[FUNCTION_NAME]] needs at least two values for both parameters."
-msgstr "[[FUNCTION_NAME]] ต้องมีอย่างน้อยสองค่าสำหรับพารามิเตอร์ทั้งสอง"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -11586,3 +11568,22 @@ msgstr "เมื่อวาน"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "zero"
 msgstr ""
+
+#~ msgid "Cannot multiply matrices : incompatible matrices size."
+#~ msgstr "ไม่สามารถคูณเมทริกซ์ : ขนาดเมทริกซ์ที่เข้ากันไม่ได้"
+
+#~ msgid ""
+#~ "Function [[FUNCTION_NAME]] invert matrix error, only square matrices are "
+#~ "invertible"
+#~ msgstr ""
+#~ "ฟังก์ชัน [[FUNCTION_NAME]] ข้อผิดพลาดเมทริกซ์กลับด้าน "
+#~ "เฉพาะเมทริกซ์จัตุรัสเท่านั้นที่สามารถกลับด้านได้"
+
+#~ msgid "The value should be a scalar or a 1x1 matrix"
+#~ msgstr "ค่าควรเป็นสเกลาร์หรือเมทริกซ์ 1x1"
+
+#~ msgid "[[FUNCTION_NAME]] expects non-empty ranges for both parameters."
+#~ msgstr "[[FUNCTION_NAME]] คาดว่าช่วงที่ไม่ว่างเปล่าสำหรับพารามิเตอร์ทั้งสอง"
+
+#~ msgid "[[FUNCTION_NAME]] needs at least two values for both parameters."
+#~ msgstr "[[FUNCTION_NAME]] ต้องมีอย่างน้อยสองค่าสำหรับพารามิเตอร์ทั้งสอง"
