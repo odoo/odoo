@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import sys
 import functools
 import io
 import json
@@ -475,11 +476,13 @@ class IrActionsReport(models.Model):
             '--width', str(width), '--height', str(height),
             '--format', image_format,
         ]
+        auto_delete = not sys.platform.startswith('win')
+        to_be_deleted = []
         with ExitStack() as stack:
             files = []
             for body in bodies:
-                input_file = stack.enter_context(tempfile.NamedTemporaryFile(suffix='.html', prefix='report_image_html_input.tmp.'))
-                output_file = stack.enter_context(tempfile.NamedTemporaryFile(suffix=f'.{image_format}', prefix='report_image_output.tmp.'))
+                input_file = stack.enter_context(tempfile.NamedTemporaryFile(delete=auto_delete, suffix='.html', prefix='report_image_html_input.tmp.'))
+                output_file = stack.enter_context(tempfile.NamedTemporaryFile(delete=auto_delete, suffix=f'.{image_format}', prefix='report_image_output.tmp.'))
                 input_file.write(body.encode())
                 files.append((input_file, output_file))
             output_images = []
@@ -499,6 +502,8 @@ class IrActionsReport(models.Model):
                     output_images.append(None)
                 else:
                     output_images.append(output_file.read())
+                if not auto_delete: to_be_deleted.extend([input_file.name, output_file.name])
+        for fname in to_be_deleted: os.remove(fname)
         return output_images
 
     @api.model
