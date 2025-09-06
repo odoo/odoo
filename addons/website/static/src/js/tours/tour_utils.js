@@ -419,6 +419,10 @@ export function goToTheme(position = "bottom") {
             tooltipPosition: position,
             run: "click",
         },
+        {
+            content: "Check that the theme tab is active",
+            trigger: ".o-tab-content .options-container [data-action-id='switchTheme']",
+        },
     ];
 }
 
@@ -530,6 +534,7 @@ export function registerThemeHomepageTour(name, steps) {
             // FIXME(?) this should probably reuse the prepend_trigger function
             // so that we do check that we are really on the homepage.
             ...steps(),
+            ...goToTheme(),
             ...clickOnSave(),
         ]
     );
