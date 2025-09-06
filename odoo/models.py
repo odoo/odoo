@@ -6608,7 +6608,11 @@ class BaseModel(metaclass=MetaModel):
                         # for relational fields, evaluate as 'any'
                         # so that negations are applied on the result of 'any' instead
                         # of on the mapped value
-                        key, comparator, value = fname, 'any', [(rest, comparator, value)]
+                        if all(record[fname] for record in self):
+                            # All records have relational value - safe to use 'any' because when have 2 records
+                            # only 1 have relational value and other is empty, when go to data.filtered_domain(value)
+                            # it will return False for empty one which is not desired behavior
+                            key, comparator, value = fname, 'any', [(rest, comparator, value)]
                 else:
                     field = self._fields[key]
                     if key == 'id':
