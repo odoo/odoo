@@ -900,7 +900,8 @@
             --o-wsale-card-info-text-flex: 0 1 40%;
         }
 
-        &:where(.o_wsale_products_opt_has_comparison):where(:has(.o_add_compare)) {
+        &:where(.o_wsale_products_opt_has_comparison):where(:has(.o_add_compare)),
+        &:where(:has(.o_add_to_compare)) {
             --o-wsale-comparison-btn-placeholder-display: inline-block;
         }
     }
