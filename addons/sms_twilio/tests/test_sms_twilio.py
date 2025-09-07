@@ -24,7 +24,7 @@ class TestSmsTwilio(MockSmsTwilio):
             (self.twilio_invalid_phone_number, "sms_number_missing", "error", "sms_number_missing", False),
         ]:
             with self.subTest(number=number, twilio_error=twilio_error):
-                with self.mock_sms_twilio_gateway(mock_error_type=twilio_error):
+                with self.mock_sms_twilio_gateway(error_type=twilio_error):
                     body = f"Send SMS to {number}"
                     composer = self.env['sms.composer'].create({
                         'body': body,
@@ -43,28 +43,44 @@ class TestSmsTwilio(MockSmsTwilio):
 
     @users('employee')
     def test_send_sms_composer_partner(self):
-        for partner, twilio_error, expected_status, expected_failure_type, expected_to_delete in [
-            (self.valid_partner, False, "pending", False, True),
+        for partner, twilio_error, exp_notif_status, exp_failure_type, exp_failure_reason, exp_to_delete in [
+            (self.valid_partner, False, "pending", False, False, True),
+            # twilio specific issues
+            (
+                self.invalid_partner, "twilio_acc_unverified", "exception", "sms_acc",
+                "Unverified recipient on Trial Account", False
+            ), (
+                self.invalid_partner, "twilio_callback", "exception", "twilio_callback",
+                "Twilio StatusCallback URL is incorrect", False
+            ),
             # check some error code support
-            (self.valid_partner, "wrong_number_format", "error", "sms_number_format", False),
-            (self.invalid_partner, "wrong_number_format", "error", "sms_number_format", False),
-            (self.invalid_partner, "sms_number_missing", "error", "sms_number_missing", False),
+            (
+                self.invalid_partner, "wrong_number_format", "exception", "sms_number_format",
+                "The number you're trying to reach is not correctly formatted", False
+            ), (
+                self.invalid_partner, "sms_number_missing", "exception", "sms_number_missing",
+                "A 'To' phone number is required", False
+            ),
         ]:
             with self.subTest(partner=partner, number=partner.phone, twilio_error=twilio_error):
-                with self.mock_sms_twilio_gateway(mock_error_type=twilio_error):
+                with self.mock_sms_twilio_gateway(error_type=twilio_error):
                     body = f"Send SMS to {partner.name}"
                     composer = self.env['sms.composer'].with_context(
                         active_model='res.partner',
-                        active_id=partner,
+                        active_id=partner.id,
                     ).create({'body': body})
-                    composer._action_send_sms()
-                    self.assertSMS(
-                        partner, partner.phone, expected_status,
-                        content=body,
-                        failure_type=expected_failure_type,
-                        fields_values={
-                            "to_delete": expected_to_delete,
-                        },
+                    message = composer._action_send_sms()
+                    self.assertEqual(len(message), 1)
+                    self.assertSMSNotification(
+                        [{
+                            'number': partner.phone, 'partner': partner,
+                            'failure_type': exp_failure_type, 'failure_reason': exp_failure_reason,
+                            'state': exp_notif_status,
+                            'sms_fields_values': {
+                                "to_delete": exp_to_delete,
+                            },
+                        }], body,
+                        messages=message,
                     )
 
     @users('employee')

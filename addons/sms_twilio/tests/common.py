@@ -69,7 +69,6 @@ class MockSmsTwilioApi(SMSCase):
         }
         cls.request_send_nok_json = {
             'code': 21211,
-            'message': "Invalid 'To' Phone Number: +324863XXXX",
             'more_info': 'https://www.twilio.com/docs/errors/21211',
             'status': 400,
         }
@@ -92,24 +91,27 @@ class MockSmsTwilioApi(SMSCase):
                 }
                 return response
             elif right_part == "Messages.json":
-                mock_error_type = cls.mock_error_number_to_type.get(cls.mock_number) or cls.mock_error_type
+                error_type = cls.mock_error_number_to_type.get(cls.mock_number) or cls.mock_error_type
+                if not error_type and not cls.mock_number:
+                    error_type = "sms_number_missing"
                 error_codes = {
                     'wrong_number_format': 21211,
                     'sms_number_missing': 21604,
+                    'twilio_acc_unverified': 21608,
                     'twilio_callback': 21609,
                     'unknown': 1,
                     'other': 1,
                 }
-                if not mock_error_type:
+                if not error_type:
                     request_send_ok_json = cls.request_send_ok_json.copy()
                     request_send_ok_json['body'] = cls.mock_body or 'body'
                     request_send_ok_json['sid'] = f'twilio_{cls.mock_company.name}_{cls.mock_sms_uuid}' if cls.mock_sms_uuid else 'SMFake'
                     request_send_ok_json['to_number'] = cls.mock_number or 'to_number'
                     response.json = lambda: request_send_ok_json
                 else:
-                    if mock_error_type not in error_codes:
+                    if error_type not in error_codes:
                         raise ValueError('Unsupported error code')
-                    error_code = error_codes.get(mock_error_type) if mock_error_type else False
+                    error_code = error_codes.get(error_type) if error_type else False
 
                     request_send_nok_json = cls.request_send_nok_json.copy()
                     request_send_nok_json['body'] = cls.mock_body or 'body'
@@ -126,40 +128,56 @@ class MockSmsTwilioApi(SMSCase):
             "sms_provider": "twilio",
             "sms_twilio_account_sid": "AC12345678987654321234567898765432",
             "sms_twilio_auth_token": "grimgorironhide",
+            "sms_twilio_number_ids": [
+                (5, 0),
+                (0, 0, {
+                    "country_id": cls.env.ref("base.be").id,
+                    "number": "+32455998877",
+                    "sequence": 0,
+                }),
+                (0, 0, {
+                    "country_id": cls.env.ref("base.us").id,
+                    "number": "+15056998877",
+                    "sequence": 1,
+                }),
+            ],
         })
 
     @classmethod
-    def _update_mock(cls, mock_error_type=None, mock_error_number_to_type=None,
-                     mock_body=None, mock_number=False, mock_sms_uuid=False,
-                     mock_company=False):
-        if mock_error_type is not None:
-            cls.mock_error_type = mock_error_type
-        if mock_error_number_to_type is not None:
-            cls.mock_error_number_to_type = mock_error_number_to_type
+    def _update_mock(cls, error_type=None, error_number_to_type=None,
+                     body=None, number=False, sms_uuid=False,
+                     company=False):
+        if error_type is not None:
+            cls.mock_error_type = error_type
+        if error_number_to_type is not None:
+            cls.mock_error_number_to_type = error_number_to_type
         # various data, used notably to forge better simulated responses
-        if mock_body is not None:
-            cls.mock_body = mock_body
-        if mock_company is not False:
-            cls.mock_company = mock_company
-        if mock_number is not False:
-            cls.mock_number = mock_number
-        if mock_sms_uuid is not False:
-            cls.mock_sms_uuid = mock_sms_uuid
+        if body is not None:
+            cls.mock_body = body
+        if company is not False:
+            cls.mock_company = company
+        if number is not False:
+            cls.mock_number = number
+        if sms_uuid is not False:
+            cls.mock_sms_uuid = sms_uuid
 
     @contextmanager
-    def mock_sms_twilio_send(self, mock_error_type=False, mock_error_number_to_type=None):
-
+    def mock_sms_twilio_send(self, error_type=False, error_number_to_type=None):
         self._clear_sms_sent()
-        self._update_mock(mock_error_type=mock_error_type, mock_error_number_to_type=mock_error_number_to_type)
+        self._update_mock(
+            error_type=error_type,
+            error_number_to_type=error_number_to_type,
+            company=self.env.company,
+        )
         sms_twilio_send_request_origin = SmsApiTwilio._sms_twilio_send_request
 
         def _sms_api_twilio_sms_twilio_send_request(model, *args, **kwargs):
             (_session, to_number, body, uuid) = args
             self._update_mock(
-                mock_error_type=self.mock_error_type,
-                mock_error_number_to_type=self.mock_error_number_to_type,
-                mock_body=body, mock_number=to_number, mock_sms_uuid=uuid,
-                mock_company=model.company,
+                error_type=self.mock_error_type,
+                error_number_to_type=self.mock_error_number_to_type,
+                body=body, number=to_number, sms_uuid=uuid,
+                company=model.company,
             )
             res = sms_twilio_send_request_origin(model, *args, **kwargs)
             self._sms += [{
@@ -174,7 +192,7 @@ class MockSmsTwilioApi(SMSCase):
             yield
 
     @contextmanager
-    def mock_sms_twilio_gateway(self, mock_error_type=False, mock_error_number_to_type=None):
+    def mock_sms_twilio_gateway(self, error_type=False, error_number_to_type=None):
         self._clear_sms_sent()
         sms_create_origin = SmsSms.create
 
@@ -185,7 +203,7 @@ class MockSmsTwilioApi(SMSCase):
 
         with (
             patch.object(SmsSms, 'create', autospec=True, wraps=SmsSms, side_effect=_sms_sms_create),
-            self.mock_sms_twilio_send(mock_error_type=mock_error_type, mock_error_number_to_type=mock_error_number_to_type),
+            self.mock_sms_twilio_send(error_type=error_type, error_number_to_type=error_number_to_type),
         ):
             yield
 

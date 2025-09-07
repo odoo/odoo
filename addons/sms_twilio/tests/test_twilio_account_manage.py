@@ -36,18 +36,17 @@ class TestSmsTwilio(MockSmsTwilio, TransactionCase):
         for twilio_error, notif_params in zip(
             (False, "wrong_number_format"),
             ({}, {
-                'message': 'sms_number_format: None',
+                'message': 'Wrong Number Format: Wrong Number Format',
                 'type': 'danger',
             }),
             strict=True,
         ):
             with self.subTest(twilio_error=twilio_error):
-                with self.mock_sms_twilio_send(mock_error_type=twilio_error):
+                with self.mock_sms_twilio_send(error_type=twilio_error):
                     notif = wizard.action_send_test()
                 params = {
                     'title': "Twilio SMS",
-                    # FIXME: check this
-                    'message': 'The SMS has been sent from False',
+                    'message': 'The SMS has been sent from +32455998877 (Belgium)',
                     'type': 'success',
                     'sticky': False,
                     **notif_params,
@@ -57,3 +56,29 @@ class TestSmsTwilio(MockSmsTwilio, TransactionCase):
                     'tag': 'display_notification',
                     'params': params,
                 })
+
+    @users('admin')
+    def test_manage_action_send_test_from_number(self):
+        for test_number, exp_from in [
+            ('+32455001122', '+32455998877 (Belgium)'),
+            ('+15056528788', '+15056998877 (United States)'),
+            ('+917891273899', '+32455998877 (Belgium)'),  # no match, takes first one
+        ]:
+            with self.subTest(test_number=test_number):
+                wizard = self.env["sms.twilio.account.manage"].create({
+                    'test_number': test_number,
+                })
+                with self.mock_sms_twilio_send():
+                    notif = wizard.action_send_test()
+                message = notif["params"]["message"]
+                self.assertEqual(message, f'The SMS has been sent from {exp_from}')
+
+        # in case there is no twilio number
+        self.env.company.write({"sms_twilio_number_ids": [(5, 0)]})
+        wizard = self.env["sms.twilio.account.manage"].create({
+            'test_number': test_number,
+        })
+        with self.mock_sms_twilio_send():
+            notif = wizard.action_send_test()
+        message = notif["params"]["message"]
+        self.assertEqual(message, 'The SMS has been sent from False')
