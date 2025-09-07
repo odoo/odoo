@@ -17,7 +17,6 @@ import {
     onMounted,
     onPatched,
     onWillDestroy,
-    onWillRender,
     onWillUpdateProps,
     toRaw,
     useChildSubEnv,
@@ -133,41 +132,6 @@ export class Message extends Component {
         this.ui = useService("ui");
         this.openReactionMenu = this.openReactionMenu.bind(this);
         this.optionsDropdown = useDropdownState();
-        onWillRender(() => {
-            const allActions = toRaw(this.messageActions).actions;
-            const quickActions = allActions.slice(
-                0,
-                allActions.length > this.quickActionCount
-                    ? this.quickActionCount - 1
-                    : this.quickActionCount
-            );
-            const moreActions =
-                allActions.length > this.quickActionCount
-                    ? allActions.slice(this.quickActionCount - 1)
-                    : false;
-            const actions = moreActions?.length
-                ? [
-                      ...quickActions,
-                      this.messageActions.more({
-                          actions: moreActions,
-                          dropdownMenuClass: "o-mail-Message-moreMenu",
-                          dropdownPosition: this.isAlignedRight
-                              ? this.message.threadAsNewest
-                                  ? "left-end"
-                                  : "left-start"
-                              : this.message.threadAsNewest
-                              ? "right-end"
-                              : "right-start",
-                          name: this.expandText,
-                      }),
-                  ]
-                : quickActions;
-            if (this.isAlignedRight) {
-                actions.reverse();
-            }
-            this.quickActions = quickActions;
-            this.actions = actions;
-        });
         useChildSubEnv({
             message: this.props.message,
             alignedRight: this.isAlignedRight,
@@ -254,6 +218,41 @@ export class Message extends Component {
             },
             () => [this.isEditing, this.message.richBody]
         );
+    }
+
+    computeActions() {
+        const allActions = this.messageActions.actions;
+        const quickActions = allActions.slice(
+            0,
+            allActions.length > this.quickActionCount
+                ? this.quickActionCount - 1
+                : this.quickActionCount
+        );
+        const moreActions =
+            allActions.length > this.quickActionCount
+                ? allActions.slice(this.quickActionCount - 1)
+                : false;
+        const moreAction = moreActions?.length
+            ? this.messageActions.more({
+                  actions: moreActions,
+                  dropdownMenuClass: "o-mail-Message-moreMenu",
+                  dropdownPosition: this.isAlignedRight
+                      ? this.message.threadAsNewest
+                          ? "left-end"
+                          : "left-start"
+                      : this.message.threadAsNewest
+                      ? "right-end"
+                      : "right-start",
+                  name: this.expandText,
+              })
+            : undefined;
+        const actions = moreAction ? [...quickActions, moreAction] : quickActions;
+        if (this.isAlignedRight) {
+            actions.reverse();
+        }
+        this.state.moreAction = moreAction;
+        this.quickActions = quickActions;
+        this.actions = actions;
     }
 
     get attClass() {
@@ -349,11 +348,7 @@ export class Message extends Component {
             this.state.isHovered ||
             this.state.isClicked ||
             this.emojiPicker?.isOpen ||
-            Boolean(
-                this.actions.find(
-                    (action) => action.definition?.isMoreAction && action.definition.isActive
-                )
-            )
+            this.state.moreAction?.definition.isActive
         );
     }
 
