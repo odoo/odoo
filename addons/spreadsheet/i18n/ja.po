@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-08-22 18:39+0000\n"
+"POT-Creation-Date: 2025-09-05 18:40+0000\n"
 "PO-Revision-Date: 2025-08-26 14:54+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-18/"
@@ -1627,12 +1627,6 @@ msgstr "シートの全てのカラムを隠すことはできません。"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Cannot hide all the rows of a sheet."
 msgstr "シートの全ての行を隠すことはできません。"
-
-#. module: spreadsheet
-#. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-msgid "Cannot multiply matrices : incompatible matrices size."
-msgstr "行列を掛け合わせることはできません。互換性のない行列のサイズです。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3620,14 +3614,6 @@ msgstr "機能[[FUNCTION_NAME]]を期待は同じ次元を持つことが条件�
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Function [[FUNCTION_NAME]] expects number values for %s, but got a %s."
 msgstr "機能 [[FUNCTION_NAME]] は値数 %sを想定していますが、  %sを得ました。"
-
-#. module: spreadsheet
-#. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-msgid ""
-"Function [[FUNCTION_NAME]] invert matrix error, only square matrices are "
-"invertible"
-msgstr "機能 [[FUNCTION_NAME]]逆行列のエラー、正方行列だけが反転可能"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -7849,6 +7835,14 @@ msgstr "最初の加数"
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid ""
+"The first and second arguments of [[FUNCTION_NAME]] must be non-empty "
+"matrices."
+msgstr ""
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "The first column index of the columns to be returned."
 msgstr "返されるカラムの最初のカラムインデックス"
 
@@ -10144,12 +10138,6 @@ msgstr "区切り文字を使用して追加される値"
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-msgid "The value should be a scalar or a 1x1 matrix"
-msgstr "値はスカラーまたは1x1の行列でなければなりません。"
-
-#. module: spreadsheet
-#. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "The value the function returns if logical_expression is FALSE."
 msgstr "logical_expressionがFALSEの場合に関数が返す値"
 
@@ -11438,14 +11426,16 @@ msgstr "[[FUNCTION_NAME]] は行の値 %sの範囲外と評価されます"
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-msgid "[[FUNCTION_NAME]] expects non-empty ranges for both parameters."
-msgstr "[[FUNCTION_NAME]] は両パラメータに空でない範囲を想定しています。"
+msgid "[[FUNCTION_NAME]] expects number values."
+msgstr "[[FUNCTION_NAME]]には数値が入ります"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-msgid "[[FUNCTION_NAME]] expects number values."
-msgstr "[[FUNCTION_NAME]]には数値が入ります"
+msgid ""
+"[[FUNCTION_NAME]] expects the provided values of %(argName)s to be a non-"
+"empty matrix."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -11476,12 +11466,6 @@ msgstr "[[FUNCTION_NAME]]が一致しない範囲サイズです"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "[[FUNCTION_NAME]] has no valid input data."
 msgstr "[[FUNCTION_NAME]]に有効な入力データがありません"
-
-#. module: spreadsheet
-#. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-msgid "[[FUNCTION_NAME]] needs at least two values for both parameters."
-msgstr "[[FUNCTION_NAME]] は両方のパラメータ用に少なくとも2つの値が必要です。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -11701,3 +11685,21 @@ msgstr "昨日"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "zero"
 msgstr "ゼロ"
+
+#~ msgid "Cannot multiply matrices : incompatible matrices size."
+#~ msgstr "行列を掛け合わせることはできません。互換性のない行列のサイズです。"
+
+#~ msgid ""
+#~ "Function [[FUNCTION_NAME]] invert matrix error, only square matrices are "
+#~ "invertible"
+#~ msgstr "機能 [[FUNCTION_NAME]]逆行列のエラー、正方行列だけが反転可能"
+
+#~ msgid "The value should be a scalar or a 1x1 matrix"
+#~ msgstr "値はスカラーまたは1x1の行列でなければなりません。"
+
+#~ msgid "[[FUNCTION_NAME]] expects non-empty ranges for both parameters."
+#~ msgstr "[[FUNCTION_NAME]] は両パラメータに空でない範囲を想定しています。"
+
+#~ msgid "[[FUNCTION_NAME]] needs at least two values for both parameters."
+#~ msgstr ""
+#~ "[[FUNCTION_NAME]] は両方のパラメータ用に少なくとも2つの値が必要です。"

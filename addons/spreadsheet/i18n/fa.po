@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-08-22 18:39+0000\n"
+"POT-Creation-Date: 2025-09-05 18:40+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Naser mars, 2025\n"
 "Language-Team: Persian (https://app.transifex.com/odoo/teams/41243/fa/)\n"
@@ -1636,12 +1636,6 @@ msgstr "نمی‌توان همه ستون‌های یک برگه را پنهان
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Cannot hide all the rows of a sheet."
 msgstr "نمی‌توان تمام ردیف‌های یک شیت را پنهان کرد."
-
-#. module: spreadsheet
-#. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-msgid "Cannot multiply matrices : incompatible matrices size."
-msgstr "نمی‌توان ماتریس‌ها را ضرب کرد: اندازه ماتریس‌ها ناسازگار است."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3619,14 +3613,6 @@ msgstr ""
 msgid "Function [[FUNCTION_NAME]] expects number values for %s, but got a %s."
 msgstr ""
 "تابع [[FUNCTION_NAME]] انتظار دارد مقادیر عددی برای %s، اما یک %s دریافت کرد."
-
-#. module: spreadsheet
-#. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-msgid ""
-"Function [[FUNCTION_NAME]] invert matrix error, only square matrices are "
-"invertible"
-msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -7864,6 +7850,14 @@ msgstr "اولین جمع‌شده."
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid ""
+"The first and second arguments of [[FUNCTION_NAME]] must be non-empty "
+"matrices."
+msgstr ""
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "The first column index of the columns to be returned."
 msgstr "اولین شاخص ستون از ستون‌هایی که باید برگردانده شوند."
 
@@ -10188,12 +10182,6 @@ msgstr "مقدار یا مقادیری که باید با استفاده از ج
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-msgid "The value should be a scalar or a 1x1 matrix"
-msgstr ""
-
-#. module: spreadsheet
-#. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "The value the function returns if logical_expression is FALSE."
 msgstr "مقداری که تابع برمی‌گرداند اگر logical_expression نادرست باشد."
 
@@ -11487,16 +11475,16 @@ msgstr "[[FUNCTION_NAME]] به یک مقدار ردیف خارج از محدود
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-msgid "[[FUNCTION_NAME]] expects non-empty ranges for both parameters."
-msgstr ""
-"[[FUNCTION_NAME]] انتظار دارد که هر دو پارامتر دارای محدوده‌های غیر خالی "
-"باشند."
+msgid "[[FUNCTION_NAME]] expects number values."
+msgstr "[[FUNCTION_NAME]] مقادیر عددی انتظار دارد."
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-msgid "[[FUNCTION_NAME]] expects number values."
-msgstr "[[FUNCTION_NAME]] مقادیر عددی انتظار دارد."
+msgid ""
+"[[FUNCTION_NAME]] expects the provided values of %(argName)s to be a non-"
+"empty matrix."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -11528,12 +11516,6 @@ msgstr "[[FUNCTION_NAME]] دارای اندازه‌های ناهماهنگ مح
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "[[FUNCTION_NAME]] has no valid input data."
 msgstr "[[FUNCTION_NAME]] هیچ داده ورودی معتبری ندارد."
-
-#. module: spreadsheet
-#. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-msgid "[[FUNCTION_NAME]] needs at least two values for both parameters."
-msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -11752,3 +11734,11 @@ msgstr "دیروز"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "zero"
 msgstr ""
+
+#~ msgid "Cannot multiply matrices : incompatible matrices size."
+#~ msgstr "نمی‌توان ماتریس‌ها را ضرب کرد: اندازه ماتریس‌ها ناسازگار است."
+
+#~ msgid "[[FUNCTION_NAME]] expects non-empty ranges for both parameters."
+#~ msgstr ""
+#~ "[[FUNCTION_NAME]] انتظار دارد که هر دو پارامتر دارای محدوده‌های غیر خالی "
+#~ "باشند."

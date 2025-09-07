@@ -1,26 +1,27 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* sms
-# 
+#
 # Translators:
 # Tereza Mokrá, 2024
 # Vojtěch Olšan, 2025
 # Wil Odoo, 2025
 # Marta Wacławek, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-04-07 20:37+0000\n"
+"POT-Creation-Date: 2025-09-05 18:40+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Marta Wacławek, 2025\n"
 "Language-Team: Czech (https://app.transifex.com/odoo/teams/41243/cs/)\n"
+"Language: cs\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: cs\n"
-"Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n <= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
+"Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n "
+"<= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__recipient_invalid_count
@@ -95,7 +96,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_view_form
 msgid ""
 "<span class=\"o_stat_text\">Add</span>\n"
-"                                <span class=\"o_stat_text\">Context Action</span>"
+"                                <span class=\"o_stat_text\">Context Action</"
+"span>"
 msgstr ""
 
 #. module: sms
@@ -107,28 +109,35 @@ msgstr "<span class=\"o_stat_text\">Náhled</span>"
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_view_form
 msgid ""
 "<span class=\"o_stat_text\">Remove</span>\n"
-"                                <span class=\"o_stat_text\">Context Action</span>"
+"                                <span class=\"o_stat_text\">Context Action</"
+"span>"
 msgstr ""
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_preview_form
-msgid "<span class=\"text-warning\" invisible=\"not no_record\">No records</span>"
+msgid ""
+"<span class=\"text-warning\" invisible=\"not no_record\">No records</span>"
 msgstr ""
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.ir_actions_server_view_form
 msgid ""
 "<span invisible=\"sms_method != 'sms'\">\n"
-"                                The message will be sent as an SMS to the recipients of the template\n"
-"                                and will not appear in the messaging history.\n"
+"                                The message will be sent as an SMS to the "
+"recipients of the template\n"
+"                                and will not appear in the messaging "
+"history.\n"
 "                            </span>\n"
 "                            <span invisible=\"sms_method != 'note'\">\n"
-"                                The SMS will not be sent, it will only be posted as an\n"
+"                                The SMS will not be sent, it will only be "
+"posted as an\n"
 "                                internal note in the messaging history.\n"
 "                            </span>\n"
 "                            <span invisible=\"sms_method != 'comment'\">\n"
-"                                The SMS will be sent as an SMS to the recipients of the\n"
-"                                template and it will also be posted as an internal note\n"
+"                                The SMS will be sent as an SMS to the "
+"recipients of the\n"
+"                                template and it will also be posted as an "
+"internal note\n"
 "                                in the messaging history.\n"
 "                            </span>"
 msgstr ""
@@ -304,6 +313,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
 msgid "Close"
 msgstr "Zavřít"
+
+#. module: sms
+#: model:ir.model,name:sms.model_res_company
+msgid "Companies"
+msgstr ""
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__composition_mode
@@ -501,8 +515,7 @@ msgstr ""
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_sms_template__template_fs
-msgid ""
-"File from where the template originates. Used to reset broken template."
+msgid "File from where the template originates. Used to reset broken template."
 msgstr ""
 "Soubor, ze kterého šablona pochází. Používá se k obnovení poškozené šablony."
 
@@ -606,8 +619,8 @@ msgstr "Pokud zaškrtnuto, některé zprávy mají chybu při doručení."
 #. module: sms
 #: model:ir.model.fields,help:sms.field_res_partner__phone_sanitized_blacklisted
 msgid ""
-"If the sanitized phone number is on the blacklist, the contact won't receive"
-" mass mailing sms anymore, from any list"
+"If the sanitized phone number is on the blacklist, the contact won't receive "
+"mass mailing sms anymore, from any list"
 msgstr ""
 "Pokud je ověřené telefonní číslo na černé listině, kontakt již nebude "
 "dostávat hromadné zprávy SMS ze žádného seznamu"
@@ -630,8 +643,8 @@ msgid ""
 "mobile and phone field in a model."
 msgstr ""
 "Označuje, zda je ověřené telefonní číslo na černé listině číslo mobilního "
-"telefonu. Pomáhá rozlišit, které číslo je na černé listině, když je v modelu"
-" pole pro mobil i telefon."
+"telefonu. Pomáhá rozlišit, které číslo je na černé listině, když je v modelu "
+"pole pro mobil i telefon."
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_res_partner__phone_blacklisted
@@ -640,9 +653,9 @@ msgid ""
 "distinguish which number is blacklisted             when there is both a "
 "mobile and phone field in a model."
 msgstr ""
-"Označuje, zda je ověřené telefonní číslo na černé listině telefonním číslem."
-" Pomáhá rozlišit, které číslo je na černé listině, když je v modelu pole pro"
-" mobil i telefon."
+"Označuje, zda je ověřené telefonní číslo na černé listině telefonním číslem. "
+"Pomáhá rozlišit, které číslo je na černé listině, když je v modelu pole pro "
+"mobil i telefon."
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_sms_composer__comment_single_recipient
@@ -860,8 +873,8 @@ msgstr "Počet zpráv s chybou při doručení"
 #. module: sms
 #: model:ir.model.fields,help:sms.field_sms_composer__res_ids_count
 msgid ""
-"Number of recipients that will receive the SMS if sent in mass mode, without"
-" applying the Active Domain value"
+"Number of recipients that will receive the SMS if sent in mass mode, without "
+"applying the Active Domain value"
 msgstr ""
 "Počet příjemců, kteří obdrží SMS, pokud je odeslána v hromadném režimu bez "
 "použití hodnoty Active Domain."
@@ -876,11 +889,11 @@ msgstr "Odhlášené"
 msgid ""
 "Optional translation language (ISO code) to select when sending out an "
 "email. If not set, the english version will be used. This should usually be "
-"a placeholder expression that provides the appropriate language, e.g. {{ "
-"object.partner_id.lang }}."
+"a placeholder expression that provides the appropriate language, e.g. "
+"{{ object.partner_id.lang }}."
 msgstr ""
-"Volitelný překladový jazyk (kód ISO), který lze vybrat při odesílání "
-"e-mailu. Pokud není nastavena, bude použita anglická verze. To by měl být "
+"Volitelný překladový jazyk (kód ISO), který lze vybrat při odesílání e-"
+"mailu. Pokud není nastavena, bude použita anglická verze. To by měl být "
 "obvykle zástupný výraz, který poskytuje vhodný jazyk, např. "
 "{{object.partner_id.lang}}."
 
@@ -1540,22 +1553,28 @@ msgid ""
 "- 'Update a Record': update the values of a record\n"
 "- 'Create Activity': create an activity (Discuss)\n"
 "- 'Send Email': post a message, a note or send an email (Discuss)\n"
-"- 'Send SMS': send SMS, log them on documents (SMS)- 'Add/Remove Followers': add or remove followers to a record (Discuss)\n"
+"- 'Send SMS': send SMS, log them on documents (SMS)- 'Add/Remove Followers': "
+"add or remove followers to a record (Discuss)\n"
 "- 'Create Record': create a new record with new values\n"
 "- 'Execute Code': a block of Python code that will be executed\n"
-"- 'Send Webhook Notification': send a POST request to an external system, also known as a Webhook\n"
-"- 'Execute Existing Actions': define an action that triggers several other server actions\n"
+"- 'Send Webhook Notification': send a POST request to an external system, "
+"also known as a Webhook\n"
+"- 'Execute Existing Actions': define an action that triggers several other "
+"server actions\n"
 msgstr ""
 "Typ serverové akce. Jsou k dispozici následující hodnoty:\n"
 "- 'Aktualizovat záznam': aktualizuje hodnoty záznamu\n"
 "- 'Vytvořit aktivitu': vytvoří aktivitu (Diskuze)\n"
 "- 'Poslat e-mail': zapíše zprávu, poznámku nebo pošle e-mail (Diskuze)\n"
 "- 'Odeslat SMS': odešle SMS, zapíše je k dokumentům (SMS)\n"
-"- 'Přidat/Odebrat sledující': přidá nebo odebere ze záznamu sledující (Diskuze)\n"
+"- 'Přidat/Odebrat sledující': přidá nebo odebere ze záznamu sledující "
+"(Diskuze)\n"
 "- 'Vytvořit záznam': vytvoří nový záznam s novými hodnotami\n"
 "- 'Provést kód': blok Python kódu, který bude spuštěn\n"
-"- 'Poslat Webhook notifikaci': odešle POST požadavek na externí systém, známý také jako Webhook\n"
-"- 'Provést existující akce': definuje akci, která spustí řadu dalších serverových akcí\n"
+"- 'Poslat Webhook notifikaci': odešle POST požadavek na externí systém, "
+"známý také jako Webhook\n"
+"- 'Provést existující akce': definuje akci, která spustí řadu dalších "
+"serverových akcí\n"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_sms__uuid
@@ -1597,15 +1616,18 @@ msgid ""
 "'comment': generated by user input e.g. through discuss or composer\n"
 "'email_outgoing': generated by a mailing\n"
 "'notification': generated by system e.g. tracking messages\n"
-"'auto_comment': generated by automated notification mechanism e.g. acknowledgment\n"
+"'auto_comment': generated by automated notification mechanism e.g. "
+"acknowledgment\n"
 "'user_notification': generated for a specific recipient"
 msgstr ""
 "Používá se ke kategorizování generátoru zpráv\n"
 "'email': vygenerováno přicházejícím e-mailem, např. brankový email\n"
-"'comment': vygenerováno uživatelským vstupem, např. prostřednictvím diskuse nebo tvůrce\n"
+"'comment': vygenerováno uživatelským vstupem, např. prostřednictvím diskuse "
+"nebo tvůrce\n"
 "'email_outgoing': vygenerováno odeslaným e-mailem\n"
 "'notification': vygenerováno systémem, např. sledování zpráv\n"
-"'auto_comment': vygenerováno mechanismem automatického oznámení, např. potvrzení\n"
+"'auto_comment': vygenerováno mechanismem automatického oznámení, např. "
+"potvrzení\n"
 "'user_notification': vygenerováno pro konkrétního příjemce"
 
 #. module: sms
@@ -1718,11 +1740,15 @@ msgstr ""
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_account_sender_view_form
 msgid ""
-"Your sender name must be between 3 and 11 characters long and only contain alphanumeric characters.\n"
-"                        It must fit your company name, and you aren't allowed to modify it once you registered one, choose it carefully."
+"Your sender name must be between 3 and 11 characters long and only contain "
+"alphanumeric characters.\n"
+"                        It must fit your company name, and you aren't "
+"allowed to modify it once you registered one, choose it carefully."
 msgstr ""
-"Jméno odesílatele musí mít délku 3 až 11 znaků a obsahovat pouze alfanumerické znaky.\n"
-"                        Musí odpovídat názvu vaší společnosti a po registraci jej nelze změnit, proto jej pečlivě zvažte"
+"Jméno odesílatele musí mít délku 3 až 11 znaků a obsahovat pouze "
+"alfanumerické znaky.\n"
+"                        Musí odpovídat názvu vaší společnosti a po "
+"registraci jej nelze změnit, proto jej pečlivě zvažte"
 
 #. module: sms
 #. odoo-python

@@ -1,24 +1,24 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* sms
-# 
+#
 # Translators:
 # zakariya moradi, 2025
 # Mostafa Barmshory <mostafa.barmshory@gmail.com>, 2025
 # Tiffany Chang, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-04-07 20:37+0000\n"
+"POT-Creation-Date: 2025-09-05 18:40+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Tiffany Chang, 2025\n"
 "Language-Team: Persian (https://app.transifex.com/odoo/teams/41243/fa/)\n"
+"Language: fa\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: fa\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: sms
@@ -95,7 +95,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_view_form
 msgid ""
 "<span class=\"o_stat_text\">Add</span>\n"
-"                                <span class=\"o_stat_text\">Context Action</span>"
+"                                <span class=\"o_stat_text\">Context Action</"
+"span>"
 msgstr ""
 "<span class=\"o_stat_text\">افزودن</span> <span class=\"o_stat_text\">اقدام "
 "متنی</span>"
@@ -109,30 +110,38 @@ msgstr "<span class=\"o_stat_text\">پیش‌نمایش</span>"
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_view_form
 msgid ""
 "<span class=\"o_stat_text\">Remove</span>\n"
-"                                <span class=\"o_stat_text\">Context Action</span>"
+"                                <span class=\"o_stat_text\">Context Action</"
+"span>"
 msgstr ""
 "<span class=\"o_stat_text\">حذف</span> <span class=\"o_stat_text\">اقدام "
 "متنی</span>"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_preview_form
-msgid "<span class=\"text-warning\" invisible=\"not no_record\">No records</span>"
-msgstr "<span class=\"text-warning\" invisible=\"not no_record\">بدون رکورد</span>"
+msgid ""
+"<span class=\"text-warning\" invisible=\"not no_record\">No records</span>"
+msgstr ""
+"<span class=\"text-warning\" invisible=\"not no_record\">بدون رکورد</span>"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.ir_actions_server_view_form
 msgid ""
 "<span invisible=\"sms_method != 'sms'\">\n"
-"                                The message will be sent as an SMS to the recipients of the template\n"
-"                                and will not appear in the messaging history.\n"
+"                                The message will be sent as an SMS to the "
+"recipients of the template\n"
+"                                and will not appear in the messaging "
+"history.\n"
 "                            </span>\n"
 "                            <span invisible=\"sms_method != 'note'\">\n"
-"                                The SMS will not be sent, it will only be posted as an\n"
+"                                The SMS will not be sent, it will only be "
+"posted as an\n"
 "                                internal note in the messaging history.\n"
 "                            </span>\n"
 "                            <span invisible=\"sms_method != 'comment'\">\n"
-"                                The SMS will be sent as an SMS to the recipients of the\n"
-"                                template and it will also be posted as an internal note\n"
+"                                The SMS will be sent as an SMS to the "
+"recipients of the\n"
+"                                template and it will also be posted as an "
+"internal note\n"
 "                                in the messaging history.\n"
 "                            </span>"
 msgstr ""
@@ -141,8 +150,8 @@ msgstr ""
 "invisible=\"sms_method != 'note'\"> پیامک ارسال نخواهد شد و فقط به عنوان یک "
 "یادداشت داخلی در تاریخچه پیام‌ها ارسال می‌شود. </span> <span "
 "invisible=\"sms_method != 'comment'\"> پیامک به عنوان یک پیامک به گیرندگان "
-"الگو ارسال می‌شود و همچنین به عنوان یک یادداشت داخلی در تاریخچه پیام‌ها "
-"ارسال می‌شود. </span>"
+"الگو ارسال می‌شود و همچنین به عنوان یک یادداشت داخلی در تاریخچه پیام‌ها ارسال "
+"می‌شود. </span>"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
@@ -188,8 +197,7 @@ msgstr ""
 #: model:ir.model.fields,help:sms.field_sms_sms__uuid
 msgid "Alternate way to identify a SMS record, used for delivery reports"
 msgstr ""
-"روش جایگزین برای شناسایی یک رکورد پیامک، که برای گزارش‌های تحویل استفاده "
-"می‌شود"
+"روش جایگزین برای شناسایی یک رکورد پیامک، که برای گزارش‌های تحویل استفاده می‌شود"
 
 #. module: sms
 #. odoo-javascript
@@ -321,6 +329,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
 msgid "Close"
 msgstr "بستن"
+
+#. module: sms
+#: model:ir.model,name:sms.model_res_company
+msgid "Companies"
+msgstr ""
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__composition_mode
@@ -518,8 +531,7 @@ msgstr ""
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_sms_template__template_fs
-msgid ""
-"File from where the template originates. Used to reset broken template."
+msgid "File from where the template originates. Used to reset broken template."
 msgstr ""
 "فایلی که الگو از آن سرچشمه می‌گیرد. برای بازنشانی الگوی خراب استفاده می‌شود."
 
@@ -624,11 +636,11 @@ msgstr "اگر علامت زده شود، برخی از پیام ها دارای
 #. module: sms
 #: model:ir.model.fields,help:sms.field_res_partner__phone_sanitized_blacklisted
 msgid ""
-"If the sanitized phone number is on the blacklist, the contact won't receive"
-" mass mailing sms anymore, from any list"
+"If the sanitized phone number is on the blacklist, the contact won't receive "
+"mass mailing sms anymore, from any list"
 msgstr ""
-"اگر شماره تلفن مدنظر در لیست سیاه باشد، مخاطب‌ دیگر پیامک‌های پستی انبوه را "
-"از هیچ لیستی، دریافت نخواهد کرد"
+"اگر شماره تلفن مدنظر در لیست سیاه باشد، مخاطب‌ دیگر پیامک‌های پستی انبوه را از "
+"هیچ لیستی، دریافت نخواهد کرد"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.mail_resend_message_view_form
@@ -647,8 +659,8 @@ msgid ""
 "distinguish which number is blacklisted             when there is both a "
 "mobile and phone field in a model."
 msgstr ""
-"نشان می دهد که آیا شماره تلفن ثبت شده در لیست سیاه، یک شماره تلفن همراه است."
-" هنگامی که در یک مدل هم فیلد تلفن همراه و هم تلفن وجود دارد، می توان تشخیص "
+"نشان می دهد که آیا شماره تلفن ثبت شده در لیست سیاه، یک شماره تلفن همراه است. "
+"هنگامی که در یک مدل هم فیلد تلفن همراه و هم تلفن وجود دارد، می توان تشخیص "
 "داد که کدام شماره در لیست سیاه قرار می گیرد."
 
 #. module: sms
@@ -658,15 +670,14 @@ msgid ""
 "distinguish which number is blacklisted             when there is both a "
 "mobile and phone field in a model."
 msgstr ""
-"نشان می دهد که آیا شماره تلفن ثبت شده در لیست سیاه، یک شماره تلفن همراه است."
-" هنگامی که در یک مدل هم فیلد تلفن همراه و هم تلفن وجود دارد، می توان تشخیص "
+"نشان می دهد که آیا شماره تلفن ثبت شده در لیست سیاه، یک شماره تلفن همراه است. "
+"هنگامی که در یک مدل هم فیلد تلفن همراه و هم تلفن وجود دارد، می توان تشخیص "
 "داد که کدام شماره در لیست سیاه قرار می گیرد."
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_sms_composer__comment_single_recipient
 msgid "Indicates if the SMS composer targets a single specific recipient"
-msgstr ""
-"نشان می‌دهد که آیا ترکیب‌کننده پیامک یک گیرنده خاص را هدف قرار داده است"
+msgstr "نشان می‌دهد که آیا ترکیب‌کننده پیامک یک گیرنده خاص را هدف قرار داده است"
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__mail_notification__failure_type__sms_credit
@@ -878,8 +889,8 @@ msgstr "تعداد پیامهای با خطای تحویل"
 #. module: sms
 #: model:ir.model.fields,help:sms.field_sms_composer__res_ids_count
 msgid ""
-"Number of recipients that will receive the SMS if sent in mass mode, without"
-" applying the Active Domain value"
+"Number of recipients that will receive the SMS if sent in mass mode, without "
+"applying the Active Domain value"
 msgstr ""
 "تعداد گیرندگانی که پیامک را در حالت ارسال انبوه دریافت خواهند کرد، بدون "
 "اعمال ارزش دامنه فعال"
@@ -894,12 +905,12 @@ msgstr "انصراف دادە شد"
 msgid ""
 "Optional translation language (ISO code) to select when sending out an "
 "email. If not set, the english version will be used. This should usually be "
-"a placeholder expression that provides the appropriate language, e.g. {{ "
-"object.partner_id.lang }}."
+"a placeholder expression that provides the appropriate language, e.g. "
+"{{ object.partner_id.lang }}."
 msgstr ""
 "زبان ترجمه اختیاری (کد ISO) برای انتخاب هنگام ارسال ایمیل. اگر تنظیم نشود، "
-"از نسخه انگلیسی استفاده خواهد شد. این معمولاً باید یک عبارت نگهدارنده باشد "
-"که زبان مناسب را ارائه می دهد، به عنوان مثال. {{ object.partner_id.lang }}."
+"از نسخه انگلیسی استفاده خواهد شد. این معمولاً باید یک عبارت نگهدارنده باشد که "
+"زبان مناسب را ارائه می دهد، به عنوان مثال. {{ object.partner_id.lang }}."
 
 #. module: sms
 #: model:ir.model,name:sms.model_sms_sms
@@ -1557,21 +1568,28 @@ msgid ""
 "- 'Update a Record': update the values of a record\n"
 "- 'Create Activity': create an activity (Discuss)\n"
 "- 'Send Email': post a message, a note or send an email (Discuss)\n"
-"- 'Send SMS': send SMS, log them on documents (SMS)- 'Add/Remove Followers': add or remove followers to a record (Discuss)\n"
+"- 'Send SMS': send SMS, log them on documents (SMS)- 'Add/Remove Followers': "
+"add or remove followers to a record (Discuss)\n"
 "- 'Create Record': create a new record with new values\n"
 "- 'Execute Code': a block of Python code that will be executed\n"
-"- 'Send Webhook Notification': send a POST request to an external system, also known as a Webhook\n"
-"- 'Execute Existing Actions': define an action that triggers several other server actions\n"
+"- 'Send Webhook Notification': send a POST request to an external system, "
+"also known as a Webhook\n"
+"- 'Execute Existing Actions': define an action that triggers several other "
+"server actions\n"
 msgstr ""
 "نوع عملکرد سرور مقادیر زیر در دسترس هستند:\n"
 "- 'به روز رسانی یک رکورد': مقادیر یک رکورد را به روز کنید\n"
 "- \"ایجاد فعالیت\": ایجاد یک فعالیت (بحث)\n"
 "- \"ارسال ایمیل\": ارسال پیام، یادداشت یا ارسال ایمیل (بحث)\n"
-"- \"ارسال پیامک\": پیامک ارسال کنید، آنها را در اسناد ثبت کنید (پیامک) - \"افزودن/حذف دنبال کنندگان\": اضافه کردن یا حذف دنبال کنندگان به یک رکورد (بحث)\n"
+"- \"ارسال پیامک\": پیامک ارسال کنید، آنها را در اسناد ثبت کنید (پیامک) - "
+"\"افزودن/حذف دنبال کنندگان\": اضافه کردن یا حذف دنبال کنندگان به یک رکورد "
+"(بحث)\n"
 "- \"ایجاد رکورد\": یک رکورد جدید با مقادیر جدید ایجاد کنید\n"
 "- \"Execute Code\": بلوکی از کد پایتون که اجرا خواهد شد\n"
-"- 'Send Webhook Notification': ارسال یک درخواست POST به یک سیستم خارجی، که به عنوان Webhook نیز شناخته می شود.\n"
-"- \"اجرای اقدامات موجود\": عملی را تعریف کنید که چندین عمل دیگر سرور را راه اندازی کند\n"
+"- 'Send Webhook Notification': ارسال یک درخواست POST به یک سیستم خارجی، که "
+"به عنوان Webhook نیز شناخته می شود.\n"
+"- \"اجرای اقدامات موجود\": عملی را تعریف کنید که چندین عمل دیگر سرور را راه "
+"اندازی کند\n"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_sms__uuid
@@ -1613,12 +1631,14 @@ msgid ""
 "'comment': generated by user input e.g. through discuss or composer\n"
 "'email_outgoing': generated by a mailing\n"
 "'notification': generated by system e.g. tracking messages\n"
-"'auto_comment': generated by automated notification mechanism e.g. acknowledgment\n"
+"'auto_comment': generated by automated notification mechanism e.g. "
+"acknowledgment\n"
 "'user_notification': generated for a specific recipient"
 msgstr ""
 "برای دسته‌بندی تولیدکننده‌ی پیام مورد استفاده قرار می‌گیرد\n"
 "ایمیل: ایجاد شده با یک ایمیل ورودی مانند درگاه ایمیل\n"
-"نظر: ایجاد شده با اطلاعات ورودی کاربر، به طورمثال از طریق بحث یا سازنده‌ی ایمیل\n"
+"نظر: ایجاد شده با اطلاعات ورودی کاربر، به طورمثال از طریق بحث یا سازنده‌ی "
+"ایمیل\n"
 "ایمیل -خروجی: ایجاد شده بوسیله‌ی ارسال یک ایمیل\n"
 "اعلان: ایجاد شده بوسیله‌ی سیستم، به طورمثال پیام‌های پیگیری\n"
 "ثبت نظر خودکار: ایجاد شده بوسیله‌ی مکانیسم اعلان خودکار\n"
@@ -1676,8 +1696,7 @@ msgid ""
 "Will automatically be deleted, while notifications will not be deleted in "
 "any case."
 msgstr ""
-"به صورت خودکار حذف خواهند شد، در حالی که اعلان‌ها در هیچ حالتی حذف نخواهند "
-"شد."
+"به صورت خودکار حذف خواهند شد، در حالی که اعلان‌ها در هیچ حالتی حذف نخواهند شد."
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__mail_notification__failure_type__sms_number_format
@@ -1733,8 +1752,10 @@ msgstr ""
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_account_sender_view_form
 msgid ""
-"Your sender name must be between 3 and 11 characters long and only contain alphanumeric characters.\n"
-"                        It must fit your company name, and you aren't allowed to modify it once you registered one, choose it carefully."
+"Your sender name must be between 3 and 11 characters long and only contain "
+"alphanumeric characters.\n"
+"                        It must fit your company name, and you aren't "
+"allowed to modify it once you registered one, choose it carefully."
 msgstr ""
 
 #. module: sms
