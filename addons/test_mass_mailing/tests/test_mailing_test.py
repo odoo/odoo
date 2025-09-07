@@ -2,10 +2,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import lxml.html
 
+from odoo.addons.sms_twilio.tests.common import MockSmsTwilioApi
 from odoo.addons.test_mass_mailing.tests.common import TestMassMailCommon
 from odoo.addons.test_mass_mailing.tests.common import TestMassSMSCommon
-from odoo.addons.sms_twilio.tests.common import MockSmsTwilioApi
-from odoo.fields import Command
 from odoo.tests.common import users, tagged
 from odoo.tools import mute_logger
 
@@ -188,16 +187,16 @@ class TestMailingSMSTest(TestMassSMSCommon, MockSmsTwilioApi):
             'mailing_id': mailing.id,
         })
 
-        for twilio_error, exp_state, exp_msg in [
+        for error_type, exp_state, exp_msg in [
             (False, 'outgoing', '<ul><li>Test SMS successfully sent to +32456001122</li></ul>'),
             (
                 'wrong_number_format', 'outgoing',  # not sure why outgoing but hey
-                "<ul><li>Test SMS could not be sent to +32456001122: The number you're trying to reach is not correctly formatted.</li></ul>"
+                "<ul><li>Test SMS could not be sent to +32456001122: The number you're trying to reach is not correctly formatted</li></ul>"
             ),
         ]:
-            with self.subTest(twilio_error=twilio_error):
+            with self.subTest(error_type=error_type):
                 with self.with_user('user_marketing'):
-                    with self.mock_sms_twilio_gateway(mock_error_type=twilio_error):
+                    with self.mock_sms_twilio_gateway(error_type=error_type):
                         mailing_test.action_send_sms()
 
                 notification = mailing.message_ids[0]
