@@ -580,16 +580,16 @@ class DiscussChannel(models.Model):
         chatbot_op = self.sudo().chatbot_message_ids[
             :1
         ].script_step_id.chatbot_script_id.operator_partner_id
-        last_msg_from_chatbot = False
+        previous_message_author_id = None
         # sudo - mail.message: getting empty messages to exclude them is allowed.
         for message in (self.message_ids - self.message_ids.sudo()._filter_empty()).sorted("id"):
-            if message.author_id == chatbot_op and not last_msg_from_chatbot:
+            if previous_message_author_id != message.author_id or message.author_guest_id:
                 parts.append(Markup("<br/>"))
             if message.author_id == chatbot_op:
                 parts.append(Markup("<strong>%s</strong><br/>") % html2plaintext(message.body))
             else:
                 parts.append(Markup("%s<br/>") % html2plaintext(message.body))
-            last_msg_from_chatbot = message.author_id == chatbot_op
+            previous_message_author_id = message.author_id or message.author_guest_id
         return Markup("").join(parts)
 
     def _get_livechat_session_fields_to_store(self):
