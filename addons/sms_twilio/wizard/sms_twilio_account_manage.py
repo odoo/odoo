@@ -77,17 +77,19 @@ class SmsTwilioAccountManage(models.TransientModel):
         composer = self.env['sms.composer'].create({
             'body': _("This is a test SMS from Odoo"),
             'composition_mode': 'numbers',
+            'numbers': self.test_number,
         })
         sms_su = composer._action_send_sms()[0]
 
         has_error = bool(sms_su.failure_type)
         if not has_error:
-            message = _("The SMS has been sent from %s", get_twilio_from_number(self.company_id, self.test_number).display_name)
+            message = _("The SMS has been sent from %s", get_twilio_from_number(self.company_id.sudo(), self.test_number).display_name)
         elif sms_su.failure_type != "unknown":
             sms_api = self.company_id._get_sms_api_class()(self.env)
+            failure_type = dict(self.env['sms.sms']._fields['failure_type'].get_description(self.env)['selection']).get(sms_su.failure_type, sms_su.failure_type)
             message = _('%(failure_type)s: %(failure_reason)s',
-                         failure_type=sms_su.failure_type,
-                         failure_reason=sms_api._get_sms_api_error_messages().get(sms_su.failure_type),
+                         failure_type=failure_type,
+                         failure_reason=sms_api._get_sms_api_error_messages().get(sms_su.failure_type, failure_type),
             )
         else:
             message = _("Error: %s", sms_su.failure_type)
