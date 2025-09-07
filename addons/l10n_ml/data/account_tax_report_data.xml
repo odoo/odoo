@@ -50,7 +50,7 @@
                             <record id="account_tax_report_line_ml_sales_18_base_sale" model="account.report.expression">
                                 <field name="label">sale</field>
                                 <field name="engine">tax_tags</field>
-                                <field name="formula">base_18</field>
+                                <field name="formula">-base_18</field>
                             </record>
                             <record id="account_tax_report_line_ml_sales_18_base_purchase" model="account.report.expression">
                                 <field name="label">purchase</field>
@@ -60,7 +60,7 @@
                             <record id="account_tax_report_line_ml_sales_18_tax" model="account.report.expression">
                                 <field name="label">tax</field>
                                 <field name="engine">tax_tags</field>
-                                <field name="formula">tax_18</field>
+                                <field name="formula">-tax_18</field>
                             </record>
                         </field>
                     </record>
@@ -77,7 +77,7 @@
                             <record id="account_tax_report_line_ml_sales_5_base_sale" model="account.report.expression">
                                 <field name="label">sale</field>
                                 <field name="engine">tax_tags</field>
-                                <field name="formula">base_5</field>
+                                <field name="formula">-base_5</field>
                             </record>
                             <record id="account_tax_report_line_ml_sales_5_base_purchase" model="account.report.expression">
                                 <field name="label">purchase</field>
@@ -87,7 +87,7 @@
                             <record id="account_tax_report_line_ml_sales_5_tax" model="account.report.expression">
                                 <field name="label">tax</field>
                                 <field name="engine">tax_tags</field>
-                                <field name="formula">tax_5</field>
+                                <field name="formula">-tax_5</field>
                             </record>
                         </field>
                     </record>
@@ -121,7 +121,7 @@
                                     <record id="account_tax_report_line_ml_sales_sd_18_tax" model="account.report.expression">
                                         <field name="label">tax</field>
                                         <field name="engine">tax_tags</field>
-                                        <field name="formula">tax_lasm_18</field>
+                                        <field name="formula">-tax_lasm_18</field>
                                     </record>
                                 </field>
                             </record>
@@ -138,7 +138,7 @@
                                     <record id="account_tax_report_line_ml_sales_sd_5_tax" model="account.report.expression">
                                         <field name="label">tax</field>
                                         <field name="engine">tax_tags</field>
-                                        <field name="formula">tax_lasm_5</field>
+                                        <field name="formula">-tax_lasm_5</field>
                                     </record>
                                 </field>
                             </record>
@@ -152,7 +152,7 @@
                             <record id="account_tax_report_line_ml_sales_export_base" model="account.report.expression">
                                 <field name="label">base</field>
                                 <field name="engine">tax_tags</field>
-                                <field name="formula">export</field>
+                                <field name="formula">-export</field>
                             </record>
                         </field>
                     </record>
@@ -164,7 +164,7 @@
                             <record id="account_tax_report_line_ml_sales_exempt_base" model="account.report.expression">
                                 <field name="label">base</field>
                                 <field name="engine">tax_tags</field>
-                                <field name="formula">sale_exempt</field>
+                                <field name="formula">-sale_exempt</field>
                             </record>
                         </field>
                     </record>

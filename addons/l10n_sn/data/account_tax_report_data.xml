@@ -45,7 +45,7 @@
                             <record id="account_tax_report_line_sn_exportation_base" model="account.report.expression">
                                 <field name="label">base</field>
                                 <field name="engine">tax_tags</field>
-                                <field name="formula">export</field>
+                                <field name="formula">-export</field>
                             </record>
                         </field>
                     </record>
@@ -57,7 +57,7 @@
                             <record id="account_tax_report_line_sn_non_taxed_base" model="account.report.expression">
                                 <field name="label">base</field>
                                 <field name="engine">tax_tags</field>
-                                <field name="formula">non_taxed</field>
+                                <field name="formula">-non_taxed</field>
                             </record>
                         </field>
                     </record>
@@ -81,7 +81,7 @@
                             <record id="account_tax_report_line_sn_exempt_base" model="account.report.expression">
                                 <field name="label">base</field>
                                 <field name="engine">tax_tags</field>
-                                <field name="formula">sale_exempt</field>
+                                <field name="formula">-sale_exempt</field>
                             </record>
                         </field>
                     </record>
@@ -93,7 +93,7 @@
                             <record id="account_tax_report_line_sn_self_delivery_base" model="account.report.expression">
                                 <field name="label">base</field>
                                 <field name="engine">tax_tags</field>
-                                <field name="formula">sale_self</field>
+                                <field name="formula">-sale_self</field>
                             </record>
                         </field>
                     </record>
@@ -122,12 +122,12 @@
                                     <record id="account_tax_report_line_sn_taxable_18_base" model="account.report.expression">
                                         <field name="label">base</field>
                                         <field name="engine">tax_tags</field>
-                                        <field name="formula">base_sale_18</field>
+                                        <field name="formula">-base_sale_18</field>
                                     </record>
                                     <record id="account_tax_report_line_sn_taxable_18_tax" model="account.report.expression">
                                         <field name="label">tax</field>
                                         <field name="engine">tax_tags</field>
-                                        <field name="formula">tax_sale_18</field>
+                                        <field name="formula">-tax_sale_18</field>
                                     </record>
                                 </field>
                             </record>
@@ -139,12 +139,12 @@
                                     <record id="account_tax_report_line_sn_taxable_10_base" model="account.report.expression">
                                         <field name="label">base</field>
                                         <field name="engine">tax_tags</field>
-                                        <field name="formula">base_sale_10</field>
+                                        <field name="formula">-base_sale_10</field>
                                     </record>
                                     <record id="account_tax_report_line_sn_taxable_10_tax" model="account.report.expression">
                                         <field name="label">tax</field>
                                         <field name="engine">tax_tags</field>
-                                        <field name="formula">tax_sale_10</field>
+                                        <field name="formula">-tax_sale_10</field>
                                     </record>
                                 </field>
                             </record>

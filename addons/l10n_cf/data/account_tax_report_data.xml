@@ -63,12 +63,12 @@
                                     <record id="account_tax_report_line_cf_sales_taxable_19_base" model="account.report.expression">
                                         <field name="label">base</field>
                                         <field name="engine">tax_tags</field>
-                                        <field name="formula">base_sale_19</field>
+                                        <field name="formula">-base_sale_19</field>
                                     </record>
                                     <record id="account_tax_report_line_cf_sales_taxable_19_tax" model="account.report.expression">
                                         <field name="label">tax</field>
                                         <field name="engine">tax_tags</field>
-                                        <field name="formula">tax_sale_19</field>
+                                        <field name="formula">-tax_sale_19</field>
                                     </record>
                                 </field>
                             </record>
@@ -80,12 +80,12 @@
                                     <record id="account_tax_report_line_cf_sales_taxable_5_base" model="account.report.expression">
                                         <field name="label">base</field>
                                         <field name="engine">tax_tags</field>
-                                        <field name="formula">base_sale_5</field>
+                                        <field name="formula">-base_sale_5</field>
                                     </record>
                                     <record id="account_tax_report_line_cf_sales_taxable_5_tax" model="account.report.expression">
                                         <field name="label">tax</field>
                                         <field name="engine">tax_tags</field>
-                                        <field name="formula">tax_sale_5</field>
+                                        <field name="formula">-tax_sale_5</field>
                                     </record>
                                 </field>
                             </record>
@@ -99,7 +99,7 @@
                             <record id="account_tax_report_line_sales_export_base_tag" model="account.report.expression">
                                 <field name="label">base</field>
                                 <field name="engine">tax_tags</field>
-                                <field name="formula">export</field>
+                                <field name="formula">-export</field>
                             </record>
                         </field>
                     </record>
@@ -111,7 +111,7 @@
                             <record id="account_tax_report_line_sales_exempt_base_tag" model="account.report.expression">
                                 <field name="label">base</field>
                                 <field name="engine">tax_tags</field>
-                                <field name="formula">sale_exempt</field>
+                                <field name="formula">-sale_exempt</field>
                             </record>
                         </field>
                     </record>

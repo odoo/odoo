@@ -156,12 +156,12 @@
                             <record id="sales_to_private_base" model="account.report.expression">
                                 <field name="label">tax_base</field>
                                 <field name="engine">tax_tags</field>
-                                <field name="formula">31A</field>
+                                <field name="formula">-31A</field>
                             </record>
                             <record id="sales_to_private_balance" model="account.report.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">tax_tags</field>
-                                <field name="formula">31B</field>
+                                <field name="formula">-31B</field>
                             </record>
                         </field>
                     </record>
@@ -173,12 +173,12 @@
                             <record id="sales_to_government_base" model="account.report.expression">
                                 <field name="label">tax_base</field>
                                 <field name="engine">tax_tags</field>
-                                <field name="formula">32A</field>
+                                <field name="formula">-32A</field>
                             </record>
                             <record id="sales_to_government_balance" model="account.report.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">tax_tags</field>
-                                <field name="formula">32B</field>
+                                <field name="formula">-32B</field>
                             </record>
                         </field>
                     </record>
@@ -190,7 +190,7 @@
                             <record id="zero_rated_base" model="account.report.expression">
                                 <field name="label">tax_base</field>
                                 <field name="engine">tax_tags</field>
-                                <field name="formula">33A</field>
+                                <field name="formula">-33A</field>
                             </record>
                         </field>
                     </record>
@@ -202,7 +202,7 @@
                             <record id="exempt_base" model="account.report.expression">
                                 <field name="label">tax_base</field>
                                 <field name="engine">tax_tags</field>
-                                <field name="formula">34A</field>
+                                <field name="formula">-34A</field>
                             </record>
                         </field>
                     </record>

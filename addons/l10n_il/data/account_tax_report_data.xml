@@ -32,7 +32,7 @@
                             <record id="account_tax_report_line_out_base_tag_sale" model="account.report.expression">
                                 <field name="label">sale</field>
                                 <field name="engine">tax_tags</field>
-                                <field name="formula">VAT SALES (BASE)</field>
+                                <field name="formula">-VAT SALES (BASE)</field>
                             </record>
                             <record id="account_tax_report_line_out_base_tag_purchase" model="account.report.expression">
                                 <field name="label">purchase</field>
@@ -58,7 +58,7 @@
                             <record id="account_tax_report_line_out_balance_tag" model="account.report.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">tax_tags</field>
-                                <field name="formula">VAT Sales</field>
+                                <field name="formula">-VAT Sales</field>
                             </record>
                         </field>
                     </record>
@@ -70,7 +70,7 @@
                             <record id="account_tax_report_line_out_balance_pa_tag" model="account.report.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">tax_tags</field>
-                                <field name="formula">VAT PA Sales</field>
+                                <field name="formula">-VAT PA Sales</field>
                             </record>
                         </field>
                     </record>
@@ -90,7 +90,7 @@
                             <record id="account_tax_report_line_out_base_exempt_tag" model="account.report.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">tax_tags</field>
-                                <field name="formula">VAT Exempt Sales (BASE)</field>
+                                <field name="formula">-VAT Exempt Sales (BASE)</field>
                             </record>
                         </field>
                     </record>

@@ -45,12 +45,12 @@
                             <record id="account_tax_report_line_gq_sales_15_base" model="account.report.expression">
                                 <field name="label">base</field>
                                 <field name="engine">tax_tags</field>
-                                <field name="formula">base_15</field>
+                                <field name="formula">-base_15</field>
                             </record>
                             <record id="account_tax_report_line_gq_sales_15_tax" model="account.report.expression">
                                 <field name="label">tax</field>
                                 <field name="engine">tax_tags</field>
-                                <field name="formula">tax_15</field>
+                                <field name="formula">-tax_15</field>
                             </record>
                         </field>
                     </record>
@@ -62,12 +62,12 @@
                             <record id="account_tax_report_line_gq_sales_30_base" model="account.report.expression">
                                 <field name="label">base</field>
                                 <field name="engine">tax_tags</field>
-                                <field name="formula">base_30</field>
+                                <field name="formula">-base_30</field>
                             </record>
                             <record id="account_tax_report_line_gq_sales_30_tax" model="account.report.expression">
                                 <field name="label">tax</field>
                                 <field name="engine">tax_tags</field>
-                                <field name="formula">tax_30</field>
+                                <field name="formula">-tax_30</field>
                             </record>
                         </field>
                     </record>
@@ -79,12 +79,12 @@
                             <record id="account_tax_report_line_gq_sales_6_base" model="account.report.expression">
                                 <field name="label">base</field>
                                 <field name="engine">tax_tags</field>
-                                <field name="formula">base_6</field>
+                                <field name="formula">-base_6</field>
                             </record>
                             <record id="account_tax_report_line_gq_sales_6_tax" model="account.report.expression">
                                 <field name="label">tax</field>
                                 <field name="engine">tax_tags</field>
-                                <field name="formula">tax_6</field>
+                                <field name="formula">-tax_6</field>
                             </record>
                         </field>
                     </record>
@@ -96,7 +96,7 @@
                             <record id="account_tax_report_line_gq_sales_export_base" model="account.report.expression">
                                 <field name="label">base</field>
                                 <field name="engine">tax_tags</field>
-                                <field name="formula">export</field>
+                                <field name="formula">-export</field>
                             </record>
                         </field>
                     </record>
@@ -108,7 +108,7 @@
                             <record id="account_tax_report_line_gq_sales_exempt_base" model="account.report.expression">
                                 <field name="label">base</field>
                                 <field name="engine">tax_tags</field>
-                                <field name="formula">sale_exempt</field>
+                                <field name="formula">-sale_exempt</field>
                             </record>
                         </field>
                     </record>

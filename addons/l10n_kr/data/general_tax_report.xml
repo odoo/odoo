@@ -51,13 +51,13 @@
                                                     model="account.report.expression">
                                                 <field name="label">balance</field>
                                                 <field name="engine">tax_tags</field>
-                                                <field name="formula">GT1a</field>
+                                                <field name="formula">-GT1a</field>
                                             </record>
                                             <record id="l10n_kr_general_tp_vat_otvttii_tax"
                                                     model="account.report.expression">
                                                 <field name="label">tax</field>
                                                 <field name="engine">tax_tags</field>
-                                                <field name="formula">GT1b</field>
+                                                <field name="formula">-GT1b</field>
                                             </record>
                                         </field>
                                     </record>
@@ -71,13 +71,13 @@
                                                     model="account.report.expression">
                                                 <field name="label">balance</field>
                                                 <field name="engine">tax_tags</field>
-                                                <field name="formula">GT2a</field>
+                                                <field name="formula">-GT2a</field>
                                             </record>
                                             <record id="l10n_kr_general_tp_vat_otvttip_tax"
                                                     model="account.report.expression">
                                                 <field name="label">tax</field>
                                                 <field name="engine">tax_tags</field>
-                                                <field name="formula">GT2b</field>
+                                                <field name="formula">-GT2b</field>
                                             </record>
                                         </field>
                                     </record>
@@ -91,13 +91,13 @@
                                                     model="account.report.expression">
                                                 <field name="label">balance</field>
                                                 <field name="engine">tax_tags</field>
-                                                <field name="formula">GT3a</field>
+                                                <field name="formula">-GT3a</field>
                                             </record>
                                             <record id="l10n_kr_general_tp_vat_otvtc_tax"
                                                     model="account.report.expression">
                                                 <field name="label">tax</field>
                                                 <field name="engine">tax_tags</field>
-                                                <field name="formula">GT3b</field>
+                                                <field name="formula">-GT3b</field>
                                             </record>
                                         </field>
                                     </record>
@@ -111,13 +111,13 @@
                                                     model="account.report.expression">
                                                 <field name="label">balance</field>
                                                 <field name="engine">tax_tags</field>
-                                                <field name="formula">GT4a</field>
+                                                <field name="formula">-GT4a</field>
                                             </record>
                                             <record id="l10n_kr_general_tp_vat_otvto_tax"
                                                     model="account.report.expression">
                                                 <field name="label">tax</field>
                                                 <field name="engine">tax_tags</field>
-                                                <field name="formula">GT4b</field>
+                                                <field name="formula">-GT4b</field>
                                             </record>
                                         </field>
                                     </record>
@@ -139,13 +139,13 @@
                                                     model="account.report.expression">
                                                 <field name="label">balance</field>
                                                 <field name="engine">tax_tags</field>
-                                                <field name="formula">GT5a</field>
+                                                <field name="formula">-GT5a</field>
                                             </record>
                                             <record id="l10n_kr_general_tp_vat_otzrtii_tax"
                                                     model="account.report.expression">
                                                 <field name="label">tax</field>
                                                 <field name="engine">tax_tags</field>
-                                                <field name="formula">GT5b</field>
+                                                <field name="formula">-GT5b</field>
                                             </record>
                                         </field>
                                     </record>
@@ -159,7 +159,7 @@
                                                     model="account.report.expression">
                                                 <field name="label">balance</field>
                                                 <field name="engine">tax_tags</field>
-                                                <field name="formula">GT6a</field>
+                                                <field name="formula">-GT6a</field>
                                             </record>
                                             <record id="l10n_kr_general_tp_vat_otzro_tax"
                                                     model="account.report.expression">
@@ -278,8 +278,8 @@
                                                     model="account.report.expression">
                                                 <field name="label">balance</field>
                                                 <field name="engine">external</field>
-                                                <field name="formula">sum</field>
                                                 <field name="subformula">editable;rounding=0</field>
+                                                <field name="formula">sum</field>
                                             </record>
                                             <record id="l10n_kr_general_tp_vat_itdpecig_tax"
                                                     model="account.report.expression">
@@ -717,7 +717,7 @@
                             <record id="l10n_kr_general_tp_vat_bt1_balance" model="account.report.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">tax_tags</field>
-                                <field name="formula">GT28a</field>
+                                <field name="formula">-GT28a</field>
                             </record>
                         </field>
                     </record>
@@ -756,7 +756,7 @@
                             <record id="l10n_kr_general_tp_vat_ime_balance" model="account.report.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">tax_tags</field>
-                                <field name="formula">GT31a</field>
+                                <field name="formula">-GT31a</field>
                             </record>
                         </field>
                     </record>
@@ -937,8 +937,8 @@
                                                     model="account.report.expression">
                                                 <field name="label">balance</field>
                                                 <field name="engine">external</field>
-                                                <field name="formula">sum</field>
                                                 <field name="subformula">editable;rounding=0</field>
+                                                <field name="formula">sum</field>
                                             </record>
                                             <record id="l10n_kr_general_tp_vat_utprpti_tax"
                                                     model="account.report.expression">
@@ -959,8 +959,8 @@
                                                     model="account.report.expression">
                                                 <field name="label">balance</field>
                                                 <field name="engine">external</field>
-                                                <field name="formula">sum</field>
                                                 <field name="subformula">editable;rounding=0</field>
+                                                <field name="formula">sum</field>
                                             </record>
                                             <record id="l10n_kr_general_tp_vat_utprodit_tax"
                                                     model="account.report.expression">
@@ -1428,8 +1428,8 @@
                                                     model="account.report.expression">
                                                 <field name="label">balance</field>
                                                 <field name="engine">external</field>
-                                                <field name="formula">sum</field>
                                                 <field name="subformula">editable;rounding=0</field>
+                                                <field name="formula">sum</field>
                                             </record>
                                             <record id="l10n_kr_general_tp_vat_fitidi_tax"
                                                     model="account.report.expression">
@@ -1449,8 +1449,8 @@
                                                     model="account.report.expression">
                                                 <field name="label">balance</field>
                                                 <field name="engine">external</field>
-                                                <field name="formula">sum</field>
                                                 <field name="subformula">editable;rounding=0</field>
+                                                <field name="formula">sum</field>
                                             </record>
                                             <record id="l10n_kr_general_tp_vat_fitidr_tax"
                                                     model="account.report.expression">
@@ -1470,8 +1470,8 @@
                                                     model="account.report.expression">
                                                 <field name="label">balance</field>
                                                 <field name="engine">external</field>
-                                                <field name="formula">sum</field>
                                                 <field name="subformula">editable;rounding=0</field>
+                                                <field name="formula">sum</field>
                                             </record>
                                             <record id="l10n_kr_general_tp_vat_fitifi_tax"
                                                     model="account.report.expression">
@@ -1500,8 +1500,8 @@
                                                     model="account.report.expression">
                                                 <field name="label">balance</field>
                                                 <field name="engine">external</field>
-                                                <field name="formula">sum</field>
                                                 <field name="subformula">editable;rounding=0</field>
+                                                <field name="formula">sum</field>
                                             </record>
                                             <record id="l10n_kr_general_tp_vat_fietidi_tax"
                                                     model="account.report.expression">
@@ -1521,8 +1521,8 @@
                                                     model="account.report.expression">
                                                 <field name="label">balance</field>
                                                 <field name="engine">external</field>
-                                                <field name="formula">sum</field>
                                                 <field name="subformula">editable;rounding=0</field>
+                                                <field name="formula">sum</field>
                                             </record>
                                             <record id="l10n_kr_general_tp_vat_fietifi_tax"
                                                     model="account.report.expression">
@@ -1552,8 +1552,8 @@
                                                     model="account.report.expression">
                                                 <field name="label">balance</field>
                                                 <field name="engine">external</field>
-                                                <field name="formula">sum</field>
                                                 <field name="subformula">editable;rounding=0</field>
+                                                <field name="formula">sum</field>
                                             </record>
                                             <record id="l10n_kr_general_tp_vat_fasticpfs_tax"
                                                     model="account.report.expression">
@@ -1573,8 +1573,8 @@
                                                     model="account.report.expression">
                                                 <field name="label">balance</field>
                                                 <field name="engine">external</field>
-                                                <field name="formula">sum</field>
                                                 <field name="subformula">editable;rounding=0</field>
+                                                <field name="formula">sum</field>
                                             </record>
                                             <record id="l10n_kr_general_tp_vat_fasticpds_tax"
                                                     model="account.report.expression">
@@ -1602,8 +1602,8 @@
                                                     model="account.report.expression">
                                                 <field name="label">balance</field>
                                                 <field name="engine">external</field>
-                                                <field name="formula">sum</field>
                                                 <field name="subformula">editable;rounding=0</field>
+                                                <field name="formula">sum</field>
                                             </record>
                                             <record id="l10n_kr_general_tp_vat_ffrurg_tax"
                                                     model="account.report.expression">
@@ -1624,8 +1624,8 @@
                                                     model="account.report.expression">
                                                 <field name="label">balance</field>
                                                 <field name="engine">external</field>
-                                                <field name="formula">sum</field>
                                                 <field name="subformula">editable;rounding=0</field>
+                                                <field name="formula">sum</field>
                                             </record>
                                             <record id="l10n_kr_general_tp_vat_ffruri_tax"
                                                     model="account.report.expression">
@@ -1646,8 +1646,8 @@
                                                     model="account.report.expression">
                                                 <field name="label">balance</field>
                                                 <field name="engine">external</field>
-                                                <field name="formula">sum</field>
                                                 <field name="subformula">editable;rounding=0</field>
+                                                <field name="formula">sum</field>
                                             </record>
                                             <record id="l10n_kr_general_tp_vat_ffruruerg_tax"
                                                     model="account.report.expression">
@@ -1668,8 +1668,8 @@
                                                     model="account.report.expression">
                                                 <field name="label">balance</field>
                                                 <field name="engine">external</field>
-                                                <field name="formula">sum</field>
                                                 <field name="subformula">editable;rounding=0</field>
+                                                <field name="formula">sum</field>
                                             </record>
                                             <record id="l10n_kr_general_tp_vat_ffrurueri_tax"
                                                     model="account.report.expression">
@@ -1783,8 +1783,8 @@
                                             model="account.report.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">external</field>
-                                        <field name="formula">sum</field>
                                         <field name="subformula">editable;rounding=0</field>
+                                        <field name="formula">sum</field>
                                     </record>
                                     <record id="l10n_kr_general_tp_vat_stpvatpfta_tax"
                                             model="account.report.expression">
@@ -1805,8 +1805,8 @@
                                             model="account.report.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">external</field>
-                                        <field name="formula">sum</field>
                                         <field name="subformula">editable;rounding=0</field>
+                                        <field name="formula">sum</field>
                                     </record>
                                     <record id="l10n_kr_general_tp_vat_stpvatpdpta_tax"
                                             model="account.report.expression">
@@ -1827,8 +1827,8 @@
                                             model="account.report.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">external</field>
-                                        <field name="formula">sum</field>
                                         <field name="subformula">editable;rounding=0</field>
+                                        <field name="formula">sum</field>
                                     </record>
                                     <record id="l10n_kr_general_tp_vat_stpvatpfsccs_tax"
                                             model="account.report.expression">
@@ -1881,7 +1881,7 @@
                                     <record id="l10n_kr_general_tp_vat_tfbt1_balance" model="account.report.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
-                                        <field name="formula">GT81a</field>
+                                        <field name="formula">-GT81a</field>
                                     </record>
                                 </field>
                             </record>
@@ -1907,7 +1907,7 @@
                                     <record id="l10n_kr_general_tp_vat_tfbt3_balance" model="account.report.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
-                                        <field name="formula">GT83a</field>
+                                        <field name="formula">-GT83a</field>
                                     </record>
                                 </field>
                             </record>
@@ -1941,7 +1941,7 @@
                                     <record id="l10n_kr_general_tp_vat_tfii_balance" model="account.report.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
-                                        <field name="formula">GT85a</field>
+                                        <field name="formula">-GT85a</field>
                                     </record>
                                 </field>
                             </record>
