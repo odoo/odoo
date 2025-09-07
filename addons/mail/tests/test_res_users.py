@@ -193,6 +193,7 @@ class TestUserTours(HttpCaseWithUserDemo):
             })
             self.user_demo.group_ids += self.env.ref('hr.group_hr_user')
         self.user_demo.tz = "Europe/Brussels"
+        self.user_demo.notification_type = "email"
 
         # avoid 'reload_context' action in the middle of the tour to ease steps and form save checks
         with patch.object(ResUsersPatchedInTest, 'preference_save', lambda self: True):
@@ -201,7 +202,7 @@ class TestUserTours(HttpCaseWithUserDemo):
                 "mail/static/tests/tours/user_modify_own_profile_tour.js",
                 login="demo",
             )
-        self.assertEqual(self.user_demo.email, "updatedemail@example.com")
+        self.assertEqual(self.user_demo.notification_type, "inbox")
 
 
 @tagged("post_install", "-at_install")

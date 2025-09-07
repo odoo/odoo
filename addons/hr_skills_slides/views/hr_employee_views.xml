@@ -41,15 +41,4 @@
             </xpath>
         </field>
     </record>
-
-    <record id="user_preference_resume_view_form_inherit" model="ir.ui.view">
-        <field name="name">hr.user.preferences.form.inherit.hr.skills.inherit</field>
-        <field name="model">res.users</field>
-        <field name="inherit_id" ref="hr_skills.res_users_view_form"/>
-        <field name="arch" type="xml">
-            <xpath expr="//field[@name='external_url']" position="after">
-                <field name="course_url"/>
-            </xpath>
-        </field>
-    </record>
 </odoo>

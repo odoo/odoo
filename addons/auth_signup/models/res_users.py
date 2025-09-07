@@ -20,7 +20,7 @@ class ResUsers(models.Model):
     _inherit = 'res.users'
 
     state = fields.Selection(compute='_compute_state', search='_search_state', string='Status',
-                 selection=[('new', 'Never Connected'), ('active', 'Confirmed')])
+                 selection=[('new', 'Invited'), ('active', 'Confirmed')])
 
     def _search_state(self, operator, value):
         if operator != 'in':

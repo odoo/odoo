@@ -88,13 +88,12 @@ class Partner extends models.Model {
 
 class Users extends models.Model {
     _records = [
-        { id: serverState.userId, name: "User 1", partner_id: serverState.partnerId, can_edit: true },
+        { id: serverState.userId, name: "User 1", partner_id: serverState.partnerId },
         { id: 2, name: "User 2", partner_id: 2 },
     ];
 
     name = fields.Char();
     partner_id = fields.Many2one({ relation: "partner" });
-    can_edit = fields.Boolean();
 }
 
 defineModels([
@@ -117,7 +116,7 @@ onRpc("get_state_selections", () => [
     ["tentative", "Maybe"],
     ["needsAction", "Needs Action"],
 ]);
-onRpc("res.users", "read", () => [{ user: serverState.userId, can_edit: true }]);
+onRpc("res.users", "read", () => [{ user: serverState.userId }]);
 
 beforeEach(() => {
     mockDate("2020-12-10 15:00:00");

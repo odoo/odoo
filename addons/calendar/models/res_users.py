@@ -12,9 +12,9 @@ class ResUsers(models.Model):
     _inherit = 'res.users'
 
     calendar_default_privacy = fields.Selection(
-        [('public', 'Public'),
-         ('private', 'Private'),
-         ('confidential', 'Only internal users')],
+        [('public', 'Public by default'),
+         ('private', 'Private by default'),
+         ('confidential', 'Internal users only')],
         compute="_compute_calendar_default_privacy",
         inverse="_inverse_calendar_res_users_settings",
     )

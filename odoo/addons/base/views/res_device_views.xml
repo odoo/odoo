@@ -46,32 +46,31 @@
             <field name="name">res.device.kanban</field>
             <field name="model">res.device</field>
             <field name="arch" type="xml">
-                <kanban create="false" default_order="is_current desc, last_activity desc">
+                <kanban create="0" can_open="0" default_order="is_current desc, last_activity desc">
                     <field name="id"/>
                     <field name="device_type"/>
                     <field name="last_activity"/>
                     <field name="is_current"/>
                     <templates>
                         <t t-name="card" class="flex-row">
-                            <t t-if="record.device_type.raw_value === 'computer'">
-                                <span class="fa fa-laptop fs-1" title="Computer" role="img" aria-label="Computer"/>
-                            </t>
-                            <t t-else="">
-                                <span class="fa fa-mobile fs-1" title="Mobile" role="img" aria-label="Mobile"/>
-                            </t>
-                            <div class="d-flex flex-column ms-3">
-                                <div class="d-flex align-items-center">
-                                    <field name="display_name" string="Name" class="fw-bolder"/>
-                                    <t t-if="record.is_current.raw_value">
-                                        <span class="ms-2 text-success o_status o_status_green"></span>
-                                    </t>
+                            <span t-if="record.device_type.raw_value === 'computer'" class="fa fa-laptop fs-1 col-1 mx-auto" title="Computer" role="img" aria-label="Computer"/>
+                            <span t-else="" class="fa fa-mobile fs-1 col-1 mx-auto" title="Mobile" role="img" aria-label="Mobile"/>
+                            <div class="d-flex col-11">
+                                <div class="d-flex flex-column ms-2">
+                                    <div class="d-flex align-items-center">
+                                        <field name="display_name" string="Name" class="fw-bolder"/>
+                                        <t t-if="record.is_current.raw_value">
+                                            <span class="ms-2 text-success o_status o_status_green"></span>
+                                        </t>
+                                        <span t-out="luxon.DateTime.fromISO(record.last_activity.raw_value).toRelative()"
+                                           class="ms-2 text-muted"/>
+                                    </div>
+                                    <field name="ip_address"/>
+                                    <field name="country"/>
+                                    <field name="city"/>
                                 </div>
-                                <field name="ip_address"/>
-                                <field name="country"/>
-                                <field name="city"/>
-                                <t t-out="luxon.DateTime.fromISO(record.last_activity.raw_value).toRelative()"/>
+                                <button name="revoke" type="object" string="Log out" class="btn btn-secondary ms-auto mb-auto my-auto"/>
                             </div>
-                            <button name="revoke" type="object" string="Revoke" class="btn btn-secondary ms-auto mt-auto"/>
                         </t>
                     </templates>
                 </kanban>

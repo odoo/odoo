@@ -126,21 +126,25 @@
                           </div>
                         </div>
                         <div class="d-flex gap-3">
-                            <field name="image_1920" widget="contact_image" options="{'preview_image': 'avatar_128', 'size': [100,100], 'img_class': 'rounded-4'}"/>
+                            <field name="image_1920" widget="contact_image" options="{'preview_image': 'avatar_128', 'img_class': 'rounded-4'}"/>
                             <field name="avatar_128" invisible="1"/> <!-- Needed in contact_image widget -->
-                            <div class="d-flex flex-column flex-grow-1">
+                            <div class="oe_title d-flex flex-column flex-grow-1">
                                 <h1 class="mb-0 w-sm-75">
                                     <field name="name" placeholder="e.g. John Doe" required="1"/>
                                 </h1>
-                                <h3 class="d-flex align-items-baseline w-sm-50 mb-0">
-                                    <field name="email" invisible="1"/> <!-- needed to update partner's email from on_change_login() -->
-                                    <i class="fa fa-fw me-1 fa-envelope text-primary" title="Email"/>
-                                    <field name="login" class="w-100" placeholder="Email"/>
-                                </h3>
-                                <h3 class="d-flex align-items-baseline w-sm-50 mb-0">
-                                    <i class="fa fa-fw me-1 fa-phone text-primary" title="Phone"/>
-                                    <field name="phone" class="w-100" widget="phone" placeholder="Phone"/>
-                                </h3>
+                                <!-- Must replace the login when the user is created. -->
+                                <h5 name="h5_email" class="d-flex align-items-baseline mb-0" invisible="not id">
+                                    <i class="fa fa-fw fa-envelope text-primary" title="Email"/>
+                                    <field name="email" placeholder="Email" class="w-75"/>
+                                </h5>
+                                <h5 class="d-flex align-items-baseline mb-0" invisible="id">
+                                    <i class="fa fa-fw fa-envelope text-primary" title="Email"/>
+                                    <field name="login" placeholder="Email" class="w-75"/>
+                                </h5>
+                                <h5 name="h5_phone" class="d-flex align-items-baseline mb-0">
+                                    <i class="fa fa-fw fa-phone text-primary" title="Email"/>
+                                    <field name="phone" placeholder="Phone" class="w-75"/>
+                                </h5>
                             </div>
                         </div>
                         <group>
@@ -153,7 +157,7 @@
                             <page name="access_rights" string="Access Rights">
                                 <group string="Roles" invisible="share and companies_count &lt;= 1">
                                     <field name="role" invisible="share" widget="radio" options="{'horizontal': true}"/>
-                                    <field string="Allowed Companies" name="company_ids" invisible="companies_count &lt;= 1" widget="many2many_tags" options="{'no_create': True, 'color_field': 'color'}"/>
+                                    <field string="Companies" name="company_ids" invisible="companies_count &lt;= 1" widget="many2many_tags" options="{'no_create': True, 'color_field': 'color'}"/>
                                     <field string="Default Company" name="company_id" invisible="companies_count &lt;= 1" context="{'user_preference': 0}"/>
                                 </group>
                                 <field name="group_ids" widget="res_user_group_ids" nolabel="1" colspan="2" groups="base.group_no_one"/>
@@ -161,7 +165,7 @@
                             </page>
                             <page string="Preferences" name="preferences">
                                 <group>
-                                    <group string="Localization" name="preferences">
+                                    <group>
                                         <label for="lang" />
                                         <div class="o_row">
                                             <field name="lang" required="1"/>
@@ -169,24 +173,70 @@
                                                 type="action"
                                                 name="%(base.action_view_base_language_install)d"
                                                 class="oe_edit_only btn-sm btn-link mb4 fa fa-globe"
+                                                groups="base.group_system"
                                                 aria-label="Add a language"
                                                 title="Add a language"/>
                                         </div>
-                                        <field name="tz" widget="timezone_mismatch" options="{'tz_offset_field': 'tz_offset'}" />
-                                        <field name="tz_offset" invisible="1"/> <!-- needed for the timezone_mismatch widget -->
+                                        <field name="signature" options="{'codeview': true, 'height': 112, 'resizable': true}" class="border border-secondary"/>
                                     </group>
-                                    <group string="Menus Customization" groups="base.group_no_one"
-                                        invisible="share">
-                                        <field name="action_id"/>
-                                    </group>
-                                </group>
-                                <group name="messaging">
-                                    <group string="Discuss" name="discuss">
-                                        <field name="signature" options="{'codeview': true}"/>
-                                    </group>
+                                    <!-- This group is meant to be used in overrides -->
+                                    <group name="other_preferences"/>
                                 </group>
                             </page>
-                            <page string="Account Security" name="account_security" invisible="not id"/>
+                            <page name="calendar" string="Calendar">
+                                <group>
+                                    <group name="calendar_preferences">
+                                        <field name="tz" widget="timezone_mismatch" options="{'tz_offset_field': 'tz_offset'}" readonly="0" invisible="share"/>
+                                        <field name="tz_offset" invisible="1"/> <!-- needed for the timezone_mismatch widget -->
+                                    </group>
+                                    <!-- This group is meant to be used in overrides -->
+                                    <group name="other_calendar_preferences"/>
+                                </group>
+                            </page>
+                            <page string="Security" name="page_security" invisible="not id">
+                                <div name="auth" class="d-flex">
+                                    <div class="col-7 col-sm-6 col-lg-3 d-flex flex-column">
+                                        <span class="o_form_label">
+                                            Change Password
+                                        </span>
+                                        <span class="text-muted">
+                                            Update if compromised.
+                                        </span>
+                                    </div>
+                                    <button invisible="id != uid" name="preference_change_password" type="object"
+                                        string="Change password" class="btn btn-secondary h-100 my-auto"/>
+                                    <button invisible="id == uid" name="action_change_password_wizard" type="object"
+                                        string="Change password" class="btn btn-secondary h-100 my-auto"/>
+                                </div>
+                                <div name="api_keys" invisible="id != uid" class="d-md-flex mt-3">
+                                    <div class="col-md-6 col-lg-3 d-flex flex-column">
+                                        <label for="api_key_wizard" string="API Keys" class="o_form_label"/>
+                                        <span class="text-muted">
+                                            Connect external services.
+                                        </span>
+                                    </div>
+                                    <div class="w-md-50 w-lg-75 d-flex flex-column my-auto">
+                                        <field name="api_key_ids" mode="kanban" invisible="not api_key_ids" class="w-sm-75 w-md-100 w-lg-75 w-xl-50 o_base_api_keys_kanban_view"/>
+                                        <div>
+                                            <button name="api_key_wizard" string="Add API Key" type="object" class="btn btn-secondary h-100"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div invisible="id != uid" class="d-md-flex mt-3">
+                                    <div class="w-md-50 w-lg-25  d-flex flex-column">
+                                        <label for="action_revoke_all_devices" string="Devices" class="o_form_label"/>
+                                        <span class="text-muted">
+                                            Check if they are yours.
+                                        </span>
+                                    </div>
+                                    <div class="w-md-50 w-lg-75 d-flex flex-column my-auto">
+                                        <field name="device_ids" mode="kanban" class="w-sm-75 w-md-100 w-lg-75 w-xl-50 o_base_devices_kanban_view"/>
+                                        <div>
+                                            <button name="action_revoke_all_devices" type="object" string="Log out from all devices" class="btn btn-secondary h-100"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </page>
                         </notebook>
                     </sheet>
                 </form>
@@ -355,20 +405,30 @@
             <field eval="18" name="priority"/>
             <field name="arch" type="xml">
                 <form string="Users" edit="1">
-                    <header></header>
                     <sheet>
                         <widget name="notification_alert"/>
-                        <field name="image_1920" readonly="0" widget='image' class="oe_avatar" options='{"preview_image": "avatar_128"}'/>
-                        <h1>
-                            <field name="name" readonly="1" class="oe_inline"/>
-                        </h1>
+                        <div class="d-flex align-items-center">
+                            <div>
+                                <field name="image_1920" widget="contact_image" options="{'preview_image': 'avatar_128'}"/>
+                                <field name="avatar_128" invisible="1"/> <!-- Needed in contact_image widget -->
+                            </div>
+                            <div class="oe_title flex-fill ms-2">
+                                <h1 class="d-flex align-items-center">
+                                    <field name="name"/>
+                                </h1>
+                                <h5 name="h5_email" class="d-flex align-items-baseline mb-0">
+                                    <i class="fa fa-fw fa-envelope text-primary" title="Email"/>
+                                    <field name="email" placeholder="Email" class="w-75"/>
+                                </h5>
+                                <h5 name="h5_phone" class="d-flex align-items-baseline mb-0">
+                                    <i class="fa fa-fw fa-phone text-primary" title="Phone"/>
+                                    <field name="phone" placeholder="Phone" class="w-75"/>
+                                </h5>
+                            </div>
+                        </div>
                         <notebook>
                             <page string="Preferences" name="preferences_page">
-                                <group name="preferences">
-                                    <group>
-                                        <field name="email" widget="email" readonly="0"/>
-                                        <field name="phone"/>
-                                    </group>
+                                <group>
                                     <group>
                                         <label for="lang"/>
                                         <div class="o_row">
@@ -382,59 +442,68 @@
                                                 title="Add a language"
                                             />
                                         </div>
+                                        <field name="signature" readonly="0" options="{'codeview': true, 'height': 112, 'resizable': true}" class="border border-secondary" />
+                                    </group>
+                                    <!-- This group is meant to be used in overrides -->
+                                    <group name="other_preferences"/>
+                                </group>
+                            </page>
+                            <page name="calendar" string="Calendar">
+                                <group>
+                                    <group name="calendar_preferences">
                                         <field name="tz" widget="timezone_mismatch" options="{'tz_offset_field': 'tz_offset'}" readonly="0"/>
                                         <field name="tz_offset" invisible="1"/> <!-- needed for the timezone_mismatch widget -->
                                     </group>
-                                </group>
-                                <group name="signature">
-                                    <field name="signature" readonly="0" options="{'codeview': true}"/>
-                                </group>
-                                <group name="status" string="Status" invisible="1">
-                                    <field name="company_id" options="{'no_create': True}" readonly="0"
-                                        groups="base.group_multi_company"/>
-                                </group>
-                                <group name="preference_contact"></group>
-                            </page>
-                            <page string="Account Security" name="page_account_security">
-                                <group name="auth" string="Password Management">
-                                    <div colspan="2">
-                                        <button name="preference_change_password" type="object" string="Change password" class="btn btn-secondary"/>
-                                    </div>
-                                </group>
-                                <group name="access" string="Other Devices">
-                                    <div colspan="2">
-                                        <button name="action_revoke_all_devices" type="object" string="Log out from all devices" class="btn btn-secondary"/>
-                                    </div>
-                                </group>
-                                <group string="API Keys">
-                                    <div class="text-muted" colspan="2">
-                                        API Keys are used to connect to Odoo from external tools without the need for a password or Two-factor Authentication.
-                                        <widget name="documentation_link" path="/developer/misc/api/external_api.html#api-keys" lable="Learn more" icon="fa-fw o_button_icon fa-info-circle"/>
-                                    </div>
-                                    <div colspan="2" invisible="not api_key_ids">
-                                        <field name="api_key_ids" nolabel="1" colspan="4" readonly="0">
-                                            <list editable="bottom" create="false" delete="false">
-                                                <field name="name"/>
-                                                <field name="scope"/>
-                                                <field name="create_date"/>
-                                                <field name="expiration_date"/>
-                                                <button type="object" name="remove"
-                                                        string="Delete API key." icon="fa-trash"/>
-                                            </list>
-                                        </field>
-                                    </div>
-                                    <div colspan="2">
-                                        <button name="api_key_wizard" string="New API Key" type="object" class="btn btn-secondary"/>
-                                    </div>
+                                    <!-- This group is meant to be used in overrides -->
+                                    <group name="other_calendar_preferences"/>
                                 </group>
                             </page>
-                            <page string="Devices" name="page_devices">
-                                <field name="device_ids" mode="kanban"/>
+                            <page string="Security" name="page_security">
+                                <div name="auth" class="d-flex">
+                                    <div class="col-7 col-sm-6 col-lg-3 d-flex flex-column">
+                                        <span class="o_form_label">
+                                            Change Password
+                                        </span>
+                                        <span class="text-muted">
+                                            Update if compromised.
+                                        </span>
+                                    </div>
+                                    <button name="preference_change_password" type="object" string="Change password"
+                                        class="btn btn-secondary h-100 my-auto"/>
+                                </div>
+                                <div name="api_keys" class="d-lg-flex mt-3">
+                                    <div class="col-lg-3 d-flex flex-column">
+                                        <label for="api_key_wizard" string="API Keys" class="o_form_label"/>
+                                        <span class="text-muted">
+                                            Connect external services.
+                                        </span>
+                                    </div>
+                                    <div class="w-lg-75 d-flex flex-column my-auto">
+                                        <field name="api_key_ids" mode="kanban" invisible="not api_key_ids" class="w-lg-75 o_base_api_keys_kanban_view"/>
+                                        <div>
+                                            <button name="api_key_wizard" string="Add API Key" type="object" class="btn btn-secondary h-100"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="d-lg-flex mt-3">
+                                    <div class="col-lg-3 d-flex flex-column">
+                                        <label for="action_revoke_all_devices" string="Devices" class="o_form_label"/>
+                                        <span class="text-muted">
+                                            Check if they are yours.
+                                        </span>
+                                    </div>
+                                    <div class="w-lg-75 d-flex flex-column my-auto">
+                                        <field name="device_ids" mode="kanban" class="w-lg-75 o_base_devices_kanban_view"/>
+                                        <div>
+                                            <button name="action_revoke_all_devices" type="object" string="Log out from all devices" class="btn btn-secondary h-100"/>
+                                        </div>
+                                    </div>
+                                </div>
                             </page>
                         </notebook>
                         <footer>
-                            <button name="preference_save" type="object" string="Save" class="btn-primary" data-hotkey="q"/>
-                            <button name="preference_cancel" string="Cancel" special="cancel" data-hotkey="x" class="btn-secondary"/>
+                            <button name="preference_save" type="object" string="Update Preferences" class="btn-primary" data-hotkey="q"/>
+                            <button name="preference_cancel" string="Discard" special="cancel" data-hotkey="x" class="btn-secondary"/>
                         </footer>
                     </sheet>
                 </form>

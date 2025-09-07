@@ -26,7 +26,7 @@ test("editing the 'lang' field and saving it triggers a 'reload_context'", async
         type: "form",
         resModel: "fake.user",
         arch: `
-            <form js_class="hr_employee_profile_form">
+            <form js_class="hr_user_preferences_form">
                 <field name="name"/>
                 <field name="lang"/>
             </form>`,

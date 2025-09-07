@@ -63,7 +63,7 @@ class ResDeviceLog(models.Model):
             )
 
     def _order_field_to_sql(self, alias, field_name, direction, nulls, query):
-        if field_name == 'is_current' and request:
+        if field_name == 'is_current' and request and request.session.sid:
             return SQL("session_identifier = %s DESC", request.session.sid[:STORED_SESSION_BYTES])
         return super()._order_field_to_sql(alias, field_name, direction, nulls, query)
 
