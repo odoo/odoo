@@ -105,7 +105,7 @@
                             <record id="account_tax_report_sale_vat_out_scope_tag" model="account.report.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">tax_tags</field>
-                                <field name="formula">Taxable Sales VAT Out of Scope (Sales)</field>
+                                <field name="formula">-Taxable Sales VAT Out of Scope (Sales)</field>
                             </record>
                         </field>
                     </record>
@@ -116,7 +116,7 @@
                             <record id="account_tax_report_sale_vat_exmpt_tag" model="account.report.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">tax_tags</field>
-                                <field name="formula">Taxable Sales VAT Exempt</field>
+                                <field name="formula">-Taxable Sales VAT Exempt</field>
                             </record>
                         </field>
                     </record>
@@ -167,7 +167,7 @@
                             <record id="account_tax_report_sale_withholding_35_tag" model="account.report.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">tax_tags</field>
-                                <field name="formula">Taxable 35% Withholding on Sales</field>
+                                <field name="formula">-Taxable 35% Withholding on Sales</field>
                             </record>
                         </field>
                     </record>
@@ -178,7 +178,7 @@
                             <record id="account_tax_report_sale_vat_withholding_tag" model="account.report.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">tax_tags</field>
-                                <field name="formula">Taxable VAT Withholding on Sales</field>
+                                <field name="formula">-Taxable VAT Withholding on Sales</field>
                             </record>
                         </field>
                     </record>
@@ -279,7 +279,7 @@
                             <record id="account_tax_report_net_sale_witheld_35_tag" model="account.report.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">tax_tags</field>
-                                <field name="formula">35% Withheld on Sales</field>
+                                <field name="formula">-35% Withheld on Sales</field>
                             </record>
                         </field>
                     </record>
@@ -290,7 +290,7 @@
                             <record id="account_tax_report_net_sale_vat_witheld_tag" model="account.report.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">tax_tags</field>
-                                <field name="formula">VAT Withheld on Sales</field>
+                                <field name="formula">-VAT Withheld on Sales</field>
                             </record>
                         </field>
                     </record>

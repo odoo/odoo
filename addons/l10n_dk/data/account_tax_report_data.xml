@@ -30,7 +30,7 @@
                             <record id="account_tax_report_line_sales_tax_tag" model="account.report.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">tax_tags</field>
-                                <field name="formula">UM</field>
+                                <field name="formula">-UM</field>
                             </record>
                         </field>
                     </record>
@@ -42,7 +42,7 @@
                             <record id="account_tax_report_line_international_purchase_products_tag" model="account.report.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">tax_tags</field>
-                                <field name="formula">MVU</field>
+                                <field name="formula">-MVU</field>
                             </record>
                         </field>
                     </record>
@@ -54,7 +54,7 @@
                             <record id="account_tax_report_line_international_purchase_services_tag" model="account.report.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">tax_tags</field>
-                                <field name="formula">MYUOB</field>
+                                <field name="formula">-MYUOB</field>
                             </record>
                         </field>
                     </record>
@@ -193,7 +193,7 @@
                             <record id="account_tax_report_line_section_b_product_eu_tag" model="account.report.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">tax_tags</field>
-                                <field name="formula">R-B-MR</field>
+                                <field name="formula">-R-B-MR</field>
                             </record>
                         </field>
                     </record>
@@ -204,7 +204,7 @@
                             <record id="account_tax_report_line_section_b_products_non_eu_tag" model="account.report.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">tax_tags</field>
-                                <field name="formula">R-B-UR</field>
+                                <field name="formula">-R-B-UR</field>
                             </record>
                         </field>
                     </record>
@@ -215,7 +215,7 @@
                             <record id="account_tax_report_line_section_b_services_tag" model="account.report.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">tax_tags</field>
-                                <field name="formula">R-C-MR</field>
+                                <field name="formula">-R-C-MR</field>
                             </record>
                         </field>
                     </record>
@@ -226,7 +226,7 @@
                             <record id="account_tax_report_line_section_b_triangular_tag" model="account.report.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">tax_tags</field>
-                                <field name="formula">R-D-MR</field>
+                                <field name="formula">-R-D-MR</field>
                             </record>
                         </field>
                     </record>
@@ -237,7 +237,7 @@
                             <record id="account_tax_report_line_section_c_tag" model="account.report.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">tax_tags</field>
-                                <field name="formula">R-C-UR</field>
+                                <field name="formula">-R-C-UR</field>
                             </record>
                         </field>
                     </record>

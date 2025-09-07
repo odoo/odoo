@@ -50,7 +50,7 @@
                                     <record id="account_tax_report_line_ci_exportation_base" model="account.report.expression">
                                         <field name="label">base</field>
                                         <field name="engine">tax_tags</field>
-                                        <field name="formula">export</field>
+                                        <field name="formula">-export</field>
                                     </record>
                                 </field>
                             </record>
@@ -62,7 +62,7 @@
                                     <record id="account_tax_report_line_ci_exempt_legal_base" model="account.report.expression">
                                         <field name="label">base</field>
                                         <field name="engine">tax_tags</field>
-                                        <field name="formula">sale_exempt_legal</field>
+                                        <field name="formula">-sale_exempt_legal</field>
                                     </record>
                                 </field>
                             </record>
@@ -74,7 +74,7 @@
                                     <record id="account_tax_report_line_ci_exempt_conventional_base" model="account.report.expression">
                                         <field name="label">base</field>
                                         <field name="engine">tax_tags</field>
-                                        <field name="formula">sale_exempt_conv</field>
+                                        <field name="formula">-sale_exempt_conv</field>
                                     </record>
                                 </field>
                             </record>
@@ -86,7 +86,7 @@
                                     <record id="account_tax_report_line_ci_non_taxed_base" model="account.report.expression">
                                         <field name="label">base</field>
                                         <field name="engine">tax_tags</field>
-                                        <field name="formula">non_taxed</field>
+                                        <field name="formula">-non_taxed</field>
                                     </record>
                                 </field>
                             </record>
@@ -120,7 +120,7 @@
                                             <record id="account_tax_report_line_ci_taxable_18_base_sale" model="account.report.expression">
                                                 <field name="label">sale</field>
                                                 <field name="engine">tax_tags</field>
-                                                <field name="formula">base_sale_18</field>
+                                                <field name="formula">-base_sale_18</field>
                                             </record>
                                             <record id="account_tax_report_line_ci_taxable_18_base_purchase" model="account.report.expression">
                                                 <field name="label">purchase</field>
@@ -130,7 +130,7 @@
                                             <record id="account_tax_report_line_ci_taxable_18_tax" model="account.report.expression">
                                                 <field name="label">tax</field>
                                                 <field name="engine">tax_tags</field>
-                                                <field name="formula">tax_sale_18</field>
+                                                <field name="formula">-tax_sale_18</field>
                                             </record>
                                         </field>
                                     </record>
@@ -147,7 +147,7 @@
                                             <record id="account_tax_report_line_ci_taxable_9_base_sale" model="account.report.expression">
                                                 <field name="label">sale</field>
                                                 <field name="engine">tax_tags</field>
-                                                <field name="formula">base_sale_9</field>
+                                                <field name="formula">-base_sale_9</field>
                                             </record>
                                             <record id="account_tax_report_line_ci_taxable_9_base_purchase" model="account.report.expression">
                                                 <field name="label">purchase</field>
@@ -157,7 +157,7 @@
                                             <record id="account_tax_report_line_ci_taxable_9_tax" model="account.report.expression">
                                                 <field name="label">tax</field>
                                                 <field name="engine">tax_tags</field>
-                                                <field name="formula">tax_sale_9</field>
+                                                <field name="formula">-tax_sale_9</field>
                                             </record>
                                         </field>
                                     </record>
@@ -195,7 +195,7 @@
                                     <record id="account_tax_report_line_ci_self_delivery_18_tax" model="account.report.expression">
                                         <field name="label">tax</field>
                                         <field name="engine">tax_tags</field>
-                                        <field name="formula">tax_self_18</field>
+                                        <field name="formula">-tax_self_18</field>
                                     </record>
                                 </field>
                             </record>
@@ -212,7 +212,7 @@
                                     <record id="account_tax_report_line_ci_self_delivery_9_tax" model="account.report.expression">
                                         <field name="label">tax</field>
                                         <field name="engine">tax_tags</field>
-                                        <field name="formula">tax_self_9</field>
+                                        <field name="formula">-tax_self_9</field>
                                     </record>
                                 </field>
                             </record>

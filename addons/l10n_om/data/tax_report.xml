@@ -33,12 +33,12 @@
                             <record id="l10n_om_tax_report_supplies_taxed_5_percent_base" model="account.report.expression">
                                 <field name="label">base</field>
                                 <field name="engine">tax_tags</field>
-                                <field name="formula">1a_B</field>
+                                <field name="formula">-1a_B</field>
                             </record>
                             <record id="l10n_om_tax_report_supplies_taxed_5_percent_tax" model="account.report.expression">
                                 <field name="label">tax</field>
                                 <field name="engine">tax_tags</field>
-                                <field name="formula">1a_T</field>
+                                <field name="formula">-1a_T</field>
                             </record>
                         </field>
                     </record>
@@ -50,7 +50,7 @@
                             <record id="l10n_om_tax_report_supplies_taxed_0_percent_base" model="account.report.expression">
                                 <field name="label">base</field>
                                 <field name="engine">tax_tags</field>
-                                <field name="formula">1b_B</field>
+                                <field name="formula">-1b_B</field>
                             </record>
                         </field>
                     </record>
@@ -62,7 +62,7 @@
                             <record id="l10n_om_tax_report_supplies_tax_exempt_base" model="account.report.expression">
                                 <field name="label">base</field>
                                 <field name="engine">tax_tags</field>
-                                <field name="formula">1c_B</field>
+                                <field name="formula">-1c_B</field>
                             </record>
                         </field>
                     </record>
@@ -149,7 +149,7 @@
                             <record id="l10n_om_tax_report_non_gcc_rcm_tax" model="account.report.expression">
                                 <field name="label">tax</field>
                                 <field name="engine">tax_tags</field>
-                                <field name="formula">2b_T</field>
+                                <field name="formula">-2b_T</field>
                             </record>
                         </field>
                     </record>
@@ -168,7 +168,7 @@
                             <record id="l10n_om_tax_report_exports_base" model="account.report.expression">
                                 <field name="label">base</field>
                                 <field name="engine">tax_tags</field>
-                                <field name="formula">3a_B</field>
+                                <field name="formula">-3a_B</field>
                             </record>
                         </field>
                     </record>
@@ -192,7 +192,7 @@
                             <record id="l10n_om_tax_report_import_goods_postponed_tax" model="account.report.expression">
                                 <field name="label">tax</field>
                                 <field name="engine">tax_tags</field>
-                                <field name="formula">4a_T</field>
+                                <field name="formula">-4a_T</field>
                             </record>
                         </field>
                     </record>
