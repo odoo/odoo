@@ -2771,6 +2771,42 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
             {'amount_residual': 0.0,        'amount_residual_currency': 0.0,        'reconciled': True},
         ])
 
+    def test_residual_at_date(self):
+        comp_curr = self.company_data['currency']
+
+        line_1 = self.create_line_for_reconciliation(1000.0, 1000.0, comp_curr, '2016-01-01')
+        line_2 = self.create_line_for_reconciliation(-300.0, -300.0, comp_curr, '2016-02-01')
+        line_3 = self.create_line_for_reconciliation(-400.0, -400.0, comp_curr, '2016-03-01')
+        all_lines = line_1 + line_2 + line_3
+
+        (line_1 + line_2).reconcile()
+        self.assertRecordValues(all_lines, [
+            {'amount_residual':  700.0, 'residual_at_date':  700.0},
+            {'amount_residual':    0.0, 'residual_at_date':    0.0},
+            {'amount_residual': -400.0, 'residual_at_date': -400.0},
+        ])
+        self.assertRecordValues(all_lines.with_context(recon_limit='2016-01-01'), [
+            {'amount_residual':  700.0, 'residual_at_date': 1000.0},
+            {'amount_residual':    0.0, 'residual_at_date': -300.0},
+            {'amount_residual': -400.0, 'residual_at_date': -400.0},
+        ])
+        (line_1 + line_3).reconcile()
+        self.assertRecordValues(self.env['account.move.line'].search([('open_on', '=', '2016-02-28'), ('id', 'in', all_lines.ids)], order='id asc'), [
+            {'amount_residual':  300.0, 'residual_at_date':  700.0},
+            {'amount_residual':    0.0, 'residual_at_date':    0.0},
+            {'amount_residual':    0.0, 'residual_at_date': -400.0},
+        ])
+
+        line_4 = self.create_line_for_reconciliation(-100.0, -100.0, comp_curr, '2016-04-01')
+        (line_1 + line_4).reconcile()
+        # Handle dynamic domains, collections in domains, and be able to search the residual_at_date field
+        self.assertRecordValues(
+            self.env['account.move.line'].search([('open_on', 'in', ['today -200y', '2016-03-28']), ('id', 'in', all_lines.ids), ('residual_at_date', '!=', 0)]),
+            [
+                {'amount_residual':  200.0, 'residual_at_date':  300.0},
+            ]
+        )
+
     def test_migration_to_new_reconciliation_multiple_currencies_fix_residual_with_writeoff(self):
         comp_curr = self.company_data['currency']
         foreign_curr1 = self.other_currency

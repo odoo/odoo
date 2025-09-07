@@ -280,6 +280,25 @@ class AccountMoveLine(models.Model):
         comodel_name='account.move.line',
         compute='_compute_reconciled_lines_excluding_exchange_diff_ids',
     )
+    # Used to set the recon_limit in the context to enable the residual_at_date computations.
+    open_on = fields.Date(
+        store=False,
+        search='_search_open_on_date',
+        help="Limit the date for the Residual (at date) fields.",
+    )
+    residual_at_date = fields.Monetary(
+        string='Residual (at date)',
+        compute='_compute_residual_at_date',
+        compute_sql='_compute_sql_residual_at_date', compute_sudo=True,
+        currency_field='company_currency_id',
+        help="The residual amount (at date) on a journal item expressed in the company currency.",
+    )
+    residual_currency_at_date = fields.Monetary(
+        string='Residual in currency (at date)',
+        compute='_compute_residual_at_date',
+        compute_sql='_compute_sql_residual_currency_at_date', compute_sudo=True,
+        help="The residual amount (at date) on a journal item expressed in its currency.",
+    )
 
     matching_number = fields.Char(
         string="Matching #",
@@ -773,6 +792,79 @@ class AccountMoveLine(models.Model):
         )))
         for record in self:
             record.cumulated_balance = result[record.id]
+
+    def _search_open_on_date(self, operator, value):
+        return []
+
+    def _join_partial_summary_query(self, table):
+        recon_limit = self.env.context.get('recon_limit')
+        assert recon_limit
+        partial_summary_alias = table._make_alias('partial_summary')
+        table._query.add_join(
+            kind='LEFT JOIN LATERAL',
+            alias=partial_summary_alias,
+            table=SQL("""(
+                SELECT COALESCE(-SUM(partial.amount), 0) as amount_to_date,
+                       COALESCE(ROUND(-SUM(partial.credit_amount_currency), curr.decimal_places), 0) AS amount_currency_to_date
+                  FROM account_partial_reconcile partial
+                  JOIN res_currency curr ON curr.id = partial.debit_currency_id
+                 WHERE partial.debit_move_id = %(base_line_id)s
+                   AND partial.max_date <= %(recon_limit)s
+              GROUP BY curr.id
+             UNION ALL
+                SELECT COALESCE(SUM(partial.amount), 0) as amount_to_date,
+                       COALESCE(ROUND(SUM(partial.debit_amount_currency), curr.decimal_places), 0) AS amount_currency_to_date
+                  FROM account_partial_reconcile partial
+                  JOIN res_currency curr ON curr.id = partial.credit_currency_id
+                 WHERE partial.credit_move_id = %(base_line_id)s
+                   AND partial.max_date <= %(recon_limit)s
+              GROUP BY curr.id
+                )""",
+                recon_limit=recon_limit,
+                base_line_id=table.id,
+            ),
+            condition=SQL("TRUE"),
+        )
+        return partial_summary_alias
+
+    @api.depends_context('recon_limit')
+    def _compute_sql_residual_at_date(self, table):
+        if not self.env.context.get('recon_limit'):
+            return table.amount_residual
+        partial_summary_alias = self._join_partial_summary_query(table)
+        return SQL(
+            "%(balance_field)s + COALESCE(%(partial_summary_amount_field)s, 0.0)",
+            balance_field=table.balance,
+            partial_summary_amount_field=partial_summary_alias.amount_to_date,
+        )
+
+    @api.depends_context('recon_limit')
+    def _compute_sql_residual_currency_at_date(self, table):
+        if not self.env.context.get('recon_limit'):
+            return table.amount_residual_currency
+        partial_summary_alias = self._join_partial_summary_query(table)
+        return SQL(
+            "%(balance_field)s + COALESCE(%(partial_summary_amount_field)s, 0.0)",
+            balance_field=table.amount_currency,
+            partial_summary_amount_field=partial_summary_alias.amount_currency_to_date,
+        )
+
+    @api.depends_context('recon_limit')
+    def _compute_residual_at_date(self):
+        need_residual_lines = self.filtered(lambda x: x.account_id.reconcile or x.account_id.account_type in ('asset_cash', 'liability_credit_card'))
+        query = self._search([('id', 'in', need_residual_lines.ids)])
+        residuals_at_date = {
+            line_id: (residual_at_date, residual_currency_at_date)
+            for line_id, residual_at_date, residual_currency_at_date in self.env.execute_query(query.select(
+                query.table.id,
+                query.table.residual_at_date,
+                query.table.residual_currency_at_date,
+            ))
+        }
+        for aml in self:
+            residual_at_date, residual_currency_at_date = residuals_at_date.get(aml.id, (0.0, 0.0))
+            aml.residual_at_date = residual_at_date
+            aml.residual_currency_at_date = residual_currency_at_date
 
     @api.depends('debit', 'credit', 'amount_currency', 'account_id', 'currency_id', 'company_id',
                  'matched_debit_ids', 'matched_credit_ids')
@@ -1526,6 +1618,14 @@ class AccountMoveLine(models.Model):
         return super().invalidate_recordset(fnames, flush)
 
     @api.model
+    def _search(self, domain, *args, **kwargs):
+        # To enable computing the residual_at_date, the recon_limit date needs to be included in the context
+        contextualized = self
+        if recon_limit := self._get_recon_limit_from_domain(domain):
+            contextualized = contextualized.with_context(recon_limit=recon_limit)
+        return super(AccountMoveLine, contextualized)._search(domain, *args, **kwargs)
+
+    @api.model
     def search_fetch(self, domain, field_names=None, offset=0, limit=None, order=None):
         def to_tuple(t):
             return tuple(map(to_tuple, t)) if isinstance(t, (list, tuple)) else t
@@ -1538,7 +1638,20 @@ class AccountMoveLine(models.Model):
             domain_cumulated_balance=to_tuple(domain or []),
             order_cumulated_balance=order,
         )
+        if recon_limit := contextualized._get_recon_limit_from_domain(domain):
+            contextualized = contextualized.with_context(recon_limit=recon_limit)
         return super(AccountMoveLine, contextualized).search_fetch(domain, field_names, offset, limit, order)
+
+    def _get_recon_limit_from_domain(self, domain):
+        for condition in Domain(domain).optimize_dynamic(self).iter_conditions():
+            match condition.field_expr, condition.operator, condition.value:
+                case 'open_on', '<=', date() as recon_limit:
+                    return recon_limit
+                case 'open_on', '<', date() as recon_limit:
+                    return fields.Date.add(recon_limit, days=-1)
+                case 'open_on', 'in', _ as recon_limit_collection:
+                    return max(recon_limit_collection)
+        return None
 
     @api.model
     def default_get(self, fields):

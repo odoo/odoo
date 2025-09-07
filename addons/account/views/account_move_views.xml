@@ -188,8 +188,8 @@
                     <field name="date_maturity" readonly="1" optional="hide" decoration-danger="not reconciled and date_maturity &lt; context_today().strftime('%Y-%m-%d')"/>
                     <field name="balance" sum="Total Balance" optional="hide" readonly="1"/>
                     <field name="matching_number" string="Matching" readonly="1" optional="show"/>
-                    <field name="amount_residual" sum="Total Residual" string="Residual" optional="hide" readonly="1" invisible="not is_account_reconcile"/>
-                    <field name="amount_residual_currency" sum="Total Residual in Currency" string="Residual in Currency" optional="hide" readonly="1" invisible="is_same_currency or not is_account_reconcile" groups="base.group_multi_currency"/>
+                    <field name="residual_at_date" sum="Total Residual" string="Residual" optional="hide" readonly="1" invisible="not is_account_reconcile"/>
+                    <field name="residual_currency_at_date" sum="Total Residual in Currency" string="Residual in Currency" optional="hide" readonly="1" invisible="is_same_currency or not is_account_reconcile" groups="base.group_multi_currency"/>
                     <field name="move_type" column_invisible="True"/>
                     <field name="parent_state" column_invisible="True"/>
                     <field name="account_type" column_invisible="True"/>
@@ -267,6 +267,18 @@
             </field>
         </record>
 
+        <record id="view_move_line_tree_open_on" model="ir.ui.view">
+            <field name="name">account.move.line.list.open</field>
+            <field name="model">account.move.line</field>
+            <field name="inherit_id" ref="account.view_move_line_tree_grouped_partner"/>
+            <field name="mode">primary</field>
+            <field name="arch" type="xml">
+                <field name="residual_at_date" position="attributes">
+                    <attribute name="optional">show</attribute>
+                </field>
+            </field>
+        </record>
+
         <record id="view_move_line_tax_audit_tree" model="ir.ui.view">
             <field name="name">account.move.line.tax.audit.list</field>
             <field name="model">account.move.line</field>
@@ -323,6 +335,7 @@
                     <field name="move_id" string="Journal Entry" filter_domain="[
                         '|', ('move_id.name', 'ilike', self), ('move_id.ref', 'ilike', self)]"/>
                     <field name="tax_ids" />
+                    <field name="open_on"/>
                     <separator/>
                     <filter string="Unposted" name="unposted" domain="[('parent_state', '=', 'draft')]" help="Unposted Journal Items"/>
                     <filter string="Posted" name="posted" domain="[('parent_state', '=', 'posted')]" help="Posted Journal Items"/>
@@ -337,7 +350,7 @@
                             name="reconcilable_account"
                             help="Journal items where the account allows reconciliation no matter the residual amount"
                     />
-                    <filter string="With residual" domain="[('amount_residual', '!=', 0), ('account_id.reconcile', '=', True)]" help="Journal items where matching number isn't set" name="unreconciled"/>
+                    <filter string="With residual" domain="[('residual_at_date', '!=', 0), ('account_id.reconcile', '=', True)]" help="Journal items where matching number isn't set" name="unreconciled"/>
                     <separator/>
                     <filter string="Sales" name="sales" domain="[('journal_id.type', '=', 'sale')]" context="{'default_journal_type': 'sale'}"/>
                     <filter string="Purchases" name="purchases" domain="[('journal_id.type', '=', 'purchase')]" context="{'default_journal_type': 'purchase'}"/>
@@ -358,6 +371,7 @@
                     <separator/>
                     <filter string="Report Dates" name="date_between" domain="[('date', '&gt;=', context.get('date_from')), ('date', '&lt;=', context.get('date_to'))]" invisible="1"/>
                     <filter string="Report Dates" name="date_before" domain="[('date', '&lt;=', context.get('date_to'))]" invisible="1"/>
+                    <filter string="Open On" name="open_on_date" invisible="1"/>
                     <separator/>
                     <filter string="Analytic Accounts" name="analytic_accounts" domain="[('analytic_distribution', 'in', context.get('analytic_ids'))]" invisible="1"/>
                     <group>
@@ -403,8 +417,8 @@
                     <field name="ref" readonly="False"/>
                     <field name="name" optional="show"/>
                     <field name="discount_amount_currency" string="Discount Amount" optional="show" invisible="not discount_amount_currency"/>
-                    <field name="amount_residual" sum="Total Residual" string="Residual" readonly="1" invisible="not is_account_reconcile"/>
-                    <field name="amount_residual_currency" string="Residual in Currency" optional="hide" readonly="1" invisible="is_same_currency or not is_account_reconcile" groups="base.group_multi_currency"/>
+                    <field name="residual_at_date" sum="Total Residual at date" string="Residual" readonly="1" invisible="not is_account_reconcile"/>
+                    <field name="residual_currency_at_date" string="Residual in Currency" optional="hide" readonly="1" invisible="is_same_currency or not is_account_reconcile" groups="base.group_multi_currency"/>
                     <field name="currency_id" groups="base.group_multi_currency" optional="hide" string="Currency" readonly="1" invisible="is_same_currency"/>
                     <field name="company_currency_id" column_invisible="True"/>
                     <field name="move_type" column_invisible="True"/>
@@ -435,6 +449,7 @@
                     <field name="journal_id"/>
                     <field name="currency_id" groups="base.group_multi_currency" invisible="1"/>
                     <field name="company_currency_id" invisible="1"/>
+                    <field name="open_on"/>
                     <separator/>
                     <filter string="Posted" name="posted" domain="[('parent_state', '=', 'posted')]" help="Posted Journal Items" invisible="1"/>
                     <separator/>
