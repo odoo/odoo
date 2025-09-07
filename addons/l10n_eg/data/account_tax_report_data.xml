@@ -25,7 +25,7 @@
                             <record id="tax_report_vat_return_sale_base_fourteen_tag" model="account.report.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">tax_tags</field>
-                                <field name="formula">1. VAT 14% (Base)</field>
+                                <field name="formula">-1. VAT 14% (Base)</field>
                             </record>
                         </field>
                     </record>
@@ -36,7 +36,7 @@
                             <record id="tax_report_vat_return_sale_base_zero_tag" model="account.report.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">tax_tags</field>
-                                <field name="formula">2. Zero Rated (Base)</field>
+                                <field name="formula">-2. Zero Rated (Base)</field>
                             </record>
                         </field>
                     </record>
@@ -47,7 +47,7 @@
                             <record id="tax_report_vat_return_sale_base_exempt_tag" model="account.report.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">tax_tags</field>
-                                <field name="formula">3. Exempt Sales (Base)</field>
+                                <field name="formula">-3. Exempt Sales (Base)</field>
                             </record>
                         </field>
                     </record>
@@ -65,7 +65,7 @@
                             <record id="tax_report_vat_return_sale_tax_fourteen_tag" model="account.report.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">tax_tags</field>
-                                <field name="formula">1. VAT 14% (Tax)</field>
+                                <field name="formula">-1. VAT 14% (Tax)</field>
                             </record>
                         </field>
                     </record>
@@ -76,7 +76,7 @@
                             <record id="tax_report_vat_return_sale_tax_zero_tag" model="account.report.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">tax_tags</field>
-                                <field name="formula">2. Zero Rated (Tax)</field>
+                                <field name="formula">-2. Zero Rated (Tax)</field>
                             </record>
                         </field>
                     </record>
@@ -87,7 +87,7 @@
                             <record id="tax_report_vat_return_sale_tax_exempt_tag" model="account.report.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">tax_tags</field>
-                                <field name="formula">3. Exempt Sales (Tax)</field>
+                                <field name="formula">-3. Exempt Sales (Tax)</field>
                             </record>
                         </field>
                     </record>
@@ -218,7 +218,7 @@
                             <record id="tax_report_withholding_tax_sale_base_half_tag" model="account.report.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">tax_tags</field>
-                                <field name="formula">WH Sales -0.5% (Base)</field>
+                                <field name="formula">-WH Sales -0.5% (Base)</field>
                             </record>
                         </field>
                     </record>
@@ -229,7 +229,7 @@
                             <record id="tax_report_withholding_tax_sale_base_one_tag" model="account.report.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">tax_tags</field>
-                                <field name="formula">WH on Sales -1% (Base)</field>
+                                <field name="formula">-WH on Sales -1% (Base)</field>
                             </record>
                         </field>
                     </record>
@@ -240,7 +240,7 @@
                             <record id="tax_report_withholding_tax_sale_base_three_tag" model="account.report.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">tax_tags</field>
-                                <field name="formula">WH on Sales -3% (Base)</field>
+                                <field name="formula">-WH on Sales -3% (Base)</field>
                             </record>
                         </field>
                     </record>
@@ -251,7 +251,7 @@
                             <record id="tax_report_withholding_tax_sale_base_five_tag" model="account.report.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">tax_tags</field>
-                                <field name="formula">WH on Sales -5% (Base)</field>
+                                <field name="formula">-WH on Sales -5% (Base)</field>
                             </record>
                         </field>
                     </record>
@@ -371,7 +371,7 @@
                             <record id="tax_report_withholding_tax_purchase_tax_half_tag" model="account.report.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">tax_tags</field>
-                                <field name="formula">WH Purchases -0.5% (Tax)</field>
+                                <field name="formula">-WH Purchases -0.5% (Tax)</field>
                             </record>
                         </field>
                     </record>
@@ -382,7 +382,7 @@
                             <record id="tax_report_withholding_tax_purchase_tax_one_tag" model="account.report.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">tax_tags</field>
-                                <field name="formula">WH Purchases -1% (Tax)</field>
+                                <field name="formula">-WH Purchases -1% (Tax)</field>
                             </record>
                         </field>
                     </record>
@@ -393,7 +393,7 @@
                             <record id="tax_report_withholding_tax_purchase_tax_three_tag" model="account.report.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">tax_tags</field>
-                                <field name="formula">WH Purchases -3% (Tax)</field>
+                                <field name="formula">-WH Purchases -3% (Tax)</field>
                             </record>
                         </field>
                     </record>
@@ -404,7 +404,7 @@
                             <record id="tax_report_withholding_tax_purchase_tax_five_tag" model="account.report.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">tax_tags</field>
-                                <field name="formula">WH Purchases -5% (Tax)</field>
+                                <field name="formula">-WH Purchases -5% (Tax)</field>
                             </record>
                         </field>
                     </record>
@@ -437,7 +437,7 @@
                             <record id="tax_report_schedule_tax_schedule_tax_sale_base_half_tag" model="account.report.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">tax_tags</field>
-                                <field name="formula">SCHD Sales 0.5% (Base)</field>
+                                <field name="formula">-SCHD Sales 0.5% (Base)</field>
                             </record>
                         </field>
                     </record>
@@ -448,7 +448,7 @@
                             <record id="tax_report_schedule_tax_schedule_tax_sale_base_one_tag" model="account.report.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">tax_tags</field>
-                                <field name="formula">SCHD Sales 1% (Base)</field>
+                                <field name="formula">-SCHD Sales 1% (Base)</field>
                             </record>
                         </field>
                     </record>
@@ -459,7 +459,7 @@
                             <record id="tax_report_schedule_tax_schedule_tax_sale_base_five_tag" model="account.report.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">tax_tags</field>
-                                <field name="formula">SCHD Sales 5% (Base)</field>
+                                <field name="formula">-SCHD Sales 5% (Base)</field>
                             </record>
                         </field>
                     </record>
@@ -470,7 +470,7 @@
                             <record id="tax_report_schedule_tax_schedule_tax_sale_base_eight_tag" model="account.report.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">tax_tags</field>
-                                <field name="formula">SCHD Sales 8% (Base)</field>
+                                <field name="formula">-SCHD Sales 8% (Base)</field>
                             </record>
                         </field>
                     </record>
@@ -481,7 +481,7 @@
                             <record id="tax_report_schedule_tax_schedule_tax_sale_base_ten_tag" model="account.report.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">tax_tags</field>
-                                <field name="formula">SCHD Sales 10% (Base)</field>
+                                <field name="formula">-SCHD Sales 10% (Base)</field>
                             </record>
                         </field>
                     </record>
@@ -492,7 +492,7 @@
                             <record id="tax_report_schedule_tax_schedule_tax_sale_base_fifteen_tag" model="account.report.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">tax_tags</field>
-                                <field name="formula">SCHD Sales 15% (Base)</field>
+                                <field name="formula">-SCHD Sales 15% (Base)</field>
                             </record>
                         </field>
                     </record>
@@ -503,7 +503,7 @@
                             <record id="tax_report_schedule_tax_schedule_tax_sale_base_thirty_tag" model="account.report.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">tax_tags</field>
-                                <field name="formula">SCHD Sales 30% (Base)</field>
+                                <field name="formula">-SCHD Sales 30% (Base)</field>
                             </record>
                         </field>
                     </record>
@@ -521,7 +521,7 @@
                             <record id="tax_report_schedule_tax_schedule_tax_sale_tax_half_tag" model="account.report.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">tax_tags</field>
-                                <field name="formula">SCHD Sales 0.5% (Tax)</field>
+                                <field name="formula">-SCHD Sales 0.5% (Tax)</field>
                             </record>
                         </field>
                     </record>
@@ -532,7 +532,7 @@
                             <record id="tax_report_schedule_tax_schedule_tax_sale_tax_one_tag" model="account.report.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">tax_tags</field>
-                                <field name="formula">SCHD Sales 1% (Tax)</field>
+                                <field name="formula">-SCHD Sales 1% (Tax)</field>
                             </record>
                         </field>
                     </record>
@@ -543,7 +543,7 @@
                             <record id="tax_report_schedule_tax_schedule_tax_sale_tax_five_tag" model="account.report.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">tax_tags</field>
-                                <field name="formula">SCHD Sales 5% (Tax)</field>
+                                <field name="formula">-SCHD Sales 5% (Tax)</field>
                             </record>
                         </field>
                     </record>
@@ -554,7 +554,7 @@
                             <record id="tax_report_schedule_tax_schedule_tax_sale_tax_eight_tag" model="account.report.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">tax_tags</field>
-                                <field name="formula">SCHD Sales 8% (Tax)</field>
+                                <field name="formula">-SCHD Sales 8% (Tax)</field>
                             </record>
                         </field>
                     </record>
@@ -565,7 +565,7 @@
                             <record id="tax_report_schedule_tax_schedule_tax_sale_tax_ten_tag" model="account.report.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">tax_tags</field>
-                                <field name="formula">SCHD Sales 10% (Tax)</field>
+                                <field name="formula">-SCHD Sales 10% (Tax)</field>
                             </record>
                         </field>
                     </record>
@@ -576,7 +576,7 @@
                             <record id="tax_report_schedule_tax_schedule_tax_sale_tax_fifteen_tag" model="account.report.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">tax_tags</field>
-                                <field name="formula">SCHD Sales 15% (Tax)</field>
+                                <field name="formula">-SCHD Sales 15% (Tax)</field>
                             </record>
                         </field>
                     </record>
@@ -587,7 +587,7 @@
                             <record id="tax_report_schedule_tax_schedule_tax_sale_tax_thirty_tag" model="account.report.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">tax_tags</field>
-                                <field name="formula">SCHD Sales 30% (Tax)</field>
+                                <field name="formula">-SCHD Sales 30% (Tax)</field>
                             </record>
                         </field>
                     </record>
@@ -788,7 +788,7 @@
                             <record id="tax_report_other_taxes_stamp_tax_base_sales_tag" model="account.report.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">tax_tags</field>
-                                <field name="formula">Stamp Tax Sales 20% (Base)</field>
+                                <field name="formula">-Stamp Tax Sales 20% (Base)</field>
                             </record>
                         </field>
                     </record>
@@ -806,7 +806,7 @@
                             <record id="tax_report_other_taxes_stamp_tax_tax_sales_tag" model="account.report.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">tax_tags</field>
-                                <field name="formula">Stamp Tax Sales 20% (Tax)</field>
+                                <field name="formula">-Stamp Tax Sales 20% (Tax)</field>
                             </record>
                         </field>
                     </record>

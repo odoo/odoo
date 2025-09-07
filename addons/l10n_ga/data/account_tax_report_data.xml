@@ -42,7 +42,7 @@
                                         <record id="account_tax_report_line_ga_sales_non_impo_base" model="account.report.expression">
                                             <field name="label">base</field>
                                             <field name="engine">tax_tags</field>
-                                            <field name="formula">GA_non_impo</field>
+                                            <field name="formula">-GA_non_impo</field>
                                         </record>
                                     </field>
                                 </record>
@@ -55,7 +55,7 @@
                                         <record id="account_tax_report_line_ga_sales_exports_base" model="account.report.expression">
                                             <field name="label">base</field>
                                             <field name="engine">tax_tags</field>
-                                            <field name="formula">GA_export</field>
+                                            <field name="formula">-GA_export</field>
                                         </record>
                                     </field>
                                 </record>
@@ -86,12 +86,12 @@
                                                 <record id="account_tax_report_line_ga_sales_taxable_18_base" model="account.report.expression">
                                                     <field name="label">base</field>
                                                     <field name="engine">tax_tags</field>
-                                                    <field name="formula">GA_base_3_18</field>
+                                                    <field name="formula">-GA_base_3_18</field>
                                                 </record>
                                                 <record id="account_tax_report_line_ga_sales_taxable_18_tax" model="account.report.expression">
                                                     <field name="label">tax</field>
                                                     <field name="engine">tax_tags</field>
-                                                    <field name="formula">GA_tax_3_18</field>
+                                                    <field name="formula">-GA_tax_3_18</field>
                                                 </record>
                                             </field>
                                         </record>
@@ -104,12 +104,12 @@
                                                 <record id="account_tax_report_line_ga_sales_taxable_10_base" model="account.report.expression">
                                                     <field name="label">base</field>
                                                     <field name="engine">tax_tags</field>
-                                                    <field name="formula">GA_base_3_10</field>
+                                                    <field name="formula">-GA_base_3_10</field>
                                                 </record>
                                                 <record id="account_tax_report_line_ga_sales_taxable_10_tax" model="account.report.expression">
                                                     <field name="label">tax</field>
                                                     <field name="engine">tax_tags</field>
-                                                    <field name="formula">GA_tax_3_10</field>
+                                                    <field name="formula">-GA_tax_3_10</field>
                                                 </record>
                                             </field>
                                         </record>
@@ -122,12 +122,12 @@
                                                 <record id="account_tax_report_line_ga_sales_taxable_5_base" model="account.report.expression">
                                                     <field name="label">base</field>
                                                     <field name="engine">tax_tags</field>
-                                                    <field name="formula">GA_base_3_5</field>
+                                                    <field name="formula">-GA_base_3_5</field>
                                                 </record>
                                                 <record id="account_tax_report_line_ga_sales_taxable_5_tax" model="account.report.expression">
                                                     <field name="label">tax</field>
                                                     <field name="engine">tax_tags</field>
-                                                    <field name="formula">GA_tax_3_5</field>
+                                                    <field name="formula">-GA_tax_3_5</field>
                                                 </record>
                                             </field>
                                         </record>
@@ -282,7 +282,7 @@
                                                         <record id="account_tax_report_line_ga_sales_additional_taxable_other_18_base" model="account.report.expression">
                                                             <field name="label">base</field>
                                                             <field name="engine">tax_tags</field>
-                                                            <field name="formula">GA_base_5b_18</field>
+                                                            <field name="formula">-GA_base_5b_18</field>
                                                         </record>
                                                         <record id="account_tax_report_line_ga_sales_additional_taxable_other_18_tax" model="account.report.expression">
                                                             <field name="label">tax</field>
@@ -300,7 +300,7 @@
                                                         <record id="account_tax_report_line_ga_sales_additional_taxable_other_10_base" model="account.report.expression">
                                                             <field name="label">base</field>
                                                             <field name="engine">tax_tags</field>
-                                                            <field name="formula">GA_base_5b_10</field>
+                                                            <field name="formula">-GA_base_5b_10</field>
                                                         </record>
                                                         <record id="account_tax_report_line_ga_sales_additional_taxable_other_10_tax" model="account.report.expression">
                                                             <field name="label">tax</field>
@@ -318,7 +318,7 @@
                                                         <record id="account_tax_report_line_ga_sales_additional_taxable_other_5_base" model="account.report.expression">
                                                             <field name="label">base</field>
                                                             <field name="engine">tax_tags</field>
-                                                            <field name="formula">GA_base_5b_5</field>
+                                                            <field name="formula">-GA_base_5b_5</field>
                                                         </record>
                                                         <record id="account_tax_report_line_ga_sales_additional_taxable_other_5_tax" model="account.report.expression">
                                                             <field name="label">tax</field>
@@ -386,7 +386,7 @@
                                                     <record id="account_tax_report_line_ga_deduction_goods_service_importation_18_tax" model="account.report.expression">
                                                         <field name="label">tax</field>
                                                         <field name="engine">tax_tags</field>
-                                                        <field name="formula">GA_7a_18</field>
+                                                        <field name="formula">-GA_7a_18</field>
                                                     </record>
                                                 </field>
                                             </record>
@@ -399,7 +399,7 @@
                                                     <record id="account_tax_report_line_ga_deduction_goods_service_importation_10_tax" model="account.report.expression">
                                                         <field name="label">tax</field>
                                                         <field name="engine">tax_tags</field>
-                                                        <field name="formula">GA_7a_10</field>
+                                                        <field name="formula">-GA_7a_10</field>
                                                     </record>
                                                 </field>
                                             </record>
@@ -412,7 +412,7 @@
                                                     <record id="account_tax_report_line_ga_deduction_goods_service_importation_5_tax" model="account.report.expression">
                                                         <field name="label">tax</field>
                                                         <field name="engine">tax_tags</field>
-                                                        <field name="formula">GA_7a_5</field>
+                                                        <field name="formula">-GA_7a_5</field>
                                                     </record>
                                                 </field>
                                             </record>
@@ -965,7 +965,7 @@
                             <record id="account_tax_report_line_ga_css_taxable_base" model="account.report.expression">
                                 <field name="label">base</field>
                                 <field name="engine">tax_tags</field>
-                                <field name="formula">GA_css</field>
+                                <field name="formula">-GA_css</field>
                             </record>
                         </field>
                     </record>
@@ -991,7 +991,7 @@
                             <record id="account_tax_report_line_ga_css_taxable_other_base" model="account.report.expression">
                                 <field name="label">base</field>
                                 <field name="engine">tax_tags</field>
-                                <field name="formula">GA_css_other</field>
+                                <field name="formula">-GA_css_other</field>
                             </record>
                         </field>
                     </record>
@@ -1023,7 +1023,7 @@
                             <record id="account_tax_report_line_ga_css_due_tax" model="account.report.expression">
                                 <field name="label">tax</field>
                                 <field name="engine">tax_tags</field>
-                                <field name="formula">GA_css_tax</field>
+                                <field name="formula">-GA_css_tax</field>
                             </record>
                         </field>
                     </record>

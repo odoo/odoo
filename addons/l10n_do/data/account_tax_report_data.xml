@@ -58,7 +58,7 @@
                                     <record id="account_tax_report_2A4_base_tag" model="account.report.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
-                                        <field name="formula">base.untaxed.sales.services</field>
+                                        <field name="formula">-base.untaxed.sales.services</field>
                                     </record>
                                 </field>
                             </record>
@@ -126,7 +126,7 @@
                                     <record id="account_tax_report_2B11_base_tag" model="account.report.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
-                                        <field name="formula">base.18%</field>
+                                        <field name="formula">-base.18%</field>
                                     </record>
                                 </field>
                             </record>
@@ -202,7 +202,7 @@
                                     <record id="account_tax_report_3_16_tax_tag" model="account.report.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">tax_tags</field>
-                                        <field name="formula">tax.18%</field>
+                                        <field name="formula">-tax.18%</field>
                                     </record>
                                 </field>
                             </record>
@@ -328,7 +328,7 @@
                             <record id="account_tax_report_A50_tax_tag" model="account.report.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">tax_tags</field>
-                                <field name="formula">A.50</field>
+                                <field name="formula">-A.50</field>
                             </record>
                         </field>
                     </record>

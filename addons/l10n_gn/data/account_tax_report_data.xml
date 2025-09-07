@@ -46,12 +46,12 @@
                             <record id="account_tax_report_line_gn_sales_taxable_base_tag" model="account.report.expression">
                                 <field name="label">base</field>
                                 <field name="engine">tax_tags</field>
-                                <field name="formula">sale_base</field>
+                                <field name="formula">-sale_base</field>
                             </record>
                             <record id="account_tax_report_line_gn_sales_taxable_tax_tag" model="account.report.expression">
                                 <field name="label">tax</field>
                                 <field name="engine">tax_tags</field>
-                                <field name="formula">sale_tax</field>
+                                <field name="formula">-sale_tax</field>
                             </record>
                         </field>
                     </record>
@@ -63,7 +63,7 @@
                             <record id="account_tax_report_line_gn_sales_export_base_tag" model="account.report.expression">
                                 <field name="label">base</field>
                                 <field name="engine">tax_tags</field>
-                                <field name="formula">export</field>
+                                <field name="formula">-export</field>
                             </record>
                         </field>
                     </record>
@@ -75,7 +75,7 @@
                             <record id="account_tax_report_line_gn_sales_exempt_base_tag" model="account.report.expression">
                                 <field name="label">base</field>
                                 <field name="engine">tax_tags</field>
-                                <field name="formula">sale_exempt</field>
+                                <field name="formula">-sale_exempt</field>
                             </record>
                         </field>
                     </record>

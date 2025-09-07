@@ -29,7 +29,7 @@
                             <record id="tax_report_out_tax_sale_tag" model="account.report.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">tax_tags</field>
-                                <field name="formula">1. Sales amount</field>
+                                <field name="formula">-1. Sales amount</field>
                             </record>
                         </field>
                     </record>
@@ -53,7 +53,7 @@
                             <record id="tax_report_out_tax_less_exempted_sales_tag" model="account.report.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">tax_tags</field>
-                                <field name="formula">3. Less exempted sales</field>
+                                <field name="formula">-3. Less exempted sales</field>
                             </record>
                         </field>
                     </record>
@@ -70,7 +70,7 @@
                             <record id="tax_report_out_tax_tag" model="account.report.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">tax_tags</field>
-                                <field name="formula">5. Output tax</field>
+                                <field name="formula">-5. Output tax</field>
                             </record>
                         </field>
                     </record>
