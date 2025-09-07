@@ -5,7 +5,7 @@
             <t t-set="product_extra_information">
                 <span
                     t-if="wish.product_id._is_sold_out() and not wish.product_id.allow_out_of_stock_order"
-                    class="o_wsale_stock_badge badge text-bg-danger align-top" 
+                    class="o_wsale_stock_badge badge text-bg-danger align-self-start align-top"
                 >
                     <i class="fa fa-circle text-danger me-1" aria-hidden="true"/>
                     Out of stock

@@ -125,9 +125,9 @@
 }
 
 .wishlist-section {
-    &:where(:has(.o_wsale_products_opt_design_grid)) {
+    &:where(:has(.o_wsale_products_opt_design_grid.o_wsale_products_opt_layout_list)) {
         .o_wsale_products_opt_design_grid {
-            border-left: 1px solid $border-color;
+            border-left: $border-width solid $border-color;
         }
 
         .o_wishlist_products_header {
@@ -203,7 +203,7 @@
     }
 
     // Grid view only
-    :where(.o_wsale_products_opt_design_grid) .o_wsale_product_btn{
+    :where(.o_wsale_products_opt_design_grid.o_wsale_products_opt_layout_list) .o_wsale_product_btn {
         @include media-breakpoint-between(md, lg) {
             @include hide-submit-button-label;
 
