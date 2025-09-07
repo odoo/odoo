@@ -78,7 +78,7 @@ class ResUsers(models.Model):
 
     def action_open_my_account_settings(self):
         action = {
-            "name": _("Account Security"),
+            "name": _("Security"),
             "type": "ir.actions.act_window",
             "res_model": "res.users",
             "views": [[self.env.ref('auth_totp_mail.res_users_view_form').id, "form"]],

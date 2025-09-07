@@ -95,33 +95,6 @@
         </field>
     </record>
 
-    <record id="res_users_view_form" model="ir.ui.view">
-        <field name="name">res.users.preferences.view.form.inherit.org_chart</field>
-        <field name="model">res.users</field>
-        <field name="inherit_id" ref="hr.res_users_view_form_profile"/>
-        <field name="arch" type="xml">
-            <div id="o_work_employee_main" position="after">
-                <div id="o_employee_org_chart" class="col-lg-5">
-                    <div invisible="not employee_id.subordinate_ids and (not employee_parent_id or employee_parent_id == id)" class="o_horizontal_separator mt-4 mb-3 text-uppercase fw-bolder small">
-                        Organization Chart
-                        <a name="%(hr_org_chart.action_hr_employee_org_chart)d"
-                            type="action"
-                            role="button"
-                            class="float-end me-2 cursor-pointer"
-                            context="{'hierarchy_res_id': id}">
-                                <i class="fa fa-share-alt fa-rotate-90 ms-1 mt-1" role="img" aria-label="Full Chart"/>
-                                Full Chart
-                        </a>
-                    </div>
-                    <div invisible="employee_id.subordinate_ids or (employee_parent_id and not employee_parent_id == id)" class="o_horizontal_separator mt-4 mb-3 text-uppercase fw-bolder small">
-                        Organization Chart
-                    </div>
-                    <field name="child_ids" class="position-relative w-100" widget="hr_org_chart" readonly="1" nolabel="1"/>
-                </div>
-            </div>
-        </field>
-    </record>
-
     <record id="act_open_view_employee_list_my_hierarchy_view" model="ir.actions.act_window.view">
         <field name="sequence" eval="16"/>
         <field name="view_mode">hierarchy</field>

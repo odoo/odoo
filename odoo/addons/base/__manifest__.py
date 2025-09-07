@@ -70,6 +70,7 @@ The kernel of Odoo, needed for all installation.
         'views/res_currency_views.xml',
         'views/res_groups_views.xml',
         'views/res_users_views.xml',
+        'views/res_users_apikeys_views.xml',
         'views/res_device_views.xml',
         'views/res_users_identitycheck_views.xml',
         'views/res_config_settings_views.xml',

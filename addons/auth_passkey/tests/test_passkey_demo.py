@@ -278,7 +278,7 @@ class PasskeyTest(HttpCaseWithUserDemo):
                 self.authenticate(user.login, user.login)
 
                 # Call a method which triggers an identity check
-                wizard_id = self.rpc('res.users', 'preference_change_password', user.id)['result']['res_id']
+                wizard_id = self.rpc('res.users', 'api_key_wizard', user.id)['result']['res_id']
 
                 # Mimic what the Javascript code is doing when clicking on the button "Use a passkey"
 

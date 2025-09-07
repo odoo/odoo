@@ -501,13 +501,10 @@
             <field name="model">res.users</field>
             <field name="inherit_id" ref="base.view_users_form"/>
             <field name="arch" type="xml">
-                <notebook colspan="4" position="inside">
                     <!-- Placeholder container to hold information about external accounts (Google calendar, Microsoft calendar, ...) -->
-                    <page string="Calendar" name="calendar" groups="base.group_system"
-                         invisible="1">
-                        <group name="calendar_accounts"/>
-                    </page>
-                </notebook>
+                <xpath expr="//page[@name='calendar']" position="inside">
+                    <group name="calendar_accounts" groups="base.group_system"/>
+                </xpath>
             </field>
     </record>
 

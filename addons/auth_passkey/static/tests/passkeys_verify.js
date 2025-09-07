@@ -13,11 +13,11 @@ registry.category("web_tour.tours").add('passkeys_tour_verify', {
             run: 'click',
         }, {
             content: "Open preferences / profile screen",
-            trigger: '[data-menu=settings]',
+            trigger: '[data-menu=preferences]',
             run: 'click',
         }, {
             content: "Switch to security tab",
-            trigger: 'a[role=tab]:contains("Account Security")',
+            trigger: 'a[role=tab]:contains("Security")',
             run: 'click',
         }, {
             content: "Ensure there is one passkey",

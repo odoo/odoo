@@ -7,11 +7,11 @@ const openUserPreferenceSecurity = () => [{
     run: 'click',
 }, {
     content: "Open preferences / profile screen",
-    trigger: '[data-menu=settings]',
+    trigger: '[data-menu=preferences]',
     run: 'click',
 }, {
     content: "Switch to security tab",
-    trigger: 'a[role=tab]:contains("Account Security")',
+    trigger: 'a[role=tab]:contains("Security")',
     run: 'click',
 }]
 
@@ -20,11 +20,11 @@ registry.category("web_tour.tours").add('apikeys_tour_setup', {
     steps: () => [
     ...openUserPreferenceSecurity(), {
     content: "Open API keys wizard",
-    trigger: 'button:contains("New API Key")',
+    trigger: 'button:contains("Add API Key")',
     run: "click",
 }, {
     content: "Check that we have to enter enhanced security mode",
-    trigger: ".modal div:contains(entering your password)",
+    trigger: ".modal div:contains(Enter your current password)",
 }, {
     content: "Input password",
     trigger: '.modal [name=password] input',
@@ -63,7 +63,7 @@ registry.category("web_tour.tours").add('apikeys_tour_setup', {
 ...openUserPreferenceSecurity(),
 {
     content: "check that our key is present",
-    trigger: '[name=api_key_ids] td:contains("my key")',
+    trigger: '[name=api_key_ids] .o_kanban_record:contains("my key")',
 }]});
 
 // deletes the previously created key
@@ -74,15 +74,15 @@ registry.category("web_tour.tours").add('apikeys_tour_teardown', {
     trigger: '.o_user_menu .dropdown-toggle',
     run: "click",
 }, {
-    trigger: '[data-menu=settings]',
+    trigger: '[data-menu=preferences]',
     run: "click",
 }, {
     content: "Switch to security tab",
-    trigger: 'a[role=tab]:contains("Account Security")',
+    trigger: 'a[role=tab]:contains("Security")',
     run: 'click',
 }, {
-    content: "delete key",
-    trigger: '[name=api_key_ids] i.fa-trash',
+    content: "Open kanban dropdown menu of the key",
+    trigger: '[name=api_key_ids] .o_kanban_record:contains("my key") .oe_kanban_action[name="remove"]',
     run: 'click',
 }, {
     content: "Input password for security mode again",
@@ -101,11 +101,11 @@ registry.category("web_tour.tours").add('apikeys_tour_teardown', {
     trigger: '.o_user_menu .dropdown-toggle',
     run: "click",
 }, {
-    trigger: '[data-menu=settings]',
+    trigger: '[data-menu=preferences]',
     run: "click",
 }, {
     content: "Switch to security tab",
-    trigger: 'a[role=tab]:contains("Account Security")',
+    trigger: 'a[role=tab]:contains("Security")',
     run: 'click',
 }, {
     content: "Check that there's no more keys",
