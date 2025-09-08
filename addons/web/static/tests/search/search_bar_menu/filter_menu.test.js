@@ -865,12 +865,7 @@ test("display names in facets", async () => {
     );
     await contains(".modal footer button").click();
 
-    expect(getFacetTexts()).toEqual([
-        "Bar = John",
-        "Bar = David or Inaccessible/missing record ID: 5555",
-        `Bar ${label("set")}`,
-        "Id = 2",
-    ]);
+    expect(getFacetTexts()).toEqual(["Bar = John", "Bar = David", `Bar ${label("set")}`, "Id = 2"]);
     expect(searchBar.env.searchModel.domain).toEqual([
         "&",
         ["bar", "=", 1],
