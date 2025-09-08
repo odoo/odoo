@@ -453,11 +453,9 @@ class WebsiteSale(payment_portal.PaymentPortal):
         products_prices = lazy(lambda: products._get_sales_prices(website))
         product_query_params = self._get_product_query_params(**post)
 
-        attributes_values = request.env['product.attribute.value'].browse(
+        grouped_attributes_values = request.env['product.attribute.value'].browse(
             attribute_value_ids
-        ).sorted()
-        if attributes_values:
-            product_query_params['attribute_values'] = ','.join(str(i) for i in attributes_values.ids)
+        ).sorted().grouped('attribute_id')
 
         values = {
             'auto_assign_ribbons': lazy(
@@ -487,6 +485,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
             'float_round': float_round,
             'shop_path': SHOP_PATH,
             'product_query_params': product_query_params,
+            'grouped_attributes_values': grouped_attributes_values,
             'previewed_attribute_values': lazy(
                 lambda: products._get_previewed_attribute_values(category, product_query_params),
             ),
