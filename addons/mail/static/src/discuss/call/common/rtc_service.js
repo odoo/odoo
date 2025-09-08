@@ -1719,6 +1719,9 @@ export class Rtc extends Record {
                 );
                 this.store.settings.useBlur = false;
             }
+        } else if (!this.store.settings.useBlur && type === "camera") {
+            this.blurManager?.close();
+            this.blurManager = undefined;
         }
         switch (type) {
             case "camera": {
