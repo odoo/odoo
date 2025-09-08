@@ -315,6 +315,17 @@ export class TourHelpers {
         });
     }
 
+    async scan(barcode) {
+        odoo.__WOWL_DEBUG__.root.env.services.barcode.bus.trigger("barcode_scanned", { barcode });
+        await new Promise(requestAnimationFrame);
+    }
+
+    async scanRFID(rfid) {
+        const params = { data: rfid.split(",") };
+        odoo.__WOWL_DEBUG__.root.env.services.mobile.bus.trigger("mobile_reader_scanned", params);
+        await new Promise(requestAnimationFrame);
+    }
+
     /**
      * Get Node for **{@link Selector}**
      * @param {Selector} selector

@@ -106,12 +106,43 @@ export function isShown() {
     ];
 }
 export function linkTables(child, parent) {
+    async function drag_multiple_and_then_drop(...drags) {
+        const dragEffectDelay = async () => {
+            console.log(this.delay);
+            await new Promise((resolve) => requestAnimationFrame(resolve));
+            await new Promise((resolve) => setTimeout(resolve, this.delay));
+        };
+        const element = this.anchor;
+        const { drag } = odoo.loader.modules.get("@odoo/hoot-dom");
+        const { drop, moveTo } = await drag(element);
+        await dragEffectDelay();
+        await this.hover(element, {
+            position: {
+                top: 20,
+                left: 20,
+            },
+            relative: true,
+        });
+        await dragEffectDelay();
+        for (const [selector, options] of drags) {
+            console.log("Selector", selector, options);
+            const target = await this.waitFor(selector, {
+                visible: true,
+                timeout: 500,
+            });
+            await moveTo(target, options);
+            await dragEffectDelay();
+        }
+        await drop();
+        await dragEffectDelay();
+    }
     return {
         content: `Drag table ${child} onto table ${parent} in order to link them`,
         trigger: table({ name: child }).trigger,
         async run(helpers) {
             helpers.delay = 500;
-            await helpers.drag_multiple_and_then_drop(
+            await drag_multiple_and_then_drop.call(
+                helpers,
                 [
                     table({ name: parent }).trigger,
                     {
@@ -171,39 +202,3 @@ export function addFloor(floorName) {
         ...selectedFloorIs(floorName),
     ];
 }
-
-import { TourHelpers } from "@web_tour/js/tour_automatic/tour_helpers";
-import { patch } from "@web/core/utils/patch";
-
-patch(TourHelpers.prototype, {
-    async drag_multiple_and_then_drop(...drags) {
-        const dragEffectDelay = async () => {
-            console.log(this.delay);
-            await new Promise((resolve) => requestAnimationFrame(resolve));
-            await new Promise((resolve) => setTimeout(resolve, this.delay));
-        };
-        const element = this.anchor;
-        const { drag } = odoo.loader.modules.get("@odoo/hoot-dom");
-        const { drop, moveTo } = await drag(element);
-        await dragEffectDelay();
-        await this.hover(element, {
-            position: {
-                top: 20,
-                left: 20,
-            },
-            relative: true,
-        });
-        await dragEffectDelay();
-        for (const [selector, options] of drags) {
-            console.log("Selector", selector, options);
-            const target = await this.waitFor(selector, {
-                visible: true,
-                timeout: 500,
-            });
-            await moveTo(target, options);
-            await dragEffectDelay();
-        }
-        await drop();
-        await dragEffectDelay();
-    },
-});
