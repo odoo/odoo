@@ -2,12 +2,14 @@
 <odoo>
     <data>
         <template id="courses_search_bar_inherit_survey" inherit_id="website_slides.courses_search_bar">
-            <xpath expr="//div[@id='navbarTagGroups']" position="before">
-                <a t-if="search_slide_category != 'certification'" class="nav-link nav-link d-flex mx-3"
-                   t-att-href="slide_query_url(tag=slugify_tags(search_tags.ids), my=search_my, search=search_term, slide_category='certification')">
-                    <t t-call="website_slides_survey.o_wss_certification_icon"/>
-                    <span class="ms-1">Certifications</span>
-                </a>
+            <xpath expr="//div[@id='navbarTagGroups']//ul" position="inside">
+                <li class="order-first">
+                    <a t-if="search_slide_category != 'certification'" class="btn btn-light"
+                    t-att-href="slide_query_url(tag=slugify_tags(search_tags.ids), my=search_my, search=search_term, slide_category='certification')">
+                        <t t-call="website_slides_survey.o_wss_certification_icon"/>
+                        <span class="ms-1">Certifications</span>
+                    </a>
+                </li>
             </xpath>
         </template>
 
