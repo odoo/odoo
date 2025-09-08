@@ -741,3 +741,7 @@ class TestUi(HttpCaseWithWebsiteUser):
 
     def test_mega_footer(self):
         self.start_tour('/', 'mega_footer', login='admin')
+
+    def test_anchor_on_accordion_item(self):
+        self.start_tour("/", "anchor_behaviour_on_accordion_same_tab", login="admin")
+        self.start_tour("/#What-services-does-your-company-offer-%3F", "anchor_behaviour_on_accordion_new_tab", login="admin")
