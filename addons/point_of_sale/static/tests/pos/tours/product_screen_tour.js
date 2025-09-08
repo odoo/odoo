@@ -819,6 +819,10 @@ registry.category("web_tour.tours").add("test_product_long_press", {
             Dialog.confirm("Open Register"),
             ProductScreen.longPressProduct("Test Product"),
             Dialog.is(),
+            {
+                content: "Check On hand quantity is display on product info popup",
+                trigger: ".section-inventory-body div:contains('On hand: 0')",
+            },
             Chrome.endTour(),
         ].flat(),
 });
