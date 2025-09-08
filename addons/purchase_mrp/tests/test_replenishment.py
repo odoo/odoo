@@ -1,3 +1,4 @@
+from odoo import Command
 from odoo.addons.stock.tests.common import TestStockCommon
 
 
@@ -15,7 +16,7 @@ class TestReplenishment(TestStockCommon):
         manufacture = self.env['stock.route'].create({
             'name': 'Manufacture',
             'rule_ids': [
-                (0, 0, {
+                Command.create({
                     'name': 'Manufacture',
                     'location_dest_id': self.stock_location.id,
                     'action': 'manufacture',
@@ -30,7 +31,7 @@ class TestReplenishment(TestStockCommon):
         buy = self.env['stock.route'].create({
             'name': 'Buy',
             'rule_ids': [
-                (0, 0, {
+                Command.create({
                     'name': 'Buy',
                     'location_dest_id': self.stock_location.id,
                     'action': 'buy',
