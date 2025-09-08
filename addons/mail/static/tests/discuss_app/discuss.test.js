@@ -244,7 +244,7 @@ test("Can use channel command /who", async () => {
     await start();
     await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "/who");
-    await press("Enter");
+    await click(".o-mail-Composer button[title='Send']:enabled");
     await contains(".o_mail_notification", { text: "You are alone in this channel." });
 });
 
