@@ -768,7 +768,7 @@ class L10nEsEdiTbaiDocument(models.Model):
         sequence = re.sub(r"\s+", " ", sequence)  # no more than one consecutive whitespace allowed
         # NOTE (optional) not recommended to use chars out of ([0123456789ABCDEFGHJKLMNPQRSTUVXYZ.\_\-\/ ])
         sequence += "TEST" if self.company_id.l10n_es_tbai_test_env else ""
-        return sequence, number
+        return sequence[-20:], number
 
     def _get_tbai_signature_and_date(self):
         """
