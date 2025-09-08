@@ -21,7 +21,9 @@ test("can open DM from @username in command palette", async () => {
     await start();
     triggerHotkey("control+k");
     await insertText(".o_command_palette_search input", "@");
+    await contains(".o_command_name", { count: 5 });
     await insertText("input[placeholder='Search a conversation']", "Mario");
+    await contains(".o_command_name", { count: 3 });
     await click(".o_command.focused:has(.fa-user)", { text: "Mario" });
     await contains(".o-mail-ChatWindow", { text: "Mario" });
 });
