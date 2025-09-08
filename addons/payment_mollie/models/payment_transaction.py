@@ -11,7 +11,6 @@ from odoo.addons.payment.logging import get_payment_logger
 from odoo.addons.payment_mollie import const
 from odoo.addons.payment_mollie.controllers.main import MollieController
 
-
 _logger = get_payment_logger(__name__)
 
 
@@ -102,7 +101,8 @@ class PaymentTransaction(models.Model):
     def _apply_updates(self, payment_data):
         """Override of `payment` to update the transaction based on the payment data."""
         if self.provider_code != 'mollie':
-            return super()._apply_updates(payment_data)
+            super()._apply_updates(payment_data)
+            return
 
         # Update the payment method.
         payment_method_type = payment_data.get('method', '')
@@ -115,7 +115,7 @@ class PaymentTransaction(models.Model):
 
         # Update the payment state.
         payment_status = payment_data.get('status')
-        if payment_status == 'pending':
+        if payment_status in ('pending', 'open'):
             self._set_pending()
         elif payment_status == 'authorized':
             self._set_authorized()
