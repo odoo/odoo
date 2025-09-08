@@ -1,5 +1,5 @@
 import { registry } from "@web/core/registry";
-import { assert } from "@stock/../tests/tours/tour_helper";
+import { assert, freezeDateTime } from "@stock/../tests/tours/tour_helper";
 import { catalogSuggestion } from "./tour_helper";
 import { purchaseForm, productCatalog } from "@purchase/../tests/tours/tour_helper";
 
@@ -11,6 +11,7 @@ registry.category("web_tour.tours").add("test_purchase_order_suggest_search_pane
          * (estimated price, warehouse logic, toggling, saving defaults)
          * ----------------------------------------------------------------
          */
+        ...freezeDateTime("2021-01-14 09:12:15"),
         { trigger: ".o_purchase_order" },
         ...purchaseForm.createNewPO(),
         ...purchaseForm.selectVendor("Julia Agrolait"),

@@ -104,11 +104,11 @@ class ProductProduct(models.Model):
             to_date=to_date,
         )
 
-    @api.depends_context('suggest_based_on', 'warehouse_id')
+    @api.depends_context('monthly_demand_start', 'monthly_demand_limit', 'warehouse_id')
     def _compute_monthly_demand(self):
-        based_on = self.env.context.get("suggest_based_on", "30_days")
         warehouse_id = self.env.context.get('warehouse_id')
-        start_date, limit_date = self._get_monthly_demand_range(based_on)
+        start_date = fields.Datetime.to_datetime(self.env.context.get('monthly_demand_start')) or datetime.now() - relativedelta(days=30)
+        limit_date = fields.Datetime.to_datetime(self.env.context.get('monthly_demand_limit')) or datetime.now()
 
         move_domain = Domain([
             ('product_id', 'in', self.ids),
@@ -124,13 +124,7 @@ class ProductProduct(models.Model):
         move_qty_by_products = self.env['stock.move']._read_group(move_domain, ['product_id'], ['product_qty:sum'])
         qty_by_product = {product.id: qty for product, qty in move_qty_by_products}
 
-        factor = 1
-        if based_on == "one_year":
-            factor = 12
-        elif based_on == "three_months" or based_on == "last_year_quarter":
-            factor = 3
-        elif based_on == "one_week":
-            factor = 7 / (365.25 / 12)  # 7 days / (365.25 days/yr / 12 mth/yr) = 0.23 months
+        factor = (limit_date - start_date).days / (365.25 / 12) or 1  # Convert demand to monthly demand (365.2 / 12 = 30.4... days)
         for product in self:
             product.monthly_demand = qty_by_product.get(product.id, 0) / factor
 
@@ -190,33 +184,6 @@ class ProductProduct(models.Model):
                         ('orderpoint_id.warehouse_id', 'in', warehouse_ids)
             ]))
         return rfq_domain & Domain.OR(domains or [Domain.TRUE])
-
-    def _get_monthly_demand_range(self, based_on):
-        start_date = limit_date = datetime.now()
-
-        if not based_on or based_on == 'actual_demand' or based_on == '30_days':
-            start_date = start_date - relativedelta(days=30)  # Default monthly demand
-        elif based_on == 'one_week':
-            start_date = start_date - relativedelta(weeks=1)
-        elif based_on == 'three_months':
-            start_date = start_date - relativedelta(months=3)
-        elif based_on == 'one_year':
-            start_date = start_date - relativedelta(years=1)
-        else:  # Relative period of time.
-            today = datetime.now()
-            start_date = datetime(year=today.year - 1, month=today.month, day=1)
-
-            if based_on == 'last_year_m_plus_1':
-                start_date += relativedelta(months=1)
-            elif based_on == 'last_year_m_plus_2':
-                start_date += relativedelta(months=2)
-
-            if based_on == 'last_year_quarter':
-                limit_date = start_date + relativedelta(months=3)
-            else:
-                limit_date = start_date + relativedelta(months=1)
-
-        return start_date, limit_date
 
 
 class ProductSupplierinfo(models.Model):
