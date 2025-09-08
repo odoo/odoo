@@ -167,7 +167,7 @@ export class ClipboardPlugin extends Plugin {
 
         this.dependencies.history.stageSelection();
 
-        this.dispatchTo("before_paste_handlers", selection);
+        this.dispatchTo("before_paste_handlers", selection, ev);
         // refresh selection after potential changes from `before_paste` handlers
         selection = this.dependencies.selection.getEditableSelection();
 
@@ -213,7 +213,9 @@ export class ClipboardPlugin extends Plugin {
      * @param {DataTransfer} clipboardData
      */
     handlePasteHtml(selection, clipboardData) {
-        const files = getImageFiles(clipboardData);
+        const files = this.delegateTo("bypass_paste_image_files")
+            ? []
+            : getImageFiles(clipboardData);
         const clipboardHtml = clipboardData.getData("text/html");
         const textContent = clipboardData.getData("text/plain");
         if (ONLY_LINK_REGEX.test(textContent)) {
@@ -232,7 +234,7 @@ export class ClipboardPlugin extends Plugin {
                     this.dependencies.dom.insert(html);
                     this.dependencies.history.addStep();
                 });
-            } else {
+            } else if (clipboardElem.hasChildNodes()) {
                 if (closestElement(selection.anchorNode, "a")) {
                     this.dependencies.dom.insert(clipboardElem.textContent);
                 } else {
@@ -326,6 +328,11 @@ export class ClipboardPlugin extends Plugin {
 
         for (const tableElement of container.querySelectorAll("table")) {
             tableElement.classList.add("table", "table-bordered", "o_table");
+        }
+        if (this.delegateTo("bypass_paste_image_files")) {
+            for (const imgElement of container.querySelectorAll("img")) {
+                imgElement.remove();
+            }
         }
 
         // todo: should it be in its own plugin ?
