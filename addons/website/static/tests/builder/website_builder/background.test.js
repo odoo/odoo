@@ -79,6 +79,8 @@ async function setupWebsiteAndOpenParallaxOptions({ editingElClasses = "" } = {}
         <section ${editingElClass} style="background-image: ${backgroundImageUrl}; width: 500px; height:500px">
         </section>`);
     await contains(":iframe section").click();
-    await contains("[data-label='Scroll Effect'] button.o-dropdown").click();
+    // Timeout: Images are fetched from the network for some values in the
+    // options, the normal timeout is sometimes too short
+    await contains("[data-label='Scroll Effect'] button.o-dropdown", { timeout: 1000 }).click();
     return websiteBuilder;
 }
