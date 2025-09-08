@@ -560,3 +560,28 @@ class TestTimesheetGlobalTimeOff(common.TransactionCase):
         timesheet_count = self.env['account.analytic.line'].search_count([('employee_id', '=', self.part_time_employee.id)])
         self.assertEqual(timesheet_count, 1, "A timesheet should have been generated for the employee with a global working "
                                               "schedule when a new public holiday is created")
+
+    def test_timesheet_generation_on_public_holiday_creation_with_flexible_hours(self):
+        """ Test that public holidays timesheet duration match the hours per days value for flexible
+        """
+
+        self.flexible_calendar = self.env['resource.calendar'].create({
+            'name': 'Flexible Calendar',
+            'hours_per_day': 7.0,
+            'full_time_required_hours': 7.0,
+            'flexible_hours': True,
+        })
+
+        self.flexible_employee = self.env['hr.employee'].create({
+            'name': 'Flexible',
+            'company_id': self.test_company.id,
+            'resource_calendar_id': self.flexible_calendar.id,
+        })
+
+        self.env['resource.calendar.leaves'].create({
+            'name': 'Public Holiday',
+            'date_from': datetime(2021, 1, 4, 0, 0, 0),
+            'date_to': datetime(2021, 1, 4, 23, 59, 59),
+        })
+        timesheet = self.env['account.analytic.line'].search([('employee_id', '=', self.flexible_employee.id)])
+        self.assertEqual(timesheet.unit_amount, self.flexible_calendar.hours_per_day)
