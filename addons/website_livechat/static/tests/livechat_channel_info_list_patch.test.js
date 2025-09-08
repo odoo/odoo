@@ -29,7 +29,7 @@ test("shows recent page views", async () => {
     });
     await start();
     await openDiscuss(channelId);
-    await contains("h3", { text: "Recent page views" });
+    await contains("h6", { text: "Recent page views" });
     await contains("div > span", { text: "General website" });
     await contains("span", { text: "Home → Contact" });
 });

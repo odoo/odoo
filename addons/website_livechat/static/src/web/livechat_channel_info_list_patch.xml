@@ -4,7 +4,7 @@
         <xpath expr="//t[@t-name='extra_infos']" position="inside">
             <t t-set="visitor" t-value="props.thread.livechat_visitor_id"/>
             <div t-if="visitor?.history" class="d-flex flex-column bg-inherit gap-1">
-                <h3 class="pt-3">Recent page views</h3>
+                <h6 class="pt-3">Recent page views</h6>
                 <div t-if="visitor.website_id">
                     <i class="me-1 fa fa-globe" aria-label="Website"/>
                     <span t-esc="visitor.website_id.name"/>
@@ -12,7 +12,7 @@
                 <span t-esc="visitor.history"/>
             </div>
             <div t-if="!props.thread.livechat_end_dt and recentConversations.length" class="d-flex flex-column bg-inherit gap-1">
-                <h3 class="pt-3">Recent conversations</h3>
+                <h6 class="pt-3">Recent conversations</h6>
                 <div class="btn btn-group o-rounded-bubble d-flex flex-column w-100 p-0 m-0" style="gap: 1px;">
                     <a
                         t-foreach="recentConversations" t-as="thread" t-key="thread.localId"
