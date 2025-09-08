@@ -38,11 +38,11 @@ function compareRecords(r1, r2, orderBy, fields) {
     return 0;
 }
 
-function copyRecordData(record) {
+function copyRecordData(record, copyFields = []) {
     const data = {};
     for (const [name, value] of Object.entries(record.data)) {
         if (
-            !["display_type", "display_name"].includes(name) &&
+            ![...copyFields, "display_name"].includes(name) &&
             (record._isReadonly(name) || record._isInvisible(name)) &&
             !record._isRequired(name)
         ) {
@@ -924,6 +924,7 @@ export class StaticList extends DataPoint {
      */
     async _duplicateRecords(records, options) {
         const targetIndex = options.targetIndex ?? this.records.indexOf(records.at(-1)) + 1;
+        const copyFields = options.copyFields || [];
         let sequence = this.records[targetIndex - 1].data[this.handleField] + 1;
         const newRecords = await Promise.all(
             records.map(async () =>
@@ -935,7 +936,7 @@ export class StaticList extends DataPoint {
         await Promise.all(
             records.map((record, index) =>
                 newRecords[index]._update({
-                    ...copyRecordData(record),
+                    ...copyRecordData(record, copyFields),
                     [this.handleField]: sequence++,
                 })
             )
