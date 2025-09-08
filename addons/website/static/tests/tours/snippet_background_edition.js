@@ -1,4 +1,4 @@
-import weUtils from '@web_editor/js/common/utils';
+import { backgroundImageCssToParts } from "@html_editor/utils/image";
 import {
     changeBackgroundColor,
     changeOption,
@@ -231,7 +231,7 @@ changeOption("Text - Image", "button[data-action-id='toggleBgImage']"),
 {
     trigger: `:iframe .${snippets[0].id}.o_cc1`,
     run: function () {
-        const parts = weUtils.backgroundImageCssToParts(
+        const parts = backgroundImageCssToParts(
             getComputedStyle(this.anchor)["background-image"]
         );
         if (!parts.url || !parts.url.startsWith('url(')) {
@@ -251,7 +251,7 @@ changeOption("Text - Image", "button[data-action-id='toggleBgImage']"),
     change: gradients[0],
     finalSelector: `:iframe .${snippets[0].id}.o_cc1:not([style*="${gradients[1]}"])`,
     finalRun: function () {
-        const parts = weUtils.backgroundImageCssToParts(
+        const parts = backgroundImageCssToParts(
             getComputedStyle(this.anchor)["background-image"]
         );
         if (!parts.url || !parts.url.startsWith('url(')) {
@@ -373,7 +373,7 @@ switchTo('gradient'),
     change: gradients[1],
     finalSelector: `:iframe .${snippets[0].id}.o_cc1:not(.bg-${backgroundColors[1].code})`,
     finalRun() {
-        const parts = weUtils.backgroundImageCssToParts(
+        const parts = backgroundImageCssToParts(
             getComputedStyle(this.anchor)["background-image"]
         );
         if (!parts.url || !parts.url.startsWith('url(')) {

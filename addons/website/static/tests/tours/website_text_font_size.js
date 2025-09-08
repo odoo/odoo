@@ -4,7 +4,7 @@ import {
     registerWebsitePreviewTour,
     clickToolbarButton,
 } from '@website/js/tours/tour_utils';
-import {FONT_SIZE_CLASSES} from '@web_editor/js/editor/odoo-editor/src/utils/utils';
+import { FONT_SIZE_CLASSES } from "@html_editor/utils/formatting";
 
 const classNameInfo = new Map();
 classNameInfo.set("display-1-fs", {scssVariableName: "display-1-font-size", start: 80, end: 90});
