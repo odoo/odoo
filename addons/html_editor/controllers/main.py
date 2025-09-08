@@ -615,7 +615,7 @@ class HTML_Editor(http.Controller):
     def generate_text(self, prompt, conversation_history):
         try:
             IrConfigParameter = request.env['ir.config_parameter'].sudo()
-            olg_api_endpoint = IrConfigParameter.get_param('web_editor.olg_api_endpoint', DEFAULT_OLG_ENDPOINT)
+            olg_api_endpoint = IrConfigParameter.get_param('html_editor.olg_api_endpoint', DEFAULT_OLG_ENDPOINT)
             database_id = IrConfigParameter.get_param('database.uuid')
             response = iap_tools.iap_jsonrpc(olg_api_endpoint + "/api/olg/1/chat", params={
                 'prompt': prompt,
