@@ -398,7 +398,7 @@ class ResourceCalendar(models.Model):
                         'duration_days': days,
                     })
                     result_per_resource_id[resource.id] = Intervals([(start_dt, end_dt, dummy_attendance)], keep_distinct=True)
-                elif resource and resource.calendar_id.flexible_hours:
+                elif (resource and resource.calendar_id.flexible_hours) or self.flexible_hours:
                     # For flexible Calendars, we create intervals to fill in the weekly intervals with the average daily hours
                     # until the full time required hours are met. This gives us the most correct approximation when looking at a daily
                     # and weekly range for time offs and overtime calculations and work entry generation
@@ -406,8 +406,10 @@ class ResourceCalendar(models.Model):
                     end_datetime_adjusted = end_datetime - relativedelta(seconds=1)
                     end_date = end_datetime_adjusted.date()
 
-                    full_time_required_hours = resource.calendar_id.full_time_required_hours
-                    max_hours_per_day = resource.calendar_id.hours_per_day
+                    calendar_id = resource.calendar_id or self
+
+                    full_time_required_hours = calendar_id.full_time_required_hours
+                    max_hours_per_day = calendar_id.hours_per_day
 
                     intervals = []
                     current_start_day = start_date
