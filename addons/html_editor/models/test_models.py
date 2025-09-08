@@ -3,9 +3,9 @@
 from odoo import models, fields
 
 
-class Web_EditorConverterTest(models.Model):
-    _name = 'web_editor.converter.test'
-    _description = 'Web Editor Converter Test'
+class Html_EditorConverterTest(models.Model):
+    _name = 'html_editor.converter.test'
+    _description = 'Html Editor Converter Test'
 
     # disable translation export for those brilliant field labels and values
     _translate = False
@@ -14,7 +14,7 @@ class Web_EditorConverterTest(models.Model):
     integer = fields.Integer()
     float = fields.Float()
     numeric = fields.Float(digits=(16, 2))
-    many2one = fields.Many2one('web_editor.converter.test.sub')
+    many2one = fields.Many2one('html_editor.converter.test.sub')
     binary = fields.Binary(attachment=False)
     date = fields.Date()
     datetime = fields.Datetime()
@@ -29,8 +29,8 @@ class Web_EditorConverterTest(models.Model):
     text = fields.Text()
 
 
-class Web_EditorConverterTestSub(models.Model):
-    _name = 'web_editor.converter.test.sub'
-    _description = 'Web Editor Converter Subtest'
+class Html_EditorConverterTestSub(models.Model):
+    _name = 'html_editor.converter.test.sub'
+    _description = 'Html Editor Converter Subtest'
 
     name = fields.Char()

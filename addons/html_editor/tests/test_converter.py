@@ -119,7 +119,7 @@ class TestConvertBack(common.TransactionCase):
         self.env = self.env(context={'inherit_branding': True})
 
     def field_rountrip_result(self, field, value, expected):
-        model = 'web_editor.converter.test'
+        model = 'html_editor.converter.test'
         record = self.env[model].create({field: value})
 
         t = etree.Element('t')
@@ -187,9 +187,9 @@ class TestConvertBack(common.TransactionCase):
         """
         field = 'many2one'
 
-        subrec1 = self.env['web_editor.converter.test.sub'].create({'name': "Foo"})
-        subrec2 = self.env['web_editor.converter.test.sub'].create({'name': "Bar"})
-        record = self.env['web_editor.converter.test'].create({field: subrec1.id})
+        subrec1 = self.env['html_editor.converter.test.sub'].create({'name': "Foo"})
+        subrec2 = self.env['html_editor.converter.test.sub'].create({'name': "Bar"})
+        record = self.env['html_editor.converter.test'].create({field: subrec1.id})
 
         t = etree.Element('t')
         e = etree.Element('span')
@@ -206,7 +206,7 @@ class TestConvertBack(common.TransactionCase):
 
         model = 'ir.qweb.field.' + element.get('data-oe-type')
         converter = self.env[model] if model in self.env else self.env['ir.qweb.field']
-        value_back = converter.from_html('web_editor.converter.test', record._fields[field], element)
+        value_back = converter.from_html('html_editor.converter.test', record._fields[field], element)
 
         self.assertIsNone(
             value_back, "the m2o converter should return None to avoid spurious"
