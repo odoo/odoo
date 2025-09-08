@@ -61,7 +61,7 @@ export class DiscussContent extends Component {
     }
 
     get showImStatus() {
-        return this.thread.channel_type === "chat";
+        return this.thread.channel?.channel_type === "chat";
     }
 
     get showThreadAvatar() {
@@ -72,7 +72,7 @@ export class DiscussContent extends Component {
         return (
             !this.thread.parent_channel_id &&
             this.thread.is_editable &&
-            ["channel", "group"].includes(this.thread.channel_type)
+            ["channel", "group"].includes(this.thread.channel?.channel_type)
         );
     }
 

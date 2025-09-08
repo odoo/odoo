@@ -34,7 +34,7 @@ export class PinnedMessagesPanel extends Component {
      * Get the message to display when nothing is pinned on this thread.
      */
     get emptyText() {
-        if (this.props.thread.channel_type === "channel") {
+        if (this.props.thread.channel?.channel_type === "channel") {
             return _t("This channel doesn't have any pinned messages.");
         } else {
             return _t("This conversation doesn't have any pinned messages.");

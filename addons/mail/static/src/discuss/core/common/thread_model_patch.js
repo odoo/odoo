@@ -67,6 +67,7 @@ const threadPatch = {
                     return {
                         id: this.id,
                         channel_member_ids: this.channel_member_ids,
+                        channel_type: this.channel_type,
                     };
                 }
                 return undefined;
@@ -106,7 +107,9 @@ const threadPatch = {
         this.hasSeenFeature = fields.Attr(false, {
             /** @this {import("models").Thread} */
             compute() {
-                return this.store.channel_types_with_seen_infos.includes(this.channel_type);
+                return this.store.channel_types_with_seen_infos.includes(
+                    this.channel?.channel_type
+                );
             },
         });
         this.firstUnreadMessage = fields.One("mail.message", {
@@ -240,13 +243,13 @@ const threadPatch = {
         return this.member_count === this.channel?.channel_member_ids.length;
     },
     get avatarUrl() {
-        if (this.channel_type === "channel" || this.channel_type === "group") {
+        if (this.channel?.channel_type === "channel" || this.channel?.channel_type === "group") {
             return imageUrl("discuss.channel", this.id, "avatar_128", {
                 unique: this.avatar_cache_key,
             });
         }
-        if (this.correspondent) {
-            return this.correspondent.avatarUrl;
+        if (this.channel?.correspondent) {
+            return this.channel.correspondent.avatarUrl;
         }
         return super.avatarUrl;
     },
@@ -258,7 +261,7 @@ const threadPatch = {
         const res = await super.checkReadAccess();
         if (!res && this.model === "discuss.channel") {
             // channel is assumed to be readable if its channel_type is known
-            return this.channel_type;
+            return this.channel.channel_type;
         }
         return res;
     },
@@ -291,8 +294,8 @@ const threadPatch = {
         if (this.supportsCustomChannelName && this.self_member_id?.custom_channel_name) {
             return this.self_member_id.custom_channel_name;
         }
-        if (this.channel_type === "chat" && this.correspondent) {
-            return this.correspondent.name;
+        if (this.channel?.channel_type === "chat" && this.channel?.correspondent) {
+            return this.channel.correspondent.name;
         }
         if (this.channel_name_member_ids.length && !this.name) {
             const nameParts = this.channel_name_member_ids
