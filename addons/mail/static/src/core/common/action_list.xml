@@ -25,7 +25,7 @@
 
 <t t-name="mail.Action">
     <t t-if="action.dropdown">
-        <t t-component="Dropdown" menuClass="(action.dropdownMenuClass ?? '') + ' ' + store.discussDropdownMenuClass(this)" position="action.dropdownPosition" state="dropdownState">
+        <t t-component="Dropdown" menuClass="(action.dropdownMenuClass ?? '') + ' ' + store.discussDropdownMenuClass(this)" position="action.dropdownPosition" state="action.dropdownState">
             <t t-call="mail.Action.main"/>
             <t t-set-slot="content">
                 <t t-if="action.dropdownTemplate" t-call="{{ action.dropdownTemplate }}">
