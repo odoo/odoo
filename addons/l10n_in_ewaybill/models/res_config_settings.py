@@ -24,6 +24,12 @@ class ResConfigSettings(models.TransientModel):
     def l10n_in_ewaybill_test(self):
         self._l10n_in_check_gst_number()
         ewaybill_api = EWayBillApi(self.company_id)
+        self.env['ir.logging']._l10n_in_log_message(
+            name=f'{self._name}({self.id})',
+            path='/l10n_in_edi_ewaybill/1/authenticate',
+            message='Verify E-waybill credentials',
+            func='_ewaybill_authenticate',
+        )
         try:
             ewaybill_api._ewaybill_authenticate()
         except EWayBillError as e:
