@@ -631,10 +631,6 @@ class AccountMove(models.Model):
     invoice_source_email = fields.Char(string='Source Email', tracking=True)
     invoice_partner_display_name = fields.Char(compute='_compute_invoice_partner_display_info', store=True)
     is_manually_modified = fields.Boolean()
-    is_self_billing = fields.Boolean(
-        string='Self Billing',
-        help="This bill is a self-billing invoice (that you create on behalf of your vendor).",
-    )
 
     # === Fiduciary mode fields === #
     quick_edit_mode = fields.Boolean(compute='_compute_quick_edit_mode')
@@ -5907,9 +5903,9 @@ class AccountMove(models.Model):
         template_xmlid = 'account.email_template_edi_invoice'
         if all(move.move_type == 'out_refund' for move in self):
             template_xmlid = 'account.email_template_edi_credit_note'
-        elif all(move.move_type == 'in_invoice' and move.is_self_billing for move in self):
+        elif all(move.move_type == 'in_invoice' and move.journal_id.is_self_billing for move in self):
             template_xmlid = 'account.email_template_edi_self_billing_invoice'
-        elif all(move.move_type == 'in_refund' and move.is_self_billing for move in self):
+        elif all(move.move_type == 'in_refund' and move.journal_id.is_self_billing for move in self):
             template_xmlid = 'account.email_template_edi_self_billing_credit_note'
         return self.env.ref(template_xmlid)
 

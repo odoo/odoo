@@ -576,10 +576,17 @@ class TestPeppolMessage(TestAccountMoveSendCommon, MailCommon):
         self.env.company.peppol_activate_self_billing_sending = True
         self.valid_partner.invoice_edi_format = 'ubl_bis3'
 
+        self_billing_journal = self.env['account.journal'].create({
+            'name': 'Self Billing',
+            'code': 'SB',
+            'type': 'purchase',
+            'is_self_billing': True,
+        })
+
         # Create a vendor bill (in_invoice) that can be sent as self-billed
         vendor_bill = self.env['account.move'].create({
             'move_type': 'in_invoice',
-            'is_self_billing': True,
+            'journal_id': self_billing_journal.id,
             'company_id': self.env.company.id,
             'partner_id': self.valid_partner.id,
             'date': '2023-01-01',
@@ -623,9 +630,16 @@ class TestPeppolMessage(TestAccountMoveSendCommon, MailCommon):
         self.env.company.peppol_activate_self_billing_sending = True
         self.valid_partner.invoice_edi_format = 'ubl_bis3'
 
+        self_billing_journal = self.env['account.journal'].create({
+            'name': 'Self Billing',
+            'code': 'SB',
+            'type': 'purchase',
+            'is_self_billing': True,
+        })
+
         vendor_bill = self.env['account.move'].create({
             'move_type': 'in_invoice',
-            'is_self_billing': True,
+            'journal_id': self_billing_journal.id,
             'company_id': self.env.company.id,
             'partner_id': self.valid_partner.id,
             'date': '2023-01-01',
