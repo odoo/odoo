@@ -247,9 +247,9 @@
             <div t-if="original_search" class="alert alert-warning mb-5">
                 No results found for '<span t-out="original_search"/>'. Showing results for '<span t-out="search_term"/>'.
             </div>
-            <div class="row mx-n2">
+            <div t-attf-class="row g-4 g-lg-3 g-xxl-4 #{'row-cols-1 row-cols-sm-2 row-cols-xl-4' if (is_public_user and not has_side_column) else 'row-cols-1 row-cols-sm-2 row-cols-xl-3'}">
                 <t t-foreach="channels" t-as="channel">
-                    <div class="col-12 col-sm-6 col-md-4 col-lg-3 px-2 d-flex">
+                    <div class="d-flex">
                         <t t-call="website_slides.course_card"/>
                     </div>
                 </t>
@@ -268,18 +268,18 @@
 </template>
 
 <template id='course_card' name="Course Card">
-    <div t-attf-class="card w-100 o_wslides_course_card mb-4 #{'o_wslides_course_unpublished' if not channel.is_published else ''}">
+    <a t-attf-href="/slides/#{slug(channel)}" t-title="channel.name" t-attf-class="card o_wslides_course_card w-100 h-100 text-decoration-none #{'o_wslides_course_unpublished' if not channel.is_published else ''}">
         <t t-set="channel_frontend_tags" t-value="channel.tag_ids.filtered(lambda tag: tag.color)"/>
-        <a t-attf-href="/slides/#{slug(channel)}" t-title="channel.name" style="height:120px">
-            <div t-field="channel.image_1920" t-options="{'widget': 'image', 'preview_image': 'image_512'}" class="o_wslides_background_image h-100"/>
+        <div>
+            <div t-field="channel.image_1920" t-options="{'widget': 'image', 'preview_image': 'image_512'}" class="o_wslides_background_image ratio ratio-16x9"/>
             <t t-if="channel.partner_has_new_content" t-call="website_slides.course_card_information"/>
-        </a>
-        <div class="card-body p-3">
-            <a class="card-title h5 mb-2 o_wslides_desc_truncate_2" t-attf-href="/slides/#{slug(channel)}" t-field="channel.name"/>
+        </div>
+        <div class="card-body">
+            <h3 class="o_line_clamp card-title h6" t-field="channel.name"/>
             <span t-if="not channel.is_published" class="badge text-bg-danger">Unpublished</span>
             <div class="card-text d-flex flex-column flex-grow-1 mt-1">
-                <div class="fw-light o_wslides_desc_truncate_3" t-field="channel.description_short"/>
-                <div t-if="channel_frontend_tags" class="mt-auto pt-1 o_wslides_desc_truncate_2_badges">
+                <small class="o_line_clamp" t-field="channel.description_short"/>
+                <div t-if="channel_frontend_tags" class="small o_wslides_desc_truncate_2_badges">
                     <t t-foreach="channel_frontend_tags" t-as="tag">
                         <t t-if="search_tags">
                             <span t-att-data-post="slide_query_url(tag=slugify_tags(search_tags.ids, toggle_tag_id=tag.id), my=search_my, search=search_term, slide_category=search_slide_category, prevent_redirect=True)"
@@ -293,21 +293,27 @@
                 </div>
             </div>
         </div>
-        <div class="card-footer bg-white text-600 px-3">
-            <div class="d-flex justify-content-between align-items-center">
-                <small t-if="channel.total_time" class="fw-bold" t-out="channel.total_time" t-options="{'widget': 'duration', 'unit': 'hour', 'round': 'minute'}"/>
-                <div class="d-flex flex-grow-1 justify-content-end">
-                    <t t-if="channel.is_member and channel.completed">
-                        <span class="badge text-bg-success pull-right"><i class="fa fa-check"/> Completed</span>
-                    </t>
-                    <div t-elif="channel.is_member and channel.channel_type != 'documentation'" class="progress w-50" style="height: 6px">
+        <div t-attf-class="card-footer d-flex align-items-center #{'justify-content-between' if channel.total_time else 'justify-content-end'}">
+            <t t-if="channel.completion and not channel.completed">
+                <div class="d-flex align-items-center gap-2 flex-basis-50">
+                    <div class="progress flex-grow-1" style="height: 6px">
                         <div class="progress-bar" role="progressbar" t-att-aria-valuenow="channel.completion" aria-valuemin="0" aria-valuemax="100" t-attf-style="width:#{channel.completion}%;" aria-label="Progress bar"/>
                     </div>
-                    <small t-else="" class="fw-bold"><t t-out="channel.total_slides"/> steps</small>
+                    <small><t t-out="channel.completion"/>%</small>
                 </div>
-            </div>
+                <button class="btn btn-sm btn-primary">Continue</button>
+            </t>
+            <t t-elif="channel.is_member and not channel.completion">
+                <small t-if="channel.total_time" t-out="channel.total_time" t-options="{'widget': 'duration', 'unit': 'hour', 'round': 'minute', 'format': 'narrow'}"/>
+                <button class="btn btn-sm btn-primary">Start now</button>
+            </t>
+            <span t-elif="channel.is_member and channel.completed" class="badge text-bg-success"><i class="fa fa-check" aria-hidden="true"/> Completed</span>
+            <t t-else="">
+                <small t-if="channel.total_time" t-out="channel.total_time" t-options="{'widget': 'duration', 'unit': 'hour', 'round': 'minute', 'format': 'narrow'}"/>
+                <small><t t-out="channel.total_slides"/> steps</small>
+            </t>
         </div>
-    </div>
+    </a>
 </template>
 
 <template id="course_card_information" name='Course Information'>
