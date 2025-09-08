@@ -1034,7 +1034,8 @@ class SaleOrder(models.Model):
         all_programs_status = {p: {'error': 'error'} for p in all_programs_to_check - domain_matching_programs}
         # Compute applicability and points given for all programs that passed the domain check
         # Note that points are computed with reward lines present
-        all_programs_status.update(self._program_check_compute_points(domain_matching_programs))
+        programs_result = self._program_check_compute_points(domain_matching_programs)
+        all_programs_status.update(programs_result)
         # Delay any unlink to the end of the function since they cause a full cache invalidation
         lines_to_unlink = self.env['sale.order.line']
         coupons_to_unlink = self.env['loyalty.card']
@@ -1088,6 +1089,7 @@ class SaleOrder(models.Model):
                     all_point_changes = [0]
                 for pe, points in zip(program_point_entries.sudo(), all_point_changes):
                     pe.points = points
+                # GDPF tried force entering this condition, no success.
                 if len(program_point_entries) < len(all_point_changes):
                     new_coupon_points = all_point_changes[len(program_point_entries):]
                     # next_order_coupons should be linked to the order's partner
@@ -1124,6 +1126,7 @@ class SaleOrder(models.Model):
         # +==========================================+
 
         # We will reuse these lines as much as possible, this resets the order in a reward-less state
+        # GDPF Here the points are faked reseted...
         reward_line_pool = self.order_line.filtered(lambda l: l.reward_id and l.coupon_id)._reset_loyalty()
         seen_rewards = set()
         line_rewards = []

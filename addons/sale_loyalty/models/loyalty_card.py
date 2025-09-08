@@ -16,6 +16,16 @@ class LoyaltyCard(models.Model):
         string="Sale Order Customer", comodel_name='res.partner', related='order_id.partner_id'
     )
 
+    def write(self, vals):
+        res = super().write(vals)
+        # GDPF Debugging write, weird behavior on new invoices.
+        return res
+
+    def create(self, vals):
+        res = super().create(vals)
+        # GDPF Debugging create, weird behavior on new invoices.
+        return res
+
     def _get_default_template(self):
         default_template = super()._get_default_template()
         if not default_template:
