@@ -47,7 +47,9 @@ test("No duplicated chat bubbles", async () => {
     // Make bubble of "John" chat
     await click(".o_menu_systray i[aria-label='Messages']");
     await click(".o-mail-MessagingMenu button", { text: "New Message" });
+    await contains(".o_command_name", { count: 5 });
     await insertText("input[placeholder='Search a conversation']", "John");
+    await contains(".o_command_name", { count: 3 });
     await click(".o_command_name", { text: "John" });
     await contains(".o-mail-ChatWindow", { text: "John" });
     await contains(".o-mail-ChatWindow", {
@@ -58,7 +60,9 @@ test("No duplicated chat bubbles", async () => {
     // Make bubble of "John" chat again
     await click(".o_menu_systray i[aria-label='Messages']");
     await click(".o-mail-MessagingMenu button", { text: "New Message" });
+    await contains(".o_command_name", { count: 5 });
     await insertText("input[placeholder='Search a conversation']", "John");
+    await contains(".o_command_name", { count: 3 });
     await click(".o_command_name", { text: "John" });
     await contains(".o-mail-ChatBubble[name='John']", { count: 0 });
     await contains(".o-mail-ChatWindow", { text: "John" });
