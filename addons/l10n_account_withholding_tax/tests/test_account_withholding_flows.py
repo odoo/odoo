@@ -76,8 +76,8 @@ class TestL10nAccountWithholdingTaxesFlows(TestTaxCommon, AnalyticCommon):
             {'balance': 1140.0,     'tax_ids': []},
             {'balance': -1150.0,    'tax_ids': []},
             {'balance': 10.0,       'tax_ids': []},
-            {'balance': 1000.0,     'tax_ids': withholding_tax.ids},
-            {'balance': -1000.0,    'tax_ids': []},
+            {'balance': 1000.0,     'tax_ids': []},
+            {'balance': -1000.0,    'tax_ids': withholding_tax.ids},
         ])
 
     def test_withholding_tax_before_payment(self):
@@ -1065,8 +1065,8 @@ class TestL10nAccountWithholdingTaxesFlows(TestTaxCommon, AnalyticCommon):
             {'balance': 900.0,     'tax_ids': [],                    'partner_id': self.partner_a.id},
             {'balance': -1000.0,   'tax_ids': [],                    'partner_id': self.partner_a.id},
             {'balance': 100.0,     'tax_ids': [],                    'partner_id': self.partner_a.id},
-            {'balance': 1000.0,    'tax_ids': withholding_tax.ids,   'partner_id': self.partner_a.id},
-            {'balance': -1000.0,   'tax_ids': [],                    'partner_id': self.partner_a.id},
+            {'balance': 1000.0,    'tax_ids': [],                    'partner_id': self.partner_a.id},
+            {'balance': -1000.0,   'tax_ids': withholding_tax.ids,   'partner_id': self.partner_a.id},
         ])
 
     def test_tax_repartition_on_refund(self):
