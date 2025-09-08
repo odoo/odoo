@@ -286,6 +286,16 @@ export class AnalyticDistribution extends Component {
         // Analytic Account fields
         line.analyticAccounts.map((account) => {
             const fieldName = this.planIdToColumn[account.planId];
+            const companyId = this.props.record.data.company_id && this.props.record.data.company_id[0];
+            const domain = companyId
+                ? [
+                    "&",
+                    ["root_plan_id", "=", account.planId],
+                    "|",
+                    ["company_id", "parent_of", companyId],
+                    ["company_id", "=", false],
+                  ]
+                : [["root_plan_id", "=", account.planId]];
             recordFields[fieldName] = {
                 string: account.planName,
                 relation: "account.analytic.account",
@@ -294,8 +304,7 @@ export class AnalyticDistribution extends Component {
                     fields: analyticAccountFields,
                     activeFields: analyticAccountFields,
                 },
-                // company domain might be required here
-                domain: [["root_plan_id", "=", account.planId]],
+                domain,
             };
             values[fieldName] =  account?.accountId || false;
         });
@@ -672,7 +681,10 @@ export class AnalyticDistribution extends Component {
 export const analyticDistribution = {
     component: AnalyticDistribution,
     supportedTypes: ["json"],
-    fieldDependencies: [{ name:"analytic_precision", type: "integer" }],
+    fieldDependencies: [
+        { name: "analytic_precision", type: "integer" },
+        { name: "company_id", type: "many2one" },
+    ],
     supportedOptions: [
         {
             label: _t("Disable save"),
