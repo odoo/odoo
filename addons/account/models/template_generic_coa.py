@@ -16,7 +16,7 @@ class AccountChartTemplate(models.AbstractModel):
         :rtype: dict
         """
         return {
-            'name': _("Generic Chart of Accounts"),
+            'name': _("Generic (Minimal) Chart of Accounts"),
             'country': None,
             'property_account_receivable_id': 'receivable',
             'property_account_payable_id': 'payable',
