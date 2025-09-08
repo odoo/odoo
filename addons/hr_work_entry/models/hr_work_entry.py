@@ -92,9 +92,6 @@ class HrWorkEntry(models.Model):
                     employee=employee.name,
                     date=contract_start,
                 ))
-            if len(contracts) > 1:  # YTI To check: Should never happen IMO
-                raise ValidationError(_("%(employee)s has multiple contracts on %(date)s. A work entry cannot overlap multiple contracts.",
-                                        employee=employee.name, date=contract_start))
             return dict(vals, version_id=contracts[0].id)
         return vals
 
