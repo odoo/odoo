@@ -11,7 +11,7 @@ import wSaleUtils from '@website_sale/js/website_sale_utils';
 export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, {
     selector: '.oe_website_sale',
     events: Object.assign({}, VariantMixin.events || {}, {
-        'change form .js_product:first input[name="add_qty"]': '_onChangeAddQuantity',
+        'change .js_product:first form input[name="add_qty"]': '_onChangeAddQuantity',
         'click a.js_add_cart_json': '_onChangeQuantity',
         'click .a-submit': '_onClickSubmit',
         'change form.js_attributes input, form.js_attributes select': '_onChangeAttribute',
