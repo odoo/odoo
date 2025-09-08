@@ -158,6 +158,25 @@ class CountryGroup(models.Model):
     country_ids = fields.Many2many('res.country', 'res_country_res_country_group_rel',
                                    'res_country_group_id', 'res_country_id', string='Countries')
 
+    @api.ondelete(at_uninstall=False)
+    def _unlink_except_country_groups(self):
+        default_country_groups = [
+            'europe',
+            'south_america',
+            'sepa_zone',
+            'gulf_cooperation_council',
+            'eurasian_economic_union',
+            'ch_and_li'
+        ]
+
+        # fetch all default country groups
+        default_group_ids = self.env['res.country.group']
+        for xml_id in default_country_groups:
+            default_group_ids |= self.env.ref(f'base.{xml_id}')
+
+        for group in self:
+            if group.id in default_group_ids.ids:
+                raise UserError(_('You cannot delete a default country group.'))
 
 class CountryState(models.Model):
     _description = "Country state"
