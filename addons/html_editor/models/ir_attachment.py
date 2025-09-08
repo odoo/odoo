@@ -51,6 +51,9 @@ class IrAttachment(models.Model):
                     attachment.image_src = '/web/image/%s-redirect/%s' % (attachment.id, name)
             else:
                 # Adding unique in URLs for cache-control
+                if not attachment.checksum:
+                    attachment.image_src = False
+                    continue
                 unique = attachment.checksum[:8]
                 if attachment.url:
                     # For attachments-by-url, unique is used as a cachebuster. They

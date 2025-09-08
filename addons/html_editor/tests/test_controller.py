@@ -232,3 +232,30 @@ class TestController(HttpCase):
         )
         self.assertEqual(200, response_abstract_model.status_code)
         self.assertTrue('error_msg' in response_abstract_model.text)
+
+    def test_06_no_img_data_modification(self):
+        self.authenticate("admin", "admin")
+        payload = self._build_payload({"name": "test", "data": self.pixel, "is_image": True})
+        response = self.url_open(
+            "/html_editor/attachment/add_data",
+            headers=self.headers,
+            data=json.dumps(payload),
+        ).json()
+        self.assertFalse("error" in response, "Upload failed: %s" % response.get("error", {}).get("message"))
+        attachment = self.env["ir.attachment"].search([("name", "=", "test")])
+        self.assertEqual(attachment.datas, self.pixel.encode("utf-8"))
+        payload2 = self._build_payload(
+            {
+                "name": attachment.name,
+                "data": None,
+                "res_id": attachment.res_id,
+                "res_model": attachment.res_model,
+            }
+        )
+        modified_image_src = self.url_open(
+            f"/html_editor/modify_image/{attachment.id}",
+            headers=self.headers,
+            data=json.dumps(payload2),
+        ).json()
+        self.assertFalse("error" in modified_image_src, "Image modification failed!")
+        self.assertFalse(modified_image_src["result"])
