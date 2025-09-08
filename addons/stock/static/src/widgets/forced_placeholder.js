@@ -5,8 +5,6 @@ import { buildM2OFieldDescription, Many2OneField } from "@web/views/fields/many2
 
 export class ForcedPlaceholder extends Many2One {
     static template = "stock.ForcedPlaceholder";
-    static components = { ...Many2One.components };
-    static props = { ...Many2One.props };
 }
 
 export class ForcedPlaceholderField extends Component {
