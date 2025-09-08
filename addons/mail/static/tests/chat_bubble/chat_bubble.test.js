@@ -46,6 +46,7 @@ test("No duplicated chat bubbles", async () => {
     await click(".o_menu_systray i[aria-label='Messages']");
     await click(".o-mail-MessagingMenu button", { text: "New Message" });
     await insertText("input[placeholder='Search a conversation']", "John");
+    await contains(".o_command_name", { count: 3 });
     await click(".o_command_name", { text: "John" });
     await contains(".o-mail-ChatWindow", { text: "John" });
     await contains(".o-mail-ChatWindow", { text: "The conversation is empty." }); // wait fully loaded
@@ -55,6 +56,7 @@ test("No duplicated chat bubbles", async () => {
     await click(".o_menu_systray i[aria-label='Messages']");
     await click(".o-mail-MessagingMenu button", { text: "New Message" });
     await insertText("input[placeholder='Search a conversation']", "John");
+    await contains(".o_command_name", { count: 3 });
     await click(".o_command_name", { text: "John" });
     await contains(".o-mail-ChatBubble[name='John']", { count: 0 });
     await contains(".o-mail-ChatWindow", { text: "John" });

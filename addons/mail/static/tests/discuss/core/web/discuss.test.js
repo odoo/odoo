@@ -110,7 +110,8 @@ test("can make a DM chat", async () => {
     await contains(".o-mail-DiscussSidebar-item", { text: "Mario", count: 0 });
     await click("input[placeholder='Find or start a conversation']");
     await insertText("input[placeholder='Search a conversation']", "mario");
-    await click("a", { text: "Mario" });
+    await contains(".o_command_name", { count: 3 });
+    await click(".o_command_name", { text: "Mario" });
     await contains(".o-mail-DiscussSidebar-item", { text: "Mario" });
     await contains(".o-mail-Message", { count: 0 });
     const channelId = pyEnv["discuss.channel"].search([["name", "=", "Mario, Mitchell Admin"]]);
@@ -159,7 +160,8 @@ test("Chat is pinned on other tabs when joined", async () => {
     await openDiscuss(undefined, { target: env2 });
     await click("input[placeholder='Find or start a conversation']", { target: env1 });
     await insertText("input[placeholder='Search a conversation']", "Jer", { target: env1 });
-    await click("a", { text: "Jerry Golay", target: env1 });
+    await contains(".o_command_name", { count: 3 });
+    await click(".o_command_name", { text: "Jerry Golay", target: env1 });
     await contains(".o-mail-DiscussSidebar-item", { target: env1, text: "Jerry Golay" });
     await contains(".o-mail-DiscussSidebar-item", { target: env2, text: "Jerry Golay" });
 });

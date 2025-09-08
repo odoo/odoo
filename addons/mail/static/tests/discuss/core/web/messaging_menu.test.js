@@ -31,6 +31,7 @@ test("can make DM chat in mobile", async () => {
     await click("button", { text: "Chat" });
     await click("button", { text: "Start a conversation" });
     await insertText("input[placeholder='Search a conversation']", "Gandalf");
+    await contains(".o_command_name", { count: 3 });
     await click(".o_command_name", { text: "Gandalf" });
     await contains(".o-mail-ChatWindow", { text: "Gandalf" });
 });
@@ -45,7 +46,8 @@ test("can search channel in mobile", async () => {
     await click("button", { text: "Channel" });
     await click("button", { text: "Start a conversation" });
     await insertText("input[placeholder='Search a conversation']", "Gryff");
-    await click("a", { text: "Gryffindors" });
+    await contains(".o_command_name", { count: 3 });
+    await click(".o_command_name", { text: "Gryffindors" });
     await contains(".o-mail-ChatWindow div[title='Gryffindors']");
 });
 
