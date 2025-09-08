@@ -916,23 +916,23 @@ async function search(request) {
         ["channel_type", "!=", "chat"],
     ];
     const priority_conditions = [[["is_member", "=", true], ...base_domain], base_domain];
-    const channels = new Set();
+    const channelIds = new Set();
     let remaining_limit;
     for (const domain of priority_conditions) {
-        remaining_limit = limit - channels.size;
+        remaining_limit = limit - channelIds.size;
         if (remaining_limit <= 0) {
             break;
         }
-        const channelIds = DiscussChannel.search(
-            Domain.and([[["id", "not in", [...channels]]], domain]).toList(),
+        const partialChannelIds = DiscussChannel.search(
+            Domain.and([[["id", "not in", [...channelIds]]], domain]).toList(),
             undefined,
             remaining_limit
         );
-        for (const channelId of channelIds) {
-            channels.add(channelId);
+        for (const channelId of partialChannelIds) {
+            channelIds.add(channelId);
         }
     }
-    store.add(channels);
+    store.add(DiscussChannel.browse(channelIds));
     ResPartner._search_for_channel_invite(store, term, undefined, limit);
     return store.get_result();
 }
