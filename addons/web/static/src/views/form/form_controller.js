@@ -331,6 +331,10 @@ export class FormController extends Component {
         }
 
         this.deleteRecordsWithConfirmation = useDeleteRecords(this.model);
+
+        this.propertiesState = useState({
+            editable: false,
+        });
     }
 
     get cogMenuProps() {
@@ -512,8 +516,11 @@ export class FormController extends Component {
                 isAvailable: () => activeActions.addPropertyFieldValue,
                 sequence: 10,
                 icon: "fa fa-cogs",
-                description: _t("Edit Properties"),
-                callback: () => this.model.bus.trigger("PROPERTY_FIELD:EDIT"),
+                description: this.propertiesState.editable ? _t("Save Properties") : _t("Edit Properties"),
+                callback: () => {
+                    this.propertiesState.editable = !this.propertiesState.editable;
+                    this.model.bus.trigger("PROPERTY_FIELD:EDIT", { editable: this.propertiesState.editable });
+                },
             },
             duplicate: {
                 isAvailable: () => activeActions.create && activeActions.duplicate,

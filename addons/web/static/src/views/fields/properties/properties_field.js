@@ -69,7 +69,12 @@ export class PropertiesField extends Component {
 
         // Properties can be added from the cog menu of the form controller
         if (this.env.config?.viewType === "form") {
-            useBus(this.env.model.bus, "PROPERTY_FIELD:EDIT", async () => {
+            useBus(this.env.model.bus, "PROPERTY_FIELD:EDIT", async (ev) => {
+                if (!ev.detail.editable) {
+                    this.state.isInEditMode = false;
+                    return;
+                }
+
                 if (this.props.readonly || this.state.isInEditMode) {
                     return;
                 }
