@@ -5,6 +5,7 @@ import * as PartnerList from "@point_of_sale/../tests/tours/utils/partner_list_u
 import * as TextInputPopup from "@point_of_sale/../tests/tours/utils/text_input_popup_util";
 import * as Dialog from "@point_of_sale/../tests/tours/utils/dialog_util";
 import * as Chrome from "@point_of_sale/../tests/tours/utils/chrome_util";
+import * as PaymentScreen from "@point_of_sale/../tests/tours/utils/payment_screen_util";
 
 export function clickLine(productName, quantity = "1.0") {
     return [
@@ -684,18 +685,7 @@ export function closePos() {
 
 export function finishOrder() {
     return [
-        {
-            isActive: ["desktop"],
-            content: "validate the order",
-            trigger: ".payment-screen .button.next.highlight:visible",
-            run: "click",
-        },
-        {
-            isActive: ["mobile"],
-            content: "validate the order",
-            trigger: ".payment-screen .btn-switchpane:contains('Validate')",
-            run: "click",
-        },
+        ...PaymentScreen.clickValidate(),
         Chrome.isSyncStatusConnected(),
         {
             isActive: ["desktop"],
