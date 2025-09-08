@@ -61,7 +61,7 @@ export class SaleOrderLineListRenderer extends ProductLabelSectionAndNoteListRen
      * while accessing comboColumns
      */
     get comboColumns() {
-        return [this.titleField, 'product_uom_qty', 'discount'];
+        return [this.titleField, ...this.props.aggregatedFields, 'product_uom_qty', 'discount'];
     }
 
     /**
@@ -115,26 +115,26 @@ export class SaleOrderLineListRenderer extends ProductLabelSectionAndNoteListRen
         const canProceed = await this.props.list.leaveEditMode({ canAbandon: false });
         if (!canProceed) return;
 
-        const { movingProducts, targetProducts } = this.getComboSwapPairs(record, direction);
-        return this.swapSections(movingProducts, targetProducts);
+        const { movingRecords, targetRecords } = this.getComboSwapPairs(record, direction);
+        return this.swapSections(movingRecords, targetRecords);
     }
 
     getComboSwapPairs(record, direction) {
-        const comboProducts = getComboRecords(this.props.list.records, record);
+        const comboRecords = getComboRecords(this.props.list.records, record);
 
         if (direction === 'up') {
             return {
-                movingProducts: this.getPreviousRecords(record),
-                targetProducts: comboProducts,
+                movingRecords: this.getPreviousRecords(record),
+                targetRecords: comboRecords,
             };
         }
         if (direction === 'down') {
             return {
-                movingProducts: comboProducts,
-                targetProducts: this.getNextRecords(record),
+                movingRecords: comboRecords,
+                targetRecords: this.getNextRecords(record),
             };
         }
-        return { movingProducts: [], targetProducts: [] };
+        return { movingRecords: [], targetRecords: [] };
     }
 
     getPreviousRecords(record) {
@@ -156,6 +156,33 @@ export class SaleOrderLineListRenderer extends ProductLabelSectionAndNoteListRen
             return getComboRecords(records, nextRecord);
         }
         return nextRecord ? [nextRecord] : false;
+    }
+
+    canUseFormatter(column, record) {
+        if (
+            this.isCombo(record) &&
+            this.props.aggregatedFields.includes(column.name)
+        ) {
+            return true;
+        }
+        return super.canUseFormatter(column, record);
+    }
+
+    // For totals on combo lines
+    getFormattedValue(column, record) {
+        if (this.isCombo(record) && this.props.aggregatedFields.includes(column.name)) {
+            const total = getComboRecords(this.props.list.records, record)
+                .reduce((total, record) => total + record.data[column.name], 0);
+
+            const formatter = registry.category('formatters').get(column.fieldType, (val) => val);
+
+            return formatter(total, {
+                ...formatter.extractOptions?.(column),
+                data: record.data,
+                field: record.fields[column.name],
+            });
+        }
+        return super.getFormattedValue(column, record);
     }
 
     isCombo(record) {
