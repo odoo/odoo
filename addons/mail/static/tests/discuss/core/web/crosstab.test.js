@@ -1,8 +1,6 @@
 import {
     click,
-    contains,
     defineMailModels,
-    insertText,
     openDiscuss,
     start,
     startServer,
@@ -15,17 +13,16 @@ defineMailModels();
 
 test("Channel subscription is renewed when channel is manually added", async () => {
     const pyEnv = await startServer();
-    pyEnv["discuss.channel"].create({ name: "General", channel_member_ids: [] });
+    const channelId = pyEnv["discuss.channel"].create({ name: "General", channel_member_ids: [] });
     await start();
     mockService("bus_service", {
         forceUpdateChannels() {
             asyncStep("update-channels");
         },
     });
-    await openDiscuss();
-    await click("input[placeholder='Search conversations']");
-    await insertText("input[placeholder='Search a conversation']", "General");
-    await click("a", { text: "General" });
-    await contains(".o-mail-DiscussSidebar-item", { text: "General" });
+    await openDiscuss(channelId);
+    await click("[title='Invite People']");
+    await click(".o-discuss-ChannelInvitation-selectable", { text: "Mitchell Admin" });
+    await click("[title='Invite']:enabled");
     await waitForSteps(["update-channels"]);
 });
