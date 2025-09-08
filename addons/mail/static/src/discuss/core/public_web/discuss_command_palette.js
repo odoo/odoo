@@ -239,7 +239,9 @@ export class DiscussCommandPalette {
                     imgUrl: thread.parent_channel_id?.avatarUrl ?? thread.avatarUrl,
                     channel: thread.channel_type !== "chat" ? thread : undefined,
                     persona:
-                        thread.channel_type === "chat" ? thread.correspondent.persona : undefined,
+                        thread.channel_type === "chat"
+                            ? thread.channel.correspondent.persona
+                            : undefined,
                     counter: thread.importantCounter,
                 },
             };

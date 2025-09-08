@@ -21,27 +21,27 @@ patch(DiscussCommandPalette.prototype, {
         const CATEGORY_LIMIT = 3;
         if (!this.cleanedTerm) {
             const limitedMentioned = importantChannels.slice(0, CATEGORY_LIMIT);
-            for (const channel of limitedMentioned) {
-                this.commands.push(this.makeDiscussCommand(channel, DISCUSS_MENTIONED));
-                if (channel.channel_type === "chat") {
-                    mentionedSet.add(channel.correspondent.persona);
+            for (const thread of limitedMentioned) {
+                this.commands.push(this.makeDiscussCommand(thread, DISCUSS_MENTIONED));
+                if (thread.channel_type === "chat") {
+                    mentionedSet.add(thread.channel.correspondent.persona);
                 } else {
-                    mentionedSet.add(channel);
+                    mentionedSet.add(thread);
                 }
             }
             const limitedRecent = recentChannels
                 .filter(
-                    (channel) =>
-                        !mentionedSet.has(channel) &&
-                        !mentionedSet.has(channel.correspondent?.persona)
+                    (thread) =>
+                        !mentionedSet.has(thread) &&
+                        !mentionedSet.has(thread.channel.correspondent?.persona)
                 )
                 .slice(0, CATEGORY_LIMIT);
-            for (const channel of limitedRecent) {
-                this.commands.push(this.makeDiscussCommand(channel, DISCUSS_RECENT));
-                if (channel.channel_type === "chat") {
-                    recentSet.add(channel.correspondent.persona);
+            for (const thread of limitedRecent) {
+                this.commands.push(this.makeDiscussCommand(thread, DISCUSS_RECENT));
+                if (thread.channel_type === "chat") {
+                    recentSet.add(thread.channel.correspondent.persona);
                 } else {
-                    recentSet.add(channel);
+                    recentSet.add(thread);
                 }
             }
         }
