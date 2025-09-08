@@ -7,6 +7,7 @@ import * as Dialog from "@point_of_sale/../tests/generic_helpers/dialog_util";
 import * as Chrome from "@point_of_sale/../tests/pos/tours/utils/chrome_util";
 import { LONG_PRESS_DURATION } from "@point_of_sale/utils";
 import { queryFirst } from "@odoo/hoot-dom";
+import * as PaymentScreen from "@point_of_sale/../tests/pos/tours/utils/payment_screen_util";
 
 export function firstProductIsFavorite(name) {
     return [
@@ -777,18 +778,7 @@ export function closePos() {
 
 export function finishOrder() {
     return [
-        {
-            isActive: ["desktop"],
-            content: "validate the order",
-            trigger: ".payment-screen .button.next.highlight:visible",
-            run: "click",
-        },
-        {
-            isActive: ["mobile"],
-            content: "validate the order",
-            trigger: ".payment-screen .btn-switchpane:contains('Validate')",
-            run: "click",
-        },
+        ...PaymentScreen.clickValidate(),
         Chrome.isSyncStatusConnected(),
         {
             isActive: ["desktop"],
