@@ -57,4 +57,18 @@ export class ShapeSelector extends BaseOptionComponent {
             }
         }
     }
+
+    onClose() {
+        this.rootRef.el.parentElement
+            .querySelector(".hb-overlay-panel-header div[role='button']")
+            .click();
+    }
+
+    onFocusIn(ev) {
+        ev.target.dispatchEvent(new Event("pointerenter"));
+    }
+
+    onFocusOut(ev) {
+        ev.target.dispatchEvent(new Event("pointerleave"));
+    }
 }

@@ -1,6 +1,5 @@
 import { BaseOptionComponent, useDomState } from "@html_builder/core/utils";
 import { toRatio } from "@html_builder/utils/utils";
-import { _t } from "@web/core/l10n/translation";
 import { ShapeSelector } from "@html_builder/plugins/shape/shape_selector";
 import { deepCopy } from "@web/core/utils/objects";
 
@@ -12,6 +11,7 @@ export class ImageShapeOption extends BaseOptionComponent {
     static defaultProps = {
         withAnimatedShapes: true,
     };
+    static components = { ShapeSelector };
     setup() {
         super.setup();
         this.customizeTabPlugin = this.env.editor.shared.customizeTab;
@@ -66,17 +66,5 @@ export class ImageShapeOption extends BaseOptionComponent {
         }
         const colors = img.dataset.shapeColors.split(";");
         return colors[shapeIndex];
-    }
-    showImageShapes() {
-        this.customizeTabPlugin.openCustomizeComponent(
-            ShapeSelector,
-            this.env.getEditingElements(),
-            {
-                shapeActionId: "setImageShape",
-                buttonWrapperClassName: "o-hb-img-shape-btn",
-                selectorTitle: _t("Shapes"),
-                shapeGroups: this.getFilteredGroups(),
-            }
-        );
     }
 }

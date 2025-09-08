@@ -4,8 +4,7 @@
     font-size: $o-we-sidebar-font-size * 1.4;
 }
 
-.o-hb-select-pager-tab-container {
-    border-top: $o-we-border-width solid $o-we-bg-lighter;
+.o_pager_nav {
     border-bottom: $o-we-border-width solid $o-we-bg-lighter;
 }
 
@@ -55,6 +54,9 @@
         &:hover,
         &:focus-visible {
             background-color: transparent;
+        }
+        &:focus {
+            border: var(--btn-active-border-color) 1px solid;
         }
     }
     .o-hb-bg-shape-btn {
