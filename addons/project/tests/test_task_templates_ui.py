@@ -13,9 +13,10 @@ class TestTaskTemplatesTour(HttpCase):
                 "name": "New",
             })],
         })
-        cls.template_task = cls.env["project.task.template"].create({
+        cls.template_task = cls.env["project.task"].create({
             "name": "Template",
             "project_id": cls.project_with_templates.id,
+            "is_template": True,
             "description": "Template description",
         })
 
