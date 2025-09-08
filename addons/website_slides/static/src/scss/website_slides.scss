@@ -50,26 +50,6 @@ $line-height-truncate: 1.5em;
 }
 
 .o_wslides_body {
-    > #wrapwrap > main {
-        // Change default "body" background in case of website_slides pages.
-        // Note: this only affects the "main" element as we don't want (semi-)
-        // transparent header/footer to be impacted and we also only want the
-        // "box" of boxed layouts to be impacted (not the color behind the box).
-        background-color: $o-wslides-color-bg;
-    }
-
-    .o_wslides_home_nav {
-        top: -40px;
-
-        @include media-breakpoint-up(lg) {
-            .o_wslides_nav_navbar_right {
-                padding-left: $spacer;
-                margin-left: auto;
-                border-left: 1px solid $border-color;
-            }
-        }
-    }
-
     .o_wslides_js_slide_like_up,
     .o_wslides_js_slide_like_down {
         user-select: none;
