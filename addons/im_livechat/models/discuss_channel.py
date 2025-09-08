@@ -215,7 +215,8 @@ class DiscussChannel(models.Model):
     def _compute_duration(self):
         for record in self:
             end = record.livechat_end_dt or fields.Datetime.now()
-            record.duration = (end - record.create_date).total_seconds() / 3600
+            start = record.create_date or fields.Datetime.now()
+            record.duration = (end - start).total_seconds() / 3600
 
     @api.depends("livechat_end_dt")
     def _compute_livechat_status(self):
