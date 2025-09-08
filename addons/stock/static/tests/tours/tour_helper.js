@@ -7,3 +7,14 @@ export function assert(current, expected, info) {
         fail(`${info}: "${current}" instead of "${expected}".`);
     }
 }
+
+export function freezeDateTime(date, format = "yyyy-MM-dd HH:mm:ss") {
+    return [
+        {
+            trigger: "body",
+            run: () => {
+                luxon.DateTime.now = () => luxon.DateTime.fromFormat(date, format);
+            },
+        },
+    ];
+}
