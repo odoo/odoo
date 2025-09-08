@@ -34,18 +34,20 @@ export class TimeOffCalendarModel extends CalendarModel {
                 result.title = [employee, result.title].join(" ");
             }
         }
-        if (rawRecord.request_unit_half) result.request_date_from_period = rawRecord.request_date_from_period;
+        if (rawRecord.request_unit_half) {
+            result.request_date_from_period = rawRecord.request_date_from_period;
+        }
         return result;
     }
 
     makeContextDefaults(record) {
         const context = super.makeContextDefaults(record);
         let default_employee_id = this.employeeId;
-        if(context['active_model'] === 'hr.employee') {
-            default_employee_id = context.active_id
+        if (context["active_model"] === "hr.employee") {
+            default_employee_id = context.active_id;
         }
         if (default_employee_id) {
-            context["default_employee_id"] = default_employee_id
+            context["default_employee_id"] = default_employee_id;
         }
         function deserialize(str) {
             // "YYYY-MM-DD".length == 10
@@ -53,10 +55,10 @@ export class TimeOffCalendarModel extends CalendarModel {
         }
         if (["week", "day"].includes(this.scale)) {
             context["default_request_unit_hours"] = true;
-            const hour_from = deserialize(context['default_date_from']??this.date);
-            const hour_to = deserialize(context['default_date_to']??this.date);
-            context['default_request_hour_from'] = hour_from.hour + hour_from.minute / 60;
-            context['default_request_hour_to'] = hour_to.hour + hour_to.minute / 60;
+            const hour_from = deserialize(context["default_date_from"] ?? this.date);
+            const hour_to = deserialize(context["default_date_to"] ?? this.date);
+            context["default_request_hour_from"] = hour_from.hour + hour_from.minute / 60;
+            context["default_request_hour_to"] = hour_to.hour + hour_to.minute / 60;
         }
 
         if ("default_date_from" in context) {
@@ -107,7 +109,7 @@ export class TimeOffCalendarModel extends CalendarModel {
     }
 
     get employeeId() {
-        return (this.meta.context.employee_id && this.meta.context.employee_id[0]) || null;
+        return this.meta.context.active_id || null;
     }
 
     fetchRecords(data) {
@@ -116,8 +118,14 @@ export class TimeOffCalendarModel extends CalendarModel {
         if (!this.employeeId) {
             context["short_name"] = 1;
         }
-        const fieldNamesToAdd = resModel === "hr.leave" ? ["request_unit_half", "request_date_from_period"] : [];
-        return this.orm.searchRead(resModel, this.computeDomain(data), [...fieldNames, ...fieldNamesToAdd], { context });
+        const fieldNamesToAdd =
+            resModel === "hr.leave" ? ["request_unit_half", "request_date_from_period"] : [];
+        return this.orm.searchRead(
+            resModel,
+            this.computeDomain(data),
+            [...fieldNames, ...fieldNamesToAdd],
+            { context }
+        );
     }
 
     computeDomain(data) {
