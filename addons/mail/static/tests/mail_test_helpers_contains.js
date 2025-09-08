@@ -324,6 +324,7 @@ function createFakeDataTransfer(files) {
         effectAllowed: "all",
         files,
         items: [],
+        getData: () => "",
         types: ["Files"],
     };
 }

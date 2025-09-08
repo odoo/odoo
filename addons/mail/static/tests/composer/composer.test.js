@@ -918,7 +918,7 @@ test("remove an attachment from composer does not need any confirmation", async 
     await contains(".o-mail-AttachmentList .o-mail-AttachmentContainer", { count: 0 });
 });
 
-test("composer: paste attachments", async () => {
+test("[text composer] composer: paste attachments", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "test" });
     const text = new File(["hello, world"], "text.txt", { type: "text/plain" });
@@ -927,6 +927,23 @@ test("composer: paste attachments", async () => {
     await contains(".o-mail-Composer-input");
     await contains(".o-mail-AttachmentList .o-mail-AttachmentContainer", { count: 0 });
     await pasteFiles(".o-mail-Composer-input", [text]);
+    await contains(
+        ".o-mail-AttachmentList .o-mail-AttachmentContainer:not(.o-isUploading):contains(text.txt)"
+    );
+});
+
+test.tags("html composer");
+test("composer: paste attachments", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "test" });
+    const text = new File(["hello, world"], "text.txt", { type: "text/plain" });
+    await start();
+    const composerService = getService("mail.composer");
+    composerService.setHtmlComposer();
+    await openDiscuss(channelId);
+    await contains(".o-mail-Composer-html.odoo-editor-editable");
+    await contains(".o-mail-AttachmentList .o-mail-AttachmentContainer", { count: 0 });
+    await pasteFiles(".o-mail-Composer-html.odoo-editor-editable", [text]);
     await contains(
         ".o-mail-AttachmentList .o-mail-AttachmentContainer:not(.o-isUploading):contains(text.txt)"
     );

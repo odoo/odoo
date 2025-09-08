@@ -6,8 +6,10 @@ import { withSequence } from "@html_editor/utils/resource";
 
 export class MailComposerPlugin extends Plugin {
     static id = "mail.composer";
-    static dependencies = ["hint", "input", "selection"];
+    static dependencies = ["clipboard", "hint", "input", "selection"];
     resources = {
+        before_paste_handlers: this.config.composerPluginDependencies.onBeforePaste.bind(this),
+        bypass_paste_image_files: () => true,
         hints: [
             withSequence(1, {
                 selector: `.odoo-editor-editable > ${baseContainerGlobalSelector}:only-child`,
