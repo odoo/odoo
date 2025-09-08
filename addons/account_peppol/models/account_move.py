@@ -43,6 +43,16 @@ class AccountMove(models.Model):
             if move.company_id.peppol_activate_self_billing_sending and move._is_exportable_as_self_invoice():
                 move.display_send_button = True
 
+    def _compute_display_is_self_billing_field(self):
+        # EXTENDS 'account'
+        super()._compute_display_is_self_billing_field()
+        for move in self:
+            if (
+                move.move_type in ('in_invoice', 'in_refund')
+                and move.company_id.peppol_activate_self_billing_sending
+            ):
+                move.display_is_self_billing_field = True
+
     @api.depends('state')
     def _compute_peppol_move_state(self):
         for move in self:
