@@ -21,7 +21,7 @@
         <xpath expr="//t[@id='o_we_media_library_images']" position="replace">
             <t id='o_we_media_library_images' t-if="['all', 'unsplash', 'media-library'].includes(state.searchService)">
                 <t t-foreach="combinedRecords" t-as="record" t-key="record.id">
-                    <t t-call="web_editor.ExternalImage"/>
+                    <t t-call="html_editor.ExternalImage"/>
                 </t>
             </t>
         </xpath>
