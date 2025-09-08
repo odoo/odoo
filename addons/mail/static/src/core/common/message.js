@@ -348,7 +348,7 @@ export class Message extends Component {
             this.state.isHovered ||
             this.state.isClicked ||
             this.emojiPicker?.isOpen ||
-            this.state.moreAction?.definition.isActive
+            Boolean(this.state.moreAction?.isActive)
         );
     }
 

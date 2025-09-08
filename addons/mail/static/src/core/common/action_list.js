@@ -1,8 +1,7 @@
 import { CallDropdown } from "@mail/discuss/call/common/call_dropdown";
 import { attClassObjectToString } from "@mail/utils/common/format";
-import { Component, onWillUnmount, useEffect } from "@odoo/owl";
+import { Component, onWillUnmount } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
-import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 
 import { useService } from "@web/core/utils/hooks";
@@ -39,15 +38,8 @@ class Action extends Component {
         this.ui = useService("ui");
         this.attClassObjectToString = attClassObjectToString;
         if (this.props.action.definition?.isMoreAction) {
-            this.dropdownState = useDropdownState();
-            useEffect(
-                () => {
-                    this.props.action.definition.isActive = this.dropdownState.isOpen;
-                },
-                () => [this.dropdownState?.isOpen]
-            );
             onWillUnmount(() => {
-                this.props.action.definition.isActive = false;
+                this.props.action.dropdownState.close();
             });
         }
     }
