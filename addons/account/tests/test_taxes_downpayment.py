@@ -1,3 +1,4 @@
+from odoo import Command
 from odoo.addons.account.tests.common import TestTaxCommon
 from odoo.tests import tagged
 
@@ -2058,5 +2059,53 @@ class TestTaxesDownPayment(TestTaxCommon):
 
     def test_no_taxes_generic_helpers(self):
         document, amount_type, amount, expected_values = self._test_no_taxes()
+        self.assert_down_payment(document, amount_type, amount, expected_values)
+        self._run_js_tests()
+
+    def _test_reverse_charge_tax(self):
+        tax = self.percent_tax(
+            21,
+            invoice_repartition_line_ids=[
+                Command.create({'factor_percent': 100, 'repartition_type': 'base'}),
+                Command.create({'factor_percent': 100, 'repartition_type': 'tax'}),
+                Command.create({'factor_percent': -100, 'repartition_type': 'tax'}),
+            ],
+            refund_repartition_line_ids=[
+                Command.create({'factor_percent': 100, 'repartition_type': 'base'}),
+                Command.create({'factor_percent': 100, 'repartition_type': 'tax'}),
+                Command.create({'factor_percent': -100, 'repartition_type': 'tax'}),
+            ],
+        )
+        document_params = self.init_document(lines=[
+            {'price_unit': 12.0, 'tax_ids': tax},
+        ])
+        document = self.populate_document(document_params)
+
+        expected_values = {
+            'same_tax_base': True,
+            'currency_id': self.currency.id,
+            'base_amount_currency': 3.0,
+            'tax_amount_currency': 0.0,
+            'total_amount_currency': 3.0,
+            'subtotals': [
+                {
+                    'name': "Untaxed Amount",
+                    'base_amount_currency': 3.0,
+                    'tax_amount_currency': 0.0,
+                    'tax_groups': [
+                        {
+                            'id': self.tax_groups[0].id,
+                            'base_amount_currency': 3.0,
+                            'tax_amount_currency': 0.0,
+                            'display_base_amount_currency': 3.0,
+                        },
+                    ],
+                },
+            ],
+        }
+        return document, 'fixed', 3.0, expected_values
+
+    def test_reverse_charge_generic_helpers(self):
+        document, amount_type, amount, expected_values = self._test_reverse_charge_tax()
         self.assert_down_payment(document, amount_type, amount, expected_values)
         self._run_js_tests()

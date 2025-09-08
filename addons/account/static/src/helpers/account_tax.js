@@ -727,6 +727,8 @@ export const accountTaxHelpers = {
             let index = 0;
             for (const tax_data of taxes_data) {
                 const tax = tax_data.tax;
+                const reverse_charge_sign = tax_data.is_reverse_charge ? -1 : 1;
+
                 tax_data.base_amount_currency = roundPrecision(
                     tax_data.raw_base_amount_currency,
                     currency.rounding
@@ -774,7 +776,7 @@ export const accountTaxHelpers = {
                 let raw_tax_amount = null;
                 if ("tax_amount_currency" in current_manual_tax_amounts) {
                     raw_tax_amount_currency = roundPrecision(
-                        current_manual_tax_amounts.tax_amount_currency,
+                        reverse_charge_sign * current_manual_tax_amounts.tax_amount_currency,
                         currency.rounding
                     );
                     raw_tax_amount = rate
@@ -787,7 +789,7 @@ export const accountTaxHelpers = {
                 }
                 if ("tax_amount" in current_manual_tax_amounts) {
                     raw_tax_amount = roundPrecision(
-                        current_manual_tax_amounts.tax_amount,
+                        reverse_charge_sign * current_manual_tax_amounts.tax_amount,
                         company.currency_id.rounding
                     );
                 }
@@ -1787,6 +1789,10 @@ export const accountTaxHelpers = {
             const first_batch = taxes_data[0].batch;
             base_line.manual_tax_amounts = {};
             for (const tax_data of taxes_data) {
+                if (tax_data.is_reverse_charge) {
+                    continue;
+                }
+
                 const tax = tax_data.tax;
                 const tax_amounts = {
                     tax_amount_currency: tax_data.tax_amount_currency,
