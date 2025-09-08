@@ -30,6 +30,7 @@ class NavTabsStyleOptionPlugin extends Plugin {
             getButtons: this.getActiveOverlayButtons.bind(this),
         }),
         is_unremovable_selector: ".nav-item",
+        unsplittable_node_predicates: this.isUnsplittable,
     };
     isNavItem(el) {
         return el.matches(".nav-item") && !!el.closest(".s_tabs, .s_tabs_images");
@@ -84,6 +85,15 @@ class NavTabsStyleOptionPlugin extends Plugin {
             nextNavItemEl.after(this.overlayTarget);
             nextTabPaneEl.after(tabPaneEl);
         }
+    }
+
+    isUnsplittable(node) {
+        return (
+            node &&
+            node.nodeType === Node.ELEMENT_NODE &&
+            node.closest(".s_tabs, .s_tabs_images") &&
+            node.closest("li")?.classList.contains("nav-item")
+        );
     }
 }
 
