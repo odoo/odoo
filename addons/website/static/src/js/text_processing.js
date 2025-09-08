@@ -1,5 +1,4 @@
 import { isVisible } from "@web/core/utils/ui";
-import * as OdooEditorLib from "@web_editor/js/editor/odoo-editor/src/utils/utils";
 
 //TODO: Delete higlight function (duplicate whith highlight_utils) when deleting snippets options
 // SVG generator: contains all information needed to draw highlight SVGs
@@ -398,66 +397,6 @@ export function removeTextHighlight(topTextEl) {
         }
     }
     topTextEl.normalize();
-}
-
-/**
- * Used to change or adjust the highlight effect when it's needed (E.g. on
- * window / text container "resize").
- *
- * @param {HTMLElement} textEl The top text highlight element.
- * @param {String} highlightID The new highlight to apply (or the old one
- * if we just want to adapt the effect).
- */
-export function switchTextHighlight(textEl, highlightID) {
-    if (!isVisible(textEl)) {
-        // No need to adapt the effects on hidden targets, since they will be
-        // immediately fixed by the `resizeObserver` once they become visible.
-        // This will also prevent conflicts with the field's synchronizations
-        // in some specific cases (e.g. desktop & mobile navbar duplicated
-        // fields with highlighted content).
-        return;
-    }
-    highlightID = highlightID || getCurrentTextHighlight(textEl);
-    const ownerDocument = textEl.ownerDocument;
-    const sel = ownerDocument.getSelection();
-    const restoreSelection = sel.rangeCount === 1 && textEl.contains(sel.anchorNode);
-    let rangeCollapsed,
-    cursorEndPosition = 0,
-    rangeSize = 0;
-
-    // Because of text highlight adaptations, the selection offset will
-    // be lost, which will cause issues when typing and deleting text...
-    // The goal here is to preserve the selection to restore it for the
-    // new elements after the update when it's needed.
-    if (restoreSelection) {
-        const range = sel.getRangeAt(0);
-        rangeSize = range.toString().length;
-        rangeCollapsed = range.collapsed;
-        // We need the position related to the `.o_text_highlight` element.
-        const globalRange = range.cloneRange();
-        globalRange.selectNodeContents(textEl);
-        globalRange.setEnd(range.endContainer, range.endOffset);
-        cursorEndPosition = globalRange.toString().length;
-    }
-
-    // Set the new text highlight effect.
-    if (highlightID) {
-        removeTextHighlight(textEl);
-        applyTextHighlight(textEl, highlightID);
-    }
-
-    // Restore the old selection.
-    if (restoreSelection && cursorEndPosition) {
-        if (rangeCollapsed) {
-            const selectionOffset = getOffsetNode(textEl, cursorEndPosition);
-            OdooEditorLib.setSelection(...selectionOffset, ...selectionOffset);
-        } else {
-            OdooEditorLib.setSelection(
-                ...getOffsetNode(textEl, cursorEndPosition - rangeSize),
-                ...getOffsetNode(textEl, cursorEndPosition)
-            );
-        }
-    }
 }
 
 /**
