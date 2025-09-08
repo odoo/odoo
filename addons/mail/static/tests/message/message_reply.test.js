@@ -160,3 +160,28 @@ test("can reply to logged note in chatter", async () => {
     await contains(".o-dropdown-item:contains('Delete')");
     await contains(".o-dropdown-item:contains('Reply')", { count: 0 });
 });
+
+test("Replying to a message containing line breaks should be correctly inlined", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "general" });
+    const messageId = pyEnv["mail.message"].create({
+        body: "<p>Message first line.<br>Message second line.<br>Message third line.</p>",
+        message_type: "comment",
+        model: "discuss.channel",
+        res_id: channelId,
+    });
+    const partnerId = pyEnv["res.partner"].create({ name: "John Doe" });
+    pyEnv["mail.message"].create({
+        body: "Howdy",
+        message_type: "comment",
+        model: "discuss.channel",
+        author_id: partnerId,
+        parent_id: messageId,
+        res_id: channelId,
+    });
+    await start();
+    await openDiscuss(channelId);
+    await contains(".o-mail-MessageInReply-message", {
+        text: "Message first line. Message second line. Message third line.",
+    });
+});
