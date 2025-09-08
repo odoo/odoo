@@ -1573,7 +1573,7 @@ class DiscussChannel(models.Model):
 
     def _get_last_messages(self):
         """ Return the last message for each of the given channels."""
-        if not self:
+        if not self.ids:
             return self.env["mail.message"]
         self.env['mail.message'].flush_model()
         self.env.cr.execute(
