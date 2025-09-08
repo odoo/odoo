@@ -36,9 +36,6 @@ export class IrAttachment extends webModels.IrAttachment {
         const kwargs = getKwArgs(arguments, "store", "fields");
         fields = kwargs.fields;
 
-        /** @type {import("mock_models").DiscussVoiceMetadata} */
-        const DiscussVoiceMetadata = this.env["discuss.voice.metadata"];
-
         for (const attachment of this) {
             const [data] = this._read_format(
                 attachment.id,
@@ -57,15 +54,21 @@ export class IrAttachment extends webModels.IrAttachment {
                           )
                         : false;
             }
-            const voice = DiscussVoiceMetadata.browse(attachment.id)[0];
-            if (voice) {
-                data.voice = true;
-            }
             store._add_record_fields(this.browse(attachment.id), data);
         }
     }
 
     get _to_store_defaults() {
-        return ["checksum", "create_date", "mimetype", "name", "res_name", "thread", "type", "url"];
+        return [
+            "checksum",
+            "create_date",
+            "mimetype",
+            "name",
+            "res_name",
+            "thread",
+            "type",
+            "url",
+            "voice_ids",
+        ];
     }
 }

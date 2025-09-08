@@ -21,9 +21,7 @@ class IrAttachment(models.Model):
     def _to_store_defaults(self, target):
         # sudo: discuss.voice.metadata - checking the existence of voice metadata for accessible
         # attachments is fine
-        return super()._to_store_defaults(target) + [
-            Store.Attr("voice", lambda a: bool(a.sudo().voice_ids))
-        ]
+        return super()._to_store_defaults(target) + [Store.Many("voice_ids", [], sudo=True)]
 
     def _post_add_create(self, **kwargs):
         super()._post_add_create(**kwargs)
