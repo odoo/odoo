@@ -16,6 +16,7 @@ import {
     isZWS,
     nextLeaf,
     previousLeaf,
+    isEmptyBlock,
 } from "../utils/dom_info";
 import { getState, isFakeLineBreak, observeMutations, prepareUpdate } from "../utils/dom_state";
 import {
@@ -1073,14 +1074,18 @@ export class DeletePlugin extends Plugin {
             const nodeClosestBlock = closestBlock(node);
             let leaf = adjacentLeafFromPos(node, offset, editableRoot);
             while (leaf) {
-                blockSwitch ||= closestBlock(leaf) !== nodeClosestBlock;
+                const leafClosestBlock = closestBlock(leaf);
+                blockSwitch ||= leafClosestBlock !== nodeClosestBlock;
 
                 if (this.shouldSkip(leaf, blockSwitch)) {
                     leaf = adjacentLeaf(leaf, editableRoot);
                     continue;
                 }
 
-                if (leaf.nodeType === Node.TEXT_NODE) {
+                if (
+                    leaf.nodeType === Node.TEXT_NODE &&
+                    !(blockSwitch && isEmptyBlock(leafClosestBlock))
+                ) {
                     const [char, index] = findVisibleChar(...textEdgePos(leaf));
                     if (char) {
                         const idx = (blockSwitch ? indexBeforeChar : indexAfterChar)(index, char);
