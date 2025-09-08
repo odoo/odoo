@@ -406,6 +406,7 @@ class AccountWithholdingLine(models.AbstractModel):
             aml_create_values_list.append({
                 **grouping_key,
                 'name': self.env._('WH Base: %(names)s', names=', '.join(amounts['names'])),
+                'tax_ids': [],
                 'tax_tag_ids': [],
                 'amount_currency': amounts['amount_currency'],
                 'balance': amounts['balance'],
@@ -414,7 +415,6 @@ class AccountWithholdingLine(models.AbstractModel):
             aml_create_values_list.append({
                 **grouping_key,
                 'name': self.env._('WH Base Counterpart: %(names)s', names=', '.join(amounts['names'])),
-                'tax_ids': [],
                 'analytic_distribution': None,
                 'amount_currency': -amounts['amount_currency'],
                 'balance': -amounts['balance'],
