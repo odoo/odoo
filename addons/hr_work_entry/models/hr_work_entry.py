@@ -286,8 +286,8 @@ class HrWorkEntry(models.Model):
             stop = stop or max(self.mapped('date'), default=False)
             if not skip and start and stop:
                 domain = (
-                    Domain('date', '<', stop)
-                    & Domain('date', '>', start)
+                    Domain('date', '<=', stop)
+                    & Domain('date', '>=', start)
                     & Domain('state', 'not in', ('validated', 'cancelled'))
                 )
                 if employee_ids:
