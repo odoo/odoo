@@ -26,7 +26,6 @@ BTREE_INDEX_IGNORE_FIELDS = {  # str(field)  (fully-qualified field name)
     'documents.document.attachment_id',                 # covered by _attachment_unique, which is enforced with an unique btree index
     'account.fiscal.position.account.position_id',      # covered by first key of _account_src_dest_uniq
     'mailing.subscription.contact_id',                  # covered by first key of _unique_contact_list
-    'iap.extracted.words.res_id',                       # covered by first key of _res_id_res_model_idx
     'knowledge.article.member.article_id',              # covered by first key of _unique_article_partner
     'slide.channel.forum_id',                           # covered by _forum_uniq
     'hr.appraisal.skill.appraisal_id',                  # covered by first key of __unique_skill
