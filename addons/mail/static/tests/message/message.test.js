@@ -819,7 +819,7 @@ test("should not be able to reply to temporary/transient messages", async () => 
     await openDiscuss(channelId);
     // these user interactions is to forge a transient message response from channel command "/who"
     await insertText(".o-mail-Composer-input", "/who");
-    await press("Enter");
+    await click(".o-mail-Composer button[title='Send']:enabled");
     await contains(".o-mail-Message [title='Reply']", { count: 0 });
 });
 
@@ -847,10 +847,10 @@ test.skip("squashed transient message should not have date in the sidebar", asyn
         text: "11:00", // FIXME: should be 10:00
     });
     await insertText(".o-mail-Composer-input", "/who");
-    await press("Enter");
+    await click(".o-mail-Composer button[title='Send']:enabled");
     await contains(".o-mail-Message", { text: "You are alone in this channel." });
     await insertText(".o-mail-Composer-input", "/who");
-    await press("Enter");
+    await click(".o-mail-Composer button[title='Send']:enabled");
     await click(":nth-child(2 of .o-mail-Message.o-squashed");
     await tick();
     await contains(":nth-child(2 of .o-mail-Message.o-squashed) .o-mail-Message-sidebar", {
