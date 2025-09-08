@@ -715,6 +715,7 @@ class TestUblBis3(AccountTestInvoicingCommon):
             'code': 'SB',
             'type': 'purchase',
             'is_self_billing': True,
+            'refund_sequence': False,
         })
 
         invoice = self.env['account.move'].create({

@@ -4022,6 +4022,12 @@ class AccountMove(models.Model):
                 domain += [('move_type', 'in' if self.move_type in refund_types else 'not in', refund_types)]
             if self.journal_id.payment_sequence:
                 domain += [('origin_payment_id', '!=' if is_payment else '=', False)]
+            if self.journal_id.is_self_billing:
+                if self.partner_id:
+                    domain += [('partner_id', '=', self.partner_id.id)]
+                else:
+                    # If the partner id is not set, we can't compute the sequence, so we force a sequence reset.
+                    domain += [(0, '=', 1)]
             reference_move_name = self.sudo().search(domain + [('date', '<=', self.date)], order='date desc', limit=1).name
             if not reference_move_name:
                 reference_move_name = self.sudo().search(domain, order='date asc', limit=1).name
@@ -4063,6 +4069,12 @@ class AccountMove(models.Model):
             else:
                 where_string += " AND origin_payment_id IS NULL "
 
+        if self.journal_id.is_self_billing:
+            if self.partner_id:
+                where_string += " AND partner_id = %(partner_id)s "
+                param['partner_id'] = self.partner_id.id
+            else:
+                where_string += " AND false "
         return where_string, param
 
     def _get_starting_sequence(self):
@@ -4088,7 +4100,16 @@ class AccountMove(models.Model):
             # example). Note that it's already the case for monthly sequences.
             starting_sequence = "%s/%s/%s" % (self.journal_id.code, year_part, '0000' if is_staggered_year else '00000')
         else:
-            starting_sequence = "%s/%s/%02d/0000" % (self.journal_id.code, year_part, move_date.month)
+            if self.journal_id.is_self_billing:
+                partner_name = self.partner_id.commercial_partner_id.name.replace(' ', '')[:10] if self.partner_id else _('[Partner name]')
+                starting_sequence = "%s/%s/%02d/0000" % (
+                    partner_name,
+                    year_part,
+                    move_date.month,
+                )
+            else:
+                starting_sequence = "%s/%s/%02d/0000" % (self.journal_id.code, year_part, move_date.month)
+
         if self.journal_id.refund_sequence and self.move_type in ('out_refund', 'in_refund'):
             starting_sequence = "R" + starting_sequence
         if self.journal_id.payment_sequence and self.origin_payment_id or self.env.context.get('is_payment'):
