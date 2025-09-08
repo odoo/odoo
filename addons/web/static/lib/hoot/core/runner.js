@@ -1953,9 +1953,7 @@ export class Runner {
                 continue;
             }
             const siblingIds = item.parent.jobs.map((job) => job.id);
-            if (
-                siblingIds.every((siblingId) => siblingId === id || remaining.includes(siblingId))
-            ) {
+            if (siblingIds.every((siblingId) => idSpecs[siblingId] === INCLUDE_LEVEL.url)) {
                 remaining = remaining.filter((id) => !siblingIds.includes(id));
                 this._include(idSpecs, [item.parent.id], INCLUDE_LEVEL.url, true);
                 this._include(idSpecs, siblingIds, 0, true);
