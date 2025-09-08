@@ -291,6 +291,7 @@ describe("models with backlinks", () => {
             createRelatedModels({
                 "product.product": {
                     name: { type: "char" },
+                    random_ids: { type: "one2many", relation: "random.model" },
                     tag_ids: {
                         type: "many2many",
                         relation: "product.tag",
@@ -304,6 +305,10 @@ describe("models with backlinks", () => {
                         relation: "product.product",
                         relation_table: "product_tag_product_product_rel",
                     },
+                },
+                "random.model": {
+                    name: { type: "char" },
+                    product_id: { type: "many2one", relation: "product.product" },
                 },
             }).models;
         test("create operation, create", () => {
@@ -327,6 +332,51 @@ describe("models with backlinks", () => {
             });
             expect(product.tag_ids).toInclude(tag1);
             expect(tag1.product_ids).toInclude(product);
+        });
+
+        test("set operation", () => {
+            const models = getModels();
+            const tag1 = models["product.tag"].create({ name: "Electronics" });
+            const tag2 = models["product.tag"].create({ name: "New" });
+            const random1 = models["random.model"].create({ name: "Random 1" });
+            const random2 = models["random.model"].create({ name: "Random 2" });
+            const product = models["product.product"].create({
+                name: "Smartphone",
+                tag_ids: [["link", tag1, tag2]],
+                random_ids: [["link", random1, random2]],
+            });
+
+            // Test many2many set
+            const tag3 = models["product.tag"].create({ name: "Sale" });
+            const tag4 = models["product.tag"].create({ name: "Featured" });
+            product.update({ tag_ids: [["set", tag3, tag4]] });
+            expect(tag1.getIndexMaps("product_ids").size).toBe(0); // Check if index map was cleared
+            expect(tag2.getIndexMaps("product_ids").size).toBe(0); // Check if index map was cleared
+            expect(tag3.getIndexMaps("product_ids").size).toBe(1); // Check if index map was updated
+            expect(tag4.getIndexMaps("product_ids").size).toBe(1); // Check if index map was updated
+            expect(product.getIndexMaps("tag_ids").size).toBe(2); // Check if index map was cleared and updated
+            expect(product.tag_ids).not.toInclude(tag1);
+            expect(product.tag_ids).not.toInclude(tag2);
+            expect(product.tag_ids).toInclude(tag3);
+            expect(product.tag_ids).toInclude(tag4);
+            expect(tag1.product_ids).not.toInclude(product);
+            expect(tag2.product_ids).not.toInclude(product);
+            expect(tag3.product_ids).toInclude(product);
+            expect(tag4.product_ids).toInclude(product);
+
+            // Test one2many set
+            const random3 = models["random.model"].create({ name: "Random 3" });
+            const random4 = models["random.model"].create({ name: "Random 4" });
+            product.update({ random_ids: [["set", random3, random4]] });
+            expect(product.getIndexMaps("random_ids").size).toBe(2); // Check if index map was cleared and updated
+            expect(product.random_ids).not.toInclude(random1);
+            expect(product.random_ids).not.toInclude(random2);
+            expect(product.random_ids).toInclude(random3);
+            expect(product.random_ids).toInclude(random4);
+            expect(random1.product_id).toBe(undefined);
+            expect(random2.product_id).toBe(undefined);
+            expect(random3.product_id).toBe(product);
+            expect(random4.product_id).toBe(product);
         });
 
         test("read operation", () => {
