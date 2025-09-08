@@ -492,7 +492,7 @@ class HTML_Editor(http.Controller):
         """
         attachments = []
         ICP = request.env['ir.config_parameter'].sudo()
-        library_endpoint = ICP.get_param('web_editor.media_library_endpoint', DEFAULT_LIBRARY_ENDPOINT)
+        library_endpoint = ICP.get_param('html_editor.media_library_endpoint', DEFAULT_LIBRARY_ENDPOINT)
 
         media_ids = ','.join(media.keys())
         params = {
@@ -720,7 +720,7 @@ class HTML_Editor(http.Controller):
     @http.route(['/html_editor/media_library_search'], type='jsonrpc', auth="user", website=True)
     def media_library_search(self, **params):
         ICP = request.env['ir.config_parameter'].sudo()
-        endpoint = ICP.get_param('web_editor.media_library_endpoint', DEFAULT_LIBRARY_ENDPOINT)
+        endpoint = ICP.get_param('html_editor.media_library_endpoint', DEFAULT_LIBRARY_ENDPOINT)
         params['dbuuid'] = ICP.get_param('database.uuid')
         response = requests.post('%s/media-library/1/search' % endpoint, data=params, timeout=5)
         if response.status_code == requests.codes.ok and response.headers['content-type'] == 'application/json':
