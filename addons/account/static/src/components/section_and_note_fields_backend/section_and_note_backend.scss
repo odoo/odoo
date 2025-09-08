@@ -27,6 +27,11 @@ table.o_section_and_note_list_view tr.o_data_row {
                 cursor: pointer;
             }
         }
+        &.o_selected_row {
+            th:focus-within, td:focus-within {
+                background-color: var(--table-bg);
+            }
+        }
     }
     &.o_is_line_note,
     &.o_is_line_section,
