@@ -14,7 +14,7 @@
                             <b class="o-mail-MessageInReply-author"><t t-out="props.message.parent_id.authorName"/></b>:
                             <span class="o-mail-MessageInReply-message ms-1 text-break">
                                 <t t-if="!props.message.parent_id.isBodyEmpty">
-                                    <t t-out="props.message.parent_id.richBody"/>
+                                    <t t-out="props.message.parent_id.inlineBody"/>
                                     <em t-if="props.message.parent_id.edited" class="smaller fw-bold text-500"> (edited)</em>
                                 </t>
                                 <t t-elif="props.message.parent_id.attachment_ids.length > 0">
