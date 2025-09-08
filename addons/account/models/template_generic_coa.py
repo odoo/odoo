@@ -46,5 +46,6 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_journal_early_pay_discount_gain_account_id': 'cash_discount_gain',
                 'expense_account_id': 'expense',
                 'income_account_id': 'income',
+                'deferred_expense_account_id': 'prepayments',
             }
         }
