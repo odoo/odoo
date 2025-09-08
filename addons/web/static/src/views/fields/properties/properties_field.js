@@ -64,7 +64,8 @@ export class PropertiesField extends Component {
         this.state = useState({
             canChangeDefinition: false,
             isInEditMode: false,
-            movedPropertyName: null,
+            isDragging: false,
+            isPopoverOpen: false,
         });
 
         // Properties can be added from the cog menu of the form controller
@@ -176,6 +177,7 @@ export class PropertiesField extends Component {
             connectGroups: true,
             cursor: "grabbing",
             onDragStart: ({ element, group }) => {
+                this.state.isDragging = true;
                 this.propertiesRef.el.classList.add("o_property_dragging");
                 element.classList.add("o_property_drag_item");
                 group.classList.add("o_property_drag_group");
@@ -214,6 +216,7 @@ export class PropertiesField extends Component {
                 await this.onPropertyMoveTo(from, to, moveBefore);
             },
             onDragEnd: ({ element }) => {
+                this.state.isDragging = false;
                 this.propertiesRef.el.classList.remove("o_property_dragging");
                 element.classList.remove("o_property_drag_item");
                 const targetGroup = this.propertiesRef.el.querySelector(".o_property_drag_group");
@@ -238,6 +241,7 @@ export class PropertiesField extends Component {
             elements: ".o_property_group:not([property-name=''])",
             cursor: "grabbing",
             onDragStart: ({ element }) => {
+                this.state.isDragging = true;
                 this.propertiesRef.el.classList.add("o_property_dragging");
                 element.classList.add("o_property_drag_item");
                 document.activeElement.blur();
@@ -248,6 +252,7 @@ export class PropertiesField extends Component {
                 await this.onGroupMoveTo(from, to);
             },
             onDragEnd: ({ element }) => {
+                this.state.isDragging = false;
                 this.propertiesRef.el.classList.remove("o_property_dragging");
                 element.classList.remove("o_property_drag_item");
             },
@@ -257,6 +262,10 @@ export class PropertiesField extends Component {
     /* --------------------------------------------------------
      * Public methods / Getters
      * -------------------------------------------------------- */
+
+    get displayAddPropertyButton() {
+        return !this.state.isDragging && !this.state.isPopoverOpen;
+    }
 
     /**
      * Return the number of columns we have to render
@@ -426,42 +435,6 @@ export class PropertiesField extends Component {
     /* --------------------------------------------------------
      * Event handlers
      * -------------------------------------------------------- */
-
-    /**
-     * Move the given property up or down in the list.
-     *
-     * @param {string} propertyName
-     * @param {string} direction, either "up" or "down"
-     */
-    async onPropertyMove(propertyName, direction) {
-        const propertiesValues = this.propertiesList || [];
-        const propertyIndex = propertiesValues.findIndex(
-            (property) => property.name === propertyName
-        );
-
-        const targetIndex = propertyIndex + (direction === "down" ? 1 : -1);
-        if (targetIndex < 0 || targetIndex >= propertiesValues.length) {
-            this.notification.add(
-                direction === "down"
-                    ? _t("This field is already last")
-                    : _t("This field is already first"),
-                { type: "warning" }
-            );
-            return;
-        }
-        this.state.movedPropertyName = propertyName;
-
-        const prop = propertiesValues[targetIndex];
-        propertiesValues[targetIndex] = propertiesValues[propertyIndex];
-        propertiesValues[propertyIndex] = prop;
-        propertiesValues[propertyIndex].definition_changed = true;
-
-        await this.props.record.update({ [this.props.name]: propertiesValues });
-        await this._unfoldPropertyGroup(targetIndex, propertiesValues);
-
-        // move the popover once the DOM is updated
-        this.movePopoverToProperty = propertyName;
-    }
 
     /**
      * Move a property after the target property.
@@ -903,9 +876,6 @@ export class PropertiesField extends Component {
      */
     _openPropertyDefinition(target, propertyName, isNewlyCreated = false) {
         const propertiesList = this.propertiesList;
-        const propertyIndex = propertiesList.findIndex(
-            (property) => property.name === propertyName
-        );
 
         // maybe the property has been renamed because the type / model
         // changed, retrieve the new one
@@ -923,14 +893,15 @@ export class PropertiesField extends Component {
         };
 
         this.onCloseCurrentPopover = () => {
+            this.state.isPopoverOpen = false;
             this.onCloseCurrentPopover = null;
-            this.state.movedPropertyName = null;
             target.classList.remove("disabled");
             if (isNewlyCreated) {
                 this._setDefaultPropertyValue(currentName(propertyName));
             }
         };
 
+        this.state.isPopoverOpen = true;
         this.popover.open(target, {
             fieldName: this.props.name,
             readonly: this.props.readonly || !this.state.canChangeDefinition,
@@ -941,10 +912,7 @@ export class PropertiesField extends Component {
             context: this.props.context,
             onChange: this.onPropertyDefinitionChange.bind(this),
             onDelete: () => this.onPropertyDelete(currentName(propertyName)),
-            onPropertyMove: (direction) =>
-                this.onPropertyMove(currentName(propertyName), direction),
             isNewlyCreated: isNewlyCreated,
-            propertyIndex: propertyIndex,
             propertiesSize: propertiesList.length,
             record: this.props.record,
             ...this.additionalPropertyDefinitionProps,

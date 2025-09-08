@@ -36,12 +36,10 @@ export class PropertyDefinition extends Component {
         context: { type: Object },
         isNewlyCreated: { type: Boolean, optional: true },
         // index and number of properties, to hide the move arrows when needed
-        propertyIndex: { type: Number },
         propertiesSize: { type: Number },
         // events
         onChange: { type: Function, optional: true },
         onDelete: { type: Function, optional: true },
-        onPropertyMove: { type: Function, optional: true },
         // prop needed by the popover service
         close: { type: Function, optional: true },
         record: { type: Object, optional: true },
@@ -77,7 +75,6 @@ export class PropertyDefinition extends Component {
             resModel: "",
             resModelDescription: "",
             matchingRecordsCount: undefined,
-            propertyIndex: this.props.propertyIndex,
         });
 
         this._syncStateWithProps(propertyDefinition);
@@ -142,20 +139,6 @@ export class PropertyDefinition extends Component {
     get defaultCurrencyField() {
         const currencyFields = this.currencyFields.map((fieldDef) => fieldDef.name);
         return currencyFields.includes("currency_id") ? "currency_id" : currencyFields[0] || false;
-    }
-
-    /**
-     * Return True if the current properties is the first one in the list.
-     */
-    get isFirst() {
-        return this.state.propertyIndex === 0;
-    }
-
-    /**
-     * Return True if the current properties is the last one in the list.
-     */
-    get isLast() {
-        return this.state.propertyIndex === this.props.propertiesSize - 1;
     }
 
     /**
@@ -317,20 +300,6 @@ export class PropertyDefinition extends Component {
             domain: new Domain(this.state.propertyDefinition.domain || "[]").toList(),
             context: this.props.context || {},
         });
-    }
-
-    /**
-     * Move the current property up or down.
-     *
-     * @param {string} direction, either 'up' or 'down'
-     */
-    onPropertyMove(direction) {
-        if (direction === "up") {
-            this.state.propertyIndex--;
-        } else {
-            this.state.propertyIndex++;
-        }
-        this.props.onPropertyMove(direction);
     }
 
     /**
