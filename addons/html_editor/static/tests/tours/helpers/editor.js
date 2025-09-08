@@ -10,3 +10,13 @@ patch(Editor.prototype, {
         return super.attachTo(...arguments);
     },
 });
+
+export function setSelection({
+    anchorNode,
+    anchorOffset,
+    focusNode = anchorNode,
+    focusOffset = anchorOffset,
+}) {
+    const selection = anchorNode.ownerDocument.getSelection();
+    selection.setBaseAndExtent(anchorNode, anchorOffset, focusNode, focusOffset);
+}
