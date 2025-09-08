@@ -1481,7 +1481,8 @@
                                     <group string="Accounting"
                                            name="accounting_info_group">
                                         <field name="company_id" groups="base.group_multi_company"/>
-                                        <field name="invoice_incoterm_id" invisible="move_type in ('out_receipt', 'in_receipt')"/>
+                                        <field name="invoice_incoterm_placeholder" invisible="1"/>    <!-- Needed for placeholder_field -->
+                                        <field name="invoice_incoterm_id" options="{'placeholder_field': 'invoice_incoterm_placeholder'}" invisible="move_type in ('out_receipt', 'in_receipt')"/>
                                         <field name="incoterm_location" invisible="move_type in ('out_receipt', 'in_receipt')"/>
                                         <field name="fiscal_position_id" readonly="state in ['cancel', 'posted']"/>
                                         <field name="secured" groups="account.group_account_secured,base.group_no_one"/>
