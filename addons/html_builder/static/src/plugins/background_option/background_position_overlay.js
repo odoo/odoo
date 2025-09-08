@@ -63,7 +63,7 @@ export class BackgroundPositionOverlay extends Component {
                 top: (position[1] / 100) * delta.y || 0,
             };
             // Make sure the editing element is visible
-            const rect = this.targetContainerEl.getBoundingClientRect();
+            const rect = this.getRect();
             const isEditingElEntirelyVisible =
                 rect.top >= 0 &&
                 rect.bottom <= this.targetContainerEl.ownerDocument.defaultView.innerHeight;
@@ -163,7 +163,7 @@ export class BackgroundPositionOverlay extends Component {
 
     dimensionOverlay() {
         const iframeRect = this.iframe.getBoundingClientRect();
-        const targetContainerRect = this.targetContainerEl.getBoundingClientRect();
+        const targetContainerRect = this.getRect();
         const scale = this.getIframeContainerScale();
         const scaledRect = new DOMRect(
             scale * targetContainerRect.x,
@@ -271,5 +271,24 @@ export class BackgroundPositionOverlay extends Component {
             x: bgRect.width - (width || (height * naturalWidth) / naturalHeight),
             y: bgRect.height - (height || (width * naturalHeight) / naturalWidth),
         };
+    }
+
+    /**
+     * Returns the editing element's bounding client rect. If the element is
+     * transformed, temporarily disables the transform to get the real position.
+     * (The transform is put back right after.)
+     *
+     * @returns {DOMRect}
+     */
+    getRect() {
+        const editingEl = this.targetContainerEl;
+        if (editingEl.style.transform) {
+            const prevTransform = editingEl.style.transform;
+            editingEl.style.transform = "";
+            const rect = editingEl.getBoundingClientRect();
+            editingEl.style.transform = prevTransform;
+            return rect;
+        }
+        return editingEl.getBoundingClientRect();
     }
 }
