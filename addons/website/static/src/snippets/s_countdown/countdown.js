@@ -62,7 +62,9 @@ export class Countdown extends Interaction {
     }
 
     destroy() {
-        this.el.querySelector(".s_countdown_canvas_wrapper").classList.remove("d-none");
+        // The optional chaining is required because the queried element may not
+        // exist anymore if the interaction target has just been deleted
+        this.el.querySelector(".s_countdown_canvas_wrapper")?.classList.remove("d-none");
         clearInterval(this.setInterval);
     }
 

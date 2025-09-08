@@ -61,7 +61,7 @@ registry.category("services").add("website_edit", {
 
             // interactions are already started. we only restart them if the
             // public root is not just starting.
-
+            stopDisconnectedInteractions();
             publicInteractions.stopInteractions(target);
             if (mode === "edit") {
                 if (!editableInteractions) {
@@ -96,6 +96,14 @@ registry.category("services").add("website_edit", {
 
         const stopInteraction = (name) => {
             publicInteractions.stopInteractionByName(name);
+        };
+
+        const stopDisconnectedInteractions = () => {
+            for (const interaction of publicInteractions.interactions) {
+                if (!interaction.el.isConnected) {
+                    stop(interaction.el);
+                }
+            }
         };
 
         const isEditingTranslations = () =>
@@ -189,6 +197,9 @@ registry.category("services").add("website_edit", {
                         return NaN; // So that it is different from itself
                     },
                     shouldStop() {
+                        if (!this.el.isConnected) {
+                            return true;
+                        }
                         // Selector does not match anymore ?
                         const I = this.constructor;
                         let isMatch = this.el.matches(I.selector);
