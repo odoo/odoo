@@ -850,7 +850,7 @@ class AccountChartTemplate(models.AbstractModel):
                 'tag_ids': [(6, 0, self.ref('account.account_tag_investing').ids)],
             },
             'transfer_account_id': {
-                'name': _("Liquidity Transfer"),
+                'name': _("Funds in Transit"),
                 'prefix': company.transfer_account_code_prefix,
                 'code_digits': code_digits,
                 'account_type': 'asset_current',
