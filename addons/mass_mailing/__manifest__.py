@@ -92,9 +92,16 @@
             ('include', 'mass_mailing.assets_mail_themes'),
             ('include', 'web.assets_frontend'),
             ('after', 'web/static/lib/bootstrap/scss/_maps.scss', 'mass_mailing/static/src/scss/mass_mailing.ui.scss'),
-            ('include', 'web_editor.backend_assets_wysiwyg'),
-            ('include', 'web_editor.assets_snippets_menu'),
-            ('include', 'web_editor.wysiwyg_iframe_editor_assets'),
+
+            'web_editor/static/src/scss/bootstrap_overridden.scss',
+
+            'web/static/src/libs/fontawesome/css/font-awesome.css',
+            'web/static/lib/odoo_ui_icons/*',
+            'web/static/src/scss/animation.scss',
+            'web/static/src/scss/mimetypes.scss',
+            'web/static/src/scss/ui.scss',
+            'web/static/src/scss/fontawesome_overridden.scss',
+
             ('include', 'html_builder.inside_builder_style'),
             'mass_mailing/static/src/scss/mass_mailing_mail.scss',
             'mass_mailing/static/src/iframe_assets/**/*',

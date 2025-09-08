@@ -30,81 +30,80 @@
 </template>
 
 <!-- Snippets & Themes Menu -->
-<template id="email_designer_snippets" inherit_id="web_editor.snippets" primary="True" groups="base.group_user">
-    <xpath expr="//t[@id='default_snippets']" position="replace">
-        <t id="default_snippets">
-            <t t-set="company_id" t-value="res_company"/>
-            <snippets id="snippet_groups" string="Categories">
-                <t snippet-group="headers" t-snippet="mass_mailing.s_snippet_group" string="Headers" t-thumbnail="/mass_mailing/static/src/img/snippets_thumbs/s_alert.svg"/>
-                <t snippet-group="footers" t-snippet="mass_mailing.s_snippet_group" string="Footers" t-thumbnail="/mass_mailing/static/src/img/snippets_thumbs/block_footer_social.png"/>
-                <t snippet-group="images" t-snippet="mass_mailing.s_snippet_group" string="Images" t-thumbnail="/mass_mailing/static/src/img/snippets_thumbs/s_picture.svg"/>
-                <t snippet-group="headings" t-snippet="mass_mailing.s_snippet_group" string="Headings" t-thumbnail="/mass_mailing/static/src/img/snippets_thumbs/s_title.svg"/>
-                <t snippet-group="people" t-snippet="mass_mailing.s_snippet_group" string="People" t-thumbnail="/mass_mailing/static/src/img/snippets_thumbs/s_company_team.svg"/>
-                <t snippet-group="columns" t-snippet="mass_mailing.s_snippet_group" string="Columns" t-thumbnail="/mass_mailing/static/src/img/snippets_thumbs/s_three_columns.svg"/>
-                <t snippet-group="marketing" t-snippet="mass_mailing.s_snippet_group" string="Marketing" t-thumbnail="/mass_mailing/static/src/img/snippets_thumbs/s_comparisons.svg"/>
-                <t snippet-group="text" t-snippet="mass_mailing.s_snippet_group" string="Text" t-thumbnail="/mass_mailing/static/src/img/snippets_thumbs/s_text_block.svg"/>
-            </snippets>
-            <snippets id ="snippet_structure">
-                <t t-snippet="mass_mailing.s_mail_block_header_social" string="Left Logo" group="headers"/>
-                <t t-snippet="mass_mailing.s_mail_block_header_text_social" string="Left Text" group="headers"/>
-                <t t-snippet="mass_mailing.s_mail_block_header_logo" string="Centered Logo" group="headers"/>
-                <t t-snippet="mass_mailing.s_mail_block_header_view" group="headers" string="View Online"/>
+<template id="email_designer_snippets" groups="base.group_user">
+    <snippets id="snippet_custom" string="Custom"/>
+    <t id="default_snippets">
+        <t t-set="company_id" t-value="res_company"/>
+        <snippets id="snippet_groups" string="Categories">
+            <t snippet-group="headers" t-snippet="mass_mailing.s_snippet_group" string="Headers" t-thumbnail="/mass_mailing/static/src/img/snippets_thumbs/s_alert.svg"/>
+            <t snippet-group="footers" t-snippet="mass_mailing.s_snippet_group" string="Footers" t-thumbnail="/mass_mailing/static/src/img/snippets_thumbs/block_footer_social.png"/>
+            <t snippet-group="images" t-snippet="mass_mailing.s_snippet_group" string="Images" t-thumbnail="/mass_mailing/static/src/img/snippets_thumbs/s_picture.svg"/>
+            <t snippet-group="headings" t-snippet="mass_mailing.s_snippet_group" string="Headings" t-thumbnail="/mass_mailing/static/src/img/snippets_thumbs/s_title.svg"/>
+            <t snippet-group="people" t-snippet="mass_mailing.s_snippet_group" string="People" t-thumbnail="/mass_mailing/static/src/img/snippets_thumbs/s_company_team.svg"/>
+            <t snippet-group="columns" t-snippet="mass_mailing.s_snippet_group" string="Columns" t-thumbnail="/mass_mailing/static/src/img/snippets_thumbs/s_three_columns.svg"/>
+            <t snippet-group="marketing" t-snippet="mass_mailing.s_snippet_group" string="Marketing" t-thumbnail="/mass_mailing/static/src/img/snippets_thumbs/s_comparisons.svg"/>
+            <t snippet-group="text" t-snippet="mass_mailing.s_snippet_group" string="Text" t-thumbnail="/mass_mailing/static/src/img/snippets_thumbs/s_text_block.svg"/>
+        </snippets>
+        <snippets id ="snippet_structure">
+            <t t-snippet="mass_mailing.s_mail_block_header_social" string="Left Logo" group="headers"/>
+            <t t-snippet="mass_mailing.s_mail_block_header_text_social" string="Left Text" group="headers"/>
+            <t t-snippet="mass_mailing.s_mail_block_header_logo" string="Centered Logo" group="headers"/>
+            <t t-snippet="mass_mailing.s_mail_block_header_view" group="headers" string="View Online"/>
 
-                <t t-snippet="mass_mailing.s_mail_block_footer_social" string="Footer Center" group="footers"/>
-                <t t-snippet="mass_mailing.s_mail_block_footer_social_left" string="Footer Left" group="footers"/>
-                <t t-snippet="mass_mailing.s_mail_block_footer_one_liner" string="One Liner" group="footers"/>
+            <t t-snippet="mass_mailing.s_mail_block_footer_social" string="Footer Center" group="footers"/>
+            <t t-snippet="mass_mailing.s_mail_block_footer_social_left" string="Footer Left" group="footers"/>
+            <t t-snippet="mass_mailing.s_mail_block_footer_one_liner" string="One Liner" group="footers"/>
 
-                <t t-snippet="mass_mailing.s_cover" string="Cover" group="images"/>
-                <t t-snippet="mass_mailing.s_image_text" group="images" string="Image - Text"/>
-                <t t-snippet="mass_mailing.s_text_image" group="images" string="Text - Image"/>
-                <t t-snippet="mass_mailing.s_picture" group="images" string="Picture"/>
-                <t t-snippet="mass_mailing.s_masonry_block" string="Masonry" group="images"/>
+            <t t-snippet="mass_mailing.s_cover" string="Cover" group="images"/>
+            <t t-snippet="mass_mailing.s_image_text" group="images" string="Image - Text"/>
+            <t t-snippet="mass_mailing.s_text_image" group="images" string="Text - Image"/>
+            <t t-snippet="mass_mailing.s_picture" group="images" string="Picture"/>
+            <t t-snippet="mass_mailing.s_masonry_block" string="Masonry" group="images"/>
 
-                <t t-snippet="mass_mailing.s_title" string="Title" group="headings"/>
-                <t t-snippet="mass_mailing.s_subtitle" string="Subtitle" group="headings"/>
-                <t t-snippet="mass_mailing.s_author" string="Author" group="headings"/>
-                <t t-snippet="mass_mailing.s_hr_title" string="Separator Title" group="headings"/>
-                <t t-snippet="mass_mailing.s_blog_title" string="Blog Title" group="headings"/>
+            <t t-snippet="mass_mailing.s_title" string="Title" group="headings"/>
+            <t t-snippet="mass_mailing.s_subtitle" string="Subtitle" group="headings"/>
+            <t t-snippet="mass_mailing.s_author" string="Author" group="headings"/>
+            <t t-snippet="mass_mailing.s_hr_title" string="Separator Title" group="headings"/>
+            <t t-snippet="mass_mailing.s_blog_title" string="Blog Title" group="headings"/>
 
-                <t t-snippet="mass_mailing.s_company_team" string="Team" group="people"/>
-                <t t-snippet="mass_mailing.s_company_team_shapes" string="Team shapes" group="people"/>
-                <t t-snippet="mass_mailing.s_reviews_wall" string="Customer testimonials" group="people"/>
-                <t t-snippet="mass_mailing.s_references" string="References" group="people"/>
-                <t t-snippet="mass_mailing.s_blockquote" string="Blockquote" group="people"/>
+            <t t-snippet="mass_mailing.s_company_team" string="Team" group="people"/>
+            <t t-snippet="mass_mailing.s_company_team_shapes" string="Team shapes" group="people"/>
+            <t t-snippet="mass_mailing.s_reviews_wall" string="Customer testimonials" group="people"/>
+            <t t-snippet="mass_mailing.s_references" string="References" group="people"/>
+            <t t-snippet="mass_mailing.s_blockquote" string="Blockquote" group="people"/>
 
-                <t t-snippet="mass_mailing.s_three_columns" string="Columns" group="columns"/>
-                <t t-snippet="mass_mailing.s_color_blocks_2" string="Big Boxes" group="columns"/>
-                <t t-snippet="mass_mailing.s_media_list" string="Media List" group="columns"/>
-                <t t-snippet="mass_mailing.s_attributes_horizontal" string="Features" group="columns"/>
-                <t t-snippet="mass_mailing.s_numbers" string="Numbers" group="columns"/>
-                <t t-snippet="mass_mailing.s_event" string="Event" group="columns"/>
-                <t t-snippet="mass_mailing.s_product_list" string="Items" group="columns"/>
-                <t t-snippet="mass_mailing.s_features_grid" string="Features Grid" group="columns"/>
+            <t t-snippet="mass_mailing.s_three_columns" string="Columns" group="columns"/>
+            <t t-snippet="mass_mailing.s_color_blocks_2" string="Big Boxes" group="columns"/>
+            <t t-snippet="mass_mailing.s_media_list" string="Media List" group="columns"/>
+            <t t-snippet="mass_mailing.s_attributes_horizontal" string="Features" group="columns"/>
+            <t t-snippet="mass_mailing.s_numbers" string="Numbers" group="columns"/>
+            <t t-snippet="mass_mailing.s_event" string="Event" group="columns"/>
+            <t t-snippet="mass_mailing.s_product_list" string="Items" group="columns"/>
+            <t t-snippet="mass_mailing.s_features_grid" string="Features Grid" group="columns"/>
 
-                <t t-snippet="mass_mailing.s_comparisons" string="Comparisons" group="marketing"/>
-                <t t-snippet="mass_mailing.s_showcase" string="Showcase" group="marketing"/>
-                <t t-snippet="mass_mailing.s_call_to_action" string="Call to Action" group="marketing"/>
-                <t t-snippet="mass_mailing.s_coupon_code" string="Promo Code" group="marketing"/>
+            <t t-snippet="mass_mailing.s_comparisons" string="Comparisons" group="marketing"/>
+            <t t-snippet="mass_mailing.s_showcase" string="Showcase" group="marketing"/>
+            <t t-snippet="mass_mailing.s_call_to_action" string="Call to Action" group="marketing"/>
+            <t t-snippet="mass_mailing.s_coupon_code" string="Promo Code" group="marketing"/>
 
-                <t t-snippet="mass_mailing.s_text_block" string="Paragraph" group="text"/>
-                <t t-snippet="mass_mailing.s_link_list" string="Links List" group="text"/>
-                <t t-snippet="mass_mailing.s_schedule" string="Schedule" group="text"/>
-                <t t-snippet="mass_mailing.s_pricelist_boxed" string="Pricelist Boxed" group="text"/>
-            </snippets>
-            <snippets id="snippet_content" string="Inner Content">
-                <t t-snippet="mass_mailing.s_inline_text" string="Text" t-thumbnail="/mass_mailing/static/src/img/snippets_thumbs/s_text_block.svg"/>
-                <t t-snippet="mass_mailing.s_alert" string="Alert" t-thumbnail="/mass_mailing/static/src/img/snippets_thumbs/s_alert.svg"/>
-                <t t-snippet="mass_mailing.s_hr" string="Separator" t-thumbnail="/web_editor/static/src/img/snippets_thumbs/s_hr.svg"/>
-                <t t-snippet="mass_mailing.s_text_highlight" string="Text Highlight" t-thumbnail="/mass_mailing/static/src/img/snippets_thumbs/s_text_highlight.svg"/>
-                <t t-snippet="mass_mailing.s_rating" string="Rating" t-thumbnail="/mass_mailing/static/src/img/snippets_thumbs/s_rating.svg"/>
-                <t t-snippet="mass_mailing.s_button" string="Button" t-thumbnail="/mass_mailing/static/src/img/snippets_thumbs/s_button.svg"/>
-                <t t-snippet="mass_mailing.s_image" string="Image" t-thumbnail="/mass_mailing/static/src/img/snippets_thumbs/s_image.svg"/>
-                <t t-snippet="mass_mailing.s_video" string="Video" t-thumbnail="/mass_mailing/static/src/img/snippets_thumbs/s_video.svg"/>
-                <t t-snippet="mass_mailing.s_badge" string="Badge" t-thumbnail="/mass_mailing/static/src/img/snippets_thumbs/s_badge.svg"/>
-                <t t-snippet="mass_mailing.s_cta_badge" string="CTA Badge" t-thumbnail="/mass_mailing/static/src/img/snippets_thumbs/s_cta_badge.svg"/>
-            </snippets>
-        </t>
-    </xpath>
+            <t t-snippet="mass_mailing.s_text_block" string="Paragraph" group="text"/>
+            <t t-snippet="mass_mailing.s_link_list" string="Links List" group="text"/>
+            <t t-snippet="mass_mailing.s_schedule" string="Schedule" group="text"/>
+            <t t-snippet="mass_mailing.s_pricelist_boxed" string="Pricelist Boxed" group="text"/>
+        </snippets>
+        <snippets id="snippet_content" string="Inner Content">
+            <t t-snippet="mass_mailing.s_inline_text" string="Text" t-thumbnail="/mass_mailing/static/src/img/snippets_thumbs/s_text_block.svg"/>
+            <t t-snippet="mass_mailing.s_alert" string="Alert" t-thumbnail="/mass_mailing/static/src/img/snippets_thumbs/s_alert.svg"/>
+            <t t-snippet="mass_mailing.s_hr" string="Separator" t-thumbnail="/mass_mailing/static/src/img/snippets_thumbs/s_hr.svg"/>
+            <t t-snippet="mass_mailing.s_text_highlight" string="Text Highlight" t-thumbnail="/mass_mailing/static/src/img/snippets_thumbs/s_text_highlight.svg"/>
+            <t t-snippet="mass_mailing.s_rating" string="Rating" t-thumbnail="/mass_mailing/static/src/img/snippets_thumbs/s_rating.svg"/>
+            <t t-snippet="mass_mailing.s_button" string="Button" t-thumbnail="/mass_mailing/static/src/img/snippets_thumbs/s_button.svg"/>
+            <t t-snippet="mass_mailing.s_image" string="Image" t-thumbnail="/mass_mailing/static/src/img/snippets_thumbs/s_image.svg"/>
+            <t t-snippet="mass_mailing.s_video" string="Video" t-thumbnail="/mass_mailing/static/src/img/snippets_thumbs/s_video.svg"/>
+            <t t-snippet="mass_mailing.s_badge" string="Badge" t-thumbnail="/mass_mailing/static/src/img/snippets_thumbs/s_badge.svg"/>
+            <t t-snippet="mass_mailing.s_cta_badge" string="CTA Badge" t-thumbnail="/mass_mailing/static/src/img/snippets_thumbs/s_cta_badge.svg"/>
+        </snippets>
+    </t>
 </template>
 
 <!-- Snippet Templates -->
