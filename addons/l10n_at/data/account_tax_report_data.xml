@@ -77,7 +77,7 @@
                     <record id="tax_report_line_l10n_at_tva_total" model="account.report.expression">
                         <field name="label">vat</field>
                         <field name="engine">aggregation</field>
-                        <field name="formula">AT_022.vat + AT_029.vat + AT_006.vat + AT_037.vat + AT_052.vat + AT_007.vat + AT_056.base + AT_057.base + AT_048.base + AT_044.base + AT_032.base + AT_072.vat + AT_073.vat + AT_008.vat + AT_088.vat</field>
+                        <field name="formula">AT_022.vat + AT_029.vat + AT_006.vat + AT_037.vat + AT_052.vat + AT_007.vat + AT_056.vat + AT_057.vat + AT_048.vat + AT_044.vat + AT_032.vat + AT_072.vat + AT_073.vat + AT_008.vat + AT_088.vat</field>
                     </record>
                 </field>
                 <field name="children_ids">
@@ -372,7 +372,7 @@
                         <field name="code">AT_056</field>
                         <field name="expression_ids">
                             <record id="tax_report_line_l10n_at_tva_line_4_20_tag" model="account.report.expression">
-                                <field name="label">base</field>
+                                <field name="label">vat</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">KZ 056</field>
                             </record>
@@ -384,7 +384,7 @@
                         <field name="code">AT_057</field>
                         <field name="expression_ids">
                             <record id="tax_report_line_l10n_at_tva_line_4_21_tag" model="account.report.expression">
-                                <field name="label">base</field>
+                                <field name="label">vat</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">KZ 057</field>
                             </record>
@@ -396,7 +396,7 @@
                         <field name="code">AT_048</field>
                         <field name="expression_ids">
                             <record id="tax_report_line_l10n_at_tva_line_4_22_tag" model="account.report.expression">
-                                <field name="label">base</field>
+                                <field name="label">vat</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">KZ 048</field>
                             </record>
@@ -408,7 +408,7 @@
                         <field name="code">AT_044</field>
                         <field name="expression_ids">
                             <record id="tax_report_line_l10n_at_tva_line_4_23_tag" model="account.report.expression">
-                                <field name="label">base</field>
+                                <field name="label">vat</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">KZ 044</field>
                             </record>
@@ -420,7 +420,7 @@
                         <field name="code">AT_032</field>
                         <field name="expression_ids">
                             <record id="tax_report_line_l10n_at_tva_line_4_24_tag" model="account.report.expression">
-                                <field name="label">base</field>
+                                <field name="label">vat</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">KZ 032</field>
                             </record>
