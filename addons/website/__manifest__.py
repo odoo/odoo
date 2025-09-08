@@ -391,7 +391,7 @@
         ],
         'website.assets_wysiwyg': [
             ('include', 'web._assets_helpers'),
-            'web_editor/static/src/scss/bootstrap_overridden.scss',
+            'html_editor/static/src/scss/bootstrap_overridden.scss',
             'web/static/src/scss/pre_variables.scss',
             'web/static/lib/bootstrap/scss/_variables.scss',
             'web/static/lib/bootstrap/scss/_variables-dark.scss',
@@ -406,10 +406,6 @@
             'website/static/src/xml/website.cookies_bar.xml',
         ],
         'website.assets_all_wysiwyg': [
-            ('include', 'website.assets_wysiwyg'),
-        ],
-        'website.backend_assets_all_wysiwyg': [
-            ('include', 'web_editor.backend_assets_wysiwyg'),
             ('include', 'website.assets_wysiwyg'),
         ],
         'html_editor.assets_media_dialog': [
