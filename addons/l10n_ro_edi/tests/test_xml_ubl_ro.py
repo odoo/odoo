@@ -61,6 +61,9 @@ def _patch_request_ciusro_download_answer(company, key_download, session):
                 'attachment_raw': file_open("l10n_ro_edi/tests/test_files/from_odoo/ciusro_in_invoice.xml").read(),
             },
         },
+        '3029027563': {
+            'error': "There has been an connection error when downloading the message content",
+        }
     }
     return answer_data.get(key_download, {})
 
@@ -93,6 +96,15 @@ def _patch_request_ciusro_synchronize_invoices(company, session, nb_days=1):
             'tip': 'FACTURA TRIMISA',
             'id': '3029027562',
             'answer': _patch_request_ciusro_download_answer(company, '3029027562', None),
+        },
+        {
+            'data_creare': '202503272020',
+            'cif': company.vat,
+            'id_solicitare': '5019882654',
+            'detalii': f"Factura cu id_incarcare=5019882654 emisa de cif_emitent={company.vat} pentru cif_beneficiar=RO1234567897",
+            'tip': 'FACTURA TRIMISA',
+            'id': '3029027563',
+            'answer': _patch_request_ciusro_download_answer(company, '3029027563', None),
         },
     ]
     sent_invoices_refused_messages = [
@@ -340,6 +352,26 @@ class TestUBLRO(TestUBLCommon):
 
         self.assertEqual(invoice.l10n_ro_edi_state, 'invoice_validated')
         self.assertEqual(len(invoice.l10n_ro_edi_document_ids), 1)
+
+    @patch('odoo.addons.l10n_ro_edi.models.account_move._request_ciusro_synchronize_invoices', new=_patch_request_ciusro_synchronize_invoices)
+    def test_ciusro_synchronize_invoices_validation_error(self):
+        ''' Test that a sent invoice status is not updated and the error message logged when there is a communication error.
+        '''
+        # Create an invoice that will match the success response returned by the server
+        invoice = self.create_move('out_invoice', l10n_ro_edi_index='5019882654', send=False)
+        invoice.name = 'INV/2017/00003'  # Skip 00001 and 00002 to avoid the validation due to similar invoice name
+        self.env['l10n_ro_edi.document'].create({
+            'invoice_id': invoice.id,
+            'state': 'invoice_sent',
+        })
+        self.assertEqual(invoice.l10n_ro_edi_state, 'invoice_sent')
+
+        self.env['account.move']._l10n_ro_edi_fetch_invoices()
+
+        self.assertEqual(invoice.l10n_ro_edi_state, 'invoice_sent')
+
+        last_message = invoice.message_ids[0]
+        self.assertEqual(str(last_message.body), '<p>Error when trying to download the E-Factura data from the SPV: There has been an connection error when downloading the message content</p>')
 
     @patch('odoo.addons.l10n_ro_edi.models.account_move._request_ciusro_synchronize_invoices', new=_patch_request_ciusro_synchronize_invoices)
     def test_ciusro_synchronize_invoices_validation_without_index(self):
