@@ -114,6 +114,15 @@ export function scrollTo(el, options = {}) {
         el.classList.add("o_check_scroll_position");
         let offsetTop = el.getBoundingClientRect().top + window.scrollY;
         el.classList.remove("o_check_scroll_position");
+        if (el.style.transform) {
+            // If the element is transformed, we can't get its real position
+            // using getBoundingClientRect. We thus temporarily disable the
+            // transform to get the position, and put it back right after.
+            const prevTransform = el.style.transform;
+            el.style.transform = "";
+            offsetTop = el.getBoundingClientRect().top + window.scrollY;
+            el.style.transform = prevTransform;
+        }
         if (el.classList.contains("d-none")) {
             el.classList.remove("d-none");
             offsetTop = el.getBoundingClientRect().top + window.scrollY;
