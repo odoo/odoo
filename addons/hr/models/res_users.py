@@ -69,7 +69,7 @@ class ResUsers(models.Model):
     work_email = fields.Char(related='employee_id.work_email', readonly=False, related_sudo=False)
     category_ids = fields.Many2many(related='employee_id.category_ids', string="Employee Tags", readonly=False, related_sudo=False)
     work_contact_id = fields.Many2one(related='employee_id.work_contact_id', readonly=False, related_sudo=False)
-    work_location_id = fields.Many2one(related='employee_id.work_location_id')
+    work_location_id = fields.Many2one(related='employee_id.work_location_id', readonly=False, related_sudo=False)
     work_location_name = fields.Char(related="employee_id.work_location_name")
     work_location_type = fields.Selection(related="employee_id.work_location_type")
     private_street = fields.Char(related='employee_id.private_street', string="Private Street", readonly=False, related_sudo=False)
