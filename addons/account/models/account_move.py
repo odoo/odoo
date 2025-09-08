@@ -712,6 +712,7 @@ class AccountMove(models.Model):
         string="PDF File",
         copy=False,
     )
+    invoice_incoterm_placeholder = fields.Char(compute='_compute_invoice_incoterm_placeholder')
 
     # === Display purpose fields === #
     # used to have a dynamic domain on journal / taxes in the form view.
@@ -2150,6 +2151,11 @@ class AccountMove(models.Model):
 
     def _compute_incoterm_location(self):
         pass
+
+    @api.depends('company_id.incoterm_id')
+    def _compute_invoice_incoterm_placeholder(self):
+        for move in self:
+            move.invoice_incoterm_placeholder = move.company_id.incoterm_id.display_name if move.company_id.incoterm_id else _('Define a default in the settings')
 
     @api.depends('partner_id', 'invoice_date', 'amount_total')
     def _compute_abnormal_warnings(self):
