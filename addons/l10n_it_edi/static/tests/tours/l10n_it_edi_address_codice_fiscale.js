@@ -1,7 +1,6 @@
 import { registry } from "@web/core/registry";
 
 registry.category("web_tour.tours").add("portal_compute_codice_fiscale", {
-    url: "/my",
     steps: () => [
         {
             content: "Check portal is loaded",
@@ -15,16 +14,34 @@ registry.category("web_tour.tours").add("portal_compute_codice_fiscale", {
             run: "click",
         },
         {
-            content: "Fill address form with VAT",
-            trigger: "form.address_autoformat",
-            run: function () {
-                $('input[name="phone"]').val("99999999");
-                $('input[name="email"]').val("abc@odoo.com");
-                $('input[name="vat"]').val("IT12345670017");
-                $('input[name="street"]').val("SO1 Billing Street, 33");
-                $('input[name="city"]').val("SO1BillingCity");
-                $('input[name="zip"]').val("10000");
-            },
+            content: "Fill address form: phone",
+            trigger: `form.address_autoformat input[name="phone"]`,
+            run: "edit 99999999",
+        },
+        {
+            content: "Fill address form: email",
+            trigger: `form.address_autoformat input[name="email"]`,
+            run: "edit abc@odoo.com",
+        },
+        {
+            content: "Fill address form: vat",
+            trigger: `form.address_autoformat input[name="vat"]`,
+            run: "edit IT12345670017",
+        },
+        {
+            content: "Fill address form: street",
+            trigger: `form.address_autoformat input[name="street"]`,
+            run: "edit SO1 Billing Street, 33",
+        },
+        {
+            content: "Fill address form: city",
+            trigger: `form.address_autoformat input[name="city"]`,
+            run: "edit SO1BillingCity",
+        },
+        {
+            content: "Fill address form: zip",
+            trigger: `form.address_autoformat input[name="zip"]`,
+            run: "edit 10000",
         },
         {
             id: "o_country_id",

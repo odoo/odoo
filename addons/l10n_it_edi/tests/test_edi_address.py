@@ -13,7 +13,7 @@ class TestUi(HttpCaseWithUserPortal, TestItEdi):
         company = self.env.ref('base.main_company')
         company.account_fiscal_country_id = company.country_id = self.env.company.country_id
 
-        self.start_tour("/", 'portal_compute_codice_fiscale', login="portal_user")
+        self.start_tour("/my", 'portal_compute_codice_fiscale', login="portal_user")
         self.assertEqual(
             it_user_portal.l10n_it_codice_fiscale,
             '12345670017',
