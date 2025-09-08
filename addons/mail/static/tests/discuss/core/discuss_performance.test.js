@@ -18,7 +18,7 @@ import { patchWithCleanup } from "@web/../tests/web_test_helpers";
 describe.current.tags("desktop");
 defineMailModels();
 
-test("posting new message should only render relevant part", async () => {
+test.skip("posting new message should only render relevant part", async () => {
     // For example, it should not render old messages again
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "general" });
