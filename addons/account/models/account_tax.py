@@ -1843,6 +1843,7 @@ class AccountTax(models.Model):
             # If there are taxes on it, account the amounts from taxes_data.
             for index, tax_data in enumerate(taxes_data):
                 tax = tax_data['tax']
+                reverse_charge_sign = -1 if tax_data['is_reverse_charge'] else 1
 
                 tax_data['base_amount_currency'] = currency.round(tax_data['raw_base_amount_currency'])
                 tax_data['base_amount'] = company.currency_id.round(tax_data['raw_base_amount'])
@@ -1867,13 +1868,13 @@ class AccountTax(models.Model):
                     tax_details['total_excluded'] = tax_details['total_included'] = tax_data['base_amount']
 
                 if 'tax_amount_currency' in current_manual_tax_amounts:
-                    raw_tax_amount_currency = currency.round(current_manual_tax_amounts['tax_amount_currency'])
+                    raw_tax_amount_currency = currency.round(reverse_charge_sign * current_manual_tax_amounts['tax_amount_currency'])
                     raw_tax_amount = company.currency_id.round(raw_tax_amount_currency / rate) if rate else 0.0
                 else:
                     raw_tax_amount_currency = tax_data['raw_tax_amount_currency']
                     raw_tax_amount = tax_data['raw_tax_amount']
                 if 'tax_amount' in current_manual_tax_amounts:
-                    raw_tax_amount = currency.round(current_manual_tax_amounts['tax_amount'])
+                    raw_tax_amount = currency.round(reverse_charge_sign * current_manual_tax_amounts['tax_amount'])
                 tax_data['tax_amount_currency'] = currency.round(raw_tax_amount_currency)
                 tax_data['tax_amount'] = company.currency_id.round(raw_tax_amount)
                 tax_details['total_included_currency'] += tax_data['tax_amount_currency']
@@ -3165,6 +3166,9 @@ class AccountTax(models.Model):
             first_batch = taxes_data[0]['batch']
             base_line['manual_tax_amounts'] = {}
             for tax_data in taxes_data:
+                if tax_data['is_reverse_charge']:
+                    continue
+
                 tax = tax_data['tax']
                 tax_amounts = {
                     'tax_amount_currency': tax_data['tax_amount_currency'],
