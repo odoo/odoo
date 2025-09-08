@@ -502,6 +502,7 @@ class ProductTemplate(models.Model):
         if self._context.get("create_product_product", True):
             templates._create_variant_ids()
 
+        # TODO remove in master: this is not needed anymore
         # This is needed to set given values to first variant after creation
         for template, vals in zip(templates, vals_list):
             related_vals = {}
