@@ -11,7 +11,6 @@
     'depends': [
         'digest',
         'web',
-        'web_editor',
         'html_editor',
         'http_routing',
         'portal',

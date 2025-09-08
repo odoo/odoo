@@ -5,7 +5,7 @@
     'name': 'Test - html_field_history',
     'version': '1.0',
     'category': 'Hidden',
-    'depends': ['web_editor'],
+    'depends': ['html_editor'],
     'data': [
         'security/ir.model.access.csv',
     ],
