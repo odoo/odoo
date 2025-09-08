@@ -198,7 +198,6 @@ class IrQweb(models.AbstractModel):
     def _get_bundles_to_pregenarate(self):
         js_assets, css_assets = super()._get_bundles_to_pregenarate()
         assets = {
-            'website.backend_assets_all_wysiwyg',
             'website.assets_all_wysiwyg',
         }
         return (js_assets | assets, css_assets | assets)

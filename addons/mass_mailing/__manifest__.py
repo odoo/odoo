@@ -14,7 +14,6 @@
         'html_builder',
         'utm',
         'link_tracker',
-        'web_editor',
         'social_media',
         'web_tour',
         'digest',
@@ -93,7 +92,7 @@
             ('include', 'web.assets_frontend'),
             ('after', 'web/static/lib/bootstrap/scss/_maps.scss', 'mass_mailing/static/src/scss/mass_mailing.ui.scss'),
 
-            'web_editor/static/src/scss/bootstrap_overridden.scss',
+            'html_builder/static/src/bootstrap_overriden.scss',
 
             'web/static/src/libs/fontawesome/css/font-awesome.css',
             'web/static/lib/odoo_ui_icons/*',
