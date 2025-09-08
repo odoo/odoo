@@ -1505,6 +1505,14 @@ class SaleOrderLine(models.Model):
         section_lines = self._get_section_lines()
         return sum(section_lines.mapped(totals_field))
 
+    def _get_combo_totals(self, totals_field):
+        """Return the total/subtotal amount sale order lines linked to combo."""
+        self.ensure_one()
+        combo_item_lines = self.order_id.order_line.filtered(
+            lambda line: line.linked_line_id == self and line.combo_item_id,
+        )
+        return sum(combo_item_lines.mapped(totals_field))
+
     def _has_taxes(self):
         """Check if a line has taxes or not. For (sub)sections, check if any child line has taxes."""
         self.ensure_one()
