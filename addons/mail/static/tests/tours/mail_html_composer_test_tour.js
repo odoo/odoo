@@ -88,7 +88,7 @@ registry.category("web_tour.tours").add("mail/static/tests/tours/mail_html_compo
         },
         {
             content: "Click on Send Message",
-            trigger: "button:contains(Send message)",
+            trigger: "button:not(.active):contains(Send message)",
             run: "click",
         },
         {
