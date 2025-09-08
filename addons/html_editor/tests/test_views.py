@@ -13,13 +13,13 @@ class TestViews(TransactionCase):
             'name': 'Test View 1',
             'type': 'qweb',
             'arch': '<div>Hello World</div>',
-            'key': 'web_editor.test_first_view',
+            'key': 'html_editor.test_first_view',
         })
         self.second_view = View.create({
             'name': 'Test View 2',
             'type': 'qweb',
-            'arch': '<div><t t-call="web_editor.test_first_view"/></div>',
-            'key': 'web_editor.test_second_view',
+            'arch': '<div><t t-call="html_editor.test_first_view"/></div>',
+            'key': 'html_editor.test_second_view',
         })
 
     def test_infinite_inherit_loop(self):
@@ -38,10 +38,10 @@ class TestViews(TransactionCase):
         base = View.create({
             'name': 'Test View oe_structure',
             'type': 'qweb',
-            'arch': """<xpath expr='//t[@t-call="web_editor.test_first_view"]' position='after'>
+            'arch': """<xpath expr='//t[@t-call="html_editor.test_first_view"]' position='after'>
                         <div class="oe_structure" id='oe_structure_test_view_oe_structure'/>
                     </xpath>""",
-            'key': 'web_editor.oe_structure_view',
+            'key': 'html_editor.oe_structure_view',
             'inherit_id': self.second_view.id
         })
 
