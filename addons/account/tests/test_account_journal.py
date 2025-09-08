@@ -33,6 +33,38 @@ class TestAccountJournal(AccountTestInvoicingCommon, HttpCase):
         with self.assertRaises(ValidationError):
             journal_bank.default_account_id.currency_id = self.company_data['currency']
 
+    def test_euro_payment_reference_generation(self):
+        """
+        Test the generation of European (ISO 11649) payment references to ensure
+        it correctly handles various journal short codes.
+        """
+        journal = self.company_data['default_journal_sale']
+        journal.invoice_reference_model = 'euro'
+
+        # Case 1: Code contains alphanumeric value.
+        journal.code = 'INV'
+        invoice_valid = self.init_invoice("out_invoice", products=self.product_a)
+        invoice_valid.journal_id = journal
+        invoice_valid.action_post()
+        self.assertTrue(invoice_valid.payment_reference, "A payment reference should be generated.")
+        self.assertIn('INV', invoice_valid.payment_reference, "The reference should be based on the journal code.")
+
+        # Case 2: Code contains a hyphen.
+        journal.code = 'INV-'
+        invoice_invalid = self.init_invoice("out_invoice", products=self.product_a)
+        invoice_invalid.journal_id = journal
+        invoice_invalid.action_post()
+        self.assertTrue(invoice_invalid.payment_reference, "A payment reference should be generated.")
+        self.assertIn(str(journal.id), invoice_invalid.payment_reference, "The reference should fall back to using the journal ID.")
+
+        # Case 3: Code is non-ASCII but alphanumeric (e.g., Greek letter 'INVα'). # noqa: RUF003
+        journal.code = 'INVα'
+        invoice_unicode = self.init_invoice("out_invoice", products=self.product_a)
+        invoice_unicode.journal_id = journal
+        invoice_unicode.action_post()
+        self.assertTrue(invoice_unicode.payment_reference, "A payment reference should be generated.")
+        self.assertIn(str(journal.id), invoice_unicode.payment_reference, "The reference should fall back to using the journal ID for non-ASCII codes.")
+
     def test_changing_journal_company(self):
         ''' Ensure you can't change the company of an account.journal if there are some journal entries '''
 
@@ -362,8 +394,9 @@ class TestAccountJournalAlias(AccountTestInvoicingCommon, MailCommon):
             journal=journal_latin,
         )
 
+        expected_id = str(invoice_non_latin.journal_id.id)
         ref_parts_non_latin = invoice_non_latin.payment_reference.split()
-        self.assertEqual(ref_parts_non_latin[1][:len(str(invoice_non_latin.journal_id.id))], str(invoice_non_latin.journal_id.id), "The reference should start with " + str(invoice_non_latin.journal_id.id))
+        self.assertEqual(ref_parts_non_latin[1][:len(expected_id)], expected_id, "The reference should start with " + expected_id)
 
         ref_parts_latin = invoice_latin.payment_reference.split()
         self.assertIn(ref_parts_latin[1][:3], latin_code, f"Expected journal code '{latin_code}' in second part of reference")
