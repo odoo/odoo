@@ -3,6 +3,7 @@ import functools
 import io
 import json
 import logging
+import sys
 import os
 import re
 import subprocess
@@ -475,11 +476,12 @@ class IrActionsReport(models.Model):
             '--width', str(width), '--height', str(height),
             '--format', image_format,
         ]
+        auto_delete = not sys.platform.startswith('win')
         with ExitStack() as stack:
             files = []
             for body in bodies:
-                input_file = stack.enter_context(tempfile.NamedTemporaryFile(suffix='.html', prefix='report_image_html_input.tmp.'))
-                output_file = stack.enter_context(tempfile.NamedTemporaryFile(suffix=f'.{image_format}', prefix='report_image_output.tmp.'))
+                input_file = stack.enter_context(tempfile.NamedTemporaryFile(suffix='.html', prefix='report_image_html_input.tmp.', delete=auto_delete))
+                output_file = stack.enter_context(tempfile.NamedTemporaryFile(suffix=f'.{image_format}', prefix='report_image_output.tmp.', delete=auto_delete))
                 input_file.write(body.encode())
                 files.append((input_file, output_file))
             output_images = []
@@ -499,6 +501,10 @@ class IrActionsReport(models.Model):
                     output_images.append(None)
                 else:
                     output_images.append(output_file.read())
+        if not auto_delete:
+            for (input_file, output_file) in files:
+                os.remove(input_file.name)
+                os.remove(output_file.name)
         return output_images
 
     @api.model
