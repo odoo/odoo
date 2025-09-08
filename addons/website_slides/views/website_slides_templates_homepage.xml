@@ -434,9 +434,9 @@
     </div>
     <div class="o_wslides_home_aside">
         <t t-set="next_rank_id" t-value="user._get_next_rank()"/>
-        <div t-if="next_rank_id">
+        <div t-if="next_rank_id" class="d-flex flex-column gap-3 mt-3 rounded p-3 bg-100">
             <t t-call="website_profile.profile_next_rank_card"/>
-            <div t-field="next_rank_id.description_motivational" class="mt-3 rounded p-3 bg-100"/>
+            <div t-field="next_rank_id.description_motivational"/>
         </div>
         <div t-else="" class="mt-3">Congratulations, you have reached the last rank!</div>
     </div>
