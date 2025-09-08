@@ -69,6 +69,7 @@ class RepairOrder(models.Model):
         product_ids = [line.product_id.id for line in bom.bom_line_ids] if bom else []
         return {
             **super()._get_action_add_from_catalog_extra_context(),
+            'back_button_label': self.env._("Back to Repair"),
             'catalog_bom_product_ids': product_ids,
             'search_default_bom_parts': bool(product_ids)
         }

@@ -500,6 +500,7 @@ class MrpBom(models.Model):
     def _get_action_add_from_catalog_extra_context(self):
         return {
             **super()._get_action_add_from_catalog_extra_context(),
+            'back_button_label': self.env._("Back to BoM"),
             'product_catalog_currency_id': self.env.company.currency_id.id,
         }
 
