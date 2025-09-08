@@ -52,8 +52,7 @@
 }
 
 .o-mail-NotificationItem-markAsRead {
-    background-color: transparent !important;
-    font-size: 0.85rem !important;
+    background-color: $o-view-background-color;
     color: $success !important;
     outline: 1px solid rgba($success, .75);
     outline-offset: -1px;
@@ -62,7 +61,8 @@
     &:hover {
         outline-color: rgba(darken($success, 10%), 1);
         color: darken($success, 10%) !important;
-        background-color: transparent !important;
+        background-color: mix($o-view-background-color, $success, 75%);
+        filter: brightness(1.1);
         box-shadow: $box-shadow-sm
     }
 }
