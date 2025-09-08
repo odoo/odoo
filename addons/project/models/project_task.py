@@ -1096,9 +1096,9 @@ class ProjectTask(models.Model):
         if not self._has_field_access(self._fields['user_ids'], 'write'):
             # remove user_ids if we have no access to it
             new_context.pop('default_user_ids', False)
-        self = self.with_context(new_context)
+        self_ctx = self.with_context(new_context)
 
-        self.browse().check_access('create')
+        self_ctx.browse().check_access('create')
         default_stage = dict()
         for vals, additional_vals in zip(vals_list, additional_vals_list):
             project_id = vals.get('project_id') or default_project_id
@@ -1106,22 +1106,22 @@ class ProjectTask(models.Model):
             if vals.get('user_ids'):
                 additional_vals['date_assign'] = fields.Datetime.now()
                 if not (vals.get('parent_id') or project_id):
-                    user_ids = self._fields['user_ids'].convert_to_cache(vals.get('user_ids', []), self.env['project.task'])
-                    if self.env.user.id not in list(user_ids) + [SUPERUSER_ID]:
-                        additional_vals['user_ids'] = [Command.set(list(user_ids) + [self.env.user.id])]
+                    user_ids = self_ctx._fields['user_ids'].convert_to_cache(vals.get('user_ids', []), self_ctx.env['project.task'])
+                    if self_ctx.env.user.id not in list(user_ids) + [SUPERUSER_ID]:
+                        additional_vals['user_ids'] = [Command.set(list(user_ids) + [self_ctx.env.user.id])]
             if default_personal_stage and 'personal_stage_type_id' not in vals:
                 additional_vals['personal_stage_type_id'] = default_personal_stage[0]
             if not vals.get('name') and vals.get('display_name'):
                 vals['name'] = vals['display_name']
 
-            if self.env.user._is_portal() and not self.env.su:
-                self._ensure_fields_write(vals, defaults=True)
+            if self_ctx.env.user._is_portal() and not self_ctx.env.su:
+                self_ctx._ensure_fields_write(vals, defaults=True)
 
             if project_id and not "company_id" in vals:
-                additional_vals["company_id"] = self.env["project.project"].browse(
+                additional_vals["company_id"] = self_ctx.env["project.project"].browse(
                     project_id
                 ).company_id.id
-            if not project_id and ("stage_id" in vals or self.env.context.get('default_stage_id')):
+            if not project_id and ("stage_id" in vals or self_ctx.env.context.get('default_stage_id')):
                 vals["stage_id"] = False
 
             if project_id and "stage_id" not in vals:
@@ -1129,42 +1129,42 @@ class ProjectTask(models.Model):
                 # 2) Ensure the defaults are correct (and computed once by project),
                 # by using default get (instead of _get_default_stage_id or _stage_find),
                 if project_id not in default_stage:
-                    default_stage[project_id] = self.with_context(
+                    default_stage[project_id] = self_ctx.with_context(
                         default_project_id=project_id
                     ).default_get(['stage_id']).get('stage_id')
                 vals["stage_id"] = default_stage[project_id]
 
             # Stage change: Update date_end if folded stage and date_last_stage_update
             if vals.get('stage_id'):
-                additional_vals.update(self.update_date_end(vals['stage_id']))
+                additional_vals.update(self_ctx.update_date_end(vals['stage_id']))
                 additional_vals['date_last_stage_update'] = fields.Datetime.now()
             # recurrence
-            rec_fields = vals.keys() & self._get_recurrence_fields()
+            rec_fields = vals.keys() & self_ctx._get_recurrence_fields()
             if rec_fields and vals.get('recurring_task') is True:
                 rec_values = {rec_field: vals[rec_field] for rec_field in rec_fields}
-                recurrence = self.env['project.task.recurrence'].create(rec_values)
+                recurrence = self_ctx.env['project.task.recurrence'].create(rec_values)
                 vals['recurrence_id'] = recurrence.id
 
         # create the task, write computed inaccessible fields in sudo
         for vals, computed_vals in zip(vals_list, additional_vals_list):
             for field_name in list(computed_vals):
-                if self._has_field_access(self._fields[field_name], 'write'):
+                if self_ctx._has_field_access(self_ctx._fields[field_name], 'write'):
                     vals[field_name] = computed_vals.pop(field_name)
         # no track when the portal user create a task to avoid using during tracking
         # process since the portal does not have access to tracking models
-        tasks = super(ProjectTask, self.with_context(mail_create_nosubscribe=True, mail_notrack=not self.env.su and self.env.user._is_portal())).create(vals_list)
+        tasks = super(ProjectTask, self_ctx.with_context(mail_create_nosubscribe=True, mail_notrack=not self_ctx.env.su and self_ctx.env.user._is_portal())).create(vals_list)
         for task, computed_vals in zip(tasks.sudo(), additional_vals_list):
             if computed_vals:
                 task.write(computed_vals)
         tasks.sudo()._populate_missing_personal_stages()
-        self._task_message_auto_subscribe_notify({task: task.user_ids - self.env.user for task in tasks})
+        self_ctx._task_message_auto_subscribe_notify({task: task.user_ids - self_ctx.env.user for task in tasks})
 
-        current_partner = self.env.user.partner_id
+        current_partner = self_ctx.env.user.partner_id
 
         all_partner_emails = []
         for task in tasks.sudo():
             all_partner_emails += tools.email_normalize_all(task.email_cc)
-        partners = self.env['res.partner'].search([('email', 'in', all_partner_emails)])
+        partners = self_ctx.env['res.partner'].search([('email', 'in', all_partner_emails)])
         partner_per_email = {
             partner.email: partner
             for partner in partners
@@ -1180,7 +1180,7 @@ class ProjectTask(models.Model):
             if current_partner not in task.message_partner_ids:
                 task.message_subscribe(current_partner.ids)
             if task.email_cc:
-                partners_with_internal_user = self.env['res.partner']
+                partners_with_internal_user = self_ctx.env['res.partner']
                 for email in tools.email_normalize_all(task.email_cc):
                     new_partner = partner_per_email.get(email)
                     if new_partner:
@@ -1760,7 +1760,7 @@ class ProjectTask(models.Model):
         if not self:
             return {}
 
-        res = dict.fromkeys(self._ids, [])
+        res = {id_: [] for id_ in self._ids}
         if all(self._ids):
             self.env.cr.execute(
                 """
