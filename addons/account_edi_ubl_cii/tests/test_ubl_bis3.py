@@ -1,3 +1,6 @@
+from contextlib import contextmanager
+from unittest import mock
+
 from odoo import Command, fields
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tests import tagged
@@ -60,6 +63,19 @@ class TestUblBis3(AccountTestInvoicingCommon):
             'country_id': self.env.ref('base.be').id,
             'bank_ids': [Command.create({'acc_number': 'BE90735788866632'})],
         })
+
+    @contextmanager
+    def allow_sending_vendor_bills(self):
+        old_get_move_constraints = self.env['account.move.send'].__class__._get_move_constraints
+
+        def patched_get_move_constraints(self, move):
+            constraints = old_get_move_constraints(self, move)
+            if move.is_purchase_document():
+                constraints.pop('not_sale_document', None)
+            return constraints
+
+        with mock.patch.object(self.env['account.move.send'].__class__, '_get_move_constraints', patched_get_move_constraints):
+            yield
 
     def _assert_invoice_ubl_file(self, invoice, filename):
         file_path = f'addons/{self.test_module}/tests/test_files/{filename}.xml'
@@ -630,7 +646,6 @@ class TestUblBis3(AccountTestInvoicingCommon):
     # -------------------------------------------------------------------------
 
     def test_export_vendor_bill(self):
-        self.env.company.peppol_activate_self_billing_sending = True
         self.setup_partner_as_be1(self.env.company.partner_id)
         self.setup_partner_as_be2(self.partner_a)
         tax_21 = self.percent_tax(21.0)
@@ -658,11 +673,11 @@ class TestUblBis3(AccountTestInvoicingCommon):
         })
 
         invoice.action_post()
-        self.env['account.move.send']._generate_and_send_invoices(invoice, sending_methods=['manual'])
+        with self.allow_sending_vendor_bills():
+            self.env['account.move.send']._generate_and_send_invoices(invoice, sending_methods=['manual'])
         self._assert_invoice_ubl_file(invoice, 'bis3/test_vendor_bill')
 
     def test_export_vendor_bill_reverse_charge(self):
-        self.env.company.peppol_activate_self_billing_sending = True
         self.setup_partner_as_fr1(self.env.company.partner_id)
         self.setup_partner_as_be2(self.partner_a)
         tax_21_reverse_charge = self.percent_tax(
@@ -701,11 +716,11 @@ class TestUblBis3(AccountTestInvoicingCommon):
             ],
         })
         invoice.action_post()
-        self.env['account.move.send']._generate_and_send_invoices(invoice, sending_methods=['manual'])
+        with self.allow_sending_vendor_bills():
+            self.env['account.move.send']._generate_and_send_invoices(invoice, sending_methods=['manual'])
         self._assert_invoice_ubl_file(invoice, 'bis3/test_vendor_bill_reverse_charge')
 
     def test_export_vendor_credit_note(self):
-        self.env.company.peppol_activate_self_billing_sending = True
         self.setup_partner_as_be1(self.env.company.partner_id)
         self.setup_partner_as_be2(self.partner_a)
         tax_21 = self.percent_tax(21.0)
@@ -734,5 +749,6 @@ class TestUblBis3(AccountTestInvoicingCommon):
         })
 
         invoice.action_post()
-        self.env['account.move.send']._generate_and_send_invoices(invoice, sending_methods=['manual'])
+        with self.allow_sending_vendor_bills():
+            self.env['account.move.send']._generate_and_send_invoices(invoice, sending_methods=['manual'])
         self._assert_invoice_ubl_file(invoice, 'bis3/test_vendor_credit_note')
