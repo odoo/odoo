@@ -509,6 +509,22 @@ describe("Selection collapsed", () => {
                 contentAfter: `<p>a[]</p>`,
             });
         });
+
+        test("should delete empty styled paragraph(s) and move cursor to previous styled inline", async () => {
+            await testEditor({
+                contentBefore: `<p><strong data-oe-zws-empty-inline="">\u200B</strong></p><p><strong data-oe-zws-empty-inline="">[]\u200B</strong></p>`,
+                stepFunction: deleteBackward,
+                contentAfterEdit: `<p o-we-hint-text='Type "/" for commands' class="o-we-hint"><strong data-oe-zws-empty-inline="">\u200B[]</strong><br></p>`,
+                contentAfter: `<p>[]<br></p>`,
+            });
+
+            await testEditor({
+                contentBefore: `<p><strong>abc</strong></p><p><strong data-oe-zws-empty-inline="">\u200B</strong></p><p><strong data-oe-zws-empty-inline="">\u200B</strong></p><p><strong data-oe-zws-empty-inline="">[]\u200B</strong></p>`,
+                stepFunction: deleteBackward,
+                contentAfterEdit: `<p><strong>abc</strong></p><p><strong data-oe-zws-empty-inline="">\u200B</strong><br></p><p o-we-hint-text='Type "/" for commands' class="o-we-hint"><strong data-oe-zws-empty-inline="">\u200B[]</strong><br></p>`,
+                contentAfter: `<p><strong>abc</strong></p><p><br></p><p>[]<br></p>`,
+            });
+        });
     });
 
     describe("Line breaks", () => {
