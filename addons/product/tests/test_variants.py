@@ -401,6 +401,31 @@ class TestVariants(ProductVariantsCommon):
         product = product_form.save()
         self.assertEqual(uom_unit, product.uom_id)
 
+    def test_single_variant_template_computed_values_after_creation(self):
+        """Check that only one packaging gets created along with a single-attribute product."""
+        product_template = self.env['product.template'].create({
+            'name': "one variant template",
+            'attribute_line_ids': [Command.create({
+                'attribute_id': self.size_attribute.id,
+                'value_ids': [Command.set(self.size_attribute_s.ids)],
+            })],
+            'packaging_ids': [Command.create({'name': "packaging"})],
+            'barcode': 'THIS IS A TEST',
+        })
+        self.assertEqual(
+            product_template.packaging_ids.ids,
+            product_template.product_variant_id.packaging_ids.ids,
+        )
+        self.assertEqual(len(product_template.packaging_ids), 1)
+        self.assertEqual(
+            product_template.barcode,
+            product_template.product_variant_id.barcode,
+        )
+        self.assertEqual(
+            product_template.barcode,
+            'THIS IS A TEST',
+        )
+
 @tagged('post_install', '-at_install')
 class TestVariantsNoCreate(ProductAttributesCommon):
 

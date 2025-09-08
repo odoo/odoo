@@ -502,7 +502,7 @@ class ProductTemplate(models.Model):
 
     def _get_related_fields_variant_template(self):
         """ Return a list of fields present on template and variants models and that are related"""
-        return ['barcode', 'default_code', 'standard_price', 'volume', 'weight', 'packaging_ids', 'product_properties']
+        return ['barcode', 'default_code', 'standard_price', 'volume', 'weight', 'product_properties']
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -511,6 +511,7 @@ class ProductTemplate(models.Model):
         if self._context.get("create_product_product", True):
             templates._create_variant_ids()
 
+        # TODO remove in master: this is not needed anymore
         # This is needed to set given values to first variant after creation
         for template, vals in zip(templates, vals_list):
             related_vals = {}
