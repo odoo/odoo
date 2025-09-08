@@ -124,7 +124,6 @@ class PurchaseOrder(models.Model):
             'vendor_suggest_days': self.partner_id.suggest_days,
             'vendor_suggest_based_on': self.partner_id.suggest_based_on,
             'vendor_suggest_percent': self.partner_id.suggest_percent,
-            'po_state': self.state,
         }
 
     def action_purchase_order_suggest(self, search_domain, section_id):

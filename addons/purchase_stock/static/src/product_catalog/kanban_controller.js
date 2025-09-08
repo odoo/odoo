@@ -10,7 +10,7 @@ export class PurchaseStockProductCatalogKanbanController extends ProductCatalogK
         Object.assign(this.suggest, {
             currencyId: this.props.context.product_catalog_currency_id,
             digits: this.props.context.product_catalog_digits,
-            poState: this.props.context.po_state,
+            poState: this.props.context.product_catalog_order_state,
             vendorName: this.props.context.vendor_name,
             warehouse_id: this.props.context.warehouse_id,
         });
@@ -41,7 +41,7 @@ export class PurchaseStockProductCatalogKanbanController extends ProductCatalogK
             "purchase.order",
             "action_purchase_order_suggest",
             [this._baseContext["product_catalog_order_id"], sm.domain, sectionId],
-            { context: sm.globalContext }
+            { context: this._editSuggestContext() }
         );
         this._toggleSuggestFilters(true);
         this.env.searchModel.trigger("section-line-count-change", {

@@ -2798,6 +2798,7 @@ class AccountMove(models.Model):
         if self.is_purchase_document() and self.partner_id:
             res['search_default_seller_ids'] = self.partner_id.name
 
+        res['back_button_label'] = self.env._("Back to Invoice") if self.move_type == "out_invoice" else self.env._("Back to Bill")
         res['product_catalog_currency_id'] = self.currency_id.id
         res['product_catalog_digits'] = self.line_ids._fields['price_unit'].get_digits(self.env)
         res['show_sections'] = bool(self.id)

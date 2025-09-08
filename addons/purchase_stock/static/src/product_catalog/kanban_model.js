@@ -11,7 +11,7 @@ export class PurchaseStockProductCatalogKanbanModel extends ProductCatalogKanban
             const notSuggestedProducts = list.filter((record) => record.suggested_qty == 0);
             return [...suggestProducts, ...notSuggestedProducts];
         };
-        const suggest = getSuggestToggleState(this.config.context.po_state);
+        const suggest = getSuggestToggleState(this.config.context.product_catalog_order_state);
         const result = await super._loadData(params);
         if (!suggest.isOn || !result.records.some((r) => r.suggested_qty > 0)) {
             return result;

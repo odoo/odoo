@@ -30,7 +30,7 @@ export class PurchaseStockProductCatalogSearchModel extends AccountProductCatalo
             numberOfDays: config.context.vendor_suggest_days ?? this.suggest.numberOfDays,
             basedOn: config.context.vendor_suggest_based_on ?? this.suggest.basedOn,
             percentFactor: config.context.vendor_suggest_percent ?? this.suggest.percentFactor,
-            suggestToggle: getSuggestToggleState(config.context.po_state),
+            suggestToggle: getSuggestToggleState(config.context.product_catalog_order_state),
         });
         if (this.suggest.suggestToggle.isOn) {
             // Add default filters for suggest before loading

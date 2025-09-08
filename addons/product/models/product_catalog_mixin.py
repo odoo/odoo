@@ -125,9 +125,19 @@ class ProductCatalogMixin(models.AbstractModel):
         return order_line_info
 
     def _get_action_add_from_catalog_extra_context(self):
+        label = self.env._("Back")  # Default for inheriters that don't override "back_button_label" key
+        # Override label for sales and purchase_orders
+        if "state" in self._fields and isinstance(self.state, str):
+            if any(s in self.state for s in ["draft", "sent"]):
+                label = self.env._("Back to Quotation")
+            else:
+                label = self.env._("Back to Order")
+
         return {
             'display_uom': self.env.user.has_group('uom.group_uom'),
             'product_catalog_order_id': self.id,
+            'product_catalog_order_state': self.state if "state" in self._fields else None,
+            'back_button_label': label,
             'product_catalog_order_model': self._name,
         }
 

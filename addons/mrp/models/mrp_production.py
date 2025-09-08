@@ -3034,6 +3034,12 @@ class MrpProduction(models.Model):
     def _is_display_stock_in_catalog(self):
         return True
 
+    def _get_action_add_from_catalog_extra_context(self):
+        return {
+            **super()._get_action_add_from_catalog_extra_context(),
+            'back_button_label': self.env._("Back to Production"),
+        }
+
     def _post_run_manufacture(self, post_production_values):
         note_subtype_id = self.env['ir.model.data']._xmlid_to_res_id('mail.mt_note')
         for production, procurement in zip(self, post_production_values):
