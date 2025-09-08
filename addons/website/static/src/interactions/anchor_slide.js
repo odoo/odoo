@@ -10,6 +10,18 @@ export class AnchorSlide extends Interaction {
         },
     };
 
+    setup() {
+        /**
+         * It expands the corresponding accordion item if the target element
+         * matches the hash.
+         */
+        const hash = window.location.hash.substring(1);
+        const anchorEl = document.getElementById(hash);
+        if (anchorEl && anchorEl.classList.contains("accordion-item")) {
+            this.handleAccordionAnchor(anchorEl);
+        }
+    }
+
     /**
      * @param {HTMLElement} el the element to scroll to.
      * @param {string} [scrollValue='true'] scroll value
@@ -24,6 +36,18 @@ export class AnchorSlide extends Interaction {
 
     computeExtraOffset() {
         return 0;
+    }
+
+    /**
+     * Automatically opens the specific accordion item and closes the others.
+     *
+     * @param {HTMLElement} anchorEl - The accordion item element to handle.
+     */
+    handleAccordionAnchor(anchorEl) {
+        const accordionCollapseEl = anchorEl.querySelector(".accordion-collapse");
+        Collapse.getOrCreateInstance(accordionCollapseEl, {
+            toggle: false,
+        }).show();
     }
 
     /**
@@ -51,6 +75,9 @@ export class AnchorSlide extends Interaction {
             return;
         }
 
+        if (anchorEl.classList.contains("accordion-item")) {
+            this.handleAccordionAnchor(anchorEl);
+        }
         const offcanvasEl = this.el.closest(".offcanvas.o_navbar_mobile");
         if (offcanvasEl && offcanvasEl.classList.contains("show")) {
             // Special case for anchors in offcanvas in mobile: we can't just
