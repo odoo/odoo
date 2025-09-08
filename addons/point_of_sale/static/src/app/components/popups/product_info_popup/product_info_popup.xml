@@ -38,6 +38,10 @@
                                 forecasted
                             </div>
                         </div>
+                        <div>
+                            On hand: <span class="me-1 fw-bolder"><t t-out="warehouse.available_quantity"/></span>
+                            <t t-out="warehouse.uom"/>
+                        </div>
                     </t>
                 </div>
             </div>
