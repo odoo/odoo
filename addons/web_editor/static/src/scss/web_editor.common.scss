@@ -969,6 +969,13 @@ section, .oe_img_bg, [data-oe-shape-data] {
         5: 5,
     );
     @each $module, $shapes in $o-bg-shapes {
+
+        // Compatibility
+        $current-module: $module;
+        @if $current-module == "web_editor" {
+            $current-module: "html_builder";
+        }
+
         @each $shape, $style in $shapes {
             $colors: map-get($style, 'colors');
             $color-to-cc-bg-map: map-merge($default-color-to-cc-bg-map, map-get($style, 'color-to-cc-bg-map') or ());
@@ -980,7 +987,7 @@ section, .oe_img_bg, [data-oe-shape-data] {
                 // When the shape is not customized, this URL, built in SCSS,
                 // allows for the shape to respond to palette changes.
                 // Mainly useful for default pages built by the configurator.
-                background-image: url("/web_editor/shape/#{$module}/#{$shape}.svg?#{str-slice($url-params, 2)}");
+                background-image: url("/html_editor/shape/#{$current-module}/#{$shape}.svg?#{str-slice($url-params, 2)}");
                 background-position: map-get($style, 'position');
                 background-size: map-get($style, 'size');
                 background-repeat:
@@ -992,7 +999,7 @@ section, .oe_img_bg, [data-oe-shape-data] {
                     $url-params: compute-shape-url-params($colors, $color-to-cc-bg-map);
 
                     &.o_#{$mapping-name}_extra_shape_mapping {
-                        background-image: url("/web_editor/shape/#{$module}/#{$shape}.svg?#{str-slice($url-params, 2)}");
+                        background-image: url("/html_editor/shape/#{$current-module}/#{$shape}.svg?#{str-slice($url-params, 2)}");
                     }
                 }
             }
