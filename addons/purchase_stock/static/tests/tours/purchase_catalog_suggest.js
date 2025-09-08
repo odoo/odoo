@@ -1,5 +1,5 @@
 import { registry } from "@web/core/registry";
-import { assert } from "@stock/../tests/tours/tour_helper";
+import { assert, freezeDateTime } from "@stock/../tests/tours/tour_helper";
 import {
     goToCatalogFromPO,
     goToPOFromCatalog,
@@ -21,6 +21,7 @@ registry.category("web_tour.tours").add("test_purchase_order_suggest_search_pane
          * (estimated price, warehouse logic, toggling, saving defaults)
          * ----------------------------------------------------------------
          */
+        ...freezeDateTime("2021-01-14 09:12:15"),
         { trigger: ".o_purchase_order" },
         {
             content: "Create a New PO",
@@ -84,14 +85,6 @@ registry.category("web_tour.tours").add("test_purchase_order_suggest_search_pane
         }, // Should save suggest params when "ADD ALL"
         ...goToPOFromCatalog(),
         {
-            content: "Check test_product was added to PO",
-            trigger: "div.o_field_product_label_section_and_note_cell span",
-            run() {
-                const order_line = this.anchor.textContent.trim();
-                assert(order_line.includes("test_product"), true, `Product not added to PO`);
-            },
-        },
-        {
             content: "Create a New PO",
             trigger: ".o_form_button_create",
             run: "click",
@@ -129,10 +122,8 @@ registry.category("web_tour.tours").add("test_purchase_order_suggest_search_pane
         { trigger: "span[name='suggest_total']:visible:contains('1,000')" },
         /*
          * -----------------  PART 2 : Kanban Interactions -----------------
-         * Checks that the Suggest UI and the Kanban record interactions
-         * (monthly demand, suggest_qtys, ADD suggested qtys
-         * TODO: Check monthly demand and Suggested qty when changing warehouse,
-         * TODO: Use check highlight to check correct order preserved on multiple
+         * Checks suggest and the Kanban record interactions (product.product model)
+         * (monthly demand, suggest_qtys, button style change and ordering )
          * ------------------------------------------------------------------
          */
         ...setSuggestParameters({ basedOn: "Last 7 days", nbDays: 28, factor: 50 }),
@@ -140,15 +131,14 @@ registry.category("web_tour.tours").add("test_purchase_order_suggest_search_pane
         { trigger: "span[name='kanban_monthly_demand_qty']:visible:contains('52')" }, // ceil(12 * 30/ 7)
         { trigger: "div[name='kanban_purchase_suggest'] span:visible:contains('24')" }, // 12 * 4 * 50%
         checkKanbanRecordPosition("test_product", 0),
-        // TODO debug
-        // ...toggleSuggest(false),
-        // { trigger: "span[name='kanban_monthly_demand_qty']:visible:contains('24')" }, // Should come back to normal monthly demand
-        // { trigger: "div.o_product_catalog_buttons i.fa-shopping-cart:visible" }, // == wait for front end to sync (shopping carts only when not suggested)
-        // checkKanbanRecordPosition("Courage", 0), // Product with lowest ref number should be first, test product should be first anymore
-        //...toggleSuggest(true),
-        // { trigger: ".o_product_catalog_buttons .btn:has(.o_catalog_card_suggest_add)" }, // Wait for UI to sync
-        // { trigger: "span[name='kanban_monthly_demand_qty']:visible:contains('52')" }, // Wait for UI to sync
-        // checkKanbanRecordPosition("test_product", 0),
+        ...toggleSuggest(false),
+        { trigger: "span[name='kanban_monthly_demand_qty']:visible:contains('24')" }, // Should come back to normal monthly demand
+        { trigger: "div.o_product_catalog_buttons i.fa-shopping-cart:visible" }, // == wait for front end to sync (shopping carts only when not suggested)
+        checkKanbanRecordPosition("Courage", 0), // Product with lowest ref number should be first, test product should be first anymore
+        ...toggleSuggest(true),
+        { trigger: ".o_product_catalog_buttons .btn:has(.o_catalog_card_suggest_add)" }, // Wait for UI to sync
+        { trigger: "span[name='kanban_monthly_demand_qty']:visible:contains('52')" }, // Wait for UI to sync
+        checkKanbanRecordPosition("test_product", 0),
 
         ...setSuggestParameters({ basedOn: "Last 30 days", factor: 10 }),
         { trigger: "span[name='suggest_total']:visible:contains('60')" },
@@ -164,27 +154,61 @@ registry.category("web_tour.tours").add("test_purchase_order_suggest_search_pane
         { trigger: "span[name='suggest_total']:visible:contains('2,000')" },
         { trigger: "span[name='o_kanban_forecasted_qty']:visible:contains('100')" }, // Move out of 100 in 20days
         { trigger: "div[name='kanban_purchase_suggest'] span:visible:contains('100')" }, // 100 * 100%
-        ...setSuggestParameters({ factor: 200 }),
-        { trigger: "div[name='kanban_purchase_suggest'] span:visible:contains('200')" }, // 100 * 200%
-        ...setSuggestParameters({ factor: 50 }),
-        { trigger: "div[name='kanban_purchase_suggest'] span:visible:contains('50')" }, // 100 * 50%
+        ...setSuggestParameters({ nbDays: 7 }),
+        { trigger: "span[name='suggest_total']:visible:contains('$ 0.00')" }, // Move out of 100 in 20days, so no suggest for 7 days
+        { trigger: ".o_view_nocontent_smiling_face" }, // Should suggest no products
         /*
          * -------------------  PART 3 : KANBAN ACTIONS ---------------------
-         * Tests record button add and remove, and add all filter
-         * TODO: Test category filters and pricelist selection
-         * TODO: New test for the bug of filter all removal and Add all
+         * Checks suggest and kanban record interactions (purchase.order model)
+         * (Add, remove and add all buttons)
          * ------------------------------------------------------------------
          */
         ...setSuggestParameters({ basedOn: "Last 7 days", nbDays: 28, factor: 50 }),
+        {
+            content: "Add suggestion from Record",
+            trigger: ".o_product_catalog_buttons .btn:has(.o_catalog_card_suggest_add)",
+            run: "click",
+        },
+        { trigger: ".fa-trash" }, // Wait till its added
+        {
+            content: "Check added qty matches expectations",
+            trigger: ".o_product_catalog_quantity input",
+            run() {
+                assert(parseInt(this.anchor.value), 24); // 12 * 4 * 50%
+            },
+        },
+        {
+            content: "Remove product from purchase Order and wait for UI to sync",
+            trigger: "div.o_tooltip_div_remove button",
+            async run(actions) {
+                await actions.click(
+                    [...document.querySelectorAll("div.o_tooltip_div_remove button")].at(0)
+                );
+                await new Promise((r) => setTimeout(r, 1000));
+            },
+        },
+        { trigger: "span[name='kanban_monthly_demand_qty']:visible:contains('52')" }, // Wait for UI to sync
+        { trigger: ".o_product_catalog_buttons .btn:has(.o_catalog_card_suggest_add)" }, // Wait for remove to be synced
         {
             content: "Add all suggestion to the PO",
             trigger: 'button[name="suggest_add_all"]',
             run: "click",
         },
+        { trigger: ".fa-trash" }, // Wait till its added
         {
-            content: "Wait for filter to be applied",
-            trigger: '.o_facet_value:contains("In the Order")',
+            content: "Check added qty matches expecations",
+            trigger: ".o_product_catalog_quantity input",
+            run() {
+                assert(parseInt(this.anchor.value), 24); // 12 * 4 * 50%
+            },
         },
+        { trigger: "div[name='kanban_purchase_suggest'] span:hidden" }, // If qty in PO match suggested we should hide the string
+        {
+            content: "Add on more qty to check if suggest reappears",
+            trigger: "div.o_product_catalog_quantity i.fa-plus",
+            run: "click",
+        },
+        { trigger: "div[name='kanban_purchase_suggest'] span:visible" }, // If qty in PO match suggested we should hide the string
         {
             content: "Remove product from purchase Order",
             trigger: "div.o_tooltip_div_remove button",
@@ -194,8 +218,10 @@ registry.category("web_tour.tours").add("test_purchase_order_suggest_search_pane
                 );
             },
         },
+        // Should go back to displaying suggested qtys
         { trigger: "span[name='kanban_monthly_demand_qty']:visible:contains('52')" },
-        // { trigger: "div[name='kanban_purchase_suggest'] span:visible:contains('24')" }, // TODO Bugs sometime on local
+        { trigger: "div[name='kanban_purchase_suggest'] span:visible:contains('24')" },
+        checkKanbanRecordPosition("test_product", 0),
         /*
          * -------------------  PART 4 : KANBAN FILTERS ---------------------
          * Checks suggest and searchModel (filters) interactions
@@ -204,8 +230,8 @@ registry.category("web_tour.tours").add("test_purchase_order_suggest_search_pane
          */
         // Remove suggest filter
         {
-            content: "Remove the inTheOrder and suggest filter (which should be 2 last filter)",
-            trigger: '.o_facet_value:contains("In the Order")',
+            content: "Remove the Suggested Or In Order filter",
+            trigger: '.o_facet_value:contains("Suggested")',
             async run(actions) {
                 await actions.click(
                     [...document.querySelectorAll(".o_searchview_facet")]
@@ -216,6 +242,7 @@ registry.category("web_tour.tours").add("test_purchase_order_suggest_search_pane
         },
         ...toggleSuggest(false), // toggling with filter off should still deactivate suggest
         { trigger: "div.o_product_catalog_buttons i.fa-shopping-cart:visible" }, // == wait for front end to sync (shopping carts only when not suggested)
+        checkKanbanRecordPosition("Courage", 0), // == suggest is off
         {
             content: "Add a non suggested product to order",
             trigger: "div.o_product_catalog_buttons i.fa-shopping-cart",
@@ -233,20 +260,6 @@ registry.category("web_tour.tours").add("test_purchase_order_suggest_search_pane
                 await new Promise((r) => setTimeout(r, 1000)); // Wait one second to catch a bug where record disappears and reappears
             },
         },
-        { trigger: "span[name='o_kanban_monthly_demand_qty']:visible:contains('52')" },
-        // { trigger: "div[name='kanban_purchase_suggest'] span:visible:contains('24')" }, // 12 * 4 * 50%
-        {
-            content: "Checks 0 qty product disappear when a filter with inOrder = true",
-            trigger: ".o_kanban_record",
-            async run() {
-                await new Promise((r) => setTimeout(r, 1000));
-                assert(
-                    [...document.querySelectorAll("article.o_kanban_record")].length,
-                    1,
-                    "Wrong number of visible records"
-                );
-            },
-        },
         {
             content: "Remove the Suggested filter",
             trigger: '.o_facet_value:contains("Suggested")',
@@ -258,15 +271,22 @@ registry.category("web_tour.tours").add("test_purchase_order_suggest_search_pane
                 );
             },
         },
-        // Check adding from record button
+        { trigger: "div[name='kanban_purchase_suggest'] span:visible:contains('24')" },
         {
-            content: "Add back suggestion with Card Button",
-            trigger: ".o_product_catalog_buttons .btn:has(.o_catalog_card_suggest_add)",
+            content: "Add suggestion by clicking on the record",
+            trigger: ".o_kanban_record",
             run: "click",
         },
-        { trigger: "div[name='kanban_purchase_suggest'] span:hidden" }, // If qty in PO match suggested we should hide the string
         { trigger: ".fa-trash" }, // Wait till its added
         ...goToPOFromCatalog(),
+        {
+            content: "Check test_product was added to PO",
+            trigger: "div.o_field_product_label_section_and_note_cell span",
+            run() {
+                const first_prod = this.anchor.textContent.trim();
+                assert(first_prod.includes("test_product"), true, "product not added to PO");
+            },
+        }, // TODO IMPROVE: check qty
         {
             content: "Go back to the dashboard",
             trigger: ".o_menu_brand",

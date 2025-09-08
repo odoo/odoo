@@ -2,8 +2,7 @@ import { ProductCatalogKanbanRecord } from "@product/product_catalog/kanban_reco
 import { ProductCatalogPurchaseSuggestOrderLine } from "./purchase_order_line";
 
 export class ProductCatalogPurchaseSuggestKanbanRecord extends ProductCatalogKanbanRecord {
-    /* Highlights product card if suggest_qty > 0,
-     * hiding suggest line if suggest_qty == qty in PO */
+    /** Highlights product card if suggest_qty > 0 hiding suggest line if suggest_qty == qty in PO */
     getRecordClasses(...args) {
         const classes = super.getRecordClasses(args) || "";
         const catalogData = this.productCatalogData || {};
