@@ -118,13 +118,15 @@ class PosSelfOrderController(http.Controller):
             raise Unauthorized("Order is not in draft state")
 
         lines = self._process_lines(order.get('lines'), pos_config, pos_order.id, order.get('take_away'))
+
+        # remove lines that are no longer in the payload
+        incoming_uuids = {l.get("uuid") for l in order.get("lines", []) if l.get("uuid")}
+        pos_order.lines.filtered(lambda l: l.uuid not in incoming_uuids).unlink()
+
         for line in lines:
             if line.get('id'):
                 # we need to find by uuid because each time we update the order, id of orderlines changed.
                 order_line = pos_order.lines.filtered(lambda l: l.uuid == line.get('uuid'))
-
-                if line.get('qty') < order_line.qty:
-                    line.set('qty', order_line.qty)
 
                 if order_line:
                     order_line.write({

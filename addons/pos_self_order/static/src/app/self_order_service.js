@@ -55,6 +55,7 @@ export class SelfOrder extends Reactive {
         this.ordering = false;
         this.orders = [];
         this.kitchenPrinters = [];
+        this.preservedOrderState = null;
 
         this.initData();
         if (this.config.self_ordering_mode === "kiosk") {
@@ -160,6 +161,13 @@ export class SelfOrder extends Reactive {
             return;
         }
 
+        // Preserve the current order state for restoring later
+        this.preservedOrderState = {
+            orderUuid: order.uuid,
+            lines: order.lines,
+            lastChangesSent: order.lastChangesSent,
+        };
+
         // if the amount is 0, we don't need to go to the payment page
         // this directive works for both mode each and meal
         if (order.amount_total === 0 && order.lines.length > 0) {
@@ -190,6 +198,22 @@ export class SelfOrder extends Reactive {
                 this.router.navigate("payment");
             }
         }
+    }
+
+    restoreChangesFromBackNavigation() {
+        if (this.preservedOrderState) {
+            const { orderUuid, lines, lastChangesSent } = this.preservedOrderState;
+            const currentOrder = this.currentOrder;
+
+            if (currentOrder?.uuid === orderUuid) {
+                currentOrder.lines = lines;
+                currentOrder.lastChangesSent = lastChangesSent;
+            }
+
+            this.preservedOrderState = null;
+            return true;
+        }
+        return false;
     }
 
     get currentOrder() {
