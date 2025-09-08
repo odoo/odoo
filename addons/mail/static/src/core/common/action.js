@@ -1,5 +1,6 @@
 import { isRecord, STORE_SYM } from "@mail/model/misc";
 import { toRaw } from "@odoo/owl";
+import { DropdownState } from "@web/core/dropdown/dropdown_hooks";
 import { useService } from "@web/core/utils/hooks";
 import { Reactive } from "@web/core/utils/reactive";
 
@@ -25,6 +26,7 @@ export const ACTION_TAGS = Object.freeze({
  * @property {boolean} [dropdown]
  * @property {string|(action: Action) => string} [dropdownMenuClass]
  * @property {string|(action: Action) => string} [dropdownPosition]
+ * @property {DropdownState|(action: Action) => DropdownState} [dropdownState]
  * @property {string|(action: Action) => string} [dropdownTemplate]
  * @property {Object|(action: Action) => Object} [dropdownTemplateParams]
  * @property {string|(action: Action) => string} [hotkey]
@@ -169,6 +171,18 @@ export class Action {
             (typeof this.definition.dropdownPosition === "function"
                 ? this.definition.dropdownPosition.call(this, this.params)
                 : this.definition.dropdownPosition)
+        );
+    }
+
+    /** @param {Action} action @returns {DropdownState|undefined} */
+    _dropdownState(action) {}
+    /** When action is a dropdown @see dropdown, this determines the preferred position of the dropdown */
+    get dropdownState() {
+        return (
+            this._dropdownState(this.params) ??
+            (typeof this.definition.dropdownState === "function"
+                ? this.definition.dropdownState.call(this, this.params)
+                : this.definition.dropdownState)
         );
     }
 
@@ -370,7 +384,9 @@ export class UseActions extends Reactive {
                 definition: {
                     ...data,
                     dropdown: true,
+                    dropdownState: new DropdownState(),
                     icon: data?.icon ?? "oi oi-ellipsis-v",
+                    isActive: ({ action }) => action.dropdownState.isOpen,
                     isMoreAction: true,
                     sequence: data.sequence ?? 1000,
                 },
