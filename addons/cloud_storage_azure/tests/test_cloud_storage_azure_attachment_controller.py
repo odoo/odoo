@@ -74,7 +74,7 @@ class TestCloudStorageAttachmentController(HttpCaseWithUserDemo, TestCloudStorag
                                         "thumbnail_access_token": attachment._get_thumbnail_token(),
                                         "type": "cloud_storage",
                                         "url": "[url]",
-                                        "voice": False,
+                                        "voice_ids": [],
                                     }
                                 ],
                             }
