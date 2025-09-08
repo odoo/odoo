@@ -141,6 +141,7 @@ class DisplayDriver(Driver):
         helpers.save_browser_state(orientation=orientation)
 
 
+# required for the display to be able to get the customer display data (request from iot box to iot box)
 class DisplayController(http.Controller):
     @route.iot_route('/hw_proxy/customer_facing_display', type='jsonrpc', cors='*')
     def customer_facing_display(self):

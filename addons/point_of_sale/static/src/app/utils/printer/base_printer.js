@@ -9,7 +9,8 @@ export class BasePrinter {
         this.setup(...arguments);
     }
 
-    setup() {
+    setup(config) {
+        this.config = config;
         this.receiptQueue = [];
     }
 

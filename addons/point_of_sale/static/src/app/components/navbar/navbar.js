@@ -3,7 +3,6 @@ import { useService } from "@web/core/utils/hooks";
 import { isDisplayStandalone } from "@web/core/browser/feature_detection";
 
 import { CashierName } from "@point_of_sale/app/components/navbar/cashier_name/cashier_name";
-import { ProxyStatus } from "@point_of_sale/app/components/navbar/proxy_status/proxy_status";
 import { SyncPopup } from "@point_of_sale/app/components/popups/sync_popup/sync_popup";
 import {
     SaleDetailsButton,
@@ -27,7 +26,6 @@ export class Navbar extends Component {
     static components = {
         // FIXME POSREF remove some of these components
         CashierName,
-        ProxyStatus,
         SaleDetailsButton,
         Input,
         Dropdown,
@@ -42,7 +40,6 @@ export class Navbar extends Component {
         this.state = useState({ searchBarOpen: false });
         this.dialog = useService("dialog");
         this.notification = useService("notification");
-        this.hardwareProxy = useService("hardware_proxy");
         this.dialog = useService("dialog");
         this.isDisplayStandalone = isDisplayStandalone();
         this.isBarcodeScannerSupported = isBarcodeScannerSupported;
@@ -169,7 +166,7 @@ export class Navbar extends Component {
     }
 
     async showSaleDetails() {
-        await handleSaleDetails(this.pos, this.hardwareProxy, this.dialog);
+        await handleSaleDetails(this.pos, this.dialog);
     }
 
     async openPresetTiming() {

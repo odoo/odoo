@@ -32,7 +32,6 @@ export class ClosePosPopup extends Component {
     setup() {
         this.pos = usePos();
         this.report = useService("report");
-        this.hardwareProxy = useService("hardware_proxy");
         this.dialog = useService("dialog");
         this.ui = useService("ui");
         this.state = useState(this.getInitialState());
@@ -134,7 +133,7 @@ export class ClosePosPopup extends Component {
     }
     async openDetailsPopup() {
         const action = _t("Cash control - closing");
-        this.hardwareProxy.openCashbox(action);
+        this.pos.openCashbox(action);
         this.dialog.add(MoneyDetailsPopup, {
             moneyDetails: this.moneyDetails,
             action: action,

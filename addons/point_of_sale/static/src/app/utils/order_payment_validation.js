@@ -136,7 +136,7 @@ export default class OrderPaymentValidation {
 
     async finalizeValidation() {
         if (this.order.isPaidWithCash() || this.order.getChange()) {
-            this.pos.hardwareProxy.openCashbox();
+            this.pos.openCashbox();
         }
 
         this.order.date_order = serializeDateTime(luxon.DateTime.now());

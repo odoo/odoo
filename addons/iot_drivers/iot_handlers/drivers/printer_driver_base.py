@@ -10,7 +10,6 @@ import re
 import time
 
 from odoo.addons.iot_drivers.driver import Driver
-from odoo.addons.iot_drivers.main import iot_devices
 from odoo.addons.iot_drivers.event_manager import event_manager
 
 _logger = logging.getLogger(__name__)
@@ -68,15 +67,6 @@ class PrinterDriverBase(Driver, ABC):
             'status': self.print_status,
             '': self._action_default,
         })
-
-    @classmethod
-    def get_status(cls):
-        status = 'connected' if any(
-            iot_devices[d].device_type == "printer"
-            and iot_devices[d].device_connection == 'direct'
-            for d in iot_devices
-        ) else 'disconnected'
-        return {'status': status, 'messages': ''}
 
     def send_status(self, status, message=None):
         """Sends a status update event for the printer.

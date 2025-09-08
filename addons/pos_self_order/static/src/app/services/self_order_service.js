@@ -10,11 +10,10 @@ import { cookie } from "@web/core/browser/cookie";
 import { formatDateTime, serializeDateTime } from "@web/core/l10n/dates";
 import { printerService } from "@point_of_sale/app/services/printer_service";
 import { OrderReceipt } from "@point_of_sale/app/screens/receipt_screen/receipt/order_receipt";
-import { HWPrinter } from "@point_of_sale/app/utils/printer/hw_printer";
 import { renderToElement } from "@web/core/utils/render";
 import { TimeoutPopup } from "@pos_self_order/app/components/timeout_popup/timeout_popup";
 import { UnavailableProductsDialog } from "@pos_self_order/app/components/unavailable_product_dialog/unavailable_product_dialog";
-import { constructFullProductName, deduceUrl, random5Chars } from "@point_of_sale/utils";
+import { constructFullProductName, random5Chars } from "@point_of_sale/utils";
 import { getOrderLineValues } from "./card_utils";
 import {
     getTaxesAfterFiscalPosition,
@@ -149,8 +148,9 @@ export class SelfOrder extends Reactive {
             this.addToCart(productTemplate, 1, "", {}, {});
             this.router.navigate("cart");
         });
+
         if (this.config.epson_printer_ip && this.config.other_devices) {
-            this.printer.setPrinter(new EpsonPrinter({ ip: this.config.epson_printer_ip }));
+            this.printer.setPrinter(new EpsonPrinter(this.config));
         }
     }
 
@@ -458,10 +458,8 @@ export class SelfOrder extends Reactive {
 
     createPrinter(printer) {
         if (printer.printer_type === "epson_epos") {
-            return new EpsonPrinter({ ip: printer.epson_printer_ip });
+            return new EpsonPrinter(printer);
         }
-        const url = deduceUrl(printer.proxy_ip || "");
-        return new HWPrinter({ url });
     }
 
     _getKioskPrintingCategoriesChanges(order, categories) {

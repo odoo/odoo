@@ -5,8 +5,7 @@ import { markRaw, reactive } from "@odoo/owl";
 import { renderToElement } from "@web/core/utils/render";
 import { registry } from "@web/core/registry";
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
-import { deduceUrl, random5Chars, uuidv4, Counter } from "@point_of_sale/utils";
-import { HWPrinter } from "@point_of_sale/app/utils/printer/hw_printer";
+import { random5Chars, uuidv4, Counter } from "@point_of_sale/utils";
 import { ConnectionAbortedError, ConnectionLostError, RPCError } from "@web/core/network/rpc";
 import { OrderReceipt } from "@point_of_sale/app/screens/receipt_screen/receipt/order_receipt";
 import { _t } from "@web/core/l10n/translation";
@@ -20,7 +19,6 @@ import {
     makeActionAwaitable,
 } from "@point_of_sale/app/utils/make_awaitable_dialog";
 import { PartnerList } from "../screens/partner_list/partner_list";
-import { ScaleScreen } from "../screens/scale_screen/scale_screen";
 import { computeComboItems } from "../models/utils/compute_combo_items";
 import { changesToOrder, getOrderChanges } from "../models/utils/order_change";
 import { QRPopup } from "@point_of_sale/app/components/popups/qr_code_popup/qr_code_popup";
@@ -56,7 +54,6 @@ export class PosStore extends WithLazyGetterTrap {
         "hardware_proxy",
         "ui",
         "pos_data",
-        "pos_scale",
         "dialog",
         "notification",
         "printer",
@@ -64,7 +61,6 @@ export class PosStore extends WithLazyGetterTrap {
         "alert",
         "pos_router",
         "mail.sound_effects",
-        "iot_longpolling",
     ];
     constructor({ traps, env, deps }) {
         super({ traps });
@@ -85,11 +81,9 @@ export class PosStore extends WithLazyGetterTrap {
             printer,
             bus_service,
             pos_data,
-            pos_scale,
             action,
             pos_router,
             alert,
-            iot_longpolling,
         }
     ) {
         this.env = env;
@@ -105,7 +99,7 @@ export class PosStore extends WithLazyGetterTrap {
         this.router = pos_router;
         this.sound = env.services["mail.sound_effects"];
         this.notification = notification;
-        this.unwatched = markRaw({});
+        this.unwatched = markRaw({ printers: [] });
         this.pushOrderMutex = new Mutex();
         this.router.popStateCallback = this.handleUrlParams.bind(this);
 
@@ -135,7 +129,6 @@ export class PosStore extends WithLazyGetterTrap {
         };
 
         this.hardwareProxy = hardware_proxy;
-        this.iotLongpolling = iot_longpolling;
         this.selectedOrderUuid = null;
         this.selectedPartner = null;
         this.selectedCategory = null;
@@ -143,19 +136,12 @@ export class PosStore extends WithLazyGetterTrap {
         this.ready = new Promise((resolve) => {
             this.markReady = resolve;
         });
-        this.scale = pos_scale;
 
         this.orderCounter = new Counter(0);
 
-        // FIXME POSREF: the hardwareProxy needs the pos and the pos needs the hardwareProxy. Maybe
-        // the hardware proxy should just be part of the pos service?
-        this.hardwareProxy.pos = this;
         this.syncingOrders = new Set();
         await this.initServerData();
 
-        if (this.config.useProxy) {
-            await this.connectToProxy();
-        }
         this.closeOtherTabs();
         this.syncAllOrdersDebounced = debounce(this.syncAllOrders, 100);
         this._searchTriggered = false;
@@ -413,16 +399,9 @@ export class PosStore extends WithLazyGetterTrap {
             }
         }
 
-        // Create printer with hardware proxy, this will override related model data
-        this.unwatched.printers = [];
         for (const relPrinter of this.models["pos.printer"].getAll()) {
-            const printer = relPrinter.raw;
-            const HWPrinter = this.createPrinter(printer);
-
-            HWPrinter.config = printer;
-            this.unwatched.printers.push(HWPrinter);
+            this._configureUnwatchedPrinters(relPrinter.raw);
         }
-        this.config.iface_printers = !!this.unwatched.printers.length;
 
         this.models["product.pricelist.item"].addEventListener("create", () => {
             const order = this.getOrder();
@@ -435,8 +414,22 @@ export class PosStore extends WithLazyGetterTrap {
 
         await this.processProductAttributes();
     }
+
+    _configureUnwatchedPrinters(printer) {
+        if (printer.printer_type === "epson_epos") {
+            this.unwatched.printers.push(new EpsonPrinter(printer));
+        }
+    }
+    openCashbox(action = false) {
+        if (this.config.iface_cashdrawer) {
+            this.ePosPrinter?.openCashbox(...arguments);
+            if (action) {
+                this.logEmployeeMessage(action, "CASH_DRAWER_ACTION");
+            }
+        }
+    }
     cashMove() {
-        this.hardwareProxy.openCashbox(_t("Cash in / out"));
+        this.openCashbox(_t("Cash in / out"));
         return makeAwaitable(this.dialog, CashMovePopup);
     }
     async closeSession() {
@@ -653,7 +646,8 @@ export class PosStore extends WithLazyGetterTrap {
         await this.deviceSync.readDataFromServer();
 
         if (this.config.other_devices && this.config.epson_printer_ip) {
-            this.hardwareProxy.printer = new EpsonPrinter({ ip: this.config.epson_printer_ip });
+            this.ePosPrinter = new EpsonPrinter(this.config);
+            this.printer.setPrinter(this.ePosPrinter); // allows `this.printer.print()` as it sets the printer in "printer" service
         }
     }
 
@@ -801,6 +795,86 @@ export class PosStore extends WithLazyGetterTrap {
             return;
         }
 
+        const pack_lot_ids = await this.configureNewOrderLine(
+            productTemplate,
+            vals,
+            values,
+            order,
+            options,
+            configure
+        );
+
+        // Handle price unit
+        if (!values.product_tmpl_id.isCombo() && vals.price_unit === undefined) {
+            values.price_unit = values.product_id.getPrice(
+                order.pricelist_id,
+                values.qty,
+                values.price_extra,
+                false,
+                values.product_id
+            );
+        }
+
+        const line = this.data.models["pos.order.line"].create({ ...values, order_id: order });
+        line.setOptions(options);
+        this.selectOrderLine(order, line);
+        if (configure) {
+            this.numberBuffer.reset();
+        }
+        const selectedOrderline = order.getSelectedOrderline();
+        if (options.draftPackLotLines && configure) {
+            selectedOrderline.setPackLotLines({
+                ...options.draftPackLotLines,
+                setQuantity: options.quantity === undefined,
+            });
+        }
+
+        let to_merge_orderline;
+        for (const curLine of order.lines) {
+            if (curLine.id !== line.id) {
+                if (curLine.canBeMergedWith(line) && merge !== false) {
+                    to_merge_orderline = curLine;
+                }
+            }
+        }
+
+        if (to_merge_orderline) {
+            to_merge_orderline.merge(line);
+            line.delete();
+            this.selectOrderLine(order, to_merge_orderline);
+        } else if (!selectedOrderline) {
+            this.selectOrderLine(order, order.getLastOrderline());
+        }
+
+        if (configure) {
+            this.numberBuffer.reset();
+        }
+
+        if (values.product_id.tracking === "serial") {
+            this.selectedOrder.getSelectedOrderline().setPackLotLines({
+                modifiedPackLotLines: pack_lot_ids.modifiedPackLotLines ?? [],
+                newPackLotLines: pack_lot_ids.newPackLotLines ?? [],
+                setQuantity: true,
+            });
+        }
+
+        // FIXME: Put this in an effect so that we don't have to call it manually.
+        order.recomputeOrderData();
+
+        if (configure) {
+            this.numberBuffer.reset();
+        }
+
+        this.hasJustAddedProduct = true;
+        clearTimeout(this.productReminderTimeout);
+        this.productReminderTimeout = setTimeout(() => {
+            this.hasJustAddedProduct = false;
+        }, 3000);
+
+        return order.getSelectedOrderline();
+    }
+
+    async configureNewOrderLine(productTemplate, vals, values, order, opts = {}, configure = true) {
         // In case of configurable product a popup will be shown to the user
         // We assign the payload to the current values object.
         // ---
@@ -973,108 +1047,13 @@ export class PosStore extends WithLazyGetterTrap {
                 values.pack_lot_ids = packLotLine.map((lot) => ["create", lot]);
             }
         }
-
-        // In case of clicking a product with tracking weight enabled a popup will be shown to the user
-        // It will return the weight of the product as quantity
-        // ---
-        // This actions cannot be handled inside pos_order.js or pos_order_line.js
-        if (values.product_tmpl_id.to_weight && this.config.iface_electronic_scale && configure) {
-            if (values.product_tmpl_id.isScaleAvailable) {
-                const decimalAccuracy = this.models["decimal.precision"].find(
-                    (dp) => dp.name === "Product Unit"
-                ).digits;
-                this.scale.setProduct(
-                    values.product_id,
-                    decimalAccuracy,
-                    this.getProductPrice(values.product_id)
-                );
-                const weight = await this.weighProduct();
-                if (weight) {
-                    values.qty = weight;
-                } else if (weight !== null) {
-                    return;
-                }
-            } else {
-                await values.product_tmpl_id._onScaleNotAvailable();
-            }
-        }
-
-        // Handle price unit
-        if (!values.product_tmpl_id.isCombo() && vals.price_unit === undefined) {
-            values.price_unit = values.product_id.getPrice(
-                order.pricelist_id,
-                values.qty,
-                values.price_extra,
-                false,
-                values.product_id
-            );
-        }
-
-        const line = this.data.models["pos.order.line"].create({ ...values, order_id: order });
-        line.setOptions(options);
-        this.selectOrderLine(order, line);
-        if (configure) {
-            this.numberBuffer.reset();
-        }
-        const selectedOrderline = order.getSelectedOrderline();
-        if (options.draftPackLotLines && configure) {
-            selectedOrderline.setPackLotLines({
-                ...options.draftPackLotLines,
-                setQuantity: options.quantity === undefined,
-            });
-        }
-
-        let to_merge_orderline;
-        for (const curLine of order.lines) {
-            if (curLine.id !== line.id) {
-                if (curLine.canBeMergedWith(line) && merge !== false) {
-                    to_merge_orderline = curLine;
-                }
-            }
-        }
-
-        if (to_merge_orderline) {
-            to_merge_orderline.merge(line);
-            line.delete();
-            this.selectOrderLine(order, to_merge_orderline);
-        } else if (!selectedOrderline) {
-            this.selectOrderLine(order, order.getLastOrderline());
-        }
-
-        if (configure) {
-            this.numberBuffer.reset();
-        }
-
-        if (values.product_id.tracking === "serial") {
-            this.selectedOrder.getSelectedOrderline().setPackLotLines({
-                modifiedPackLotLines: pack_lot_ids.modifiedPackLotLines ?? [],
-                newPackLotLines: pack_lot_ids.newPackLotLines ?? [],
-                setQuantity: true,
-            });
-        }
-
-        // FIXME: Put this in an effect so that we don't have to call it manually.
-        order.recomputeOrderData();
-
-        if (configure) {
-            this.numberBuffer.reset();
-        }
-
-        this.hasJustAddedProduct = true;
-        clearTimeout(this.productReminderTimeout);
-        this.productReminderTimeout = setTimeout(() => {
-            this.hasJustAddedProduct = false;
-        }, 3000);
-
-        return order.getSelectedOrderline();
+        return pack_lot_ids;
     }
 
     createPrinter(config) {
         if (config.printer_type === "epson_epos") {
-            return new EpsonPrinter({ ip: config.epson_printer_ip });
+            return new EpsonPrinter(config);
         }
-        const url = deduceUrl(config.proxy_ip || "");
-        return new HWPrinter({ url });
     }
     async _loadFonts() {
         return new Promise(function (resolve, reject) {
@@ -1983,38 +1962,12 @@ export class PosStore extends WithLazyGetterTrap {
         };
     }
 
-    connectToProxy() {
-        return new Promise((resolve, reject) => {
-            this.barcodeReader?.disconnectFromProxy();
-            this.loadingSkipButtonIsShown = true;
-            this.hardwareProxy.autoConnect({ force_ip: this.config.proxy_ip }).then(
-                () => {
-                    if (this.config.iface_scan_via_proxy) {
-                        this.barcodeReader?.connectToProxy();
-                    }
-                    resolve();
-                },
-                (statusText, url) => {
-                    // this should reject so that it can be captured when we wait for pos.ready
-                    // in the chrome component.
-                    // then, if it got really rejected, we can show the error.
-                    if (statusText == "error" && window.location.protocol == "https:") {
-                        // FIXME POSREF this looks like it's dead code.
-                        reject({
-                            title: _t("HTTPS connection to IoT Box failed"),
-                            body: _t(
-                                "Make sure you are using IoT Box v18.12 or higher. Navigate to %s to accept the certificate of your IoT Box.",
-                                url
-                            ),
-                            popup: "alert",
-                        });
-                    } else {
-                        resolve();
-                    }
-                }
-            );
-        });
+    addOrderIfEmpty(forceEmpty) {
+        if (!this.getOrder()) {
+            return this.addNewOrder();
+        }
     }
+
     editPartnerContext(partner) {
         return {};
     }
@@ -2682,10 +2635,6 @@ export class PosStore extends WithLazyGetterTrap {
         return (
             (await this.data.orm.searchCount("pos.session", [["id", "=", this.session.id]])) === 0
         );
-    }
-
-    weighProduct() {
-        return makeAwaitable(this.env.services.dialog, ScaleScreen);
     }
 
     async validateOrderFast(paymentMethod) {

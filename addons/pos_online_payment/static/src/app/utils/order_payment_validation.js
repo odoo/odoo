@@ -217,7 +217,7 @@ patch(OrderPaymentValidation.prototype, {
             (this.order.isPaidWithCash() || this.order.getChange()) &&
             this.pos.config.iface_cashdrawer
         ) {
-            this.hardwareProxy.printer.openCashbox();
+            this.pos.openCashbox();
         }
 
         if (isInvoiceRequested) {
