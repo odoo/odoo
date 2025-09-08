@@ -189,9 +189,6 @@ class HrWorkEntry(models.Model):
                     date_start=contract_start,
                     date_end=contract_end,
                 ))
-            elif len(contracts) > 1:
-                raise ValidationError(_("%(employee)s has multiple contracts from %(date_start)s to %(date_end)s. A work entry cannot overlap multiple contracts.",
-                                        employee=employee.name, date_start=contract_start, date_end=contract_end))
             return dict(vals, version_id=contracts[0].id)
         return vals
 
