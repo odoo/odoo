@@ -25,7 +25,10 @@
     ],
     'assets': {
         'web.assets_backend': [
-            'hr_work_entry/static/**/*',
+            'hr_work_entry/static/src/**/*',
+        ],
+        'web.assets_unit_tests': [
+            'hr_work_entry/static/tests/**/*',
         ],
     },
     'author': 'Odoo S.A.',
