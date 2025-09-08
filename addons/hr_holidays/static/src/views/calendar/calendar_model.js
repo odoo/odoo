@@ -116,7 +116,7 @@ export class TimeOffCalendarModel extends CalendarModel {
     }
 
     get employeeId() {
-        return (this.meta.context.employee_id && this.meta.context.employee_id[0]) || null;
+        return (this.meta.context.employee_id && this.meta.context.employee_id[0]) || this.meta.context.active_id || null;
     }
 
     fetchRecords(data) {
