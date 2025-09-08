@@ -147,6 +147,32 @@
                 </div>
             </div>
             <t t-call="website_slides.courses_footer"></t>
+            <!-- Search Modal for Mobile -->
+            <div
+                id="o_wslides_search_modal"
+                class="modal fade css_editable_mode_hidden"
+                aria-hidden="true"
+                tabindex="-1"
+            >
+                <div class="modal-dialog modal-lg pt-5">
+                    <div class="modal-content mt-5 bg-transparent border-0">
+                        <div class="o_container_small">
+                            <t t-call="website.website_search_box_input">
+                                <t t-set="default_style" t-valuef="true"/>
+                                <t t-set="search_type" t-valuef="slides"/>
+                                <t t-set="_classes" t-valuef="input-group rounded o_cc o_cc1 mb-1"/>
+                                <t t-set="_input_classes" t-valuef="border-0 p-3"/>
+                                <t t-set="_submit_classes" t-valuef="px-4"/>
+                                <t t-set="placeholder">Search courses</t>
+                                <t t-set="search" t-value="original_search or search_term"/>
+                                <input type="hidden" name="my" t-attf-value="#{1 if search_my else 0}"/>
+                                <input t-if="search_slide_category" type="hidden" name="slide_category" t-att-value="search_slide_category" />
+                                <input type="hidden" name="prevent_redirect" value="True"/>
+                            </t>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </t>
 </template>
@@ -155,7 +181,7 @@
     <!-- Navbar dynamically composed using displayed channel tag groups. -->
     <div class="d-flex flex-column flex-md-row flex-wrap align-items-md-center gap-2 mt-4 mb-3">
         <h1 class="h4 mb-0 me-auto">Courses</h1>
-        <div class="d-flex gap-2 flex-column flex-md-row flex-grow-1 flex-md-grow-0 align-items-start">
+        <div class="d-flex gap-2 flex-grow-1 flex-md-grow-0 align-items-start">
             <!-- Desktop tag groups -->
             <div id="navbarTagGroups">
                 <t t-set="search_tag_groups" t-value="search_tags.mapped('group_id')"/>
@@ -180,8 +206,9 @@
                     </t>
                 </ul>
             </div>
-            <div class="d-flex gap-2 align-items-center ms-md-auto">
+            <div class="d-flex gap-2 align-items-center ms-auto">
                 <t t-call="website.website_search_box_input">
+                    <t t-set="_classes" t-valuef="d-none d-md-flex"/>
                     <t t-set="search_type" t-valuef="slides"/>
                     <!-- No action: remain on same URL -->
                     <t t-set="display_description" t-valuef="true"/>
@@ -192,6 +219,17 @@
                     <input t-if="search_slide_category" type="hidden" name="slide_category" t-att-value="search_slide_category" />
                     <input type="hidden" name="prevent_redirect" value="True"/>
                 </t>
+                <!-- Mobile Search button -->
+                <a
+                    class="btn o_not_editable d-md-none btn-light"
+                    data-bs-target="#o_wslides_search_modal"
+                    data-bs-toggle="modal"
+                    role="button"
+                    title="Search Courses"
+                    href="#"
+                >
+                    <i class="oi oi-search" role="img"/>
+                </a>
                 <a class="btn d-block d-lg-none p-0" data-bs-toggle="offcanvas" href="#o_wslides_overview_offcanvas" role="button" aria-controls="o_wslides_overview_offcanvas">
                     <t t-call="website_slides.slides_misc_user_image">
                         <t t-set="img_class" t-value="'o_wslides_user_avatar rounded-circle'"/>
