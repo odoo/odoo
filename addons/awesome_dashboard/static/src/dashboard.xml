@@ -3,19 +3,36 @@
 
     <t t-name="awesome_dashboard.AwesomeDashboard">
         <Layout display="{ controlPanel: {}}">
-            hello OXP 2025!
-            <div>
-                <Counter />
-            </div>
             <div class="d-flex flex-wrap">
                 <DashboardItem>
-                    some content
+                    Average amount of t-shirt by order this month
+                    <div class="fs-1 fw-bold text-success text-center">
+                        <t t-esc="statistics.average_quantity"/>
+                    </div>
                 </DashboardItem>
-                <DashboardItem size="2">
-                    I love milk
+               <DashboardItem>
+                    Average time for an order to go from 'new' to 'sent' or 'cancelled'
+                    <div class="fs-1 fw-bold text-success text-center">
+                        <t t-esc="statistics.average_time"/>
+                    </div>
                 </DashboardItem>
                 <DashboardItem>
-                    some content
+                    Number of new orders this month
+                    <div class="fs-1 fw-bold text-success text-center">
+                        <t t-esc="statistics.nb_new_orders"/>
+                    </div>
+                </DashboardItem>
+                <DashboardItem>
+                    Number of cancelled orders this month
+                    <div class="fs-1 fw-bold text-success text-center">
+                        <t t-esc="statistics.nb_cancelled_orders"/>
+                    </div>
+                </DashboardItem>
+                <DashboardItem>
+                    Total amount of new orders this month
+                    <div class="fs-1 fw-bold text-success text-center">
+                        <t t-esc="statistics.total_amount"/>
+                    </div>
                 </DashboardItem>
             </div>
         </Layout>    
