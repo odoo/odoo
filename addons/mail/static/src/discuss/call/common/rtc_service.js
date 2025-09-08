@@ -2069,6 +2069,9 @@ export class Rtc extends Record {
                 this.store.settings.useBlur = false;
                 outputTrack = sourceStream.getVideoTracks()[0];
             }
+        } else if (!this.store.settings.useBlur && type === "camera") {
+            this.blurManager?.close();
+            this.blurManager = undefined;
         }
         switch (type) {
             case "camera": {
