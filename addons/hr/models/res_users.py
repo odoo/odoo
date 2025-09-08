@@ -84,6 +84,7 @@ class ResUsers(models.Model):
     private_email = fields.Char(related='employee_id.private_email', string="Private Email", readonly=False)
     km_home_work = fields.Integer(related='employee_id.km_home_work', readonly=False, related_sudo=False)
     # res.users already have a field bank_account_id and country_id from the res.partner inheritance: don't redefine them
+    # This field no longer appears to be in use. To avoid breaking anything it must only be removed after the freeze of v19.
     employee_bank_account_ids = fields.Many2many('res.partner.bank', related='employee_id.bank_account_ids', string="Employee's Bank Accounts", related_sudo=False, readonly=False)
     emergency_contact = fields.Char(related='employee_id.emergency_contact', readonly=False, related_sudo=False)
     emergency_phone = fields.Char(related='employee_id.emergency_phone', readonly=False, related_sudo=False)
