@@ -552,6 +552,9 @@ class HTML_Editor(http.Controller):
                     raise werkzeug.exceptions.NotFound()
             svg = attachment.raw.decode('utf-8')
         else:
+            # Used for compatibility
+            if module == 'web_editor':
+                module = 'html_builder'
             svg = self._get_shape_svg(module, 'shapes', filename)
 
         svg, options = self._update_svg_colors(kwargs, svg)
@@ -576,6 +579,9 @@ class HTML_Editor(http.Controller):
 
     @http.route(['/web_editor/image_shape/<string:img_key>/<module>/<path:filename>', '/html_editor/image_shape/<string:img_key>/<module>/<path:filename>'], type='http', auth="public", website=True)
     def image_shape(self, module, filename, img_key, **kwargs):
+        # Used for compatibility
+        if module == 'web_editor':
+            module = 'html_builder'
         svg = self._get_shape_svg(module, 'image_shapes', filename)
 
         record = request.env['ir.binary']._find_record(img_key)
