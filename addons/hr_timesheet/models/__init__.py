@@ -10,7 +10,6 @@ from . import ir_ui_menu
 from . import res_company
 from . import res_config_settings
 from . import project_project
-from . import project_task_template
 from . import project_task
 from . import project_update
 from . import project_collaborator
