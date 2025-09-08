@@ -50,7 +50,9 @@ test("No duplicated chat bubbles", async () => {
     await insertText("input[placeholder='Search a conversation']", "John");
     await click(".o_command_name", { text: "John" });
     await contains(".o-mail-ChatWindow", { text: "John" });
-    await contains(".o-mail-ChatWindow", { text: "This is the start of your direct chat with John" }); // wait fully loaded
+    await contains(".o-mail-ChatWindow", {
+        text: "This is the start of your direct chat with John",
+    }); // wait fully loaded
     await click("button[title='Fold']");
     await contains(".o-mail-ChatBubble[name='John']");
     // Make bubble of "John" chat again
@@ -354,13 +356,13 @@ test("Compact chat hub is crosstab synced", async () => {
     setupChatHub({ folded: channelIds });
     const env1 = await start({ asTab: true });
     const env2 = await start({ asTab: true });
-    await contains(".o-mail-ChatBubble", { count: 2, target: env1 });
-    await contains(".o-mail-ChatBubble", { count: 2, target: env2 });
-    await hover(".o-mail-ChatBubble:eq(0)", { target: env1 });
-    await click("button[title='Chat Options']", { target: env1 });
-    await click(".o-dropdown-item", { text: "Hide all conversations", target: env1 });
-    await contains(".o-mail-ChatBubble .fa-comments", { target: env1 });
-    await contains(".o-mail-ChatBubble .fa-comments", { target: env2 });
+    await contains(`${env1.selector} .o-mail-ChatBubble`, { count: 2 });
+    await contains(`${env2.selector} .o-mail-ChatBubble`, { count: 2 });
+    await hover(`${env1.selector} .o-mail-ChatBubble:eq(0)`);
+    await click(`${env1.selector} button[title='Chat Options']`);
+    await click(`${env1.selector} .o-dropdown-item`, { text: "Hide all conversations" });
+    await contains(`${env1.selector} .o-mail-ChatBubble .fa-comments`);
+    await contains(`${env2.selector} .o-mail-ChatBubble .fa-comments`);
 });
 
 test("Compacted chat hub shows badge with amount of hidden chats with important messages", async () => {
