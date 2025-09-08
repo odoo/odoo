@@ -57,7 +57,7 @@ export class PurchaseSuggestCatalogKanbanController extends ProductCatalogKanban
             await this.model.orm.call(
                 "purchase.order",
                 "action_purchase_order_suggest",
-                [this._baseContext["order_id"], sm.domain],
+                [this._baseContext["product_catalog_order_id"], sm.domain],
                 { context: this._getSuggestContext() }
             );
             this._toggleSuggestFilters(true);
