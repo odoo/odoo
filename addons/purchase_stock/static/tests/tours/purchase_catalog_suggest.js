@@ -1,5 +1,5 @@
 import { registry } from "@web/core/registry";
-import { assert } from "@stock/../tests/tours/tour_helper";
+import { assert, freezeDateTime } from "@stock/../tests/tours/tour_helper";
 import {
     goToCatalogFromPO,
     goToPOFromCatalog,
@@ -21,6 +21,7 @@ registry.category("web_tour.tours").add("test_purchase_order_suggest_search_pane
          * (estimated price, warehouse logic, toggling, saving defaults)
          * ----------------------------------------------------------------
          */
+        ...freezeDateTime("2021-01-14 09:12:15"),
         { trigger: ".o_purchase_order" },
         {
             content: "Create a New PO",
@@ -279,8 +280,8 @@ registry.category("web_tour.tours").add("test_purchase_order_suggest_search_pane
         },
         { trigger: "div[name='kanban_purchase_suggest'] span:visible:contains('24')" },
         {
-            content: "Add back suggestion with Card Button",
-            trigger: ".o_product_catalog_buttons .btn:has(.o_catalog_card_suggest_add)",
+            content: "Add suggestion by clicking on the record",
+            trigger: ".o_kanban_record",
             run: "click",
         },
         { trigger: ".fa-trash" }, // Wait till its added
