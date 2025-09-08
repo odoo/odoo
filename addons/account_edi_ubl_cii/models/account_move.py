@@ -220,7 +220,7 @@ class AccountMove(models.Model):
         return (
             self.state == 'posted'
             and self.is_purchase_document()
-            and self.is_self_billing
+            and self.journal_id.is_self_billing
             and (invoice_edi_format := self.commercial_partner_id._get_peppol_edi_format())
             and (edi_builder := self.partner_id._get_edi_builder(invoice_edi_format)) is not None
             and edi_builder._can_export_selfbilling()

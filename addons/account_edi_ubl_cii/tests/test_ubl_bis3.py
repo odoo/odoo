@@ -635,9 +635,16 @@ class TestUblBis3(AccountTestInvoicingCommon):
         self.setup_partner_as_be2(self.partner_a)
         tax_21 = self.percent_tax(21.0)
 
+        self_billing_journal = self.env['account.journal'].create({
+            'name': 'Self Billing',
+            'code': 'SB',
+            'type': 'purchase',
+            'is_self_billing': True,
+        })
+
         invoice = self.env['account.move'].create({
             'move_type': 'in_invoice',
-            'is_self_billing': True,
+            'journal_id': self_billing_journal.id,
             'partner_id': self.partner_a.id,
             'invoice_date': '2017-01-01',
             'invoice_line_ids': [
@@ -672,9 +679,16 @@ class TestUblBis3(AccountTestInvoicingCommon):
             ],
         )
 
+        self_billing_journal = self.env['account.journal'].create({
+            'name': 'Self Billing',
+            'code': 'SB',
+            'type': 'purchase',
+            'is_self_billing': True,
+        })
+
         invoice = self.env['account.move'].create({
             'move_type': 'in_invoice',
-            'is_self_billing': True,
+            'journal_id': self_billing_journal.id,
             'partner_id': self.partner_a.id,
             'invoice_date': '2017-01-01',
             'invoice_line_ids': [
@@ -696,9 +710,16 @@ class TestUblBis3(AccountTestInvoicingCommon):
         self.setup_partner_as_be2(self.partner_a)
         tax_21 = self.percent_tax(21.0)
 
+        self_billing_journal = self.env['account.journal'].create({
+            'name': 'Self Billing',
+            'code': 'SB',
+            'type': 'purchase',
+            'is_self_billing': True,
+        })
+
         invoice = self.env['account.move'].create({
             'move_type': 'in_refund',
-            'is_self_billing': True,
+            'journal_id': self_billing_journal.id,
             'partner_id': self.partner_a.id,
             'invoice_date': '2017-01-01',
             'invoice_line_ids': [

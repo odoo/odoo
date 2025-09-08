@@ -110,6 +110,11 @@ class AccountJournal(models.Model):
         Select 'Cash', 'Bank' or 'Credit Card' for journals that are used in customer or vendor payments.
         Select 'General' for miscellaneous operations journals.
         """)
+    is_self_billing = fields.Boolean(
+        string='Self Billing',
+        help="This journal is for self-billing invoices. "
+             "Invoices will be created using a different sequence per partner.",
+    )
     default_account_type = fields.Char(string='Default Account Type', compute="_compute_default_account_type")
     default_account_id = fields.Many2one(
         comodel_name='account.account', check_company=True, copy=False, ondelete='restrict',

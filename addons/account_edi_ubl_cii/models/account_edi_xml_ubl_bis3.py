@@ -49,7 +49,7 @@ class AccountEdiXmlUbl_Bis3(models.AbstractModel):
     def _add_invoice_config_vals(self, vals):
         super()._add_invoice_config_vals(vals)
         invoice = vals['invoice']
-        vals['process_type'] = 'selfbilling' if invoice.is_purchase_document() and invoice.is_self_billing else 'billing'
+        vals['process_type'] = 'selfbilling' if invoice.is_purchase_document() and invoice.journal_id.is_self_billing else 'billing'
 
     def _can_export_selfbilling(self):
         return bool(self._get_customization_id(process_type='selfbilling'))

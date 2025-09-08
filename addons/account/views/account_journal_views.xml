@@ -158,6 +158,7 @@
                                     <group string="Automation" groups="account.group_account_manager">
                                         <field name="restrict_mode_hash_table" groups="account.group_account_readonly" invisible="type not in ['sale', 'purchase', 'general']"
                                         />
+                                        <field name="is_self_billing" invisible="type != 'purchase'"/>
                                     </group>
                                     <group string="Emails" name="group_email_alias"
                                            invisible="type not in ('general', 'sale', 'purchase')">
