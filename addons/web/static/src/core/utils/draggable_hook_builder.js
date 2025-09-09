@@ -107,6 +107,7 @@ const DEFAULT_ACCEPTED_PARAMS = {
     tolerance: [Number],
     touchDelay: [Number],
     iframeWindow: [Object, Function],
+    iframeSelector: [String],
 };
 const DEFAULT_DEFAULT_PARAMS = {
     allowDisconnected: false,
@@ -231,7 +232,11 @@ function makeDOMHelpers(cleanup) {
         const { noAddedStyle } = options;
         delete options.noAddedStyle;
         el.addEventListener(event, callback, options);
-        if (!noAddedStyle && /mouse|pointer|touch/.test(event)) {
+        if (
+            !noAddedStyle &&
+            /mouse|pointer|touch/.test(event) &&
+            el.nodeType === Node.ELEMENT_NODE
+        ) {
             // Restore pointer events on elements listening on mouse/pointer/touch events.
             addStyle(el, { pointerEvents: "auto" });
         }
@@ -550,13 +555,10 @@ export function makeDraggableHook(hookParams) {
                 }
 
                 dom.addClass(document.body, "pe-none", "user-select-none");
-                if (params.iframeWindow) {
-                    for (const iframe of document.getElementsByTagName("iframe")) {
-                        if (iframe.contentWindow === params.iframeWindow) {
-                            dom.addClass(iframe, "pe-none", "user-select-none");
-                        }
-                    }
+                for (const iframe of getIframes(params.ref.el)) {
+                    dom.addClass(iframe, "pe-none", "user-select-none");
                 }
+
                 // FIXME: adding pe-none and cursor on the same element makes
                 // no sense as pe-none prevents the cursor to be displayed.
                 if (ctx.cursor) {
@@ -601,6 +603,15 @@ export function makeDraggableHook(hookParams) {
 
                 cleanup.cleanup();
             };
+
+            function* getIframes(el) {
+                const iframes =
+                    el && params.iframeSelector ? el.querySelectorAll(params.iframeSelector) : [];
+                yield* iframes;
+                if (params.iframeWindow && el === params.ref.el) {
+                    yield params.iframeWindow.frameElement;
+                }
+            }
 
             /**
              * Applies scroll to the container if the current element is near
@@ -932,8 +943,8 @@ export function makeDraggableHook(hookParams) {
                         passive: false,
                         noAddedStyle: true,
                     });
-                    if (params.iframeWindow) {
-                        dom.addListener(params.iframeWindow, "touchmove", safePrevent, {
+                    for (const iframe of getIframes(ctx.ref.el)) {
+                        dom.addListener(iframe.contentWindow, "touchmove", safePrevent, {
                             passive: false,
                             noAddedStyle: true,
                         });
@@ -1054,49 +1065,84 @@ export function makeDraggableHook(hookParams) {
             // nicely when they happen from within the iframe. To work around
             // this, we use mouse events instead of pointer events.
             const useMouseEvents = isBrowserFirefox() && !hasTouch() && params.iframeWindow;
+            const throttledOnPointerMove = setupHooks.throttle(onPointerMove);
+            function initWindow(_window, addListener) {
+                addListener(
+                    _window,
+                    useMouseEvents ? "mousemove" : "pointermove",
+                    throttledOnPointerMove,
+                    { passive: false }
+                );
+                addListener(_window, useMouseEvents ? "mouseup" : "pointerup", onPointerUp);
+                addListener(_window, "pointercancel", onPointerCancel);
+                addListener(_window, "keydown", onKeyDown, { capture: true });
+            }
+
+            function initEl(el, addListener) {
+                const event = useMouseEvents ? "mousedown" : "pointerdown";
+                addListener(el, event, onPointerDown, { noAddedStyle: true });
+                addListener(el, "click", onClick);
+                if (hasTouch()) {
+                    addListener(el, "contextmenu", safePrevent);
+                    // Adds a non-passive listener on touchstart: this allows
+                    // the subsequent "touchmove" events to be cancelable
+                    // and thus prevent parasitic "touchcancel" events to
+                    // be fired. Note that we DO NOT want to prevent touchstart
+                    // events since they're responsible of the native swipe
+                    // scrolling.
+                    addListener(el, "touchstart", () => {}, {
+                        passive: false,
+                        noAddedStyle: true,
+                    });
+                }
+            }
             // Effect depending on the `ref.el` to add triggering pointer events listener.
             setupHooks.setup(
                 (el) => {
                     if (el) {
                         const { add, cleanup } = makeCleanupManager();
                         const { addListener } = makeDOMHelpers({ add });
-                        const event = useMouseEvents ? "mousedown" : "pointerdown";
-                        addListener(el, event, onPointerDown, { noAddedStyle: true });
-                        addListener(el, "click", onClick);
-                        if (hasTouch()) {
-                            addListener(el, "contextmenu", safePrevent);
-                            // Adds a non-passive listener on touchstart: this allows
-                            // the subsequent "touchmove" events to be cancelable
-                            // and thus prevent parasitic "touchcancel" events to
-                            // be fired. Note that we DO NOT want to prevent touchstart
-                            // events since they're responsible of the native swipe
-                            // scrolling.
-                            addListener(el, "touchstart", () => {}, {
-                                passive: false,
-                                noAddedStyle: true,
-                            });
-                        }
+                        initEl(el, addListener);
                         return cleanup;
                     }
                 },
                 () => [ctx.ref.el]
             );
-            const addWindowListener = (type, listener, options) => {
-                if (params.iframeWindow) {
-                    setupHooks.addListener(params.iframeWindow, type, listener, options);
-                }
-                setupHooks.addListener(window, type, listener, options);
-            };
-            // Other global event listeners.
-            const throttledOnPointerMove = setupHooks.throttle(onPointerMove);
-            addWindowListener(
-                useMouseEvents ? "mousemove" : "pointermove",
-                throttledOnPointerMove,
-                { passive: false }
+
+            setupHooks.setup(
+                () => {
+                    const { add, cleanup } = makeCleanupManager();
+                    const { addListener } = makeDOMHelpers({ add });
+                    initWindow(window, addListener);
+                    return cleanup;
+                },
+                () => []
             );
-            addWindowListener(useMouseEvents ? "mouseup" : "pointerup", onPointerUp);
-            addWindowListener("pointercancel", onPointerCancel);
-            addWindowListener("keydown", onKeyDown, { capture: true });
+
+            if (params.iframeWindow || params.iframeSelector) {
+                setupHooks.setup(
+                    (...iframes) => {
+                        const { add, cleanup } = makeCleanupManager();
+                        const { addListener } = makeDOMHelpers({ add });
+                        for (const iframe of iframes) {
+                            // Fun fact: the iframe has a contentWindow and a contentDocument from the moment the iframe is in the dom.
+                            // However, when the iframe is loaded, the contentDocument changes.
+                            const { contentWindow, contentDocument } = iframe;
+                            const body = contentDocument.body;
+                            initEl(body, addListener);
+                            initWindow(contentWindow, addListener);
+                            addListener(iframe, "load", () => {
+                                if (iframe.contentDocument.body !== body) {
+                                    initEl(iframe.contentDocument.body, addListener);
+                                }
+                            });
+                        }
+                        return cleanup;
+                    },
+                    () => [...getIframes(params.ref.el)]
+                );
+            }
+
             setupHooks.teardown(() => dragEnd(null));
 
             return state;
