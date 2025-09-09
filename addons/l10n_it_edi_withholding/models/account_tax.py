@@ -4,11 +4,6 @@
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 
-TAX_KIND_SELECTION = [
-    ('vat', 'VAT tax'),
-    ('withholding', 'Withholding tax'),
-    ('pension_fund', 'Pension Fund tax'),
-]
 
 WITHHOLDING_TYPE_SELECTION = [
     ('RT01', '[RT01] Withholding for persons'),
@@ -86,19 +81,27 @@ class AccountTax(models.Model):
     l10n_it_withholding_reason = fields.Selection(WITHHOLDING_REASON_SELECTION, string="Withholding tax reason (Italy)", help="Withholding tax reason. Only for Italian accounting EDI.")
     l10n_it_pension_fund_type = fields.Selection(PENSION_FUND_TYPE_SELECTION, string="Pension fund type (Italy)", help="Pension Fund Type. Only for Italian accounting EDI.")
 
-    def _l10n_it_get_tax_kind(self):
-        return ((self.l10n_it_withholding_type and 'withholding')
-                or (self.l10n_it_pension_fund_type and 'pension_fund')
-                or super()._l10n_it_get_tax_kind())
+    def _l10n_it_filter_kind(self, kind):
+        # EXTENDS l10n_it_edi
+        match kind:
+            case 'withholding':
+                return self.filtered(lambda tax: tax.l10n_it_withholding_type)
+            case 'pension_fund':
+                return self.filtered(lambda tax: tax.l10n_it_pension_fund_type)
+            case 'vat':
+                return super()._l10n_it_filter_kind('vat').filtered(lambda tax:
+                    not tax.l10n_it_withholding_type
+                    and not tax.l10n_it_pension_fund_type
+                )
+            case _:
+                return super()._l10n_it_filter_kind(kind)
 
     @api.constrains('amount', 'l10n_it_withholding_type', 'l10n_it_withholding_reason', 'l10n_it_pension_fund_type')
     def _validate_withholding(self):
         for tax in self:
-            if tax.l10n_it_withholding_type and tax.l10n_it_withholding_type != 'RT04' and tax.amount >= 0:
+            if tax.l10n_it_withholding_type and tax.amount >= 0:
                 raise ValidationError(_("Tax '%s' has a withholding type so the amount must be negative.", tax.name))
             if tax.l10n_it_withholding_type and not tax.l10n_it_withholding_reason:
                 raise ValidationError(_("Tax '%s' has a withholding type, so the withholding reason must also be specified", tax.name))
             if tax.l10n_it_withholding_reason and not tax.l10n_it_withholding_type:
                 raise ValidationError(_("Tax '%s' has a withholding reason, so the withholding type must also be specified", tax.name))
-            if (tax.l10n_it_withholding_type or tax.l10n_it_withholding_reason) and tax.l10n_it_pension_fund_type:
-                raise ValidationError(_("Tax '%s' cannot be both a Withholding tax and a Pension fund tax. Please create two separate ones.", tax.name))
