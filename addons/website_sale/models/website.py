@@ -1060,5 +1060,4 @@ class Website(models.Model):
             website.env['product.feed'].create({
                 'name': website.env._("GMC 1"),
                 'website_id': website.id,
-                'lang_id': website.default_lang_id.id,
             })

@@ -20,7 +20,6 @@ class WebsiteSaleGMCCommon(ProductVariantsCommon, WebsiteSaleCommon):
         cls.gmc_feed = cls.env['product.feed'].create({
             'name': "GMC",
             'website_id': cls.website.id,
-            'lang_id': cls.website.default_lang_id.id,
         })
 
         # Prepare products
