@@ -72,11 +72,10 @@
                     </h5>
                 </xpath>
                 <xpath expr="//group[@name='other_preferences']" position="inside">
-                    <field name="is_hr_user" invisible="1"/>
-                    <field name="pin" string="Attendance PIN" readonly="not is_hr_user"/>
+                    <field name="pin" string="Attendance PIN"/>
                 </xpath>
                 <xpath expr="//group[@name='other_calendar_preferences']" position="inside">
-                    <field name="work_location_id" string="Main Work Location"/>
+                    <field name="work_location_id" string="Main Work Location" options="{'no_create': True}"/>
                 </xpath>
                 <xpath expr="//page[@name='calendar']" position="after">
                     <page name="private_information" string="Private">
@@ -94,7 +93,6 @@
                                 </div>
                                 <field name="private_email" string="Private Email"/>
                                 <field name="private_phone" string="Private Phone" class="o_force_ltr"/>
-                                <field name="employee_bank_account_ids" widget="many2many_tags" context="{'display_partner': True}" readonly="not is_hr_user"/>
                             </group>
                             <group string="Emergency Contact">
                                 <field name="emergency_contact" string="Contact Name" placeholder="e.g. John Doe"/>
