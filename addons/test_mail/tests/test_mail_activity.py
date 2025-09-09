@@ -825,6 +825,18 @@ class TestActivityMixin(TestActivityCommon):
             self.assertFalse(record, "Should not find record if the only late activity is done")
 
     @users('employee')
+    def test_record_renamed(self):
+        """Check that MailActivity.res_name is updated with its related record display_name when it changes."""
+        test_record = self.test_record.with_user(self.env.user)
+        my_activity = test_record.activity_schedule(summary='My Activity', user_id=self.env.uid)
+        admin_activity = test_record.activity_schedule(summary='Admin Activity', user_id=self.user_admin.id)
+        activities = my_activity + admin_activity
+        self.assertEqual(activities.mapped('res_name'), ['Test', 'Test'])
+        test_record.name = 'Renamed Test Record'
+        test_record.env.cr.precommit.run()
+        self.assertEqual(activities.mapped('res_name'), ['Renamed Test Record', 'Renamed Test Record'])
+
+    @users('employee')
     def test_record_unlink(self):
         test_record = self.test_record.with_user(self.env.user)
         act1 = test_record.activity_schedule(summary='Active')

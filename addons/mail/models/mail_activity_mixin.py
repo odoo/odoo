@@ -235,12 +235,38 @@ class MailActivityMixin(models.AbstractModel):
         return [('activity_ids', 'in', activity_ids)]
 
     def write(self, vals):
+        """Trigger res_name update on related activities, as we cannot depend on arbitrary res_model and res_id in compute methods.
+
+        As a result display_name computation for models implementing this mixin should be kept simple.
+        """
         # Delete activities of archived record.
         if 'active' in vals and vals['active'] is False:
             self.env['mail.activity'].sudo().search(
                 [('res_model', '=', self._name), ('res_id', 'in', self.ids)]
             ).unlink()
-        return super(MailActivityMixin, self).write(vals)
+
+        def update_activity_res_name():
+            """Check if the display_name of various activity mixin records changed during the transaction.
+
+            If so force the recompute of the res_name of the linked activities, if any.
+            """
+            res_id_display_name_by_model = self.env.cr.precommit.data.pop('mail_activity_mixin_write_original_display_names', {})
+            to_recompute_activities_sudo = self.env['mail.activity'].sudo()
+            for model, display_name_by_res_id in res_id_display_name_by_model.items():
+                records_sudo = self.env[model].browse(list(display_name_by_res_id.keys())).sudo().exists()
+                modified_records = self.browse([
+                    res_id for res_id, new_display_name in zip(records_sudo.ids, records_sudo.mapped('display_name'))
+                    if display_name_by_res_id[res_id] != new_display_name
+                ])
+                to_recompute_activities_sudo |= modified_records.sudo().activity_ids
+            to_recompute_activities_sudo._compute_res_name()
+
+        # add the original display_name when the records were first encountered to be checked later.
+        precommit_data = self.env.cr.precommit.data.setdefault('mail_activity_mixin_write_original_display_names', {})
+        precommit_data[self._name] = dict(zip(self.ids, self.mapped('display_name'))) | precommit_data.setdefault(self._name, {})
+        self.env.cr.precommit.add(update_activity_res_name)
+
+        return super().write(vals)
 
     def unlink(self):
         """ Override unlink to delete records activities through (res_model, res_id). """
