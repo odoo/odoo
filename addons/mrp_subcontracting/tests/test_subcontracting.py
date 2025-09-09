@@ -1658,6 +1658,48 @@ class TestSubcontractingTracking(TransactionCase):
         mo.procurement_group_id.mrp_production_ids.button_mark_done()
         self.assertEqual(mo.procurement_group_id.mrp_production_ids.mapped("state"), ['done', 'done' , 'done'])
 
+    def test_tracked_no_unwanted_quants(self):
+        """
+        Check that the receipt of a subcontracted tracked product does not create unwanted additional
+        quants in the subcontracted location
+        """
+        self.bom_tracked.consumption = 'flexible'
+        self.comp1_sn.tracking = 'none'
+
+        picking_form = Form(self.env['stock.picking'])
+        picking_form.picking_type_id = self.env.ref('stock.picking_type_in')
+        picking_form.partner_id = self.subcontractor_partner1
+        with picking_form.move_ids_without_package.new() as move:
+            move.product_id = self.finished_product
+            move.product_uom_qty = 1
+        picking_receipt = picking_form.save()
+        picking_receipt.action_confirm()
+
+        self.env['stock.quant']._clean_reservations()
+        lot_id = self.env['stock.lot'].create({
+            'name': 'lot1',
+            'product_id': self.finished_product.id,
+        })
+
+        action = picking_receipt.move_ids.action_show_details()
+        self.assertEqual(action['name'], 'Subcontract', "It should open the subcontract record components wizard instead.")
+        mo = self.env['mrp.production'].browse(action['res_id'])
+        with Form(mo.with_context(action['context']), view=action['view_id']) as mo_form:
+            mo_form.qty_producing = 1
+            mo_form.lot_producing_id = lot_id
+            mo_form.save()
+        mo.subcontracting_record_component()
+        picking_receipt.button_validate()
+        sbc_location = self.subcontractor_partner1.company_id.subcontracting_location_id
+        sbc_quants = self.env['stock.quant'].search([
+            ('product_id', '=', self.finished_product.id), ('location_id', '=', sbc_location.id)
+        ], order='reserved_quantity')
+        self.assertEqual(len(sbc_quants), 2)
+        self.assertRecordValues(sbc_quants, [
+            {'lot_id': lot_id.id, 'quantity': 0, 'reserved_quantity': 0},
+            {'lot_id': False, 'quantity': 0, 'reserved_quantity': 1}
+        ])
+
 
 @tagged('post_install', '-at_install')
 class TestSubcontractingPortal(TransactionCase):

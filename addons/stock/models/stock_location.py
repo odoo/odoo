@@ -495,6 +495,10 @@ class Location(models.Model):
 
         return result
 
+    def is_subcontracted_location(self):
+        self.ensure_one()
+        return False
+
 
 class StockRoute(models.Model):
     _name = 'stock.route'

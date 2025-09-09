@@ -101,3 +101,6 @@ class StockLocation(models.Model):
         reference_routes = reference_rules.route_id
         rules_to_archive = self.env['stock.rule'].search(['&', ('route_id', 'in', reference_routes.ids), '|', ('location_src_id', 'in', self.ids), ('location_dest_id', 'in', self.ids)])
         rules_to_archive.action_archive()
+
+    def is_subcontracted_location(self):
+        return super().is_subcontracted_location() or self.is_subcontracting_location
