@@ -162,6 +162,13 @@ class StockRule(models.Model):
                         po.date_order = order_date_planned
             self.env['purchase.order.line'].sudo().create(po_line_values)
 
+    def _filter_warehouse_routes(self, product, warehouses, route):
+        if any(rule.action == 'buy' for rule in route.rule_ids):
+            if product.seller_ids:
+                return super()._filter_warehouse_routes(product, warehouses, route)
+            return False
+        return super()._filter_warehouse_routes(product, warehouses, route)
+
     def _get_matching_supplier(self, product_id, product_qty, product_uom, company_id, values):
         supplier = False
         # Get the schedule date in order to find a valid seller
