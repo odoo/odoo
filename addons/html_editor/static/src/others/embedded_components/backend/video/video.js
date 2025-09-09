@@ -82,7 +82,9 @@ export class EmbeddedVideoComponent extends ReadonlyEmbeddedVideoComponent {
         const urlParams = Object.fromEntries(
             Object.entries(this.state.params).filter(([key]) => key !== "isVertical")
         );
-        return getVideoUrl(this.state.platform, this.state.videoId, urlParams).toString();
+        return decodeURIComponent(
+            getVideoUrl(this.state.platform, this.state.videoId, urlParams).toString()
+        );
     }
 
     /**
