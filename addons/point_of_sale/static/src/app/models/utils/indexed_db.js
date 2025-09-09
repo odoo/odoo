@@ -152,10 +152,13 @@ export default class IndexedDB {
                 }
             });
 
-            results.push(batchPromise);
+            const result = await batchPromise
+                .then(() => ({ status: "fulfilled" }))
+                .catch((err) => ({ status: "rejected", reason: err }));
+            results.push(result);
         }
 
-        return Promise.allSettled(results);
+        return results;
     }
 
     getNewTransaction(dbStore) {
