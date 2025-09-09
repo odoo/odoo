@@ -476,6 +476,7 @@ class TestAnalyticAccount(TestMrpAnalyticAccount):
         mo_form.bom_id = self.bom
         mo_form.product_qty = 1
         mo_form.project_id = self.project
+        self.bom.bom_line_ids.operation_id = self.bom.operation_ids
         mo = mo_form.save()
         mo.action_confirm()
         mo.workorder_ids.button_finish()
