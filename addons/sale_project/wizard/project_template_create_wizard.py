@@ -6,7 +6,7 @@ class ProjectTemplateCreateWizard(models.TransientModel):
 
     partner_id = fields.Many2one("res.partner")
     allow_billable = fields.Boolean(related="template_id.allow_billable")
-    role_to_users_ids = fields.One2many(compute="_compute_role_to_users_ids", readonly=False)
+    role_to_users_ids = fields.One2many(compute="_compute_role_to_users_ids", readonly=False, store=True)
 
     @api.depends("template_id")
     def _compute_role_to_users_ids(self):
