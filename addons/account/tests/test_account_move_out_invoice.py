@@ -4758,6 +4758,22 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
                 move_form.invoice_currency_rate = -420
         self.assertEqual(invoice.invoice_currency_rate, 2.0)
 
+    def test_invoice_currency_rate_manually_changed(self):
+        """ Ensure that invoice_currency_rate is set to a value, but without any invoice date, the post() doesn't change it back to default"""
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'invoice_date': False,
+            'partner_id': self.partner_a.id,
+            'invoice_line_ids': [Command.create({'quantity': 1, 'price_unit': 100})],
+            'currency_id': self.other_currency.id,
+        })
+        invoice.invoice_currency_rate = 5
+        invoice.action_post()
+        self.assertRecordValues(invoice.line_ids, [
+            {'amount_currency':   -100.0, 'balance':   -20.0},  # Product line
+            {'amount_currency':    100.0, 'balance':    20.0},  # Receivable line
+        ])
+
     def test_invoice_no_followup(self):
         """Make sure that excluding an invoice from follow-up excludes all its receivable lines."""
         installments_payment_term = self.env['account.payment.term'].create({
