@@ -134,7 +134,12 @@ export class SectionAndNoteListRenderer extends ListRenderer {
     }
 
     async toggleCollapse(record, fieldName) {
-        const changes = { [fieldName]: !record.data[fieldName] };
+        // We don't want to have 'collapse_prices' & 'collapse_composition' set to True at the same time
+        const reverseFieldName = fieldName === 'collapse_prices' ? 'collapse_composition' : 'collapse_prices';
+        const changes = {
+            [fieldName]: !record.data[fieldName],
+            [reverseFieldName]: false,
+        };
         await record.update(changes);
     }
 
