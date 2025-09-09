@@ -404,7 +404,7 @@ export class Store extends BaseStore {
             return true;
         } else if (link.classList.contains("o_mail_redirect") && id) {
             ev.preventDefault();
-            this.openChat({ partnerId: id });
+            this.onClickPartnerMention(ev, id);
             return true;
         } else if (link.classList.contains("o_message_redirect")) {
             const message = this["mail.message"].get(id);
@@ -714,6 +714,10 @@ export class Store extends BaseStore {
         });
     }
 
+    onClickPartnerMention(ev, id) {
+        this.openChat({ partnerId: id });
+    }
+
     /**
      * @param {string} searchTerm
      * @param {Thread} thread
@@ -740,7 +744,7 @@ export class Store extends BaseStore {
 Store.register();
 
 export const storeService = {
-    dependencies: ["bus_service", "im_status", "ui"],
+    dependencies: ["bus_service", "im_status", "ui", "popover"],
     /**
      * @param {import("@web/env").OdooEnv} env
      * @param {import("services").ServiceFactories} services
