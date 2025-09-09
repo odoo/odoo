@@ -161,6 +161,12 @@ class PosConfig(models.Model):
             if vals.get('self_ordering_mode') == 'mobile' and vals.get('self_ordering_pay_after') == 'meal':
                 vals['self_ordering_service_mode'] = 'table'
 
+            if vals.get('self_ordering_mode') == 'kiosk':
+                vals['module_pos_restaurant'] = False
+                vals['self_ordering_pay_after'] = 'each'
+            elif not vals.get('module_pos_restaurant') and not record.module_pos_restaurant:
+                vals['self_ordering_service_mode'] = 'counter'
+
         res = super().write(vals)
 
         if vals.get('self_ordering_mode', 'nothing') != 'nothing' or not vals.get('limit_categories', True) or not vals.get('iface_available_categ_ids', True):
