@@ -256,6 +256,17 @@ class AccountEdiXmlUbl_21Zatca(models.AbstractModel):
             }
         }
 
+    def _get_partner_party_identification_number(self, partner):
+        """ Override to include/update values specific to ZATCA's UBL 2.1 specs """
+        identification_number = partner.l10n_sa_edi_additional_identification_number
+        vat = re.sub(r'[^a-zA-Z0-9]', '', partner.vat or "")
+        if partner.country_code != "SA":
+            identification_number = vat
+        elif partner.l10n_sa_edi_additional_identification_scheme == 'TIN':
+            # according to ZATCA, the TIN number is always the first 10 digits of the VAT number
+            identification_number = vat[:10]
+        return identification_number
+
     def _get_party_node(self, vals):
         partner = vals['partner']
         role = vals['role']
@@ -263,15 +274,10 @@ class AccountEdiXmlUbl_21Zatca(models.AbstractModel):
 
         party_node = {}
 
-        if vat := (
-            commercial_partner.l10n_sa_edi_additional_identification_number
-            if commercial_partner.l10n_sa_edi_additional_identification_scheme != 'TIN'
-            and commercial_partner.country_code == 'SA'
-            else commercial_partner.vat
-        ):
+        if identification_number := self._get_partner_party_identification_number(commercial_partner):
             party_node['cac:PartyIdentification'] = {
                 'cbc:ID': {
-                    '_text': vat,
+                    '_text': identification_number,
                     'schemeID': commercial_partner.l10n_sa_edi_additional_identification_scheme,
                 }
             }
