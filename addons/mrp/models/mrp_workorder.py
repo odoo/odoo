@@ -255,9 +255,9 @@ class MrpWorkorder(models.Model):
     def _compute_qty_ready(self):
         mo_ids_to_backorder = self.env.context.get('mo_ids_to_backorder', [])
         for workorder in self:
-            if self.env.context.get('skip_backorder') and mo_ids_to_backorder and workorder.production_id.procurement_group_id.mrp_production_ids:
+            if self.env.context.get('skip_backorder') and mo_ids_to_backorder and workorder.production_id.production_group_id.production_ids:
                 # When creating a workorder from a backorder MO, workorder dependencies are not set, which leads to wrong qty_ready computation (and then to a wrong state).
-                previous_mo_ids = list(filter(lambda mo_id: mo_id in workorder.production_id.procurement_group_id.mrp_production_ids.ids, mo_ids_to_backorder))
+                previous_mo_ids = list(filter(lambda mo_id: mo_id in workorder.production_id.production_group_id.production_ids.ids, mo_ids_to_backorder))
                 wo_to_bypass = workorder.id == [min(workorder.production_id.workorder_ids.ids)] if not workorder.allow_workorder_dependencies else len(workorder.operation_id.blocked_by_operation_ids) == 0
                 if not wo_to_bypass and workorder.id != min(workorder.production_id.workorder_ids.ids) and previous_mo_ids and any(mo_id < workorder.production_id.id for mo_id in previous_mo_ids):
                     workorder.qty_ready = 0
@@ -373,11 +373,13 @@ class MrpWorkorder(models.Model):
 
     @api.depends('operation_id', 'workcenter_id', 'qty_producing', 'qty_production', 'production_state')
     def _compute_duration_expected(self):
+        if self.env.context.get('bypass_duration_calculation'):
+            return
         for workorder in self:
             # Recompute the duration expected if the qty_producing has been changed:
             # compare with the origin record if it happens during an onchange
-            if (workorder.state not in ['done', 'cancel'] and (float_is_zero(workorder.duration_expected, 2) or workorder._origin.qty_production != workorder.qty_production)) or (workorder.production_state == 'done' and (workorder.qty_producing != workorder.qty_production
-            or (workorder._origin != workorder and workorder._origin.qty_producing and workorder.qty_producing != workorder._origin.qty_producing))):
+            if (workorder.state not in ['done', 'cancel'] and (float_is_zero(workorder.duration_expected, 2) or workorder.qty_producing != workorder.qty_production
+                or (workorder._origin != workorder and workorder._origin.qty_producing and workorder.qty_producing != workorder._origin.qty_producing))):
                 workorder.duration_expected = workorder._get_duration_expected()
 
     @api.depends('time_ids.duration', 'qty_produced')
@@ -944,10 +946,7 @@ class MrpWorkorder(models.Model):
             if wo.working_state == 'blocked':
                 raise UserError(_('Please unblock the work center to validate the work order'))
             wo.button_finish()
-            if wo.duration == 0.0:
-                ratio = wo.qty_produced / wo.qty_production
-                wo.duration = wo.duration_expected * ratio
-                wo.duration_percent = 100 * ratio
+        self._update_durations_on_done()
         return True
 
     def _compute_expected_operation_cost(self, without_employee_cost=False):
@@ -972,3 +971,14 @@ class MrpWorkorder(models.Model):
         for wo in self:
             if wo.product_uom_id.compare(wo.qty_produced, 0) <= 0:
                 wo.qty_produced = wo.get_fulfilled_qty_produced()
+
+    def _update_durations_on_done(self):
+        for wo in self:
+            # ratio = (wo.qty_production / wo.qty_producing) if wo.qty_producing not in (0, self.qty_production) else (wo.qty_produced / wo.qty_production)
+            # wo.duration_expected = wo._get_duration_expected(ratio=ratio)
+
+            if wo.duration == 0.0:
+                wo.duration = wo.duration_expected
+                wo.duration_percent = 100
+            # if wo.production_id.product_uom_id.compare(wo.qty_producing, wo.qty_production) != 0:
+                # wo.duration_expected = (wo.qty_producing / wo.qty_production) * wo.duration_expected
