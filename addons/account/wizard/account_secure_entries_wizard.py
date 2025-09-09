@@ -196,7 +196,7 @@ class AccountSecureEntriesWizard(models.TransientModel):
                     'message': _("Securing these entries will create at least one gap in the sequence."),
                     'action_text': _("Review Entries"),
                     'action': {
-                        **self.env['account.journal']._show_sequence_holes(domain),
+                        **self.env['account.journal']._show_sequence_holes(list(domain)),
                         'views': [[self.env.ref('account.view_move_tree_multi_edit').id, 'list'], [self.env.ref('account.view_move_form').id, 'form']],
                     }
                 }
@@ -252,7 +252,7 @@ class AccountSecureEntriesWizard(models.TransientModel):
             'name': _('Draft Entries'),
             'res_model': 'account.move',
             'type': 'ir.actions.act_window',
-            'domain': self._get_draft_moves_in_hashed_period_domain(),
+            'domain': list(self._get_draft_moves_in_hashed_period_domain()),
             'search_view_id': [self.env.ref('account.view_account_move_filter').id, 'search'],
             'views': [[self.env.ref('account.view_move_tree_multi_edit').id, 'list'], [self.env.ref('account.view_move_form').id, 'form']],
         }
