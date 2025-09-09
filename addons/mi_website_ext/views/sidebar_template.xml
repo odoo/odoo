@@ -198,32 +198,33 @@
                                     <div class="column1">
                                         <!--Welcmome
                                 card-->
+                                        <t t-set="SUPERUSER_ID" t-value="request.env.ref('base.user_root').id"/>
                                         <t t-set="current_month_qweb" t-value="datetime.datetime.now().month"/>
                                         <t t-set="current_year_qweb" t-value="datetime.datetime.now().year"/>
                                         <t t-set="today_date_obj_qweb" t-value="datetime.date.today()"/>
-                                        <t t-set="all_active_employees_for_welcome" t-value="request.env['hr.employee'].sudo().search([
-            ('active', '=', True)
-        ])"/>
+                                        <t t-set="all_active_employees_for_welcome" t-value="request.env['hr.employee'].with_user(SUPERUSER_ID).search([
+    ('active', '=', True)
+])"/>
                                         <t t-set="new_hires_this_month_list" t-value="[]"/>
                                         <t t-foreach="all_active_employees_for_welcome" t-as="employee_new_hire">
-                                            <t t-set="contract_for_hire_date" t-value="request.env['hr.contract'].sudo().search([
-                ('employee_id', '=', employee_new_hire.id),
-                ('date_start', '!=', False),
-                ('date_start', '&lt;=', today_date_obj_qweb) 
-            ], order='date_start asc', limit=1)"/>
+                                            <t t-set="contract_for_hire_date" t-value="request.env['hr.contract'].with_user(SUPERUSER_ID).search([
+        ('employee_id', '=', employee_new_hire.id),
+        ('date_start', '!=', False),
+        ('date_start', '&lt;=', today_date_obj_qweb) 
+    ], order='date_start asc', limit=1)"/>
                                             <t t-if="contract_for_hire_date and contract_for_hire_date.date_start">
                                                 <t t-set="hire_date_val" t-value="contract_for_hire_date.date_start"/>
                                                 <t t-if="hire_date_val.month == current_month_qweb and hire_date_val.year == current_year_qweb">
                                                     <t t-set="user_of_new_hire" t-value="employee_new_hire.user_id"/>
                                                     <t t-set="new_hires_this_month_list" t-value="new_hires_this_month_list + [{
-        'employee_obj': employee_new_hire,      
-        'user_obj': user_of_new_hire,          
-        'employee_name': employee_new_hire.name,
-        'employee_id_for_url': employee_new_hire.id,
-        'hire_date_obj': hire_date_val,
-        'company_name': employee_new_hire.company_id.name if employee_new_hire.company_id else (user_of_new_hire.company_id.name if user_of_new_hire and user_of_new_hire.company_id else 'Calteks')
-    }]"/>
-</t>
+                'employee_obj': employee_new_hire,
+                'user_obj': user_of_new_hire,
+                'employee_name': employee_new_hire.name,
+                'employee_id_for_url': employee_new_hire.id,
+                'hire_date_obj': hire_date_val,
+                'company_name': employee_new_hire.company_id.name if employee_new_hire.company_id else (user_of_new_hire.company_id.name if user_of_new_hire and user_of_new_hire.company_id else 'Calteks')
+            }]"/>
+        </t>
                                             </t>
                                         </t>
                                         <t t-set="sorted_new_hires_list" t-value="sorted(new_hires_this_month_list, key=lambda x: x['hire_date_obj'].day)"/>
@@ -232,8 +233,7 @@
                                                 <div class="welcome-title">
                                                     <h3>
                                                         <t t-if="len(sorted_new_hires_list) == 1">Bienvenido</t>
-                                                        <t t-else="">Bienvenidos</t>
-    a la familia CalEngS
+                                                        <t t-else="">Bienvenidos</t> a la familia CalEngS
                                                     </h3>
                                                     <t t-if="user.company_id.id == 1">
                                                         <img src="/mi_website_ext/static/src/img/Welcome.svg" alt="Grupo" />
