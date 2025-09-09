@@ -280,6 +280,21 @@ describe("HTML builder tests", () => {
             await contains("[data-action-id='isPreviewing'] input").edit("truthy");
             expect.verifySteps(["apply true", "apply false"]);
         });
+
+        test("useColorPickerBuilderComponent", async () => {
+            addBuilderOption({
+                selector: ".test-options-target",
+                template: xml`<BuilderColorPicker action="'isPreviewing'"/>`,
+            });
+            await setupHTMLBuilder(`<section class="test-options-target">Homepage</section>`);
+            await contains(":iframe .test-options-target").click();
+
+            // apply
+            await contains(".o_we_color_preview").click();
+            await contains("button:contains(Custom)").click();
+            await contains("button[data-color='600']").click();
+            expect.verifySteps(["apply true", "apply false"]);
+        });
     });
 
     test("reload action: apply, clean save and reload are called in the right order (async)", async () => {
