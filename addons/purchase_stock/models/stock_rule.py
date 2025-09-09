@@ -355,9 +355,7 @@ class StockRule(models.Model):
         if partner.group_rfq == 'default':
             if values.get('reference_ids'):
                 domain += (('reference_ids', 'in', tuple(values['reference_ids'].ids)),)
-            else:
-                domain += (('reference_ids', '=', False),)
-        date_planned = fields.Datetime.from_string(values['date_planned']) - relativedelta(days=int(values['supplier'].delay))
+        date_planned = fields.Datetime.from_string(values['date_planned'])
         if partner.group_rfq == 'day':
             start_dt = datetime.combine(date_planned, datetime.min.time())
             end_dt = datetime.combine(date_planned, datetime.max.time())
