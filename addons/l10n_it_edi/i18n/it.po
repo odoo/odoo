@@ -458,8 +458,30 @@ msgstr "Fattura/e da controllare"
 #. module: l10n_it_edi
 #. odoo-python
 #: code:addons/l10n_it_edi/models/account_move.py:0
-msgid "Invoices must have exactly one VAT tax set per line."
-msgstr "Le fatture devono avere esattamente una tassa IVA impostata per linea."
+#, python-format
+msgid "Invoices must have %s one %s tax set per line."
+msgstr "Le fatture devono avere %s una tassa %s impostata per linea."
+
+#. module: l10n_it_edi
+#. odoo-python
+#: code:addons/l10n_it_edi/models/account_move.py:0
+#, python-format
+msgid "VAT"
+msgstr "IVA"
+
+#. module: l10n_it_edi
+#. odoo-python
+#: code:addons/l10n_it_edi/models/account_move.py:0
+#, python-format
+msgid "at most"
+msgstr "al massimo"
+
+#. module: l10n_it_edi
+#. odoo-python
+#: code:addons/l10n_it_edi/models/account_move.py:0
+#, python-format
+msgid "exactly"
+msgstr "esattamente"
 
 #. module: l10n_it_edi
 #: model:ir.model.fields,field_description:l10n_it_edi.field_res_config_settings__is_edi_proxy_active
