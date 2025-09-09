@@ -1,5 +1,6 @@
 import { beforeEach, expect, test } from "@odoo/hoot";
-import { contains, mountView } from "@web/../tests/web_test_helpers";
+import { animationFrame, hover } from "@odoo/hoot-dom";
+import { contains, mockService, mountView, onRpc } from "@web/../tests/web_test_helpers";
 
 import { defineProjectModels, ProjectTask } from "./project_models";
 
@@ -75,8 +76,23 @@ for (const [viewType, newButtonClass] of [
         await contains(`${newButtonClass}`).click();
     });
 
-    test(`template dropdown in ${viewType} view of a project with one template`, async () => {
+    test(`template dropdown in ${viewType} view of a project with one template with showing Edit and Delete actions`, async () => {
         addTemplateTasks();
+
+        onRpc(({ method }) => {
+            if (method === "unlink") {
+                expect.step(method);
+            }
+        });
+
+        mockService("action", {
+            doAction(action) {
+                if (action.res_id === 4 && action.res_model === "project.task") {
+                    expect.step("task template opened");
+                }
+            },
+        });
+
         await mountView({
             resModel: "project.task",
             resId: 1,
@@ -99,6 +115,22 @@ for (const [viewType, newButtonClass] of [
         expect("button.dropdown-item:contains('Template Task 1')").toHaveCount(1, {
             message: "There should be a button named after the task template",
         });
+
+        await hover("button.dropdown-item:contains('Template Task 1')");
+        await animationFrame();
+
+        await contains(".o_template_icon_group:first > i.fa-trash").click();
+        expect(".modal-body").toHaveCount(1, {
+            message: "A confirmation modal should appear when deleting a template",
+        });
+
+        await contains(".modal-footer .btn-primary").click();
+        expect.verifySteps(["unlink"]);
+
+        await animationFrame();
+        await contains(".o_template_icon_group:first > i.fa-pencil").click();
+        expect.verifySteps(["task template opened"]);
+
     });
 }
 
