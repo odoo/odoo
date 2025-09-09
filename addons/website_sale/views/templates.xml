@@ -2128,10 +2128,9 @@
                                             </t>
                                         </div>
                                     </div>
-                                    <t
-                                        t-if="not is_fullwidth_content"
-                                        t-call="website_sale.product_terms_and_conditions"
-                                    />
+                                    <t t-if="not is_fullwidth_content">
+                                        <div id="o_product_terms_and_share"/>
+                                    </t>
                                 </div>
                                 <div
                                     t-if="is_fullwidth_content"
@@ -2139,7 +2138,7 @@
                                 >
                                     <div class="o_wsale_product_sticky_col position-sticky">
                                         <t t-call="website_sale.cta_wrapper"/>
-                                        <t t-call="website_sale.product_terms_and_conditions"/>
+                                        <div id="o_product_terms_and_share"/>
                                     </div>
                                 </div>
                             </div>
@@ -2386,14 +2385,21 @@
     <template
         name="Terms and Conditions"
         id="website_sale.product_terms_and_conditions"
+        inherit_id="website_sale.product"
         active="True"
-        priority="21">
-        <small class="text-muted mb-0">
-            <a href="/terms" class="o_translate_inline text-muted"><u>Terms and Conditions</u></a><br/>
-            30-day money-back guarantee<br/>
-            Shipping: 2-3 Business Days
-        </small>
+        priority="21"
+    >
+        <div id="o_product_terms_and_share" position="inside">
+            <small class="text-muted mb-0">
+                <a href="/terms" class="o_translate_inline text-muted">
+                    <u>Terms and Conditions</u>
+                </a><br/>
+                30-day money-back guarantee<br/>
+                Shipping: 2-3 Business Days
+            </small>
+        </div>
     </template>
+
 
     <!-- Product options: Zoom -->
     <template inherit_id='website_sale.product' id="product_picture_magnify_hover" name="Automatic Image Zoom">
