@@ -2,7 +2,24 @@ import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { getVisibleElements } from "@web/core/utils/ui";
 import { Macro } from "@web/core/macro";
-import { click, edit } from "@odoo/hoot-dom";
+
+const ACTION_HELPERS = {
+    click(el) {
+        el.dispatchEvent(new MouseEvent("mouseover"));
+        el.dispatchEvent(new MouseEvent("mouseenter"));
+        el.dispatchEvent(new MouseEvent("mousedown"));
+        el.dispatchEvent(new MouseEvent("mouseup"));
+        el.click();
+        el.dispatchEvent(new MouseEvent("mouseout"));
+        el.dispatchEvent(new MouseEvent("mouseleave"));
+    },
+    text(el, value) {
+        this.click(el);
+        el.value = value;
+        el.dispatchEvent(new InputEvent("input", { bubbles: true }));
+        el.dispatchEvent(new InputEvent("change", { bubbles: true }));
+    },
+};
 
 function clickOnButton(selector) {
     const button = document.body.querySelector(selector);
@@ -33,14 +50,13 @@ function updatePager(position) {
             {
                 trigger: "span.o_pager_value",
                 async action(trigger) {
-                    await click(trigger);
+                    ACTION_HELPERS.click(trigger);
                 },
             },
             {
                 trigger: "input.o_pager_value",
                 async action(trigger) {
-                    await click(trigger);
-                    await edit(next, { confirm: "blur" });
+                    ACTION_HELPERS.text(trigger, next);
                 },
             },
         ],
