@@ -1,4 +1,3 @@
-import * as hoot from "@odoo/hoot-dom";
 import { _t } from "@web/core/l10n/translation";
 
 export const stepUtils = {
@@ -23,10 +22,12 @@ export const stepUtils = {
             },
             {
                 trigger,
-                run: async () => {
-                    const input = hoot.queryFirst(trigger);
+                async run({ queryFirst }) {
+                    const input = queryFirst(trigger);
                     input.focus();
-                    await hoot.edit(value);
+                    input.value = value;
+                    input.dispatchEvent(new Event("input", { bubbles: true }));
+                    input.dispatchEvent(new Event("change", { bubbles: true }));
                 },
             },
         ];
@@ -68,10 +69,10 @@ export const stepUtils = {
             isActive,
             content: `autoExpandMoreButtons`,
             trigger: ".o-form-buttonbox",
-            run() {
-                const more = hoot.queryFirst(".o-form-buttonbox .o_button_more");
+            async run({ queryFirst, click }) {
+                const more = queryFirst(".o-form-buttonbox .o_button_more");
                 if (more) {
-                    hoot.click(more);
+                    await click(more);
                 }
             },
         };
@@ -111,13 +112,13 @@ export const stepUtils = {
             {
                 isActive: ["auto", "mobile"],
                 trigger: ".o_statusbar_buttons",
-                run: (actions) => {
-                    const buttonOutSideDropdownMenu = hoot.queryFirst(
+                async run({ queryFirst, click }) {
+                    const buttonOutSideDropdownMenu = queryFirst(
                         `.o_statusbar_buttons button:enabled:contains('${innerTextButton}')`
                     );
-                    const node = hoot.queryFirst(".o_statusbar_buttons button:has(.oi-ellipsis-v)");
+                    const node = queryFirst(".o_statusbar_buttons button:has(.oi-ellipsis-v)");
                     if (!buttonOutSideDropdownMenu && node) {
-                        hoot.click(node);
+                        await click(node);
                     }
                 },
             },
