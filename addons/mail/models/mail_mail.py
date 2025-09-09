@@ -556,7 +556,7 @@ class MailMail(models.Model):
             mail_server_id, email_from, Records<mail.mail>.ids
         """
         mail_values = self.with_context(prefetch_fields=False).read(['id', 'email_from', 'mail_server_id', 'record_alias_domain_id'], load='')
-        self.env['ir.mail_server'].browse(values['mail_server_id'] or False for values in mail_values).mapped('display_name')
+        self.env['ir.mail_server'].browse(values['mail_server_id'] for values in mail_values if values['mail_server_id']).mapped('display_name')
 
         # First group the <mail.mail> per mail_server_id, per alias_domain (if no server) and per email_from
         group_per_email_from = defaultdict(list)
