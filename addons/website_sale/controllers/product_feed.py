@@ -41,19 +41,7 @@ class ProductFeed(Controller):
         feed_sudo = self._find_and_check_feed_access(feed_id, access_token)
 
         if feed_sudo.website_id != request.website:
-            feed_sudo._notify_website_manager(
-                subject=request.env._("GMC: Domain Mismatch"),
-                body=request.env._(
-                    "The feed '%(feed_name)s' is configured for '%(feed_website)s', but was"
-                    " accessed from '%(request_website)s'. This may be due to a recent"
-                    " configuration change. Please ensure the URL is updated in Google Merchant"
-                    " Center as well.",
-                    feed_name=feed_sudo.display_name,
-                    request_website=request.website.display_name,
-                    feed_website=feed_sudo.website_id.display_name,
-                ),
-            )
-            raise BadRequest()
+            raise BadRequest("Website does not match.")
 
         compressed_gmc_xml = feed_sudo._render_and_cache_compressed_gmc_feed()
 
