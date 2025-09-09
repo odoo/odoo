@@ -1557,6 +1557,7 @@ test("Open record on new window", async () => {
     expect(".o_hierarchy_view").toHaveCount(1);
     expect(".o_form_view").toHaveCount(0);
     expect.verifySteps([
+        "get menu_id-null",
         "get current_state-null",
         "get current_action-null",
         'set current_state-{"actionStack":[{"displayName":"","model":"hr.employee","view_type":"hierarchy"}],"model":"hr.employee"}',
