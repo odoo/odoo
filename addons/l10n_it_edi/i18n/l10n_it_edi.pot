@@ -517,7 +517,29 @@ msgstr ""
 #. module: l10n_it_edi
 #. odoo-python
 #: code:addons/l10n_it_edi/models/account_move.py:0
-msgid "Invoices must have exactly one VAT tax set per line."
+#, python-format
+msgid "Invoices must have %s one %s tax set per line."
+msgstr ""
+
+#. module: l10n_it_edi
+#. odoo-python
+#: code:addons/l10n_it_edi/models/account_move.py:0
+#, python-format
+msgid "VAT"
+msgstr ""
+
+#. module: l10n_it_edi
+#. odoo-python
+#: code:addons/l10n_it_edi/models/account_move.py:0
+#, python-format
+msgid "at most"
+msgstr ""
+
+#. module: l10n_it_edi
+#. odoo-python
+#: code:addons/l10n_it_edi/models/account_move.py:0
+#, python-format
+msgid "exactly"
 msgstr ""
 
 #. module: l10n_it_edi
@@ -923,6 +945,12 @@ msgid "Payment due date invalid in XML file: %s"
 msgstr ""
 
 #. module: l10n_it_edi
+#. odoo-python
+#: code:addons/l10n_it_edi_withholding/models/account_move.py:0
+msgid "Pension Fund"
+msgstr ""
+
+#. module: l10n_it_edi
 #: model:ir.model.fields,help:l10n_it_edi.field_account_tax__l10n_it_pension_fund_type
 msgid "Pension Fund Type. Only for Italian accounting EDI."
 msgstr ""
@@ -1139,14 +1167,6 @@ msgstr ""
 #. module: l10n_it_edi
 #: model:ir.model,name:l10n_it_edi.model_account_tax
 msgid "Tax"
-msgstr ""
-
-#. module: l10n_it_edi
-#. odoo-python
-#: code:addons/l10n_it_edi/models/account_tax.py:0
-msgid ""
-"Tax '%s' cannot be both a Withholding tax and a Pension fund tax. Please "
-"create two separate ones."
 msgstr ""
 
 #. module: l10n_it_edi
@@ -1501,6 +1521,12 @@ msgstr ""
 msgid ""
 "We are simulating the sending of the e-invoice file %s, as we are in demo "
 "mode."
+msgstr ""
+
+#. module: l10n_it_edi
+#. odoo-python
+#: code:addons/l10n_it_edi/models/account_move.py:0
+msgid "Withholding"
 msgstr ""
 
 #. module: l10n_it_edi
