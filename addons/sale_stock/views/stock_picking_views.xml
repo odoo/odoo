@@ -22,7 +22,7 @@
         <field name="model">stock.picking</field>
         <field name="inherit_id" ref="stock.view_picking_form"></field>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='picking_type_code']" position="after">
+            <xpath expr="//field[@name='move_type']" position="before">
                 <field name="sale_id"/>
             </xpath>
         </field>
