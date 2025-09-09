@@ -9,11 +9,11 @@ export class AddPackageListRenderer extends ListRenderer {
         this.orm = useService("orm");
         this.actionService = useService("action");
         this.pickingId = this.props.list.context.picking_id || 0;
+        this.canAddEntirePacks = this.props.list.context?.can_add_entire_packs;
     }
 
     get displayRowCreates() {
-        // As this view is not a Many2Many, this would be false otherwise.
-        return true;
+        return this.canAddEntirePacks;
     }
 
     async add(params) {
