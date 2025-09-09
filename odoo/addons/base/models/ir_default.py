@@ -31,6 +31,16 @@ class IrDefault(models.Model):
             except json.JSONDecodeError:
                 raise ValidationError(_('Invalid JSON format in Default Value field.'))
 
+    @api.constrains('json_value', 'field_id')
+    def _check_field_type(self):
+        for record in self:
+            try:
+                model = self.env[record.field_id.model_id.model]
+                field = model._fields[record.field_id.name]
+                field.convert_to_cache(record.json_value, model)
+            except ValueError:
+                raise ValidationError(_('Invalid value type in Default Value field. Expected type: %s') % record.field_id.ttype)
+
     @api.model_create_multi
     def create(self, vals_list):
         self.env.registry.clear_cache()
