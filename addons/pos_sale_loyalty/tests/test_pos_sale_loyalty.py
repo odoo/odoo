@@ -6,6 +6,11 @@ from odoo.tests import tagged
 
 @tagged("post_install", "-at_install")
 class TestPoSSaleLoyalty(TestPointOfSaleHttpCommon):
+    @classmethod
+    def get_default_groups(cls):
+        groups = super().get_default_groups()
+        return groups | cls.quick_ref('sales_team.group_sale_manager')
+
     def test_pos_sale_loyalty_1(self):
         """Test that only one loyalty card is created when settling an unconfirmed order."""
         self.env['loyalty.program'].search([]).write({'active': False})
