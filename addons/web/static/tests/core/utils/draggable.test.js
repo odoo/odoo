@@ -1,5 +1,5 @@
 import { expect, test } from "@odoo/hoot";
-import { queryRect } from "@odoo/hoot-dom";
+import { queryFirst, queryRect } from "@odoo/hoot-dom";
 import { animationFrame, mockTouch } from "@odoo/hoot-mock";
 import { Component, reactive, useRef, useState, xml } from "@odoo/owl";
 import { contains, mountWithCleanup } from "@web/../tests/web_test_helpers";
@@ -432,4 +432,54 @@ test("Focusing is not lost after clicking", async () => {
 
     await contains(".item").click();
     expect(".item").toBeFocused();
+});
+
+test("draggable in iframe", async () => {
+    class List extends Component {
+        static template = xml`
+        <div t-ref="root" class="root">
+            <iframe class="mydroppable" t-att-srcdoc="srcdoc" />
+        </div>`;
+        static props = ["*"];
+        setup() {
+            useDraggable({
+                iframeSelector: ".mydroppable",
+                ref: useRef("root"),
+                elements: ".item",
+                onDrop: ({ element, getRect }) => {
+                    const rect = getRect(element);
+                    for (const el of element.ownerDocument.querySelectorAll(".item")) {
+                        if (el === element) {
+                            continue;
+                        }
+                        const _rect = getRect(el);
+                        if (_rect.y < rect.y) {
+                            el.append(element);
+                            break;
+                        }
+                    }
+                },
+            });
+            this.srcdoc = `<html><body>
+            <div class="item">Content 1</div>
+            <div class="item">Content 2</div>
+            <body></html>`;
+        }
+    }
+    await mountWithCleanup(List);
+
+    await contains(":iframe .item:contains(Content 2)").dragAndDrop(
+        ":iframe .item:contains(Content 1)",
+        { position: "bottom-left" }
+    );
+    await animationFrame();
+    const iframeBody = queryFirst(".mydroppable").contentDocument.body.cloneNode(true);
+    iframeBody.querySelectorAll(".item").forEach((el) => el.removeAttribute("style"));
+    expect(iframeBody).toHaveInnerHTML(`
+    <div class="item">
+        Content 1
+        <div class="item">
+            Content 2
+        </div>
+    </div>`);
 });
