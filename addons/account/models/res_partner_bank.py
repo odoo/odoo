@@ -366,10 +366,6 @@ class ResPartnerBank(models.Model):
     def _compute_display_name(self):
         super()._compute_display_name()
         if self.env.context.get('display_account_trust'):
-            for acc in self:
-                trusted_label = _('trusted') if acc.allow_out_payment else _('untrusted')
-                if acc.bank_id:
-                    name = f'{acc.acc_number} - {acc.bank_id.name} ({trusted_label})'
-                else:
-                    name = f'{acc.acc_number} ({trusted_label})'
-                acc.display_name = name
+            for account in self:
+                if not account.allow_out_payment:
+                    account.display_name += "\u00A0\U0001F534"
