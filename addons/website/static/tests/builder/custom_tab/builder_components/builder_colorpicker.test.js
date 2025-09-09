@@ -326,7 +326,7 @@ describe("Custom colorpicker: preview and commit", () => {
         await waitFor(".o-overlay-item .o_color_pick_area");
         expect(":iframe .test-options-target").not.toHaveAttribute("data-color");
         // Press shift+tab until it gets to the colorpicker area.
-        for (let i = 0; i < 9; i++) {
+        for (let i = 0; i < 5; i++) {
             await press("Tab", { shiftKey: true });
         }
         expect(".o-overlay-item .o_color_pick_area .o_picker_pointer").toBeFocused();
@@ -368,7 +368,7 @@ describe("Custom colorpicker: preview and commit", () => {
         expect(":iframe .test-options-target").toHaveAttribute("data-color");
         await press("Enter"); // Validate
         await animationFrame();
-        expect.verifySteps(["apply"]) // Commit
+        expect.verifySteps(["apply"]); // Commit
         await press("escape");
         await animationFrame();
         expect(":iframe .test-options-target").toHaveAttribute("data-color");
