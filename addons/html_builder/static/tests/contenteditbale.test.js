@@ -1,7 +1,9 @@
+import { base64Img } from "@html_editor/../tests/_helpers/editor";
 import { Plugin } from "@html_editor/plugin";
 import { expect, test } from "@odoo/hoot";
+import { xml } from "@odoo/owl";
 import { contains } from "@web/../tests/web_test_helpers";
-import { addBuilderPlugin, setupHTMLBuilder } from "./helpers";
+import { addBuilderOption, addBuilderPlugin, setupHTMLBuilder } from "./helpers";
 
 test("Do not set contenteditable to true on elements inside o_not_editable", async () => {
     class TestPlugin extends Plugin {
@@ -44,4 +46,27 @@ test("Media should not be replaceable if not inside a savable zone", async () =>
     expect("span:contains('Double-click to edit')").toHaveCount(0);
     await contains(":iframe #wrapwrap .target").dblclick();
     expect(".modal-content:contains(Select a media)").toHaveCount(0);
+});
+
+test("clone of editable media inside not editable area should be editable", async () => {
+    addBuilderOption({
+        selector: "section",
+        template: xml`<BuilderButton classAction="'test'">Test</BuilderButton>`,
+    });
+    addBuilderOption({
+        selector: "img",
+        template: xml`<BuilderButton classAction="'test'">Test Image</BuilderButton>`,
+    });
+    await setupHTMLBuilder(`
+        <section>
+            <div class="o_not_editable">
+                <img class="o_editable_media" src="${base64Img}"/>
+            </div>
+        </section>
+    `);
+    await contains(":iframe img").click();
+    expect(".options-container[data-container-title='Image']").toBeDisplayed();
+    await contains(".oe_snippet_clone").click();
+    await contains(":iframe section:last-of-type img").click();
+    expect(".options-container[data-container-title='Image']").toBeDisplayed();
 });
