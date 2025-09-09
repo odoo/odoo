@@ -3,6 +3,7 @@ import { setupEditor, testEditor } from "./_helpers/editor";
 import { deleteBackward, deleteForward, insertText, undo } from "./_helpers/user_actions";
 import { getContent } from "./_helpers/selection";
 import { execCommand } from "./_helpers/userCommands";
+import { dispatchNormalize } from "./_helpers/dispatch";
 
 function insertFontAwesome(faClass) {
     return (editor) => {
@@ -164,6 +165,29 @@ describe("parse/render", () => {
             contentAfter: '<div><i class="fa fa-pastafarianism"></i><div><p>abc</p></div></div>',
         });
     });
+
+    test("should add U+FEFF characters around icon within a span which is within a paragraph related element or a base container", async () => {
+        await testEditor({
+            contentBefore: '<p><span><i class="fa fa-pastafarianism"></i></span></p>',
+            contentBeforeEdit:
+                '<p><span>\ufeff<i class="fa fa-pastafarianism" contenteditable="false">\u200b</i>\ufeff</span></p>',
+            contentAfter: '<p><span><i class="fa fa-pastafarianism"></i></span></p>',
+        });
+    });
+
+    test("should not add U+FEFF characters around icon if not direct child of paragraph related element or formatable tag", async () => {
+        const { editor, el } = await setupEditor(`<p></p>`);
+        const div = document.createElement("div");
+        const icon = document.createElement("i");
+        icon.className = "fa fa-pastafarianism";
+        div.appendChild(icon);
+        el.firstChild.appendChild(div);
+        dispatchNormalize(editor);
+        expect(getContent(el)).toBe(
+            `<p><div><i class="fa fa-pastafarianism" contenteditable="false">\u200b</i></div></p>`
+        );
+    });
+
     /** not sure this is necessary, keep for now in case it is
         test('should insert navigation helpers when before a fontawesome, in an editable', async () => {
             await testEditor({

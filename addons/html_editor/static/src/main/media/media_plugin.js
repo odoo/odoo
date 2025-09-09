@@ -21,6 +21,7 @@ import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 import { boundariesOut, rightPos } from "@html_editor/utils/position";
 import { withSequence } from "@html_editor/utils/resource";
 import { closestElement } from "@html_editor/utils/dom_traversal";
+import { FORMATTABLE_TAGS } from "@html_editor/utils/formatting";
 
 /**
  * @typedef { Object } MediaShared
@@ -81,7 +82,9 @@ export class MediaPlugin extends Plugin {
         functional_empty_node_predicates: isMediaElement,
 
         selectors_for_feff_providers: () =>
-            `:is(${paragraphRelatedElementsSelector}) :is(${ICON_SELECTOR})`,
+            `:is(${paragraphRelatedElementsSelector}, ${FORMATTABLE_TAGS.join(
+                ", "
+            )}, A) > :is(${ICON_SELECTOR})`,
         before_save_handlers: this.savePendingImages.bind(this),
     };
 
