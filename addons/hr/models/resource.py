@@ -3,7 +3,7 @@
 
 from collections import defaultdict
 from datetime import datetime
-from pytz import timezone
+from pytz import timezone, utc
 
 from odoo import api, fields, models
 from odoo.tools.intervals import Intervals
@@ -98,3 +98,30 @@ class ResourceResource(models.Model):
                 self.env['resource.calendar.attendance']
             )])
         return calendars_within_period_per_resource
+
+    def _is_flexible_at(self, date_start, date_end, tz):
+        flexible_resources = defaultdict(lambda: self.env['resource.resource'])
+        valid_versions = self.env['hr.version'].sudo().search([
+            ('employee_id', 'in', self.employee_id.ids),
+            ('active', '=', True),
+        ])
+        for resource in self:
+            res_tz = timezone(resource.tz) or tz or utc
+            resource_date_start = date_start.astimezone(res_tz).date()
+            resource_date_end = date_end.astimezone(res_tz).date()
+            resource_versions = valid_versions.filtered(lambda v:
+                v in resource.employee_id.sudo().version_ids
+                and (not v.contract_date_start or v.contract_date_start <= resource_date_start)
+                and (not v.contract_date_end or v.contract_date_end >= resource_date_end)
+                and (not v.date_version or v.date_version <= resource_date_start)
+            ).sorted('date_start')
+            if not resource_versions:
+                flexible_resources[resource] = False
+                continue
+            version = resource_versions[len(resource_versions) - 1]
+            # the value of flexible_resources[resource] is True if it's fully flexible or calender_id if it's flexible
+            if version.resource_calendar_id and version.resource_calendar_id.flexible_hours:
+                flexible_resources[resource] = version.resource_calendar_id
+            else:
+                flexible_resources[resource] = not version.resource_calendar_id
+        return flexible_resources
