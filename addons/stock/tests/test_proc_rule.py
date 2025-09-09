@@ -836,6 +836,7 @@ class TestProcRule(TransactionCase):
         self.assertEqual(orderpoint_1.deadline_date, False)
         self.assertEqual(orderpoint_2.deadline_date, delivery_date_1.date())
 
+    @freeze_time('2025-08-14 10:00:00')
     def test_orderpoint_wizard_graph(self):
         """ Test that the graph data is correctly computed. """
         self.product.is_storable = True
