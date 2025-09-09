@@ -103,10 +103,8 @@ export class NewContentSystrayItem extends Component {
             ],
         });
 
-        useHotkey("escape", () => {
-            if (this.dropdown.isOpen) {
-                this.dropdown.close();
-            }
+        useHotkey("escape", () => this.dropdown.close(), {
+            isAvailable: () => this.dropdown.isOpen,
         });
     }
 
