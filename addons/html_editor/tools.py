@@ -146,6 +146,7 @@ def get_video_url_data(video_url, autoplay=False, loop=False,
         'params': params
     }
 
+
 def get_video_embed_code(video_url):
     """ Computes the valid iframe from given URL that can be embedded
         (or None in case of invalid URL).
@@ -169,6 +170,7 @@ def get_video_embed_code(video_url):
     if 'error' in data:
         return None
     return Markup('<iframe class="embed-responsive-item" src="%s" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowFullScreen="true" frameborder="0"></iframe>') % data['embed_url']
+
 
 def get_video_thumbnail(video_url):
     """ Computes the valid thumbnail image from given URL
@@ -197,7 +199,10 @@ def get_video_thumbnail(video_url):
         return image_process(response.content)
     return None
 
+
 diverging_history_regex = 'data-last-history-steps="([0-9,]+)"'
+
+
 # This method must be called in a context that has write access to the record as
 # it will write to the bus.
 def handle_history_divergence(record, html_field_name, vals):
