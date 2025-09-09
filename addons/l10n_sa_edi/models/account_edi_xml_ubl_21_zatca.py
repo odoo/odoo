@@ -259,7 +259,7 @@ class AccountEdiXmlUBL21Zatca(models.AbstractModel):
         if downpayment_vals:
             # - BR-KSA-80: To calculate payable amount, we deduct prepaid amount from total tax inclusive amount
             prepaid_amount = downpayment_vals['total_amount']
-            payable_amount = tax_inclusive_amount - prepaid_amount
+            payable_amount = invoice.currency_id.round(tax_inclusive_amount - prepaid_amount)
         return {
             'line_extension_amount': line_extension_amount - allowance_total_amount,
             'tax_inclusive_amount': tax_inclusive_amount,
