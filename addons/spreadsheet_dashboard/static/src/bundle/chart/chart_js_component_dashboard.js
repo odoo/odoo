@@ -41,9 +41,20 @@ patch(components.ChartJsComponent.prototype, {
     },
     hasChartDataChanged() {
         return !deepEquals(
-            this.currentRuntime.chartJsConfig.data,
-            this.chartRuntime.chartJsConfig.data
+            this.getChartDataInRuntime(this.currentRuntime),
+            this.getChartDataInRuntime(this.chartRuntime)
         );
+    },
+    getChartDataInRuntime(runtime) {
+        const data = runtime.chartJsConfig.data;
+        return {
+            labels: data.labels,
+            dataset: data.datasets.map((dataset) => ({
+                data: dataset.data,
+                label: dataset.label,
+                tree: dataset.tree,
+            })),
+        };
     },
     enableAnimationInChartData(chartData) {
         return {

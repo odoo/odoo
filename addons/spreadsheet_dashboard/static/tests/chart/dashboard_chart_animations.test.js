@@ -1,8 +1,13 @@
 import { describe, expect, test } from "@odoo/hoot";
 import { animationFrame } from "@odoo/hoot-dom";
-import { Model, components } from "@odoo/o-spreadsheet";
+import { Model, components, readonlyAllowedCommands } from "@odoo/o-spreadsheet";
 import { insertChartInSpreadsheet } from "@spreadsheet/../tests/helpers/chart";
-import { addGlobalFilter, createBasicChart } from "@spreadsheet/../tests/helpers/commands";
+import {
+    addGlobalFilter,
+    createBasicChart,
+    updateChart,
+    setCellContent,
+} from "@spreadsheet/../tests/helpers/commands";
 import { makeSpreadsheetMockEnv } from "@spreadsheet/../tests/helpers/model";
 import { OdooDataProvider } from "@spreadsheet/data_sources/odoo_data_provider";
 import { createDashboardActionWithData } from "@spreadsheet_dashboard/../tests/helpers/dashboard_action";
@@ -73,4 +78,24 @@ test("Animations are replayed only when chart data changes", async () => {
     model.dispatch("SET_GLOBAL_FILTER_VALUE", { id: "filterId" });
     await animationFrame();
     expect(charts[chartId].config.options.animation).toBe(false);
+});
+
+test("Treemap animation are not replayed when data does not change but runtime is re-created", async () => {
+    readonlyAllowedCommands.add("UPDATE_CELL");
+
+    const env = await makeSpreadsheetMockEnv();
+    const setupModel = new Model({}, { custom: { odooDataProvider: new OdooDataProvider(env) } });
+    createBasicChart(setupModel, "chartId");
+    updateChart(setupModel, "chartId", { type: "treemap", dataSets: [{ dataRange: "A1:A6" }] });
+    setCellContent(setupModel, "A2", "1");
+
+    const charts = spyCharts();
+    const { model } = await createDashboardActionWithData(setupModel.exportData());
+    expect(charts["chartId"].config.options.animation).toEqual({ animateRotate: true });
+
+    setCellContent(model, "B1", "6");
+    await animationFrame();
+    expect(charts["chartId"].config.options.animation).toEqual(false);
+
+    readonlyAllowedCommands.delete("UPDATE_CELL");
 });
