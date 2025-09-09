@@ -12,7 +12,7 @@ class StockPackageHistory(models.Model):
     location_id = fields.Many2one('stock.location', 'Origin Location')
     location_dest_id = fields.Many2one('stock.location', 'Destination Location')
     move_line_ids = fields.One2many('stock.move.line', 'package_history_id', string='Move Lines', required=True)
-    package_id = fields.Many2one('stock.package', 'Package', required=True)
+    package_id = fields.Many2one('stock.package', 'Package', required=True, ondelete='cascade')
     package_name = fields.Char('Package Name', required=True)
     package_type_id = fields.Many2one('stock.package.type', related='package_id.package_type_id')
     parent_orig_id = fields.Many2one('stock.package', 'Origin Container')
