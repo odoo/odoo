@@ -318,6 +318,7 @@ class PosOrder(models.Model):
     floating_order_name = fields.Char(string='Order Name')
     general_customer_note = fields.Text(string='General Customer Note')
     internal_note = fields.Text(string='Internal Note')
+    internal_note_text = fields.Text(string='Order Internal Note', compute='_compute_internal_note')
     nb_print = fields.Integer(string='Number of Print', readonly=True, copy=False, default=0)
     pos_reference = fields.Char(string='Receipt Number', readonly=True, copy=False, index=True, help="""
         Human readable reference for this order.
@@ -439,6 +440,12 @@ class PosOrder(models.Model):
             order.email = order.partner_id.email or ""
             order.mobile = order._phone_format(number=order.partner_id.phone or "",
                         country=order.partner_id.country_id)
+
+    @api.depends('internal_note')
+    def _compute_internal_note(self):
+        for order in self.filtered(lambda x: x.internal_note):
+            parsed = json.loads(order.internal_note)
+            order.internal_note_text = ", ".join(n.get("text", n) for n in parsed)
 
     def _compute_total_cost_in_real_time(self):
         """
