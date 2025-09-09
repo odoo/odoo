@@ -324,7 +324,7 @@ class ProjectTask(models.Model):
     is_template = fields.Boolean(copy=False, export_string_translation=False)
     has_project_template = fields.Boolean(related='project_id.is_template', string="Has Project Template", export_string_translation=False)
     has_template_ancestor = fields.Boolean(compute='_compute_has_template_ancestor', search='_search_has_template_ancestor',
-                                           recursive=True, export_string_translation=False)
+                                           recursive=True, export_string_translation=False, store=True)
 
     _recurring_task_has_no_parent = models.Constraint(
         'CHECK (NOT (recurring_task IS TRUE AND parent_id IS NOT NULL))',
