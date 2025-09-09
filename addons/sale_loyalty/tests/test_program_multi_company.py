@@ -112,3 +112,33 @@ class TestSaleCouponMultiCompany(TestSaleCouponCommon):
 
         order._update_programs_and_rewards()
         self.assertIn(self.immediate_promotion_program, order._get_applied_programs())
+
+    def test_applicable_programs_confirm_on_branch(self):
+        # create a branch
+        self.env['loyalty.program'].search([]).write({'active': False})
+        branch_a = self.env['res.company'].create(
+            {'name': 'Branch A', 'parent_id': self.company_a.id}
+        )
+
+        LoyaltyProgram = self.env['loyalty.program']
+        LoyaltyProgram.create(LoyaltyProgram._get_template_values()['loyalty'])
+
+        self.sale_user.write({'company_ids': [Command.set((branch_a + self.company_a).ids)]})
+
+        # create an order
+        order = self.empty_order
+        order.update(
+            {
+                'order_line': [
+                    Command.create({
+                        'product_id': self.product_A.id,
+                    }),
+                ],
+                'company_id': branch_a.id,
+                'partner_id': self.partner.id,
+                'user_id': self.sale_user.id
+            }
+        )
+
+        order.with_user(self.sale_user).with_company(branch_a.id).sudo(False).action_confirm()
+        self.assertEqual(order.state, 'sale')
