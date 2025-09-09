@@ -5257,21 +5257,22 @@ class TestMrpOrder(TestMrpCommon):
         # Check the first generated serial numbers
         self.assertEqual(mo.lot_producing_ids.mapped('name'), ['sn#01', 'sn#02', 'sn#03', 'sn#04', 'sn#05'])
         mo.button_mark_done()
-        # Make a second one with a quantity of 3
+        # Make a second one with a quantity of 3 and a custom serial number
         mo_form = Form(self.env['mrp.production'])
+        p_final.serial_prefix_format = "customMRPSerial"
         mo_form.product_id = p_final
         mo_form.product_qty = 3
         mo2 = mo_form.save()
         mo2.action_confirm()
         res_dict = mo2.action_generate_serial()
         serials_wizard = Form.from_action(self.env, res_dict)
-        self.assertEqual(serials_wizard.lot_name, 'sn#06')
+        self.assertEqual(serials_wizard.lot_name, 'customMRPSerial0000001')
         serials_wizard.lot_quantity = mo2.product_uom_qty
         res_dict = serials_wizard.save().action_generate_serial_numbers()
         serials_wizard = Form.from_action(self.env, res_dict)
         serials_wizard.save().action_apply()
         # Check that the serial numbers follow the sequence
-        self.assertEqual(mo2.lot_producing_ids.mapped('name'), ['sn#06', 'sn#07', 'sn#08'])
+        self.assertEqual(mo2.lot_producing_ids.mapped('name'), ['customMRPSerial0000001', 'customMRPSerial0000002', 'customMRPSerial0000003'])
 
 
 @tagged('-at_install', 'post_install')
