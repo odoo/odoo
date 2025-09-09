@@ -16,7 +16,7 @@
         <record id="loyalty_history_company_rule" model="ir.rule">
             <field name="name">Loyalty history multi company rule</field>
             <field name="model_id" ref="model_loyalty_history"/>
-            <field name="domain_force">[('company_id', 'in', company_ids + [False])]</field>
+            <field name="domain_force">['|', ('company_id', 'in', company_ids + [False]), ('company_id', 'parent_of', company_ids)]</field>
         </record>
 
         <record id="sale_loyalty_rule_company_rule" model="ir.rule">
