@@ -92,7 +92,8 @@
             ('include', 'web.assets_frontend'),
             ('after', 'web/static/lib/bootstrap/scss/_maps.scss', 'mass_mailing/static/src/scss/mass_mailing.ui.scss'),
 
-            'html_builder/static/src/bootstrap_overriden.scss',
+            # TODO DUAU: change when file is back in html_builder
+            'html_editor/static/src/scss/bootstrap_overridden.scss',
 
             'web/static/src/libs/fontawesome/css/font-awesome.css',
             'web/static/lib/odoo_ui_icons/*',

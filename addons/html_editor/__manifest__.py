@@ -19,6 +19,10 @@ This addon provides an extensible, maintainable editor.
     ],
     'auto_install': True,
     'assets': {
+        'web._assets_primary_variables': [
+            # TODO DUAU: change when file is back in html_builder
+            ('after', 'web/static/src/scss/primary_variables.scss', 'html_editor/static/src/scss/builder.variables.scss'),
+        ],
         'web.assets_frontend': [
             ('include', 'html_editor.assets_media_dialog'),
             ('include', 'html_editor.assets_readonly'),
