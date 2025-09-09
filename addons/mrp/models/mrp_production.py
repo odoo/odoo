@@ -980,7 +980,7 @@ class MrpProduction(models.Model):
                 production.with_context(no_procurement=True)._autoconfirm_production()
                 if production in production_to_replan:
                     production._plan_workorders()
-            if production.state == 'done' and 'qty_producing' in vals:
+            if 'qty_producing' in vals and production.state == 'done':
                 finished_move = production.move_finished_ids.filtered(
                     lambda move: move.product_id == production.product_id and move.state == 'done')
                 finished_move.quantity = vals.get('qty_producing')
@@ -2077,8 +2077,6 @@ class MrpProduction(models.Model):
         moves_to_consume.write({'picked': True})
 
         workorders_to_cancel = self.env['mrp.workorder']
-        for workorder in self.workorder_ids:
-            workorder.duration_expected = workorder._get_duration_expected()
         for production in self:
             initial_qty = initial_qty_by_production[production]
             initial_workorder_remaining_qty = []
@@ -2086,7 +2084,10 @@ class MrpProduction(models.Model):
 
             # Adapt duration
             for workorder in bo.workorder_ids:
-                workorder.duration_expected = workorder._get_duration_expected()
+                workorder.duration_expected = workorder._get_duration_expected(ratio=(workorder.qty_production / initial_qty))
+            # for workorder in production.workorder_ids:
+                # ratio = workorder.qty_production / workorder.qty_producing if workorder.qty_producing != 0 else 1
+                # workorder.duration_expected = workorder._get_duration_expected(ratio=ratio)
 
             # Adapt quantities produced
             for workorder in production.workorder_ids.sorted('id'):

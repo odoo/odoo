@@ -247,21 +247,23 @@ class MrpWorkorder(models.Model):
 
     def _set_production_qty_producing(self):
         for workorder in self:
-            if workorder.qty_producing != 0 and workorder.product_uom_id.compare(workorder.production_id.qty_producing, workorder.qty_producing) != 0:
-                workorder.production_id.qty_producing = workorder.qty_producing
+            if not workorder.product_uom_id.is_zero(workorder.qty_produced) and workorder.product_uom_id.compare(workorder.production_id.qty_producing, workorder.qty_produced + workorder.qty_reported_from_previous_wo) != 0:
+                workorder.production_id.qty_producing = min(workorder.production_id.workorder_ids.mapped(lambda wo: wo.qty_produced + wo.qty_reported_from_previous_wo))  #TODO : do out of loop ! Apply min only when allow_partial_qty ?_
                 workorder.production_id._set_qty_producing(False)
 
     @api.depends('blocked_by_workorder_ids.qty_produced', 'blocked_by_workorder_ids.state', 'production_state')
     def _compute_qty_ready(self):
-        mo_ids_to_backorder = self.env.context.get('mo_ids_to_backorder', [])
+        # mo_ids_to_backorder = self.env.context.get('mo_ids_to_backorder', [])
         for workorder in self:
-            if self.env.context.get('skip_backorder') and mo_ids_to_backorder and workorder.production_id.procurement_group_id.mrp_production_ids:
-                # When creating a workorder from a backorder MO, workorder dependencies are not set, which leads to wrong qty_ready computation (and then to a wrong state).
-                previous_mo_ids = list(filter(lambda mo_id: mo_id in workorder.production_id.procurement_group_id.mrp_production_ids.ids, mo_ids_to_backorder))
-                wo_to_bypass = workorder.id == [min(workorder.production_id.workorder_ids.ids)] if not workorder.allow_workorder_dependencies else len(workorder.operation_id.blocked_by_operation_ids) == 0
-                if not wo_to_bypass and workorder.id != min(workorder.production_id.workorder_ids.ids) and previous_mo_ids and any(mo_id < workorder.production_id.id for mo_id in previous_mo_ids):
-                    workorder.qty_ready = 0
-                    continue
+            # All following bullshit is only to comply with test, hence it breaks the real stuff, some tests will be removed.
+            # if self.env.context.get('skip_backorder') and mo_ids_to_backorder and workorder.production_id.production_group_id.production_ids:
+            #     # When creating a workorder from a backorder MO, workorder dependencies are not set, which leads to wrong qty_ready computation (and then to a wrong state).
+            #     previous_mo_ids = list(filter(lambda mo_id: mo_id in workorder.production_id.production_group_id.production_ids.ids, mo_ids_to_backorder))
+            #     wo_to_bypass = workorder.id == [min(workorder.production_id.workorder_ids.filtered(lambda wo: not wo.product_uom_id.is_zero(wo.qty_remaining)).ids)] if not workorder.allow_workorder_dependencies else len(workorder.operation_id.blocked_by_operation_ids) == 0
+            #     # first_wo =  # workorder.state == 'cancel' or
+            #     if not wo_to_bypass and previous_mo_ids and any(mo_id < workorder.production_id.id for mo_id in previous_mo_ids):
+            #         workorder.qty_ready = 0
+            #         continue
             if not workorder.allow_partial_qty:
                 workorder.qty_ready = 0 if any(wo.state != 'done' for wo in workorder.blocked_by_workorder_ids) else workorder.qty_remaining
                 continue
@@ -373,11 +375,13 @@ class MrpWorkorder(models.Model):
 
     @api.depends('operation_id', 'workcenter_id', 'qty_producing', 'qty_production', 'production_state')
     def _compute_duration_expected(self):
+        if self.env.context.get('bypass_duration_calculation'):
+            return
         for workorder in self:
             # Recompute the duration expected if the qty_producing has been changed:
             # compare with the origin record if it happens during an onchange
-            if (workorder.state not in ['done', 'cancel'] and (float_is_zero(workorder.duration_expected, 2) or workorder._origin.qty_production != workorder.qty_production)) or (workorder.production_state == 'done' and (workorder.qty_producing != workorder.qty_production
-            or (workorder._origin != workorder and workorder._origin.qty_producing and workorder.qty_producing != workorder._origin.qty_producing))):
+            if (workorder.state not in ['done', 'cancel'] and (float_is_zero(workorder.duration_expected, 2) or workorder.qty_producing != workorder.qty_production
+                or (workorder._origin != workorder and workorder._origin.qty_producing and workorder.qty_producing != workorder._origin.qty_producing))):
                 workorder.duration_expected = workorder._get_duration_expected()
 
     @api.depends('time_ids.duration', 'qty_produced')
@@ -840,8 +844,10 @@ class MrpWorkorder(models.Model):
             else:
                 qty_ratio = 1
             return setup + cleanup + duration_expected_working * qty_ratio * ratio * 100.0 / self.workcenter_id.time_efficiency
-        qty_production = self.qty_producing or self.qty_production
-        cycle_number = float_round(qty_production / capacity, precision_digits=0, rounding_method='UP')
+        qty_production = (self.allow_partial_qty and self.qty_produced) or self.qty_producing or self.qty_production
+        cycle_number = qty_production / capacity  #products are handled linearly: time is determined per product
+        if self.workcenter_id._has_capacity(self.product_id):  #products are handled in parralel: time is determined per batch
+            cycle_number = float_round(cycle_number, precision_digits=0, rounding_method='UP')
         if alternative_workcenter:
             # TODO : find a better alternative : the settings of workcenter can change
             duration_expected_working = (self.duration_expected - setup - cleanup) * self.workcenter_id.time_efficiency / (100.0 * cycle_number)
@@ -945,10 +951,7 @@ class MrpWorkorder(models.Model):
             if wo.working_state == 'blocked':
                 raise UserError(_('Please unblock the work center to validate the work order'))
             wo.button_finish()
-            if wo.duration == 0.0:
-                ratio = wo.qty_produced / wo.qty_production
-                wo.duration = wo.duration_expected * ratio
-                wo.duration_percent = 100 * ratio
+        self._update_durations_on_done()
         return True
 
     def _compute_expected_operation_cost(self, without_employee_cost=False):
@@ -973,3 +976,14 @@ class MrpWorkorder(models.Model):
         for wo in self:
             if wo.product_uom_id.compare(wo.qty_produced, 0) <= 0:
                 wo.qty_produced = wo.get_fulfilled_qty_produced()
+
+    def _update_durations_on_done(self):
+        for wo in self:
+            # ratio = (wo.qty_production / wo.qty_producing) if wo.qty_producing not in (0, self.qty_production) else (wo.qty_produced / wo.qty_production)
+            # wo.duration_expected = wo._get_duration_expected(ratio=ratio)
+
+            if wo.duration == 0.0:
+                wo.duration = wo.duration_expected
+                wo.duration_percent = 100
+            # if wo.production_id.product_uom_id.compare(wo.qty_producing, wo.qty_production) != 0:
+                # wo.duration_expected = (wo.qty_producing / wo.qty_production) * wo.duration_expected

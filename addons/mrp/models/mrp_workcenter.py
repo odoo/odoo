@@ -414,6 +414,9 @@ class MrpWorkcenter(models.Model):
             return (capacity.product_uom_id._compute_quantity(capacity.capacity, unit), capacity.time_start, capacity.time_stop)
         return (default_capacity, self.time_start, self.time_stop)
 
+    def _has_capacity(self, product):
+        self.ensure_one()
+        return bool(self.capacity_ids.filtered(lambda c: (not c.product_id or c.product_id == product) and c.product_uom_id == product.uom_id))
 
 class MrpWorkcenterTag(models.Model):
     _name = 'mrp.workcenter.tag'
@@ -526,6 +529,16 @@ class MrpWorkcenterProductivity(models.Model):
                 blocktime.duration = blocktime.loss_id._convert_to_duration(blocktime.date_start.replace(microsecond=0), blocktime.date_end.replace(microsecond=0), blocktime.workcenter_id)
             else:
                 blocktime.duration = 0.0
+
+    # def write(self, vals):
+    #     if 'date_start' in vals or 'date_end' in vals or 'duration' in vals:
+    #         print("brkpoint")
+    #     return super(MrpWorkcenterProductivity, self).write(vals)
+
+    # @api.model_create_multi
+    # def create(self, vals_list):
+    #     records = super(MrpWorkcenterProductivity, self).create(vals_list)
+    #     return records
 
     @api.onchange('duration')
     def _duration_changed(self):
