@@ -32,20 +32,20 @@ class TestVideoUtils(common.BaseCase):
     }
 
     def test_player_regexes(self):
-        #youtube
+        # youtube
         self.assertIsNotNone(re.search(tools.player_regexes['youtube'], TestVideoUtils.urls['youtube']))
         self.assertIsNotNone(re.search(tools.player_regexes['youtube'], TestVideoUtils.urls['youtube_shorts_video']))
         self.assertIsNotNone(re.search(tools.player_regexes['youtube'], TestVideoUtils.urls['youtube_live_stream']))
-        #vimeo
+        # vimeo
         self.assertIsNotNone(re.search(tools.player_regexes['vimeo'], TestVideoUtils.urls['vimeo']))
         self.assertIsNotNone(re.search(tools.player_regexes['vimeo'], TestVideoUtils.urls['vimeo_unlisted_video']))
         self.assertIsNotNone(re.search(tools.player_regexes['vimeo'], TestVideoUtils.urls['vimeo_player']))
         self.assertIsNotNone(re.search(tools.player_regexes['vimeo'], TestVideoUtils.urls['vimeo_player_unlisted_video']))
-        #dailymotion
+        # dailymotion
         self.assertIsNotNone(re.search(tools.player_regexes['dailymotion'], TestVideoUtils.urls['dailymotion']))
-        #youku
+        # youku
         self.assertIsNotNone(re.search(tools.player_regexes['youku'], TestVideoUtils.urls['youku']))
-        #instagram
+        # instagram
         self.assertIsNotNone(re.search(tools.player_regexes['instagram'], TestVideoUtils.urls['instagram']))
         # facebook
         self.assertIsNotNone(re.search(tools.player_regexes["facebook"], TestVideoUtils.urls["facebook_video"]))
@@ -53,7 +53,7 @@ class TestVideoUtils(common.BaseCase):
 
     def test_get_video_source_data(self):
         self.assertEqual(3, len(tools.get_video_source_data(TestVideoUtils.urls['youtube'])))
-        #youtube
+        # youtube
         self.assertEqual('youtube', tools.get_video_source_data(TestVideoUtils.urls['youtube'])[0])
         self.assertEqual('xCvFZrrQq7k', tools.get_video_source_data(TestVideoUtils.urls['youtube'])[1])
         self.assertEqual('youtube', tools.get_video_source_data(TestVideoUtils.urls['youtube_shorts_video'])[0])
@@ -62,7 +62,7 @@ class TestVideoUtils(common.BaseCase):
         self.assertEqual('fmVNEoxr7iU', tools.get_video_source_data(TestVideoUtils.urls['youtube_live_stream'])[1])
         self.assertEqual('youtube', tools.get_video_source_data(TestVideoUtils.urls['youtube_mobile'])[0])
         self.assertEqual('xCvFZrrQq7k', tools.get_video_source_data(TestVideoUtils.urls['youtube_mobile'])[1])
-        #vimeo
+        # vimeo
         self.assertEqual('vimeo', tools.get_video_source_data(TestVideoUtils.urls['vimeo'])[0])
         self.assertEqual('395399735', tools.get_video_source_data(TestVideoUtils.urls['vimeo'])[1])
         self.assertEqual('vimeo', tools.get_video_source_data(TestVideoUtils.urls['vimeo_unlisted_video'])[0])
@@ -71,7 +71,7 @@ class TestVideoUtils(common.BaseCase):
         self.assertEqual('395399735', tools.get_video_source_data(TestVideoUtils.urls['vimeo_player'])[1])
         self.assertEqual('vimeo', tools.get_video_source_data(TestVideoUtils.urls['vimeo_player_unlisted_video'])[0])
         self.assertEqual('795669787', tools.get_video_source_data(TestVideoUtils.urls['vimeo_player_unlisted_video'])[1])
-        #dailymotion
+        # dailymotion
         self.assertEqual('dailymotion', tools.get_video_source_data(TestVideoUtils.urls['dailymotion'])[0])
         self.assertEqual('x7svr6t', tools.get_video_source_data(TestVideoUtils.urls['dailymotion'])[1])
         self.assertEqual(None, tools.get_video_source_data(TestVideoUtils.urls['dailymotion_hub_no_video']))
@@ -83,14 +83,14 @@ class TestVideoUtils(common.BaseCase):
         self.assertEqual('x578has', tools.get_video_source_data(TestVideoUtils.urls['dailymotion_embed'])[1])
         self.assertEqual('dailymotion', tools.get_video_source_data(TestVideoUtils.urls['dailymotion_video_extra'])[0])
         self.assertEqual('x2jvvep', tools.get_video_source_data(TestVideoUtils.urls['dailymotion_video_extra'])[1])
-        #youku
+        # youku
         self.assertEqual('youku', tools.get_video_source_data(TestVideoUtils.urls['youku'])[0])
         self.assertEqual('XMzY1MjY4', tools.get_video_source_data(TestVideoUtils.urls['youku'])[1])
         self.assertEqual('youku', tools.get_video_source_data(TestVideoUtils.urls['player_youku'])[0])
         self.assertEqual('XMTI5Mjg5NjE4MA', tools.get_video_source_data(TestVideoUtils.urls['player_youku'])[1])
         self.assertEqual('youku', tools.get_video_source_data(TestVideoUtils.urls['youku_embed'])[0])
         self.assertEqual('XNTIwMzE1MzUzNg', tools.get_video_source_data(TestVideoUtils.urls['youku_embed'])[1])
-        #instagram
+        # instagram
         self.assertEqual('instagram', tools.get_video_source_data(TestVideoUtils.urls['instagram'])[0])
         self.assertEqual('B6dXGTxggTG', tools.get_video_source_data(TestVideoUtils.urls['instagram'])[1])
         # facebook
@@ -101,10 +101,10 @@ class TestVideoUtils(common.BaseCase):
 
     def test_get_video_url_data(self):
         self.assertEqual(4, len(tools.get_video_url_data(TestVideoUtils.urls['youtube'])))
-        #youtube
+        # youtube
         for key in ['youtube', 'youtube_shorts_video', 'youtube_live_stream']:
             self.assertEqual('youtube', tools.get_video_url_data(TestVideoUtils.urls[key])['platform'])
-        #vimeo
+        # vimeo
         for key in ['vimeo', 'vimeo_player']:
             self.assertEqual(tools.get_video_url_data(TestVideoUtils.urls[key]), {
                 'platform': 'vimeo',
@@ -126,11 +126,11 @@ class TestVideoUtils(common.BaseCase):
                     'h': '0763fdb816',
                 }
             })
-        #dailymotion
+        # dailymotion
         self.assertEqual('dailymotion', tools.get_video_url_data(TestVideoUtils.urls['dailymotion'])['platform'])
-        #youku
+        # youku
         self.assertEqual('youku', tools.get_video_url_data(TestVideoUtils.urls['youku'])['platform'])
-        #instagram
+        # instagram
         self.assertEqual('instagram', tools.get_video_url_data(TestVideoUtils.urls['instagram'])['platform'])
 
     def test_valid_video_url(self):
@@ -140,15 +140,15 @@ class TestVideoUtils(common.BaseCase):
 @tagged('-standard', 'external')
 class TestVideoUtilsExternal(common.BaseCase):
     def test_get_video_thumbnail(self):
-        #youtube
+        # youtube
         for key in ['youtube', 'youtube_shorts_video', 'youtube_live_stream']:
             self.assertIsInstance(tools.get_video_thumbnail(TestVideoUtils.urls[key]), bytes)
-        #vimeo
+        # vimeo
         for key in ['vimeo', 'vimeo_unlisted_video', 'vimeo_player', 'vimeo_player_unlisted_video']:
             self.assertIsInstance(tools.get_video_thumbnail(TestVideoUtils.urls[key]), bytes)
-        #dailymotion
+        # dailymotion
         self.assertIsInstance(tools.get_video_thumbnail(TestVideoUtils.urls['dailymotion']), bytes)
-        #instagram
+        # instagram
         self.assertIsInstance(tools.get_video_thumbnail(TestVideoUtils.urls['instagram']), bytes)
-        #default
+        # default
         self.assertIsInstance(tools.get_video_thumbnail(TestVideoUtils.urls['youku']), bytes)
