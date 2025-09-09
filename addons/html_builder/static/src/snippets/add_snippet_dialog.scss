@@ -27,15 +27,17 @@
 
         .list-group {
             --list-group-border-radius: 0;
+            --list-group-active-bg: #{$o-brand-primary};
+            --list-group-active-border-color: #{$o-brand-primary};
+            --list-group-active-color: #{color-contrast($o-brand-primary)};
 
             min-width: 200px;
             max-width: 250px;
-
-            button.active {
-                background-color: $o-brand-primary;
-                border-color: $o-brand-primary;
-            }
         }
+    }
+
+    .o_add_snippet_dialog_search {
+        background-color: var(--SearchBar-bg-color, #{$o-white});
     }
 }
 .o_add_snippet_dialog_iframe_loader {
