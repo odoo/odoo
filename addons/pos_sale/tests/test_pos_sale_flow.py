@@ -10,6 +10,11 @@ import uuid
 
 @tagged('post_install', '-at_install')
 class TestPoSSale(TestPointOfSaleHttpCommon):
+    @classmethod
+    def get_default_groups(cls):
+        groups = super().get_default_groups()
+        return groups | cls.quick_ref('sales_team.group_sale_manager')
+
     def test_settle_order_with_kit(self):
         if not self.env["ir.module.module"].search([("name", "=", "mrp"), ("state", "=", "installed")]):
             self.skipTest("mrp module is required for this test")
@@ -517,6 +522,7 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
 
         self.main_pos_config.open_ui()
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'PosSettleDraftOrder', login="accountman")
+        self.assertEqual(sale_order.state, 'sale')
 
     def test_settle_order_change_customer(self):
         """
@@ -948,7 +954,10 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'PosSettleOrderShipLater', login="accountman")
 
-        self.assertEqual(len(sale_order_single.picking_ids), 0)
+        self.assertEqual(len(sale_order_single.picking_ids), 1)
+        self.assertEqual(sale_order_single.picking_ids.state, "cancel")
+        self.assertEqual(len(sale_order_single.pos_order_line_ids.order_id.picking_ids), 1)
+        self.assertEqual(sale_order_single.pos_order_line_ids.order_id.picking_ids.state, "assigned")
 
         # The pos order is being shipped later so the qty_delivered should still be 0
         self.assertEqual(sale_order_single.order_line[0].qty_delivered, 0)
@@ -963,7 +972,10 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
         self.assertEqual(sale_order_multi.order_line[0].qty_delivered, 0)
         self.assertEqual(sale_order_multi.order_line[1].qty_delivered, 0)
 
-        self.assertEqual(len(sale_order_multi.picking_ids), 0)
+        self.assertEqual(len(sale_order_multi.picking_ids), 1)
+        self.assertEqual(sale_order_multi.picking_ids.state, "cancel")
+        self.assertEqual(len(sale_order_multi.pos_order_line_ids.order_id.picking_ids), 1)
+        self.assertEqual(sale_order_multi.pos_order_line_ids.order_id.picking_ids.state, "assigned")
 
     def test_draft_pos_order_linked_sale_order(self):
         """This test create an order and settle it in the PoS. It will let the PoS order in draft state.
