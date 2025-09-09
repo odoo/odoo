@@ -1841,18 +1841,34 @@ class AccountMove(models.Model):
         return errors
 
     def _l10n_it_edi_export_taxes_check(self):
-        if move_lines := self.mapped("invoice_line_ids").filtered(lambda line:
+        errors = {}
+        for kind_code, kind_desc, min_len in (
+            ('vat', _('VAT'), 1),
+            ('withholding', _('Withholding'), 0),
+            ('pension_fund', _('Pension Fund'), 0),
+        ):
+            errors.update(self._l10n_it_edi_check_lines_for_tax_kind(kind_code, kind_desc, min_len))
+        return errors
+
+    def _l10n_it_edi_check_lines_for_tax_kind(self, kind_code, kind_desc, min_len=1):
+        assert min_len in (0, 1)
+        if self.invoice_line_ids.filtered(lambda line:
             line.display_type == 'product'
-            and len(line.tax_ids.flatten_taxes_hierarchy()._l10n_it_filter_kind('vat')) != 1
+            and not (min_len <= len(line.tax_ids._l10n_it_filter_kind(kind_code)) <= 1),
         ):
             return {
-                'l10n_it_edi_move_only_one_vat_tax_per_line': {
-                    'message': _("Invoices must have exactly one VAT tax set per line."),
+                f'l10n_it_edi_move_{kind_code}_tax_per_line': {
+                    'message': _(
+                        "Invoices must have %(number)s one %(kind)s tax set per line.",
+                        number=_("exactly") if min_len == 1 else _("at most"),
+                        kind=kind_desc,
+                    ),
                     **({
                         'action_text': _("View invoice(s)"),
-                        'action': move_lines.mapped("move_id")._get_records_action(name=_("Check taxes on invoice lines")),
-                    } if len(self) > 1 else {})
-                }}
+                        'action': self._get_records_action(name=_("Check taxes on invoice lines")),
+                    } if len(self) > 1 else {}),
+                },
+            }
         return {}
 
     def _l10n_it_edi_get_formatters(self):
