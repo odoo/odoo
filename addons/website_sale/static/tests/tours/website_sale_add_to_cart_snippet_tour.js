@@ -49,6 +49,10 @@ registerWebsitePreviewTour('add_to_cart_snippet_tour', {
         // Product with 2 variants with a variant selected
         ...editAddToCartSnippet(),
         ...changeOptionInPopover("Add to Cart Button", "Product", "Product Yes Variant 2", true),
+        {
+            content: "Check if variant option is visible",
+            trigger: "[data-container-title='Add to Cart Button'] [data-label='Variant']"
+        },
         ...changeOptionInPopover("Add to Cart Button", "Variant", "Product Yes Variant 2 (Pink)"),
         ...clickOnSave(),
         clickOnElement("add to cart button", ":iframe .s_add_to_cart_btn"),
