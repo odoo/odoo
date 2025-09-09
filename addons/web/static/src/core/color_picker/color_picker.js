@@ -65,7 +65,6 @@ export class ColorPicker extends Component {
         enabledTabs: { type: Array, optional: true },
         colorPrefix: { type: String },
         themeColorPrefix: { type: String, optional: true },
-        showRgbaField: { type: Boolean, optional: true },
         defaultOpacity: { type: Number, optional: true },
         grayscales: { type: Object, optional: true },
         noTransparency: { type: Boolean, optional: true },
@@ -76,7 +75,6 @@ export class ColorPicker extends Component {
         close: () => {},
         defaultOpacity: 100,
         enabledTabs: ["solid", "gradient", "custom"],
-        showRgbaField: false,
         themeColorPrefix: "",
         setOnCloseCallback: () => {},
     };

@@ -28,7 +28,6 @@ export class CustomColorPicker extends Component {
         onColorSelect: { type: Function, optional: true },
         onColorPreview: { type: Function, optional: true },
         onInputEnter: { type: Function, optional: true },
-        showRgbaField: { type: Boolean, optional: true },
         defaultOpacity: { type: Number, optional: true },
         setOnCloseCallback: { type: Function, optional: true },
         setOperationCallbacks: { type: Function, optional: true },
@@ -42,7 +41,6 @@ export class CustomColorPicker extends Component {
         onColorSelect: () => {},
         onColorPreview: () => {},
         onInputEnter: () => {},
-        showRgbaField: true,
     };
 
     setup() {
@@ -660,22 +658,12 @@ export class CustomColorPicker extends Component {
             case "hex":
                 // Handled by the "input" event (see "onHexColorInput").
                 return;
-            case "rgb":
-                this._updateRgba(
-                    parseInt(this.el.querySelector(".o_red_input").value),
-                    parseInt(this.el.querySelector(".o_green_input").value),
-                    parseInt(this.el.querySelector(".o_blue_input").value)
-                );
-                break;
             case "hsl":
                 this._updateHsl(
                     parseInt(this.el.querySelector(".o_hue_input").value),
                     parseInt(this.el.querySelector(".o_saturation_input").value),
                     parseInt(this.el.querySelector(".o_lightness_input").value)
                 );
-                break;
-            case "opacity":
-                this._updateOpacity(parseInt(this.el.querySelector(".o_opacity_input").value));
                 break;
         }
         this._updateUI();
