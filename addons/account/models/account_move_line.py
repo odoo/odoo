@@ -3362,62 +3362,49 @@ class AccountMoveLine(models.Model):
         self.ensure_one()
         return self.move_id.state == 'posted'
 
-    def _get_child_lines(self, grouped=True):
+    def _get_child_lines(self):
         """
-        Return a tax-wise summary of sale order lines linked to section.
+        Return a tax-wise summary of account move lines linked to section.
         Groups lines by their tax IDs and computes subtotal and total for each group.
         """
         self.ensure_one()
 
-        section_lines = self.move_id.invoice_line_ids.filtered(lambda l: (l.parent_id == self or l.parent_id.parent_id == self) and l != self)
+        section_lines = self.move_id.invoice_line_ids.filtered(lambda l: (l.parent_id == self or l.parent_id.parent_id == self))
         result = []
-        for taxes, lines in groupby(section_lines, key=lambda l: l.tax_ids):
-            amls = sum(lines, start=self.env['account.move.line'])
-            for aml in amls.sorted('sequence'):
-                if aml.parent_id != self and aml.parent_id not in amls:
-                    amls += aml.parent_id
-
+        for taxes, lines_for_tax_group in groupby(section_lines, key=lambda l: l.tax_ids):
+            lines_for_tax_group = sum(lines_for_tax_group, start=self.env['account.move.line'])
             tax_labels = [tax.tax_label for tax in taxes if tax.tax_label]
-            subtotal = sum(l.price_subtotal for l in lines)
-            price_total = sum(l.price_total for l in lines)
-
-            if subtotal or tax_labels:
-                result.append({
-                    'name': self.name,
-                    'taxes': tax_labels,
-                    'price_subtotal': subtotal,
-                    'price_total': price_total,
-                    'display_type': self.display_type if not grouped else 'product',
-                    'quantity': 1,
-                    'discount': self.discount,
-                })
-
-                if not grouped:
-                    treated_lines = []
-                    for line in amls.sorted('sequence'):
-                        if line.display_type == 'line_subsection' and not self.collapse_composition and line.collapse_composition:
-                            sub_section_lines = amls.filtered(lambda l: (l.parent_id == self or l.parent_id.parent_id == self) and l != self)
-                            result.append({
-                                'name': line.name,
-                                'price_subtotal': sum(l.price_subtotal for l in sub_section_lines),
-                                'price_total': sum(l.price_total for l in sub_section_lines),
-                                'display_type': 'product',
-                                'original_display_type': line.display_type,
-                                'quantity': 1,
-                                'discount': line.discount,
-                            })
-                            treated_lines.extend(sub_section_lines)
-                        elif line not in treated_lines:
-                            result.append({
-                                'name': line.name,
-                                'price_subtotal': sum(l.price_subtotal for l in amls.filtered(lambda l: (l.parent_id == line or l.parent_id.parent_id == line))),
-                                'price_total': sum(l.price_total for l in amls.filtered(lambda l: (l.parent_id == line or l.parent_id.parent_id == line))),
-                                'display_type': line.display_type,
-                                'quantity': line.quantity,
-                                'line_uom': line.product_uom_id,
-                                'product_uom': line.product_id.uom_id,
-                                'discount': line.discount,
-                            })
+            for section_line, move_lines in lines_for_tax_group.sorted('sequence').grouped('parent_id').items():
+                lines_to_sum = move_lines if section_line != self else lines_for_tax_group
+                subtotal = sum(l.price_subtotal for l in lines_to_sum)
+                total = sum(l.price_total for l in lines_to_sum)
+                if not subtotal and not tax_labels:
+                    continue
+                elif section_line.collapse_composition or section_line.parent_id.collapse_composition:
+                    result.append({
+                        'name': section_line.name,
+                        'taxes': tax_labels if not section_line.parent_id.collapse_prices else [],
+                        'price_subtotal': subtotal,
+                        'price_total': total,
+                        'display_type': 'product',
+                        'quantity': 1,
+                        'line_uom': False,
+                        'product_uom': False,
+                        'discount': 0.0,
+                    })
+                else:
+                    for line in (section_line | move_lines):
+                        result.append({
+                            'name': line.name,
+                            'taxes': tax_labels if line == self else [],
+                            'price_subtotal': subtotal if line == section_line else line.price_subtotal,
+                            'price_total': total if line == section_line else line.price_total,
+                            'display_type': line.display_type,
+                            'quantity': line.quantity,
+                            'line_uom': line.product_uom_id,
+                            'product_uom': line.product_id.uom_id,
+                            'discount': line.discount,
+                        })
 
         return result or [{
             'name': self.name,
@@ -3432,9 +3419,9 @@ class AccountMoveLine(models.Model):
         section_lines = self._get_section_lines()
         return sum(section_lines.mapped('price_subtotal'))
 
+    # TODO: deprecated, remove in master
     def get_column_to_exclude_for_colspan_calculation(self, taxes=None):
-        colspan = 2 if taxes and self.display_type != 'product' else 1
-        return colspan
+        return False
 
     def get_parent_section_line(self):
         if self.display_type == 'product' and self.parent_id.display_type == 'line_subsection':

@@ -7027,13 +7027,10 @@ class AccountMove(models.Model):
         def show_line(line):
             return (
                 line.display_type == 'line_section'
-                or (not (
-                    line.parent_id.collapse_composition
-                    or line.parent_id.parent_id.collapse_composition
-                ) and not (
-                    line.parent_id.collapse_prices
-                    or line.parent_id.parent_id.collapse_prices
-                ))
+                or (
+                    not any([line.parent_id.collapse_composition, line.parent_id.parent_id.collapse_composition]) and
+                    not any([line.parent_id.collapse_prices, line.parent_id.parent_id.collapse_prices])
+                )
             )
 
         return self.invoice_line_ids.filtered(show_line).sorted('sequence')
