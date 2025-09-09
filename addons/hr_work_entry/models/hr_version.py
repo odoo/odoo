@@ -100,12 +100,16 @@ class HrVersion(models.Model):
             employees_by_calendar[version.resource_calendar_id] |= version.employee_id
         result = dict()
         for calendar, employees in employees_by_calendar.items():
-            result.update(calendar._attendance_intervals_batch(
-                start_dt,
-                end_dt,
-                resources=employees.resource_id,
-                tz=pytz.timezone(calendar.tz) if calendar.tz else pytz.utc
-            ))
+            if not calendar:
+                for employee in employees:
+                    result.update({employee.resource_id.id: Intervals([(start_dt, end_dt, self.env['resource.calendar.attendance'])])})
+            else:
+                result.update(calendar._attendance_intervals_batch(
+                    start_dt,
+                    end_dt,
+                    resources=employees.resource_id,
+                    tz=pytz.timezone(calendar.tz) if calendar.tz else pytz.utc
+                ))
         return result
 
     def _get_lunch_intervals(self, start_dt, end_dt):
@@ -115,6 +119,8 @@ class HrVersion(models.Model):
             employees_by_calendar[version.resource_calendar_id] |= version.employee_id
         result = {}
         for calendar, employees in employees_by_calendar.items():
+            if not calendar:
+                continue
             result.update(calendar._attendance_intervals_batch(
                 start_dt,
                 end_dt,
@@ -335,7 +341,7 @@ class HrVersion(models.Model):
         for version in self:
             versions_by_company_tz[
                 version.company_id,
-                (version.resource_calendar_id).tz,
+                (version.resource_calendar_id or version.employee_id).tz,
             ] += version
         utc = pytz.timezone('UTC')
         new_work_entries = self.env['hr.work.entry']
@@ -367,7 +373,7 @@ class HrVersion(models.Model):
         })
         utc = pytz.timezone('UTC')
         for version in self:
-            version_tz = (version.resource_calendar_id or version.company_id.resource_calendar_id).tz
+            version_tz = (version.resource_calendar_id or version.company_id.resource_calendar_id or version.employee_id).tz
             tz = pytz.timezone(version_tz) if version_tz else pytz.utc
             version_start = tz.localize(fields.Datetime.to_datetime(version.date_start)).astimezone(utc).replace(tzinfo=None)
             version_stop = datetime.combine(fields.Datetime.to_datetime(version.date_end or datetime.max.date()),
