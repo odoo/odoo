@@ -30,6 +30,7 @@ class TestSubcontractingBasic(TransactionCase):
         wh_copy = wh_original.copy(default={'name': 'Dummy Warehouse (copy)', 'code': 'Dummy'})
         wh_original.buy_to_resupply = False
         wh_original.manufacture_to_resupply = False
+        wh_original.subcontracting_to_resupply = False
         # Check if warehouse routes got RECREATED (instead of reused)
         route_types = [
             "route_ids",
