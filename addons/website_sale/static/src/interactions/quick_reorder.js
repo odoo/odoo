@@ -133,22 +133,21 @@ export class QuickReorder extends Interaction {
                 }));
         }
 
+        const data = await this.waitFor(rpc('/shop/cart/quick_add', {
+            product_template_id: productTemplateId,
+            product_id: productId,
+            quantity: quantity,
+            ...(isCombo && { linked_products: linkedProducts }),
+        }));
+
         // Add the product to the cart and update the DOM.
         const cart = document.getElementById('shop_cart');
         // `updateCartNavBar` regenerates the cart lines and `updateQuickReorderSidebar`
         // regenerates the quick reorder products, so we need to stop and start interactions to
         // make sure the regenerated reorder products and cart lines are properly handled.
-        this.services['public.interactions'].stopInteractions();
         this.services['public.interactions'].stopInteractions(cart);
-        const data = await rpc('/shop/cart/quick_add', {
-            product_template_id: productTemplateId,
-            product_id: productId,
-            quantity: quantity,
-            ...(isCombo && { linked_products: linkedProducts }),
-        })
-        wSaleUtils.updateQuickReorderSidebar(data);
         wSaleUtils.updateCartNavBar(data);
-        this.services['public.interactions'].startInteractions();
+        wSaleUtils.updateQuickReorderSidebar(data);
         this.services['public.interactions'].startInteractions(cart);
 
         // Move the focus to the next quantity input.
