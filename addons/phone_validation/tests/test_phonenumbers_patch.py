@@ -189,3 +189,27 @@ class TestPhonenumbersPatch(BaseCase):
             self.PhoneInputOutputLine("+22176 707 0065"),
         )
         self._assert_parsing_phonenumbers(parse_test_lines_SN)
+
+    def test_region_LB_monkey_patch(self):
+        """Tests Lebanon phone number changes effective May 26, 2025
+
+        Key changes being tested:
+        1. New mobile allocations:
+           - +961 78 700 000 → 78 799 999
+           - +961 79 325 000 → 79 399 999
+        2. New fixed-line blocks with 21x-29x prefixes
+        3. All numbers now 8 digits (excluding country code)
+        """
+        parse_test_lines_LB = (
+            # NEW: Mobile numbers - May 26, 2025 allocations
+            self.PhoneInputOutputLine("+96178700000"),
+            self.PhoneInputOutputLine("+96178799999"),
+            self.PhoneInputOutputLine("+96179325000"),
+            self.PhoneInputOutputLine("+96179399999"),
+
+            # NEW: Fixed-line numbers with updated blocks
+            self.PhoneInputOutputLine("+96121012345"),
+            self.PhoneInputOutputLine("+96124012345"),
+            self.PhoneInputOutputLine("+96125012345"),
+        )
+        self._assert_parsing_phonenumbers(parse_test_lines_LB)
