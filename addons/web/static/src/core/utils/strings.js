@@ -245,3 +245,12 @@ export function uuid() {
     }
     return id;
 }
+/**
+ * Generates a string ID.
+ *
+ * @param {string} prefix
+ * @returns {string}
+ */
+export function generateHTMLId(prefix = "o") {
+    return `${prefix}${Math.random().toString(36).substring(2, 15)}`;
+}

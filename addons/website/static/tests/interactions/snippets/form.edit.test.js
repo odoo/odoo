@@ -2,8 +2,9 @@ import { describe, expect, test } from "@odoo/hoot";
 import { setupInteractionWhiteList, startInteractions } from "@web/../tests/public/helpers";
 import { onRpc } from "@web/../tests/web_test_helpers";
 import { switchToEditMode } from "../../helpers";
+import { formSelectXml } from "@website/../tests/interactions/snippets/helpers";
 
-setupInteractionWhiteList("website.form");
+setupInteractionWhiteList(["website.form", "website.form.add_other_option"]);
 
 describe.current.tags("interaction_dev");
 
@@ -80,4 +81,13 @@ test("form is NOT prefilled in translate mode", async () => {
     const { core } = await startInteractions(formXml, { waitForStart: true, translateMode: true });
     expect(core.interactions).toHaveLength(1);
     expect("form input[name=company]").toHaveValue("");
+});
+
+test("should show 'other option' input field in edit mode by default when enabled 'Add other' option", async () => {
+    setupUser();
+    const { core } = await startInteractions(formSelectXml);
+    await switchToEditMode(core);
+    expect(core.interactions).toHaveLength(1);
+    expect(".o_other_input").toBeDisplayed();
+    expect(".o_other_input").toHaveAttribute("placeholder", "Other option...");
 });
