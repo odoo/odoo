@@ -4351,10 +4351,7 @@
             t-attf-class="o_carousel_product_indicators {{indicators_div_class}}"
         >
             <ol
-                t-att-class="'carousel-indicators '
-                    + (indicators_list_class or '')
-                    + ('justify-content-center ' if website.product_page_image_width == '100_pc' else '')
-                    + ' position-static pt-2 pt-lg-0 mx-auto my-0'"
+                t-attf-class="carousel-indicators position-static pt-2 pt-lg-0 mx-auto my-0 {{indicators_list_class}} {{website.product_page_image_width == '100_pc' and 'justify-content-center'}}"
             >
                 <li
                     t-foreach="product_images" t-as="product_image"
