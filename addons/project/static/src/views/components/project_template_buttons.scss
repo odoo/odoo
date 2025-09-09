@@ -1,0 +1,25 @@
+.o-project-template, .o-task-template {
+    @include media-breakpoint-up(sm) {
+        .o_template_icon_group {
+            visibility: hidden;
+        }
+
+        &:hover, &.focus {
+            .o_template_icon_group {
+                visibility: visible;
+
+                .btn {
+                    color: $text-muted !important;
+
+                    &.btn-link:hover {
+                        color: $btn-link-hover-color !important;
+                    }
+
+                    &.fa-trash:hover {
+                        color: $o-danger !important;
+                    }
+                }
+            }
+        }
+    }
+}
