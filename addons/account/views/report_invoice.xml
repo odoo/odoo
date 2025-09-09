@@ -194,11 +194,11 @@
                                     </t>
                                     <t t-elif="is_subsection">
                                         <t t-set="current_subsection" t-value="line"/>
-                                        <t t-set="line_padding" t-value="2"/>
+                                        <t t-set="line_padding" t-value="3"/>
                                     </t>
                                     <t t-else="">
                                         <t t-set="line_padding"
-                                           t-value="3 if current_subsection else (2 if current_section else 0)"
+                                           t-value="4 if current_subsection else (3 if current_section else 0)"
                                         />
                                     </t>
                                     <t t-set="padding_class" t-value="line_padding and ('px-' + str(line_padding)) or ''"/>
@@ -211,7 +211,7 @@
                                             'fw-bold o_line_subsection' if is_subsection else
                                             'fst-italic o_line_note' if is_note
                                             else ''">
-                                            <t t-set="line_colspan" t-value="line.get_column_to_exclude_for_colspan_calculation(line.tax_ids)"/>
+                                            <t t-set="line_colspan" t-value="3 + (1 if display_discount else 0) + (1 if display_taxes and not line.tax_ids else 0)"/>
                                             <t t-if="is_product" name="account_invoice_line_accountable">
                                                 <td name="account_invoice_line_name" t-att-class="padding_class">
                                                     <span t-if="line.name" t-field="line.name" t-options="{'widget': 'text'}">Bacon Burger</span>
@@ -244,7 +244,7 @@
                                                 <t t-set="section_subtotal" t-value="line.get_section_subtotal()"/>
                                                 <!-- For desktop -->
                                                 <td name="line_name_td"
-                                                    t-att-colspan="(1 if is_product else 6 if display_discount else 5) - line_colspan"
+                                                    t-att-colspan="(1 if is_product else line_colspan)"
                                                     t-attf-class="{{'d-none d-md-table-cell' if report_type == 'html' else ''}} {{padding_class}}">
                                                     <span t-if="line.name" t-field="line.name" t-options="{'widget': 'text'}">A section title</span>
                                                 </td>
@@ -264,8 +264,7 @@
                                         </tr>
                                     </t>
                                     <t t-else="">
-                                        <t t-if="hide_details" t-set="grouped_lines" t-value="line._get_child_lines()"/>
-                                        <t t-if="hide_prices" t-set="grouped_lines" t-value="line._get_child_lines(False)"/>
+                                        <t t-set="grouped_lines" t-value="line._get_child_lines()"/>
                                         <t t-foreach="grouped_lines" t-as="grouped_line">
                                             <t t-if="grouped_line['display_type'] == 'product'">
                                                 <t t-set="line_colspan" t-value="1"/>
@@ -274,14 +273,18 @@
                                                 <t t-set="line_colspan" t-value="3 + (1 if display_discount else 0) + (1 if display_taxes and not grouped_line.get('taxes') else 0)"/>
                                             </t>
                                             <t t-if="hide_prices">
-                                                <t t-set="line_padding"
-                                                   t-value="3 if current_subsection and grouped_line['display_type'] != 'line_subsection' and grouped_line.get('original_display_type') != 'line_subsection' else
-                                                            2 if current_section and grouped_line['display_type'] != 'line_section' and grouped_line.get('original_display_type') != 'line_section' else
-                                                            0"/>
-                                                <t t-set="padding_class" t-value="line_padding and ('px-' + str(line_padding)) or ''"/>
+                                                <t t-if="grouped_line['display_type'] == 'line_section'">
+                                                    <t t-set="current_section" t-value="grouped_line"/>
+                                                    <t t-set="current_subsection" t-value="None"/>
+                                                </t>
                                                 <t t-if="grouped_line['display_type'] == 'line_subsection'">
                                                     <t t-set="current_subsection" t-value="grouped_line"/>
                                                 </t>
+                                                <t t-set="line_padding"
+                                                   t-value="4 if current_subsection and grouped_line['display_type'] != 'line_subsection' else
+                                                            3 if current_section and grouped_line['display_type'] != 'line_section' else
+                                                            0"/>
+                                                <t t-set="padding_class" t-value="line_padding and ('px-' + str(line_padding)) or ''"/>
                                             </t>
                                             <tr t-att-class="
                                                 'fw-bolder o_line_section' if grouped_line.get('display_type') == 'line_section' and not hide_details else
