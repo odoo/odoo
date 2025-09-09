@@ -462,7 +462,7 @@ function classToStyle($editable, cssRules) {
             }
         };
         style = correctBorderAttributes(style);
-        if (Object.keys(style || {}).length === 0) {
+        if (Object.keys(style || {}).length === 0 || node.nodeName === "T") {
             writes.push(() => { node.removeAttribute('style'); });
         } else {
             writes.push(() => {
