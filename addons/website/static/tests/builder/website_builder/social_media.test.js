@@ -171,3 +171,11 @@ test("save social medias", async () => {
     await contains(".o-snippets-top-actions button[data-action='save']").click();
     expect(writeCalled).toBe(true, { message: "did not write social links" });
 });
+
+test("social media snippet should not be user-selectable", async () => {
+    await setupWebsiteBuilder(
+        `<div class="s_social_media o_not_editable"><h4>Social Media</h4></div>`,
+        { loadIframeBundles: true }
+    );
+    expect(":iframe .s_social_media").toHaveStyle({ "user-select": "none" });
+});

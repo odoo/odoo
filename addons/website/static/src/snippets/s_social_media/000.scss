@@ -1,6 +1,9 @@
 
 .s_social_media {
     $-size: map-get($spacers, 5);
+    &[contenteditable="false"] {
+        user-select: none;
+    }
     > * {
         display: inline-block;
         vertical-align: middle;
