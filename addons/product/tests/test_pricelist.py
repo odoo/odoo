@@ -1,8 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.exceptions import UserError
+from itertools import pairwise
+
+from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Command
-from odoo.tests import tagged, Form
+from odoo.tests import Form, tagged
 
 from odoo.addons.product.tests.common import ProductCommon
 
@@ -262,3 +264,48 @@ class TestPricelist(ProductCommon):
             company_2_b2b_pl,
             "Assigning pricelists in one company shouldn't impact pricelists in other companies",
         )
+
+    def test_prevent_pricelist_recursion(self):
+        """Ensure recursive pricelist rules raise an error on creation."""
+        def create_item_vals(pl_from, pl_to):
+            return {
+                'pricelist_id': pl_from.id,
+                'compute_price': 'formula',
+                'base': 'pricelist',
+                'base_pricelist_id': pl_to.id,
+                'applied_on': '3_global',
+            }
+        Pricelist = self.env['product.pricelist']
+        pl_a, pl_b, pl_c, pl_d = pricelists = Pricelist.create([{
+            'name': f"Pricelist {c}",
+        } for c in 'ABCD'])
+
+        # A -> B -> C -> D
+        Pricelist.item_ids.create([
+            create_item_vals(pl_from, pl_to)
+            for (pl_from, pl_to) in pairwise(pricelists)
+        ])
+
+        with self.assertRaises(ValidationError):
+            # A -> B -> C -> D -> D -> _ (recurs)
+            Pricelist.item_ids.create(create_item_vals(pl_d, pl_d))
+        with self.assertRaises(ValidationError):
+            # A -> B -> C -> D -> A -> _ (recurs)
+            Pricelist.item_ids.create(create_item_vals(pl_d, pl_a))
+        with self.assertRaises(ValidationError):
+            # A -> B -> C -> [B -> _, D] (recurs)
+            Pricelist.item_ids.create(create_item_vals(pl_c, pl_b))
+
+        # A -> B, C -> D
+        pl_b.item_ids.unlink()
+        # C -> D -> A -> B
+        Pricelist.item_ids.create(create_item_vals(pl_d, pl_a))
+        # C -> [B, D -> A -> B]
+        Pricelist.item_ids.create(create_item_vals(pl_c, pl_b))
+
+        with self.assertRaises(ValidationError):
+            # C -> [B, D -> A -> [B, C -> _]] (recurs)
+            Pricelist.item_ids.create(create_item_vals(pl_a, pl_c))
+        with self.assertRaises(ValidationError):
+            # C -> [B -> D -> A -> B -> _, D -> _] (recurs)
+            Pricelist.item_ids.create(create_item_vals(pl_b, pl_d))
