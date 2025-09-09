@@ -215,6 +215,16 @@ class ResourceResource(models.Model):
         self.ensure_one()
         return not self.calendar_id
 
+    def _is_flexible_at(self, date_start, date_end, tz):
+        flexible_resources = defaultdict(lambda: self.env['resource.resource'])
+        for resource in self:
+            # the value of flexible_resources[resource] is True if it's fully flexible or calender_id if it's flexible
+            if resource.calendar_id and resource.calendar_id.flexible_hours:
+                flexible_resources[resource] = resource.calendar_id
+            else:
+                flexible_resources[resource] = not resource.calendar_id
+        return flexible_resources
+
     def _is_flexible(self):
         """ An employee is considered flexible if the field flexible_hours is True on the calendar
             or the employee is not assigned any calendar, in which case is considered as Fully flexible.
