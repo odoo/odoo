@@ -67,7 +67,7 @@ function createOdooChartRuntime(chart, getters) {
             layout: getChartLayout(definition, chartData),
             scales: getRadarChartScales(definition, chartData),
             plugins: {
-                title: getChartTitle(definition),
+                title: getChartTitle(definition, getters),
                 legend: getRadarChartLegend(definition, chartData),
                 tooltip: getRadarChartTooltip(definition, chartData),
                 chartShowValuesPlugin: getChartShowValues(definition, chartData),
