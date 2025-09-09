@@ -24,7 +24,7 @@ class IrActionsReport(models.Model):
                 expense_report = OdooPdfFileReader(stream, strict=False)
                 output_pdf = OdooPdfFileWriter()
                 output_pdf.appendPagesFromReader(expense_report)
-                for attachment in attachments:
+                for attachment in self._prepare_local_attachments(attachments):
                     if attachment.mimetype == 'application/pdf':
                         attachment_stream = pdf.to_pdf_stream(attachment)
                     else:
