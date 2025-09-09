@@ -307,8 +307,23 @@ class ProductPricelistItem(models.Model):
 
     @api.constrains('base_pricelist_id', 'pricelist_id', 'base')
     def _check_pricelist_recursion(self):
-        if any(item.base == 'pricelist' and item.pricelist_id and item.pricelist_id == item.base_pricelist_id for item in self):
-            raise ValidationError(_('You cannot assign the Main Pricelist as Other Pricelist in PriceList Item'))
+        def dfs_path(from_item, path, seen=set()):
+            if from_item.base_pricelist_id in path:
+                return path + from_item.base_pricelist_id
+            for to_item in from_item.base_pricelist_id.item_ids:
+                if to_item.base != 'pricelist' or to_item.id in seen:
+                    continue
+                seen.add(to_item.id)
+                if res := dfs_path(to_item, path + from_item.base_pricelist_id):
+                    return res
+            return path.browse()
+
+        for item in self:
+            if path := dfs_path(item, item.pricelist_id):
+                raise ValidationError(_(
+                    "Recursive pricelist rules detected: %s",
+                    " ⇒ ".join(path.mapped('name')),
+                ))
 
     @api.constrains('date_start', 'date_end')
     def _check_date_range(self):
