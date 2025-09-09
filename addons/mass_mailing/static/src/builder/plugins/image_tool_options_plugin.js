@@ -1,9 +1,9 @@
-import { ImageToolOption } from "@html_builder/plugins/image/image_tool_option";
 import { CropImageAction } from "@html_builder/plugins/image/image_tool_option_plugin";
 import { IMAGE_TOOL } from "@html_builder/utils/option_sequence";
 import { Plugin } from "@html_editor/plugin";
 import { closestElement } from "@html_editor/utils/dom_traversal";
 import { withSequence } from "@html_editor/utils/resource";
+import { MassMailingImageToolOption } from "@mass_mailing/builder/options/image_tool_option";
 import { registry } from "@web/core/registry";
 import { patch } from "@web/core/utils/patch";
 
@@ -36,10 +36,6 @@ class ImageToolOptionPlugin extends Plugin {
             }),
         ],
     };
-}
-
-export class MassMailingImageToolOption extends ImageToolOption {
-    static template = "mass_mailing.ImageToolOption";
 }
 
 patch(CropImageAction.prototype, {
