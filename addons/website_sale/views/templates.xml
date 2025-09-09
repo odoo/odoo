@@ -2701,13 +2701,13 @@
 
     <template id="ecom_show_extra_fields" inherit_id="website_sale.product" active="True" name="Show Extra Fields">
         <xpath expr="//div[@id='product_details']" position="inside">
-            <t t-if="any([product[field.name] for field in website.shop_extra_field_ids])">
+            <t t-if="any([product.sudo()[field.name] for field in website.shop_extra_field_ids])">
                 <hr/>
                 <p class="text-muted">
-                    <t t-foreach='website.shop_extra_field_ids' t-as='field' t-if='product[field.name]'>
+                    <t t-foreach='website.shop_extra_field_ids' t-as='field' t-if='product.sudo()[field.name]'>
                         <b><t t-esc='field.label'/>: </b>
                         <t t-if='field.field_id.ttype != "binary"'>
-                            <span t-esc='product[field.name]' t-options="{'widget': field.field_id.ttype}"/>
+                            <span t-esc='product.sudo()[field.name]' t-options="{'widget': field.field_id.ttype}"/>
                         </t>
                         <t t-else=''>
                             <a target='_blank' t-attf-href='/web/content/product.template/#{product.id}/#{field.name}?download=1'>

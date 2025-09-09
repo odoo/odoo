@@ -28,8 +28,9 @@ export function selectFirstOrder() {
         },
     ];
 }
-export function selectNthOrder(n) {
-    return [
+export function selectNthOrder(n, options = {}) {
+    const { loadSN } = options;
+    const step = [
         {
             content: `select order`,
             trigger: `.order-list .order-row:nth-child(${n})`,
@@ -39,6 +40,20 @@ export function selectNthOrder(n) {
             trigger: `.selection-item:contains('Settle the order')`,
         },
     ];
+    if (loadSN) {
+        step.push(...[
+            {
+            content: `Await confirmation demand popup`,
+            trigger: `.modal-body:contains('Do you want to load the SN/Lots linked to the Sales Order?')`,
+            },
+            {
+            content: `Choose to auto link the lot number to the order line`,
+            trigger: `.button.confirm:contains('Yes')`,
+            run: "click",
+            },
+        ]);
+    }
+    return step;
 }
 export function downPaymentFirstOrder() {
     return [

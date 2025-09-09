@@ -1687,6 +1687,8 @@ QUnit.test(
         messageFetchShouldFail = false;
         await click("button", { text: "Click here to retry" });
         await contains(".o-mail-Message", { count: 60 });
+        await click("button", { text: "Load More" });
+        await contains(".o-mail-Message", { count: 90 });
     }
 );
 

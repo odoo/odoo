@@ -197,6 +197,7 @@ export class ThreadService {
             });
             const messages = this.store.Message.insert(rawMessages.reverse(), { html: true });
             thread.isLoaded = true;
+            thread.hasLoadingFailed = false;
             return messages;
         } catch (e) {
             thread.hasLoadingFailed = true;
