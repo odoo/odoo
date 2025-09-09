@@ -539,8 +539,26 @@ msgstr "Fattura/e da controllare"
 #. module: l10n_it_edi
 #. odoo-python
 #: code:addons/l10n_it_edi/models/account_move.py:0
-msgid "Invoices must have exactly one VAT tax set per line."
-msgstr "Le fatture devono avere esattamente un'imposta IVA per riga."
+msgid "Invoices must have %s one %s tax set per line."
+msgstr "Le fatture devono avere %s una tassa %s impostata per linea."
+
+#. module: l10n_it_edi
+#. odoo-python
+#: code:addons/l10n_it_edi/models/account_move.py:0
+msgid "VAT"
+msgstr "IVA"
+
+#. module: l10n_it_edi
+#. odoo-python
+#: code:addons/l10n_it_edi/models/account_move.py:0
+msgid "at most"
+msgstr "al massimo"
+
+#. module: l10n_it_edi
+#. odoo-python
+#: code:addons/l10n_it_edi/models/account_move.py:0
+msgid "exactly"
+msgstr "esattamente"
 
 #. module: l10n_it_edi
 #: model:ir.model.fields,field_description:l10n_it_edi.field_res_company__l10n_it_edi_purchase_journal_id
@@ -956,6 +974,12 @@ msgid "Payment due date invalid in XML file: %s"
 msgstr "Data scadenza pagamento non valida nel file XML: %s"
 
 #. module: l10n_it_edi
+#. odoo-python
+#: code:addons/l10n_it_edi_withholding/models/account_move.py:0
+msgid "Pension Fund"
+msgstr "Cassa Previdenziale"
+
+#. module: l10n_it_edi
 #: model:ir.model.fields,help:l10n_it_edi.field_account_tax__l10n_it_pension_fund_type
 msgid "Pension Fund Type. Only for Italian accounting EDI."
 msgstr "Tipo di fondo pensione. Solo per EDI contabilità italiana."
@@ -1182,16 +1206,6 @@ msgstr "TP02 pagamento completo"
 #: model:ir.model,name:l10n_it_edi.model_account_tax
 msgid "Tax"
 msgstr "Imposta"
-
-#. module: l10n_it_edi
-#. odoo-python
-#: code:addons/l10n_it_edi/models/account_tax.py:0
-msgid ""
-"Tax '%s' cannot be both a Withholding tax and a Pension fund tax. Please "
-"create two separate ones."
-msgstr ""
-"L'imposta '%s' non può essere sia una ritenuta d'acconto che una tassa sul fondo pensione. "
-"Si prega di crearne due separate."
 
 #. module: l10n_it_edi
 #. odoo-python
@@ -1587,6 +1601,12 @@ msgid ""
 msgstr ""
 "Stiamo simulando l'invio del file di fattura elettronica %s, in quanto siamo "
 "in modalità demo."
+
+#. module: l10n_it_edi
+#. odoo-python
+#: code:addons/l10n_it_edi/models/account_move.py:0
+msgid "Withholding"
+msgstr "Ritenuta"
 
 #. module: l10n_it_edi
 #. odoo-python
