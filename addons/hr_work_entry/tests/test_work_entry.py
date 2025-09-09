@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import datetime
+from datetime import date, datetime
 from dateutil.relativedelta import relativedelta
 from psycopg2 import IntegrityError
 import pytz
@@ -327,3 +327,176 @@ class TestWorkEntry(TestWorkEntryBase):
         self.assertEqual(work_entry.duration, 1, "The duration should be 1 hour")
         self.assertEqual(one_day_entry.duration, 24.5, "Duration should be 24 hours and half an hour")
         self.assertEqual(multi_day_entry.duration, 169, "Duration should be 169 hours (7 days and one hour)")
+
+    def test_work_entry_different_calendars(self):
+        """ Test work entries are correctly created for employees with versions that have different calendar types. """
+        flexible_calendar = self.env['resource.calendar'].create({
+            'name': 'flexible calendar',
+            'flexible_hours': True,
+            'full_time_required_hours': 21,
+            'hours_per_day': 3,
+        })
+        # create 4 employees that have versions corresponding to these 4 cases:
+        # flexible calendar then standard calendar
+        # standard calendar then flexible calendar
+        # no calendar (fully flexible) then standard calendar
+        # standard calendar then no calendar (fully flexible)
+        # the cases of flexible then fully flexible and fully flexible then flexible are similar in logic to the last 2
+        # so they should work if last 2 are working properly
+        emp_flex_std, emp_std_flex, emp_fullyflex_std, emp_std_fullyflex = self.env['hr.employee'].create([
+            {'name': 'emp flex std'},
+            {'name': 'emp std flex'},
+            {'name': 'emp fullyflex std'},
+            {'name': 'emp fullyflex std'},
+        ])
+        self.env['hr.version'].create([{
+            'employee_id': emp_flex_std.id,
+            'resource_calendar_id': flexible_calendar.id,
+            'date_version': datetime(2025, 9, 1),
+            'contract_date_start': datetime(2025, 9, 1),
+            'contract_date_end': datetime(2025, 9, 15),
+            'name': 'Flex Contract',
+            'wage': 5000.0,
+            'active': True,
+        },
+        {
+            'employee_id': emp_flex_std.id,
+            'resource_calendar_id': self.resource_calendar_id.id,
+            'date_version': datetime(2025, 9, 16),
+            'contract_date_start': datetime(2025, 9, 16),
+            'contract_date_end': datetime(2025, 9, 30),
+            'name': 'Std Contract',
+            'wage': 5000.0,
+            'active': True,
+        },
+        {
+            'employee_id': emp_std_flex.id,
+            'resource_calendar_id': self.resource_calendar_id.id,
+            'date_version': datetime(2025, 9, 1),
+            'contract_date_start': datetime(2025, 9, 1),
+            'contract_date_end': datetime(2025, 9, 15),
+            'name': 'Std Contract',
+            'wage': 5000.0,
+            'active': True,
+        },
+        {
+            'employee_id': emp_std_flex.id,
+            'resource_calendar_id': flexible_calendar.id,
+            'date_version': datetime(2025, 9, 16),
+            'contract_date_start': datetime(2025, 9, 16),
+            'contract_date_end': datetime(2025, 9, 30),
+            'name': 'Flex Contract',
+            'wage': 5000.0,
+            'active': True,
+        },
+        {
+            'employee_id': emp_fullyflex_std.id,
+            'resource_calendar_id': False,
+            'date_version': datetime(2025, 9, 1),
+            'contract_date_start': datetime(2025, 9, 1),
+            'contract_date_end': datetime(2025, 9, 15),
+            'name': 'FullyFlex Contract',
+            'wage': 5000.0,
+            'active': True,
+        },
+        {
+            'employee_id': emp_fullyflex_std.id,
+            'resource_calendar_id': self.resource_calendar_id.id,
+            'date_version': datetime(2025, 9, 16),
+            'contract_date_start': datetime(2025, 9, 16),
+            'contract_date_end': datetime(2025, 9, 30),
+            'name': 'Std Contract',
+            'wage': 5000.0,
+            'active': True,
+        },
+        {
+            'employee_id': emp_std_fullyflex.id,
+            'resource_calendar_id': self.resource_calendar_id.id,
+            'date_version': datetime(2025, 9, 1),
+            'contract_date_start': datetime(2025, 9, 1),
+            'contract_date_end': datetime(2025, 9, 15),
+            'name': 'Std Contract',
+            'wage': 5000.0,
+            'active': True,
+        },
+        {
+            'employee_id': emp_std_fullyflex.id,
+            'resource_calendar_id': False,
+            'date_version': datetime(2025, 9, 16),
+            'contract_date_start': datetime(2025, 9, 16),
+            'contract_date_end': datetime(2025, 9, 30),
+            'name': 'FullyFlex Contract',
+            'wage': 5000.0,
+            'active': True,
+        }])
+
+        # localizing the used dates to the timezones of the employees
+        tz = self.tz
+        half1_date_start = tz.localize(datetime(2025, 9, 1, 0, 0))
+        half1_date_end = tz.localize(datetime(2025, 9, 15, 23, 59, 59, 999999))
+        half2_date_start = tz.localize(datetime(2025, 9, 16, 0, 0))
+        half2_date_end = tz.localize(datetime(2025, 9, 30, 23, 59, 59, 999999))
+
+        # generate work entries for the 4 employees between (2025, 9, 1) and (2025, 9, 30)
+        # then split them into 2 halves (each half corresponding to the work entries generated by 1 contract)
+        # the timezones are considered in the split
+        all_work_entries = (emp_flex_std + emp_std_flex + emp_fullyflex_std + emp_std_fullyflex).generate_work_entries(date(2025, 9, 1), date(2025, 9, 30))
+        flex_std_work_entries = all_work_entries.filtered(lambda e: e.employee_id == emp_flex_std)
+        self.assertEqual(len(flex_std_work_entries), 37)
+        half1_entries = flex_std_work_entries.filtered(lambda e:
+            e.date_start.astimezone(tz) >= half1_date_start
+            and e.date_stop.astimezone(tz) <= half1_date_end)
+        half2_entries = flex_std_work_entries.filtered(lambda e:
+            e.date_start.astimezone(tz) >= half2_date_start
+            and e.date_stop.astimezone(tz) <= half2_date_end)
+        self.assertEqual(len(half1_entries), 15)  # 1 work entry per day (including weekend)
+        self.assertTrue(all(entry.duration == 3 for entry in half1_entries))
+        self.assertTrue(all(entry.version_id.name == 'Flex Contract' for entry in half1_entries))
+        self.assertEqual(len(half2_entries), 22)  # 2 work entries per day, no work entries for weekend
+        self.assertTrue(all(entry.duration == 4 for entry in half2_entries))
+        self.assertTrue(all(entry.version_id.name == 'Std Contract' for entry in half2_entries))
+
+        std_flex_work_entries = all_work_entries.filtered(lambda e: e.employee_id == emp_std_flex)
+        self.assertEqual(len(std_flex_work_entries), 37)
+        half1_entries = std_flex_work_entries.filtered(lambda e:
+            e.date_start.astimezone(tz) >= half1_date_start
+            and e.date_stop.astimezone(tz) <= half1_date_end)
+        half2_entries = std_flex_work_entries.filtered(lambda e:
+            e.date_start.astimezone(tz) >= half2_date_start
+            and e.date_stop.astimezone(tz) <= half2_date_end)
+        self.assertEqual(len(half1_entries), 22)  # 2 work entries per day, no work entries for weekend
+        self.assertTrue(all(entry.duration == 4 for entry in half1_entries))
+        self.assertTrue(all(entry.version_id.name == 'Std Contract' for entry in half1_entries))
+        self.assertEqual(len(half2_entries), 15)  # 1 work entry per day (including weekend)
+        self.assertTrue(all(entry.duration == 3 for entry in half2_entries))
+        self.assertTrue(all(entry.version_id.name == 'Flex Contract' for entry in half2_entries))
+
+        fullyflex_std_work_entries = all_work_entries.filtered(lambda e: e.employee_id == emp_fullyflex_std)
+        self.assertEqual(len(fullyflex_std_work_entries), 23)
+        half1_entries = fullyflex_std_work_entries.filtered(lambda e:
+            e.date_start.astimezone(tz) >= half1_date_start
+            and e.date_stop.astimezone(tz) <= half1_date_end)
+        half2_entries = fullyflex_std_work_entries.filtered(lambda e:
+            e.date_start.astimezone(tz) >= half2_date_start
+            and e.date_stop.astimezone(tz) <= half2_date_end)
+        self.assertEqual(len(half1_entries), 1)  # 1 work entry for the entire duration
+        self.assertEqual(half1_entries.duration, 15 * 24)
+        self.assertTrue(all(entry.version_id.name == 'FullyFlex Contract' for entry in half1_entries))
+        self.assertEqual(len(half2_entries), 22)  # 2 work entries per day, no work entries for weekend
+        self.assertTrue(all(entry.duration == 4 for entry in half2_entries))
+        self.assertTrue(all(entry.version_id.name == 'Std Contract' for entry in half2_entries))
+
+        std_fullyflex_work_entries = all_work_entries.filtered(lambda e: e.employee_id == emp_std_fullyflex)
+        self.assertEqual(len(std_fullyflex_work_entries), 23)
+        half1_entries = std_fullyflex_work_entries.filtered(lambda e:
+            e.date_start.astimezone(tz) >= half1_date_start
+            and e.date_stop.astimezone(tz) <= half1_date_end)
+        half2_entries = std_fullyflex_work_entries.filtered(lambda e:
+            e.date_start.astimezone(tz) >= half2_date_start
+            and e.date_stop.astimezone(tz) <= half2_date_end)
+        self.assertEqual(len(half1_entries), 22)  # 2 work entries per day, no work entries for weekend
+        self.assertTrue(all(entry.duration == 4 for entry in half1_entries))
+        self.assertTrue(all(entry.version_id.name == 'Std Contract' for entry in half1_entries))
+        self.assertEqual(len(half2_entries), 1)  # 1 work entry for the entire duration
+        self.assertEqual(half2_entries.duration, 15 * 24)
+        self.assertTrue(all(entry.version_id.name == 'FullyFlex Contract' for entry in half2_entries))
