@@ -44,7 +44,7 @@ class TestPurchaseLeadTime(PurchaseTestCommon):
             and different Delivery Lead Time."""
 
         # Make procurement request from product_1's form view, create procurement and check it's state
-        date_planned1 = fields.Datetime.now() + timedelta(days=10)
+        date_planned1 = fields.Datetime.now() + timedelta(days=5)
         self._create_make_procurement(self.product_1, 10.00, date_planned=date_planned1)
         purchase1 = self.env['purchase.order.line'].search([('product_id', '=', self.product_1.id)], limit=1).order_id
 
@@ -85,6 +85,44 @@ class TestPurchaseLeadTime(PurchaseTestCommon):
         purchase_form.date_planned = purchase2.date_planned + timedelta(days=2)
         purchase_form.save()
         self.assertEqual(purchase2.picking_ids.date_deadline, purchase2.date_planned, "Deadline of pickings should be propagate")
+
+    def test_02_product_level_delay(self):
+        """ To check schedule dates of multiple purchase order line of the same purchase order,
+            we create two procurements for the two different product with same vendor
+            and different supplier Lead Time. Vendor grouping rfq option is 'by day'."""
+
+        self.partner_1.group_rfq = 'day'
+        # Make procurement request from product_1's form view, create procurement and check it's state
+        date_planned = fields.Datetime.now()
+        ref1, ref2 = self.env['stock.reference'].create([
+            {'name': 'SO001'},
+            {'name': 'SO002'},
+        ])
+        self._create_make_procurement(self.product_1, 10.00, date_planned=date_planned, ref=ref1)
+        purchase1 = self.env['purchase.order.line'].search([('product_id', '=', self.product_1.id)], limit=1).order_id
+
+        # Make procurement request from product_2's form view, create procurement and check it's state
+        self._create_make_procurement(self.product_2, 5.00, date_planned=date_planned, ref=ref2)
+        purchase2 = self.env['purchase.order.line'].search([('product_id', '=', self.product_2.id)], limit=1).order_id
+
+        # Check purchase order is same or not
+        self.assertEqual(purchase1, purchase2, 'Purchase orders should be same for the two different product with same vendor.')
+
+        # Confirm purchase order
+        purchase1.button_confirm()
+
+        # Check order date of purchase order
+        order_line_pro_1 = purchase1.order_line.filtered(lambda r: r.product_id == self.product_1)
+        order_line_pro_2 = purchase2.order_line.filtered(lambda r: r.product_id == self.product_2)
+        self.assertEqual(purchase2.date_planned, date_planned, 'planned date should be equal to procurement date')
+        deadline = date_planned - timedelta(days=max((self.product_1 | self.product_2).seller_ids.mapped('delay')))
+        self.assertEqual(purchase2.date_order, deadline, 'Deadline date should be equal to: Date of the procurement order - max Lead Time.')
+
+        # Check scheduled date of purchase order line for product_1
+        self.assertEqual(order_line_pro_1.date_planned, date_planned, 'Schedule date of purchase order line for product_1 should be equal to: Order date of purchase order + Delivery Lead Time of product_1.')
+
+        # Check scheduled date of purchase order line for product_2
+        self.assertEqual(order_line_pro_2.date_planned, date_planned, 'Schedule date of purchase order line for product_2 should be equal to: Order date of purchase order + Delivery Lead Time of product_2.')
 
     def test_merge_po_line(self):
         """Change that merging po line for same procurement is done."""
