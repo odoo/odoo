@@ -5446,7 +5446,8 @@ class BaseModel(metaclass=MetaModel):
                     # reassigned to the correct one thanks to the (Command.CREATE, 0, ...)
                     vals[name] = [Command.create(line) for line in lines if line]
                 elif field.type == 'many2many':
-                    vals[name] = [Command.set(record[name].ids)]
+                    # copy only links that we can read, otherwise the write will fail
+                    vals[name] = [Command.set(record[name]._filtered_access('read').ids)]
                 else:
                     vals[name] = field.convert_to_write(record[name], record)
             vals_list.append(vals)
