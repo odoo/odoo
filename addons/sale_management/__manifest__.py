@@ -42,8 +42,6 @@ The Dashboard for the Sales Manager will include
         'security/ir.model.access.csv',
         'security/sale_management_security.xml',
 
-        'report/sale_report_templates.xml',
-
         # Define SO template views & actions before their place of use
         'views/sale_order_template_views.xml',
 
@@ -58,6 +56,9 @@ The Dashboard for the Sales Manager will include
         'data/sale_order_template_demo.xml',
     ],
     'assets': {
+        'web.assets_backend': [
+            'sale_management/static/src/fields/**/*',
+        ],
         'web.assets_frontend': [
             'sale_management/static/src/interactions/**/*',
         ],

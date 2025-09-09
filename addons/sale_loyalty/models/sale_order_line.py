@@ -134,3 +134,8 @@ class SaleOrderLine(models.Model):
 
     def _sellable_lines_domain(self):
         return super()._sellable_lines_domain() + [('reward_id', '=', False)]
+
+    # === TOOLING ===#
+
+    def _can_be_edited_on_portal(self):
+        return super()._can_be_edited_on_portal() and not self.is_reward_line

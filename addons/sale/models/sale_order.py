@@ -2246,3 +2246,8 @@ class SaleOrder(models.Model):
             'label': _('Import Template for Quotations'),
             'template': '/sale/static/xls/quotations_import_template.xlsx',
         }]
+
+    # For `sale_management`, to control optional products on portal
+    def _can_be_edited_on_portal(self):
+        self.ensure_one()
+        return self.state in ('draft', 'sent')

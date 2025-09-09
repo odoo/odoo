@@ -6,81 +6,16 @@
         <field name="model">sale.order</field>
         <field name="inherit_id" ref="sale.view_order_form"/>
         <field name="arch" type="xml">
-            <page name="order_lines" position="after">
-                <page string="Optional Products"
-                    name="optional_products"
-                    invisible="state not in ['draft', 'sent']">
-                    <field name="sale_order_option_ids" mode="list,kanban" readonly="state in ['cancel', 'sale']">
-                        <form string="Optional Products">
-                            <group>
-                                <field name="product_id"/>
-                                <field name="name"/>
-                                <field name="quantity"/>
-                                <field name="uom_id" widget="many2one_uom" groups="uom.group_uom"/>
-                                <field name="price_unit"/>
-                                <field name="discount" groups="sale.group_discount_per_so_line"/>
-                                <field name="is_present" />
-                                <field name="company_id" invisible="1"/>
-                            </group>
-                        </form>
-                        <kanban class="o_kanban_mobile">
-                            <field name="is_present" />
-                            <templates>
-                                <t t-name="card">
-                                    <div class="row">
-                                        <field name="product_id" class="col-10 fw-bolder"/>
-                                        <button name="button_add_to_order"
-                                            t-att-class="'col-2 btn btn-link oe_link fa fa-shopping-cart ' + (record.id.raw_value ? '' : 'disabled')"
-                                            title="Add to order lines"
-                                            type="object"
-                                            invisible="is_present"/>
-                                    </div>
-                                    <div class="text-muted">
-                                        Quantity:
-                                        <field name="quantity"/>
-                                        <field name="uom_id" widget="many2one_uom" groups="uom.group_uom"/>
-                                    </div>
-                                    <div class="text-muted">
-                                        Unit Price:
-                                        <field name="price_unit"/>
-                                    </div>
-                                </t>
-                            </templates>
-                        </kanban>
-                        <list string="Sales Quotation Template Lines"
-                            editable="bottom"
-                            decoration-success="is_present == True">
-                            <control>
-                                <create name="add_product_control" string="Add a product"/>
-                            </control>
-                            <field name="sequence" widget="handle"/>
-                            <field name="product_id"/>
-                            <field name="name" optional="show"/>
-                            <field name="quantity"/>
-                            <field name="uom_id" widget="many2one_uom" groups="uom.group_uom" optional="show"/>
-                            <field name="price_unit"/>
-                            <field name="discount"
-                                width="50px"
-                                string="Disc.%"
-                                groups="sale.group_discount_per_so_line"
-                                optional="show"/>
-                            <button name="button_add_to_order"
-                                type="object"
-                                class="oe_link"
-                                icon="fa-shopping-cart"
-                                title="Add to order lines"
-                                invisible="is_present"/>
-                        </list>
-                    </field>
-                </page>
-            </page>
-
             <field name="partner_shipping_id" position="after">
                 <field
                     name="sale_order_template_id"
                     options="{'no_create': True}"
                     readonly="state in ['cancel', 'sale']"
                     groups="sale_management.group_sale_order_template"/>
+            </field>
+
+            <field name="collapse_prices" position="after">
+                <field name="is_optional" column_invisible="True"/>
             </field>
         </field>
     </record>
