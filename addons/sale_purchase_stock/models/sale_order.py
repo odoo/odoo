@@ -12,4 +12,4 @@ class SaleOrder(models.Model):
         super()._compute_purchase_order_count()
 
     def _get_purchase_orders(self):
-        return super()._get_purchase_orders() | (self.stock_reference_ids.purchase_ids.filtered(lambda po: self in po.order_line.sale_line_id.order_id))
+        return super()._get_purchase_orders() | self.stock_reference_ids.purchase_ids
