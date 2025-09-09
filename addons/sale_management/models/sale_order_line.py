@@ -4,10 +4,17 @@ from odoo import api, fields, models
 
 
 class SaleOrderLine(models.Model):
-    _inherit = "sale.order.line"
+    _inherit = 'sale.order.line'
     _description = "Sales Order Line"
 
-    sale_order_option_ids = fields.One2many('sale.order.option', 'line_id', 'Optional Products Lines')
+    # Section-related fields
+    is_optional = fields.Boolean(
+        string="Optional Line",
+        copy=True,
+        default=False,
+    )  # Whether this section's lines are optional in the portal.
+
+    # === COMPUTE METHODS === #
 
     @api.depends('product_id')
     def _compute_name(self):
@@ -31,20 +38,22 @@ class SaleOrderLine(models.Model):
         self.ensure_one()
         return True
 
-    def _compute_price_unit(self):
-        # Avoid recomputing the price with pricelist rules, use the initial price
-        # used in the optional product line.
-        lines_without_price_recomputation = self._lines_without_price_recomputation()
-        super(SaleOrderLine, self - lines_without_price_recomputation)._compute_price_unit()
+    # === TOOLING ===#
 
-    def _lines_without_price_recomputation(self):
-        """ Hook to allow filtering the lines to avoid the recomputation of the price. """
-        return self.filtered('sale_order_option_ids')
+    def _is_line_optional(self):
+        """ Returns whether the line is optional or not.
 
-    #=== TOOLING ===#
+        A line is optional if it is directly under an optional (sub)section, or under a subsection
+        which is itself under an optional section.
+        """
+        self.ensure_one()
+        return (
+            self.parent_id.is_optional
+            or (
+                self.parent_id.display_type == 'line_subsection'
+                and self.parent_id.parent_id.is_optional
+            )
+        )
 
     def _can_be_edited_on_portal(self):
-        return self.order_id._can_be_edited_on_portal() and (
-            self.sale_order_option_ids
-            or self.product_id in self.order_id.sale_order_option_ids.product_id
-        )
+        return super()._can_be_edited_on_portal() and self._is_line_optional()

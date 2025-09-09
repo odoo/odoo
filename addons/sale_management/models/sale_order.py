@@ -17,10 +17,6 @@ class SaleOrder(models.Model):
         compute='_compute_sale_order_template_id',
         store=True, readonly=False, check_company=True, precompute=True,
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
-    sale_order_option_ids = fields.One2many(
-        comodel_name='sale.order.option', inverse_name='order_id',
-        string="Optional Products Lines",
-        copy=True)
 
     #=== COMPUTE METHODS ===#
 
@@ -75,21 +71,6 @@ class SaleOrder(models.Model):
         for order in self.filtered('sale_order_template_id'):
             order.journal_id = order.sale_order_template_id.journal_id
 
-    #=== CONSTRAINT METHODS ===#
-
-    @api.constrains('company_id', 'sale_order_option_ids')
-    def _check_optional_product_company_id(self):
-        for order in self:
-            companies = order.sale_order_option_ids.product_id.company_id
-            if companies and companies != order.company_id:
-                bad_products = order.sale_order_option_ids.product_id.filtered(lambda p: p.company_id and p.company_id != order.company_id)
-                raise ValidationError(_(
-                    "Your quotation contains products from company %(product_company)s whereas your quotation belongs to company %(quote_company)s. \n Please change the company of your quotation or remove the products from other companies (%(bad_products)s).",
-                    product_company=', '.join(companies.mapped('display_name')),
-                    quote_company=order.company_id.display_name,
-                    bad_products=', '.join(bad_products.mapped('display_name')),
-                ))
-
     #=== ONCHANGE METHODS ===#
 
     @api.onchange('company_id')
@@ -120,14 +101,6 @@ class SaleOrder(models.Model):
 
         self.order_line = order_lines_data
 
-        option_lines_data = [fields.Command.clear()]
-        option_lines_data += [
-            fields.Command.create(option._prepare_option_line_values())
-            for option in sale_order_template.sale_order_template_option_ids
-        ]
-
-        self.sale_order_option_ids = option_lines_data
-
     @api.onchange('partner_id')
     def _onchange_partner_id(self):
         """Reload template for unsaved orders with unmodified lines & orders."""
@@ -140,21 +113,10 @@ class SaleOrder(models.Model):
                 for fname in ['product_id', 'product_uom_id', 'product_uom_qty', 'display_type']
             )
 
-        def option_eqv(option, t_option):
-            return option and t_option and all(
-                option[fname] == t_option[fname]
-                for fname in ['product_id', 'uom_id', 'quantity']
-            )
-
         lines = self.order_line
-        options = self.sale_order_option_ids
         t_lines = self.sale_order_template_id.sale_order_template_line_ids
-        t_options = self.sale_order_template_id.sale_order_template_option_ids
 
-        if all(chain(
-            starmap(line_eqv, zip_longest(lines, t_lines)),
-            starmap(option_eqv, zip_longest(options, t_options)),
-        )):
+        if all(starmap(line_eqv, zip_longest(lines, t_lines))):
             self._onchange_sale_order_template_id()
 
     #=== ACTION METHODS ===#
@@ -176,16 +138,3 @@ class SaleOrder(models.Model):
             if order.sale_order_template_id.mail_template_id:
                 order._send_order_notification_mail(order.sale_order_template_id.mail_template_id)
         return res
-
-    def _recompute_prices(self):
-        super()._recompute_prices()
-        # Special case: we want to overwrite the existing discount on _recompute_prices call
-        # i.e. to make sure the discount is correctly reset
-        # if pricelist rule is different than when the price was first computed.
-        self.sale_order_option_ids.discount = 0.0
-        self.sale_order_option_ids._compute_price_unit()
-        self.sale_order_option_ids._compute_discount()
-
-    def _can_be_edited_on_portal(self):
-        self.ensure_one()
-        return self.state in ('draft', 'sent')

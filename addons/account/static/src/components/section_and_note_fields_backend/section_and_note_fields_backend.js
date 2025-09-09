@@ -27,7 +27,7 @@ function getPreviousSectionRecords(list, record) {
     return sectionRecords;
 }
 
-function getSectionRecords(list, record, subSection) {
+export function getSectionRecords(list, record, subSection) {
     const { sectionRecords } = getRecordsUntilSection(list, record, true, subSection);
     return sectionRecords;
 }
@@ -116,7 +116,7 @@ export class SectionAndNoteListRenderer extends ListRenderer {
     }
 
     get showPricesButton() {
-        if (this.record.data.display_type === DISPLAY_TYPES.SUBSECTION) {
+        if (this.isSubSection(this.record)) {
             const parentRecord = getParentSectionRecord(this.props.list, this.record);
             return !parentRecord?.data?.collapse_prices && !parentRecord?.data?.collapse_composition;
         }
@@ -124,8 +124,9 @@ export class SectionAndNoteListRenderer extends ListRenderer {
     }
 
     get showCompositionButton() {
-        if (this.record.data.display_type === DISPLAY_TYPES.SUBSECTION) {
-            return !getParentSectionRecord(this.props.list, this.record)?.data?.collapse_composition;
+        if (this.isSubSection(this.record)) {
+            const parentRecord = getParentSectionRecord(this.props.list, this.record);
+            return !parentRecord?.data?.collapse_composition;
         }
         return true;
     }
