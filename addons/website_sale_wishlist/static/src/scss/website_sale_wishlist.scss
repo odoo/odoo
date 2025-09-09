@@ -48,16 +48,6 @@
             grid-column: auto/span 12;
         }
 
-        &.o_wsale_products_opt_design_grid {
-            .o_wishlist_item {
-                --o-wsale-card-border-width: #{$border-width} #{$border-width} 0px #{$border-width};
-
-                &:last-of-type {
-                    --o-wsale-card-border-width: #{$border-width};
-                }
-            }
-        }
-
         &.o_wsale_products_opt_design_thumbs {
             --o-wsale-card-padding: 0 0 var(--o-wsale-wishlist-grid-gap, 16px);
         }
@@ -107,41 +97,6 @@
 
         &[data-wishlist-grid-columns] .o_wishlist_item {
             grid-column: auto/span 1 !important;
-        }
-
-        &.o_wsale_products_opt_design_grid {
-            .o_wishlist_item {
-                --o-wsale-card-border-width: #{$border-width} #{$border-width} #{$border-width} 0px;
-
-                &:first-of-type {
-                    --o-wsale-card-border-width: #{$border-width};
-                }
-            }
-
-            @mixin o-wishlist-grid-borders($cols) {
-                .o_wishlist_item:nth-of-type(n + #{$cols + 1}) {
-                    --o-wsale-card-border-width: 0 #{$border-width} #{$border-width} 0;
-                }
-                .o_wishlist_item:nth-of-type(#{$cols}n + 1):not(:nth-of-type(-n + #{$cols})) {
-                    --o-wsale-card-border-width: 0 #{$border-width} #{$border-width} #{$border-width};
-                }
-            }
-
-            @for $i from 2 through 6 {
-                &[data-wishlist-grid-columns="#{$i}"] {
-                    @include o-wishlist-grid-borders($i);
-                }
-            }
-
-            @include media-breakpoint-down(lg) {
-                &[data-wishlist-mobile-columns="1"] {
-                    @include o-wishlist-grid-borders(1);
-                }
-
-                &[data-wishlist-mobile-columns="2"] {
-                    @include o-wishlist-grid-borders(2);
-                }
-            }
         }
     }
 
@@ -210,17 +165,18 @@
 }
 
 .wishlist-section {
-    &:where(:has(.o_wsale_products_opt_design_grid.o_wsale_products_opt_layout_list)) {
+    &:where(:has(.o_wsale_products_opt_design_grid)) {
         .o_wsale_products_opt_design_grid {
             border-left: $border-width solid $border-color;
         }
-
         .o_wishlist_products_header {
             padding: 0 $container-padding-x * 0.5;
             border: $border-width solid $border-color;
             border-top: 0;
         }
+    }
 
+    &:where(:has(.o_wsale_products_opt_design_grid.o_wsale_products_opt_layout_list)) {
         &[style*="--o-wsale-products-grid-gap: 0px"] .oe_product_image_link,
         &[style*="--o-wsale-products-grid-gap:0px"] .oe_product_image_link {
             @include media-breakpoint-down(lg) {
