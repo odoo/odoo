@@ -64,7 +64,7 @@ class StockWarehouse(models.Model):
                 buy_route.warehouse_ids = [Command.unlink(warehouse.id)]
 
     def _create_or_update_route(self):
-        purchase_route = self._find_or_create_global_route('purchase_stock.route_warehouse0_buy', _('Buy'))
+        purchase_route = self._find_or_create_global_route('purchase_stock.route_warehouse0_buy', self.env._('Buy'))
         for warehouse in self:
             if warehouse.buy_to_resupply:
                 purchase_route.warehouse_ids = [Command.link(warehouse.id)]

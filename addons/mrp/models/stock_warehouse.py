@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, Command, fields, models, _
+from odoo import Command, _, api, fields, models
 from odoo.exceptions import ValidationError, UserError
 from odoo.tools import split_every
 
@@ -61,7 +61,7 @@ class StockWarehouse(models.Model):
                 manufacture_route.warehouse_ids = [Command.unlink(warehouse.id)]
 
     def _create_or_update_route(self):
-        manufacture_route = self._find_or_create_global_route('mrp.route_warehouse0_manufacture', _('Manufacture'))
+        manufacture_route = self._find_or_create_global_route('mrp.route_warehouse0_manufacture', self.env._('Manufacture'))
         for warehouse in self:
             if warehouse.manufacture_to_resupply:
                 manufacture_route.warehouse_ids = [Command.link(warehouse.id)]
