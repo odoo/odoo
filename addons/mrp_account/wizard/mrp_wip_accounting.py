@@ -71,10 +71,7 @@ class MrpAccountWipAccounting(models.TransientModel):
         if overhead_account:
             return overhead_account.id
         ProductCategory = self.env['product.category']
-        cop_acc = ProductCategory._fields['property_stock_account_production_cost_id'].get_company_dependent_fallback(ProductCategory)
-        if cop_acc:
-            return cop_acc.id
-        return ProductCategory._fields['property_stock_account_input_categ_id'].get_company_dependent_fallback(ProductCategory).id
+        return ProductCategory._fields['property_stock_account_production_cost_id'].get_company_dependent_fallback(ProductCategory).id
 
     def _get_line_vals(self, productions=False, date=False):
         if not productions:
