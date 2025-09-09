@@ -2,8 +2,6 @@ import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
 import { withSequence } from "@html_editor/utils/resource";
 import { SNIPPET_SPECIFIC_BEFORE, END, VERTICAL_ALIGNMENT } from "@html_builder/utils/option_sequence";
-import { WEBSITE_BACKGROUND_OPTIONS } from "@website/builder/option_sequence";
-import { WebsiteBackgroundOption } from "@website/builder/plugins/options/background_option";
 import { BuilderAction } from "@html_builder/core/builder_action";
 
 class EcommCategoriesShowcaseOptionPlugin extends Plugin {
@@ -22,17 +20,6 @@ class EcommCategoriesShowcaseOptionPlugin extends Plugin {
             withSequence(SNIPPET_SPECIFIC_BEFORE, {
                 template: "website.EcommCategoriesShowcaseOption",
                 selector: ".s_ecomm_categories_showcase",
-            }),
-            withSequence(WEBSITE_BACKGROUND_OPTIONS + 1, {
-                OptionComponent: WebsiteBackgroundOption,
-                selector: ".s_ecomm_categories_showcase_block",
-                props: {
-                    withColors: true,
-                    withImages: true,
-                    withVideos: true,
-                    withShapes: true,
-                    withColorCombinations: true,
-                },
             }),
             withSequence(VERTICAL_ALIGNMENT, {
                 template: "website.EcommCategoriesShowcaseBlockDesign",
