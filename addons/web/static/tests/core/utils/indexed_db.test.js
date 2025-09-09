@@ -53,6 +53,24 @@ test("two caches, read", async () => {
     await ensureDbIsAbsent();
 });
 
+test("two caches, read (2)", async () => {
+    onError(() => deleteCacheDB());
+    await ensureDbIsAbsent();
+
+    // having 2 caches simulates 2 tabs, each one accessing the same indexeddb
+    const indexedDB1 = new IndexedDB(CACHE_NAME, 1);
+    const indexedDB2 = new IndexedDB(CACHE_NAME, 1);
+
+    await indexedDB1.write("mytable", "test", "value for 'test'");
+    await indexedDB1.write("mytable1", "test", "value for 'test'");
+
+    expect(await indexedDB2.read("mytable", "test")).toBe("value for 'test'");
+
+    await indexedDB1.deleteDatabase();
+    await indexedDB2.deleteDatabase(); // deleting twice the same DB don't throw error !
+    await ensureDbIsAbsent();
+});
+
 test("one cache, invalidate", async () => {
     onError(() => deleteCacheDB());
     await ensureDbIsAbsent();
