@@ -1902,6 +1902,8 @@ class WebsiteSale(payment_portal.PaymentPortal):
         :rtype: product.public.category
         """
         ProductCategory = request.env['product.public.category']
+        if not isinstance(category, ProductCategory.__class__) and category and not str(category).isdigit():
+            raise ValidationError(_("Invalid category."))
         if (
             (category := ProductCategory.browse(category and int(category)).exists())
             and category.can_access_from_current_website()
