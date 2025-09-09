@@ -1539,12 +1539,6 @@ $-product-radius-map: (
     .o_carousel_product_indicators {
         max-height: 400px;
 
-        .o_wsale_product_page_opt_image_width_100_pc & {
-            @include media-breakpoint-up(lg) {
-                @include o-position-absolute(auto, 0, .75rem, 0);
-            }
-        }
-
         // Desktop indicator styles
         @include media-breakpoint-up(lg) {
             .carousel-indicators {
@@ -1630,6 +1624,15 @@ $-product-radius-map: (
                 &:not(:first-child) {
                     margin-top: 10px;
                 }
+            }
+        }
+    }
+
+    // Indicator Positioning
+    @include media-breakpoint-up(lg) {
+        .o_wsale_product_page_opt_image_width_100_pc &:not(.o_carousel_product_left_indicators) {
+            .o_carousel_product_indicators {
+                @include o-position-absolute(auto, 0, .75rem, 0);
             }
         }
     }
