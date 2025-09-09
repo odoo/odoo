@@ -176,7 +176,7 @@ export class ImageSelector extends FileSelector {
                     // This message is about the blob fetch failure.
                     // It is only displayed if the fallback did not work.
                     this.notificationService.add(_t("An error occurred while fetching the entered URL."), {
-                        title: _t("Error"),
+                        type: "danger",
                         sticky: true,
                     });
                     resolve();
@@ -194,7 +194,7 @@ export class ImageSelector extends FileSelector {
                         this.notificationService.add(_t(
                             "You can not replace a field by this image. If you want to use this image, first save it on your computer and then upload it here."
                         ), {
-                            title: _t("Error"),
+                            type: "danger",
                             sticky: true,
                         });
                         return resolve();
@@ -333,7 +333,7 @@ export class ImageSelector extends FileSelector {
             this.notificationService.add(_t(
                 "You can not replace a field by this image. If you want to use this image, first save it on your computer and then upload it here."
             ), {
-                title: _t("Error"),
+                type: "danger",
                 sticky: true,
             });
             return;

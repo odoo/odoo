@@ -1471,8 +1471,8 @@ test("save a record with an empty many2many_tags required", async () => {
     expect.assertions(3);
     mockService("notification", {
         add: (message, params) => {
-            expect(message.toString()).toBe("<ul><li>pokemon</li></ul>");
-            expect(params).toEqual({ title: "Invalid fields: ", type: "danger" });
+            expect(message).toBe("Missing required fields");
+            expect(params).toEqual({ type: "danger" });
         },
     });
 

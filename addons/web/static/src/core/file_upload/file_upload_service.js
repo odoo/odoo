@@ -81,7 +81,7 @@ export const fileUploadService = {
                     params.displayErrorNotification
                 ) {
                     notificationService.add(_t("An error occured while uploading."), {
-                        title: _t("Error"),
+                        type: "danger",
                         sticky: true,
                     });
                 }

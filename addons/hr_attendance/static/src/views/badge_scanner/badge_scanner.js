@@ -24,14 +24,12 @@ export class BadgeScanner extends Component {
     async onBarcodeScanned(barcode) {
         if (!barcode) {
             this.notification.add(_t("No barcode received"), {
-                title: _t("Warning"),
                 type: "danger",
             });
             return;
         }
         if (!this.employeeId) {
             this.notification.add(_t("Missing Employee ID"), {
-                title: _t("Warning"),
                 type: "danger",
             });
         }
@@ -42,7 +40,6 @@ export class BadgeScanner extends Component {
         }
         catch(error){
             this.notification.add(_t("Failed to update badge: ") + error?.data?.message, {
-                title: _t("Error"),
                 type: "danger",
             });
         }

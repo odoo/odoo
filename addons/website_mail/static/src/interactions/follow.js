@@ -1,7 +1,6 @@
 import { Interaction } from "@web/public/interaction";
 import { registry } from "@web/core/registry";
 
-import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
 import { ReCaptcha } from "@google_recaptcha/js/recaptcha";
 
@@ -116,7 +115,6 @@ export class Follow extends Interaction {
             if (tokenCaptcha.error) {
                 this.services.notification.add(tokenCaptcha.error, {
                     type: "danger",
-                    title: _t("Error"),
                     sticky: true,
                 });
                 return false;
