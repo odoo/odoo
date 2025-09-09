@@ -1415,6 +1415,7 @@ describe(`new urls`, () => {
 
         expect(`.o_kanban_view`).toHaveCount(1);
         expect.verifySteps([
+            "get menu_id-null",
             "get current_state-null",
             "get current_action-null",
             'set current_state-{"actionStack":[{"displayName":"First record","model":"partner","view_type":"form","resId":1}],"resId":1,"model":"partner"}',
@@ -1431,11 +1432,11 @@ describe(`new urls`, () => {
         await animationFrame();
         expect(`.o_kanban_view`).toHaveCount(1);
         expect.verifySteps([
+            "get menu_id-null",
             'get current_state-{"actionStack":[{"displayName":"First record","model":"partner","view_type":"form","resId":1},{"displayName":"","model":"partner","view_type":"kanban","active_id":1}],"active_id":1,"model":"partner"}',
             'get current_action-{"type":"ir.actions.act_window","res_model":"partner","views":[[1,"kanban"]],"context":{"lang":"en","tz":"taht","uid":7,"allowed_company_ids":[1],"active_model":"partner","active_id":1,"active_ids":[1]}}',
             'set current_state-{"actionStack":[{"displayName":"First record","model":"partner","view_type":"form","resId":1},{"displayName":"","model":"partner","view_type":"kanban","active_id":1}],"active_id":1,"model":"partner"}',
             'set current_action-{"type":"ir.actions.act_window","res_model":"partner","views":[[1,"kanban"]],"context":{"lang":"en","tz":"taht","uid":7,"active_model":"partner","active_id":1,"active_ids":[1]}}',
-            "get menu_id-null",
         ]);
     });
 
@@ -1486,6 +1487,7 @@ describe(`new urls`, () => {
         expect(`.o_kanban_view`).toHaveCount(1);
         expect(`.o_kanban_record:not(.o_kanban_ghost)`).toHaveCount(1);
         expect.verifySteps([
+            "get menu_id-null",
             "get current_state-null",
             "get current_action-null",
             'set current_state-{"actionStack":[{"displayName":"First record","action":100,"view_type":"form","resId":1}],"resId":1,"action":100}',
@@ -1507,11 +1509,80 @@ describe(`new urls`, () => {
         expect(`.o_kanban_view`).toHaveCount(1);
         expect(`.o_kanban_record:not(.o_kanban_ghost)`).toHaveCount(1);
         expect.verifySteps([
+            "get menu_id-null",
             'get current_state-{"actionStack":[{"displayName":"First record","action":100,"view_type":"form","resId":1},{"displayName":"","action":200,"view_type":"kanban"}],"action":200}',
             'get current_action-{"id":200,"type":"ir.actions.act_window","res_model":"partner","views":[[1,"kanban"]],"domain":[["id","=",1]]}',
             'set current_state-{"actionStack":[{"displayName":"First record","action":100,"view_type":"form","resId":1},{"displayName":"","action":200,"view_type":"kanban","active_id":1}],"action":200,"active_id":1}',
             'set current_action-{"id":200,"type":"ir.actions.act_window","res_model":"partner","views":[[1,"kanban"]],"domain":[["id","=",1]]}',
+        ]);
+    });
+
+    test("menu jumping fix: multiple menus sharing same action", async () => {
+        // Test case for menu jumping issue when multiple menus share the same action
+        // Scenario: User navigates to Sale->Customers, then F5 reload should stay in Sale, not jump to Account
+        defineActions([
+            {
+                id: 9001,
+                name: "Partners",
+                res_model: "partner",
+                type: "ir.actions.act_window",
+                views: [
+                    [false, "list"],
+                    [false, "form"],
+                ],
+            },
+        ]);
+
+        defineMenus([
+            { id: 0 }, // prevents auto-loading
+            // Sale App
+            { id: 100, name: "Sale", appID: 100, children: [101] },
+            { id: 101, name: "Customers", appID: 100, actionID: 9001, parent_id: 100 },
+            // Account App
+            { id: 200, name: "Accounting", appID: 200, children: [201] },
+            { id: 201, name: "Customers", appID: 200, actionID: 9001, parent_id: 200 }, // Same action!
+        ]);
+
+        patchWithCleanup(browser.sessionStorage, {
+            setItem(key, value) {
+                expect.step(`set ${key}-${value}`);
+                super.setItem(key, value);
+            },
+            getItem(key) {
+                const res = super.getItem(key);
+                expect.step(`get ${key}-${res}`);
+                return res;
+            },
+        });
+
+        // Step 1: Navigate to Sale->Customers with explicit menu_id
+        redirect("/odoo/action-9001?menu_id=100");
+        logHistoryInteractions();
+
+        await mountWebClient();
+        expect(`.o_list_view`).toHaveCount(1);
+
+        // Step 2: Emulate F5 reload
+        routerBus.trigger("ROUTE_CHANGE");
+        await animationFrame();
+        await animationFrame();
+
+        expect(`.o_list_view`).toHaveCount(1);
+
+        expect.verifySteps([
             "get menu_id-null",
+            "set menu_id-100",
+            "get current_state-null",
+            "get current_action-null",
+            'set current_state-{"actionStack":[{"displayName":"Partners","action":9001,"view_type":"list"}],"action":9001}',
+            'set current_action-{"binding_type":"action","binding_view_types":"list,form","id":9001,"type":"ir.actions.act_window","xml_id":9001,"name":"Partners","res_model":"partner","views":[[false,"list"],[false,"form"]],"context":{},"embedded_action_ids":[],"group_ids":[],"limit":80,"mobile_view_mode":"kanban","target":"current","view_ids":[],"view_mode":"list,form","cache":true}',
+            "pushState http://example.com/odoo/action-9001",
+            "get menu_id-100", // F5 reload checks stored menu
+            'get current_state-{"actionStack":[{"displayName":"Partners","action":9001,"view_type":"list"}],"action":9001}',
+            'get current_action-{"binding_type":"action","binding_view_types":"list,form","id":9001,"type":"ir.actions.act_window","xml_id":9001,"name":"Partners","res_model":"partner","views":[[false,"list"],[false,"form"]],"context":{},"embedded_action_ids":[],"group_ids":[],"limit":80,"mobile_view_mode":"kanban","target":"current","view_ids":[],"view_mode":"list,form","cache":true}',
+            'set current_state-{"actionStack":[{"displayName":"Partners","action":9001,"view_type":"list"}],"action":9001}',
+            'set current_action-{"binding_type":"action","binding_view_types":"list,form","id":9001,"type":"ir.actions.act_window","xml_id":9001,"name":"Partners","res_model":"partner","views":[[false,"list"],[false,"form"]],"context":{},"embedded_action_ids":[],"group_ids":[],"limit":80,"mobile_view_mode":"kanban","target":"current","view_ids":[],"view_mode":"list,form","cache":true}',
+            "Update the state without updating URL, nextState: actionStack,action",
         ]);
     });
 
@@ -1598,6 +1669,7 @@ describe(`new urls`, () => {
             },
         ]);
         expect.verifySteps([
+            "get menu_id-null",
             "get current_state-null",
             "get current_action-null",
             'set current_state-{"actionStack":[{"displayName":"Kanban Partners","action":200,"view_type":"kanban"}],"action":200}',
@@ -1662,11 +1734,11 @@ describe(`new urls`, () => {
             "First record",
         ]);
         expect.verifySteps([
+            "get menu_id-null",
             'get current_state-{"actionStack":[{"displayName":"Kanban Partners","action":200,"view_type":"kanban"},{"displayName":"List Partners with active id","action":300,"view_type":"list","active_id":5},{"displayName":"First record","action":100,"view_type":"form","resId":1}],"resId":1,"action":100}',
             'get current_action-{"binding_type":"action","binding_view_types":"list,form","id":100,"type":"ir.actions.act_window","xml_id":100,"res_model":"partner","res_id":1,"name":"Partners","views":[[false,"form"],[false,"list"]],"context":{},"embedded_action_ids":[],"group_ids":[],"limit":80,"mobile_view_mode":"kanban","target":"current","view_ids":[],"view_mode":"list,form","cache":true}',
             'set current_state-{"actionStack":[{"displayName":"Kanban Partners","action":200},{"displayName":"List Partners with active id","action":300,"active_id":5},{"displayName":"First record","action":100,"view_type":"form","resId":1}],"resId":1,"action":100}',
             'set current_action-{"binding_type":"action","binding_view_types":"list,form","id":100,"type":"ir.actions.act_window","xml_id":100,"res_model":"partner","res_id":1,"name":"Partners","views":[[false,"form"],[false,"list"]],"context":{},"embedded_action_ids":[],"group_ids":[],"limit":80,"mobile_view_mode":"kanban","target":"current","view_ids":[],"view_mode":"list,form","cache":true}',
-            "get menu_id-null",
         ]);
     });
 });
