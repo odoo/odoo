@@ -233,7 +233,7 @@ class AccountMove(models.Model):
                 if jwt:
                     try:
                         if data := response.get('data'):
-                            signinvoice = data.get['SignedInvoice']
+                            signinvoice = data['SignedInvoice']
                             decoded_response = jwt.decode(signinvoice, options={'verify_signature': False})
                             decoded_response = json.loads(decoded_response['data'])
                     except (json.JSONDecodeError, jwt.exceptions.DecodeError) as e:
