@@ -411,9 +411,10 @@ test("many2ones in form views with show_address", async () => {
     });
 
     expect("input.o_input").toHaveValue("aaa");
-    expect(".o_field_many2one_extra").toHaveInnerHTML("<div>Street</div><div>City ZIP</div>", {
-        type: "html",
-    });
+    expect(".o_field_many2one_extra").toHaveInnerHTML(
+        `<div class="text-truncate" title="Street">Street</div> <div class="text-truncate" title="City ZIP">City ZIP</div>`,
+        { type: "html" }
+     );
     expect("button.o_external_button").toHaveCount(1);
 });
 
@@ -457,27 +458,30 @@ test("many2one show_address in edit", async () => {
     });
 
     expect(".o_field_widget input").toHaveValue("aaa");
-    expect(".o_field_many2one_extra").toHaveInnerHTML("<div>AAA</div><div>Record</div>", {
-        type: "html",
-    });
+    expect(".o_field_many2one_extra").toHaveInnerHTML(
+        `<div class="text-truncate" title="AAA">AAA</div><div class="text-truncate" title="Record">Record</div>`,
+        { type: "html" }
+    );
 
     await contains(".o_field_widget input").edit("first record", { confirm: false });
     await runAllTimers();
     await contains(".dropdown-menu li").click();
 
     expect(".o_field_widget input").toHaveValue("first record");
-    expect(".o_field_many2one_extra").toHaveInnerHTML("<div>First</div><div>Record</div>", {
-        type: "html",
-    });
+    expect(".o_field_many2one_extra").toHaveInnerHTML(
+        `<div class="text-truncate" title="First">First</div><div class="text-truncate" title="Record">Record</div>`,
+        { type: "html" }
+    );
 
     await contains(".o_field_widget input").edit("second record", { confirm: false });
     await runAllTimers();
     await contains(".dropdown-menu li").click();
 
     expect(".o_field_widget input").toHaveValue("second record");
-    expect(".o_field_many2one_extra").toHaveInnerHTML("<div>Second</div><div>Record</div>", {
-        type: "html",
-    });
+    expect(".o_field_many2one_extra").toHaveInnerHTML(
+        `<div class="text-truncate" title="Second">Second</div><div class="text-truncate" title="Record">Record</div>`,
+        { type: "html" }
+    );
 });
 
 test("show_address works in a view embedded in a view of another type", async () => {
