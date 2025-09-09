@@ -86,6 +86,9 @@ class PosOrder(models.Model):
             # flush the qty_delivered to make sure the updated qty_delivered is used when
             # updating the demand value
             so_lines = pos_order.lines.mapped('sale_order_line_id')
+            sale_orders |= so_lines.mapped('order_id')
+            for sale_order in sale_orders:
+                sale_order.sudo().write({'state': 'sale'})
             so_lines.flush_recordset(['qty_delivered'])
             # track the waiting pickings
             waiting_picking_ids = set()
