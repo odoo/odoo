@@ -28,7 +28,11 @@ export const menuService = {
                 if (res) {
                     const fetchedMenus = JSON.stringify(res);
                     if (fetchedMenus !== storedMenus) {
-                        browser.localStorage.setItem("webclient_menus", fetchedMenus);
+                        try {
+                            browser.localStorage.setItem("webclient_menus", fetchedMenus);
+                        } catch (error) {
+                            console.error("Error while storing menus in localStorage", error);
+                        }
                         menusData = res;
                         env.bus.trigger("MENUS:APP-CHANGED");
                     }
@@ -38,8 +42,12 @@ export const menuService = {
         } else {
             menusData = await fetchMenus();
             if (menusData) {
-                browser.localStorage.setItem("webclient_menus_version", session.registry_hash);
-                browser.localStorage.setItem("webclient_menus", JSON.stringify(menusData));
+                try {
+                    browser.localStorage.setItem("webclient_menus_version", session.registry_hash);
+                    browser.localStorage.setItem("webclient_menus", JSON.stringify(menusData));
+                } catch (error) {
+                    console.error("Error while storing menus in localStorage", error);
+                }
             }
         }
 
