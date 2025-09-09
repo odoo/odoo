@@ -28,7 +28,7 @@ class IrActionsReport(models.Model):
 
         collected_streams = OrderedDict()
         for invoice in invoices:
-            attachment = invoice.message_main_attachment_id
+            attachment = self._prepare_local_attachments(invoice.message_main_attachment_id)
             if attachment:
                 stream = pdf.to_pdf_stream(attachment)
                 if stream:
