@@ -27,15 +27,16 @@
 
     // Adapts arrow container width
     @mixin o-adapts-col-size {
+        .carousel {
+            --o-wsale-dynamic-snippet-col-size: var(--o-carousel-item-width-percentage);
 
-        // For mobile
-        .carousel:has(:where(.s_dynamic_snippet_row > div:nth-child(2))) {
-            --o-wsale-dynamic-snippet-col-size: 50%;
-        }
+            &:where(:has(.col-6)) {
+                --o-wsale-dynamic-snippet-col-size: 50%;
+            }
 
-        // For desktop
-        .carousel:has(:where(.s_dynamic_snippet_row > div:nth-child(4))) {
-            --o-wsale-dynamic-snippet-col-size: 25%;
+            &:where(:has(.col-3)) {
+                --o-wsale-dynamic-snippet-col-size: 25%;
+            }
         }
     }
     .s_dynamic_snippet_row.row {
