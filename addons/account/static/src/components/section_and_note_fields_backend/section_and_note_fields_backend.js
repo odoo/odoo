@@ -17,7 +17,7 @@ const DISPLAY_TYPES = {
     SUBSECTION: "line_subsection",
 };
 
-function getParentSectionRecord(list, record) {
+export function getParentSectionRecord(list, record) {
     const { sectionIndex } = getRecordsUntilSection(list, record, false, record.data.display_type !== DISPLAY_TYPES.SUBSECTION);
     return list.records[sectionIndex];
 }
