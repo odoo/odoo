@@ -25,6 +25,11 @@ class SlidesSearchbarOptionPlugin extends Plugin {
                 dependency: "search_slides_opt",
             },
             {
+                label: _t("HTML Content"),
+                dataAttribute: "displayHtmlContent",
+                dependency: "search_slides_opt",
+            },
+            {
                 label: _t("Publication Date"),
                 dataAttribute: "displayDetail",
                 dependency: "search_slides_opt",

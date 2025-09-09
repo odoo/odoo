@@ -45,6 +45,7 @@ export class SearchBar extends Interaction {
             "displayDescription": dataset.displayDescription,
             "displayExtraLink": dataset.displayExtraLink,
             "displayDetail": dataset.displayDetail,
+            "displayHtmlContent": dataset.displayHtmlContent,
             // Make it easy for customization to disable fuzzy matching on specific searchboxes
             "allowFuzzy": !dataset.noFuzzy,
         };
