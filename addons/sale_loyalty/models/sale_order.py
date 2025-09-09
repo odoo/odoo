@@ -150,6 +150,7 @@ class SaleOrder(models.Model):
             all_coupons = order.applied_coupon_ids | order.coupon_point_ids.coupon_id | order.order_line.coupon_id
             if any(order._get_real_points_for_coupon(coupon) < 0 for coupon in all_coupons):
                 raise ValidationError(_("One or more rewards on the sale order is invalid. Please check them."))
+            # Give points on order confirmation
             order._update_programs_and_rewards()
             order._add_loyalty_history_lines()
         has_claimable_rewards = len(self) == 1 and bool(self._get_claimable_rewards())
@@ -212,6 +213,7 @@ class SaleOrder(models.Model):
             coupon = next(iter(claimable_rewards))
             rewards = claimable_rewards[coupon]
             if len(rewards) == 1 and not rewards.multi_product:
+                # GDPF this call discount points.
                 self._apply_program_reward(claimable_rewards[coupon], coupon)
                 return True
         elif not claimable_rewards:
