@@ -1513,11 +1513,14 @@ class StockQuant(models.Model):
         :param unpack: set to True when needing to unpack the quant
         :param up_to_parent_packages: `stock.package` that are the upper limit to keep the parents
         """
-        def set_parent_package(package, limit_ids):
-            if not package.parent_package_id or not limit_ids or package.id in limit_ids:
+        def set_parent_package(all_quants, package, limit_ids):
+            if not package.parent_package_id or (limit_ids and package.id in limit_ids):
+                return
+            if any(quant not in all_quants for quant in package.parent_package_id.contained_quant_ids):
+                # Only move the container package as well if its whole content is moved as well
                 return
             package.package_dest_id = package.parent_package_id
-            return set_parent_package(package.parent_package_id, limit_ids)
+            return set_parent_package(all_quants, package.parent_package_id, limit_ids)
 
         message = message or _('Quantity Relocated')
         move_vals = []
@@ -1526,7 +1529,7 @@ class StockQuant(models.Model):
             result_package_id = package_dest_id  # temp variable to keep package_dest_id unchanged
             if not unpack and not package_dest_id:
                 result_package_id = quant.package_id
-                set_parent_package(result_package_id, limit_ids)
+                set_parent_package(self, result_package_id, limit_ids)
             move_vals.append(quant.with_context(inventory_name=message)._get_inventory_move_values(
                 quant.quantity,
                 quant.location_id,
