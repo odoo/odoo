@@ -7,7 +7,6 @@ export class IndexedDB {
     constructor(name, version) {
         this.name = name;
         this._tables = new Set([VERSION_TABLE]);
-        this._IDBversion = undefined;
         this.mutex = new Mutex();
         this.mutex.exec(() => this._checkVersion(version));
     }
@@ -127,9 +126,9 @@ export class IndexedDB {
         });
     }
 
-    async _execute(callback) {
+    async _execute(callback, idbVersion) {
         return new Promise((resolve) => {
-            const request = indexedDB.open(this.name, this._IDBversion);
+            const request = indexedDB.open(this.name, idbVersion);
             request.onupgradeneeded = (event) => {
                 const db = event.target.result;
                 const dbTables = new Set(db.objectStoreNames);
@@ -138,13 +137,12 @@ export class IndexedDB {
             };
             request.onsuccess = (event) => {
                 const db = event.target.result;
-                this._IDBversion = db.version;
                 const dbTables = new Set(db.objectStoreNames);
                 const newTables = this._tables.difference(dbTables);
                 if (newTables.size !== 0) {
                     db.close();
-                    this._IDBversion++;
-                    return this._execute(callback).then(resolve);
+                    const version = db.version + 1;
+                    return this._execute(callback, version).then(resolve);
                 }
                 Promise.resolve(callback(db)).then((result) => {
                     db.close();
