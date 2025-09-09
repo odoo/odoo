@@ -16,14 +16,18 @@ class Project(models.Model):
             return {}
         can_see_expense = with_action and self.user_has_groups('hr_expense.group_hr_expense_team_approver')
         query = self.env['hr.expense']._search([('state', 'in', ['approved', 'done'])])
-        query.add_where(
-            SQL(
-                "%s && %s",
-                [str(self.analytic_account_id.id)],
-                self.env['hr.expense']._query_analytic_accounts(),
-            )
+        query.add_join('JOIN', 'json_data', SQL('JSONB_EACH(hr_expense.analytic_distribution)'), SQL('true'))
+        query.add_where(SQL(
+            "%s && regexp_split_to_array(json_data.key,'\\D+')",
+            [str(self.analytic_account_id.id)],
+        ))
+        query_string, query_param = query.select(
+            'sale_order_id',
+            'product_id',
+            'currency_id',
+            'array_agg(id) as ids',
+            SQL("SUM(untaxed_amount_currency * json_data.value::int / 100) as untaxed_amount_currency"),
         )
-        query_string, query_param = query.select('sale_order_id', 'product_id', 'currency_id', 'array_agg(id) as ids', 'SUM(untaxed_amount_currency) as untaxed_amount_currency')
         query_string = f"{query_string} GROUP BY sale_order_id, product_id, currency_id"
         self._cr.execute(query_string, query_param)
         expenses_read_group = [expense for expense in self._cr.dictfetchall()]
@@ -104,7 +108,11 @@ class Project(models.Model):
     def _get_already_included_profitability_invoice_line_ids(self):
         move_line_ids = super()._get_already_included_profitability_invoice_line_ids()
         query = self.env['hr.expense']._search([('state', 'in', ['approved', 'done'])])
-        query.add_where('hr_expense.analytic_distribution ? %s', [str(self.analytic_account_id.id)])
+        query.add_where(SQL(
+            "%s && %s",
+            [str(self.analytic_account_id.id)],
+            self.env['hr.expense']._query_analytic_accounts(),
+        ))
         query.order = None
         query_string, query_param = query.select('sale_order_id')
         query_string = f"{query_string} GROUP BY sale_order_id"

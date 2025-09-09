@@ -325,3 +325,116 @@ class TestProjectSaleExpenseProfitability(TestProjectProfitabilityCommon, TestPr
                 'total': {'invoiced': expense_profitability['revenues']['invoiced'] + revenue_items_from_sol['total']['invoiced'], 'to_invoice': expense_profitability['revenues']['to_invoice'] + revenue_items_from_sol['total']['to_invoice']},
             },
         )
+
+    def test_project_profitability_several_analytics(self):
+        """
+        An expense is split among several projects
+        Profitability should take into account only the part associated with the right project
+
+        Expense | Plan_x1 account           | Plan_x2 account
+        ======================================================
+                | default_project_account   |
+                | default_sale_account      | account B
+                | account with Plan id 1    | project_2_account
+        """
+
+        product_new_project_task = self.env['product.product'].create({
+            'name': "Service, create task in new project",
+            'standard_price': 30,
+            'list_price': 90,
+            'type': 'service',
+            'default_code': 'SERV-ORDERED2',
+            'service_tracking': 'task_in_project',
+        })
+
+        sale_order = self.env['sale.order'].with_context(tracking_disable=True).create({
+            'partner_id': self.partner.id,
+            'partner_invoice_id': self.partner.id,
+            'partner_shipping_id': self.partner.id,
+        })
+
+        self.env['sale.order.line'].create({
+            'product_id': product_new_project_task.id,
+            'product_uom_qty': 1,
+            'order_id': sale_order.id,
+        })
+
+        analytic_plan_b = self.env['account.analytic.plan'].create({
+            'name': 'Plan B',
+        })
+        analytic_account_plan_b, analytic_account_project_plan_b = self.env['account.analytic.account'].create([{
+            'name': 'one more analytica account',
+            'code': 'BB-1234',
+            'plan_id': analytic_plan_b.id,
+        }, {
+            'name': 'Project - BB',
+            'code': 'BB-12345678',
+            'plan_id': analytic_plan_b.id,
+        }])
+        project_2 = self.env['project.project'].with_context({'mail_create_nolog': True}).create([{
+            'name': 'Project',
+            'partner_id': self.partner.id,
+            'analytic_account_id': analytic_account_project_plan_b.id,
+        }])
+
+        # plan 1 account for 2nd project
+        plan1_account = self.env['account.analytic.account'].search([('plan_id', '=', 1), ('company_id', '=', self.env.company.id)], limit=1)
+
+        sale_order.action_confirm()
+        project = sale_order.order_line.project_id
+
+        expense = self.env["hr.expense"].create({
+            "name": "Car Travel Expenses",
+            "product_id": self.product_c.id,
+            "total_amount": 100.00,
+            "employee_id": self.expense_employee.id,
+            "analytic_distribution": {
+                f"{self.project.analytic_account_id.id  }": 20,
+                f"{project.analytic_account_id.id       },{analytic_account_plan_b.id       }": 30,
+                f"{plan1_account.id                     },{project_2.analytic_account_id.id }": 50,
+            },
+            "sale_order_id": sale_order.id,
+            "tax_ids": False,
+        })
+        expense_sheet_vals_list = expense._get_default_expense_sheet_values()
+        expense_sheet = self.env["hr.expense.sheet"].create(expense_sheet_vals_list)
+
+        sequence_per_invoice_type = self.project._get_profitability_sequence_per_invoice_type()
+        self.assertIn('expenses', sequence_per_invoice_type)
+        expense_sequence = sequence_per_invoice_type['expenses']
+
+        expense_sheet.action_submit_sheet()
+        expense_sheet.action_approve_expense_sheets()
+        expense_sheet.action_sheet_move_create()
+
+        invoice = sale_order._create_invoices()
+        invoice.action_post()
+
+        sale_items = project.sudo()._get_sale_order_items()
+        domain = [
+            ('order_id', 'in', sale_items.order_id.ids),
+            '|',
+                '|',
+                    ('project_id', 'in', project.ids),
+                    ('project_id', '=', False),
+                ('id', 'in', sale_items.ids),
+        ]
+
+        revenue_items_from_sol = project._get_revenues_items_from_sol(domain, False)
+        expense_profitability = project._get_expenses_profitability_items(False)
+        project_profitability = project._get_profitability_items(False)
+
+        self.maxDiff = None
+        self.assertDictEqual(
+            project_profitability,
+            {
+                'costs': {
+                    'data': [{'id': 'expenses', 'sequence': expense_sequence, 'to_bill': 0.0, 'billed': -30.0}],
+                    'total': {'to_bill': 0.0, 'billed': -30.0},
+                },
+                'revenues': {
+                    'data': [expense_profitability['revenues'], revenue_items_from_sol['data'][0]],
+                    'total': {'invoiced': expense_profitability['revenues']['invoiced'] + revenue_items_from_sol['total']['invoiced'], 'to_invoice': expense_profitability['revenues']['to_invoice'] + revenue_items_from_sol['total']['to_invoice']},
+                },
+            },
+        )
