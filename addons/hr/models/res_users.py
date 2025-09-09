@@ -69,7 +69,7 @@ class ResUsers(models.Model):
     work_email = fields.Char(related='employee_id.work_email', readonly=False, related_sudo=False)
     category_ids = fields.Many2many(related='employee_id.category_ids', string="Employee Tags", readonly=False, related_sudo=False)
     work_contact_id = fields.Many2one(related='employee_id.work_contact_id', readonly=False, related_sudo=False)
-    work_location_id = fields.Many2one(related='employee_id.work_location_id')
+    work_location_id = fields.Many2one(related='employee_id.work_location_id', readonly=False, related_sudo=False)
     work_location_name = fields.Char(related="employee_id.work_location_name")
     work_location_type = fields.Selection(related="employee_id.work_location_type")
     private_street = fields.Char(related='employee_id.private_street', string="Private Street", readonly=False, related_sudo=False)
@@ -84,6 +84,7 @@ class ResUsers(models.Model):
     private_email = fields.Char(related='employee_id.private_email', string="Private Email", readonly=False)
     km_home_work = fields.Integer(related='employee_id.km_home_work', readonly=False, related_sudo=False)
     # res.users already have a field bank_account_id and country_id from the res.partner inheritance: don't redefine them
+    # This field no longer appears to be in use. To avoid breaking anything it must only be removed after the freeze of v19.
     employee_bank_account_ids = fields.Many2many('res.partner.bank', related='employee_id.bank_account_ids', string="Employee's Bank Accounts", related_sudo=False, readonly=False)
     emergency_contact = fields.Char(related='employee_id.emergency_contact', readonly=False, related_sudo=False)
     emergency_phone = fields.Char(related='employee_id.emergency_phone', readonly=False, related_sudo=False)
