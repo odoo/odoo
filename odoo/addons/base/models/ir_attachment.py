@@ -925,6 +925,10 @@ class IrAttachment(models.Model):
 
         return stream
 
+    def _is_remote_source(self):
+        self.ensure_one()
+        return self.url and not self.file_size and self.url.startswith(('http://', 'https://', 'ftp://'))
+
     def _can_return_content(self, field_name=None, access_token=None):
         attachment_sudo = self.sudo().with_context(prefetch_fields=False)
         if access_token:
