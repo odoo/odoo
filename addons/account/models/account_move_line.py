@@ -2606,9 +2606,7 @@ class AccountMoveLine(models.Model):
         # ==== Prepare the partials ====
         partials_values_list = []
         exchange_diff_values_list = []
-        exchange_diff_partial_index = []
         all_plan_results = []
-        partial_index = 0
         for plan in plan_list:
             plan_results = self\
                 .with_context(
@@ -2620,8 +2618,6 @@ class AccountMoveLine(models.Model):
             for results in plan_results:
                 partials_values_list.append(results['partial_values'])
                 if results.get('exchange_values') and results['exchange_values']['move_values']['line_ids']:
-                    exchange_diff_partial_index.append(partial_index)
-                    partial_index += 1
                     exchange_diff_values_list.append(results['exchange_values'])
 
         # ==== Create the partials ====
@@ -2637,8 +2633,11 @@ class AccountMoveLine(models.Model):
 
         # ==== Create the partial exchange journal entries ====
         exchange_moves = self._create_exchange_difference_moves(exchange_diff_values_list)
-        for index, exchange_move in zip(exchange_diff_partial_index, exchange_moves):
-            partials[index].exchange_move_id = exchange_move
+        for partial in partials:
+            for exchange_move in exchange_moves:
+                linked_move_lines = exchange_move.line_ids.reconciled_lines_ids
+                if any(line == partial.debit_move_id or line == partial.credit_move_id for line in linked_move_lines):
+                    partial.exchange_move_id = exchange_move
 
         # ==== Create entries for cash basis taxes ====
         def is_cash_basis_needed(amls):
