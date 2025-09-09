@@ -168,7 +168,6 @@ class ResConfigSettings(models.TransientModel):
             'target': 'new',
             'context': {
                 'default_website_id': self.website_id.id,
-                'default_lang_id': self.website_id.default_lang_id.id,
                 'hide_website_column': True,
             },
             'domain': [('website_id', '=', self.website_id.id)],

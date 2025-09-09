@@ -26,15 +26,19 @@ class ProductFeed(models.Model):
     pricelist_id = fields.Many2one(
         'product.pricelist',
         help="Specify a pricelist to localize the feed with a specific currency."
-             " If not set, the default website pricelist will be used.\n"
-             "Note that the pricelist must be selectable on the website.",
+        " If not set, the default website pricelist will be used."
+        "\nNote that the pricelist must be selectable on the website.",
         domain="[('website_id', 'in', (False, website_id)), ('selectable', '=', True)]",
     )
     lang_id = fields.Many2one(
         'res.lang',
         string="Language",
         help="Select the language to translate product names, descriptions,"
-             " and other text in the feed.",
+        " and other text in the feed.",
+        compute='_compute_lang_id',
+        precompute=True,
+        store=True,
+        readonly=False,
         required=True,
         domain="[('id', 'in', website_lang_ids)]",
     )
@@ -44,23 +48,22 @@ class ProductFeed(models.Model):
         selection=[
             ('gmc', "Google Merchant Center"),
         ],
-        default='gmc',
         required=True,
+        default='gmc',
     )
     access_token = fields.Char(
-        default=lambda _: uuid.uuid4().hex,
-        required=True,
-        copy=False,
         readonly=True,
+        required=True,
+        default=lambda _: uuid.uuid4().hex,
+        copy=False,
     )
     url = fields.Char(compute='_compute_url')
 
-    # TODO LIPI
     last_notification_date = fields.Date()
 
     # Caching mechanism (technical fields)
     feed_cache = fields.Binary(compute='_compute_feed_cache', store=True, readonly=True)
-    cache_expiry = fields.Datetime(default=fields.Datetime.now, required=True, readonly=True)
+    cache_expiry = fields.Datetime(readonly=True, required=True, default=fields.Datetime.now)
 
     @api.depends('target')
     def _compute_url(self):
@@ -76,6 +79,11 @@ class ProductFeed(models.Model):
                 feed.website_id.get_base_url(),
                 f'{path}?feed_id={feed.id}&access_token={feed.access_token}',
             )
+
+    @api.depends('website_id')
+    def _compute_lang_id(self):
+        for feed in self.filtered(lambda f: not f.lang_id):
+            feed.lang_id = feed.website_id.default_lang_id
 
     @api.depends(
         'website_id', 'pricelist_id', 'lang_id', 'product_category_ids'
@@ -102,7 +110,7 @@ class ProductFeed(models.Model):
                 ))
 
     def action_invalidate_cache(self):
-        self.feed_cache = False
+        self.cache_expiry = fields.Datetime.now() - relativedelta(days=1)
 
         return {
             'type': 'ir.actions.client',
@@ -129,10 +137,12 @@ class ProductFeed(models.Model):
             # Lock the record to prevent concurrent rendering
             self.lock_for_update()
             gmc_xml = self._render_gmc_feed()
+            compressed_gmc_xml = gzip.compress(gmc_xml.encode())
             # The binary field stores the data in the `datas` field of an `ir.attachment` which is a
             # base64 view of its `raw` data, therefore we encode the gzip content before saving it.
-            self.feed_cache = base64.b64encode(gzip.compress(gmc_xml.encode()))
+            self.feed_cache = base64.b64encode(compressed_gmc_xml)
             self.cache_expiry = fields.Datetime.today() + relativedelta(days=1)
+            return compressed_gmc_xml  # Avoid encoding and directly decoding
 
         return base64.b64decode(self.feed_cache)
 
@@ -233,16 +243,22 @@ class ProductFeed(models.Model):
         # Send an early warning to the website manager if the number of products exceeds the
         # midpoint between the soft and hard limit.
         if len(products) > (const.PRODUCT_FEED_SOFT_LIMIT + const.PRODUCT_FEED_HARD_LIMIT) / 2:
-            self._notify_website_manager(
-                subject=self.env._("GMC: Product Limit Exceeded"),
-                body=self.env._(
-                    "The feed %(feed_name)s contains more than %(limit)s products,"
-                    " which may not be fully updated. Consider refining the feed by adjusting"
-                    " the product categories.",
-                    feed_name=self.display_name,
-                    limit=f"{const.PRODUCT_FEED_SOFT_LIMIT:,}",  # Format to 5,000
-                ),
-            )
+            today = fields.Date.today()
+            if (
+                not self.last_notification_date
+                or relativedelta(today, self.last_notification_date).weeks > 0
+            ):
+                self._notify_website_manager(
+                    subject=self.env._("GMC: Product Limit Exceeded"),
+                    body=self.env._(
+                        "The feed %(feed_name)s contains more than %(limit)s products,"
+                        " which may not be fully updated. Consider refining the feed by adjusting"
+                        " the product categories.",
+                        feed_name=self.display_name,
+                        limit=f"{const.PRODUCT_FEED_SOFT_LIMIT:,}",  # Format to 5,000
+                    ),
+                )
+                self.last_notification_date = today
 
         return products
 
