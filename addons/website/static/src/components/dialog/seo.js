@@ -7,7 +7,7 @@ import { escapeRegExp } from "@web/core/utils/strings";
 import { useService, useAutofocus } from '@web/core/utils/hooks';
 import { isVisible } from "@web/core/utils/ui";
 import { CheckBox } from '@web/core/checkbox/checkbox';
-import { MediaDialog } from '@web_editor/components/media_dialog/media_dialog';
+import { MediaDialog } from "@html_editor/main/media/media_dialog/media_dialog";
 import { WebsiteDialog } from './dialog';
 import { Component, onMounted, onWillStart, reactive, useEffect, useState, useRef } from "@odoo/owl";
 import wUtils from "@website/js/utils";

@@ -290,7 +290,7 @@ export class VideoSelector extends Component {
      * Keep rpc call in distinct method make it patchable by test.
      */
     async _getVideoURLData(url, options) {
-        return await rpc("/web_editor/video_url/data", {
+        return await rpc("/html_editor/video_url/data", {
             video_url: url,
             ...options,
         });
