@@ -57,6 +57,7 @@ def _update_nogap(self, number_increment):
     self.invalidate_recordset(['number_next'])
     return number_next
 
+
 def _predict_nextval(self, seq_id):
     """Predict next value for PostgreSQL sequence without consuming it"""
     # Cannot use currval() as it requires prior call to nextval()
@@ -272,17 +273,26 @@ class IrSequence(models.Model):
     def next_by_code(self, sequence_code, sequence_date=None):
         """ Draw an interpolated string using a sequence with the requested code.
             If several sequences with the correct code are available to the user
-            (multi-company cases), the one from the user's current company will
-            be used.
+            (multi-company cases), the one from the user's current company (or a
+            parent company) will be used.
         """
         self.browse().check_access('read')
         company_id = self.env.company.id
-        seq_ids = self.search([('code', '=', sequence_code), ('company_id', 'in', [company_id, False])], order='company_id')
-        if not seq_ids:
-            _logger.debug("No ir.sequence has been found for code '%s'. Please make sure a sequence is set for current company." % sequence_code)
+        seqs = self.search([
+            ('code', '=', sequence_code),
+            '|', ('company_id', '=', False), ('company_id', 'parent_of', company_id),
+        ], order='company_id.id DESC')
+        if not seqs:
+            _logger.warning(
+                "%s has no ir.sequence available with code %r",
+                self.env.company.name, sequence_code,
+            )
             return False
-        seq_id = seq_ids[0]
-        return seq_id._next(sequence_date=sequence_date)
+        # Get the first sequence with a `company_id`, otherwise one without.
+        # In case multiple sequences have a `company_id`, the first one will be the lowest
+        # in the company hierarchy, by virtue of being ordered descendingly on `company_id`.
+        seq = next(iter(seq for seq in seqs if seq.company_id), seqs[0])
+        return seq._next(sequence_date=sequence_date)
 
 
 class IrSequenceDate_Range(models.Model):
