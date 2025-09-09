@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-07-16 18:39+0000\n"
-"PO-Revision-Date: 2025-08-29 08:49+0000\n"
+"PO-Revision-Date: 2025-09-09 23:41+0000\n"
 "Last-Translator: \"Kira Petersen François (peti)\" <peti@odoo.com>\n"
 "Language-Team: Danish <https://translate.odoo.com/projects/odoo-s18-4/"
 "website_payment/da/>\n"
@@ -33,9 +33,10 @@ msgid ""
 msgstr ""
 ".\n"
 "                        <br/>\n"
-"                        Vi sætter pris på din støtte til vores organisation som sådan.\n"
+"                        Vi sætter stor pris på din støtte til vores "
+"organisation.\n"
 "                        <br/>\n"
-"                        Hilsen."
+"                        Med venlig hilsen"
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.donation_mail_body
@@ -50,12 +51,12 @@ msgstr "<b>Donationsdato:</b>"
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.donation_mail_body
 msgid "<b>Donor Email:</b>"
-msgstr "<b>Donor Email:</b>"
+msgstr "<b>Donorens e-mail:</b>"
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.donation_mail_body
 msgid "<b>Donor Name:</b>"
-msgstr "<b>Donor Navn:</b>"
+msgstr "<b>Donorens navn:</b>"
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.donation_mail_body
@@ -65,12 +66,12 @@ msgstr "<b>Betalings-ID:</b>"
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.donation_mail_body
 msgid "<b>Payment Method:</b>"
-msgstr "<b>Betalingsmetode:</b>"
+msgstr "<b>Betalingsform:</b>"
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.donation_information
 msgid "<option value=\"\">Country...</option>"
-msgstr "<option value=\"\">Land...</option>"
+msgstr "<option value=\"\">Land ...</option>"
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.donation_input
@@ -78,31 +79,33 @@ msgid ""
 "<small class=\"text-danger d-none\" id=\"warning_message_id\">Please enter "
 "the amount to donate.</small>"
 msgstr ""
+"<small class=\"text-danger d-none\" id=\"warning_message_id\">Indtast det "
+"beløb, du ønsker at donere.</small>"
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.s_donation_button
 msgid "<span class=\"s_donation_currency pe-1\">$</span>"
-msgstr ""
+msgstr "<span class=\"s_donation_currency pe-1\">kr.</span>"
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.s_donation_button
 msgid "<span class=\"s_donation_currency pe-1\">$</span>10"
-msgstr ""
+msgstr "10<span class=\"s_donation_currency pe-1\">kr.</span>"
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.s_donation_button
 msgid "<span class=\"s_donation_currency pe-1\">$</span>100"
-msgstr ""
+msgstr "100<span class=\"s_donation_currency pe-1\">kr.</span>"
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.s_donation_button
 msgid "<span class=\"s_donation_currency pe-1\">$</span>25"
-msgstr ""
+msgstr "25<span class=\"s_donation_currency pe-1\">kr.</span>"
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.s_donation_button
 msgid "<span class=\"s_donation_currency pe-1\">$</span>50"
-msgstr ""
+msgstr "50<span class=\"s_donation_currency pe-1\">kr.</span>"
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.donation_pay
@@ -113,22 +116,22 @@ msgstr "<strong>Advarsel</strong> Valutaen mangler eller er ugyldig."
 #. odoo-python
 #: code:addons/website_payment/models/payment_transaction.py:0
 msgid "A donation has been made on your website"
-msgstr "En donation er blevet foretaget på din hjemmeside"
+msgstr "Der er modtaget en donation på din hjemmeside"
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.s_donation_button
 msgid "A year of cultural awakening."
-msgstr "Et år med kulturel opvågning."
+msgstr "Et år med fokus på kulturel bevidsthed."
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.res_config_settings_view_form
 msgid "Activate Payments"
-msgstr "Aktiver betalinger"
+msgstr "Aktivér betalinger"
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.res_config_settings_view_form
 msgid "Activate Stripe"
-msgstr "Aktiver Stripe"
+msgstr "Aktivér Stripe"
 
 #. module: website_payment
 #. odoo-javascript
@@ -161,12 +164,12 @@ msgstr "Beløb ("
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.donation_input
 msgid "Amount to donate"
-msgstr ""
+msgstr "Donationsbeløb"
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.donation_mail_body
 msgid "Amount("
-msgstr "Beløb("
+msgstr "Beløb ("
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.s_donation_button
@@ -189,7 +192,7 @@ msgstr "Konfigurationsindstillinger"
 #. odoo-python
 #: code:addons/website_payment/models/res_config_settings.py:0
 msgid "Configure %s"
-msgstr "Konfigurer %s"
+msgstr "Konfigurér %s"
 
 #. module: website_payment
 #. odoo-javascript
@@ -253,18 +256,18 @@ msgstr "Vis navn"
 #: code:addons/website_payment/static/src/website_builder/donation_option.xml:0
 #: model_terms:ir.ui.view,arch_db:website_payment.s_donation_options
 msgid "Display Options"
-msgstr "Vil muligheder"
+msgstr "Vis muligheder"
 
 #. module: website_payment
 #. odoo-python
 #: code:addons/website_payment/controllers/portal.py:0
 msgid "Donate"
-msgstr "Doner"
+msgstr "Donér"
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.s_donation_button
 msgid "Donate Now"
-msgstr "Doner nu"
+msgstr "Donér nu"
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.donation_information
@@ -277,7 +280,7 @@ msgstr "Donation"
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.snippets
 msgid "Donation Button"
-msgstr "Donations knap"
+msgstr "Donationsknap"
 
 #. module: website_payment
 #. odoo-python
@@ -294,7 +297,7 @@ msgstr "Donationsbekræftelse"
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.donation_mail_body
 msgid "Donation notification"
-msgstr "Donation notifikation"
+msgstr "Notifikation om donation"
 
 #. module: website_payment
 #. odoo-javascript
@@ -308,7 +311,7 @@ msgid ""
 "Email\n"
 "                    <span class=\"s_website_form_mark\"> *</span>"
 msgstr ""
-"Email\n"
+"E-mail\n"
 "                    <span class=\"s_website_form_mark\"> *</span>"
 
 #. module: website_payment
@@ -320,12 +323,12 @@ msgstr "E-mail er påkrævet."
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.donation_input
 msgid "Enter a valid number!"
-msgstr ""
+msgstr "Indtast et gyldigt nummer!"
 
 #. module: website_payment
 #: model:ir.model.fields,field_description:website_payment.field_res_config_settings__first_provider_label
 msgid "First Provider Label"
-msgstr "Første udbyder-etiket"
+msgstr "Første udbyderetiket"
 
 #. module: website_payment
 #: model:ir.model.fields,field_description:website_payment.field_account_payment__id
@@ -350,7 +353,7 @@ msgstr "Er donation"
 #. module: website_payment
 #: model:ir.model.fields,field_description:website_payment.field_res_config_settings__is_stripe_supported_country
 msgid "Is Stripe Supported Country"
-msgstr "Er Stripe Understøttet Land"
+msgstr "Er et land, der understøtter Stripe"
 
 #. module: website_payment
 #: model:ir.model.fields,field_description:website_payment.field_payment_transaction__is_donation
@@ -423,7 +426,7 @@ msgstr "Andet end Paypal"
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.donation_information
 msgid "Payment Details"
-msgstr "Betalingsdetaljer"
+msgstr "Betalingsoplysninger"
 
 #. module: website_payment
 #: model:ir.model,name:website_payment.model_payment_provider
@@ -454,17 +457,17 @@ msgstr "Kun Paypal"
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.donation_information
 msgid "Please enter a valid email address."
-msgstr ""
+msgstr "Indtast venligst en gyldig e-mailadresse."
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.donation_information
 msgid "Please provide a name."
-msgstr ""
+msgstr "Angiv venligst et navn."
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.donation_information
 msgid "Please select a country."
-msgstr ""
+msgstr "Vælg venligst et land."
 
 #. module: website_payment
 #. odoo-javascript
@@ -482,14 +485,14 @@ msgstr "Forudfyldte valgmuligheder"
 #. module: website_payment
 #: model:ir.model.fields,field_description:website_payment.field_res_config_settings__providers_state
 msgid "Providers State"
-msgstr "Udbydere Stat"
+msgstr "Udbyderens stat"
 
 #. module: website_payment
 #. odoo-javascript
 #: code:addons/website_payment/static/src/website_builder/donation_option.xml:0
 #: model_terms:ir.ui.view,arch_db:website_payment.s_donation_options
 msgid "Recipient Email"
-msgstr "Modtager email"
+msgstr "Modtagerens e-mailadresse"
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.res_config_settings_view_form
@@ -536,18 +539,18 @@ msgstr ""
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.donation_mail_body
 msgid "Thank you for your donation of"
-msgstr "Tak for din donation af"
+msgstr "Tak for din donation på"
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.donation_input
 msgid "The minimum donation amount is"
-msgstr ""
+msgstr "Minimumsbeløb for donationen er"
 
 #. module: website_payment
 #. odoo-javascript
 #: code:addons/website_payment/static/src/snippets/s_donation/donation_snippet.js:0
 msgid "The minimum donation amount is %(amount)s"
-msgstr ""
+msgstr "Det mindste donationsbeløb er %(amount)s"
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.donation_pay
@@ -582,4 +585,4 @@ msgstr "Din kommentar"
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.donation_mail_body
 msgid "made on"
-msgstr "lavet på"
+msgstr "lavet den"
