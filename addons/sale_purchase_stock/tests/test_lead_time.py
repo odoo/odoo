@@ -25,38 +25,76 @@ class TestLeadTime(TestCommonSalePurchaseNoChart):
             'email': 'grand.horus@chansonbelge.dz',
             'group_ids': cls.env.ref('sales_team.group_sale_salesman'),
         })
-
-    def test_supplier_lead_time(self):
-        """ Basic stock configuration and a supplier with a minimum qty and a lead time """
-
-        product = self.env['product.product'].create({
+        cls.product = cls.env['product.product'].create({
             'name': 'corpse starch',
             'is_storable': True,
             'seller_ids': [Command.create({
-                'partner_id': self.vendor.id,
+                'partner_id': cls.vendor.id,
                 'min_qty': 1,
                 'price': 10,
                 'date_start': fields.Date.today() - timedelta(days=1),
             })],
-            'route_ids': [(6, 0, (self.mto_route + self.buy_route).ids)],
+            'route_ids': [Command.set((cls.mto_route + cls.buy_route).ids)],
         })
+
+    def test_supplier_lead_time(self):
+        """ Basic stock configuration and a supplier with a minimum qty and a lead time """
 
         so = self.env['sale.order'].with_user(self.user_salesperson).create({
             'partner_id': self.partner_a.id,
             'user_id': self.user_salesperson.id,
         })
         self.env['sale.order.line'].create({
-            'name': product.name,
-            'product_id': product.id,
+            'name': self.product.name,
+            'product_id': self.product.id,
             'product_uom_qty': 1,
-            'price_unit': product.list_price,
+            'price_unit': self.product.list_price,
             'tax_ids': False,
             'order_id': so.id,
         })
         so.action_confirm()
 
         po = self.env['purchase.order'].search([('partner_id', '=', self.vendor.id)])
-        self.assertEqual(po.order_line.price_unit, product.seller_ids.price)
+        self.assertEqual(po.order_line.price_unit, self.product.seller_ids.price)
+
+    def test_merge_procurement(self):
+        """create 2 sale order for the same supplier with grouping option and check that only one PO is created"""
+
+        self.vendor.group_rfq = 'day'
+
+        sale_order = self.env["sale.order"].create([{
+            "partner_id": self.partner_a.id,
+            "order_line": [Command.create(
+                {
+                    "name": self.product.name,
+                    "product_id": self.product.id,
+                    "product_uom_qty": 2,
+                    "price_unit": self.product.list_price,
+                    "tax_ids": False,
+                })],
+        }])
+        sale_order.action_confirm()
+
+        pol = self.env['purchase.order.line'].search([('product_id', '=', self.product.id)])
+        self.assertRecordValues(pol, [{'product_qty': 2}])
+        # create another SO, it should increate the existing PO line
+        so = self.env["sale.order"].create({
+            "partner_id": self.partner_a.id,
+            "order_line": [Command.create(
+                {
+                    "name": self.product.name,
+                    "product_id": self.product.id,
+                    "product_uom_qty": 1,
+                    "price_unit": self.product.list_price,
+                    "tax_ids": False,
+                })],
+        })
+        so.action_confirm()
+        self.assertEqual(pol.product_qty, 3)
+
+        # Edit a SOL, it should update the PO line
+        sale_order.order_line.product_uom_qty += 1
+        self.assertEqual(pol.product_qty, 4)
 
     def test_dynamic_lead_time_delay(self):
         self.env.company.horizon_days = 0
