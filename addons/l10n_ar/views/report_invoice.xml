@@ -136,6 +136,12 @@
         <t t-set="section_subtotal" t-value="line.get_section_subtotal()" position="attributes">
             <attribute name="t-value">line.get_section_subtotal() + l10n_ar_values['price_subtotal']</attribute>
         </t>
+        <t t-set="line_colspan" t-value="3 + (1 if display_discount else 0) + (1 if display_taxes and not line.tax_ids else 0)" position="attributes">
+            <attribute name="t-value">3 + (1 if display_discount else 0) + (1 if not line.tax_ids and not o._l10n_ar_include_vat() else 0)</attribute>
+        </t>
+        <t t-set="line_colspan" t-value="3 + (1 if display_discount else 0) + (1 if display_taxes and not grouped_line.get('taxes') else 0)" position="attributes">
+            <attribute name="t-value">3 + (1 if display_discount else 0) + (1 if display_taxes and not grouped_line.get('taxes') and o._l10n_ar_include_vat() else 0)</attribute>
+        </t>
         <!-- label amount for subtotal column on b2b and b2c -->
         <xpath expr="//th[@name='th_subtotal']/span" position="replace">
             <span>Amount</span>
@@ -161,7 +167,7 @@
         </xpath>
 
         <xpath expr="//span[@id='line_tax_ids']/.." position="attributes">
-            <attribute name="t-if">not o._l10n_ar_include_vat()</attribute>
+            <attribute name="t-if">not hide_prices and not o._l10n_ar_include_vat()</attribute>
         </xpath>
         <xpath expr="//span[@id='grouped_line_tax_ids']/.." position="attributes">
             <attribute name="t-if">not o._l10n_ar_include_vat()</attribute>
