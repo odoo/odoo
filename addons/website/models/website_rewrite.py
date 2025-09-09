@@ -157,3 +157,10 @@ class WebsiteRewrite(models.Model):
 
     def refresh_routes(self):
         self.env['website.route']._refresh()
+
+    @api.model
+    def get_import_templates(self):
+        return [{
+            'label': _("Import Template for Redirects"),
+            'template': '/website/static/xls/redirects_import_template.xlsx',
+        }]
