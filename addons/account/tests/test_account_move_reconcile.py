@@ -3532,12 +3532,12 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
         caba_transition_exchange_moves_1 = caba_transition_lines_1.matched_credit_ids.exchange_move_id
         self.assertEqual(len(caba_transition_exchange_moves_1), 2)
         self.assertRecordValues(caba_transition_exchange_moves_1[0].line_ids, [
-            {'debit': 0.0,      'credit': 1.39,     'amount_currency': 0.0,     'currency_id': currency_id,     'account_id': self.cash_basis_transfer_account.id},
-            {'debit': 1.39,     'credit': 0.0,      'amount_currency': 0.0,     'currency_id': currency_id,     'account_id': self.env.company.expense_currency_exchange_account_id.id},
-        ])
-        self.assertRecordValues(caba_transition_exchange_moves_1[1].line_ids, [
             {'debit': 0.0,      'credit': 0.48,     'amount_currency': 0.0,     'currency_id': currency_id,     'account_id': self.cash_basis_transfer_account.id},
             {'debit': 0.48,     'credit': 0.0,      'amount_currency': 0.0,     'currency_id': currency_id,     'account_id': self.env.company.expense_currency_exchange_account_id.id},
+        ])
+        self.assertRecordValues(caba_transition_exchange_moves_1[1].line_ids, [
+            {'debit': 0.0,      'credit': 1.39,     'amount_currency': 0.0,     'currency_id': currency_id,     'account_id': self.cash_basis_transfer_account.id},
+            {'debit': 1.39,     'credit': 0.0,      'amount_currency': 0.0,     'currency_id': currency_id,     'account_id': self.env.company.expense_currency_exchange_account_id.id},
         ])
 
         self.assertAmountsGroupByAccount([
@@ -3598,16 +3598,16 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
         caba_transition_exchange_moves_2 = caba_transition_lines_2.matched_credit_ids.exchange_move_id
         self.assertEqual(len(caba_transition_exchange_moves_2), 3)
         self.assertRecordValues(caba_transition_exchange_moves_2[0].line_ids, [
+            {'debit': 0.0,      'credit': 1.85,     'amount_currency': 0.0,     'currency_id': currency_id,     'account_id': self.cash_basis_transfer_account.id},
+            {'debit': 1.85,     'credit': 0.0,      'amount_currency': 0.0,     'currency_id': currency_id,     'account_id': self.env.company.expense_currency_exchange_account_id.id},
+        ])
+        self.assertRecordValues(caba_transition_exchange_moves_2[1].line_ids, [
             {'debit': 0.01,     'credit': 0.0,      'amount_currency': 0.0,     'currency_id': currency_id,     'account_id': self.cash_basis_transfer_account.id},
             {'debit': 0.0,      'credit': 0.01,     'amount_currency': 0.0,     'currency_id': currency_id,     'account_id': self.env.company.income_currency_exchange_account_id.id},
         ])
-        self.assertRecordValues(caba_transition_exchange_moves_2[1].line_ids, [
+        self.assertRecordValues(caba_transition_exchange_moves_2[2].line_ids, [
             {'debit': 0.0,      'credit': 1.86,     'amount_currency': 0.0,     'currency_id': currency_id,     'account_id': self.cash_basis_transfer_account.id},
             {'debit': 1.86,     'credit': 0.0,      'amount_currency': 0.0,     'currency_id': currency_id,     'account_id': self.env.company.expense_currency_exchange_account_id.id},
-        ])
-        self.assertRecordValues(caba_transition_exchange_moves_2[2].line_ids, [
-            {'debit': 0.0,      'credit': 1.85,     'amount_currency': 0.0,     'currency_id': currency_id,     'account_id': self.cash_basis_transfer_account.id},
-            {'debit': 1.85,     'credit': 0.0,      'amount_currency': 0.0,     'currency_id': currency_id,     'account_id': self.env.company.expense_currency_exchange_account_id.id},
         ])
 
         self.assertAmountsGroupByAccount([
