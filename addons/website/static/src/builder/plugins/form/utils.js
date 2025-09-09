@@ -1,6 +1,6 @@
 import { _t } from "@web/core/l10n/translation";
 import { renderToElement } from "@web/core/utils/render";
-import { generateHTMLId } from "@html_builder/utils/utils_css";
+import { generateHTMLId } from "@web/core/utils/strings";
 import { isSmallInteger } from "@html_builder/utils/utils";
 
 export const VISIBILITY_DATASET = [
@@ -295,6 +295,16 @@ export function replaceFieldElement(oldFieldEl, fieldEl) {
     [...fieldEl.childNodes].forEach((node) => oldFieldEl.appendChild(node));
     [...fieldEl.attributes].forEach((el) => oldFieldEl.removeAttribute(el.nodeName));
     [...fieldEl.attributes].forEach((el) => oldFieldEl.setAttribute(el.nodeName, el.nodeValue));
+    if (!["selection", "many2one"].includes(oldFieldEl.dataset.type)) {
+        const dataAttributesToRemove = [
+            "otherOptionAllowed",
+            "otherOptionLabel",
+            "otherOptionPlaceholder",
+        ];
+        for (const dataAttribute of dataAttributesToRemove) {
+            delete oldFieldEl.dataset[dataAttribute];
+        }
+    }
     if (hasConditionalVisibility) {
         oldFieldEl.classList.add("s_website_form_field_hidden_if", "d-none");
     }
@@ -514,9 +524,13 @@ export function getListItems(fieldEl) {
     const multipleInputsEl = getMultipleInputs(fieldEl);
     let options = [];
     if (selectEl) {
-        options = [...selectEl.querySelectorAll("option")];
+        options = [...selectEl.querySelectorAll("option:not([value='_other'])")];
     } else if (multipleInputsEl) {
-        options = [...multipleInputsEl.querySelectorAll(".checkbox input, .radio input")];
+        options = [
+            ...multipleInputsEl.querySelectorAll(
+                ".checkbox input, .radio input:not([value='_other'])"
+            ),
+        ];
     }
     return options.map((opt) => {
         const name = selectEl ? opt : opt.nextElementSibling;

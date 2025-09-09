@@ -1,12 +1,21 @@
 import { setupInteractionWhiteList, startInteractions } from "@web/../tests/public/helpers";
 
 import { describe, expect, test } from "@odoo/hoot";
-import { animationFrame, clear, click, fill, queryOne, setInputFiles } from "@odoo/hoot-dom";
+import {
+    animationFrame,
+    clear,
+    click,
+    fill,
+    queryOne,
+    select,
+    setInputFiles,
+} from "@odoo/hoot-dom";
 import { advanceTime } from "@odoo/hoot-mock";
 
-import { contains, onRpc } from "@web/../tests/web_test_helpers";
+import { contains, onRpc, patchWithCleanup } from "@web/../tests/web_test_helpers";
+import { browser } from "@web/core/browser/browser";
 
-setupInteractionWhiteList(["website.form", "website.post_link"]);
+setupInteractionWhiteList(["website.form", "website.post_link", "website.form.add_other_option"]);
 
 describe.current.tags("interaction_dev");
 
@@ -214,6 +223,38 @@ const formWithVisibilityRulesTemplate = /* html */ `
                     </div>
                 </form>
             </div>
+        </section>
+    </div>
+`;
+
+const formTemplateWithRadioAndSelect = /* html */ `
+    <div id="wrapwrap">
+        <section class="s_website_form">
+            <form action="/website/form/" method="post" enctype="multipart/form-data" class="o_mark_required" data-model_name="mail.mail">
+                <div data-name="Field" class="s_website_form_field">
+                    <input class="form-control s_website_form_input" type="email" name="email_from" id="o15u8g10ugoy">
+                </div>
+                <div data-name="Field" class="s_website_form_field">
+                    <input class="form-control s_website_form_input" type="text" name="subject" id="o7r4gf8heilh">
+                </div>
+                <div data-name="Field" class="s_website_form_field s_website_form_custom" data-type="selection" data-other-option-allowed="true" data-other-option-label="Other" data-other-option-placeholder="Other option... (radio)">
+                    <div class="row s_website_form_multiple" data-name="Radio Button">
+                        <div class="form-check">
+                            <input type="radio" class="s_website_form_input form-check-input" id="obd2szn9ilqn0" name="Radio Button" value="Option 1" required="">
+                            <label class="form-check-label s_website_form_check_label" for="obd2szn9ilqn0">Option 1</label>
+                        </div>
+                    </div>
+                </div>
+                <div data-name="Field" class="s_website_form_field s_website_form_custom" data-type="many2one" data-other-option-allowed="true" data-other-option-label="Other" data-other-option-placeholder="Other option... (select)">
+                    <select class="form-select s_website_form_input" name="Select" required="" id="oo7t6wykitto">
+                        <option id="oo7t6wykitto0" value="Option 1" selected>Option 1</option>
+                    </select>
+                </div>
+                <div class="s_website_form_submit">
+                    <span id="s_website_form_result"></span>
+                    <a href="#" role="button" class="btn btn-primary s_website_form_send" contenteditable="true">Submit</a>
+                </div>
+            </form>
         </section>
     </div>
 `;
@@ -655,4 +696,30 @@ test("form elements chained conditional visibility", async () => {
     await advanceTime(400); // Debounce delay.
     checkField(fieldB, true, false);
     checkField(fieldC, true, false);
+});
+
+test("should make 'Other' input fields required when 'Other' option is selected", async () => {
+    await startInteractions(formTemplateWithRadioAndSelect);
+    const selectOtherInputEl = queryOne(".o_other_input[placeholder='Other option... (select)']");
+    const radioOtherInputEl = queryOne(".o_other_input[placeholder='Other option... (radio)']");
+    await contains("input[name=email_from]").fill("a@b.com");
+    await contains("input[name=subject]").fill("Subject");
+    await click(".form-select");
+    await select("_other");
+    await click("a.s_website_form_send");
+    checkField(selectOtherInputEl, true, true);
+    await contains(selectOtherInputEl).fill("Other option input for select");
+    await click(".s_website_form_input[value='_other']");
+    await click("a.s_website_form_send");
+    checkField(radioOtherInputEl, true, true);
+    await contains(radioOtherInputEl).fill("Other option input for radio");
+    patchWithCleanup(browser, {
+        fetch(_url, { body: formData }) {
+            expect(formData.get("Radio Button")).toBe("Other option input for radio");
+            expect(formData.get("Select")).toBe("Other option input for select");
+        },
+    });
+    // Wait for the debounced input event to update the form state.
+    await advanceTime(400);
+    await click("a.s_website_form_send");
 });

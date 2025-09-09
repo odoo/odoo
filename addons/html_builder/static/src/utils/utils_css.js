@@ -264,15 +264,6 @@ export function getBgImageURLFromEl(el) {
     return getBgImageURLFromURL(string);
 }
 /**
- * Generates a string ID.
- *
- * @private
- * @returns {string}
- */
-export function generateHTMLId() {
-    return `o${Math.random().toString(36).substring(2, 15)}`;
-}
-/**
  * Returns the class of the element that matches the specified prefix.
  *
  * @private

@@ -201,6 +201,10 @@ export class FormFieldOption extends BaseOptionComponent {
         const el = this.env.getEditingElement();
         return !isFieldCustom(el) && this.state.fields[getFieldName(el)].type === "many2many";
     }
+    get isOtherOptionSupported() {
+        const el = this.env.getEditingElement();
+        return isFieldCustom(el) && ["selection", "many2one"].includes(el.dataset.type);
+    }
     get isMultipleInputs() {
         const el = this.env.getEditingElement();
         return !!getMultipleInputs(el);

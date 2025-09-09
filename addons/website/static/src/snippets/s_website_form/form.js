@@ -332,7 +332,12 @@ export class Form extends Interaction {
         }
 
         const formFields = [];
+        // List of placeholder values to ignore for submission
+        const valuesToIgnore = ["_other"];
         new FormData(this.el).forEach((value, key) => {
+            if (valuesToIgnore.includes(value)) {
+                return;
+            }
             const inputElement = this.el.querySelector(`[name="${CSS.escape(key)}"]`);
             if (inputElement && inputElement.type !== "file") {
                 formFields.push({ name: key, value: value });

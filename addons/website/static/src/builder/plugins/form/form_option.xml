@@ -166,12 +166,12 @@
     <BuilderRow label.translate="Description">
         <BuilderCheckbox action="'toggleDescription'" preview="false"/>
     </BuilderRow>
-    <BuilderRow label.translate="Placeholder">
+    <BuilderRow label.translate="Placeholder" t-if="!isOtherOptionSupported">
         <BuilderTextInput attributeAction="'placeholder'"
             applyTo="`input[type='text'], input[type='email'], input[type='number'], input[type='tel'], input[type='url'], textarea`"
         />
     </BuilderRow>
-    <BuilderRow label.translate="Default Value">
+    <BuilderRow label.translate="Default Value" t-if="!isOtherOptionSupported">
         <BuilderTextInput action="'selectTextareaValue'" applyTo="'textarea'"/>
         <BuilderCheckbox attributeAction="'checked'" attributeActionValue="'checked'"
             applyTo="`.col-sm > * > input[type='checkbox']`" preview="false"
@@ -229,6 +229,15 @@
                 forbidLastItemRemoval="true"
                 records="state.valueList.availableRecords" />
         </div>
+    </BuilderRow>
+    <BuilderRow label.translate="Add Other" t-if="isOtherOptionSupported" tooltip.translate="Allow people to add their own option">
+        <BuilderCheckbox id="'otherOption'" dataAttributeAction="'otherOptionAllowed'" dataAttributeActionValue="'true'" preview="false"/>
+    </BuilderRow>
+    <BuilderRow label.translate="Label" t-if="isActiveItem('otherOption')" tooltip.translate="Label for other option" level="1">
+        <BuilderTextInput dataAttributeAction="'otherOptionLabel'" default.translate="Other"/>
+    </BuilderRow>
+    <BuilderRow label.translate="Placeholder" t-if="isActiveItem('otherOption')" level="1">
+        <BuilderTextInput dataAttributeAction="'otherOptionPlaceholder'"/>
     </BuilderRow>
     <BuilderRow label.translate="Requirement"
             t-if="domStateCurrentFieldInput.hasDateTimePicker or domStateCurrentFieldInput.isTextArea or canHaveTextValidationCondition.includes(domStateCurrentFieldInput.type)">

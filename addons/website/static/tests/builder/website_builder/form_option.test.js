@@ -17,6 +17,7 @@ import {
     setupWebsiteBuilder,
     setupWebsiteBuilderWithSnippet,
 } from "@website/../tests/builder/website_helpers";
+import { formSelectXml } from "@website/../tests/interactions/snippets/helpers";
 
 class HrJob extends models.Model {
     _name = "hr.job";
@@ -820,4 +821,27 @@ describe("Many2one Field", () => {
             expect(".modal-dialog .o_right_panel .o_list_item").toHaveCount(2);
         });
     });
+});
+
+test("other option attributes are preserved when switching between radio and select, removed for other field types", async () => {
+    onRpc("get_authorized_fields", () => ({}));
+    await setupWebsiteBuilder(formSelectXml);
+    await contains(":iframe .s_website_form_field").click();
+    expect(":iframe .s_website_form_field").toHaveAttribute("data-other-option-allowed", "true");
+    expect(":iframe .s_website_form_field").toHaveAttribute("data-other-option-label");
+    expect(":iframe .s_website_form_field").toHaveAttribute("data-other-option-placeholder");
+
+    await contains("button[id='type_opt']").click();
+    await contains("[data-action-value='selection']").click();
+    expect(":iframe .s_website_form_field").toHaveAttribute("data-other-option-allowed", "true");
+    expect(":iframe .s_website_form_field").toHaveAttribute("data-other-option-label");
+    expect(":iframe .s_website_form_field").toHaveAttribute("data-other-option-placeholder");
+
+    await contains("button[id='type_opt']").click();
+    await contains("[data-action-value='selection']").click();
+    await contains(".options-container [data-label='Type'] button").click();
+    await contains(".o_popover [data-action-value='one2many']").click();
+    expect(":iframe .s_website_form_field").not.toHaveAttribute("data-other-option-allowed");
+    expect(":iframe .s_website_form_field").not.toHaveAttribute("data-other-option-label");
+    expect(":iframe .s_website_form_field").not.toHaveAttribute("data-other-option-placeholder");
 });
