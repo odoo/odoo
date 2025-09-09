@@ -5369,9 +5369,14 @@ class AccountMove(models.Model):
                     validation_msgs.add(_("The field 'Vendor' is required, please complete it to validate the Vendor Bill."))
 
             # Handle case when the invoice_date is not set. In that case, the invoice_date is set at today and then,
-            # lines are recomputed accordingly.
+            # lines are recomputed accordingly (if the user didnt' change the rate manually)
             if not invoice.invoice_date and invoice.is_invoice(include_receipts=True):
-                invoice.invoice_date = fields.Date.context_today(self)
+                if invoice.invoice_currency_rate != invoice.expected_currency_rate:
+                    # keep the rate set by the user
+                    with self.env.protecting([self._fields['invoice_currency_rate']], invoice):
+                        invoice.invoice_date = fields.Date.context_today(self)
+                else:
+                    invoice.invoice_date = fields.Date.context_today(self)
 
         for move in self:
             if move.state in ['posted', 'cancel']:
