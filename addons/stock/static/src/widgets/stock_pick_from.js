@@ -25,7 +25,11 @@ export class StockPickFrom extends Component {
             name_parts.push(data.lot_id?.display_name || data.lot_name)
         }
         if (data.package_id) {
-            name_parts.push(data.package_id?.display_name)
+            let packageName = data.package_id?.display_name;
+            if (packageName && ["done", "cancel"].includes(data.state)) {
+                packageName = packageName.split(" > ").pop();
+            }
+            name_parts.push(packageName);
         }
         if (data.owner) {
             name_parts.push(data.owner?.display_name)
@@ -44,5 +48,6 @@ registry.category("fields").add("pick_from", {
         { name: "location_dest_id", type: "relation" },
         { name: "package_id", type: "relation" },
         { name: "owner_id", type: "relation" },
+        { name: "state", type: "char" },
     ],
 });
