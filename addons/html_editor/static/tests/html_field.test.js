@@ -1071,7 +1071,7 @@ test("should display overlay on video hover and handle video replacement and rem
     });
     setSelectionInHtmlField();
 
-    await onRpc("/web_editor/video_url/data", async (request) => {
+    await onRpc("/html_editor/video_url/data", async (request) => {
         const videoUrl = (await request.json()).params.video_url;
 
         if (videoUrl === "https://www.youtube.com/embed/qxb74CMR748?rel=0&autoplay=0") {

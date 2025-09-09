@@ -165,9 +165,6 @@
             'website_sale/static/src/xml/website_sale_utils.xml',
             'website_sale/static/src/xml/website_sale_editor_previews.xml',
         ],
-        'website.backend_assets_all_wysiwyg': [
-            'website_sale/static/src/js/components/wysiwyg_adapter/wysiwyg_adapter.js',
-        ],
         'website.assets_edit_frontend': [
             'web/static/lib/bootstrap/scss/_variables.scss',
             'website_sale/static/src/website_builder/**/*.edit.*',

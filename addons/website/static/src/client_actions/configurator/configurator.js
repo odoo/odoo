@@ -4,7 +4,7 @@ import { AutoComplete } from "@web/core/autocomplete/autocomplete";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 import { delay } from "@web/core/utils/concurrency";
 import { getDataURLFromFile, redirect } from "@web/core/utils/urls";
-import weUtils from '@web_editor/js/common/utils';
+import { getCSSVariableValue } from "@html_editor/utils/formatting";
 import { _t } from "@web/core/l10n/translation";
 import { svgToPNG, webpToPNG } from "@website/js/utils";
 import { useAutofocus, useService } from "@web/core/utils/hooks";
@@ -889,10 +889,10 @@ export class Configurator extends Component {
                 name: paletteName
             };
             for (let j = 1; j <= 5; j += 1) {
-                palette[`color${j}`] = weUtils.getCSSVariableValue(`o-palette-${paletteName}-o-color-${j}`, style);
+                palette[`color${j}`] = getCSSVariableValue(`o-palette-${paletteName}-o-color-${j}`, style);
             }
             CUSTOM_BG_COLOR_ATTRS.forEach((attr) => {
-                palette[attr] = weUtils.getCSSVariableValue(`o-palette-${paletteName}-${attr}-bg`, style);
+                palette[attr] = getCSSVariableValue(`o-palette-${paletteName}-${attr}-bg`, style);
             });
             palettes[paletteName] = palette;
         });
@@ -917,7 +917,7 @@ export class Configurator extends Component {
         // Needed to build the recommended palette.
         const defaultColors = {};
         CUSTOM_BG_COLOR_ATTRS.forEach((attr) => {
-            const color = weUtils.getCSSVariableValue(`o-default-${attr}-bg`, style);
+            const color = getCSSVariableValue(`o-default-${attr}-bg`, style);
             const match = color.match(/o-color-(?<idx>[1-5])/);
             const colorIdx = parseInt(match.groups['idx']);
             defaultColors[attr] = `color${colorIdx}`;

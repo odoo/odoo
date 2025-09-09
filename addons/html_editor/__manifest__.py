@@ -19,16 +19,27 @@ This addon provides an extensible, maintainable editor.
     ],
     'auto_install': True,
     'assets': {
+        'web._assets_primary_variables': [
+            # TODO DUAU: change when file is back in html_builder
+            ('after', 'web/static/src/scss/primary_variables.scss', 'html_editor/static/src/scss/builder.variables.scss'),
+        ],
         'web.assets_frontend': [
             ('include', 'html_editor.assets_media_dialog'),
             ('include', 'html_editor.assets_readonly'),
             'html_editor/static/src/public/**/*',
+            'html_editor/static/src/scss/html_editor.common.scss',
+            'html_editor/static/src/scss/html_editor.frontend.scss',
+            'html_editor/static/src/scss/base_style.scss',
         ],
         'web.assets_backend': [
             ('include', 'html_editor.assets_editor'),
             'html_editor/static/src/others/dynamic_placeholder_plugin.js',
             'html_editor/static/src/backend/**/*',
             'html_editor/static/src/fields/**/*',
+            'html_editor/static/lib/vkbeautify/**/*',
+            'html_editor/static/src/scss/base_style.scss',
+            'html_editor/static/src/scss/html_editor.common.scss',
+            'html_editor/static/src/scss/html_editor.backend.scss',
         ],
         'html_editor.assets_editor': [
             'web/static/lib/dompurify/DOMpurify.js',
@@ -83,6 +94,21 @@ This addon provides an extensible, maintainable editor.
             'html_editor/static/lib/cropperjs/cropper.css',
             'html_editor/static/lib/cropperjs/cropper.js',
             'html_editor/static/lib/webgl-image-filter/webgl-image-filter.js',
+        ],
+        'web.report_assets_common': [
+            'html_editor/static/src/scss/base_style.scss',
+            'html_editor/static/src/scss/bootstrap_overridden.scss',
+            'html_editor/static/src/scss/html_editor.common.scss',
+        ],
+        'web._assets_secondary_variables': [
+            'html_editor/static/src/scss/secondary_variables.scss',
+        ],
+        'web._assets_backend_helpers': [
+            'html_editor/static/src/scss/bootstrap_overridden_backend.scss',
+            'html_editor/static/src/scss/bootstrap_overridden.scss',
+        ],
+        'web._assets_frontend_helpers': [
+            ('prepend', 'html_editor/static/src/scss/bootstrap_overridden.scss'),
         ],
     },
     'license': 'LGPL-3'

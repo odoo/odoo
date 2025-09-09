@@ -529,7 +529,7 @@ class TestQwebDataSnippet(TransactionCase):
         first_search = 1  # fom key & website
         t_call_snippets = 2
         fetch_snippets = 0
-        get_root_view = 2
+        get_root_view = 1
         combine_views = 3
 
         all_ir_ui_view_queries = first_search + t_call_snippets + fetch_snippets + get_root_view + combine_views  # 9

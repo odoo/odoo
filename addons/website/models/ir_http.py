@@ -226,8 +226,8 @@ class IrHttp(models.AbstractModel):
                     raise werkzeug.exceptions.Forbidden()
 
     @classmethod
-    def _get_web_editor_context(cls):
-        ctx = super()._get_web_editor_context()
+    def _get_editor_context(cls):
+        ctx = super()._get_editor_context()
         if request.is_frontend_multilang and request.lang == cls._get_default_lang():
             ctx['edit_translations'] = False
         return ctx
@@ -260,7 +260,7 @@ class IrHttp(models.AbstractModel):
         request.update_context(
             allowed_company_ids=allowed_company_ids,
             website_id=website.id,
-            **cls._get_web_editor_context(),
+            **cls._get_editor_context(),
         )
 
         request.website = website.with_context(request.env.context)

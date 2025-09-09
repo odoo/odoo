@@ -7,7 +7,8 @@ import {
     registerWebsitePreviewTour,
     openLinkPopup,
 } from '@website/js/tours/tour_utils';
-import { boundariesIn, setSelection, nodeSize } from '@web_editor/js/editor/odoo-editor/src/utils/utils';
+import { boundariesIn, nodeSize } from "@html_editor/utils/position";
+import { setSelection } from "@html_editor/../tests/tours/helpers/editor";
 
 const clickOnImgStep = {
     content: "Click somewhere else to save.",

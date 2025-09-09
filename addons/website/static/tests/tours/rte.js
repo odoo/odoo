@@ -5,9 +5,8 @@ import {
     goToTheme,
     registerWebsitePreviewTour,
 } from "@website/js/tours/tour_utils";
-import { setSelection } from '@web_editor/js/editor/odoo-editor/src/utils/utils';
 import { whenReady } from "@odoo/owl";
-import { editorsWeakMap } from "@html_editor/../tests/tours/helpers/editor";
+import { editorsWeakMap, setSelection } from "@html_editor/../tests/tours/helpers/editor";
 
 registerWebsitePreviewTour('rte_translator', {
     url: '/',
