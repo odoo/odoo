@@ -1,12 +1,32 @@
-import { registerWebsitePreviewTour } from "@website/js/tours/tour_utils";
+import {
+    clickOnEditAndWaitEditMode,
+    registerWebsitePreviewTour,
+} from "@website/js/tours/tour_utils";
 
 let numNavChildren;
+
+const addNavItem = [
+    {
+        content: "Add a menu item",
+        trigger: ".modal-dialog .fa-plus-circle:first-child",
+        run: "click",
+    },
+    {
+        content: "Input name",
+        trigger: ".o_menu_dialog_form input",
+        run: "edit name",
+    },
+    {
+        content: "Click Continue",
+        trigger: ".modal-dialog .modal-footer .btn-primary:contains(Continue)",
+        run: "click",
+    },
+];
 
 const getTheLayoutChildren = {
     content: "Get the number of elements in the navbar",
     trigger: ":iframe #o_main_nav ul[role='menu']",
-    async run({ animationFrame }) {
-        await animationFrame();
+    async run() {
         numNavChildren = this.anchor.children.length;
     },
 };
@@ -14,8 +34,7 @@ const getTheLayoutChildren = {
 const checkThatLayoutChanged = {
     content: "Ensure that the navbar layout has changed",
     trigger: ":iframe #o_main_nav ul[role='menu']",
-    async run({ animationFrame }) {
-        await animationFrame();
+    async run() {
         if (this.anchor.children.length === numNavChildren) {
             throw new Error("Navbar layout should change");
         }
@@ -25,10 +44,30 @@ const checkThatLayoutChanged = {
 registerWebsitePreviewTour(
     "website_auto_hide_menu",
     {
-        edition: true,
         url: "/",
     },
     () => [
+        {
+            content: "Click on Site",
+            trigger: ".o_main_navbar .o_menu_sections :contains('Site')",
+            run: "click",
+        },
+        {
+            content: "Click on Menu Editor",
+            trigger: ".o_popover .o-dropdown-item:contains('Menu Editor')",
+            run: "click",
+        },
+        ...Array(5).fill(addNavItem).flat(),
+        {
+            content: "Save",
+            trigger: ".modal-footer .btn:contains('Save')",
+            run: "click",
+        },
+        {
+            content: "Check that modal has disappeared",
+            trigger: "body:not(:has(.modal))",
+        },
+        ...clickOnEditAndWaitEditMode(),
         getTheLayoutChildren,
         {
             content: "Click on the navbar",
