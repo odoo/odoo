@@ -88,6 +88,7 @@
             ('remove', 'project/static/src/views/project_task_analysis_pivot/**'),
             ('remove', 'project/static/src/views/burndown_chart/**'),
             ('remove', 'project/static/src/**/*.dark.scss'),
+            ('remove', 'project/static/src/views/project_project_activity/**'),
         ],
         "web.assets_web_dark": [
             'project/static/src/**/*.dark.scss',
@@ -101,6 +102,7 @@
             'project/static/src/views/project_task_analysis_graph/**',
             'project/static/src/views/project_task_analysis_pivot/**',
             'project/static/src/views/burndown_chart/**',
+            'project/static/src/views/project_project_activity/**',
         ],
         'web.assets_frontend': [
             'project/static/src/scss/portal_rating.scss',
@@ -231,6 +233,8 @@
             'project/static/src/views/project_task_control_panel/*',
             'project/static/src/views/project_task_model_mixin.js',
             'project/static/src/views/project_task_relational_model.js',
+            'project/static/src/views/project_model_mixin.js',
+            'project/static/src/views/project_relational_model.js',
 
             ('include', 'portal.assets_chatter_helpers'),
             'portal/static/src/chatter/core/**/*',
