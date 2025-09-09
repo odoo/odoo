@@ -522,6 +522,7 @@
 
         #o_wsale_floating_bar {
             bottom: var(--_container-gap);
+            z-index: 4; // above the comparison bottom bar and pager
             max-width: calc(100vw - calc(var(--_container-gap) * 2));
             gap: map-get($spacers, 1) 0;
         }
