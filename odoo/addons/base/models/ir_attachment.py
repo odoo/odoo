@@ -832,3 +832,7 @@ class IrAttachment(models.Model):
             stream.size = 0
 
         return stream
+
+    def _is_remote_source(self):
+        self.ensure_one()
+        return self.url and not self.file_size and self.url.startswith(('http://', 'https://', 'ftp://'))
