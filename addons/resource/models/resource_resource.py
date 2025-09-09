@@ -216,6 +216,9 @@ class ResourceResource(models.Model):
         self.ensure_one()
         return not self.calendar_id
 
+    def _get_calendar_at(self, date_target, tz=False):
+        return {resource: resource.calendar_id for resource in self}
+
     def _is_flexible(self):
         """ An employee is considered flexible if the field flexible_hours is True on the calendar
             or the employee is not assigned any calendar, in which case is considered as Fully flexible.

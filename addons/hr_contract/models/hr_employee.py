@@ -154,7 +154,7 @@ class HrEmployee(models.Model):
         for employee in self:
             employee_contracts = contracts_by_employee[employee.id]
             if employee_contracts:
-                res[employee.id] = contracts[0].resource_calendar_id.sudo(False)
+                res[employee.id] = employee_contracts[0].resource_calendar_id.sudo(False)
         return res
 
     def _get_calendar_periods(self, start, stop):
