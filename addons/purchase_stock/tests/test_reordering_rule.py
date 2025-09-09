@@ -305,11 +305,13 @@ class TestReorderingRule(TransactionCase):
         - The PO should be updated
         - The qty to order of the RR should be zero
         """
+        today = Date.context_today(self.env.user)
         warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.user.id)], limit=1)
         stock_location = warehouse.lot_stock_id
         out_type = warehouse.out_type_id
         customer_location = self.env.ref('stock.stock_location_customers')
 
+        self.product_01.seller_ids.delay = 3
         rr = self.env['stock.warehouse.orderpoint'].create({
             'location_id': stock_location.id,
             'product_id': self.product_01.id,
@@ -330,6 +332,9 @@ class TestReorderingRule(TransactionCase):
             })]
         })
         delivery.action_confirm()
+        self.assertEqual(rr.deadline_date, today - td(days=3))
+        delivery.scheduled_date += td(days=4)
+        self.assertEqual(rr.deadline_date, today + td(days=1))
 
         pol = self.env['purchase.order.line'].search([('product_id', '=', self.product_01.id)])
         self.assertEqual(pol.product_qty, 1.0)

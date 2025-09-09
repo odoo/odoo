@@ -120,7 +120,7 @@ class StockWarehouseOrderpoint(models.Model):
         for orderpoint in self:
             orderpoint.show_supply_warning = not orderpoint.rule_ids
 
-    @api.depends('location_id', 'product_min_qty', 'route_id', 'product_id.route_ids', 'product_id.stock_move_ids',
+    @api.depends('location_id', 'product_min_qty', 'route_id', 'product_id.route_ids', 'product_id.stock_move_ids.date',
                  'product_id.stock_move_ids.state', 'product_id.seller_ids', 'product_id.seller_ids.delay', 'company_id.horizon_days')
     def _compute_deadline_date(self):
         """ This function first checks if the qty_on_hand is less than the product_min_qty. If it is the case,
@@ -175,7 +175,7 @@ class StockWarehouseOrderpoint(models.Model):
                     if qty_on_hand_at_date < orderpoint.product_min_qty:
                         tentative_deadline = move_date - relativedelta.relativedelta(days=orderpoint.lead_days)
                         break
-                orderpoint.deadline_date = max(tentative_deadline, fields.Date.today()) if tentative_deadline < horizon_date else False
+                orderpoint.deadline_date = tentative_deadline if tentative_deadline < horizon_date else False
 
     @api.depends('rule_ids', 'product_id.seller_ids', 'product_id.seller_ids.delay', 'company_id.horizon_days')
     def _compute_lead_days(self):
