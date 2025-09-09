@@ -13607,6 +13607,7 @@ test("kanban records are middle clickable by default", async () => {
 
     await contains(".o_kanban_record").click({ ctrlKey: true });
     expect.verifySteps([
+        "get menu_id-null",
         "get current_action-null",
         'set current_action-{"id":1,"res_model":"partner","type":"ir.actions.act_window","views":[[false,"kanban"],[false,"form"]]}',
         'get current_action-{"id":1,"res_model":"partner","type":"ir.actions.act_window","views":[[false,"kanban"],[false,"form"]]}',
