@@ -315,10 +315,12 @@
             position: sticky;
             top: 0;
             z-index: $zindex-sticky;
+            background-color: $body-bg;
+            box-shadow: 0 0.3rem 0.25rem -0.25rem rgba(0, 0, 0, 0.075);
 
-            &:not(.modal .o_form_statusbar) {
-                background-color: $body-bg;
-                box-shadow: 0 0.3rem 0.25rem -0.25rem rgba(0, 0, 0, 0.075);
+            .modal & {
+                background-color: $o-view-background-color;
+                box-shadow: none;
             }
         }
 
