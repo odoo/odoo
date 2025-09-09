@@ -41,6 +41,7 @@ export class Form extends Interaction {
             })
         },
         "input[type=file]": { "t-on-change": this.changeFile },
+        "select.form-select, div.s_website_form_multiple, div.s_website_form_custom": { "t-on-change": this.changeSelect },
         "input.o_add_files_button": { "t-on-click": this.clickAddFilesButton },
         ".s_website_form_field[data-type=binary]": { "t-on-click": this.clickFileDelete }, // delegate on ".o_file_delete"
         ".s_website_form_field": {
@@ -922,6 +923,23 @@ export class Form extends Interaction {
         }
         // Update the input files.
         fileInputEl.files = fileInputEl.fileList.files;
+    }
+
+    changeSelect(ev) {
+        const select = ev.target;
+        const fieldEl = select.closest(".s_website_form_field");
+        const otherInput = fieldEl.querySelector(".o_other_input");
+
+        if (!otherInput) {
+            return;
+        }
+
+        if (select.value === "__other__") {
+            otherInput.classList.remove("d-none"); // show
+        } else {
+            otherInput.classList.add("d-none"); // hide
+            otherInput.value = ""; // reset when hidden
+        }
     }
 
     /**
