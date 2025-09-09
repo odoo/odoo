@@ -34,7 +34,7 @@ class TranslationNamespace extends OdooUIPlugin {
         return term;
     }
 }
-featurePluginRegistry.add("TranslationNamespace", TranslationNamespace);
+featurePluginRegistry.replace("dynamic_translate", TranslationNamespace);
 
 functionRegistry.add("_t", {
     description: _t("Get the translated value of the given string"),
