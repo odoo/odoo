@@ -2,6 +2,7 @@ import { browser } from "@web/core/browser/browser";
 
 const CURRENT_TOUR_RECORDER_LOCAL_STORAGE = "current_tour_recorder";
 const CURRENT_TOUR_RECORDER_RECORD_LOCAL_STORAGE = "current_tour_recorder.record";
+export const TOUR_RECORDER_ACTIVE_LOCAL_STORAGE_KEY = "tour_recorder_active";
 
 /**
  * Wrapper around localStorage for persistence of the current recording.
