@@ -7,6 +7,7 @@ from PIL import Image
 from odoo.tests.common import HttpCase, tagged
 from odoo.tools.misc import file_open
 
+
 @tagged("-at_install", "post_install")
 class TestFontToImg(HttpCase):
 
