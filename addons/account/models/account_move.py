@@ -2300,9 +2300,10 @@ class AccountMove(models.Model):
     def _compute_no_followup(self):
         for move in self:
             if move.is_invoice():
-                move.no_followup = move.line_ids.filtered(
+                lines = move.line_ids.filtered(
                     lambda line: line.account_type in ('asset_receivable', 'liability_payable'),
-                )[0].no_followup
+                )
+                move.no_followup = lines[0].no_followup if lines else True
             else:
                 move.no_followup = True
 
