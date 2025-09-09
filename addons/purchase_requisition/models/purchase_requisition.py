@@ -252,6 +252,7 @@ class PurchaseRequisitionLine(models.Model):
             self.env['product.supplierinfo'].sudo().create({
                 'partner_id': purchase_requisition.vendor_id.id,
                 'product_id': self.product_id.id,
+                'product_uom_id': self.product_uom_id.id,
                 'product_tmpl_id': self.product_id.product_tmpl_id.id,
                 'price': self.price_unit,
                 'currency_id': self.requisition_id.currency_id.id,
