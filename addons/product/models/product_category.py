@@ -59,3 +59,11 @@ class ProductCategory(models.Model):
             return super()._compute_display_name()
         for record in self:
             record.display_name = record.name
+
+    def copy_data(self, default=None):
+        default = dict(default or {})
+        vals_list = super().copy_data(default=default)
+        if 'name' not in default:
+            for category, vals in zip(self, vals_list):
+                vals['name'] = _("%s (copy)", category.name)
+        return vals_list
