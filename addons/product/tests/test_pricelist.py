@@ -4,7 +4,7 @@ from itertools import pairwise
 
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Command
-from odoo.tests import tagged, Form
+from odoo.tests import Form, tagged
 
 from odoo.addons.product.tests.common import ProductCommon
 
