@@ -60,7 +60,11 @@ export class TimeOffCalendarYearRenderer extends CalendarYearRenderer {
     }
 
     openPopover(target, date, records) {
-        this.popover.open(target, this.getPopoverProps(date, records), "o_cw_popover_holidays o_cw_popover");
+        this.popover.open(
+            target,
+            this.getPopoverProps(date, records),
+            "o_cw_popover_holidays o_cw_popover"
+        );
     }
 
     getDayCellClassNames(info) {
@@ -75,16 +79,19 @@ export class TimeOffCalendarYearRenderer extends CalendarYearRenderer {
         const record = this.props.model.records[event.id];
         if (record && record.requestDateFromPeriod && record.sameDay) {
             if (record.requestDateFromPeriod === "am" && record.requestDateToPeriod === "am") {
-                classesToAdd.push("o_event_half_left")
-            } else if (record.requestDateFromPeriod === "pm" && record.requestDateToPeriod === "pm") {
-                classesToAdd.push("o_event_half_right")
+                classesToAdd.push("o_event_half_left");
+            } else if (
+                record.requestDateFromPeriod === "pm" &&
+                record.requestDateToPeriod === "pm"
+            ) {
+                classesToAdd.push("o_event_half_right");
             }
         }
         // handling half pill UX for custom_hours
         if (record?.rawRecord?.request_unit_hours && record.sameDay) {
             if (record.end.c.hour < 12) {
                 classesToAdd.push("o_event_half_left");
-            } else if (record.end.c.hour >= 12) {
+            } else if (record.end.c.hour >= 12 && record.start.c.hour >= 12) {
                 classesToAdd.push("o_event_half_right");
             }
         }
