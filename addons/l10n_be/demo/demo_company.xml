@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <record id="base.partner_demo_company_be" model="res.partner" forcecreate="1">
-        <field name="name">BE Company CoA</field>
-        <field name="vat">BE246697724</field>
-        <field name="street">1021 Sint-Bernardsesteenweg</field>
-        <field name="city">Antwerpen</field>
+        <field name="name">My Belgian Company</field>
         <field name="country_id" ref="base.be"/>
-        <field name="zip">2660</field>
+        <field name="currency_id" ref="base.EUR"/>
+        <field name="vat">BE0897223670</field>
+        <field name="street">Rue du Paradis</field>
+        <field name="city">Eghezee</field>
+        <field name="zip">6870</field>
         <field name="phone">+32 470 12 34 56</field>
         <field name="email">becompany@example.com</field>
         <field name="website">www.becompany.example.com</field>
@@ -14,7 +15,7 @@
     </record>
 
     <record id="base.demo_company_be" model="res.company" forcecreate="1">
-        <field name="name">BE Company CoA</field>
+        <field name="name">My Belgian Company</field>
         <field name="partner_id" ref="base.partner_demo_company_be"/>
     </record>
 
