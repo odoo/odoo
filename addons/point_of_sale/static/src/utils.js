@@ -73,7 +73,7 @@ export function random5Chars() {
 }
 
 export function qrCodeSrc(url, { size = 200 } = {}) {
-    return `/report/barcode/QR/${encodeURIComponent(url)}?width=${size}&height=${size}`;
+    return `/report/barcode/QR/${encodeURIComponent(url)}?width=${size}&height=${size}&quiet=0`;
 }
 
 /**

@@ -76,7 +76,7 @@
                 </t>
 
                 <div t-if="qrCode" class="gap-2 d-flex flex-row pt-3" style="font-size: 75%;">
-                    <div t-if="['qr_code', 'qr_code_and_url'].includes(header.company.point_of_sale_ticket_portal_url_display_mode)" class="pt-1">
+                    <div t-if="['qr_code', 'qr_code_and_url'].includes(header.company.point_of_sale_ticket_portal_url_display_mode)" class="pt-1 me-1">
                         <img id="posqrcode" t-att-src="qrCode" class="pos-receipt-logo m-0 w-100"/>
                     </div>
                     <div class="w-100">
