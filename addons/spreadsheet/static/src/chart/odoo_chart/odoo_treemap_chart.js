@@ -71,7 +71,7 @@ function createOdooChartRuntime(chart, getters) {
             ...CHART_COMMON_OPTIONS,
             layout: getChartLayout(definition, chartData),
             plugins: {
-                title: getChartTitle(definition),
+                title: getChartTitle(definition, getters),
                 legend: { display: false },
                 tooltip: getTreeMapChartTooltip(definition, chartData),
             },
