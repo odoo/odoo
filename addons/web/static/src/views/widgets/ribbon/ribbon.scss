@@ -64,6 +64,7 @@
     }
 }
 
-.modal .modal-dialog .o_form_sheet:has(> .o_widget_web_ribbon) {
+.modal .modal-dialog .o_form_sheet_bg:not(:has(> .o_form_statusbar))
+    > .o_form_sheet:has(> .o_widget_web_ribbon) {
     position: static !important;
 }
