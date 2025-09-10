@@ -5,6 +5,12 @@
     .s_announcement_scroll_marquee_item {
         white-space: preserve nowrap;
         caret-color: transparent; // o_not_editable doesn't hide the caret on Firefox
+
+        @media (prefers-reduced-motion: reduce) {
+            & {
+                animation: none !important;
+            }
+        }
     }
 
     // Item options
@@ -36,23 +42,24 @@
             --marquee-animation-hover-multiplier: 2;
         }
 
-        // Hover effects, only when not scrolling
-        &:where(:hover:not(.s_announcement_scroll_page_scrolling)) {
-
-            &.s_announcement_scroll_hover_pause .s_announcement_scroll_marquee_item {
-                animation-play-state: paused;
-            }
-            &.s_announcement_scroll_hover_slow .s_announcement_scroll_marquee_item {
-                animation-play-state: running;
-            }
-            &.s_announcement_scroll_hover_direction .s_announcement_scroll_marquee_item {
-                animation-play-state: paused, running;
+        // Hover effects, only when not scrolling and on devices that support
+        // hover.
+        @media (hover: hover) {
+            &:where(:hover:not(.s_announcement_scroll_page_scrolling)) {
+                &.s_announcement_scroll_hover_pause .s_announcement_scroll_marquee_item {
+                    animation-play-state: paused;
+                }
+                &.s_announcement_scroll_hover_slow .s_announcement_scroll_marquee_item {
+                    animation-play-state: running;
+                }
+                &.s_announcement_scroll_hover_direction .s_announcement_scroll_marquee_item {
+                    animation-play-state: paused, running;
+                }
             }
         }
 
         // Parallax effects: disabling the CSS animation while scrolling
         &:where(.s_announcement_scroll_page_scrolling) {
-
             &.s_announcement_scroll_parallax .s_announcement_scroll_marquee_item {
                 animation-play-state: paused;
             }
