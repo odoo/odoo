@@ -157,6 +157,10 @@ class StockWarehouseOrderpoint(models.Model):
                 orderpoint.supplier_id = False
         super()._inverse_route_id()
 
+    def _get_route_domain(self):
+        domain = super()._get_route_domain()
+        return Domain.OR([domain, [('rule_ids.action', '=', 'buy')]])
+
     @api.depends('supplier_id')
     def _compute_deadline_date(self):
         """ Extend to add more depends values """

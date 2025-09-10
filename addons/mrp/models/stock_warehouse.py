@@ -4,6 +4,7 @@
 from odoo import Command, _, api, fields, models
 from odoo.exceptions import ValidationError, UserError
 from odoo.tools import split_every
+from odoo.fields import Domain
 
 
 class StockWarehouse(models.Model):
@@ -327,3 +328,7 @@ class StockWarehouseOrderpoint(models.Model):
             non_kit_ids.extend(id_ for id_ in products.ids if id_ not in kit_ids)
             products.invalidate_recordset()
         return self.env['product.product'].browse(non_kit_ids)
+
+    def _get_route_domain(self):
+        domain = super()._get_route_domain()
+        return Domain.OR([domain, Domain([('rule_ids.action', '=', 'manufacture')])])
