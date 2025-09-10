@@ -1538,7 +1538,14 @@
 
             This also allows to gain some page speed scoring.
             -->
-            <span t-field="website.logo" t-options="{'widget': 'image', 'width': 95, 'height': 40}" role="img" t-att-aria-label="'Logo of %s' % website.name" t-att-title="website.name"/>
+            <t t-set="base_options" t-value="{'widget': 'image'}"/>
+            <span
+                t-field="website.logo"
+                t-options="base_options if editable else dict(base_options, width=95, height=40)"
+                role="img"
+                t-att-aria-label="'Logo of %s' % website.name"
+                t-att-title="website.name"
+            />
         </a>
     </xpath>
 </template>
