@@ -11,6 +11,7 @@ from odoo.fields import Domain
 
 class HrLeaveGenerateMultiWizard(models.TransientModel):
     _name = 'hr.leave.generate.multi.wizard'
+    _inherit = ['hr.mixin']
     _description = 'Generate time off for multiple employees'
 
     def _get_employee_domain(self):
@@ -54,7 +55,7 @@ class HrLeaveGenerateMultiWizard(models.TransientModel):
 
     def _prepare_employees_holiday_values(self, employees, date_from_tz, date_to_tz):
         self.ensure_one()
-        work_days_data = employees._get_work_days_data_batch(date_from_tz, date_to_tz)
+        work_days_data = employees.sudo()._get_work_days_data_batch(date_from_tz, date_to_tz)
         validated = self.env.user.has_group('hr_holidays.group_hr_holidays_user') or self.holiday_status_id.leave_validation_type == 'no_validation'
         return [{
             'name': self.name,
