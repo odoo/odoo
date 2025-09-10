@@ -104,11 +104,30 @@ class Pony extends models.Model {
 }
 
 class ResUsersSettings extends WebResUsersSettings {
-    /** @param {number[]} id */
-    get_embedded_actions_settings(id) {
+    /**
+     * @param {number} action_id
+     * @param {number} res_id
+     */
+    get_embedded_actions_setting(id, action_id, res_id) {
+        const kwargs = getKwArgs(arguments, "id", "action_id", "res_id", "vals");
+        id = kwargs.id;
+        action_id = kwargs.action_id;
+        res_id = kwargs.res_id;
+
         /** @type {import("mock_models").ResUsersSettingsEmbeddedAction} */
         const ResUsersSettingsEmbeddedAction = this.env["res.users.settings.embedded.action"];
-        return ResUsersSettingsEmbeddedAction.embedded_action_settings_format(id);
+
+        const [embeddedSettings] = ResUsersSettingsEmbeddedAction.search_read([
+            ["user_setting_id", "=", id],
+            ["action_id", "=", action_id],
+            ["res_id", "=", res_id],
+        ]);
+        if (embeddedSettings) {
+            return ResUsersSettingsEmbeddedAction.embedded_action_settings_format(
+                embeddedSettings.id
+            );
+        }
+        return {};
     }
 
     /**
@@ -126,7 +145,7 @@ class ResUsersSettings extends WebResUsersSettings {
         /** @type {import("mock_models").ResUsersSettingsEmbeddedAction} */
         const ResUsersSettingsEmbeddedAction = this.env["res.users.settings.embedded.action"];
 
-        const [embeddedSettings] = ResUsersSettingsEmbeddedAction.search_read([
+        let [embeddedSettings] = ResUsersSettingsEmbeddedAction.search_read([
             ["user_setting_id", "=", id],
             ["action_id", "=", action_id],
             ["res_id", "=", res_id],
@@ -138,50 +157,15 @@ class ResUsersSettings extends WebResUsersSettings {
                     .join(",");
             }
         }
-        if (embeddedSettings) {
-            return ResUsersSettingsEmbeddedAction.write(embeddedSettings.id, vals);
-        }
-        return false;
-    }
-
-    /**
-     * @param {number} action_id
-     * @param {number} res_id
-     * @param {number} vals
-     */
-    create_embedded_actions_setting(id, action_id, res_id, vals) {
-        const kwargs = getKwArgs(arguments, "id", "action_id", "res_id", "vals");
-        id = kwargs.id;
-        action_id = kwargs.action_id;
-        res_id = kwargs.res_id;
-        vals = kwargs.vals;
-
-        /** @type {import("mock_models").ResUsersSettingsEmbeddedAction} */
-        const ResUsersSettingsEmbeddedAction = this.env["res.users.settings.embedded.action"];
-
-        const [embeddedSettings] = ResUsersSettingsEmbeddedAction.search_read([
-            ["user_setting_id", "=", id],
-            ["action_id", "=", action_id],
-            ["res_id", "=", res_id],
-        ]);
-        for (const [field, value] of Object.entries(vals)) {
-            if (["embedded_actions_order", "embedded_actions_visibility"].includes(field)) {
-                vals[field] = value
-                    .map((action_id) => (action_id === false ? "false" : String(action_id)))
-                    .join(",");
-            }
-        }
-        let embeddedSettingsId;
         if (!embeddedSettings) {
-            embeddedSettingsId = ResUsersSettingsEmbeddedAction.create({
+            embeddedSettings = ResUsersSettingsEmbeddedAction.create({
                 action_id,
                 res_id,
                 ...vals,
             });
+        } else {
+            ResUsersSettingsEmbeddedAction.write(embeddedSettings.id, vals);
         }
-        return ResUsersSettingsEmbeddedAction.embedded_action_settings_format(
-            embeddedSettings?.id || embeddedSettingsId
-        );
     }
 }
 
@@ -323,6 +307,7 @@ test("can display embedded actions linked to the current action", async () => {
             embedded_actions_order: [],
             embedded_actions_visibility: [false],
             embedded_visibility: true,
+            res_model: "partner",
         },
     });
 });

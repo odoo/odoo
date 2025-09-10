@@ -4,9 +4,9 @@ from odoo import models
 class ResUsersSettings(models.Model):
     _inherit = 'res.users.settings'
 
-    def create_embedded_actions_setting(self, action_id, res_id, vals):
+    def get_embedded_actions_setting(self, action_id, res_id):
         self.ensure_one()
-        if vals.get('res_model') == 'project.project' and action_id == self.env.ref('project.act_project_project_2_project_task_all').id:
+        if action_id == self.env.ref('project.act_project_project_2_project_task_all').id:
             current_user_config = self.env['res.users.settings.embedded.action'].search([
                 ('user_setting_id', '=', self.id), ('action_id', '=', action_id), ('res_id', '=', res_id)
             ], limit=1)
@@ -18,4 +18,4 @@ class ResUsersSettings(models.Model):
                     ], limit=1)
                     if project_manager_config:
                         return project_manager_config.copy({'user_setting_id': self.id})._embedded_action_settings_format()
-        return super().create_embedded_actions_setting(action_id, res_id, vals)
+        return super().get_embedded_actions_setting(action_id, res_id)

@@ -13,35 +13,27 @@ class ResUsersSettings(models.Model):
             res['embedded_actions_config_ids'] = self.embedded_actions_config_ids._embedded_action_settings_format()
         return res
 
-    def get_embedded_actions_settings(self):
+    def get_embedded_actions_setting(self, action_id, res_id):
         self.ensure_one()
-        return self.embedded_actions_config_ids._embedded_action_settings_format()
+        embedded_actions_config = self.env['res.users.settings.embedded.action'].search([
+            ('user_setting_id', '=', self.id), ('action_id', '=', action_id), ('res_id', '=', res_id)
+        ], limit=1)
+        return embedded_actions_config._embedded_action_settings_format()
 
     def set_embedded_actions_setting(self, action_id, res_id, vals):
         self.ensure_one()
         embedded_actions_config = self.env['res.users.settings.embedded.action'].search([
             ('user_setting_id', '=', self.id), ('action_id', '=', action_id), ('res_id', '=', res_id)
         ], limit=1)
+        for field, value in vals.items():
+            if field in ('embedded_actions_order', 'embedded_actions_visibility'):
+                vals[field] = ','.join('false' if action_id is False else str(action_id) for action_id in value)
         if embedded_actions_config:
-            for field, value in vals.items():
-                if field in ('embedded_actions_order', 'embedded_actions_visibility'):
-                    vals[field] = ','.join('false' if action_id is False else str(action_id) for action_id in value)
-            return embedded_actions_config.write(vals)
-        return False
-
-    def create_embedded_actions_setting(self, action_id, res_id, vals):
-        self.ensure_one()
-        embedded_actions_config = self.env['res.users.settings.embedded.action'].search([
-            ('user_setting_id', '=', self.id), ('action_id', '=', action_id), ('res_id', '=', res_id)
-        ], limit=1)
-        if not embedded_actions_config:
-            for field, value in vals.items():
-                if field in ('embedded_actions_order', 'embedded_actions_visibility'):
-                    vals[field] = ','.join('false' if action_id is False else str(action_id) for action_id in value)
-            embedded_actions_config = self.env['res.users.settings.embedded.action'].create({
+            embedded_actions_config.write(vals)
+        else:
+            self.env['res.users.settings.embedded.action'].create({
                 **vals,
                 'user_setting_id': self.id,
                 'action_id': action_id,
                 'res_id': res_id,
             })
-        return embedded_actions_config._embedded_action_settings_format()
