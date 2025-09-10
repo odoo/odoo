@@ -167,6 +167,7 @@ export class FormOptionPlugin extends Plugin {
             SetCustomErrorMessageAction,
             SetDefaultErrorMessageAction,
             SetRequirementComparatorAction,
+            SetMultipleFilesAction,
         },
         force_not_editable_selector: ".s_website_form form",
         force_editable_selector: [
@@ -1431,6 +1432,12 @@ class PropertyAction extends BuilderAction {
 
     apply({ editingElement, params: { property, format } = {}, value }) {
         editingElement[property] = format ? format(value) : value;
+    }
+}
+class SetMultipleFilesAction extends BuilderAction {
+    static id = "setMultipleFiles";
+    apply({ editingElement }) {
+        editingElement.multiple = editingElement.dataset.maxFilesNumber > 1;
     }
 }
 
