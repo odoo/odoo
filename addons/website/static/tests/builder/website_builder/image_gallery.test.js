@@ -157,7 +157,8 @@ test("Change gallery layout when images have a link", async () => {
     await contains("[data-label='Media'] button[data-action-id='setLink']").click();
 
     await contains("[data-label='Your URL'] [data-action-id='setUrl'] > input").fill(
-        "http://odoo.com"
+        "http://odoo.com",
+        { confirm: "blur" }
     );
     expect(":iframe section a[href='http://odoo.com'] > img[data-index='1']").toHaveCount(1);
 
