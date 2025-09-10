@@ -86,6 +86,7 @@ import {
     isLinkEligibleForZwnbsp,
     isZwnbsp,
     childNodeIndex,
+    setTagName,
 } from './utils/utils.js';
 import { editorCommands } from './commands/commands.js';
 import { Powerbox } from './powerbox/Powerbox.js';
@@ -3736,6 +3737,22 @@ export class OdooEditor extends EventTarget {
                 }
             }
         } else if (node.nodeType !== Node.TEXT_NODE) {
+            if (node.nodeName === "THEAD") {
+                const tbody = node.nextElementSibling;
+                if (tbody) {
+                    // If a <tbody> already exists, move all rows from
+                    // <thead> into the start of <tbody>.
+                    tbody.prepend(...node.children);
+                    node.remove();
+                    node = tbody;
+                } else {
+                    // Otherwise, replace the <thead> with <tbody>
+                    node = setTagName(node, "TBODY");
+                }
+            } else if (node.nodeName === "TH") {
+                // Convert all <th> into <td>
+                node = setTagName(node, "TD");
+            }
             if (node.nodeName === 'TD') {
                 if (node.hasAttribute('bgcolor') && !node.style['background-color']) {
                     node.style['background-color'] = node.getAttribute('bgcolor');
