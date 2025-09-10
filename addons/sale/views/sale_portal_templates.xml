@@ -839,7 +839,7 @@
                                             name="td_combo_taxes"
                                             t-attf-class="text-end {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}"
                                         />
-                                        <td t-if="not line.is_downpayment" name="td_combo_subtotal" class="text-end">
+                                        <td name="td_combo_subtotal" class="text-end">
                                             <span
                                                 t-if="not collapse_prices"
                                                 name="price_subtotal_combo"
