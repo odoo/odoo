@@ -415,7 +415,6 @@ export class ListRenderer extends Component {
                     type: "field",
                     hasLabel: true,
                     label: propertyField.string,
-                    sortable: false,
                     attrs: ["integer", "float"].includes(propertyField.type)
                         ? { sum: propertyField.string }
                         : {},
