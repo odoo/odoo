@@ -9,6 +9,7 @@ from odoo.addons.resource.models.utils import HOURS_PER_DAY
 
 class HrLeaveAllocationGenerateMultiWizard(models.TransientModel):
     _name = 'hr.leave.allocation.generate.multi.wizard'
+    _inherit = ['hr.mixin']
     _description = 'Generate time off allocations for multiple employees'
 
     def _get_employee_domain(self):

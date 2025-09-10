@@ -9,7 +9,7 @@ from pytz import timezone
 from odoo import fields, Command
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import date_utils, mute_logger
-from odoo.tests import Form, tagged
+from odoo.tests import Form, tagged, users
 
 from odoo.addons.hr_holidays.tests.common import TestHrHolidaysCommon
 
@@ -256,6 +256,25 @@ class TestLeaveRequests(TestHrHolidaysCommon):
         leave_wizard.action_generate_time_off()
         member_ids = self.hr_dept.member_ids.ids
         self.assertEqual(self.env['hr.leave'].search_count([('employee_id', 'in', member_ids)]), len(member_ids), "Time Off should be created for members of department")
+
+    @users('Titus')
+    def test_create_group_leave_without_hr_right(self):
+        employee_1, employee_2 = self.env['hr.employee'].sudo().create([
+            {
+                'name': 'Emp1',
+                'leave_manager_id': self.user_responsible_id,
+            }, {
+                'name': 'Emp2',
+                'leave_manager_id': self.user_responsible_id,
+            },
+        ])
+        leave_wizard = self.env['hr.leave.generate.multi.wizard'].create({
+            'holiday_status_id': self.holidays_type_1.id,
+            'date_from': date(2019, 5, 6),
+            'date_to': date(2019, 5, 6),
+            'employee_ids': (employee_1 + employee_2).ids
+        })
+        leave_wizard.action_generate_time_off()
 
     @mute_logger('odoo.models.unlink', 'odoo.addons.mail.models.mail_mail')
     def test_allocation_request(self):
