@@ -73,7 +73,7 @@ class ImageToolOptionPlugin extends Plugin {
                         await this.dependencies.imagePostProcess.processImage({
                             img: image,
                             newDataset: {
-                                formatMimetype: "image/webp",
+                                formatMimetype: this.config.defaultImageMimetype ?? "image/webp",
                             },
                             // TODO Using a callback is currently needed to avoid
                             // the extra RPC that would occur if loadImageInfo was

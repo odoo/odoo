@@ -40,20 +40,29 @@ class ImageFormatOptionPlugin extends Plugin {
         const maxWidth = await this.getImageWidth(data.originalSrc, data.width);
         const optimizedWidth = Math.min(maxWidth, computeMaxDisplayWidth?.(img) || 0);
         const widths = {
-            128: ["128px", "image/webp"],
-            256: ["256px", "image/webp"],
-            512: ["512px", "image/webp"],
-            1024: ["1024px", "image/webp"],
-            1920: ["1920px", "image/webp"],
+            128: ["128px", this.config.defaultImageMimetype ?? "image/webp"],
+            256: ["256px", this.config.defaultImageMimetype ?? "image/webp"],
+            512: ["512px", this.config.defaultImageMimetype ?? "image/webp"],
+            1024: ["1024px", this.config.defaultImageMimetype ?? "image/webp"],
+            1920: ["1920px", this.config.defaultImageMimetype ?? "image/webp"],
         };
-        widths[img.naturalWidth] = [_t("%spx", img.naturalWidth), "image/webp"];
-        widths[optimizedWidth] = [_t("%spx (Suggested)", optimizedWidth), "image/webp"];
+        widths[img.naturalWidth] = [
+            _t("%spx", img.naturalWidth),
+            this.config.defaultImageMimetype ?? "image/webp",
+        ];
+        widths[optimizedWidth] = [
+            _t("%spx (Suggested)", optimizedWidth),
+            this.config.defaultImageMimetype ?? "image/webp",
+        ];
         const mimetypeBeforeConversion = data.mimetypeBeforeConversion;
         widths[maxWidth] = [_t("%spx (Original)", maxWidth), mimetypeBeforeConversion, true];
-        if (mimetypeBeforeConversion !== "image/webp") {
-            // Avoid a key collision by subtracting 0.1 - putting the webp
+        if (mimetypeBeforeConversion !== this.config.defaultImageMimetype ?? "image/webp") {
+            // Avoid a key collision by subtracting 0.1 - putting the default image mimetype
             // above the original format one of the same size.
-            widths[maxWidth - 0.1] = [_t("%spx", maxWidth), "image/webp"];
+            widths[maxWidth - 0.1] = [
+                _t("%spx", maxWidth),
+                this.config.defaultImageMimetype ?? "image/webp",
+            ];
         }
         return Object.entries(widths)
             .filter(([width]) => width <= maxWidth)
