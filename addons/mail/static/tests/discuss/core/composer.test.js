@@ -44,6 +44,7 @@ test('do not send typing notification on typing "/" command', async () => {
     await start();
     await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "/");
+    await contains(".o-mail-Composer button[title='Send']:enabled");
     await waitForSteps([]); // No rpc done
     testEnded = true;
 });
