@@ -206,9 +206,7 @@ registerCallAction("join-with-camera", {
 });
 registerCallAction("join", {
     condition: ({ store, thread }) =>
-        !thread?.eq(store.rtc?.channel) &&
-        !thread?.self_member_id?.rtc_inviting_session_id &&
-        typeof thread?.useCameraByDefault !== "boolean",
+        !thread?.eq(store.rtc?.channel) && typeof thread?.useCameraByDefault !== "boolean",
     disabledCondition: ({ store }) => store.rtc?.state.hasPendingRequest,
     name: _t("Join Call"),
     icon: "fa fa-phone",
