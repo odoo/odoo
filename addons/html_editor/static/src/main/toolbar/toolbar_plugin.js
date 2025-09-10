@@ -342,7 +342,7 @@ export class ToolbarPlugin extends Plugin {
     _updateToolbar(selectionData = this.dependencies.selection.getSelectionData()) {
         const targetedNodes = this.getFilteredTargetedNodes();
         this.updateNamespace(targetedNodes);
-        this.updateToolbarVisibility(selectionData, targetedNodes);
+        this.updateToolbarVisibility(selectionData);
         if (!this.overlay.isOpen) {
             return;
         }
@@ -360,8 +360,8 @@ export class ToolbarPlugin extends Plugin {
             );
     }
 
-    updateToolbarVisibility(selectionData, targetedNodes) {
-        if (this.shouldBeVisible(selectionData, targetedNodes)) {
+    updateToolbarVisibility(selectionData) {
+        if (this.shouldBeVisible(selectionData)) {
             // Do not reposition the toolbar if it's already open.
             if (!this.overlay.isOpen) {
                 this.overlay.open({ props: this.toolbarProps });
@@ -371,12 +371,17 @@ export class ToolbarPlugin extends Plugin {
         }
     }
 
-    shouldBeVisible(selectionData, targetedNodes) {
+    shouldBeVisible(selectionData) {
         const inEditable =
             selectionData.currentSelectionIsInEditable &&
             !selectionData.documentSelectionIsProtected &&
             !selectionData.documentSelectionIsProtecting;
         if (!inEditable) {
+            return false;
+        }
+        // Prevent toolbar to open if the selection is only non-editable nodes.
+        const targetedNodes = this.dependencies.selection.getTargetedNodes();
+        if (targetedNodes.every((node) => !this.dependencies.selection.isNodeEditable(node))) {
             return false;
         }
         const canDisplayToolbar = this.getResource("can_display_toolbar").every((fn) =>
@@ -388,13 +393,32 @@ export class ToolbarPlugin extends Plugin {
         if (this.isMobileToolbar) {
             return true;
         }
+        const isToolbarVisibleOveride = this.getResource("is_toolbar_visible_override").some((fn) =>
+            fn(selectionData)
+        );
+        if (isToolbarVisibleOveride) {
+            return true;
+        }
+
         const isCollapsed = selectionData.editableSelection.isCollapsed;
         if (isCollapsed) {
-            return this.getResource("collapsed_selection_toolbar_predicate").some((fn) =>
-                fn(selectionData)
-            );
+            return false;
         }
-        return !!targetedNodes.length;
+        // Only allow the toolbar to open if the selection contains visible selected characters.
+        const selectionText = selectionData.editableSelection.textContent();
+        const textCleaned = selectionText.replace(/(\r\n|\n|\r|\u200B)/gm, "");
+        if (textCleaned.length) {
+            return true;
+        }
+        // Even if the selection has no visual text content, we display the
+        // toolbar if it contains a <br> , an image or a fa icon.
+        const filteredTargetedNodes = this.getFilteredTargetedNodes().filter(
+            (node) =>
+                node.nodeType === Node.ELEMENT_NODE &&
+                (["BR", "IMG"].includes(node.tagName) || node.classList.contains("fa"))
+        );
+
+        return !!filteredTargetedNodes.length;
     }
 
     shouldPreventClosing() {

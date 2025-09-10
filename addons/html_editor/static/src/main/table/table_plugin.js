@@ -126,7 +126,7 @@ export class TablePlugin extends Plugin {
         fully_selected_node_predicates: (node) => !!closestElement(node, ".o_selected_td"),
         targeted_nodes_processors: this.adjustTargetedNodes.bind(this),
         move_node_whitelist_selectors: "table",
-        collapsed_selection_toolbar_predicate: (selectionData) =>
+        is_toolbar_visible_override: (selectionData) =>
             !!closestElement(selectionData.editableSelection.anchorNode, ".o_selected_td"),
     };
 

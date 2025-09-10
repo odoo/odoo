@@ -65,6 +65,53 @@ test("toolbar is only visible when selection is not collapsed in desktop", async
     setContent(el, "<p>test[]</p>");
     await expectElementCount(".o-we-toolbar", 0);
 });
+test.tags("desktop");
+test("toolbar is only visible when selection is not empty in desktop", async () => {
+    const { el } = await setupEditor("<h1>test</h1><p>text</p>");
+    await expectElementCount(".o-we-toolbar", 0);
+    setContent(el, "<h1>tes[t</h1><p>]text</p>");
+    await expectElementCount(".o-we-toolbar", 1);
+    // Set an empty selection to close toolbar.
+    setContent(el, "<h1>test[</h1><p>]text</p>");
+    await expectElementCount(".o-we-toolbar", 0);
+});
+test.tags("desktop");
+test("toolbar is only visible when selection is not empty in desktop (2)", async () => {
+    const { el } = await setupEditor("<h1>test</h1><p>some text</p>");
+    await expectElementCount(".o-we-toolbar", 0);
+    setContent(el, "<h1>test</h1><p>some[ ]text</p>");
+    await expectElementCount(".o-we-toolbar", 1);
+    // Set an empty selection to close toolbar.
+    setContent(el, "<h1>test[</h1>]<p>some text</p>");
+    await expectElementCount(".o-we-toolbar", 0);
+});
+test.tags("desktop");
+test("toolbar is only visible when selection is not empty in desktop (3)", async () => {
+    const { el } = await setupEditor("<h1>test</h1> <p> text</p>");
+    await expectElementCount(".o-we-toolbar", 0);
+    setContent(el, "<h1>tes[t</h1> <p> t]ext</p>");
+    await expectElementCount(".o-we-toolbar", 1);
+    // Set an empty selection to close toolbar.
+    // The selection should be considered empty since it only contains invisible spaces.
+    // Spaces used to format the html.
+    setContent(el, "<h1>test</h1>[ <p> ]text</p>");
+    await expectElementCount(".o-we-toolbar", 0);
+});
+test.tags("desktop");
+test("toolbar is only visible when selection is not empty in desktop (4)", async () => {
+    const { el } = await setupEditor(
+        `<p>text
+text2</p>`
+    );
+    await expectElementCount(".o-we-toolbar", 0);
+    // a line break inside a block is considered as a space by the browser renderer
+    setContent(
+        el,
+        `<p>text[
+]text2</p>`
+    );
+    await expectElementCount(".o-we-toolbar", 1);
+});
 
 test.tags("mobile");
 test("toolbar is also visible when selection is collapsed in mobile", async () => {
@@ -76,6 +123,17 @@ test("toolbar is also visible when selection is collapsed in mobile", async () =
     await expectElementCount(".o-we-toolbar", 1);
 
     setContent(el, "<p>test[]</p>");
+    await animationFrame();
+    await expectElementCount(".o-we-toolbar", 1);
+});
+test.tags("mobile");
+test("toolbar is also visible when selection is empty in mobile", async () => {
+    const { el } = await setupEditor("<h1>test</h1><p>text</p>");
+    await expectElementCount(".o-we-toolbar", 0);
+    setContent(el, "<h1>tes[t</h1><p>]text</p>");
+    await expectElementCount(".o-we-toolbar", 1);
+    // Set an empty selection to close toolbar.
+    setContent(el, "<h1>test[</h1><p>]text</p>");
     await animationFrame();
     await expectElementCount(".o-we-toolbar", 1);
 });
@@ -1234,7 +1292,7 @@ test("keep the toolbar if the selection crosses two blocks, even if their conten
     setContent(el, "<p>a[</p><p>]b</p>");
     await tick(); // selectionChange
     await animationFrame();
-    await expectElementCount(".o-we-toolbar", 1);
+    await expectElementCount(".o-we-toolbar", 0);
 });
 
 test.tags("desktop");
@@ -1251,7 +1309,7 @@ test("keep the toolbar if the selection crosses two blocks, even if their conten
     setContent(el, "<p>a[</p>\n<p>]b</p>");
     await tick(); // selectionChange
     await animationFrame();
-    await expectElementCount(".o-we-toolbar", 1);
+    await expectElementCount(".o-we-toolbar", 0);
 });
 
 test.tags("desktop");
