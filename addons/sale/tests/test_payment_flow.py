@@ -488,6 +488,10 @@ class TestSalePayment(AccountPaymentCommon, SaleCommon, PaymentHttpCommon):
             tx_done._reconcile_after_done()
 
             self.assertEqual(notification_mail_mock.call_count, 2)
-            notification_mail_mock.assert_called_with(
-                self.env.ref('sale.mail_template_sale_confirmation'))
+            order_confirmation_mail_template_id = int(
+                self.env["ir.config_parameter"]
+                .sudo()
+                .get_param("sale.default_confirmation_template", self.env.ref("sale.mail_template_sale_confirmation").id)
+            )
+            notification_mail_mock.assert_called_with(self.env["mail.template"].browse(order_confirmation_mail_template_id))
             self.assertEqual(self.sale_order.state, 'sale')
