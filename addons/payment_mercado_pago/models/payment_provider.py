@@ -35,6 +35,8 @@ class PaymentProvider(models.Model):
         required_if_provider='mercado_pago',
         copy=False,
     )
+    # TODO anko remove in 19.1
+    mercado_pago_is_oauth_supported = fields.Boolean(compute='_compute_mercado_pago_is_oauth_supported')
 
     # OAuth fields
     mercado_pago_access_token = fields.Char(
@@ -76,6 +78,10 @@ class PaymentProvider(models.Model):
                 active_test=False,
             ).search([('name', '=', currency_code)], limit=1)
             provider.available_currency_ids = [Command.set(currency.ids)]
+
+    def _compute_mercado_pago_is_oauth_supported(self):
+        """Return current state of OAuth support by Odoo. To be removed in future versions."""
+        self.mercado_pago_is_oauth_supported = False
 
     # === CONSTRAINT METHODS === #
 
