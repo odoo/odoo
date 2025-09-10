@@ -531,9 +531,9 @@
             <t t-set="opt_wsale_show_shop_title" t-value="is_view_active('website_sale.products_shop_title')"/>
             <t t-set="opt_wsale_shop_title_align" t-value="is_view_active('website_sale.products_shop_title_align')"/>
 
-            <t t-set="opt_wsale_show_category_title" t-value="category and category.show_category_title"/>
-            <t t-set="opt_wsale_show_category_description" t-value="category and category.show_category_description"/>
-            <t t-set="opt_wsale_category_align" t-value="category and category.align_category_content"/>
+            <t t-set="opt_wsale_show_category_title" t-value="bool(category) and category.show_category_title"/>
+            <t t-set="opt_wsale_show_category_description" t-value="bool(category) and category.show_category_description"/>
+            <t t-set="opt_wsale_category_align" t-value="bool(category) and category.align_category_content"/>
 
             <t t-set="website_sale_pricelists" t-value="website.get_pricelist_available(show_visible=True)" />
             <t t-set="website_sale_sortable" t-value="website._get_product_sort_mapping()"/>
