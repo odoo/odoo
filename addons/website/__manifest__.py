@@ -444,9 +444,6 @@
         ],
         'html_builder.iframe_add_dialog': [
             'website/static/src/snippets/**/*.preview.scss',
-            'website/static/src/snippets/s_color_blocks_2/s_color_blocks_2.scss',
-            'website/static/src/snippets/s_ecomm_categories_showcase/categories_showcase.scss',
-            'website/static/src/snippets/s_floating_blocks/floating_blocks.scss',
         ],
     },
     'configurator_snippets': {
