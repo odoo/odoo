@@ -549,7 +549,9 @@ class StockQuant(models.Model):
         self.user_id = False
 
     def action_set_inventory_quantity_zero(self):
-        self.filtered(lambda l: not l.inventory_quantity).inventory_quantity = 0
+        self.inventory_quantity = 0
+        if self.env.context.get('inventory_report_mode'):
+            self._apply_inventory()
         self.user_id = self.env.user.id
 
     @api.depends('location_id', 'lot_id', 'package_id', 'owner_id')
