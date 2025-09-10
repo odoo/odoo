@@ -500,7 +500,7 @@ class IrActionsReport(models.Model):
                     _logger.warning(message)
                     output_images.append(None)
                 else:
-                    with closing(open(output_path, 'rb')) as output_file:
+                    with open(output_path, 'rb') as output_file:
                         output_images.append(output_file.read())
         return output_images
 
