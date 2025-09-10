@@ -8,6 +8,7 @@ import { SeparatorPlugin } from "./main/separator_plugin";
 import { FormatPlugin } from "./core/format_plugin";
 import { HistoryPlugin } from "./core/history_plugin";
 import { InputPlugin } from "./core/input_plugin";
+import { PasswordInputPlugin } from "./core/password_input_plugin";
 import { LineBreakPlugin } from "./core/line_break_plugin";
 import { NoInlineRootPlugin } from "./core/no_inline_root_plugin";
 import { OverlayPlugin } from "./core/overlay_plugin";
@@ -134,6 +135,7 @@ export const CORE_PLUGINS = [
     FormatPlugin,
     HistoryPlugin,
     InputPlugin,
+    PasswordInputPlugin,
     LineBreakPlugin,
     NoInlineRootPlugin,
     OverlayPlugin,
