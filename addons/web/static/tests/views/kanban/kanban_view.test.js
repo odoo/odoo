@@ -14485,3 +14485,82 @@ test(`cache web_read_group: less groups than in cache`, async () => {
     expect(`.o_kanban_view .o_kanban_group`).toHaveCount(1);
     expect(queryAllTexts(`.o_kanban_group .o_kanban_header`)).toEqual(["xmo\n(4)"]);
 });
+
+test.tags("desktop");
+test("Cache: folded is now unfolded", async () => {
+    Product._records[1].fold = true;
+
+    Partner._views = {
+        "kanban,false": `
+            <kanban default_group_by="product_id">
+                <templates>
+                    <div t-name="card">
+                        <field name="id"/>
+                    </div>
+                </templates>
+            </kanban>`,
+        "search,false": `<search/>`,
+    };
+
+    defineActions([
+        {
+            id: 1,
+            name: "Partners Action",
+            res_model: "partner",
+            views: [[false, "kanban"]],
+            search_view_id: [false, "search"],
+        },
+    ]);
+
+    await mountWithCleanup(WebClient);
+    await getService("action").doAction(1);
+
+    expect(queryAll(".o_kanban_record", { root: getKanbanColumn(0) })).toHaveCount(2);
+    expect(getKanbanColumn(1)).toHaveClass("o_column_folded");
+    expect(queryText(getKanbanColumn(1))).toBe("xmo\n(2)");
+
+    MockServer.env["product"].write(5, { fold: false });
+    await getService("action").doAction(1);
+
+    expect(queryAll(".o_kanban_record", { root: getKanbanColumn(0) })).toHaveCount(2);
+    expect(queryAll(".o_kanban_record", { root: getKanbanColumn(1) })).toHaveCount(2);
+});
+
+test.tags("desktop");
+test("Cache: unfolded is now folded", async () => {
+    Product._records[1].fold = false;
+
+    Partner._views = {
+        "kanban,false": `
+            <kanban default_group_by="product_id">
+                <templates>
+                    <div t-name="card">
+                        <field name="id"/>
+                    </div>
+                </templates>
+            </kanban>`,
+        "search,false": `<search/>`,
+    };
+
+    defineActions([
+        {
+            id: 1,
+            name: "Partners Action",
+            res_model: "partner",
+            views: [[false, "kanban"]],
+            search_view_id: [false, "search"],
+        },
+    ]);
+
+    await mountWithCleanup(WebClient);
+    await getService("action").doAction(1);
+
+    expect(queryAll(".o_kanban_record", { root: getKanbanColumn(0) })).toHaveCount(2);
+    expect(queryAll(".o_kanban_record", { root: getKanbanColumn(1) })).toHaveCount(2);
+
+    MockServer.env["product"].write(5, { fold: true });
+    await getService("action").doAction(1);
+    expect(queryAll(".o_kanban_record", { root: getKanbanColumn(0) })).toHaveCount(2);
+    expect(getKanbanColumn(1)).toHaveClass("o_column_folded");
+    expect(queryText(getKanbanColumn(1))).toBe("xmo\n(2)");
+});
