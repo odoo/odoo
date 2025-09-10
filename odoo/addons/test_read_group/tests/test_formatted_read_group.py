@@ -2039,35 +2039,64 @@ class TestFormattedReadGroupMonetary(common.TransactionCase):
         cls.MonetaryAggRelated = cls.env['test_read_group.aggregate.monetary.related']
         cls.MonetaryAgg = cls.env['test_read_group.aggregate.monetary']
 
-        cls.MonetaryAgg.create([
+        usd_parent, eur_parent, stn_parent = cls.MonetaryAggRelated.create([
             {
-                "name": "key1",  # 1 $
+                "stored_currency_id": cls.usd.id,
+            },
+            {
+                "stored_currency_id": cls.eur.id,
+            },
+            {
+                "stored_currency_id": cls.stn.id,
+            },
+        ])
+
+        cls.monetary_records = cls.MonetaryAgg.create([
+            {
+                "name": "key1",
                 "currency_id": cls.usd.id,
-                "total_in_currency_id": 1.00,
+                "total_in_currency_id": 1.00,  # 1 $
+
+                "related_model_id": usd_parent.id,
+                "total_in_related_stored_currency_id": 4.00,  # 4 $
             },
             {
-                "name": "key3",  # 2 $
+                "name": "key3",
                 "currency_id": cls.usd.id,
-                "total_in_currency_id": 2.00,
+                "total_in_currency_id": 2.00,  # 2 $
+
+                "related_model_id": eur_parent.id,
+                "total_in_related_stored_currency_id": 1.00,  # 1 €
             },
             {
-                "name": "key1",  # 1 €
+                "name": "key1",
                 "currency_id": cls.eur.id,
-                "total_in_currency_id": 1.00,
+                "total_in_currency_id": 1.00,  # 1 €
+
+                "related_model_id": usd_parent.id,
+                "total_in_related_stored_currency_id": 3.00,  # 3 $
             },
             {
-                "name": "key2",  # 2 €
+                "name": "key2",
                 "currency_id": cls.eur.id,
-                "total_in_currency_id": 2.00,
+                "total_in_currency_id": 2.00,  # 2 €
+
+                "related_model_id": eur_parent.id,
+                "total_in_related_stored_currency_id": 3.00,  # 3 €
             },
             {
-                "name": "key1",  # 1 (no currency)
-                "total_in_currency_id": 1.00,
+                "name": "key1",
+                "total_in_currency_id": 1.00,  # 1 (no currency)
+
+                "total_in_related_stored_currency_id": 1.00,
             },
             {
-                "name": "key2",  # 1 Db (no active currency)
+                "name": "key2",
                 "currency_id": cls.stn.id,
-                "total_in_currency_id": 1.00,
+                "total_in_currency_id": 1.00,  # 1 Db (no active currency)
+
+                "related_model_id": stn_parent.id,
+                "total_in_related_stored_currency_id": 1.00,  # 1 Db (no active currency)
             },
         ])
 
@@ -2109,7 +2138,7 @@ class TestFormattedReadGroupMonetary(common.TransactionCase):
                     DISTINCT "test_read_group_aggregate_monetary"."currency_id"
                     ORDER BY "test_read_group_aggregate_monetary"."currency_id"
                 ),
-                SUM("test_read_group_aggregate_monetary"."total_in_currency_id" / COALESCE("test_read_group_aggregate_monetary__rates"."rate", 1.0))
+                SUM("test_read_group_aggregate_monetary"."total_in_currency_id" / COALESCE("test_read_group_aggregate_monetary__currency_id__rates"."rate", 1.0))
             FROM
                 "test_read_group_aggregate_monetary"
                 LEFT JOIN (
@@ -2123,8 +2152,8 @@ class TestFormattedReadGroupMonetary(common.TransactionCase):
                         "res_currency_rate"."company_id",
                         CASE WHEN "res_currency_rate"."name" <= %s THEN "res_currency_rate"."name" END DESC,
                         CASE WHEN "res_currency_rate"."name" > %s THEN "res_currency_rate"."name" END ASC
-                ) AS "test_read_group_aggregate_monetary__rates" ON (
-                    "test_read_group_aggregate_monetary"."currency_id" = "test_read_group_aggregate_monetary__rates"."currency_id"
+                ) AS "test_read_group_aggregate_monetary__currency_id__rates" ON (
+                    "test_read_group_aggregate_monetary"."currency_id" = "test_read_group_aggregate_monetary__currency_id__rates"."currency_id"
                 )
         """]):
             self.assertEqual(
@@ -2203,7 +2232,7 @@ class TestFormattedReadGroupMonetary(common.TransactionCase):
                     DISTINCT "test_read_group_aggregate_monetary"."currency_id"
                     ORDER BY "test_read_group_aggregate_monetary"."currency_id"
                 ),
-                SUM("test_read_group_aggregate_monetary"."total_in_currency_id" / COALESCE("test_read_group_aggregate_monetary__rates"."rate", 1.0))
+                SUM("test_read_group_aggregate_monetary"."total_in_currency_id" / COALESCE("test_read_group_aggregate_monetary__currency_id__rates"."rate", 1.0))
             FROM
                 "test_read_group_aggregate_monetary"
                 LEFT JOIN (
@@ -2217,8 +2246,8 @@ class TestFormattedReadGroupMonetary(common.TransactionCase):
                         "res_currency_rate"."company_id",
                         CASE WHEN "res_currency_rate"."name" <= %s THEN "res_currency_rate"."name" END DESC,
                         CASE WHEN "res_currency_rate"."name" > %s THEN "res_currency_rate"."name" END ASC
-                ) AS "test_read_group_aggregate_monetary__rates" ON (
-                    "test_read_group_aggregate_monetary"."currency_id" = "test_read_group_aggregate_monetary__rates"."currency_id"
+                ) AS "test_read_group_aggregate_monetary__currency_id__rates" ON (
+                    "test_read_group_aggregate_monetary"."currency_id" = "test_read_group_aggregate_monetary__currency_id__rates"."currency_id"
                 )
         """]):
             self.assertEqual(
@@ -2233,3 +2262,47 @@ class TestFormattedReadGroupMonetary(common.TransactionCase):
                     '__extra_domain': [(1, '=', 1)],
                 }],
             )
+
+    def test_multi_currency_related(self):
+        self.env['res.currency.rate'].create([
+            {
+                'currency_id': self.eur.id,
+                'name': fields.Date.context_today(self),
+                'rate': 0.8,  # 1 $ = 0.8 eur, 1 eur = 1.25 $
+            },
+            {
+                'currency_id': self.stn.id,
+                'name': fields.Date.context_today(self),
+                'rate': 20,  # 1 $ = 20 Db, 1 Db = 0.05 $
+            },
+        ])
+
+        aggregates = [
+            'total_in_currency_id:sum',
+            'currency_id:array_agg_distinct',
+            'total_in_currency_id:sum_currency',
+
+            'total_in_related_stored_currency_id:sum',
+            'related_stored_currency_id:array_agg_distinct',
+            'total_in_related_stored_currency_id:sum_currency',
+        ]
+
+        self.maxDiff = None
+        self.assertEqual(
+            self.MonetaryAgg.formatted_read_group([], [], aggregates),
+            [{
+                'total_in_currency_id:sum': 8.0,
+                'currency_id:array_agg_distinct': (self.usd + self.eur + self.stn).ids + [None],
+                'total_in_currency_id:sum_currency':
+                    # 3 $ + 3 euro + 1 Db + 1 no currency = 7.8 euro
+                    3 + 3 * 1.25 + 0.05 + 1,  # Do nothing, if no currency is set
+
+                'total_in_related_stored_currency_id:sum': 13.0,
+                'related_stored_currency_id:array_agg_distinct': (self.usd + self.eur + self.stn).ids + [None],
+                'total_in_related_stored_currency_id:sum_currency':
+                    # 7 $ + 4 euro + 1 Db + 1 no currency = 13.05 euro
+                    7 + (4 * 1.25) + 0.05 + 1,  # Do nothing, if no currency is set
+
+                '__extra_domain': [(1, '=', 1)],
+            }],
+        )
