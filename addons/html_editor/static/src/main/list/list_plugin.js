@@ -76,6 +76,9 @@ export class ListPlugin extends Plugin {
         "dom",
         "color",
     ];
+    static defaultConfig = {
+        allowChecklist: true,
+    };
     toolbarListSelectorKey = reactive({ value: 0 });
     resources = {
         user_commands: [
@@ -101,7 +104,8 @@ export class ListPlugin extends Plugin {
                 description: _t("Track tasks with a checklist"),
                 icon: "fa-check-square-o",
                 run: () => this.toggleListCommand({ mode: "CL" }),
-                isAvailable: this.canToggleList.bind(this),
+                isAvailable: (selection) =>
+                    this.config.allowChecklist && this.canToggleList(selection),
             },
         ],
         shortcuts: [
@@ -1279,14 +1283,18 @@ export class ListPlugin extends Plugin {
     }
 
     getListSelectorButtons() {
-        return listSelectorItems.map((item) => {
-            const command = this.resources.user_commands.find((cmd) => cmd.id === item.commandId);
-            const button = composeToolbarButton(command, item);
-            return {
-                ...pick(button, "id", "icon", "run", "mode"),
-                // We want short descriptions for these buttons.
-                description: command.title,
-            };
-        });
+        return listSelectorItems
+            .filter((item) => item.commandId != "toggleListCL" || this.config.allowChecklist)
+            .map((item) => {
+                const command = this.resources.user_commands.find(
+                    (cmd) => cmd.id === item.commandId
+                );
+                const button = composeToolbarButton(command, item);
+                return {
+                    ...pick(button, "id", "icon", "run", "mode"),
+                    // We want short descriptions for these buttons.
+                    description: command.title,
+                };
+            });
     }
 }
