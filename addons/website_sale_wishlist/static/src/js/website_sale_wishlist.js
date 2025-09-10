@@ -136,13 +136,10 @@ publicWidget.registry.ProductWishlist = publicWidget.Widget.extend(VariantMixin,
             $wishButton.toggleClass('d-none', !this.wishlistProductIDs.length);
         }
         $wishButton.find('.my_wish_quantity').text(this.wishlistProductIDs.length);
-        const wishlistQuantity = document.querySelector('.my_wish_quantity');
-        if (this.wishlistProductIDs.length != 0) {
-            wishlistQuantity.classList.remove('d-none');
-        }
-        else {
-            wishlistQuantity.classList.add('d-none');
-        }
+        const wishlistQuantities = document.querySelectorAll(".my_wish_quantity");
+        wishlistQuantities.forEach((quantity) => {
+            quantity.classList.toggle("d-none", !this.wishlistProductIDs.length);
+        });
     },
     /**
      * @private
