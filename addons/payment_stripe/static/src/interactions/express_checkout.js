@@ -5,7 +5,7 @@ import { _t } from '@web/core/l10n/translation';
 import { rpc } from '@web/core/network/rpc';
 import { redirect } from '@web/core/utils/urls';
 import { ExpressCheckout } from '@payment/interactions/express_checkout';
-import { StripeOptions } from '@payment_stripe/js/stripe_options';
+import { StripeOptions } from '@payment_stripe/interactions/stripe_options';
 
 patch(ExpressCheckout.prototype, {
     /**
