@@ -5,6 +5,11 @@ import { getSectionRecords, getParentSectionRecord } from '@account/components/s
 
 patch(SaleOrderLineListRenderer.prototype, {
 
+    setup() {
+        super.setup();
+        this.copyFields.push('is_optional');
+    },
+
     get showOptionalButton() {
         if (this.isSubSection(this.record)) {
             const parentRecord = getParentSectionRecord(this.props.list, this.record);

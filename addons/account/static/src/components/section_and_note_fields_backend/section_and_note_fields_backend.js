@@ -94,7 +94,7 @@ export class SectionAndNoteListRenderer extends ListRenderer {
         this.titleField = "name";
         this.priceColumns = [...this.props.aggregatedFields, "price_unit"];
         // invisible fields to force copy when duplicating a section
-        this.copyFields = ["display_type"];
+        this.copyFields = ["display_type", "collapse_composition", "collapse_prices"];
         useEffect(
             (editedRecord) => this.focusToName(editedRecord),
             () => [this.editedRecord]

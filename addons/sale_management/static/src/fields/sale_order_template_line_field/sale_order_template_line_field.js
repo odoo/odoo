@@ -11,6 +11,11 @@ import { registry } from '@web/core/registry';
 export class SaleOrderTemplateLineListRenderer extends SectionAndNoteListRenderer {
     static recordRowTemplate = 'sale_management.ListRenderer.RecordRow';
 
+    setup() {
+        super.setup();
+        this.copyFields.push('is_optional');
+    }
+
     get showOptionalButton() {
         if (this.isSubSection(this.record)) {
             const parentRecord = getParentSectionRecord(this.props.list, this.record);
