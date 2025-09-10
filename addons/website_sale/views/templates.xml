@@ -3415,7 +3415,7 @@
                     </a>
                 </t>
             </t>
-            <div t-if="not hide_payment_button" t-attf-class="position-relative d-flex w-100 justify-content-center align-items-center my-2 opacity-75">
+            <div t-if="not hide_payment_button" class="position-relative d-none d-lg-flex w-100 justify-content-center align-items-center my-2 opacity-75">
                 <hr class="w-100"/>
                 <span class="px-3">or</span>
                 <hr class="w-100"/>
@@ -3423,14 +3423,14 @@
             <t t-if="previous_website_checkout_step">
                 <a
                     t-att-href="previous_website_checkout_step.step_href"
-                    class="pt-2 pt-lg-0 text-center"
+                    class="mt-2 mt-lg-0 text-center"
                 >
                     <i class="fa fa-angle-left me-2 fw-light"/>
                     <span t-field="previous_website_checkout_step.back_button_label"/>
                 </a>
             </t>
             <t t-else="">
-                <a t-att-href="'/shop'" class="pt-2 pt-lg-0 text-center">
+                <a t-att-href="'/shop'" class="mt-2 mt-lg-0 text-center">
                     <i class="fa fa-angle-left me-2 fw-light"/>
                     Continue shopping
                 </a>
