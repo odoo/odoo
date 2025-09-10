@@ -55,3 +55,9 @@ class AccountAnalyticLine(models.Model):
             super()._get_favorite_project_id_domain(employee_id),
             [('holiday_id', '=', False), ('global_leave_id', '=', False)],
         ])
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        if any('holiday_id' in val for val in vals_list):
+            vals_list = [val for val in vals_list if self.env['hr.leave'].browse(val.get('holiday_id')).holiday_status_id.time_type != 'other']
+        return super().create(vals_list)

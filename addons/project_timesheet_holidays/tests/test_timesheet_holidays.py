@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import datetime
+from datetime import datetime, date
 from dateutil.relativedelta import relativedelta
 from freezegun import freeze_time
 
@@ -313,3 +313,21 @@ class TestTimesheetHolidays(TestCommonTimesheet):
         time_off.with_user(SUPERUSER_ID)._action_validate()
 
         self.assertEqual(time_off.state, 'validate', "The time off for a fully flexible employee should be validated")
+
+    def test_time_type_other(self):
+        """ this test verifies that when an entry with leave of type "other" is encoded, no timesheet is
+        created. """
+        leave_type = self.env['hr.leave.type'].create({
+            'name': 'Home office',
+            'time_type': 'other',
+            'requires_allocation': False,
+        })
+        leave_1 = self.env['hr.leave'].create({
+            'name': 'Home working',
+            'employee_id': self.empl_employee.id,
+            'holiday_status_id': leave_type.id,
+            'date_from': date(2020, 4, 2),
+            'date_to': date(2020, 4, 2),
+        })
+        leave_1.action_approve()
+        self.assertFalse(self.env['account.analytic.line'].search([("holiday_id", "=", leave_1.id)]))
