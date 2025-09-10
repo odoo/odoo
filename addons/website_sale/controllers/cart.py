@@ -470,7 +470,7 @@ class Cart(PaymentPortal):
                     'name': line._get_line_header(),
                     'combination_name': line._get_combination_name(),
                     'description': line._get_sale_order_line_multiline_description_variants(),
-                    'price_total': line.price_unit * added_qty_per_line[line.id],
+                    'price_total': line._get_cart_display_price() * (added_qty_per_line[line.id] / line.product_qty),
                     **self._get_additional_cart_notification_information(line),
                 } for line in lines
             ],
