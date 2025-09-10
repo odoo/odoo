@@ -322,6 +322,12 @@
     </xpath>
 </template>
 
+<template id="fields" inherit_id="auth_signup.fields">
+    <xpath expr="//input[@id='confirm_password']/.." position="attributes">
+        <attribute name="class" add="o_not_editable" separator=" "/>
+    </xpath>
+</template>
+
 <template id="custom_code_layout" name="Custom Code Layout" inherit_id="website.layout" priority="55">
     <xpath expr="//head" position="inside">
         <t t-out="website.custom_code_head"/>
