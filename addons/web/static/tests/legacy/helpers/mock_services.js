@@ -190,14 +190,6 @@ export const fakeTitleService = {
     },
 };
 
-export const fakeColorSchemeService = {
-    start() {
-        return {
-            switchToColorScheme() {},
-        };
-    },
-};
-
 export function makeFakeNotificationService(mock) {
     return {
         start() {
@@ -298,7 +290,6 @@ function makeFakeActionService() {
 }
 
 export const mocks = {
-    color_scheme: () => fakeColorSchemeService,
     command: () => fakeCommandService,
     effect: () => effectService, // BOI The real service ? Is this what we want ?
     localization: makeFakeLocalizationService,
