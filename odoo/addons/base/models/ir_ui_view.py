@@ -467,6 +467,13 @@ actual arch.
                 values.setdefault('mode', 'extension' if values['inherit_id'] else 'primary')
         return values
 
+    def _validate_xml_encoding(self, text):
+        if isinstance(text, str) and re.search(r'<\?xml[^>]*encoding=.*?\?>', text, re.IGNORECASE):
+            raise UserError(_(
+                "Unicode strings with encoding declaration are not supported in XML.\n"
+                "Remove the encoding declaration."
+            ))
+
     @api.model_create_multi
     def create(self, vals_list):
         for values in vals_list:
@@ -474,6 +481,8 @@ actual arch.
                 # delete empty arch_db to avoid triggering _check_xml before _inverse_arch_base is called
                 del values['arch_db']
 
+            if values.get('arch_base'):
+                self._validate_xml_encoding(values['arch_base'])
             if not values.get('type'):
                 if values.get('inherit_id'):
                     values['type'] = self.browse(values['inherit_id']).type
@@ -525,6 +534,8 @@ actual arch.
         if 'arch_db' in vals and not self.env.context.get('no_save_prev'):
             vals['arch_prev'] = self.arch_db
 
+        if vals.get('arch_base'):
+            self._validate_xml_encoding(vals['arch_base'])
         res = super(View, self).write(self._compute_defaults(vals))
 
         # Check the xml of the view if it gets re-activated.
