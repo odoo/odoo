@@ -79,8 +79,8 @@ test("unmounts erroring main component", async () => {
     ]);
     expect.verifyErrors(["BOOM"]);
 
-    expect(".o-main-components-container span").toHaveCount(1);
-    expect(".o-main-components-container span").toHaveInnerHTML("MainComponentB");
+    expect(".o-main-components-container > span").toHaveCount(1);
+    expect(".o-main-components-container > span").toHaveInnerHTML("MainComponentB");
 });
 
 test("unmounts erroring main component: variation", async () => {
@@ -125,8 +125,8 @@ test("unmounts erroring main component: variation", async () => {
         "BOOM",
     ]);
     expect.verifyErrors(["BOOM"]);
-    expect(".o-main-components-container span").toHaveCount(1);
-    expect(".o-main-components-container span").toHaveInnerHTML("MainComponentA");
+    expect(".o-main-components-container > span").toHaveCount(1);
+    expect(".o-main-components-container > span").toHaveInnerHTML("MainComponentA");
 });
 
 test("MainComponentsContainer re-renders when the registry changes", async () => {

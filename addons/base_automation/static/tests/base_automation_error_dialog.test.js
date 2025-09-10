@@ -88,7 +88,7 @@ test("display automation rule id and name in Error dialog", async () => {
     await animationFrame();
     expect.verifyErrors(["Message"]);
     expect.verifySteps(["error setup"]);
-    expect(".modal-body p:nth-child(2)").toHaveText(
+    expect(".modal-body p.mt-2").toHaveText(
         `The error occurred during the execution of the automation rule "Test base automation error dialog" (ID: 1).`
     );
 });
