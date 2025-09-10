@@ -51,18 +51,6 @@ class SaleOrderLine(models.Model):
     def _can_be_invoiced_alone(self):
         return super()._can_be_invoiced_alone() and not self.is_reward_line
 
-    def _is_sellable(self):
-        """ Override of `sale` to flag reward lines as not sellable.
-
-        :return: Whether the line is sellable or not.
-        :rtype: bool
-        """
-        return super()._is_sellable() and (
-            not self.is_reward_line
-            # Sellable so the link is clickable in the cart.
-            or self.reward_id.reward_type == 'product'
-        )
-
     def _reset_loyalty(self, complete=False):
         """
         Reset the line(s) to a state which does not impact reward computation.

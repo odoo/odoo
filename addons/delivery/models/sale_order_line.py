@@ -12,14 +12,6 @@ class SaleOrderLine(models.Model):
     )
     recompute_delivery_price = fields.Boolean(related='order_id.recompute_delivery_price')
 
-    def _is_sellable(self):
-        """ Override of `sale` to flag delivery lines as not sellable.
-
-        :return: Whether the line is sellable or not.
-        :rtype: bool
-        """
-        return super()._is_sellable() and not self.is_delivery
-
     def _can_be_invoiced_alone(self):
         return super()._can_be_invoiced_alone() and not self.is_delivery
 
