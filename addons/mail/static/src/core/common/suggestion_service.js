@@ -15,6 +15,7 @@ export class SuggestionService {
         this.env = env;
         this.orm = services.orm;
         this.store = services["mail.store"];
+        this.composer = services["mail.composer"];
         this.emojis;
     }
 
@@ -29,6 +30,9 @@ export class SuggestionService {
      * @returns {Array<[string, number, number]>}
      */
     getSupportedDelimiters(thread) {
+        if (this.composer.htmlEnabled) {
+            return [["::"], [":", undefined, 2]];
+        }
         return [["@"], ["#"], ["::"], [":", undefined, 2]];
     }
 
@@ -355,7 +359,7 @@ export class SuggestionService {
 }
 
 export const suggestionService = {
-    dependencies: ["orm", "mail.store"],
+    dependencies: ["orm", "mail.store", "mail.composer"],
     /**
      * @param {import("@web/env").OdooEnv} env
      * @param {import("services").ServiceFactories} services
