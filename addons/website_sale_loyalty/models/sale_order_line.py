@@ -34,3 +34,13 @@ class SaleOrderLine(models.Model):
     def _should_show_strikethrough_price(self):
         """ Override of `website_sale` to hide the strikethrough price for rewards. """
         return super()._should_show_strikethrough_price() and not self.is_reward_line
+
+    def _is_sellable(self):
+        """Override of `website_sale` to flag reward lines as not sellable.
+
+        :return: Whether the line is sellable or not.
+        :rtype: bool
+        """
+        return super()._is_sellable() and (
+            not self.is_reward_line or self.reward_id.reward_type == 'product'
+        )

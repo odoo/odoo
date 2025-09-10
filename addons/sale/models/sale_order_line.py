@@ -1556,16 +1556,6 @@ class SaleOrderLine(models.Model):
         self.ensure_one()
         return False
 
-    def _is_sellable(self):
-        """ Check if a line is sellable or not.
-
-        A line is not sellable if the product is unpublished.
-
-        :return: Whether the line is sellable or not.
-        :rtype: bool
-        """
-        return self.product_id.is_published
-
     def _get_product_catalog_lines_data(self, **kwargs):
         """ Return information about sale order lines in `self`.
 
