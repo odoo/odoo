@@ -169,7 +169,6 @@ export const FAKE_MODEL = {
     fieldMapping: {
         date_start: "start_date",
         date_stop: "stop_date",
-        date_delay: "delay",
         all_day: "allday",
         color: "color",
     },
