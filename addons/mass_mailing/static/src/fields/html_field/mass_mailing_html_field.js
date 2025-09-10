@@ -212,6 +212,7 @@ export class MassMailingHtmlField extends HtmlField {
         return {
             ...config,
             mobileBreakpoint: "md",
+            defaultImageMimetype: "image/jpeg",
             onEditorReady: () => this.commitChanges(),
         };
     }
