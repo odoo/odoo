@@ -76,26 +76,6 @@ export class Thread extends Record {
          */
         sort: (a1, a2) => (a1.id < a2.id ? 1 : -1),
     });
-    get allowedToLeaveChannelTypes() {
-        return ["channel", "group"];
-    }
-    get canLeave() {
-        return (
-            this.allowedToLeaveChannelTypes.includes(this.channel_type) &&
-            this.group_ids.length === 0 &&
-            this.store.self_partner
-        );
-    }
-    get allowedToUnpinChannelTypes() {
-        return ["chat"];
-    }
-    get canUnpin() {
-        return (
-            this.parent_channel_id || this.allowedToUnpinChannelTypes.includes(this.channel_type)
-        );
-    }
-    /** @type {boolean} */
-    can_react = true;
     chat_window = fields.One("ChatWindow", {
         inverse: "thread",
     });
@@ -301,18 +281,6 @@ export class Thread extends Record {
         return this.needactionMessages.length > 0;
     }
 
-    get typesAllowingCalls() {
-        return ["chat", "channel", "group"];
-    }
-
-    get allowCalls() {
-        return (
-            !this.isTransient &&
-            this.typesAllowingCalls.includes(this.channel_type) &&
-            !this.correspondent?.persona.eq(this.store.odoobot)
-        );
-    }
-
     /**
      * Return the name of the given persona to display in the context of this
      * thread.
@@ -326,10 +294,6 @@ export class Thread extends Record {
 
     get hasAttachmentPanel() {
         return this.model === "discuss.channel";
-    }
-
-    get isChatChannel() {
-        return ["chat", "group"].includes(this.channel_type);
     }
 
     get supportsCustomChannelName() {
@@ -346,10 +310,6 @@ export class Thread extends Record {
 
     get avatarUrl() {
         return this.module_icon ?? this.store.DEFAULT_AVATAR;
-    }
-
-    get allowDescription() {
-        return ["channel", "group"].includes(this.channel_type);
     }
 
     get isTransient() {
@@ -403,13 +363,6 @@ export class Thread extends Record {
 
     onPinStateUpdated() {}
 
-    get invitationLink() {
-        if (!this.uuid || this.channel_type === "chat") {
-            return undefined;
-        }
-        return `${window.location.origin}/chat/${this.id}/${this.uuid}`;
-    }
-
     get isEmpty() {
         return this.messages.length === 0;
     }
@@ -433,15 +386,6 @@ export class Thread extends Record {
     async checkReadAccess() {
         await this.store.Thread.getOrFetch(this, ["hasReadAccess"]);
         return this.hasReadAccess;
-    }
-
-    executeCommand(command, body = "") {
-        return this.store.env.services.orm.call(
-            "discuss.channel",
-            command.methodName,
-            [[this.id]],
-            { body }
-        );
     }
 
     /** @param {{after: Number, before: Number}} */
@@ -678,12 +622,6 @@ export class Thread extends Record {
         this.message_needaction_counter = 0;
     }
 
-    async markAsFetched() {
-        await this.store.env.services.orm.silent.call("discuss.channel", "channel_fetched", [
-            [this.id],
-        ]);
-    }
-
     /**
      * @param {Object} [options] used in overrides
      */
@@ -698,24 +636,6 @@ export class Thread extends Record {
         if (this.message_needaction_counter > 0) {
             this.markAllMessagesAsRead();
         }
-    }
-
-    /** @param {string} data base64 representation of the binary */
-    async notifyAvatarToServer(data) {
-        await rpc("/discuss/channel/update_avatar", {
-            channel_id: this.id,
-            data,
-        });
-    }
-
-    async notifyDescriptionToServer(description) {
-        this.description = description;
-        return this.store.env.services.orm.call(
-            "discuss.channel",
-            "channel_change_description",
-            [[this.id]],
-            { description }
-        );
     }
 
     /** @param {import("models").Message} message */
@@ -746,35 +666,6 @@ export class Thread extends Record {
         await this.store.chatHub.initPromise;
         const chatWindow = this.store.ChatWindow.get({ thread: this });
         await chatWindow?.close({ notifyState: false, ...options });
-    }
-
-    /** @param {string} name */
-    async rename(name) {
-        const newName = name.trim();
-        if (
-            newName !== this.displayName &&
-            ((newName && this.channel_type === "channel") || this.isChatChannel)
-        ) {
-            if (this.channel_type === "channel" || this.channel_type === "group") {
-                this.name = newName;
-                await this.store.env.services.orm.call(
-                    "discuss.channel",
-                    "channel_rename",
-                    [[this.id]],
-                    { name: newName }
-                );
-            } else if (this.supportsCustomChannelName) {
-                if (this.self_member_id) {
-                    this.self_member_id.custom_channel_name = newName;
-                }
-                await this.store.env.services.orm.call(
-                    "discuss.channel",
-                    "channel_set_custom_name",
-                    [[this.id]],
-                    { name: newName }
-                );
-            }
-        }
     }
 
     addOrReplaceMessage(message, tmpMsg) {
@@ -873,29 +764,6 @@ export class Thread extends Record {
                 this.messages.splice(afterIndex - 1, 0, message);
             }
         }
-    }
-
-    async leaveChannel({ force = false } = {}) {
-        if (
-            this.channel_type !== "group" &&
-            this.create_uid?.eq(this.store.self.main_user_id) &&
-            !force
-        ) {
-            await this.askLeaveConfirmation(
-                _t("You are the administrator of this channel. Are you sure you want to leave?")
-            );
-        }
-        if (this.channel_type === "group" && !force) {
-            await this.askLeaveConfirmation(
-                _t(
-                    "You are about to leave this group conversation and will no longer have access to it unless you are invited again. Are you sure you want to continue?"
-                )
-            );
-        }
-        await this.closeChatWindow();
-        await this.store.env.services.orm.silent.call("discuss.channel", "action_unfollow", [
-            this.id,
-        ]);
     }
 
     _getActualModelName() {
