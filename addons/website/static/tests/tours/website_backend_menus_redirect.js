@@ -20,6 +20,7 @@ registry.category("web_tour.tours").add('website_backend_menus_redirect', {
     content: 'Click on Test Root backend menu',
     trigger: '.o_frontend_to_backend_apps_menu a:contains("Test Root")',
     run: "click",
+    expectUnloadPage: true,
 }, {
     isActive: ["community"],
     content: 'Check that we landed on the apps page (Apps), and not the Home Action page (Settings)',
