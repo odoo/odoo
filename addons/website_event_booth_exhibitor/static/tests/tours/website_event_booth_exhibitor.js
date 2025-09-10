@@ -43,9 +43,4 @@
     },
     {
         trigger: "input[name='sponsor_name'], input[name='sponsor_email'], input[name='sponsor_phone']",
-    },
-    {
-        content: "Validate booth details",
-        trigger: 'button.o_wbooth_registration_confirm',
-        run: 'click',
     }, ...new FinalSteps()._getSteps()].filter(Boolean)});
