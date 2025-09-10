@@ -1,6 +1,8 @@
 import * as ProductScreen from "@point_of_sale/../tests/tours/utils/product_screen_util";
 import * as Chrome from "@point_of_sale/../tests/tours/utils/chrome_util";
 import * as PaymentScreen from "@point_of_sale/../tests/tours/utils/payment_screen_util";
+import * as ReceiptScreen from "@point_of_sale/../tests/tours/utils/receipt_screen_util";
+import * as OnlinePayment from "@pos_online_payment/../tests/tours/utils/online_payment_util";
 import * as Dialog from "@point_of_sale/../tests/tours/utils/dialog_util";
 import { registry } from "@web/core/registry";
 
@@ -56,5 +58,22 @@ registry.category("web_tour.tours").add("OnlinePaymentErrorsTour", {
             // successfully confirming the dialog would imply that the error popup is actually shown
             // Online payment line is now automatically deleted after the error popup
             Dialog.confirm(),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_online_payment_with_invoice", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickDisplayedProduct("Letter Tray"),
+            ProductScreen.clickPartnerButton(),
+            ProductScreen.clickCustomer("A powerful PoS man!"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickInvoiceButton(),
+            PaymentScreen.clickPaymentMethod("Online payment"),
+            OnlinePayment.patchAndMockOnlinePayment(),
+            PaymentScreen.clickValidate(),
+            ReceiptScreen.isShown(),
         ].flat(),
 });

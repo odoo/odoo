@@ -330,6 +330,10 @@ class TestUi(TestPointOfSaleHttpCommon, OnlinePaymentCommon):
             session.action_pos_session_close()
             self.assertEqual(session.state, 'closed')
 
+    def test_online_payment_with_invoice(self):
+        self.pos_config.with_user(self.pos_user).open_ui()
+        self.start_pos_tour('test_online_payment_with_invoice', login="pos_user")
+
     @classmethod
     def tearDownClass(cls):
         # Restore company values after the tests
