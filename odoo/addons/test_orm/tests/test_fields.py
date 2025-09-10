@@ -3675,7 +3675,7 @@ class TestX2many(TransactionExpressionCase):
                 })
             # 1.1 Command.UPDATE
             # Case: a public/portal updating his user to add himself a group
-            with self.assertRaisesRegex(AccessError, "not allowed to modify 'User'"):
+            with self.assertRaisesRegex(AccessError, "do not have enough rights to access the field"):
                 my_partner.write({
                     'user_ids': [Command.update(my_partner.user_ids[0].id, {
                         'group_ids': [self.env.ref('base.group_system').id],
@@ -3689,7 +3689,7 @@ class TestX2many(TransactionExpressionCase):
                 })
             # 1.3 Command.UNLINK
             # Case: a public user unlinking the public partner and the public user to mess with the database
-            with self.assertRaisesRegex(AccessError, "not allowed to modify 'User'"):
+            with self.assertRaisesRegex(AccessError, "do not have enough rights to access the field"):
                 my_partner.write({
                     'user_ids': [Command.unlink(my_partner.user_ids[0].id)],
                 })
@@ -3703,14 +3703,14 @@ class TestX2many(TransactionExpressionCase):
                 })
             # 1.5 Command.CLEAR
             # Case: a public user unlinking the public partner and the public user just to mess with the database
-            with self.assertRaisesRegex(AccessError, "not allowed to modify 'User'"):
+            with self.assertRaisesRegex(AccessError, "do not have enough rights to access the field"):
                 my_partner.write({
                     'user_ids': [Command.clear()],
                 })
             # 1.6 Command.SET
             # Case: a public/portal user changing the `partner_id` of an admin,
             # to change the email address of the user and ask for a reset password.
-            with self.assertRaisesRegex(AccessError, "not allowed to modify 'User'"):
+            with self.assertRaisesRegex(AccessError, "do not have enough rights to access the field"):
                 my_partner.write({
                     'user_ids': [Command.set([admin_user.id])],
                 })

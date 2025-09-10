@@ -144,13 +144,9 @@ class WebsiteProfile(http.Controller):
     @http.route('/profile/user/save', type='jsonrpc', auth='user', methods=['POST'], website=True)
     def save_edited_profile(self, **kwargs):
         user_id = int(kwargs.get('user_id', 0))
-        if user_id and request.env.user.id != user_id and request.env.user._is_admin():
-            user = request.env['res.users'].browse(user_id)
-        else:
-            user = request.env.user
+        user = request.env['res.users'].browse(user_id or request.env.uid)
         values = self._profile_edition_preprocess_values(user, **kwargs)
-        whitelisted_values = {key: values[key] for key in sorted(user._self_accessible_fields()[1]) if key in values}
-        user.write(whitelisted_values)
+        user.write(values)
 
     # Ranks and Badges
     # ---------------------------------------------------
