@@ -187,9 +187,11 @@
                                     t-att-class="padding_class"
                                 >
                                     <span t-field="line.name">Combo Product</span>
+                                    x <span t-field="line.product_uom_qty" t-options="{'widget': 'integer'}"/>
                                 </td>
                                 <td name="td_combo_price" class="text-end o_price_total">
                                     <span
+                                        t-if="not collapse_prices"
                                         name="price_subtotal_combo"
                                         t-out="line._get_combo_totals(price_field)"
                                         class="text-nowrap"
