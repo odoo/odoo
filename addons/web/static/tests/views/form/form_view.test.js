@@ -8420,7 +8420,8 @@ test(`default_order on x2many embedded view`, async () => {
     expect(`.modal`).toHaveCount(1);
 
     await contains(`.modal .o_field_widget[name=foo] input`).edit("xop");
-    await contains(`.modal-footer .o_form_button_save_new`).click();
+    await contains(`.modal-footer .o_form_button_save`).click();
+    await contains(`.o_field_x2many_list_row_add a`).click();
     await contains(`.modal .o_field_widget[name=foo] input`).edit("zop");
     await contains(`.modal-footer .o_form_button_save`).click();
 

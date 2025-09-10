@@ -460,6 +460,7 @@ test("existing record has an expand button", async () => {
     ]);
 });
 
+test.tags("desktop");
 test("expand button with save and new", async () => {
     Instrument._views.form = /* xml */ `<form><field name="name"/></form>`;
     Instrument._records = [{ id: 1, name: "Violon" }];
