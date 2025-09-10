@@ -15,6 +15,7 @@ class ResumeLine(models.Model):
         ('expired', 'Expired'),
         ('expiring', 'Expiring'),
         ('valid', 'Valid')], compute='_compute_expiration_status', store=True)
+    expiration_status_ui = fields.Boolean(compute='_compute_expiration_status_ui')
 
     @api.depends('date_end')
     def _compute_expiration_status(self):
@@ -25,3 +26,8 @@ class ResumeLine(models.Model):
                     line.expiration_status = 'expired'
                 elif line.date_end + relativedelta(months=-3) <= fields.Date.today():
                     line.expiration_status = 'expiring'
+
+    @api.depends('date_end')
+    def _compute_expiration_status_ui(self):
+        self.expiration_status_ui = True
+        self._compute_expiration_status()
