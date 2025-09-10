@@ -14,6 +14,12 @@ body:not(.o_mass_mailing_iframe_fullscreen, .o_mass_mailing_iframe_mobile) {
 }
 
 body {
+    &.o_mass_mailing_iframe_fullscreen, &.o_mass_mailing_iframe_mobile {
+        .note-editable {
+            overflow: auto;
+            height: 100%;
+        }
+    }
     &.o_mass_mailing_iframe_fullscreen {
         .o_layout {
             display: grid;
