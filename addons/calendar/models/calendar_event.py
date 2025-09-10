@@ -989,11 +989,7 @@ class CalendarEvent(models.Model):
             _logger.warning('Template "calendar.calendar_template_delete_event" was not found. Cannot send delete notifications.')
             return {}
 
-        lang = self.env.context.get('lang')
-        if template.lang:
-            # This method ensures that the template is translated according
-            # to the user's or record's language settings.
-            lang = template._render_lang(self.ids)[self.id]
+        if self.ids and (lang := template._render_lang(self.ids)[self.id]):
             context = {
                 'default_use_template': bool(template),
                 'default_template_id': template.id,
