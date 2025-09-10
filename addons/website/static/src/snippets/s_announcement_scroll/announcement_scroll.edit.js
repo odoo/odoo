@@ -14,7 +14,8 @@ export const AnnouncementScrollEdit = (I) =>
                 this.el.contains(el) &&
                 el.matches(
                     `.s_announcement_scroll_marquee_container,
-                    .s_announcement_scroll_marquee_item:first-child`
+                    .s_announcement_scroll_marquee_item:first-child,
+                    .s_announcement_scroll_marquee_item:first-child > [data-oe-translation-source-sha]`
                 )
             );
         }
