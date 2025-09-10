@@ -1685,19 +1685,19 @@
 
 <template id="template_footer_descriptive" inherit_id="website.layout" name="Descriptive" active="False">
     <xpath expr="//div[@id='footer']" position="replace">
-        <div id="footer" class="oe_structure oe_structure_solo text-break" t-ignore="true" t-if="not no_footer">
-            <section class="s_text_block" data-snippet="s_text_block" data-name="Container" data-oe-shape-data="{'shape':'html_builder/Bold/16', 'colors':{'c5': '#0000000D'},'flip':[],'showOnMobile':false,'shapeAnimationSpeed':'0'}">
-            <div class="o_we_shape o_html_builder_Bold_16" style="background-image: url('/html_editor/shape/html_builder/Bold/16.svg?c5=%230000000D');"/>
+        <div id="footer" class="oe_structure oe_structure_solo border text-break" t-ignore="true" t-if="not no_footer" style="--box-border-top-width: 0px; --box-border-left-width: 0px; --box-border-right-width: 0px;">
+            <section class="s_text_block" data-snippet="s_text_block" data-name="Container" data-oe-shape-data="{'shape':'html_builder/Bold/21', 'colors':{'c5': '#0000000D'},'flip':[],'showOnMobile':true,'shapeAnimationSpeed':'0'}">
+            <div class="o_we_shape o_html_builder_Bold_21 o_shape_show_mobile" style="background-image: url('/html_editor/shape/html_builder/Bold/21.svg?c5=%230000000D');"/>
                 <div class="container s_allow_columns">
                     <div class="row">
                         <div class="col-lg-12 pt48 pb24">
                             <h4>Designed for companies</h4>
                         </div>
-                        <div class="col-lg-5 d-lg-block d-none pb48 o_snippet_mobile_invisible">
+                        <div class="col-lg-5 pb48">
                             <p>We are a team of passionate people whose goal is to improve everyone's life through disruptive products. We build great products to solve your business problems. Our products are designed for small to medium size companies willing to optimize their performance.</p>
                             <p><a href="/contactus" class="btn btn-lg btn-primary">Get in touch</a></p>
                         </div>
-                        <div class="col-lg-4 offset-lg-3 pb24">
+                        <div class="col-lg-4 offset-lg-3 pb48">
                             <p><b>My Company</b><br/>8000 Marina Blvd, Suite 300 <br/> Brisbane CA 94005 <br/>United States</p>
                             <ul class="list-unstyled mb-2">
                                 <li><i class="fa fa-phone fa-fw me-2"/><span class="o_force_ltr"><a href="tel:+1 555-555-5556">+1 555-555-5556</a></span></li>
@@ -1719,9 +1719,6 @@
                                 </a>
                             </div>
                         </div>
-                        <div class="col-lg-12 d-lg-none pb48 o_snippet_desktop_invisible">
-                            <p><a href="/contactus" class="btn btn-lg btn-primary">Get in touch</a></p>
-                        </div>
                     </div>
                 </div>
             </section>
@@ -1732,7 +1729,7 @@
 <template id="template_footer_centered" inherit_id="website.layout" name="Centered" active="False">
     <xpath expr="//div[@id='footer']" position="replace">
         <div id="footer" class="oe_structure oe_structure_solo text-break" t-ignore="true" t-if="not no_footer">
-            <section class="s_text_block pt32 pb16" data-snippet="s_text_block" data-name="Container">
+            <section class="s_text_block pt32" data-snippet="s_text_block" data-name="Container">
                 <div class="container s_allow_columns">
                     <div class="row">
                         <div class="col-lg-12 order-lg-0" style="order: 0;">
@@ -1878,19 +1875,19 @@
             <section class="s_text_block pt32 pb32" data-snippet="s_text_block" data-name="Container">
                 <div class="container">
                     <div class="row o_grid_mode" style="gap: 16px;" data-row-count="3">
-                        <div class="col-lg-3 o_grid_item g-col-lg-3 g-height-2 offset-1 offset-lg-0 col-10 o_cc o_cc1 rounded pt16 pb16" style="z-index: 1; grid-area: 1 / 1 / 3 / 4; border-radius: 24px !important; --grid-item-padding-y: 30px; --grid-item-padding-x: 30px;">
+                        <div class="col-lg-3 o_grid_item g-col-lg-3 g-height-2 offset-1 offset-lg-0 col-10 o_cc o_cc3 rounded pt16 pb16" style="z-index: 1; grid-area: 1 / 1 / 3 / 4; border-radius: 24px !important; --grid-item-padding-y: 30px; --grid-item-padding-x: 30px;">
                             <h6>How can we help?</h6>
                             <p><span class="h5-fs"><a href="/contactus">Contact us anytime</a></span></p>
                         </div>
-                        <div class="col-lg-3 o_grid_item g-col-lg-3 g-height-2 offset-1 offset-lg-0 col-10 o_cc o_cc3 rounded pt16 pb16" style="z-index: 2; grid-area: 1 / 4 / 3 / 7; border-radius: 24px !important; --grid-item-padding-x: 30px; --grid-item-padding-y: 30px;">
+                        <div class="col-lg-3 o_grid_item g-col-lg-3 g-height-2 offset-1 offset-lg-0 col-10 o_cc o_cc1 rounded pt16 pb16" style="z-index: 2; grid-area: 1 / 4 / 3 / 7; border-radius: 24px !important; --grid-item-padding-x: 30px; --grid-item-padding-y: 30px;">
                             <h6>Call us</h6>
                             <p><span class="h5-fs"><a href="tel:+1 555-555-5556"><span class="o_force_ltr">+1 555-555-5556</span></a></span></p>
                         </div>
-                        <div class="col-lg-3 o_grid_item g-col-lg-3 g-height-2 offset-1 offset-lg-0 col-10 o_cc o_cc3 rounded pt16 pb16" style="z-index: 3; grid-area: 1 / 7 / 3 / 10; --grid-item-padding-x: 30px; border-radius: 24px !important; --grid-item-padding-y: 30px;">
+                        <div class="col-lg-3 o_grid_item g-col-lg-3 g-height-2 offset-1 offset-lg-0 col-10 o_cc o_cc1 rounded pt16 pb16" style="z-index: 3; grid-area: 1 / 7 / 3 / 10; --grid-item-padding-x: 30px; border-radius: 24px !important; --grid-item-padding-y: 30px;">
                             <h6>Send us a message</h6>
                             <p><span class="h5-fs"><a href="mailto:hello@mycompany.com">hello@mycompany.com</a></span></p>
                         </div>
-                        <div class="col-lg-3 o_grid_item g-col-lg-3 g-height-2 offset-1 offset-lg-0 col-10 o_cc o_cc3 rounded pt16 pb16" style="z-index: 4; grid-area: 1 / 10 / 3 / 13; --grid-item-padding-x: 30px; --grid-item-padding-y: 30px; border-radius: 24px !important;">
+                        <div class="col-lg-3 o_grid_item g-col-lg-3 g-height-2 offset-1 offset-lg-0 col-10 o_cc o_cc1 rounded pt16 pb16" style="z-index: 4; grid-area: 1 / 10 / 3 / 13; --grid-item-padding-x: 30px; --grid-item-padding-y: 30px; border-radius: 24px !important;">
                             <div class="s_social_media text-start no_icon_color o_not_editable" data-snippet="s_social_media" data-name="Social Media" contenteditable="false">
                                 <h6 class="s_social_media_title d-block mb-2" contenteditable="true">Follow us</h6>
                                 <a href="/website/social/twitter" class="s_social_media_twitter" target="_blank">
@@ -1945,14 +1942,14 @@
                 <div class="container s_allow_columns">
                     <div class="row o_grid_mode" data-row-count="3">
                         <div class="o_grid_item g-col-lg-6 g-height-2 offset-1 offset-lg-0 col-10 order-lg-0 col-lg-6" style="z-index: 1; --grid-item-padding-x: 10px; --grid-item-padding-y: 0px; grid-area: 1 / 1 / 3 / 7; order: 0;">
-                            <h2>50,000+ companies run Odoo to grow their businesses.</h2>
+                            <h2 class="h3-fs">50,000+ companies run Odoo to grow their businesses.</h2>
                         </div>
                         <div class="o_grid_item g-col-lg-3 col-lg-3 order-lg-0 g-height-2" style="text-align: center; z-index: 2; --grid-item-padding-x: 10px; --grid-item-padding-y: 0px; grid-area: 1 / 10 / 3 / 13; order: 2;">
                             <a href="/contactus" class="btn btn-primary btn-lg">Get started</a>
                         </div>
                         <div class="o_grid_item g-col-lg-7 offset-1 offset-lg-0 order-lg-0 col-10 g-height-1 col-lg-7" style="z-index: 4; --grid-item-padding-x: 10px; grid-area: 3 / 1 / 4 / 8; order: 1; --grid-item-padding-y: 12px;">
                             <p>
-                                <font style="color: rgba(255, 255, 255, 0.5);">8000 Marina Blvd, Suite 300 • Brisbane CA 94005 • United States</font>
+                                8000 Marina Blvd, Suite 300 • Brisbane CA 94005 • United States
                             </p>
                             <div class="s_hr d-lg-none o_snippet_desktop_invisible pb16 pt16">
                                 <hr class="w-100 mx-auto"/>
@@ -2064,7 +2061,7 @@
                     </div>
                 </div>
             </section>
-            <section class="s_text_block o_footer_bottom_part pt8 pb8" style="position: relative; background-color: rgba(255, 255, 255, 0.1);" data-snippet="s_text_block" data-name="Bottom Part">
+            <section class="s_text_block o_footer_bottom_part pt8 pb8" style="position: relative; background-color: rgba(0, 0, 0, 0.05);" data-snippet="s_text_block" data-name="Bottom Part">
                 <div class="container">
                     <div class="row">
                         <div class="col-lg-6 pt8 pb8">
@@ -2114,7 +2111,7 @@
                 <div class="container">
                     <div class="row">
                         <div class="col-lg-4">
-                            <div class="s_text_highlight o_cc o_cc3 w-100 my-3 text-center" data-snippet="s_text_highlight" data-name="Text Highlight">
+                            <div class="s_text_highlight o_cc o_cc1 w-100 my-3 text-center" data-snippet="s_text_highlight" data-name="Text Highlight">
                                 <img
                                     src="/html_editor/shape/website/s_attributes_1.svg?c1=rgba(0,0,0,.25)&amp;c4=o-color-4&amp;c5=o-color-5"
                                     class="img img-fluid d-block mx-auto"
@@ -2152,7 +2149,7 @@
                             </div>
                         </div>
                         <div class="col-lg-4">
-                            <div class="s_text_highlight o_cc o_cc3 w-100 my-3 text-center" data-snippet="s_text_highlight" data-name="Text Highlight">
+                            <div class="s_text_highlight o_cc o_cc1 w-100 my-3 text-center" data-snippet="s_text_highlight" data-name="Text Highlight">
                                 <img
                                     src="/html_editor/shape/website/s_attributes_2.svg?c1=rgba(0,0,0,.25)&amp;c2=rgba(0,0,0,.5)&amp;c4=o-color-4&amp;c5=o-color-5"
                                     class="img img-fluid d-block mx-auto"
@@ -2171,7 +2168,7 @@
                             <p>250 Executive Park Blvd, Suite 3400 <br/>San Francisco CA 94134</p>
                         </div>
                         <div class="col-lg-4">
-                            <div class="s_text_highlight o_cc o_cc3 w-100 my-3 text-center" data-snippet="s_text_highlight" data-name="Text Highlight">
+                            <div class="s_text_highlight o_cc o_cc1 w-100 my-3 text-center" data-snippet="s_text_highlight" data-name="Text Highlight">
                                 <img
                                     src="/html_editor/shape/website/s_attributes_3.svg?c1=rgba(0,0,0,.25)&amp;c4=o-color-4&amp;c5=o-color-5"
                                     class="img img-fluid d-block mx-auto"
@@ -2309,7 +2306,7 @@
                     </div>
                 </div>
             </section>
-            <section class="s_text_block o_footer_bottom_part pt8 pb8" style="position: relative; background-color: rgba(255, 255, 255, 0.1);" data-snippet="s_text_block" data-name="Bottom Part">
+            <section class="s_text_block o_footer_bottom_part pt8 pb8" style="position: relative; background-color: rgba(0, 0, 0, 0.05);" data-snippet="s_text_block" data-name="Bottom Part">
                 <div class="container">
                     <div class="row">
                         <div class="col-lg-12 pt8 pb8">
@@ -2351,7 +2348,7 @@
             <section class="s_text_block pt24 pb24" data-snippet="s_text_block" data-name="Container">
                 <div class="container">
                     <div class="row o_grid_mode" style="gap: 24px;" data-row-count="7">
-                        <div class="o_grid_item g-col-lg-4 col-lg-4 g-height-4 offset-1 offset-lg-0 col-10 o_cc o_cc3" style="z-index: 1; grid-area: 1 / 1 / 5 / 5; --grid-item-padding-y: 24px; --grid-item-padding-x: 24px; border-radius: 24px !important;">
+                        <div class="o_grid_item g-col-lg-4 col-lg-4 g-height-4 offset-1 offset-lg-0 col-10 o_cc o_cc1" style="z-index: 1; grid-area: 1 / 1 / 5 / 5; --grid-item-padding-y: 24px; --grid-item-padding-x: 24px; border-radius: 24px !important;">
                             <h5>Company</h5>
                             <ul class="list-unstyled">
                                 <li><a href="#">History</a></li>
@@ -2361,7 +2358,7 @@
                                 <li><a href="/contactus">Contact Us</a></li>
                             </ul>
                         </div>
-                        <div class="o_grid_item g-col-lg-4 col-lg-4 g-height-4 offset-1 offset-lg-0 col-10 o_cc o_cc3" style="z-index: 2; grid-area: 1 / 5 / 5 / 9; --grid-item-padding-y: 24px; --grid-item-padding-x: 24px; border-radius: 24px !important;">
+                        <div class="o_grid_item g-col-lg-4 col-lg-4 g-height-4 offset-1 offset-lg-0 col-10 o_cc o_cc1" style="z-index: 2; grid-area: 1 / 5 / 5 / 9; --grid-item-padding-y: 24px; --grid-item-padding-x: 24px; border-radius: 24px !important;">
                             <h5>Support</h5>
                             <ul class="list-unstyled">
                                 <li><a href="#">Help</a></li>
@@ -2379,11 +2376,11 @@
                                 alt=""
                                 />
                         </div>
-                        <div class="o_grid_item g-col-lg-4 col-lg-4 g-height-3 offset-1 offset-lg-0 col-10 o_cc o_cc1" style="z-index: 4; grid-area: 5 / 1 / 8 / 5; --grid-item-padding-y: 24px; --grid-item-padding-x: 24px; border-radius: 24px !important;">
+                        <div class="o_grid_item g-col-lg-4 col-lg-4 g-height-3 offset-1 offset-lg-0 col-10 o_cc o_cc4" style="z-index: 4; grid-area: 5 / 1 / 8 / 5; --grid-item-padding-y: 24px; --grid-item-padding-x: 24px; border-radius: 24px !important;">
                             <h5>About us</h5>
                             <p>We are a team of passionate people whose goal is to improve everyone's life through disruptive products.</p>
                         </div>
-                        <div class="o_grid_item g-col-lg-4 col-lg-4 g-height-3 offset-1 offset-lg-0 col-10 o_cc o_cc4" style="z-index: 5; grid-area: 5 / 5 / 8 / 9; --grid-item-padding-y: 24px; --grid-item-padding-x: 24px; border-radius: 24px !important;">
+                        <div class="o_grid_item g-col-lg-4 col-lg-4 g-height-3 offset-1 offset-lg-0 col-10 o_cc o_cc3" style="z-index: 5; grid-area: 5 / 5 / 8 / 9; --grid-item-padding-y: 24px; --grid-item-padding-x: 24px; border-radius: 24px !important;">
                             <h5>Contact us</h5>
                             <p>San Francisco CA 94134</p>
                             <ul class="list-unstyled">
@@ -2391,7 +2388,7 @@
                                 <li><a href="tel:+1 555-555-5556"><span class="o_force_ltr">+1 555-555-5556</span></a></li>
                             </ul>
                         </div>
-                        <div class="o_grid_item g-col-lg-4 col-lg-4 g-height-3 offset-1 offset-lg-0 col-10 o_cc o_cc3" style="z-index: 6; grid-area: 5 / 9 / 8 / 13; --grid-item-padding-y: 24px; --grid-item-padding-x: 24px; border-radius: 24px !important;">
+                        <div class="o_grid_item g-col-lg-4 col-lg-4 g-height-3 offset-1 offset-lg-0 col-10 o_cc o_cc1" style="z-index: 6; grid-area: 5 / 9 / 8 / 13; --grid-item-padding-y: 24px; --grid-item-padding-x: 24px; border-radius: 24px !important;">
                             <div class="s_social_media text-start o_not_editable" data-snippet="s_social_media" data-name="Social Media" contenteditable="false">
                                 <h5 class="s_social_media_title d-block mb-2" contenteditable="true">Follow us</h5>
                                 <a href="/website/social/twitter" class="s_social_media_twitter" target="_blank">
