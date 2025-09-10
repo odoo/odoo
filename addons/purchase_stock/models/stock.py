@@ -58,16 +58,16 @@ class StockWarehouse(models.Model):
             if not buy_route:
                 buy_route = self.env['stock.rule'].search([
                     ('action', '=', 'buy'), ('warehouse_id', '=', warehouse.id)]).route_id
-            if warehouse.buy_to_resupply:
+            if warehouse.buy_to_resupply and buy_route.warehouse_selectable:
                 buy_route.warehouse_ids = [Command.link(warehouse.id)]
             else:
                 buy_route.warehouse_ids = [Command.unlink(warehouse.id)]
 
     def _create_or_update_route(self):
-        purchase_route = self._find_or_create_global_route('purchase_stock.route_warehouse0_buy', self.env._('Buy'))
+        buy_route = self._find_or_create_global_route('purchase_stock.route_warehouse0_buy', self.env._('Buy'))
         for warehouse in self:
-            if warehouse.buy_to_resupply:
-                purchase_route.warehouse_ids = [Command.link(warehouse.id)]
+            if warehouse.buy_to_resupply and buy_route.warehouse_selectable:
+                buy_route.warehouse_ids = [Command.link(warehouse.id)]
         return super()._create_or_update_route()
 
     def _generate_global_route_rules_values(self):
