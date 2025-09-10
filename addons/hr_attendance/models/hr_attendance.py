@@ -480,8 +480,9 @@ class HrAttendance(models.Model):
     def write(self, vals):
         if vals.get('employee_id') and \
             vals['employee_id'] not in self.env.user.employee_ids.ids and \
-            not self.env.user.has_group('hr_attendance.group_hr_attendance_officer'):
-            raise AccessError(_("Do not have access, user cannot edit the attendances that are not his own."))
+            not self.env.user.has_group('hr_attendance.group_hr_attendance_officer') or \
+            vals.get('employee_id') and self.env['hr.employee'].sudo().browse(vals['employee_id']).attendance_manager_id.id != self.env.user.id:
+            raise AccessError(_("Do not have access, user cannot edit the attendances that are not their own or if they are not the attendance manager of the employee."))
         attendances_dates = self._get_attendances_dates()
 
         if vals.get('check_out') and self.out_mode == 'technical':
