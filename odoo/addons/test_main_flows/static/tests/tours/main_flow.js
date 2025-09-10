@@ -779,14 +779,21 @@ stepUtils.autoExpandMoreButtons(),
 },
 {
     isActive: ["mobile"],
-    trigger: ".modal:not(.o_inactive_modal) .modal-footer .btn-primary:contains('Save & New')",
-    content: _t('Save & New'),
+    trigger: ".modal:not(.o_inactive_modal) .modal-footer .btn-primary:contains('Save & Close')",
+    content: _t('Save & Close'),
     tooltipPosition: 'right',
     run: "click",
 }, {
     // check if the new record is displayed
     isActive: ["mobile"],
-    trigger: ".modal:not(.o_inactive_modal) .modal-footer .btn-primary:contains('Save & New'):enabled",
+    trigger: ".o_kanban_record:contains('the_flow.product')",
+},
+{
+    isActive: ["mobile"],
+    trigger: ".o_field_widget[name=order_line] .btn:contains(Add)",
+    content: _t("Click here to add some lines to your quotations."),
+    tooltipPosition: "bottom",
+    run: "click",
 },
 {
     isActive: ["desktop"],

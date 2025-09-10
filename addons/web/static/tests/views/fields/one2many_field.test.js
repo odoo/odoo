@@ -3541,9 +3541,10 @@ test("one2many kanban: edition", async () => {
     // create two new subrecords
     await contains(".o-kanban-button-new:eq(0)").click();
     await contains(".modal .o_form_view .o_field_widget:eq(0) input").edit("new subrecord 2");
-    await contains(".modal .modal-footer .btn-primary:eq(1)").click();
+    await contains(".modal .modal-footer .btn-primary").click();
+    await contains(".o-kanban-button-new:eq(0)").click();
     await contains(".modal .o_form_view .o_field_widget:eq(0) input").edit("new subrecord 3");
-    await contains(".modal .modal-footer .btn-primary:eq(0)").click();
+    await contains(".modal .modal-footer .btn-primary").click();
     expect(".o_kanban_record:not(.o_kanban_ghost):not(.o-kanban-button-new)").toHaveCount(4);
 
     // delete subrecords
@@ -11217,7 +11218,8 @@ test("one2many with extra X2many field from server not in inline form", async ()
     await contains(".modal .o_field_widget[name=name] input").edit("first", { confirm: false });
 
     // Save & New
-    await contains(".modal .btn-primary:eq(1)").click();
+    await contains(".modal .btn-primary").click();
+    await contains(".o_field_x2many_list_row_add a").click();
     await contains(".modal .o_field_widget[name=name] input").edit("second", { confirm: false });
 
     // Save & Close
@@ -12551,6 +12553,7 @@ test("one2many, form view dialog with added custom footer (replace='0')", async 
     expect(".modal-footer button").toHaveCount(3);
 });
 
+test.tags("desktop");
 test('Add a line, click on "Save & New" with an invalid form', async () => {
     mockService("notification", {
         add: (message, params) => {
