@@ -15,6 +15,7 @@ const DEFAULT_ARCH_RESULTS = {
     eventLimit: 5,
     fieldMapping: {
         date_start: "start_date",
+        date_stop: "start_date",
     },
     fieldNames: ["start_date"],
     filtersInfo: {},

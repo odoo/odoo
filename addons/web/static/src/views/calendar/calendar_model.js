@@ -384,11 +384,6 @@ export class CalendarModel extends Model {
                     : serializeDateTime(end);
         }
 
-        if (this.meta.fieldMapping.date_delay) {
-            if (this.meta.scale !== "month" || !options.moved) {
-                data[this.meta.fieldMapping.date_delay] = end.diff(start, "hours").hours;
-            }
-        }
         return data;
     }
     makeContextDefaults(rawRecord) {
@@ -399,7 +394,6 @@ export class CalendarModel extends Model {
             fieldMapping.create_name_field || "name",
             fieldMapping.date_start,
             fieldMapping.date_stop,
-            fieldMapping.date_delay,
             fieldMapping.all_day || "allday",
         ];
         for (const fieldName of fieldNames) {
@@ -595,14 +589,10 @@ export class CalendarModel extends Model {
         const serializeFn = this.dateStartType === "date" ? serializeDate : serializeDateTime;
         const formattedEnd = serializeFn(data.range.end);
         const formattedStart = serializeFn(data.range.start);
-
-        const domain = [[fieldMapping.date_start, "<=", formattedEnd]];
-        if (fieldMapping.date_stop) {
-            domain.push([fieldMapping.date_stop, ">=", formattedStart]);
-        } else if (!fieldMapping.date_delay) {
-            domain.push([fieldMapping.date_start, ">=", formattedStart]);
-        }
-        return domain;
+        return [
+            [fieldMapping.date_start, "<=", formattedEnd],
+            [fieldMapping.date_stop, ">=", formattedStart]
+        ];
     }
 
     //--------------------------------------------------------------------------
@@ -676,13 +666,14 @@ export class CalendarModel extends Model {
                 : deserializeDateTime(rawRecord[fieldMapping.date_stop]);
         }
 
-        const duration = rawRecord[fieldMapping.date_delay] || 1;
-
         if (isAllDay) {
             start = start.startOf("day");
             end = end.startOf("day");
         }
-        if (!fieldMapping.date_stop && duration) {
+
+        let duration = end.diff(start, "hours").hours;
+        if (!duration) {
+            duration = 1;
             end = start.plus({ hours: duration });
         }
 

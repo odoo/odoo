@@ -387,7 +387,7 @@ test(`simple calendar rendering on desktop`, async () => {
         resModel: "event",
         type: "calendar",
         arch: `
-            <calendar event_open_popup="1" date_start="start" date_stop="stop" all_day="is_all_day" mode="week" attendee="attendee_ids" color="partner_id" date_delay="delay">
+            <calendar event_open_popup="1" date_start="start" date_stop="stop" all_day="is_all_day" mode="week" attendee="attendee_ids" color="partner_id">
                 <filter name="user_id" avatar_field="image"/>
                 <field name="attendee_ids" write_model="filter.partner" write_field="partner_id"/>
                 <field name="partner_id" filters="1" invisible="1"/>
@@ -489,7 +489,7 @@ test(`simple calendar rendering on mobile`, async () => {
         resModel: "event",
         type: "calendar",
         arch: `
-            <calendar event_open_popup="1" date_start="start" date_stop="stop" all_day="is_all_day" mode="week" attendee="attendee_ids" color="partner_id" date_delay="delay">
+            <calendar event_open_popup="1" date_start="start" date_stop="stop" all_day="is_all_day" mode="week" attendee="attendee_ids" color="partner_id">
                 <filter name="user_id" avatar_field="image"/>
                 <field name="attendee_ids" write_model="filter.partner" write_field="partner_id"/>
                 <field name="partner_id" filters="1" invisible="1"/>
@@ -3473,7 +3473,7 @@ test(`events starting at midnight on desktop`, async () => {
     await mountView({
         resModel: "event",
         type: "calendar",
-        arch: `<calendar date_start="start" mode="week"/>`,
+        arch: `<calendar date_start="start" date_stop="stop" mode="week"/>`,
     });
 
     // Click on Tuesday 12am
@@ -3493,7 +3493,7 @@ test(`events starting at midnight on mobile`, async () => {
     await mountView({
         resModel: "event",
         type: "calendar",
-        arch: `<calendar date_start="start" mode="week"/>`,
+        arch: `<calendar date_start="start" date_stop="stop" mode="week"/>`,
     });
 
     // Click on Tuesday 12am
@@ -3765,7 +3765,7 @@ test(`timezone does not affect drag and drop on desktop`, async () => {
         resModel: "event",
         type: "calendar",
         arch: `
-            <calendar date_start="start" mode="month">
+            <calendar date_start="start" date_stop="stop" mode="month">
                 <field name="name"/>
                 <field name="start"/>
             </calendar>
@@ -3812,7 +3812,7 @@ test(`timezone does not affect drag and drop on mobile`, async () => {
         resModel: "event",
         type: "calendar",
         arch: `
-            <calendar date_start="start" mode="month">
+            <calendar date_start="start" date_stop="stop" mode="month">
                 <field name="name"/>
                 <field name="start"/>
             </calendar>
@@ -3989,30 +3989,6 @@ test(`drag and drop on month mode with all_day mapping`, async () => {
     await moveEventToDate(8, "2016-12-19");
     await clickEvent(8);
     expect(`.list-group-item:eq(1)`).toHaveText("07:00 - 19:00 (12 hours)");
-});
-
-test(`drag and drop on month mode with date_start and date_delay`, async () => {
-    onRpc("write", ({ args }) => {
-        expect.step("write");
-        expect(args[1].delay).toBe(undefined);
-    });
-    await mountView({
-        resModel: "event",
-        type: "calendar",
-        arch: `
-            <calendar date_start="start" date_delay="delay" mode="month">
-                <field name="name"/>
-                <field name="start"/>
-                <field name="delay"/>
-            </calendar>
-        `,
-    });
-
-    await clickDate("2016-12-20");
-    await contains(`.o-calendar-quick-create--input`).edit("An event", { confirm: false });
-    await contains(`.o-calendar-quick-create--create-btn`).click();
-    await moveEventToDate(8, "2016-11-27");
-    expect.verifySteps(["write"]);
 });
 
 test(`form_view_id attribute works (for creating events)`, async () => {

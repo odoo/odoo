@@ -5,7 +5,6 @@ import { Field } from "@web/views/fields/field";
 
 const FIELD_ATTRIBUTE_NAMES = [
     "date_start",
-    "date_delay",
     "date_stop",
     "all_day",
     "create_name_field",
@@ -122,6 +121,10 @@ export class CalendarArchParser {
         }
         if (!Number.isInteger(eventLimit)) {
             throw new CalendarParseArchError(`Calendar view's event limit should be a number`);
+        }
+
+        if (!fieldMapping.date_stop) {
+            fieldMapping.date_stop = fieldMapping.date_start;
         }
 
         return {

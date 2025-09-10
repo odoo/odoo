@@ -1626,7 +1626,7 @@ actual arch.
     # Specific node postprocessors
     #------------------------------------------------------
     def _postprocess_tag_calendar(self, node, name_manager, node_info):
-        for additional_field in ('date_start', 'date_delay', 'date_stop', 'color', 'all_day'):
+        for additional_field in ('date_start', 'date_stop', 'color', 'all_day'):
             if fname := node.get(additional_field):
                 name_manager.has_field(node, fname, node_info)
         if fname := node.get('aggregate'):
@@ -1884,7 +1884,7 @@ actual arch.
                 self._raise_view_error(msg, child)
 
     def _validate_tag_calendar(self, node, name_manager, node_info):
-        for additional_field in ('date_start', 'date_delay', 'date_stop', 'color', 'all_day'):
+        for additional_field in ('date_start', 'date_stop', 'color', 'all_day'):
             if fnames := node.get(additional_field):
                 name_manager.has_field(node, fnames.split('.', 1)[0], node_info)
         for f in node:
@@ -2877,14 +2877,8 @@ class Base(models.AbstractModel):
         set_first_of(["user_id", "partner_id", "x_user_id", "x_partner_id"],
                      self._fields, 'color')
 
-        if not set_first_of(["date_stop", "date_end", "x_date_stop", "x_date_end"],
-                            self._fields, 'date_stop'):
-            if not set_first_of(["date_delay", "planned_hours", "x_date_delay", "x_planned_hours"],
-                                self._fields, 'date_delay'):
-                raise UserError(_(
-                    "Insufficient fields to generate a Calendar View for %s, missing a date_stop or a date_delay",
-                    self._name
-                ))
+        set_first_of(["date_stop", "date_end", "x_date_stop", "x_date_end"],
+                     self._fields, 'date_stop')
 
         return view
 
