@@ -148,9 +148,9 @@ class BarcodeNomenclature(models.Model):
         """
         domain = Domain(domain)
         nomenclature = self.env.company.nomenclature_id
-        if not self.env.context.get('skip_preprocess_gs1') and nomenclature.is_gs1_nomenclature:
+        if not self.env.context.get('skip_preprocess_gs1'):
             def map_gs1_barcode(condition):
-                if condition.field_expr != field:
+                if condition.field_expr != field or not nomenclature.is_gs1_nomenclature:
                     return condition
                 # Check operator
                 # handle `in` first and check the rest

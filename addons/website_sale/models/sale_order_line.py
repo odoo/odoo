@@ -9,6 +9,7 @@ class SaleOrderLine(models.Model):
 
     name_short = fields.Char(compute='_compute_name_short')
     shop_warning = fields.Char(string="Warning")
+    show_in_cart = fields.Boolean(compute="_compute_show_in_cart")
 
     #=== COMPUTE METHODS ===#
 
@@ -77,17 +78,17 @@ class SaleOrderLine(models.Model):
                                 self.env['decimal.precision'].precision_get('Product Unit'))
         return int(rounded_uom_qty) == rounded_uom_qty and int(rounded_uom_qty) or rounded_uom_qty
 
-    def _show_in_cart(self):
-        self.ensure_one()
-        # Exclude delivery & section/note lines from showing up in the cart
-        return not self.is_delivery and not bool(self.display_type) and not bool(self.combo_item_id)
+    def _compute_show_in_cart(self):
+        for sol in self:
+            # Exclude delivery & section/note lines from showing up in the cart
+            sol.show_in_cart = not sol.is_delivery and not bool(sol.display_type) and not bool(sol.combo_item_id)
 
     def _is_reorder_allowed(self):
         self.ensure_one()
         return (
             bool(self.product_id)
             and self.product_id._is_add_to_cart_allowed()
-            and self._show_in_cart()
+            and self.show_in_cart
         )
 
     def _get_cart_display_price(self):

@@ -110,9 +110,9 @@ class ProductPublicCategory(models.Model):
     @api.depends('product_tmpl_ids.is_published', 'child_id.has_published_products')
     def _compute_has_published_products(self):
         for category in self:
-            category.has_published_products = (
-                any(category.mapped('product_tmpl_ids.is_published'))
-                or any(category.mapped('child_id.has_published_products'))
+            category.has_published_products = any(
+                bool(any(p.is_published for p in categ.product_tmpl_ids) or any(c.has_published_products for c in categ.child_id))
+                for categ in category
             )
 
     # === CONSTRAINT METHODS === #

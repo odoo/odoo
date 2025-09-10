@@ -122,7 +122,7 @@ class TestWebsiteSalePerformance(TestWebsitePerformanceCommon, TestWebsitePriceL
         self.assertIn(f'<img src="/web/image/product.template/{self.productA.product_tmpl_id.id}/', html)
         self.assertIn(f'<img src="/web/image/product.image/{self.product_images.ids[1]}/', html)
 
-        self.assertEqual(self._get_url_hot_query('/shop'), 133)
+        self.assertEqual(self._get_url_hot_query('/shop'), 35)  # To increase this number you must ask the permission to al
 
     def _get_cart_quantity(self):
         return int(re.search(
@@ -151,8 +151,6 @@ class TestWebsiteSalePerformance(TestWebsitePerformanceCommon, TestWebsitePriceL
             'website_menu': 1,
             'ir_ui_view': 2,
             'res_company': 1,
-            # website_sale queries
-            'res_users': 1,
         }
         expected_query_count = sum(select_tables_perf.values())
         self._check_url_hot_query(self.page.url, expected_query_count, select_tables_perf, {})
@@ -183,8 +181,8 @@ class TestWebsiteSalePerformance(TestWebsitePerformanceCommon, TestWebsitePriceL
             'res_company': 1,
             # website_sale queries
             'res_users': 1,
-            'sale_order': 2,
-            'sale_order_line': 2,
+            'sale_order': 1,
+            'sale_order_line': 1,
             'product_product': 1,
             'product_template': 1,
             'payment_transaction': 1,
@@ -215,7 +213,7 @@ class TestWebsiteSalePerformance(TestWebsitePerformanceCommon, TestWebsitePriceL
             'res_company': 1,
             # website_sale queries
             'res_users': 1,
-            'sale_order': 2,
+            'sale_order': 1,
             'sale_order_line': 1,
             'payment_transaction': 1,
         }
@@ -242,4 +240,4 @@ class TestWebsiteSalePerformancePostInstall(TestWebsiteSalePerformance):
         self.assertIn(f'<img src="/web/image/product.template/{self.productA.product_tmpl_id.id}/', html)
         self.assertIn(f'<img src="/web/image/product.image/{self.product_images.ids[1]}/', html)
 
-        self.assertEqual(self._get_url_hot_query('/shop'), 144)
+        self.assertEqual(self._get_url_hot_query('/shop'), 46)  # To increase this number you must ask the permission to al

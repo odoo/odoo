@@ -51,8 +51,11 @@ class SaleOrder(models.Model):
 
     @api.depends('order_line')
     def _compute_website_order_line(self):
-        for order in self:
-            order.website_order_line = order.order_line.filtered(lambda sol: sol._show_in_cart())
+        orders = self.with_context(prefetch_fields=False)  # cancel natural prefetch to avoid the fetching line ids query
+        order_lines = self.env['sale.order.line'].search_fetch([('order_id', 'in', orders.ids)])  # group saler.order.line to prefetch all in one query
+        for order in orders:
+            website_order_line = order_lines.filtered(lambda sol: sol.order_id == order and sol.show_in_cart)
+            order.website_order_line = website_order_line.with_prefetch(order_lines.ids)  # use prefetch
 
     @api.depends('order_line.price_total', 'order_line.price_subtotal')
     def _compute_amount_delivery(self):
