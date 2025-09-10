@@ -93,11 +93,11 @@ export class ImportAction extends Component {
             if (!this.action) {
                 return this.env.config.historyBack();
             }
-            if (this.action.type !== "ir.actions.act_window") {
+            if (this.action.type !== "ir.actions.client") {
                 return this.actionService.restore(this.actionService.currentController.jsId);
             }
 
-            this.resModel = this.action.res_model;
+            this.resModel = this.props.action.params.model;
             this.model.setResModel(this.resModel);
             return this.model.init();
         });
