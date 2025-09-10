@@ -984,7 +984,7 @@ class AccountMove(models.Model):
         assert list(value) == [True]
         return [('inalterable_hash', '!=', False)]
 
-    @api.depends('line_ids.account_id.account_type')
+    @api.depends('line_ids.account_id')
     def _compute_always_tax_exigible(self):
         for record in self.with_context(prefetch_fields=False):
             # We need to check is_invoice as well because always_tax_exigible is used to
