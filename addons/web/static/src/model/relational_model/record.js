@@ -830,6 +830,7 @@ export class Record extends DataPoint {
                     },
                     propertyName: property.name,
                     relation: property.comodel,
+                    sortable: !["many2one", "many2many", "tags"].includes(property.type),
                 };
             }
             if (hasCurrentValues || !this.activeFields[propertyFieldName]) {
