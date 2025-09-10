@@ -45,6 +45,7 @@ const GROUPED_STYLES = {
     border: [
         "border-top-width", "border-right-width", "border-bottom-width", "border-left-width",
         "border-top-style", "border-right-style", "border-bottom-style", "border-left-style",
+        "border-top-color", "border-right-color", "border-bottom-color", "border-left-color",
     ],
     padding: ["padding-top", "padding-bottom", "padding-left", "padding-right"],
     margin: ["margin-top", "margin-bottom", "margin-left", "margin-right"],
@@ -730,6 +731,12 @@ export async function toInline($editable, options) {
     // Fix card-img-top heights (must happen before we transform everything).
     for (const imgTop of editable.querySelectorAll('.card-img-top')) {
         imgTop.style.setProperty('height', _getHeight(imgTop) + 'px');
+    }
+    // Fix empty element heights to be always visible as they might have borders
+    // (used as separation) and can be rendered with height 0px.
+    // like having empty div with % height and display inline-block.
+    for (const el of editable.querySelectorAll(".o_not_editable[class*='border-']:empty")) {
+        el.style.height = getComputedStyle(el).height;
     }
 
     attachmentThumbnailToLinkImg($editable);
