@@ -3,32 +3,6 @@ import { isObject } from "./objects";
 export const nbsp = "\u00a0";
 
 /**
- * Escapes a string for HTML.
- *
- * @param {string | number} [str] the string to escape
- * @returns {string} an escaped string
- */
-export function escape(str) {
-    if (str === undefined) {
-        return "";
-    }
-    if (typeof str === "number") {
-        return String(str);
-    }
-    [
-        ["&", "&amp;"],
-        ["<", "&lt;"],
-        [">", "&gt;"],
-        ["'", "&#x27;"],
-        ['"', "&quot;"],
-        ["`", "&#x60;"],
-    ].forEach((pairs) => {
-        str = String(str).replaceAll(pairs[0], pairs[1]);
-    });
-    return str;
-}
-
-/**
  * Escapes a string to use as a RegExp.
  * @url https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions#Escaping
  *
