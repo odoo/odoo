@@ -1032,7 +1032,7 @@ test("Message is sent only once when pressing enter twice in a row", async () =>
     await contains(".o-mail-Message-content", { text: "Hello World!" });
 });
 
-test('display canned response suggestions on typing "::"', async () => {
+test('[text composer] display canned response suggestions on typing "::"', async () => {
     const pyEnv = await startServer();
     const guestId = pyEnv["mail.guest"].create({ name: "Mario" });
     const channelId = pyEnv["discuss.channel"].create({
@@ -1055,7 +1055,36 @@ test('display canned response suggestions on typing "::"', async () => {
     await contains(".o-mail-NavigableList-item", { text: "helloHello! How are you?" });
 });
 
-test("select a canned response suggestion", async () => {
+test.tags("html composer");
+test('display canned response suggestions on typing "::"', async () => {
+    const pyEnv = await startServer();
+    const guestId = pyEnv["mail.guest"].create({ name: "Mario" });
+    const channelId = pyEnv["discuss.channel"].create({
+        name: "test",
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ guest_id: guestId }),
+        ],
+    });
+    pyEnv["mail.canned.response"].create({
+        source: "hello",
+        substitution: "Hello! How are you?",
+    });
+    await start();
+    const composerService = getService("mail.composer");
+    composerService.setHtmlComposer();
+    await openDiscuss(channelId);
+    await focus(".o-mail-Composer-html.odoo-editor-editable");
+    const editor = {
+        document,
+        editable: document.querySelector(".o-mail-Composer-html.odoo-editor-editable"),
+    };
+    await htmlInsertText(editor, "::");
+    await contains(".o-mail-Composer-suggestionList .o-open");
+    await contains(".o-mail-NavigableList-item", { text: "helloHello! How are you?" });
+});
+
+test("[text composer] select a canned response suggestion", async () => {
     const pyEnv = await startServer();
     const guestId = pyEnv["mail.guest"].create({ name: "Mario" });
     const channelId = pyEnv["discuss.channel"].create({
@@ -1079,7 +1108,36 @@ test("select a canned response suggestion", async () => {
     await contains(".o-mail-Composer-input", { value: "Hello! How are you? " });
 });
 
-test("select a canned response suggestion with some text", async () => {
+test.tags("html composer");
+test("select a canned response suggestion", async () => {
+    const pyEnv = await startServer();
+    const guestId = pyEnv["mail.guest"].create({ name: "Mario" });
+    const channelId = pyEnv["discuss.channel"].create({
+        name: "test",
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ guest_id: guestId }),
+        ],
+    });
+    pyEnv["mail.canned.response"].create({
+        source: "hello",
+        substitution: "Hello! How are you?",
+    });
+    await start();
+    const composerService = getService("mail.composer");
+    composerService.setHtmlComposer();
+    await openDiscuss(channelId);
+    await focus(".o-mail-Composer-html.odoo-editor-editable");
+    const editor = {
+        document,
+        editable: document.querySelector(".o-mail-Composer-html.odoo-editor-editable"),
+    };
+    await htmlInsertText(editor, "::");
+    await click(".o-mail-Composer-suggestion");
+    await contains(".o-mail-Composer-html.odoo-editor-editable", { text: "Hello! How are you?" });
+});
+
+test("[text composer] select a canned response suggestion with some text", async () => {
     const pyEnv = await startServer();
     const guestId = pyEnv["mail.guest"].create({ name: "Mario" });
     const channelId = pyEnv["discuss.channel"].create({
@@ -1102,6 +1160,39 @@ test("select a canned response suggestion with some text", async () => {
     await insertText(".o-mail-Composer-input", "::");
     await click(".o-mail-Composer-suggestion");
     await contains(".o-mail-Composer-input", { value: "bluhbluh Hello! How are you? " });
+});
+
+test.tags("html composer");
+test("select a canned response suggestion with some text", async () => {
+    const pyEnv = await startServer();
+    const guestId = pyEnv["mail.guest"].create({ name: "Mario" });
+    const channelId = pyEnv["discuss.channel"].create({
+        name: "Mario",
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ guest_id: guestId }),
+        ],
+    });
+    pyEnv["mail.canned.response"].create({
+        source: "hello",
+        substitution: "Hello! How are you?",
+    });
+    await start();
+    const composerService = getService("mail.composer");
+    composerService.setHtmlComposer();
+    await openDiscuss(channelId);
+    await focus(".o-mail-Composer-html.odoo-editor-editable");
+    const editor = {
+        document,
+        editable: document.querySelector(".o-mail-Composer-html.odoo-editor-editable"),
+    };
+    await htmlInsertText(editor, "bluhbluh ");
+    await contains(".o-mail-Composer-html.odoo-editor-editable", { text: "bluhbluh" });
+    await htmlInsertText(editor, "::");
+    await click(".o-mail-Composer-suggestion");
+    await contains(".o-mail-Composer-html.odoo-editor-editable", {
+        text: "bluhbluh\u00A0Hello! How are you?",
+    });
 });
 
 test("add an emoji after a canned response", async () => {
@@ -1292,7 +1383,7 @@ test("Tab to select of canned response suggestion works in chat window", async (
     });
 });
 
-test('can quickly add emoji with ":" keyword', async () => {
+test('[text composer] can quickly add emoji with ":" keyword', async () => {
     const pyEnv = await startServer();
     const guestId = pyEnv["mail.guest"].create({ name: "Mario" });
     const channelId = pyEnv["discuss.channel"].create({
@@ -1316,6 +1407,39 @@ test('can quickly add emoji with ":" keyword', async () => {
     await contains(".o-mail-Composer-suggestionList .o-open");
     await contains(".o-mail-NavigableList-item", { text: "😅:sweat_smile:" });
     await insertText(".o-mail-Composer-input", ":s", { replace: true });
+    await contains(".o-mail-Composer-suggestionList .o-open", { count: 0 });
+});
+
+test.tags("html composer");
+test("can quickly add emoji with ':' keyword", async () => {
+    const pyEnv = await startServer();
+    const guestId = pyEnv["mail.guest"].create({ name: "Mario" });
+    const channelId = pyEnv["discuss.channel"].create({
+        name: "test",
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ guest_id: guestId }),
+        ],
+    });
+    await start();
+    const composerService = getService("mail.composer");
+    composerService.setHtmlComposer();
+    await openDiscuss(channelId);
+    await focus(".o-mail-Composer-html.odoo-editor-editable");
+    const editor = {
+        document,
+        editable: document.querySelector(".o-mail-Composer-html.odoo-editor-editable"),
+    };
+    await htmlInsertText(editor, ":sweat");
+    await contains(".o-mail-Composer-suggestionList .o-open");
+    await contains(".o-mail-NavigableList-item", { text: "😅:sweat_smile:" });
+    await click(".o-mail-NavigableList-item", { text: "😅:sweat_smile:" });
+    await contains(".o-mail-Composer-html.odoo-editor-editable", { text: "😅" });
+    await contains(".o-mail-Composer-suggestionList .o-open", { count: 0 });
+    await htmlInsertText(editor, ":sw");
+    await contains(".o-mail-Composer-suggestionList .o-open");
+    await contains(".o-mail-NavigableList-item", { text: "😅:sweat_smile:" });
+    await htmlInsertText(editor, ":s", { replace: true });
     await contains(".o-mail-Composer-suggestionList .o-open", { count: 0 });
 });
 

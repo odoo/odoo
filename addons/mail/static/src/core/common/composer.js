@@ -834,12 +834,20 @@ export class Composer extends Component {
     onClickInsertCannedResponse(ev) {
         markEventHandled(ev, "composer.clickInsertCannedResponse");
         const composer = toRaw(this.props.composer);
-        const composerText = composer.composerText;
-        const firstPart = composerText.slice(0, composer.selection.start);
-        const secondPart = composerText.slice(composer.selection.end, composerText.length);
-        const toInsertPart = firstPart.length === 0 || firstPart.at(-1) === " " ? "::" : " ::";
-        composer.composerText = firstPart + toInsertPart + secondPart;
-        this.selection.moveCursor((firstPart + toInsertPart).length);
+        if (this.editor) {
+            if (!isHtmlEmpty(this.props.composer.composerHtml)) {
+                this.editor.shared.dom.insert(" ");
+            }
+            this.editor.shared.dom.insert("::");
+            this.editor.shared.history.addStep();
+        } else {
+            const composerText = composer.composerText;
+            const firstPart = composerText.slice(0, composer.selection.start);
+            const secondPart = composerText.slice(composer.selection.end, composerText.length);
+            const toInsertPart = firstPart.length === 0 || firstPart.at(-1) === " " ? "::" : " ::";
+            composer.composerText = firstPart + toInsertPart + secondPart;
+            this.selection.moveCursor((firstPart + toInsertPart).length);
+        }
         if (!this.ui.isSmall || !this.env.inChatter) {
             composer.autofocus++;
         }

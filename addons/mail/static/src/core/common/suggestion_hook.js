@@ -36,6 +36,7 @@ export class UseSuggestion {
                 this.composer.selection.start,
                 this.composer.selection.end,
                 this.composer.composerText,
+                this.composer.composerHtml,
             ]
         );
     }
@@ -80,8 +81,19 @@ export class UseSuggestion {
         this.state.items = undefined;
     }
     detect() {
-        const { start, end } = this.composer.selection;
-        const text = this.composer.composerText;
+        let start = 0;
+        let end = 0;
+        let text = "";
+        if (this.comp.composerService.htmlEnabled) {
+            const selection = this.comp.editor.shared.selection.getEditableSelection();
+            start = selection.startOffset;
+            end = selection.endOffset;
+            text = selection.anchorNode.textContent;
+        } else {
+            start = this.composer.selection.start;
+            end = this.composer.selection.end;
+            text = this.composer.composerText;
+        }
         if (start !== end) {
             // avoid interfering with multi-char selection
             this.clearSearch();
@@ -155,6 +167,17 @@ export class UseSuggestion {
         if ([":", "::"].includes(this.search.delimiter)) {
             position = this.search.position;
         }
+        if (this.comp.composerService.htmlEnabled) {
+            const { startContainer, endContainer, endOffset } =
+                this.comp.editor.shared.selection.getEditableSelection();
+            const range = {
+                startContainer,
+                startOffset: position,
+                endContainer,
+                endOffset,
+            };
+            this.comp.editor.shared.delete.deleteRange(range);
+        }
         if (option.partner) {
             this.composer.mentionedPartners.add({ id: option.partner.id });
         } else if (option.role) {
@@ -164,12 +187,17 @@ export class UseSuggestion {
         } else if (option.cannedResponse) {
             this.composer.cannedResponses.push(option.cannedResponse);
         }
-        // remove the user-typed search delimiter
-        this.composer.composerText =
-            this.composer.composerText.substring(0, position) +
-            this.composer.composerText.substring(this.composer.selection.end);
-        this.clearSearch();
-        this.composer.insertText(`${option.label} `, position);
+        if (this.comp.composerService.htmlEnabled) {
+            this.comp.editor.shared.dom.insert(option.label);
+            this.comp.editor.shared.history.addStep();
+        } else {
+            // remove the user-typed search delimiter
+            this.composer.composerText =
+                this.composer.composerText.substring(0, position) +
+                this.composer.composerText.substring(this.composer.selection.end);
+            this.clearSearch();
+            this.composer.insertText(`${option.label} `, position);
+        }
     }
     update() {
         if (!this.search.delimiter) {
