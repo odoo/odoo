@@ -105,7 +105,7 @@ export class Call extends Component {
     }
 
     get isActiveCall() {
-        return Boolean(this.channel.eq(this.rtc.channel));
+        return this.channel.isRtcChannel;
     }
 
     get minimized() {

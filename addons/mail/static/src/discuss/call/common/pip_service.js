@@ -33,7 +33,7 @@ export const callPipService = {
          */
         async function openPip({ context }) {
             const rtc = env.services["discuss.rtc"];
-            if (!rtc?.channel) {
+            if (!rtc?.isInCall) {
                 return;
             }
             state.active = true;
