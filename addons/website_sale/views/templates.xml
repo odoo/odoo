@@ -2130,13 +2130,11 @@
                                             </t>
                                         </div>
                                     </t>
-                                    <div class="o_wsale_product_details_content_section o_wsale_product_details_content_section_cta mb-4">
-                                        <t
-                                            t-call="website_sale.cta_wrapper"
-                                        />
-                                        <t
-                                            t-call="website_sale.product_terms_and_conditions"
-                                        />
+                                    <div
+                                        id="o_wsale_product_cta_section"
+                                        class="o_wsale_product_details_content_section o_wsale_product_details_content_section_cta mb-4"
+                                    >
+                                        <t t-call="website_sale.cta_wrapper"/>
                                     </div>
 
                                     <div
@@ -2528,13 +2526,19 @@
     <template
         name="Terms and Conditions"
         id="website_sale.product_terms_and_conditions"
+        inherit_id="website_sale.product"
         active="True"
-        priority="21">
-        <small class="text-muted mb-0">
-            <a href="/terms" class="o_translate_inline text-muted"><u>Terms and Conditions</u></a><br/>
-            30-day money-back guarantee<br/>
-            Shipping: 2-3 Business Days
-        </small>
+        priority="21"
+    >
+        <div id="o_wsale_product_cta_section" position="inside">
+            <small class="text-muted mb-0">
+                <a href="/terms" class="o_translate_inline text-muted">
+                    <u>Terms and Conditions</u>
+                </a><br/>
+                30-day money-back guarantee<br/>
+                Shipping: 2-3 Business Days
+            </small>
+        </div>
     </template>
 
     <!-- Product options: Zoom -->
