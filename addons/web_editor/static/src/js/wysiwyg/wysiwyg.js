@@ -1783,14 +1783,13 @@ export class Wysiwyg extends Component {
                 } else {
                     await this.snippetsMenu.callPostSnippetDrop($element);
                 }
-                if (element.tagName !== 'IMG') {
+                if (!["img", "media_iframe_video"].some((el) => element.classList.contains(el))) {
                     return;
                 }
                 return new Promise(resolve => {
                     this.snippetsMenu.trigger_up("snippet_edition_request", {exec: () => {
-                        // TODO In master use a trigger parameter
-                        const event = $.Event("image_changed", {_complete: resolve});
-                        $element.trigger(event);
+                        element.dispatchEvent(new Event("image_changed", { bubbles: true }));
+                        resolve();
                     }});
                 });
             }
