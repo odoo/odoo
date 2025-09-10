@@ -2,6 +2,7 @@ import { _t } from "@web/core/l10n/translation";
 import { Dialog } from "@web/core/dialog/dialog";
 import { rpc } from "@web/core/network/rpc";
 import { useService } from "@web/core/utils/hooks";
+import { getOuterHtml } from "@web/core/utils/html";
 import { Component, useState, onWillDestroy, status, markup } from "@odoo/owl";
 
 const POSTPROCESS_GENERATED_CONTENT = (content, baseContainer) => {
@@ -84,9 +85,9 @@ export class ChatGPTDialog extends Component {
         let result = "";
         for (const child of fragment.children) {
             this.props.sanitize(child, { IN_PLACE: true });
-            result += child.outerHTML;
+            result = markup`${result}${getOuterHtml(child)}`;
         }
-        return markup(result);
+        return result;
     }
 
     generate(prompt, callback) {

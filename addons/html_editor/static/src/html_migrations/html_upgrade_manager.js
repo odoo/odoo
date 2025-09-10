@@ -1,10 +1,10 @@
-import { markup } from "@odoo/owl";
 import {
     compareVersions,
     VERSION_SELECTOR,
     htmlEditorVersions,
 } from "@html_editor/html_migrations/html_migrations_utils";
 import { registry } from "@web/core/registry";
+import { getInnerHtml, getOuterHtml } from "@web/core/utils/html";
 import { fixInvalidHTML } from "@html_editor/utils/sanitize";
 
 /**
@@ -94,6 +94,9 @@ export class HtmlUpgradeManager {
                 migrate(this.element, this.env);
             }
         }
-        return markup(this.element[this.containsComplexHTML ? "outerHTML" : "innerHTML"]);
+        if (this.containsComplexHTML) {
+            return getOuterHtml(this.element);
+        }
+        return getInnerHtml(this.element);
     }
 }

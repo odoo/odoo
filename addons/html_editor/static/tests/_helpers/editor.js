@@ -213,10 +213,15 @@ export async function testEditor(config) {
     }
     if (contentAfter) {
         // Test the saved value, with added cursor markers for convenience of testing.
-        const content = editor.getContent(); // Saved value.
+        const content = editor.getContent().toString(); // Saved value.
         dispatchCleanForSave(editor, { root: el, preserveSelection: true });
         const innerHTML = el.innerHTML; // Cleaned value without cursors.
-        await compareFunction(getContent(el), contentAfter, "Editor content, after clean", editor);
+        await compareFunction(
+            getContent(el).toString(),
+            contentAfter,
+            "Editor content, after clean",
+            editor
+        );
         // Test that the saved value matches the cleaned value tested above.
         await compareFunction(content, innerHTML, "Value from editor.getContent()", editor);
     }
