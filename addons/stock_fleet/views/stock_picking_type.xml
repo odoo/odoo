@@ -49,7 +49,8 @@
                 <div class="o_row gap-3">
                     <field name="dispatch_management"/>
                     <div class="d-flex gap-3" invisible="not dispatch_management" groups="stock.group_stock_multi_locations">
-                        <span class="fw-bold">To</span>
+                        <span class="fw-bold" invisible= "code !='outgoing'">From</span>
+                        <span class="fw-bold" invisible= "code =='outgoing'">To</span>
                         <field name="dock_ids" placeholder="Dock Locations" widget="many2many_tags" context="{'for_dock_location': True}"/>
                     </div>
                 </div>
