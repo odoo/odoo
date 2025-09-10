@@ -24,4 +24,5 @@
     ],
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',
+    'iap_paid_service': True,
 }
