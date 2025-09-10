@@ -78,6 +78,11 @@
     </li>
 </template>
 
+<template id="_get_meta_i18n_value" name="Get Meta I18n Value">
+    <t t-set="val" t-value="(obj and field_name in obj._fields and obj._fields[field_name].store and (obj._fields[field_name]._get_stored_translations(obj) or {}).get(request.lang.code))"/>
+    <t t-out="val or ''"/>
+</template>
+
 <template id="layout" name="Main layout" inherit_id="portal.frontend_layout">
     <xpath expr="//html" position="before">
         <t t-set="html_data" t-value="{
@@ -130,14 +135,24 @@
         "/>
         <meta t-if="no_index" name="robots" content="noindex"/>
         <t t-set="seo_object" t-value="seo_object or main_object"/>
-        <t t-set="meta_description" t-value="seo_object and 'website_meta_description' in seo_object
-            and seo_object.sudo().website_meta_description or website_meta_description or website_meta.get('meta_description', '')"/>
-        <t t-set="meta_keywords" t-value="seo_object and 'website_meta_keywords' in seo_object
-            and seo_object.sudo().website_meta_keywords or website_meta_keywords"/>
+        <t t-set="record" t-value="seo_object._name == 'website.page' and seo_object.view_id.sudo() or seo_object.sudo()"/>
+        <t t-set="meta_description">
+            <t t-call="website._get_meta_i18n_value">
+                <t t-set="obj" t-value="record"/>
+                <t t-set="field_name" t-value="'website_meta_description'"/>
+            </t>
+        </t>
+        <t t-set="meta_description" t-value="(meta_description or '').strip() or website_meta.get('meta_description')"/>
+        <t t-set="meta_keywords">
+            <t t-call="website._get_meta_i18n_value">
+                <t t-set="obj" t-value="record"/>
+                <t t-set="field_name" t-value="'website_meta_keywords'"/>
+            </t>
+        </t>
+        <t t-set="meta_keywords" t-value="(meta_keywords or '').strip()"/>
         <meta t-if="meta_description or editable" name="description" t-att-content="meta_description"/>
         <meta t-if="meta_keywords or editable" name="keywords" t-att-content="meta_keywords"/>
         <t t-if="seo_object">
-        <meta name="default_description" t-att-content="website_meta_description or website_meta.get('meta_description')" groups="website.group_website_designer"/>
             <!-- OpenGraph tags for Facebook sharing -->
             <t t-set="opengraph_meta" t-value="website_meta.get('opengraph_meta')"/>
             <t t-if="opengraph_meta">
@@ -154,7 +169,7 @@
             </t>
             <!-- Twitter tags for sharing -->
             <t t-set="twitter_meta" t-value="website_meta.get('twitter_meta')"/>
-            <t t-if="opengraph_meta">
+            <t t-if="twitter_meta">
                 <t t-foreach="twitter_meta" t-as="t_meta">
         <meta t-att-name="t_meta" t-att-content="twitter_meta[t_meta]"/>
                 </t>
