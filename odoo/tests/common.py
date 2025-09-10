@@ -1220,7 +1220,7 @@ class ChromeBrowser:
                 continue
             except websocket.WebSocketConnectionClosedException as e:
                 if not self._result.done():
-                    self.ws = None
+                    del self.ws
                     self._result.set_exception(e)
                     for f in self._responses.values():
                         f.cancel()
