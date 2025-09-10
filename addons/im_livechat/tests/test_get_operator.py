@@ -23,6 +23,7 @@ class TestGetOperator(MailCommon, TestGetOperatorCommon):
                 "last_interest_dt": fields.Datetime.now(),
             }
         )
+        channel.with_user(operator).message_post(body="Hello, how can I help you?")
         if in_call:
             member = self.env["discuss.channel.member"].search(
                 [("partner_id", "=", operator.partner_id.id), ("channel_id", "=", channel.id)]
@@ -431,3 +432,19 @@ class TestGetOperator(MailCommon, TestGetOperatorCommon):
         self.assertEqual(
             livechat_channel._get_operator(lang="en_US", users=all_operators), operator_2
         )
+
+    def test_operator_freed_after_chat_ends(self):
+        first_operator = self._create_operator()
+        second_operator = self._create_operator()
+        livechat_channel = self.env["im_livechat.channel"].create(
+            {
+                "name": "Livechat Channel",
+                "user_ids": [first_operator.id, second_operator.id],
+            }
+        )
+        self.assertEqual(first_operator, livechat_channel._get_operator())
+        chat = self._create_chat(livechat_channel, first_operator)
+        self.assertEqual(second_operator, livechat_channel._get_operator())
+        chat.livechat_active = False
+        chat.flush_recordset(["livechat_active"])
+        self.assertEqual(first_operator, livechat_channel._get_operator())
