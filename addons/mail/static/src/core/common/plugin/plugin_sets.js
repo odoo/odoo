@@ -5,9 +5,11 @@ import { InlineCodePlugin } from "@html_editor/main/inline_code";
 import { TabulationPlugin } from "@html_editor/main/tabulation_plugin";
 import { HintPlugin } from "@html_editor/main/hint_plugin";
 import { MailComposerPlugin } from "@mail/core/common/plugin/mail_composer_plugin";
+import { ChatGPTTranslatePlugin } from "@html_editor/main/chatgpt/chatgpt_translate_plugin";
 
 export const MAIL_PLUGINS = [
     ...CORE_PLUGINS,
+    ChatGPTTranslatePlugin,
     HintPlugin,
     InlineCodePlugin,
     MailComposerPlugin,
@@ -18,6 +20,7 @@ export const MAIL_PLUGINS = [
 
 export const MAIL_SMALL_UI_PLUGINS = [
     ...CORE_PLUGINS,
+    ChatGPTTranslatePlugin,
     HintPlugin,
     InlineCodePlugin,
     MailComposerPlugin,
