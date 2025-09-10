@@ -298,7 +298,7 @@ export class ControlPanel extends Component {
                                 this.state.embeddedInfos.visibleEmbeddedActions;
                         }
                     }
-                    this._setEmbeddedActionsConfig(config);
+                    await this._createEmbeddedActionsConfig(config);
                 }
             } else {
                 this._setEmbeddedActionsConfig({ embedded_visibility: true });
@@ -666,5 +666,23 @@ export class ControlPanel extends Component {
 
     _getEmbeddedActionsConfig(key) {
         return this.embeddedActionsConfig?.[this.embeddedActionsKey]?.[key];
+    }
+
+    async _createEmbeddedActionsConfig(config) {
+        const newEmbeddedSetting = await this.orm.call(
+            "res.users.settings",
+            "create_embedded_actions_setting",
+            [user.settings.id, this.parentActionId, this.currentActiveId, config]
+        );
+        this.embeddedActionsConfig[this.embeddedActionsKey] =
+            newEmbeddedSetting[this.embeddedActionsKey];
+        user.updateUserSettings("embedded_actions_config_ids", this.embeddedActionsConfig);
+        this.state.embeddedInfos.visibleEmbeddedActions =
+            this._getEmbeddedActionsConfig("embedded_actions_visibility") || [];
+        const embeddedOrderLocalStorageKey =
+            this._getEmbeddedActionsConfig("embedded_actions_order");
+        if (embeddedOrderLocalStorageKey) {
+            this._sortEmbeddedActions(embeddedOrderLocalStorageKey);
+        }
     }
 }
