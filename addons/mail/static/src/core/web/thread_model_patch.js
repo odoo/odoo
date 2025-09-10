@@ -34,10 +34,6 @@ const threadPatch = {
     computeIsDisplayed() {
         return this.isDisplayedInDiscussAppDesktop || super.computeIsDisplayed();
     },
-    async leave() {
-        await this.closeChatWindow();
-        super.leave(...arguments);
-    },
     async loadMoreFollowers() {
         const data = await this.store.env.services.orm.call(this.model, "message_get_followers", [
             [this.id],
