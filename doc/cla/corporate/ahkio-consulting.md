@@ -13,3 +13,4 @@ Johan Tötterman johan@ahkio.com https://github.com/juppe
 List of contributors:
 
 Johan Tötterman johan@ahkio.com https://github.com/juppe
+Tommi Järvinen tommi@ahkio.com https://github.com/tiere
