@@ -44,6 +44,7 @@ registry.category('web_tour.tours').add('website_sale_collect_buy_product', {
             content: "Click on confirm button",
             trigger: '[name="website_sale_main_button"]',
             run: 'click',
+            expectUnloadPage: true,
         },
         {
             content: "Ensure in store delivery method is selected.",
