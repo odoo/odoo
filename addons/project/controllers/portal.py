@@ -383,7 +383,7 @@ class ProjectCustomerPortal(CustomerPortal):
 
         Task = request.env['project.task']
 
-        domain = Domain(domain or Domain.TRUE)
+        domain = Domain.AND([domain or [], [('has_template_ancestor', '=', False)]])
         if not su and Task.has_access('read'):
             domain &= Domain(request.env['ir.rule']._compute_domain(Task._name, 'read'))
         Task_sudo = Task.sudo()
