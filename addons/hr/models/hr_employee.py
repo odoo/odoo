@@ -46,6 +46,7 @@ class HrEmployee(models.Model):
     # versions
     version_id = fields.Many2one(
         'hr.version',
+        string="Employee Record",
         compute='_compute_version_id',
         search='_search_version_id',
         ondelete='cascade',
@@ -55,23 +56,24 @@ class HrEmployee(models.Model):
         groups="hr.group_hr_user")
     current_version_id = fields.Many2one(
         'hr.version',
+        string="Current Employee Record",
         compute='_compute_current_version_id',
         store=True,
         groups="hr.group_hr_user",
     )
     current_date_version = fields.Date(
+        string="Current Date Employee Record",
         related="current_version_id.date_version",
-        string="Current Date Version",
         groups="hr.group_hr_user"
     )
     version_ids = fields.One2many(
         'hr.version',
         'employee_id',
-        string='Employee Versions',
+        string='Employee Records',
         groups="hr.group_hr_user",
         required=True
     )
-    versions_count = fields.Integer(compute='_compute_versions_count', groups="hr.group_hr_user")
+    versions_count = fields.Integer(string="Employee Records Count", compute='_compute_versions_count', groups="hr.group_hr_user")
 
     @api.model
     def _lang_get(self):
@@ -1499,7 +1501,7 @@ We can redirect you to the public employee list."""
             self.version_id.write(version_vals)
 
             for employee in self:
-                employee._track_set_log_message(Markup("<b>Modified on the Version '%s'</b>") % employee.version_id.display_name)
+                employee._track_set_log_message(Markup("<b>%s</b>") % self.env._("Modified on the Employee Record '%s'") % employee.version_id.display_name)
         if res and 'resource_calendar_id' in vals:
             resources_per_calendar_id = defaultdict(lambda: self.env['resource.resource'])
             for employee in self:

@@ -22,7 +22,7 @@ def format_date_abbr(env, date):
 
 class HrVersion(models.Model):
     _name = 'hr.version'
-    _description = 'Version'
+    _description = 'Employee Record'
     _inherit = ['mail.thread', 'mail.activity.mixin']  # TODO: remove later ? (see if still needed because contract template)
     _mail_post_access = 'read'
     _order = 'date_version'
@@ -50,7 +50,7 @@ class HrVersion(models.Model):
     display_name = fields.Char(compute='_compute_display_name')
     active = fields.Boolean(default=True, tracking=True)
 
-    date_version = fields.Date(required=True, default=fields.Date.today, tracking=True, groups="hr.group_hr_user")
+    date_version = fields.Date(string="Effective Date", required=True, default=fields.Date.today, tracking=True, groups="hr.group_hr_user")
     last_modified_uid = fields.Many2one('res.users', string='Last Modified by',
                                         default=lambda self: self.env.uid, required=True, groups="hr.group_hr_user")
     last_modified_date = fields.Datetime(string='Last Modified on', default=fields.Datetime.now, required=True,
