@@ -5332,6 +5332,22 @@ class TestMrpOrder(TestMrpCommon):
         self.assertEqual(unbuild_order.state, 'done')
         self.assertEqual(unbuild_order.product_qty, 1.23456)
 
+    def test_workorders_without_worcenter_planned_slots(self):
+        """
+        Test that updating a workorder duration does not crash when others are unplanned.
+        """
+        mo = self.env['mrp.production'].create({
+            'product_id': self.product_6.id,
+            'product_qty': 1.0,
+            'bom_id': self.bom_3.id,
+        })
+        mo.action_confirm()
+
+        mo.workorder_ids[0].button_start()  # Start first workorder
+        with Form(mo) as mo_form:
+            with mo_form.workorder_ids.edit(1) as second_wo_line:
+                second_wo_line.duration = 12.0  # Edit the duration of the second workorder
+
 
 @tagged('-at_install', 'post_install')
 class TestTourMrpOrder(HttpCase):
