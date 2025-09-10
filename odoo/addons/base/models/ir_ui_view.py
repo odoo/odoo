@@ -457,7 +457,7 @@ actual arch.
                     # fully upgraded already.
                     if self.pool._init and sibling_primary_views:
                         query = sibling_primary_views._get_filter_xmlid_query()
-                        sql = SQL(query, res_ids=tuple(sibling_primary_views.ids), modules=tuple(self.pool._init_modules))
+                        sql = SQL(query, res_ids=tuple(sibling_primary_views.ids), modules=tuple(self.pool._init_modules) + (self.env.context.get('install_module'),))
                         loaded_view_ids = {id_ for id_, in self.env.execute_query(sql)}
                         loaded_view_ids.update({
                             id
