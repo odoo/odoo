@@ -977,6 +977,7 @@ class DomainCondition(Domain):
 
     def _optimize_field_search_method(self, model: BaseModel) -> Domain:
         field = self._field(model)
+        model._check_field_access(field, 'read')
         operator, value = self.operator, self.value
         # use the `Field.search` function
         original_exception = None
