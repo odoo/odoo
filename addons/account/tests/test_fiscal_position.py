@@ -301,7 +301,9 @@ class TestFiscalPosition(common.TransactionCase):
         fp_3.write({'country_group_id': a_country_group.id})
         self.assertEqual(self.env.company.domestic_fiscal_position_id, fp_2)
 
+        # Check that sequence is applied after the country
         fp_2.write({'sequence': 20})
+        fp_3.write({'sequence': 15})
         self.assertEqual(self.env.company.domestic_fiscal_position_id, fp_1)
 
         # CH/LI case - one fp with country_group_id only, nothing for others
