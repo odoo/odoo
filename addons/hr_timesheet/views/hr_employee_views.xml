@@ -10,7 +10,7 @@
     <record id="hr_employee_view_form_inherit_timesheet" model="ir.ui.view">
         <field name="name">hr.employee.form.timesheet</field>
         <field name="model">hr.employee</field>
-        <field name="inherit_id" ref="hr_hourly_cost.view_employee_form"/>
+        <field name="inherit_id" ref="hr.view_employee_form"/>
         <field name="priority" eval="40"/>
         <field name="arch" type="xml">
             <xpath expr="/form" position="attributes">
@@ -24,6 +24,9 @@
                     </div>
                 </button>
             </button>
+            <group name="application_group" position="attributes">
+                <attribute name="invisible">0</attribute>
+            </group>
         </field>
     </record>
 

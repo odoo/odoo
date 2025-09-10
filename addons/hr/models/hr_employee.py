@@ -184,6 +184,7 @@ class HrEmployee(models.Model):
     is_in_contract = fields.Boolean(related='version_id.is_in_contract', inherited=True, groups="hr.group_hr_manager")
     structure_type_id = fields.Many2one(readonly=False, related='version_id.structure_type_id', inherited=True, groups="hr.group_hr_manager")
     contract_type_id = fields.Many2one(readonly=False, related='version_id.contract_type_id', inherited=True, groups="hr.group_hr_manager")
+    hourly_cost = fields.Monetary('Hourly Cost', groups="hr.group_hr_user", tracking=True)
 
     # Direct subordinates
     parent_id = fields.Many2one('hr.employee', 'Manager', tracking=True, index=True,

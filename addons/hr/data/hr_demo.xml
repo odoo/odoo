@@ -234,6 +234,7 @@ If you have development competencies, we can propose you specific traineeships</
             <field name="work_location_id" ref="work_location_1"/>
             <field name="hr_responsible_id" ref="base.user_admin"/>
             <field name="sex">male</field>
+            <field name="hourly_cost">100</field>
         </record>
 
         <record id="work_contact_ngh" model="res.partner">
@@ -260,6 +261,7 @@ If you have development competencies, we can propose you specific traineeships</
             <field name="contract_date_end" eval="(DateTime.today() + relativedelta(months=2))"/>
             <field name="wage" eval="6000"/>
             <field name="structure_type_id" ref="hr.structure_type_worker"/>
+            <field name="hourly_cost">40</field>
         </record>
 
         <record id="employee_qdp" model="hr.employee">
@@ -286,6 +288,7 @@ If you have development competencies, we can propose you specific traineeships</
             <field name="hr_responsible_id" ref="base.user_admin"/>
             <field name="sex">male</field>
             <field name="distance_home_work">23</field>
+            <field name="hourly_cost">75</field>
         </record>
 
         <record id="work_contact_al" model="res.partner">
@@ -313,6 +316,7 @@ If you have development competencies, we can propose you specific traineeships</
             <field name="work_location_id" ref="work_location_1"/>
             <field name="hr_responsible_id" ref="base.user_admin"/>
             <field name="sex">male</field>
+            <field name="hourly_cost">50</field>
         </record>
 
         <record id="work_contact_vad" model="res.partner">
@@ -341,6 +345,7 @@ If you have development competencies, we can propose you specific traineeships</
             <field name="work_location_id" ref="work_location_1"/>
             <field name="hr_responsible_id" ref="base.user_admin"/>
             <field name="sex">female</field>
+            <field name="hourly_cost">35</field>
         </record>
 
         <record id="work_contact_hne" model="res.partner">
@@ -371,6 +376,7 @@ If you have development competencies, we can propose you specific traineeships</
             <field name="contract_date_end" eval="(DateTime.today() + relativedelta(months=2))"/>
             <field name="wage" eval="6500"/>
             <field name="structure_type_id" ref="hr.structure_type_worker"/>
+            <field name="hourly_cost">10</field>
         </record>
 
         <record id="work_contact_fpi" model="res.partner">
@@ -402,6 +408,7 @@ If you have development competencies, we can propose you specific traineeships</
             <field name="resource_calendar_id" ref="resource.resource_calendar_std_38h"/>
             <field name="work_location_id" ref="work_location_1"/>
             <field name="hr_responsible_id" ref="base.user_admin"/>
+            <field name="hourly_cost">50</field>
         </record>
 
         <function name="create_version" model="hr.employee">
@@ -433,6 +440,7 @@ If you have development competencies, we can propose you specific traineeships</
             <field name="image_1920" type="base64" file="hr/static/img/employee_lur-image.jpg"/>
             <field name="date_version" eval="'2010-01-01'"/>
             <field name="sex">male</field>
+            <field name="hourly_cost">35</field>
         </record>
 
         <record id="work_contact_jod" model="res.partner">
@@ -454,6 +462,7 @@ If you have development competencies, we can propose you specific traineeships</
             <field name="image_1920" type="base64" file="hr/static/img/employee_jod-image.jpg"/>
             <field name="date_version" eval="'2010-01-01'"/>
             <field name="sex">female</field>
+            <field name="hourly_cost">55</field>
         </record>
 
         <record id="work_contact_fme" model="res.partner">
@@ -482,6 +491,7 @@ If you have development competencies, we can propose you specific traineeships</
             <field name="work_location_id" ref="work_location_1"/>
             <field name="hr_responsible_id" ref="base.user_admin"/>
             <field name="sex">male</field>
+            <field name="hourly_cost">45</field>
         </record>
 
         <record id="work_contact_jep" model="res.partner">
@@ -506,6 +516,7 @@ If you have development competencies, we can propose you specific traineeships</
             <field name="date_version" eval="'2010-01-01'"/>
             <field name="sex">female</field>
             <field name="distance_home_work">13</field>
+            <field name="hourly_cost">25</field>
         </record>
 
         <record id="work_contact_jgo" model="res.partner">
@@ -527,6 +538,7 @@ If you have development competencies, we can propose you specific traineeships</
             <field name="image_1920" type="base64" file="hr/static/img/employee_jgo-image.jpg"/>
             <field name="date_version" eval="'2010-01-01'"/>
             <field name="sex">male</field>
+            <field name="hourly_cost">45</field>
         </record>
 
         <record id="work_contact_jth" model="res.partner">
@@ -555,6 +567,7 @@ If you have development competencies, we can propose you specific traineeships</
             <field name="work_location_id" ref="work_location_1"/>
             <field name="hr_responsible_id" ref="base.user_admin"/>
             <field name="sex">female</field>
+            <field name="hourly_cost">25</field>
         </record>
 
         <record id="work_contact_mit" model="res.partner">
@@ -586,6 +599,7 @@ If you have development competencies, we can propose you specific traineeships</
             <field name="work_location_id" ref="work_location_1"/>
             <field name="hr_responsible_id" ref="base.user_admin"/>
             <field name="sex">female</field>
+            <field name="hourly_cost">15</field>
         </record>
 
         <record id="work_contact_niv" model="res.partner">
@@ -614,6 +628,7 @@ If you have development competencies, we can propose you specific traineeships</
             <field name="work_location_id" ref="work_location_1"/>
             <field name="hr_responsible_id" ref="base.user_admin"/>
             <field name="sex">female</field>
+            <field name="hourly_cost">45</field>
         </record>
 
         <record id="work_contact_stw" model="res.partner">
@@ -642,6 +657,7 @@ If you have development competencies, we can propose you specific traineeships</
             <field name="work_location_id" ref="work_location_1"/>
             <field name="hr_responsible_id" ref="base.user_admin"/>
             <field name="sex">male</field>
+            <field name="hourly_cost">65</field>
         </record>
 
         <record id="work_contact_chs" model="res.partner">
@@ -670,6 +686,7 @@ If you have development competencies, we can propose you specific traineeships</
             <field name="work_location_id" ref="work_location_1"/>
             <field name="hr_responsible_id" ref="base.user_admin"/>
             <field name="sex">female</field>
+            <field name="hourly_cost">20</field>
         </record>
 
         <record id="work_contact_jve" model="res.partner">
@@ -697,6 +714,7 @@ If you have development competencies, we can propose you specific traineeships</
             <field name="work_location_id" ref="work_location_1"/>
             <field name="hr_responsible_id" ref="base.user_admin"/>
             <field name="sex">male</field>
+            <field name="hourly_cost">15</field>
         </record>
 
         <record id="work_contact_han" model="res.partner">
@@ -723,6 +741,7 @@ If you have development competencies, we can propose you specific traineeships</
             <field name="work_location_id" ref="work_location_1"/>
             <field name="hr_responsible_id" ref="base.user_admin"/>
             <field name="sex">male</field>
+            <field name="hourly_cost">35</field>
         </record>
 
         <record id="work_contact_jog" model="res.partner">
@@ -747,6 +766,7 @@ If you have development competencies, we can propose you specific traineeships</
             <field name="date_version" eval="'2010-01-01'"/>
             <field name="sex">female</field>
             <field name="distance_home_work">50</field>
+            <field name="hourly_cost">40</field>
         </record>
 
         <record id="work_contact_barty_mcbly" model="res.partner">
