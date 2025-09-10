@@ -958,7 +958,7 @@ export class OptimizeSEODialog extends Component {
             // from the iframe DOM.
             await this.waitForIframe();
             const {
-                metadata: { mainObject, seoObject, path },
+                metadata: { mainObject, seoObject, path, langName },
             } = this.website.currentWebsite;
             this.object = seoObject || mainObject;
             this.data = await rpc("/website/get_seo_data", {
@@ -966,6 +966,9 @@ export class OptimizeSEODialog extends Component {
                 res_model: this.object.model,
             });
 
+            if (this.data.multi_lang) {
+                this.title += ` — ${langName || this.data.lang.name}`;
+            }
             this.canEditSeo = this.data.can_edit_seo;
             this.canEditDescription = this.canEditSeo && "website_meta_description" in this.data;
             this.canEditTitle = this.canEditSeo && "website_meta_title" in this.data;
@@ -988,7 +991,11 @@ export class OptimizeSEODialog extends Component {
                 this.seoNameDefault = this.data.seo_name_default;
             }
 
-            seoContext.description = this.getMeta({ name: "description" });
+            const storedDescription = this.canEditDescription
+                ? this.data.website_meta_description
+                : "";
+            this.isDefaultLang = this.data.lang?.code === this.data.default_lang_code;
+            seoContext.description = storedDescription || this.getMeta({ name: "description" });
             this.previewDescription = _t(
                 "Your page description should be between 50 and 160 characters long."
             );
@@ -1007,7 +1014,14 @@ export class OptimizeSEODialog extends Component {
             this.hasSocialDefaultImage = this.data.has_social_default_image;
 
             this.canEditKeywords = "website_meta_keywords" in this.data;
-            seoContext.keywords = this.getMeta({ name: "keywords" });
+            if (this.canEditKeywords) {
+                seoContext.keywords = this.data.website_meta_keywords
+                    .split(",")
+                    .map((el) => el.trim())
+                    .filter(Boolean);
+            } else {
+                seoContext.keywords = [];
+            }
         });
     }
 
@@ -1076,9 +1090,31 @@ export class OptimizeSEODialog extends Component {
         if (seoContext.metaImage !== this.previousMetaImage) {
             data.website_meta_og_img = seoContext.metaImage;
         }
+
+        const currentLang = this.website.currentWebsite.metadata.lang;
+        const defaultLang = this.data.default_lang_code;
+        // Avoid using translated SEO fields as fallback/base values when the
+        // default language is empty.
+        for (const fieldName of [
+            "website_meta_title",
+            "website_meta_description",
+            "website_meta_keywords",
+        ]) {
+            if (
+                data[fieldName] &&
+                currentLang !== defaultLang &&
+                !this.data[`default_${fieldName}`]
+            ) {
+                data[fieldName] = {
+                    [defaultLang]: "",
+                    [currentLang]: data[fieldName],
+                };
+            }
+        }
+
         await this.orm.write(this.object.model, [this.object.id], data, {
             context: {
-                lang: this.website.currentWebsite.metadata.lang,
+                lang: currentLang,
                 website_id: this.website.currentWebsite.id,
             },
         });
