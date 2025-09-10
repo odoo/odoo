@@ -744,12 +744,12 @@ class AccountJournal(models.Model):
             ('state', '=', 'posted'),
         ])
         selects = [
-            SQL("journal_id"),
-            SQL("company_id"),
-            SQL("currency_id AS currency"),
-            SQL("invoice_date_due < %s AS late", fields.Date.context_today(self)),
-            SQL("SUM(amount_residual_signed) AS amount_total_company"),
-            SQL("SUM((CASE WHEN move_type = 'in_invoice' THEN -1 ELSE 1 END) * amount_residual) AS amount_total"),
+            SQL("account_move.journal_id"),
+            SQL("account_move.company_id"),
+            SQL("account_move.currency_id AS currency"),
+            SQL("account_move.invoice_date_due < %s AS late", fields.Date.context_today(self)),
+            SQL("SUM(account_move.amount_residual_signed) AS amount_total_company"),
+            SQL("SUM((CASE WHEN account_move.move_type = 'in_invoice' THEN -1 ELSE 1 END) * account_move.amount_residual) AS amount_total"),
             SQL("COUNT(*)"),
             SQL("TRUE AS to_pay")
         ]
@@ -1171,3 +1171,4 @@ class AccountJournal(models.Model):
     def create_supplier_payment(self):
         """return action to create a supplier payment"""
         return self.open_payments_action('outbound', mode='form')
+
