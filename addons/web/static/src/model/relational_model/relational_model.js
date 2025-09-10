@@ -336,6 +336,9 @@ export class RelationalModel extends Model {
                         // in case there're less groups, we don't want to keep displaying groups
                         // that are no longer there => forget previous groups
                         delete this.root.config.currentGroups;
+                        // in case that the config of the groups changed (e.g. group is now folded)
+                        // we want to update the groups.
+                        this.root.config.groups = [];
                         result = await this._postprocessReadGroup(root.config, result);
                     }
                     root._setData(result);
