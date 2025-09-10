@@ -8,4 +8,4 @@ declaration.
 
 Signed,
 
-Hamza Irfan hamzairfangill@outlook.com https://github.com/hamzairfan
+Hamza Irfan hamzairfanandroid@gmail.com https://github.com/hamzairfan
