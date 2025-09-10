@@ -723,7 +723,7 @@ async function mail_message_update_content(request) {
         IrAttachment.write(
             attachments.map((attachment) => attachment.id),
             {
-                model: message.model,
+                res_model: message.model,
                 res_id: message.res_id,
             }
         );
