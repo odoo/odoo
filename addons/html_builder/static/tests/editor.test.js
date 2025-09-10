@@ -151,7 +151,7 @@ test("should apply default table classes on paste", async () => {
         anchorOffset: 0,
     });
     pasteHtml(editor, `<table><tr><td>1234</td></tr></table>`);
-    expect(editor.document.querySelector("table")).toHaveClass("table table-bordered");
+    expect(editor.document.querySelector("table")).toHaveClass("table table-bordered o_table");
 });
 
 describe("toolbar dropdowns", () => {
