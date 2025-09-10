@@ -193,3 +193,23 @@ test("Upload button is disabled if attachment upload is not finished", async () 
         message: "the upload button should be enabled for upload",
     });
 });
+
+test("support preprocessing of files via props", async () => {
+    await createFileInput({
+        props: {
+            onWillUploadFiles(files) {
+                expect.step(files[0].name);
+                return files;
+            },
+        },
+        mockPost: (route, params) => {
+            return JSON.stringify([{ name: params.ufile[0].name }]);
+        },
+    });
+
+    await contains(".o_file_input input", { visible: false }).click();
+    await setInputFiles([new File(["test"], "fake_file.txt", { type: "text/plain" })]);
+    await animationFrame();
+
+    expect.verifySteps(["fake_file.txt"]);
+});
