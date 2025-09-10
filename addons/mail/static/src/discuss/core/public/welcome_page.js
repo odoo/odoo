@@ -1,9 +1,10 @@
-import { Component, onMounted, useEffect, useRef, useState } from "@odoo/owl";
+import { Component, useEffect, useRef, useState } from "@odoo/owl";
 
 import { DeviceSelect } from "@mail/discuss/call/common/device_select";
 import { browser } from "@web/core/browser/browser";
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
+import { CallPermissionDialog } from "@mail/discuss/call/common/call_permission_dialog";
 
 export class WelcomePage extends Component {
     static props = ["proceed?"];
@@ -16,6 +17,7 @@ export class WelcomePage extends Component {
     setup() {
         super.setup();
         this.isClosed = false;
+        this.dialog = useService("dialog");
         this.store = useService("mail.store");
         this.ui = useService("ui");
         this.notification = useService("notification");
@@ -27,12 +29,6 @@ export class WelcomePage extends Component {
         });
         this.audioRef = useRef("audio");
         this.videoRef = useRef("video");
-        onMounted(() => {
-            if (this.store.discuss.thread.default_display_mode === "video_full_screen") {
-                this.enableMicrophone();
-                this.enableVideo();
-            }
-        });
         useEffect(
             () => {
                 if (this.state.audioStream) {
@@ -93,17 +89,13 @@ export class WelcomePage extends Component {
     }
 
     async enableMicrophone() {
-        if (!this.hasRtcSupport) {
+        if (!this.hasRtcSupport || !(await this.rtc.askForBrowserPermission({ audio: true }))) {
             return;
         }
-        try {
-            this.state.audioStream = await navigator.mediaDevices.getUserMedia({
-                audio: this.store.settings.audioConstraints,
-            });
-            this.audioRef.el.srcObject = this.state.audioStream;
-        } catch {
-            // TODO: display popup asking the user to re-enable their mic
-        }
+        this.state.audioStream = await navigator.mediaDevices.getUserMedia({
+            audio: this.store.settings.audioConstraints,
+        });
+        this.audioRef.el.srcObject = this.state.audioStream;
         if (this.isClosed) {
             this.stopTracksOnMediaStream(this.state.audioStream);
         }
@@ -116,17 +108,13 @@ export class WelcomePage extends Component {
     }
 
     async enableVideo() {
-        if (!this.hasRtcSupport) {
+        if (!this.hasRtcSupport || !(await this.rtc.askForBrowserPermission({ video: true }))) {
             return;
         }
-        try {
-            this.state.videoStream = await navigator.mediaDevices.getUserMedia({
-                video: this.store.settings.cameraConstraints,
-            });
-            await this.applyBlurConditionally();
-        } catch {
-            // TODO: display popup asking the user to re-enable their camera
-        }
+        this.state.videoStream = await navigator.mediaDevices.getUserMedia({
+            video: this.store.settings.cameraConstraints,
+        });
+        await this.applyBlurConditionally();
         if (this.isClosed) {
             this.stopTracksOnMediaStream(this.state.videoStream);
         }
@@ -178,21 +166,42 @@ export class WelcomePage extends Component {
     }
 
     async onClickMic() {
-        if (!this.state.audioStream) {
-            await this.enableMicrophone();
-        } else {
+        if (this.state.audioStream) {
             this.disableMicrophone();
+            return;
         }
+        if (this.rtc.microphonePermission === "prompt") {
+            this.dialog.add(CallPermissionDialog, {
+                media: "microphone",
+                useMicrophone: () => this.enableMicrophone(),
+                useCamera: () => this.enableVideo(),
+            });
+            return;
+        }
+        await this.enableMicrophone();
     }
 
     async onClickVideo() {
-        if (!this.state.videoStream) {
-            await this.enableVideo();
-        } else {
+        if (this.state.videoStream) {
             this.disableVideo();
+            return;
         }
+        if (this.rtc.cameraPermission === "prompt") {
+            this.dialog.add(CallPermissionDialog, {
+                media: "camera",
+                useMicrophone: () => this.enableMicrophone(),
+                useCamera: () => this.enableVideo(),
+            });
+            return;
+        }
+        await this.enableVideo();
     }
+
     getLoggedInAsText() {
         return _t("Logged in as %s", this.store.self.name);
+    }
+
+    get noActiveParticipants() {
+        return !this.store.discuss.thread.rtc_session_ids.length;
     }
 }

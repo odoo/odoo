@@ -7,6 +7,7 @@ import { Reactive } from "@web/core/utils/reactive";
 export const ACTION_TAGS = Object.freeze({
     DANGER: "DANGER",
     SUCCESS: "SUCCESS",
+    WARNING_BADGE: "WARNING_BADGE",
     CALL_LAYOUT: "CALL_LAYOUT",
     JOIN_LEAVE_CALL: "JOIN_LEAVE_CALL",
 });

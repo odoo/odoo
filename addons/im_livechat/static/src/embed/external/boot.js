@@ -23,6 +23,7 @@ import { session } from "@web/session";
     await startServices(env);
     odoo.isReady = true;
     const target = await makeShadow(makeRoot(document.body));
+    env.services["discuss.rtc"].rootEl = target;
     await mount(MainComponentsContainer, target, {
         env,
         getTemplate,
