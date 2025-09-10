@@ -56,8 +56,8 @@ registerWebsitePreviewTour(
         // Add a shape
         changeOption("Cover", "toggleBgShape"),
         {
-            content: "Click on the back button",
-            trigger: ".o_pager_nav_angle",
+            content: "Click on the first background shape button",
+            trigger: "button[data-action-id='setBackgroundShape']",
             run: "click",
         },
         {

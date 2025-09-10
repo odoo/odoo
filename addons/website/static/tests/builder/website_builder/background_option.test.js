@@ -209,7 +209,7 @@ test("changing shape's background color doesn't hide the shape itself", async ()
         ".o_pager_container .o-hb-bg-shape-btn [data-action-value='html_builder/Connections/01'][data-action-id='setBackgroundShape']"
     ).click();
     const backgroundImageValue = getComputedStyle(queryOne(":iframe .o_we_shape")).backgroundImage;
-    expect(backgroundImageValue).toMatch(/Connections\/01/);
+    expect(backgroundImageValue).toMatch(/Connections%2F01/);
     await contains("[data-label='Colors'] button:nth-child(2)").click();
     await contains(".o_colorpicker_section button[data-color='o-color-1']").click();
     expect(":iframe .o_we_shape").toHaveStyle({ backgroundImage: backgroundImageValue });
