@@ -6,6 +6,7 @@ import { loadImage } from "@html_editor/utils/image_processing";
 import { withSequence } from "@html_editor/utils/resource";
 import { DYNAMIC_SVG } from "@html_builder/utils/option_sequence";
 import { BuilderAction } from "@html_builder/core/builder_action";
+import { getCSSVariableValue, getHtmlStyle } from "@html_editor/utils/formatting";
 
 class DynamicSvgOptionPlugin extends Plugin {
     static id = "DynamicSvgOption";
@@ -30,6 +31,10 @@ export class SvgColorAction extends BuilderAction {
         return searchParams.get(colorName);
     }
     async load({ editingElement: imgEl, params: { mainParam: colorName }, value: color }) {
+        const match = color.match(/^var\(--(.+)\)$/);
+        if (match) {
+            color = getCSSVariableValue(match[1], getHtmlStyle(this.document));
+        }
         const newURL = new URL(imgEl.src, window.location.origin);
         newURL.searchParams.set(colorName, normalizeCSSColor(color));
         const src = newURL.pathname + newURL.search;
