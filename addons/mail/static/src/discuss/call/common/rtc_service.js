@@ -1,5 +1,6 @@
 import { fields, Record } from "@mail/core/common/record";
 import { BlurManager } from "@mail/discuss/call/common/blur_manager";
+import { CallPermissionDialog } from "@mail/discuss/call/common/call_permission_dialog";
 import { monitorAudio } from "@mail/utils/common/media_monitoring";
 import { rpc } from "@web/core/network/rpc";
 import { assignDefined, closeStream, onChange } from "@mail/utils/common/misc";
@@ -225,6 +226,10 @@ export class Rtc extends Record {
             return this.iceServers ? this.iceServers : GET_DEFAULT_ICE_SERVERS();
         },
     });
+    /** @type {"granted" | "denied" | "prompt" | undefined} */
+    microphonePermission;
+    /** @type {"granted" | "denied" | "prompt" | undefined} */
+    cameraPermission;
     /**
      * The RtcSession of the current user for the call hosted by this tab, this is only set if
      * the current tab is the cross-tab host (the tab that is maintaining the connections and streams).
@@ -270,6 +275,12 @@ export class Rtc extends Record {
             });
         },
     });
+    /**
+     * Html element embedding the rtc service. Used to scope the dialog to the correct
+     * document fragment (either the actual document or the active shadow root).
+     * @type {HTMLElement|undefined}
+     */
+    rootEl;
     serverInfo;
     /**
      * @type {Network}
@@ -384,12 +395,21 @@ export class Rtc extends Record {
             isFullscreen: false,
         });
         this.blurManager = undefined;
+        browser.navigator.permissions?.query({ name: "microphone" }).then((status) => {
+            this.microphonePermission = status.state;
+            status.onchange = () => (this.microphonePermission = status.state);
+        });
+        browser.navigator.permissions?.query({ name: "camera" }).then((status) => {
+            this.cameraPermission = status.state;
+            status.onchange = () => (this.cameraPermission = status.state);
+        });
     }
 
     start() {
         const services = this.store.env.services;
         this.notification = services.notification;
         this.overlay = services.overlay;
+        this.dialog = services.dialog;
         this.soundEffectsService = services["mail.sound_effects"];
         this.pttExtService = services["discuss.ptt_extension"];
         if (this._broadcastChannel) {
@@ -731,7 +751,11 @@ export class Rtc extends Record {
             await this.leaveCall(this.state.channel);
         }
         if (!isActiveCall) {
-            await this.joinCall(channel, { audio, camera });
+            const joinCallOpts = { audio, camera };
+            if (this.microphonePermission !== "granted") {
+                joinCallOpts.audio = false;
+            }
+            await this.joinCall(channel, joinCallOpts);
         }
     }
 
@@ -774,9 +798,58 @@ export class Rtc extends Record {
         this.soundEffectsService.play("earphone-on");
     }
 
+    /** @param {"microphone" | "camera"} media */
+    showMediaPermissionDialog(media) {
+        this.closeCallPermissionDialog = this.dialog.add(
+            CallPermissionDialog,
+            {
+                media,
+                useMicrophone: () => this.unmute(),
+                useCamera: () => this.toggleVideo("camera", { force: true, refreshStream: true }),
+            },
+            { context: { root: { el: this.rootEl } } }
+        );
+    }
+
+    showMediaUnavailableWarning({ microphone, camera, screen }) {
+        let errorMessage;
+        if (microphone && camera) {
+            errorMessage = _t("Camera and microphone access blocked. Enable in browser settings.");
+        } else if (camera) {
+            errorMessage = _t("Camera access blocked. Enable in browser settings.");
+        } else if (microphone) {
+            errorMessage = _t("Microphone access blocked. Enable in browser settings.");
+        } else if (screen) {
+            errorMessage = _t("Screen sharing access blocked. Enable in browser settings.");
+        }
+        this.notification.add(errorMessage, { type: "warning" });
+    }
+
+    async askForBrowserPermission({ audio, video }) {
+        try {
+            const stream = await browser.navigator.mediaDevices.getUserMedia({
+                audio: audio ? this.store.settings.audioConstraints : false,
+                video: video ? this.store.settings.cameraConstraints : false,
+            });
+            closeStream(stream);
+        } catch {
+            this.showMediaUnavailableWarning({ microphone: audio, camera: video });
+        }
+        if (audio && video) {
+            return this.microphonePermission === "granted" && this.cameraPermission === "granted";
+        }
+        return audio
+            ? this.microphonePermission === "granted"
+            : this.cameraPermission === "granted";
+    }
+
     async unmute() {
         if (this.isRemote) {
             this._remoteAction({ is_muted: false });
+            return;
+        }
+        if (this.microphonePermission === "prompt") {
+            this.showMediaPermissionDialog("microphone");
             return;
         }
         if (this.state.micAudioTrack) {
@@ -1583,6 +1656,7 @@ export class Rtc extends Record {
         this.audioContext?.close();
         this.audioContext = undefined;
         this._p2pRecoveryCount = 0;
+        this.closeCallPermissionDialog?.();
         this.state.updateAndBroadcastDebounce?.cancel();
         this.state.disconnectAudioMonitor?.();
         this.state.micAudioTrack?.stop();
@@ -1729,6 +1803,10 @@ export class Rtc extends Record {
         }
         switch (type) {
             case "camera": {
+                if (this.cameraPermission === "prompt" && !this.state.cameraTrack) {
+                    this.showMediaPermissionDialog("camera");
+                    return;
+                }
                 const track = this.state.cameraTrack;
                 const sendCamera = force ?? !this.state.sendCamera;
                 this.state.sendCamera = false;
@@ -1878,11 +1956,10 @@ export class Rtc extends Record {
                 this.soundEffectsService.play("screen-sharing");
             }
         } catch {
-            const str =
-                type === "camera"
-                    ? _t('%s" requires "camera" access', window.location.host)
-                    : _t('%s" requires "screen recording" access', window.location.host);
-            this.notification.add(str, { type: "warning" });
+            this.showMediaUnavailableWarning({
+                camera: type === "camera",
+                screen: type === "screen",
+            });
             stopVideo();
             return;
         }
@@ -1991,12 +2068,7 @@ export class Rtc extends Record {
                     this.setMute(false);
                 }
             } catch {
-                this.notification.add(
-                    _t('"%(hostname)s" requires microphone access', {
-                        hostname: window.location.host,
-                    }),
-                    { type: "warning" }
-                );
+                this.showMediaUnavailableWarning({ microphone: true });
                 return;
             }
             if (!this.localSession) {

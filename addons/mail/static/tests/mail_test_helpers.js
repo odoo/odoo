@@ -432,6 +432,7 @@ export async function patchUiSize({ height, size, width }) {
 
 /**
  * Mocks the browser's `navigator.mediaDevices.getUserMedia` and `navigator.mediaDevices.getDisplayMedia`
+ * Also mocks the permissions API to return "granted" for camera and microphone permissions by default.
  */
 export function mockGetMedia() {
     class MockMediaStreamTrack extends EventTarget {
@@ -475,6 +476,17 @@ export function mockGetMedia() {
         const stream = canvas.captureStream(1);
         return stream;
     };
+    // Mock permissions API to return "granted" by default.
+    patchWithCleanup(browser.navigator.permissions, {
+        async query() {
+            return {
+                state: "granted",
+                addEventListener: () => {},
+                removeEventListener: () => {},
+                onchange: null,
+            };
+        },
+    });
     patchWithCleanup(browser.navigator.mediaDevices, {
         getUserMedia(constraints) {
             let stream;

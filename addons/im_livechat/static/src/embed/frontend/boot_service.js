@@ -24,6 +24,7 @@ export const livechatBootService = {
         const target = this.getTarget();
         const root = makeRoot(target);
         makeShadow(root).then((shadow) => {
+            env.services["discuss.rtc"].rootEl = shadow;
             new App(LivechatRoot, {
                 env,
                 getTemplate,

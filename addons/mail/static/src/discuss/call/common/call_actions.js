@@ -29,14 +29,24 @@ export function registerCallAction(id, definition) {
 registerCallAction("mute", {
     condition: ({ store, thread }) => thread?.eq(store.rtc?.channel),
     name: ({ store }) => (store.rtc.selfSession.isMute ? _t("Unmute") : _t("Mute")),
-    isActive: ({ store }) => store.rtc.selfSession?.isMute,
+    isActive: ({ store }) =>
+        store.rtc.selfSession?.isMute && store.rtc.microphonePermission === "granted",
     isTracked: true,
     icon: ({ action }) => (action.isActive ? "fa fa-microphone-slash" : "fa fa-microphone"),
     hotkey: "shift+m",
     onSelected: ({ store }) => store.rtc.toggleMicrophone(),
     sequence: 10,
     sequenceGroup: 100,
-    tags: ({ action }) => (action.isActive ? ACTION_TAGS.DANGER : undefined),
+    tags: ({ action, store }) => {
+        const tags = [];
+        if (action.isActive) {
+            tags.push(ACTION_TAGS.DANGER);
+        }
+        if (store.rtc.microphonePermission !== "granted") {
+            tags.push(ACTION_TAGS.DANGER, ACTION_TAGS.WARNING_BADGE);
+        }
+        return tags;
+    },
 });
 registerCallAction("deafen", {
     condition: ({ store, thread }) => thread?.eq(store.rtc?.channel),
@@ -65,7 +75,16 @@ registerCallAction("camera-on", {
     onSelected: ({ owner, store }) => store.rtc.toggleVideo("camera", { env: owner.env }),
     sequence: 30,
     sequenceGroup: 100,
-    tags: ({ action }) => (action.isActive ? ACTION_TAGS.SUCCESS : undefined),
+    tags: ({ action, store }) => {
+        const tags = [];
+        if (action.isActive) {
+            tags.push(ACTION_TAGS.SUCCESS);
+        }
+        if (store.rtc.cameraPermission !== "granted") {
+            tags.push(ACTION_TAGS.DANGER, ACTION_TAGS.WARNING_BADGE);
+        }
+        return tags;
+    },
 });
 registerCallAction("switch-camera", {
     condition: ({ store, thread }) =>
