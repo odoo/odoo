@@ -734,23 +734,20 @@ export class CalendarModel extends Model {
      */
     async loadFilters(data) {
         const previousSections = data.filterSections;
-        const sections = {};
         const dynamicFiltersInfo = {};
         const proms = [];
         for (const [fieldName, filterInfo] of Object.entries(this.meta.filtersInfo)) {
             const previousSection = previousSections[fieldName];
             if (filterInfo.writeResModel) {
                 const prom = this.loadFilterSection(fieldName, filterInfo, previousSection).then(
-                    (result) => {
-                        sections[fieldName] = result;
-                    }
+                    (result) => [fieldName, result]
                 );
                 proms.push(prom);
             } else {
                 dynamicFiltersInfo[fieldName] = { filterInfo, previousSection };
             }
         }
-        await Promise.all(proms);
+        const sections = Object.fromEntries(await Promise.all(proms));
         return { sections, dynamicFiltersInfo };
     }
     /**
@@ -799,7 +796,6 @@ export class CalendarModel extends Model {
      * @protected
      */
     async loadDynamicFilters(data, filtersInfo) {
-        const sections = {};
         const proms = [];
         for (const [fieldName, { filterInfo, previousSection }] of Object.entries(filtersInfo)) {
             const prom = this.loadDynamicFilterSection(
@@ -807,13 +803,11 @@ export class CalendarModel extends Model {
                 fieldName,
                 filterInfo,
                 previousSection
-            ).then((result) => {
-                sections[fieldName] = result;
-            });
+            ).then((result) => [fieldName, result]);
             proms.push(prom);
         }
-        await Promise.all(proms);
-        return sections;
+        const sections = await Promise.all(proms);
+        return Object.fromEntries(sections);
     }
     /**
      * @protected
