@@ -461,29 +461,27 @@ class Im_LivechatChannel(models.Model):
             return self.env["res.users"]
         if expertises is None:
             expertises = self.env["im_livechat.expertise"]
-        self.env.cr.execute("""
-            WITH operator_rtc_session AS (
-                SELECT COUNT(DISTINCT s.id) as nbr, member.partner_id as partner_id
-                  FROM discuss_channel_rtc_session s
-                  JOIN discuss_channel_member member ON (member.id = s.channel_member_id)
+        self.env.cr.execute(
+            """
+                WITH operator_rtc_session AS (
+                    SELECT COUNT(DISTINCT s.id) as nbr, member.partner_id as partner_id
+                      FROM discuss_channel_rtc_session s
+                      JOIN discuss_channel_member member ON (member.id = s.channel_member_id)
                   GROUP BY member.partner_id
-            )
-            SELECT COUNT(DISTINCT h.channel_id), COALESCE(rtc.nbr, 0) > 0 as in_call, h.partner_id
-            FROM im_livechat_channel_member_history h
-            LEFT OUTER JOIN discuss_channel c ON h.channel_id = c.id
-            LEFT OUTER JOIN mail_message m ON h.channel_id = m.res_id AND m.model = 'discuss.channel'
-            LEFT OUTER JOIN operator_rtc_session rtc ON rtc.partner_id = h.partner_id
-            WHERE c.create_date > ((now() at time zone 'UTC') - interval '24 hours')
-            AND (
-                c.livechat_end_dt IS NULL
-                OR m.create_date > ((now() at time zone 'UTC') - interval '30 minutes')
-            )
-            AND h.partner_id in %s
-            GROUP BY h.partner_id, rtc.nbr
-            ORDER BY COUNT(DISTINCT h.channel_id) < 2 OR rtc.nbr IS NULL DESC,
-                     COUNT(DISTINCT h.channel_id) ASC,
-                     rtc.nbr IS NULL DESC""",
-            (tuple(users.partner_id.ids),)
+                )
+               SELECT COUNT(DISTINCT h.channel_id), COALESCE(rtc.nbr, 0) > 0 as in_call, h.partner_id
+                 FROM im_livechat_channel_member_history h
+                 JOIN discuss_channel c ON h.channel_id = c.id
+      LEFT OUTER JOIN operator_rtc_session rtc ON rtc.partner_id = h.partner_id
+                WHERE c.livechat_end_dt IS NULL
+                  AND c.last_interest_dt > ((now() at time zone 'UTC') - interval '30 minutes')
+                  AND h.partner_id in %s
+             GROUP BY h.partner_id, rtc.nbr
+             ORDER BY COUNT(DISTINCT h.channel_id) < 2 OR rtc.nbr IS NULL DESC,
+                      COUNT(DISTINCT h.channel_id) ASC,
+                      rtc.nbr IS NULL DESC
+            """,
+            (tuple(users.partner_id.ids),),
         )
         operator_statuses = self.env.cr.dictfetchall()
         # Try to match the previous operator
