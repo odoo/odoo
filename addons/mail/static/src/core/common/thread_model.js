@@ -625,12 +625,6 @@ export class Thread extends Record {
         return "/mail/thread/messages";
     }
 
-    async leave() {
-        await this.store.env.services.orm.silent.call("discuss.channel", "action_unfollow", [
-            this.id,
-        ]);
-    }
-
     /**
      * Get ready to jump to a message in a thread. This method will fetch the
      * messages around the message to jump to if required, and update the thread
@@ -897,7 +891,10 @@ export class Thread extends Record {
                 )
             );
         }
-        this.leave();
+        await this.closeChatWindow();
+        await this.store.env.services.orm.silent.call("discuss.channel", "action_unfollow", [
+            this.id,
+        ]);
     }
 
     _getActualModelName() {
