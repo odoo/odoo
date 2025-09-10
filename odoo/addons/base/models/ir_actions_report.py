@@ -478,15 +478,17 @@ class IrActionsReport(models.Model):
         with ExitStack() as stack:
             files = []
             for body in bodies:
-                input_file = stack.enter_context(tempfile.NamedTemporaryFile(suffix='.html', prefix='report_image_html_input.tmp.'))
-                output_file = stack.enter_context(tempfile.NamedTemporaryFile(suffix=f'.{image_format}', prefix='report_image_output.tmp.'))
-                input_file.write(body.encode())
-                files.append((input_file, output_file))
+                (input_fd, input_path) = tempfile.mkstemp(suffix='.html', prefix='report_image_html_input.tmp.')
+                (output_fd, output_path) = tempfile.mkstemp(suffix=f'.{image_format}', prefix='report_image_output.tmp.')
+                stack.callback(os.remove, input_path)
+                stack.callback(os.remove, output_path)
+                os.close(output_fd)
+                with closing(os.fdopen(input_fd, 'wb')) as input_file:
+                    input_file.write(body.encode())
+                files.append((input_path, output_path))
             output_images = []
-            for input_file, output_file in files:
-                # smaller bodies may be held in a python buffer until close, force flush
-                input_file.flush()
-                wkhtmltoimage = [_wkhtml().wkhtmltoimage_bin, *command_args, input_file.name, output_file.name]
+            for (input_path, output_path) in files:
+                wkhtmltoimage = [_wkhtml().wkhtmltoimage_bin, *command_args, input_path, output_path]
                 # start and block, no need for parallelism for now
                 completed_process = subprocess.run(wkhtmltoimage, stdout=subprocess.DEVNULL, stderr=subprocess.PIPE, check=False, encoding='utf-8')
                 if completed_process.returncode:
@@ -498,7 +500,8 @@ class IrActionsReport(models.Model):
                     _logger.warning(message)
                     output_images.append(None)
                 else:
-                    output_images.append(output_file.read())
+                    with open(output_path, 'rb') as output_file:
+                        output_images.append(output_file.read())
         return output_images
 
     @api.model
