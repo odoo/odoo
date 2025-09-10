@@ -1739,9 +1739,17 @@ export class PosStore extends WithLazyGetterTrap {
             this.printOptions
         );
         if (!printBillActionTriggered) {
-            order.nb_print = order.nb_print ? order.nb_print + 1 : 1;
-            if (typeof order.id === "number" && result) {
-                await this.data.write("pos.order", [order.id], { nb_print: order.nb_print });
+            if (result) {
+                const count = order.nb_print ? order.nb_print + 1 : 1;
+                if (typeof order.id === "number") {
+                    const wasDirty = order.isDirty();
+                    await this.data.write("pos.order", [order.id], { nb_print: count });
+                    if (!wasDirty) {
+                        order._dirty = false;
+                    }
+                } else {
+                    order.nb_print = count;
+                }
             }
         } else if (!order.nb_print) {
             order.nb_print = 0;
