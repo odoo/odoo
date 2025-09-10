@@ -638,7 +638,7 @@ class TestDomainOptimize(TransactionCase):
             self.assertEqual(list(Domain('date', '=', 'today').optimize_full(model).value), [date(2024, 1, 5)])
 
     def test_condition_optimize_datetime(self):
-        model = self.env['test_orm.mixed']
+        model = self.env['test_orm.mixed'].with_context(tz='UTC')
         self.assertEqual(
             Domain('moment', '=', date(2024, 1, 5)).optimize(model),
             Domain('moment', '<', datetime(2024, 1, 5, second=1))
@@ -711,7 +711,7 @@ class TestDomainOptimize(TransactionCase):
         )
 
     def test_condition_optimize_datetime_millisecond(self):
-        model = self.env['test_orm.mixed']
+        model = self.env['test_orm.mixed'].with_context(tz='UTC')
         self.assertEqual(
             Domain('moment', '=', '2024-01-05').optimize(model),
             Domain('moment', '<', datetime(2024, 1, 5, second=1))
