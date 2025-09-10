@@ -160,7 +160,7 @@ const setSlideUrl = (urlText, matchText) => [
     },
     {
         content: "Select the URL from autocomplete dropdown",
-        trigger: `ul.ui-autocomplete li div:contains('${matchText}')`,
+        trigger: `ul.ui-autocomplete li a:contains('${matchText}')`,
         run: "click",
     },
 ];
@@ -214,9 +214,9 @@ registerWebsitePreviewTour(
             run: "edit ",
         },
         {
-            content: "Press Enter in the URL input",
+            content: "Press Tab in the URL input",
             trigger: "div[data-action-id='setSlideAnchorUrl'] input",
-            run: "press Enter",
+            run: "press Tab",
         },
         {
             content: "Check that the anchor tag is removed",

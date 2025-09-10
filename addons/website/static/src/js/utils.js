@@ -6,6 +6,7 @@ import { getTemplate } from "@web/core/templates";
 import { UrlAutoComplete } from "@website/components/autocomplete_with_pages/url_autocomplete";
 import * as urlUtils from "@html_editor/utils/url";
 import { patch } from "@web/core/utils/patch";
+import { rpc } from "@web/core/network/rpc";
 
 /**
  * Allows to load anchors from a page.
@@ -85,6 +86,57 @@ function autocompleteWithPages(input, options = {}, env = undefined) {
         owlApp.destroy();
         container.remove();
     };
+}
+
+/**
+ * Fetches autocomplete suggestions for the URL input.
+ *
+ * Depending on the entered term:
+ * - If it starts with `#`, returns anchor suggestions found in the given DOM.
+ * - If it starts with `http` or is empty, returns no suggestions to avoid
+ *   unnecessary RPC calls.
+ * - Otherwise, fetches suggested internal links from the backend and formats
+ *   them into selectable autocomplete items, including optional categories.
+ *
+ * @param {string} term Current value of the URL input.
+ * @param {HTMLElement} body Document body used to search for anchor targets.
+ * @param {Function} onSelect
+ *    Callback invoked when an autocomplete item is selected.
+ * @returns {Promise<Array<Object>>} Array of autocomplete options objects.
+ */
+async function loadOptionsSource(term, body, onSelect) {
+    const makeItem = (item) => ({
+        cssClass: "ui-autocomplete-item",
+        label: item.label,
+        onSelect: () => onSelect(item.value),
+        data: { icon: item.icon || false, isCategory: false },
+    });
+
+    if (term[0] === "#") {
+        const anchors = await loadAnchors(term, body);
+        return anchors.map((anchor) => makeItem({ label: anchor, value: anchor }), this);
+    } else if (term.startsWith("http") || term.length === 0) {
+        // avoid useless call to /website/get_suggested_links
+        return [];
+    }
+
+    const res = await rpc("/website/get_suggested_links", {
+        needle: term,
+        limit: 15,
+    });
+    const choices = res.matching_pages.map(makeItem);
+    for (const other of res.others) {
+        if (other.values.length) {
+            choices.push({
+                cssClass: "ui-autocomplete-category",
+                label: other.title,
+                data: { icon: false, isCategory: true },
+            });
+            choices.push(...other.values.map(makeItem));
+        }
+    }
+
+    return choices;
 }
 
 /**
@@ -570,6 +622,7 @@ patch(urlUtils, {
 export default {
     loadAnchors: loadAnchors,
     autocompleteWithPages: autocompleteWithPages,
+    loadOptionsSource: loadOptionsSource,
     onceAllImagesLoaded: onceAllImagesLoaded,
     prompt: prompt,
     sendRequest: sendRequest,
