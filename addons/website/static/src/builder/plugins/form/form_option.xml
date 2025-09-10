@@ -197,9 +197,11 @@
         <BuilderNumberInput id="'max_files_number_opt'" t-if="isMaxFilesVisible"
             title.translate="The maximum number of files that can be uploaded."
             dataAttributeAction="'maxFilesNumber'"
+            action="'setMultipleFiles'"
             default="1"
             applyTo="`input[type='file']`"
             step="1"
+            min="1"
         />
     </BuilderRow>
     <BuilderRow label.translate="Max File Size">
