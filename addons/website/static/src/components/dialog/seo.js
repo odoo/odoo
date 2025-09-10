@@ -606,7 +606,7 @@ export class BrokenLink extends Component {
     static template = "website.BrokenLink";
 
     static props = {
-        link: String,
+        link: Object,
     };
 
     setup() {
