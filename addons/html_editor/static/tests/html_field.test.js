@@ -1502,6 +1502,41 @@ test("edit and save a html field in collaborative should keep the same wysiwyg",
     expect.verifySteps(["web_save"]);
 });
 
+test("'checklist' command is not available when 'allowChecklist' = false", async () => {
+    await mountView({
+        type: "form",
+        resId: 1,
+        resModel: "partner",
+        arch: `
+            <form>
+                <field name="txt" widget="html" options="{'allowChecklist': false}"/>
+            </form>`,
+    });
+    setSelectionInHtmlField();
+    await insertText(htmlEditor, "/chec");
+    await waitFor(".o-we-powerbox");
+    expect(queryAllTexts(".o-we-command-name")).not.toInclude("Checklist");
+});
+
+test("'checklist' toolbar option is not available when 'allowChecklist' = false", async () => {
+    await mountView({
+        type: "form",
+        resId: 1,
+        resModel: "partner",
+        arch: `
+            <form>
+                <field name="txt" widget="html" options="{'allowChecklist': false}"/>
+            </form>`,
+    });
+    const node = queryOne(".odoo-editor-editable p");
+    setSelection({ anchorNode: node, anchorOffset: 0, focusNode: node, focusOffset: 1 });
+    await waitFor(".o-we-toolbar");
+    await expandToolbar();
+    await contains(".o-we-toolbar button[name='list_selector']").click();
+    await waitFor(".o-we-toolbar-dropdown");
+    expect("button[name='checklist']").toHaveCount(0);
+});
+
 describe("sandbox", () => {
     const recordWithComplexHTML = {
         id: 1,
