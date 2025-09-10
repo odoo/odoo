@@ -59,6 +59,7 @@ patch(Thread, threadStaticPatch);
 const threadPatch = {
     setup() {
         super.setup();
+        this.can_react = true;
         this.channel_member_ids = fields.Many("discuss.channel.member", {
             inverse: "channel_id",
             onDelete: (r) => r.delete(),
@@ -467,6 +468,125 @@ const threadPatch = {
     },
     get unknownMembersCount() {
         return (this.member_count ?? 0) - this.channel_member_ids.length;
+    },
+    get allowedToLeaveChannelTypes() {
+        return ["channel", "group"];
+    },
+    get canLeave() {
+        return (
+            this.allowedToLeaveChannelTypes.includes(this.channel_type) &&
+            this.group_ids.length === 0 &&
+            this.store.self_partner
+        );
+    },
+    get allowedToUnpinChannelTypes() {
+        return ["chat"];
+    },
+    get canUnpin() {
+        return (
+            this.parent_channel_id || this.allowedToUnpinChannelTypes.includes(this.channel_type)
+        );
+    },
+    get typesAllowingCalls() {
+        return ["chat", "channel", "group"];
+    },
+    get allowCalls() {
+        return (
+            !this.isTransient &&
+            this.typesAllowingCalls.includes(this.channel_type) &&
+            !this.correspondent?.persona.eq(this.store.odoobot)
+        );
+    },
+    get isChatChannel() {
+        return ["chat", "group"].includes(this.channel_type);
+    },
+    get allowDescription() {
+        return ["channel", "group"].includes(this.channel_type);
+    },
+    get invitationLink() {
+        if (!this.uuid || this.channel_type === "chat") {
+            return undefined;
+        }
+        return `${window.location.origin}/chat/${this.id}/${this.uuid}`;
+    },
+    executeCommand(command, body = "") {
+        return this.store.env.services.orm.call(
+            "discuss.channel",
+            command.methodName,
+            [[this.id]],
+            { body }
+        );
+    },
+    async markAsFetched() {
+        await this.store.env.services.orm.silent.call("discuss.channel", "channel_fetched", [
+            [this.id],
+        ]);
+    },
+    /** @param {string} data base64 representation of the binary */
+    async notifyAvatarToServer(data) {
+        await rpc("/discuss/channel/update_avatar", {
+            channel_id: this.id,
+            data,
+        });
+    },
+    async notifyDescriptionToServer(description) {
+        this.description = description;
+        return this.store.env.services.orm.call(
+            "discuss.channel",
+            "channel_change_description",
+            [[this.id]],
+            { description }
+        );
+    },
+    async leaveChannel({ force = false } = {}) {
+        if (
+            this.channel_type !== "group" &&
+            this.create_uid?.eq(this.store.self.main_user_id) &&
+            !force
+        ) {
+            await this.askLeaveConfirmation(
+                _t("You are the administrator of this channel. Are you sure you want to leave?")
+            );
+        }
+        if (this.channel_type === "group" && !force) {
+            await this.askLeaveConfirmation(
+                _t(
+                    "You are about to leave this group conversation and will no longer have access to it unless you are invited again. Are you sure you want to continue?"
+                )
+            );
+        }
+        await this.closeChatWindow();
+        await this.store.env.services.orm.silent.call("discuss.channel", "action_unfollow", [
+            this.id,
+        ]);
+    },
+    /** @param {string} name */
+    async rename(name) {
+        const newName = name.trim();
+        if (
+            newName !== this.displayName &&
+            ((newName && this.channel_type === "channel") || this.isChatChannel)
+        ) {
+            if (this.channel_type === "channel" || this.channel_type === "group") {
+                this.name = newName;
+                await this.store.env.services.orm.call(
+                    "discuss.channel",
+                    "channel_rename",
+                    [[this.id]],
+                    { name: newName }
+                );
+            } else if (this.supportsCustomChannelName) {
+                if (this.self_member_id) {
+                    this.self_member_id.custom_channel_name = newName;
+                }
+                await this.store.env.services.orm.call(
+                    "discuss.channel",
+                    "channel_set_custom_name",
+                    [[this.id]],
+                    { name: newName }
+                );
+            }
+        }
     },
 };
 patch(Thread.prototype, threadPatch);
