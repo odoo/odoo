@@ -62,11 +62,8 @@ class AccountJournal(models.Model):
     def _default_outbound_payment_methods(self):
         return self.env.ref('account.account_payment_method_manual_out')
 
-    def __get_bank_statements_available_sources(self):
-        return [('undefined', _('Undefined Yet'))]
-
     def _get_bank_statements_available_sources(self):
-        return self.__get_bank_statements_available_sources()
+        return [('undefined', _('Undefined Yet'))]
 
     def _default_invoice_reference_model(self):
         """Get the invoice reference model according to the company's country."""
