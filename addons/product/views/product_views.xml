@@ -495,9 +495,6 @@
                     <field name="default_code"/>
                     <field name="barcode"/>
                 </xpath>
-                <xpath expr="//field[@name='is_favorite']" position="attributes">
-                    <attribute name="readonly">1</attribute>
-                </xpath>
                 <field name="list_price" position="attributes">
                    <attribute name="invisible">1</attribute>
                    <attribute name="readonly">product_variant_count &gt; 1</attribute>
