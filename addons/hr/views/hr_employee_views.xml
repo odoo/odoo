@@ -425,7 +425,13 @@
                                     <group name="managers" string="Approvers">
                                         <field name="hr_responsible_id" widget="many2one_avatar_user"/>
                                     </group>
-                                    <group name="application_group" string="Application Settings" invisible="1"/>
+                                    <group name="application_group" string="Application Settings" invisible="1">
+                                        <label for="hourly_cost"/>
+                                        <div name="hourly_cost">
+                                            <field name="hourly_cost" class="oe_inline"/>
+                                            <field name="currency_id" invisible="1"/>
+                                        </div>
+                                    </group>
                                     <group string="Attendance/Point of Sale" name="identification_group">
                                         <field name="pin" string="PIN Code"/>
                                         <label for="barcode"/>

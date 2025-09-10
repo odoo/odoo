@@ -4907,7 +4907,6 @@ class TestInvisibleField(TransactionCaseWithUserDemo):
             'hr_gamification',
             'hr_holidays',
             'hr_holidays_attendance',
-            'hr_hourly_cost',
             'hr_maintenance',
             'hr_payroll',
             'hr_payroll_account',
