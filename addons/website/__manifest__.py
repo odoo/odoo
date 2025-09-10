@@ -440,6 +440,7 @@
         ],
         'html_builder.iframe_add_dialog': [
             'website/static/src/snippets/**/*.iframe_add_dialog.scss',
+            'website/static/src/snippets/**/*.preview.scss',
         ],
     },
     'configurator_snippets': {
