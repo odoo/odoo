@@ -187,6 +187,7 @@ test("should display invitations", async () => {
             .get_result()
     );
     await contains(".o-discuss-CallInvitation");
+    await contains(".o-discuss-CallInvitation button[title='Join Call']");
     await waitForSteps(["play - call-invitation"]);
     // Simulate stop receiving call invitation
 
