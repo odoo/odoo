@@ -338,3 +338,33 @@ test("Correctly set field dependency name at selected field rename", async () =>
     expect(".o-main-components-container  .o-dropdown-item:contains('Option 2')").toHaveCount(1);
     expect(`.o-main-components-container  .o-dropdown-item:contains('${newName}')`).toHaveCount(1);
 });
+
+test("Changing max files number option updates file input 'multiple' attribute", async () => {
+    onRpc("get_authorized_fields", () => ({}));
+    await setupWebsiteBuilder(`
+    <section class="s_website_form" data-vcss="001" data-snippet="s_website_form" data-name="Form">
+        <form data-model_name="mail.mail">
+            <div class="s_website_form_rows">
+                <div data-name="Field" class="s_website_form_field s_website_form_custom" data-type="binary">
+                    <label class="s_website_form_label" for="o3xe8o85w0ct">
+                        <span class="s_website_form_label_content">File Upload</span>
+                    </label>
+                    <input type="file" class="form-control s_website_form_input"
+                        name="File Upload" required id="o3xe8o85w0ct"
+                        data-max-files-number="1" data-max-file-size="64">
+                </div>
+            </div>
+        </form>
+    </section>
+        `);
+    expect(":iframe input[type=file]").toHaveAttribute("data-max-files-number", "1")
+    expect(":iframe input[type=file]").not.toHaveAttribute("multiple");
+    await contains(":iframe .s_website_form_input").click();
+    await contains(".options-container div[data-action-id='setMultipleFiles'] input").edit("2");
+    expect(":iframe input[type=file]").toHaveAttribute("data-max-files-number", "2")
+    expect(":iframe input[type=file]").toHaveAttribute("multiple");
+    await contains(":iframe .s_website_form_input").click();
+    await contains(".options-container div[data-action-id='setMultipleFiles'] input").edit("1");
+    expect(":iframe input[type=file]").toHaveAttribute("data-max-files-number", "1")
+    expect(":iframe input[type=file]").not.toHaveAttribute("multiple");
+});
