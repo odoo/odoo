@@ -269,7 +269,7 @@ class PurchaseRequisitionLine(models.Model):
         return {
             'name': name,
             'product_id': self.product_id.id,
-            'product_uom_id': self.product_id.uom_id.id,
+            'product_uom_id': self.product_uom_id.id,
             'product_qty': product_qty,
             'price_unit': price_unit,
             'tax_ids': [(6, 0, taxes_ids)],
