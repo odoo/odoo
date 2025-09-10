@@ -41,7 +41,7 @@ class SlideChannel(models.Model):
         its height is set to fit to content (snippet option to change this also disabled on the view)."""
         res = super()._default_cover_properties()
         res.update({
-            "background_color_class": "o_cc3",
+            "background_color_class": "o_cc4",
             'background_color_style': (
                 'background-color: rgba(0, 0, 0, 0); '
                 'background-image: linear-gradient(120deg, #875A7B, #78516F);'
