@@ -67,6 +67,11 @@
         align-items: center;
         gap: var(--hb-row-content-gap);
         z-index: $_z-index; // Make sure outlines / shadows are not trimmed.
+
+        // to prevent overlapping of ul with builder options.
+        &:has(ul) {
+            z-index: auto;
+        }
     }
 
     .o_hb_collapse_toggler {
