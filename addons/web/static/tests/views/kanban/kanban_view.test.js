@@ -9447,6 +9447,43 @@ test("progress bar with monetary aggregate and multi currencies", async () => {
     expect(".o_multi_currency_popover").toHaveText("8,100.00 € at $ 0.50\n16,200.00 AED at $ 0.25");
 });
 
+test("progress bar with monetary aggregate and multi currencies: quick create record", async () => {
+    Partner._views["form,some_view_ref"] = `
+        <form>
+            <field name="salary"/>
+            <field name="currency_id"/>
+        </form>`;
+    Partner._fields.currency_id.default = 1; // create new records in dollars by default
+    Partner._records = [{ id: 99, foo: "bar", salary: 300, currency_id: 2, product_id: 3 }];
+    await mountView({
+        type: "kanban",
+        resModel: "partner",
+        arch: `
+            <kanban quick_create_view="some_view_ref">
+                <progressbar field="foo" colors='{"yop": "success", "gnap": "warning", "blip": "danger"}' sum_field="salary"/>
+                <field name="currency_id"/>
+                <templates>
+                    <t t-name="card">
+                        <field name="foo"/>
+                        <field name="salary"/>
+                    </t>
+                </templates>
+            </kanban>`,
+        groupBy: ["product_id"],
+    });
+
+    expect(".o_kanban_counter .o_animated_number").toHaveCount(1);
+    expect(".o_kanban_counter:last .o_animated_number").toHaveText("300 €");
+
+    await quickCreateKanbanRecord();
+    expect(".o_kanban_quick_create").toHaveCount(1);
+    expect(".o_kanban_quick_create .o_field_widget[name=currency_id] input").toHaveValue("USD");
+
+    await editKanbanRecordQuickCreateInput("salary", 1000);
+    await validateKanbanRecord();
+    expect(".o_kanban_counter:last .o_animated_number").toHaveText("$ 1,300?");
+});
+
 test("progress bar with aggregates: activate bars (grouped by boolean)", async () => {
     Partner._records = [
         { foo: "yop", bar: true, int_field: 1 },
