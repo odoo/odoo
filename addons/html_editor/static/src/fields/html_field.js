@@ -347,6 +347,9 @@ export const htmlField = {
         if ("allowFile" in options) {
             editorConfig.allowFile = Boolean(options.allowFile);
         }
+        if ("allowChecklist" in options) {
+            editorConfig.allowChecklist = Boolean(options.allowChecklist);
+        }
         if ("allowAttachmentCreation" in options) {
             editorConfig.allowImage = Boolean(options.allowAttachmentCreation);
             editorConfig.allowFile = Boolean(options.allowAttachmentCreation);
