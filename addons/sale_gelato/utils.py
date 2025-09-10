@@ -30,6 +30,10 @@ def make_request(api_key, subdomain, version, endpoint, payload=None, method='PO
     try:
         if method == 'GET':
             response = requests.get(url=url, params=payload, headers=headers, timeout=10)
+        elif method == 'PATCH':
+            response = requests.patch(url=url, json=payload, headers=headers, timeout=10)
+        elif method == 'DELETE':
+            response = requests.delete(url=url, params=payload, headers=headers, timeout=10)
         else:
             response = requests.post(url=url, json=payload, headers=headers, timeout=10)
         response_content = response.json()
