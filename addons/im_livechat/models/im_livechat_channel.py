@@ -361,7 +361,7 @@ class Im_LivechatChannel(models.Model):
         else:
             channel_name = ' '.join([
                 visitor_user.display_name if visitor_user else guest.name,
-                agent.livechat_username or agent.name
+                agent.sudo().livechat_username or agent.name
             ])
         return channel_name
 
