@@ -6,8 +6,14 @@ patch(FinalSteps.prototype, {
 
     _getSteps: function () {
         return [
+            {
+                content: "Click on confirm button",
+                trigger: "button.o_wbooth_registration_confirm",
+                run: "click",
+                expectUnloadPage: true,
+            },
             wsTourUtils.goToCheckout(),
-            ...wsTourUtils.payWithTransfer(),
+            ...wsTourUtils.payWithTransfer({ expectUnloadPage: true }),
         ];
     }
 
