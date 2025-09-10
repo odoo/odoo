@@ -147,7 +147,7 @@ def get_video_thumbnail_url(video_url):
     if platform == 'youtube':
         thumbnail_url = f'https://img.youtube.com/vi/{video_id}/0.jpg'
     elif platform == 'vimeo':
-        video_details_url = f'http://vimeo.com/api/oembed.json?url={video_url}'
+        video_details_url = f'https://vimeo.com/api/oembed.json?url={video_url}'
         res = requests.get(video_details_url, timeout=10)
         if res.ok:
             data = res.json()
