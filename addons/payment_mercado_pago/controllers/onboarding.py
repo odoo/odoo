@@ -50,7 +50,10 @@ class MercadoPagoOnboardingController(Controller):
 
         # Fetch an access token using the authorization token.
         proxy_payload = self.env['payment.provider']._prepare_json_rpc_payload(
-            {'authorization_code': authorization_code}
+            {
+                'authorization_code': authorization_code,
+                'account_country_code': provider_sudo.mercado_pago_account_country_id.code.lower(),
+            }
         )
         try:
             response_content = provider_sudo._send_api_request(
