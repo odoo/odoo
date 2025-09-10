@@ -43,6 +43,7 @@ The service is provided by the In App Purchase Odoo platform.
     ],
     'installable': True,
     'auto_install': True,
+    'iap_paid_service': True,
     'assets': {
         'web.assets_backend': [
             'sms/static/src/**/*',
