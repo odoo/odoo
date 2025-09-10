@@ -268,7 +268,6 @@ class TestOrderEdiUbl(TestAccountEdiUblCii):
             # Raise user error if line does not have product set
             so.action_confirm()
         line_vals[0]['product_id'] = False
-        line_vals[0]['price_unit'] = 0.0
         # Should set other values properly
         self.assertRecordValues(so.order_line, line_vals)
         # Should create an activity if product is not found
