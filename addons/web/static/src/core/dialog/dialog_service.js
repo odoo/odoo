@@ -83,7 +83,7 @@ export const dialogService = {
                             document.body.classList.remove("modal-open");
                         }
                     },
-                    rootId: options.context?.root?.el.getRootNode()?.host?.id,
+                    rootId: options.context?.root?.el?.getRootNode()?.host?.id,
                 }
             );
 
