@@ -373,7 +373,6 @@
             'website/static/src/xml/**/*.xml',
             ## TODO: remove the following line when cleaning up residuals files
             ## from the old editor
-            ('remove', 'website/static/src/snippets/s_floating_blocks/options.xml'),
             ('remove', 'website/static/src/xml/website.editor.xml'),
             ('remove', 'website/static/src/xml/web_editor.xml'),
             'website/static/src/snippets/s_table_of_content/000.scss',
@@ -437,7 +436,6 @@
             'website/static/src/snippets/s_website_controller_page_listing_layout/options.js',
             'website/static/src/snippets/s_website_form/options.js',
             'website/static/src/snippets/s_floating_blocks/options.js',
-            'website/static/src/snippets/s_floating_blocks/options.xml',
             'website/static/src/js/send_mail_form.js',
             'website/static/src/xml/website_form.xml',
             'website/static/src/xml/website.editor.xml',
