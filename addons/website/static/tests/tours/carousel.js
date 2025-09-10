@@ -160,7 +160,7 @@ const setSlideUrl = (urlText, matchText) => [
     },
     {
         content: "Select the URL from autocomplete dropdown",
-        trigger: `ul.ui-autocomplete li div:contains('${matchText}')`,
+        trigger: `ul.ui-autocomplete li a:contains('${matchText}')`,
         run: "click",
     },
 ];
