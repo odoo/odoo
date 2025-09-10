@@ -46,6 +46,12 @@ patch(OrderPaymentValidation.prototype, {
     },
     //@override
     async isOrderValid(isForceValidate) {
+        if (
+            this.order.refunded_order_id?.source === "mobile" &&
+            this.order.refunded_order_id?.payment_ids[0].online_account_payment_id
+        ) {
+            return await super.isOrderValid(...arguments);
+        }
         if (!(await super.isOrderValid(...arguments))) {
             return false;
         }
