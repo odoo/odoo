@@ -1,10 +1,10 @@
 import { setupInteractionWhiteList, startInteractions } from "@web/../tests/public/helpers";
 
 import { describe, expect, test } from "@odoo/hoot";
-import { clear, click, fill, queryOne } from "@odoo/hoot-dom";
+import { animationFrame, clear, click, fill, queryOne, setInputFiles } from "@odoo/hoot-dom";
 import { advanceTime, Deferred } from "@odoo/hoot-mock";
 
-import { onRpc } from "@web/../tests/web_test_helpers";
+import { contains, onRpc } from "@web/../tests/web_test_helpers";
 
 setupInteractionWhiteList(["website.form", "website.post_link"]);
 
@@ -96,6 +96,44 @@ const formTemplate = /* html */ `
         </section>
     </div>
 `;
+
+function createFileUploadForm(maxFiles = 1) {
+    return `
+        <div id="wrapwrap">
+            <section class="s_website_form" data-vcss="001" data-snippet="s_website_form" data-name="Form">
+                <div class="container-fluid">
+                    <form action="/website/form/" method="post" enctype="multipart/form-data"
+                          class="o_mark_required" data-mark="*" data-pre-fill="true"
+                          data-model_name="mail.mail" data-success-mode="redirect"
+                          data-success-page="/contactus-thank-you">
+                        <div class="s_website_form_rows row s_col_no_bgcolor">
+                            <div data-name="Field" class="s_website_form_field mb-3 col-12
+                                s_website_form_custom s_website_form_required pb0 o_colored_level"
+                                data-type="binary">
+                                <div class="row s_col_no_resize s_col_no_bgcolor">
+                                    <label class="col-sm-auto s_website_form_label" style="width: 200px" for="o3xe8o85w0ct">
+                                        <span class="s_website_form_label_content">File Upload</span>
+                                        <span class="s_website_form_mark">*</span>
+                                    </label>
+                                    <div class="col-sm">
+                                        <div class="o_files_zone row gx-1"></div>
+                                        <input type="file" class="form-control s_website_form_input"
+                                            name="File Upload" required id="o3xe8o85w0ct"
+                                           ${maxFiles > 1 ? "multiple" : ""} data-max-files-number="${maxFiles}" data-max-file-size="64">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="s_website_form_submit">
+                            <div class="s_website_form_label"/>
+                            <a>Submit</a>
+                        </div>
+                    </form>
+                </div>
+            </section>
+        </div>
+    `;
+}
 
 const formWithVisibilityRulesTemplate = /* html */ `
     <div id="wrapwrap">
@@ -225,6 +263,26 @@ test("(name) form checks conditions", async () => {
     });
     await click("a.s_website_form_send");
     checkField(nameEl, true, false);
+});
+
+test("max file upload limit = 1", async () => {
+    const fileUploadForm = createFileUploadForm();
+    await startInteractions(fileUploadForm);
+    const file = new File(["fake_file"], "fake_file.pdf", { type: "application/pdf" });
+    await contains(".s_website_form input[type='file']").click();
+    await setInputFiles([file]);
+    await animationFrame();
+    expect(".o_add_files_button").toHaveValue("Replace File");
+});
+
+test("max file upload limit > 1", async () => {
+    const fileUploadFormMultiple = createFileUploadForm(10);
+    await startInteractions(fileUploadFormMultiple);
+    const file = new File(["fake_file"], "fake_file.pdf", { type: "application/pdf" });
+    await contains(".s_website_form input[type='file']").click();
+    await setInputFiles([file]);
+    await animationFrame();
+    expect(".o_add_files_button").toHaveValue("Add Files");
 });
 
 test("(mail) form checks conditions", async () => {
