@@ -1,6 +1,6 @@
 import { defineWebsiteModels, setupWebsiteBuilder } from "../website_helpers";
 import { expect, test } from "@odoo/hoot";
-import { animationFrame, clear, click, fill, waitFor } from "@odoo/hoot-dom";
+import { animationFrame, clear, click, fill, queryOne, waitFor } from "@odoo/hoot-dom";
 import { contains } from "@web/../tests/web_test_helpers";
 
 defineWebsiteModels();
@@ -37,7 +37,7 @@ test("change rating score", async () => {
     await animationFrame();
     expect(":iframe .s_rating .s_rating_inactive_icons i").toHaveCount(3);
     expect(":iframe .s_rating").toHaveInnerHTML(
-        `<h4 class="s_rating_title">Quality</h4>
+        `<h4 class="s_rating_title" contenteditable="true">Quality</h4>
         <div class="s_rating_icons o_not_editable" contenteditable="false">
             <span class="s_rating_active_icons">
                 <i class="fa fa-star" contenteditable="false">
@@ -80,4 +80,11 @@ test("Ensure order of operations when clicking very fast on two options", async 
     expect("[data-label='Icon'] .dropdown-toggle").toHaveText("Stars");
     expect(":iframe .s_rating").not.toHaveAttribute("data-active-custom-icon");
     expect(":iframe .s_rating_icons").not.toHaveClass("fa-2x");
+});
+
+test("rating snippet should not be editable (except title) nor user-selectable", async () => {
+    await setupWebsiteBuilder(websiteContent, { loadIframeBundles: true });
+    expect(queryOne(":iframe .s_rating").isContentEditable).toBe(false);
+    expect(queryOne(":iframe .s_rating_title").isContentEditable).toBe(true);
+    expect(":iframe .s_rating").toHaveStyle({ "user-select": "none" });
 });

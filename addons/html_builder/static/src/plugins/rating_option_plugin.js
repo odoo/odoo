@@ -18,6 +18,8 @@ class RatingOptionPlugin extends Plugin {
             ActiveIconsNumberAction,
             TotalIconsNumberAction,
         },
+        force_not_editable_selector: [".s_rating"],
+        force_editable_selector: [".s_rating_title"],
     };
 }
 
