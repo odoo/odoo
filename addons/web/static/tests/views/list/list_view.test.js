@@ -16835,6 +16835,10 @@ test(`Properties: char`, async () => {
     await contains(`.o_list_button_save`).click();
     expect(`.o_field_cell.o_char_cell:eq(0)`).toHaveText("TEST");
     expect.verifySteps(["web_save"]);
+
+    expect(
+        `.o_list_renderer th[data-name='properties.property_char'] .o_list_sortable_icon`
+    ).not.toHaveClass("d-none"); // sortable
 });
 
 test(`Properties: boolean`, async () => {
