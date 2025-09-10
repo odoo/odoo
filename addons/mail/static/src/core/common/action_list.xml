@@ -11,7 +11,7 @@
         }"/>
         <t t-foreach="groups" t-as="group" t-key="group_index">
             <span t-if="group.length" class="o-mail-ActionList-group btn-group" t-att-class="groupAttClass">
-                <Action t-foreach="group" t-as="action" t-key="action.id" t-props="getActionProps(action, group, { isFirstInGroup: action_first, isLastInGroup: action_last })"/>
+                <Action t-foreach="group" t-as="action" t-key="action.id" t-props="getActionProps(action, group, { isFirstInGroup: action_first, index: action_index, isLastInGroup: action_last })"/>
             </span>
             <t t-if="!group_last" t-call="mail.ActionList.groupSeparator"/>
         </t>
@@ -47,6 +47,7 @@
     <t t-set="btnClass" t-value="attClassObjectToString({
         [action.btnClass ?? '']: true,
         [action.tagClassNames]: true,
+        'position-relative': true,
         'active': action.isActive,
         'o-mail-ActionList-button btn btn-secondary btn-group-item': true,
         'o-first': props.isFirstInGroup,
@@ -65,7 +66,6 @@
         'px-3 py-2': props.dropdown and ui.isSmall,
         'py-1': props.dropdown and !ui.isSmall,
         'text-start px-2': !props.inline and !ui.isSmall,
-        'active': action.isActive,
         'btn-danger': action.tags.includes('DANGER'),
         'btn-success': action.tags.includes('SUCCESS'),
         'o-text-white border-0 o-simulateDarkTheme': store.shouldSimulateDarkTheme(this),
@@ -77,8 +77,14 @@
     <DropdownItem t-elif="props.dropdown" class="btnClass + ' d-flex align-items-center gap-1'" tag="'button'" onSelected="(ev) => this.onSelected(action, ev)" attrs="attrs">
         <t t-call="mail.Action.content"/>
     </DropdownItem>
-    <button t-else="" t-att-class="btnClass" t-att="Object.assign(attrs, { 'title': action.name })" t-on-click="(ev) => this.onSelected(action, ev)" t-att-data-hotkey="action.hotkey">
+    <button t-else="" t-att-class="btnClass" t-att="Object.assign(attrs, { 'title': action.name })" t-on-click="(ev) => this.onSelected(action, ev)" t-att-data-hotkey="action.hotkey" t-att-style="props.style">
         <t t-call="mail.Action.content"/>
+        <span
+            t-if="action.tags.includes('WARNING_BADGE')"
+            class="position-absolute me-n1 mt-n1 end-0 fw-bolder badge p-0 rounded-circle bg-warning d-flex justify-content-center align-items-center" style="aspect-ratio: 1; font-size: 0.6rem;"
+        >
+            <i class="fa fa-exclamation"/>
+        </span>
     </button>
 </t>
 
