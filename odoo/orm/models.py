@@ -1991,8 +1991,8 @@ class BaseModel(metaclass=MetaModel):
                 name_field_sql=CurrencyRate._field_to_sql(CurrencyRate._table, 'name'),
                 today=Date.context_today(self),
             )
-            alias_rate = query.make_alias(self._table, 'rates')
             currency_field_name = field.get_currency_field(self)
+            alias_rate = query.make_alias(self._table, f'{currency_field_name}__rates')
             currency_field_sql = self._field_to_sql(self._table, currency_field_name, query)
             condition = SQL("%s = %s", currency_field_sql, SQL.identifier(alias_rate, "currency_id"))
             query.add_join('LEFT JOIN', alias_rate, rate_subquery_table, condition)
