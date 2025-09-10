@@ -76,7 +76,7 @@ globalFieldMatchingRegistry.add("pivot", {
 globalFieldMatchingRegistry.add("list", {
     getIds: (getters) => getters.getListIds().filter((id) => getters.getListFieldMatch(id)),
     getDisplayName: (getters, listId) => getters.getListName(listId),
-    getTag: (getters, listId) => _t(`List #%(list_id)s`, { list_id: listId }),
+    getTag: (getters, listId) => _t("List #%(list_id)s", { list_id: listId }),
     getFieldMatching: (getters, listId, filterId) => getters.getListFieldMatching(listId, filterId),
     getModel: (getters, listId) => getters.getListDefinition(listId).model,
     waitForReady: (getters) =>
@@ -90,14 +90,14 @@ globalFieldMatchingRegistry.add("list", {
 
 globalFieldMatchingRegistry.add("chart", {
     getIds: (getters) => getters.getOdooChartIds(),
-    getDisplayName: (getters, chartId) => getters.getOdooChartDisplayName(chartId),
+    getDisplayName: (getters, chartId) => getters.getOdooChartName(chartId),
     getFieldMatching: (getters, chartId, filterId) =>
         getters.getOdooChartFieldMatching(chartId, filterId),
     getModel: (getters, chartId) =>
         getters.getChart(chartId).getDefinitionForDataSource().metaData.resModel,
-    getTag: async (getters, chartId) => {
-        const chartModel = await getters.getChartDataSource(chartId).getModelLabel();
-        return _t("Chart - %(chartModel)s", { chartModel });
+    getTag: (getters, chartId) => {
+        const odooChartId = getters.getOdooChartIds().indexOf(chartId) + 1;
+        return _t("Chart #%(odooChartId)s", { odooChartId });
     },
     waitForReady: (getters) =>
         getters

@@ -22,6 +22,7 @@ export class OdooChartCorePlugin extends OdooCorePlugin {
     static getters = /** @type {const} */ ([
         "getOdooChartIds",
         "getChartFieldMatch",
+        "getOdooChartName",
         "getOdooChartDisplayName",
         "getOdooChartFieldMatching",
         "getChartGranularity",
@@ -94,6 +95,16 @@ export class OdooChartCorePlugin extends OdooCorePlugin {
      */
     getChartFieldMatch(chartId) {
         return this.charts[chartId].fieldMatching;
+    }
+
+    /**
+     *
+     * @param {string} chartId
+     * @returns {string}
+     */
+    getOdooChartName(chartId) {
+        const { title, type } = this.getters.getChart(chartId);
+        return title.text || CHART_PLACEHOLDER_DISPLAY_NAME[type];
     }
 
     /**
