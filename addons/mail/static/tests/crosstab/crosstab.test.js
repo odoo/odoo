@@ -11,6 +11,8 @@ import {
 import { describe, test } from "@odoo/hoot";
 import { press } from "@odoo/hoot-dom";
 import { mockDate } from "@odoo/hoot-mock";
+
+import { inputFiles } from "@web/../tests/utils";
 import {
     asyncStep,
     getService,
@@ -18,8 +20,6 @@ import {
     serverState,
     waitForSteps,
 } from "@web/../tests/web_test_helpers";
-
-import { rpc } from "@web/core/network/rpc";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -114,7 +114,7 @@ test.skip("Channel subscription is renewed when channel is added from invite", a
 test("Adding attachments", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "Hogwarts Legacy" });
-    const messageId = pyEnv["mail.message"].create({
+    pyEnv["mail.message"].create({
         body: "Hello world!",
         model: "discuss.channel",
         res_id: channelId,
@@ -124,17 +124,18 @@ test("Adding attachments", async () => {
     const env2 = await start({ asTab: true });
     await openDiscuss(channelId, { target: env1 });
     await openDiscuss(channelId, { target: env2 });
-    const attachmentId = pyEnv["ir.attachment"].create({
-        name: "test.txt",
-        mimetype: "text/plain",
-    });
-    rpc("/mail/message/update_content", {
-        message_id: messageId,
-        update_data: {
-            body: "Hello world!",
-            attachment_ids: [attachmentId],
-        },
-    });
+    const file = new File(["file content"], "test.txt", { type: "text/plain" });
+    await contains(`${env1.selector} .o-mail-Message:contains('Hello world!')`);
+    await contains(`${env2.selector} .o-mail-Message:contains('Hello world!')`);
+    await click(`${env1.selector} .o-mail-Message button[title='Edit']`);
+    await click(`${env1.selector} .o-mail-Message .o-mail-Composer button[title='More Actions']`);
+    await click(`${env1.selector} .o_popover button[name='upload-files']`);
+    await inputFiles(`${env1.selector} .o-mail-Message .o-mail-Composer .o_input_file`, [file]);
+    await contains(
+        `${env1.selector} .o-mail-AttachmentContainer:not(.o-isUploading):contains(test.txt) .fa-check`
+    );
+    await click(`${env1.selector} .o-mail-Message .o-mail-Composer button[data-type='save']`);
+
     await contains(
         `${env2.selector} .o-mail-AttachmentContainer:not(.o-isUploading):contains(test.txt)`
     );
