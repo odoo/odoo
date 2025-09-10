@@ -351,7 +351,18 @@ test("clickbot show rpc error when an error dialog is detected", async () => {
             },
             error: (msg) => {
                 // Replace msg with null id as JSON-RPC ids are not reset between two tests
-                expect.step(msg.toString().replaceAll(/"id":\d+,/g, `"id":null,`));
+                expect.step(
+                    msg
+                        .toString()
+                        .replaceAll(/"id":\d+,/g, `"id":null,`)
+                        // Since the traceback is displayed in the dialog, we change the content of the balises "p.text-info" and "pre"
+                        // containing the traceback / date / url linked to the running environnement
+                        .replace(
+                            /<p\b[^>]*class="d-block small text-info"[^>]*>[\s\S]*?<\/p>/i,
+                            '<p class="d-block small text-info">ERROR INFO</p>'
+                        )
+                        .replace(/<pre\b[^>]*>[\s\S]*?<\/pre>/i, "<pre>TRACEBACK</pre>")
+                );
                 clickEverywhereDef.resolve();
             },
         },
@@ -448,13 +459,25 @@ test("clickbot show rpc error when an error dialog is detected", async () => {
     });
     const expectedModalHtml = /* xml */ `
         <header class="modal-header">
-            <h4 class="modal-title text-break flex-grow-1">Oops!</h4>
-            <button type="button" class="btn-close" aria-label="Close" tabindex="-1"></button>
+            <h4 class="modal-title text-break flex-grow-1 fs-5">Oops!</h4>
+            <button type="button" class="btn-close position-absolute top-0 end-0 mt-1 me-1" aria-label="Close" tabindex="-1"></button>
         </header>
         <main class="modal-body">
             <div role="alert">
-                <p class="text-prewrap"> Something went wrong... If you really are stuck, share the report with your friendly support service </p>
-                <button class="btn btn-link p-0">See technical details</button>
+                <p> Something went wrong... If you really are stuck, share the report with your friendly support service </p>
+                <details>
+                    <summary class="mb-1 link-info">See technical details</summary>
+                    <div class="text-bg-100 clearfix mt-2 position-relative o_error_detail pb-2">
+                        <button class="btn position-absolute top-0 end-0 pt-2 btn-link link-body-emphasis"><span class="fa fa-clipboard"></span></button>
+                        <div class="ps-1 pt-1 ps-md-3 pt-md-3">
+                            <p class="m-0"><b>Odoo Server Error</b></p>
+                            <p class="d-block small text-info">ERROR INFO</p>
+                            <code>RPC_ERROR</code>
+                            <code class="d-block">This is a server Error, it should be displayed in an error dialog</code>
+                            <pre>TRACEBACK</pre>
+                        </div>
+                    </div>
+                </details>
             </div>
         </main>
         <footer class="modal-footer justify-content-around justify-content-md-start flex-wrap gap-1 w-100">

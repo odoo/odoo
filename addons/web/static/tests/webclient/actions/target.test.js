@@ -433,6 +433,7 @@ describe("new", () => {
         expect(".modal").toHaveCount(1);
 
         await contains(".modal-body button.btn-link").click();
+        await contains(".modal-body summary.link-info").click();
         expect(queryText(".modal-body .o_error_detail")).toInclude("my error");
         expect.verifyErrors(["my error"]);
 
