@@ -6,6 +6,9 @@
         <attribute name="class" remove="o_input pe-3" separator=" "/>
         <attribute name="t-attf-class" add="{{inputClass}}" separator=" "/>
     </xpath>
+    <xpath expr="//div[contains(@class, 'o-autocomplete')]" position="attributes">
+        <attribute name="class" add="flex d-flex" separator=" "/>
+    </xpath>
 </t>
 
 <t t-name="website.AutoCompleteItem">
@@ -48,6 +51,14 @@
     </xpath>
     <xpath expr="//a[hasclass('o_we_url_link')]" position="attributes">
         <attribute name="t-on-click">onClickForcePreviewMode</attribute>
+    </xpath>
+</t>
+
+<!-- Re-adding the preview button slot since BuilderUrlPicker's input
+was replaced by AutoCompleteInLinkPopover, which removed the original button -->
+<t t-inherit="website.AutoCompleteInLinkPopover" t-inherit-mode="extension">
+    <xpath expr="//input[@t-ref='input']" position="after">
+        <t t-slot="previewButton"/>
     </xpath>
 </t>
 

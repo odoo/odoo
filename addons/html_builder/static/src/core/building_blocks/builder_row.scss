@@ -61,6 +61,11 @@
         z-index: $_z-index; // Make sure outlines / shadows are not trimmed.
     }
 
+    // to prevent overlapping of ul with builder options.
+    .hb-row-content:has(ul) {
+        z-index: auto;
+    }
+
     .o_hb_collapse_toggler {
         position: absolute;
         padding-left: $o-hb-row-spacing;

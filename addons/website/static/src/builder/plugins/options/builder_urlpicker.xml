@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-inherit="html_builder.BuilderUrlPicker" t-inherit-mode="extension">
+    <xpath expr="//BuilderTextInputBase" position="replace">
+        <AutoCompleteInLinkPopover
+            sources="sources"
+            value="state.value"
+            input="urlRef"
+            placeholder="props.placeholder"
+            title="props.title"
+            updateValue.bind="updateValue"
+            inputClass="'o-hb-input-base o_builder_url_input'"
+            menuCssClass="'o_website_ui_autocomplete'"
+        >
+            <t t-set-slot="previewButton">
+                <button class="btn" title="Preview this URL in a new tab" t-on-click="openPreviewUrl">
+                    <i class="fa fa-fw fa-external-link"/>
+                </button>
+            </t>
+        </AutoCompleteInLinkPopover>
+    </xpath>
+</t>
+
+</templates>

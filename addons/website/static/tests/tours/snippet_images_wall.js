@@ -67,7 +67,7 @@ registerWebsitePreviewTour("snippet_images_wall", {
     run: "click",
 }, {
     content: "Change the link of the image",
-    trigger: "div[data-label='Your URL'] div[data-action-id='setUrl'] input",
+    trigger: "input.o_builder_url_input",
     // TODO: This should not be needed, but there seems to be an odd behavior
     // with the input not properly blurring when clicking on the reorder
     // buttons. However this is also the case in older versions. It

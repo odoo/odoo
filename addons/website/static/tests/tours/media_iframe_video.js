@@ -22,7 +22,7 @@ registerWebsitePreviewTour("website_media_iframe_video", {
         },
         {
             content: "Enter the url",
-            trigger: "input[placeholder='www.example.com']",
+            trigger: "input[placeholder='e.g. /my-awesome-page']",
             run: "edit odoo.com",
         },
         {
