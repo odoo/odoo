@@ -15,6 +15,10 @@
             background-color: inherit;
         }
 
+    &:active i {
+        transform: scale(0.9);
+    }
+
         &.o-inline {
             &:where(:has(i:first-child:last-child)) {
                 $_btn-height: calc((#{$btn-font-size} * #{$btn-line-height}) + #{$btn-padding-y} * 2);
