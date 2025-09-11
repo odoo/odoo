@@ -165,14 +165,12 @@ export class Animation extends Interaction {
             // case specifically instead of a generic solution using
             // elementFromPoint as it is a rare case and the implementation
             // would have been too complicated for such a small use case.
-            const actualScroll = this.wrapwrapEl.scrollTop + windowsHeight;
+            const actualScroll = scrollTop + windowsHeight;
             const totalScrollHeight = this.wrapwrapEl.scrollHeight;
             const heightFromFooter = this.getElementOffsetTop(el, footerEl);
-            visible = actualScroll >=
-                totalScrollHeight - heightFromFooter - elHeight + elOffset;
+            visible = actualScroll >= totalScrollHeight - heightFromFooter - elHeight + elOffset;
         } else {
-            visible = windowsHeight > (elTop + elOffset) &&
-                0 < (elTop + elHeight - elOffset);
+            visible = windowsHeight > elTop + elOffset && 0 < elTop + elHeight - elOffset;
         }
         if (this.isAnimateOnScroll) {
             if (visible) {
