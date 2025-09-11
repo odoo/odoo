@@ -2481,17 +2481,17 @@ class BaseModel(metaclass=MetaModel):
         check_property_field_value_name(property_name)
 
         target_model = self.env[self._fields[field.definition_record].comodel_name]
-        self.env.cr.execute(SQL(
+        field_definition = target_model._fields[field.definition_record_field]
+        result = self.env.execute_query_dict(SQL(
             """ SELECT definition
                   FROM %(table)s, jsonb_array_elements(%(field)s) definition
                  WHERE %(field)s IS NOT NULL AND definition->>'name' = %(name)s
                  LIMIT 1 """,
             table=SQL.identifier(target_model._table),
-            field=SQL.identifier(field.definition_record_field),
+            field=SQL.identifier(field.definition_record_field, to_flush=field_definition),
             name=property_name,
         ))
-        result = self.env.cr.dictfetchone()
-        return result["definition"] if result else {}
+        return result[0]["definition"] if result else {}
 
     def _parent_store_compute(self) -> None:
         """ Compute parent_path field from scratch. """
