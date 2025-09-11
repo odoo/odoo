@@ -15,9 +15,9 @@ class ResPartner(models.Model):
         "On-Time Delivery Rate", compute='_compute_on_time_rate',
         help="Over the past x days; the number of products received on time divided by the number of ordered products."\
             "x is either the System Parameter purchase_stock.on_time_delivery_days or the default 365")
-    suggest_based_on = fields.Char(store=True, default='30_days')
-    suggest_days = fields.Integer(store=True, default=7)
-    suggest_percent = fields.Integer(store=True, default=100)
+    suggest_based_on = fields.Char(default='30_days')
+    suggest_days = fields.Integer(default=7)
+    suggest_percent = fields.Integer(default=100)
     group_rfq = fields.Selection(
         [('default', 'On Order'), ('day', 'Daily'), ('week', 'Weekly'), ('all', 'Always')],
         string='Group RFQ', required=True, default='default', help="Define if RFQ should be grouped \
