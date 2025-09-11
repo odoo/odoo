@@ -1376,6 +1376,18 @@ class Base_ImportImport(models.TransientModel):
                 'error': e
             })
 
+    @api.model
+    def _stringify_date_like_objects(self, data, options):
+        # As imported string like datas might be automatically interpreted and imported as date/datetime
+        # object by the spreedsheet a reconversion might be needed
+        if isinstance(data, datetime.datetime):
+            return data.strftime(options.get('datetime_format') or DEFAULT_SERVER_DATETIME_FORMAT)
+        elif isinstance(data, datetime.date):
+            return data.strftime(options.get('date_format') or DEFAULT_SERVER_DATE_FORMAT)
+        else:
+            return data
+
+    # TODO remove in master
     def _build_import_error_msg(self, message, record, row_index, field=None):
         return {
             'type': 'error',
@@ -1385,6 +1397,7 @@ class Base_ImportImport(models.TransientModel):
             'rows': {'from': row_index + 1, 'to': row_index + 1},
         }
 
+    # TODO remove in master
     def _parse_datetime_data(self, import_fields, input_file_data):
         errors = []
         field_types = self.env[self.res_model].fields_get(import_fields, ['type'])
@@ -1435,8 +1448,6 @@ class Base_ImportImport(models.TransientModel):
 
         try:
             input_file_data, import_fields = self._convert_import_data(fields, options)
-            if errors := self._parse_datetime_data(import_fields, input_file_data):
-                return {'messages': errors}
             # Parse date and float field
             input_file_data = self._parse_import_data(input_file_data, import_fields, options)
         except ImportValidationError as error:
@@ -1446,7 +1457,7 @@ class Base_ImportImport(models.TransientModel):
 
         binary_filenames = self._extract_binary_filenames(import_fields, input_file_data)
 
-        import_fields, merged_data = self._handle_multi_mapping(import_fields, input_file_data)
+        import_fields, merged_data = self.with_context(import_options=options)._handle_multi_mapping(import_fields, input_file_data)
 
         if options.get('fallback_values'):
             merged_data = self._handle_fallback_values(import_fields, merged_data, options['fallback_values'])
@@ -1496,7 +1507,7 @@ class Base_ImportImport(models.TransientModel):
             # pad front as data doesn't contain anythig for skipped lines
             r = import_result['name'] = [''] * skipped
             # only add names for the window being imported
-            r.extend(x[index_of_name] for x in input_file_data[:import_limit])
+            r.extend(self._stringify_date_like_objects(x[index_of_name], options) for x in input_file_data[:import_limit])
             # pad back (though that's probably not useful)
             r.extend([''] * (len(input_file_data) - (import_limit or 0)))
         else:
@@ -1575,6 +1586,7 @@ class Base_ImportImport(models.TransientModel):
         for idx, field in enumerate(field for field in import_fields if field):
             mapped_field_indexes.setdefault(field, list()).append(idx)
         import_fields = list(mapped_field_indexes.keys())
+        import_options = self.env.context.get('import_options', {})
 
         # recreate data and merge duplicates (applies only on text or char fields)
         # Also handles multi-mapping on "field of relation fields".
@@ -1594,16 +1606,29 @@ class Base_ImportImport(models.TransientModel):
                     if field != target_field and field in self.env[target_model]:
                         target_model = self.env[target_model][field]._name
 
-                field = self.env[target_model]._fields.get(target_field)
+                field = self.env[target_model]._fields.get(target_field.split('.')[0])
                 field_type = field.type if field else ''
 
                 # merge data if necessary
                 if field_type == 'char':
-                    new_record.append(' '.join(record[idx] for idx in indexes if record[idx]))
+                    new_record.append(
+                        ' '.join(
+                            self._stringify_date_like_objects(record[idx], import_options)
+                            for idx in indexes if record[idx]
+                        )
+                    )
                 elif field_type == 'text':
-                    new_record.append('\n'.join(record[idx] for idx in indexes if record[idx]))
+                    new_record.append(
+                        '\n'.join(
+                            self._stringify_date_like_objects(record[idx], import_options)
+                            for idx in indexes if record[idx]
+                        )
+                    )
                 elif field_type == 'many2many':
                     new_record.append(','.join(record[idx] for idx in indexes if record[idx]))
+                elif field_type == 'properties':
+                    # for property fields date and datetime objects are not suitable for JSON values
+                    new_record.append(self._stringify_date_like_objects(record[indexes[0]], import_options))
                 else:
                     new_record.append(record[indexes[0]])
 
