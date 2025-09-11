@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import datetime, timedelta
+from datetime import date, datetime, timedelta
+from freezegun import freeze_time
 
 from odoo import Command
 from odoo.tests import users, tagged
@@ -21,6 +22,7 @@ class TestWorkingHours(TestHrCalendarCommon):
             notification_type='email',
             login='user_bxls',
         )
+        # TODO RETH get rid of these tests since they can never run
         if 'hr.version' in cls.env:
             cls.skipTest(cls,
                 "hr_contract module is installed. To test these features you need to install test_hr_contract_calendar")
@@ -304,6 +306,64 @@ class TestWorkingHoursWithVersion(TestHrContractCalendarCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        cls.user_bxls = mail_new_test_user(
+            cls.env,
+            company_id=cls.company_A.id,
+            email='brussels@test.example.com',
+            groups='base.group_user',
+            name='User Brussels',
+            notification_type='email',
+            login='user_bxls',
+        )
+
+    def test_event_unavailable_partner_ids_without_contract(self):
+        """Check that new employees with no ongoing contract are available
+        to attend meetings during their assigned calendar hours.
+        """
+        # create employee and its first version before contract start
+        # otherwise it will mess with availability
+        with freeze_time(datetime(2024, 6, 1)):
+            self.user_bxls.action_create_employee()
+        employee = self.user_bxls.employee_ids
+        company_calendar = self.env.company.resource_calendar_id
+        employee_partner = self.user_bxls.partner_id
+        self.assertEqual(len(employee), 1)
+        self.assertEqual(len(employee.version_ids), 1)
+        self.assertEqual(employee.version_ids.contract_date_start, False)
+        self.assertTrue(employee.resource_calendar_id)
+        self.assertEqual(employee.resource_calendar_id, company_calendar)
+        cases = [
+            # no contract scheduled to start -> available based on employee calendar
+            (self.env['res.partner'], datetime(2024, 7, 12, 8, 30), datetime(2024, 7, 12, 9, 30), company_calendar, False, False),
+            # no contract scheduled to start -> not available based on employee calendar
+            (employee_partner, datetime(2024, 7, 12, 5, 30), datetime(2024, 7, 12, 9, 30), company_calendar, False, False),
+            # no contract and no calendar -> always available, considered flexible schedule
+            (self.env['res.partner'], datetime(2024, 7, 11, 1), datetime(2024, 7, 14, 16, 30), False, False, False),
+            # contract starts same day -> available based on contract calendar
+            (self.env['res.partner'], datetime(2024, 7, 12, 8, 30), datetime(2024, 7, 12, 9, 30), company_calendar, date(2024, 7, 12), False),
+            # contract starts in a few days -> unavailable despite valid for employee calendar
+            (employee_partner, datetime(2024, 7, 12, 8, 30), datetime(2024, 7, 12, 9, 30), company_calendar, date(2024, 7, 14), False),
+            # contract finished -> unavailable despite valid for employee calendar
+            (employee_partner, datetime(2024, 7, 12, 8, 30), datetime(2024, 7, 12, 9, 30), company_calendar, date(2024, 7, 10), date(2024, 7, 11)),
+        ]
+        for expected_unavailable_partners, start, stop, employee_calendar, version_contract_start, version_contract_end in cases:
+            employee.version_ids.write({
+                'contract_date_start': version_contract_start,
+                'contract_date_end': version_contract_end,
+            })
+            employee.resource_calendar_id = employee_calendar
+            employee.version_ids.resource_calendar_id = employee_calendar
+            with self.subTest(
+                start=start, stop=stop, employee_calendar=employee_calendar,
+                contract_start=version_contract_start, contract_end=version_contract_end
+            ):
+                event = self.env['calendar.event'].new({
+                    'start': start,
+                    'stop': stop,
+                    'name': 'Event X',
+                    'partner_ids': employee_partner,
+                })
+                self.assertEqual(event.unavailable_partner_ids.ids, expected_unavailable_partners.ids)
 
     def test_working_hours_2_emp_same_calendar(self):
         self.env.user.company_id = self.company_A
