@@ -718,6 +718,7 @@ export class Rtc extends Record {
             id: CALL_FULLSCREEN_ID,
             keepBrowserHeader: true,
             props,
+            rootId: this.rootEl?.getRootNode()?.host?.id,
         });
     }
 
