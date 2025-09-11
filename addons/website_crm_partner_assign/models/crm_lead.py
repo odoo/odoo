@@ -188,14 +188,17 @@ class CrmLead(models.Model):
         return res_partner_ids
 
     def partner_interested(self, comment=False):
+        self.check_access('write')
         message = Markup('<p>%s</p>') % _('I am interested by this lead.')
         if comment:
             message += Markup('<p>%s</p>') % comment
-        for lead in self:
+        # sudo required to convert partner data
+        for lead in self.sudo():
             lead.message_post(body=message)
-            lead.sudo().convert_opportunity(lead.partner_id)  # sudo required to convert partner data
+            lead.convert_opportunity(lead.partner_id)
 
     def partner_desinterested(self, comment=False, contacted=False, spam=False):
+        self.check_access('write')
         if contacted:
             message = Markup('<p>%s</p>') % _('I am not interested by this lead. I contacted the lead.')
         else:
@@ -205,7 +208,7 @@ class CrmLead(models.Model):
         self.message_unsubscribe(partner_ids=partner_ids.ids)
         if comment:
             message += Markup('<p>%s</p>') % comment
-        self.message_post(body=message)
+        self.sudo().message_post(body=message)
         values = {
             'partner_assigned_id': False,
         }
