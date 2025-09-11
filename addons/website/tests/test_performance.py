@@ -7,7 +7,7 @@ from contextlib import closing
 
 from odoo.sql_db import categorize_query
 from odoo.tools import mute_logger
-from odoo.tests.common import HttpCase, tagged
+from odoo.tests.common import tagged
 
 
 _logger = logging.getLogger(__name__)
@@ -113,7 +113,7 @@ class TestStandardPerformance(UtilPerf):
         # not published user, get the not found image placeholder
         self.assertEqual(self.env['res.users'].sudo().browse(2).website_published, False)
         url = '/web/image/res.users/2/image_256'
-        self.assertEqual(self._get_url_hot_query(url), 8)
+        self.assertEqual(self._get_url_hot_query(url), 7)
 
     @mute_logger('odoo.http')
     def test_11_perf_sql_img_controller(self):
@@ -124,9 +124,9 @@ class TestStandardPerformance(UtilPerf):
             'orm_signaling_registry': 1,
             'res_users': 2,
             'res_partner': 1,
-            'ir_attachment': 2,
+            'ir_attachment': 1,
         }
-        self._check_url_hot_query(url, 6, select_tables_perf)
+        self._check_url_hot_query(url, 5, select_tables_perf)
 
     @mute_logger('odoo.http')
     def test_20_perf_sql_img_controller_bis(self):

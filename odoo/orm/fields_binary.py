@@ -158,7 +158,7 @@ class Binary(Field):
         bin_size = records.env.context.get('bin_size')
         data = {
             att.res_id: _encode(human_size(att.file_size)) if bin_size else att.datas
-            for att in records.env['ir.attachment'].sudo().search(domain)
+            for att in records.env['ir.attachment'].sudo().search_fetch(domain)
         }
         self._insert_cache(records, map(data.get, records._ids))
 

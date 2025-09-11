@@ -70,6 +70,7 @@ class TestWebsiteAllPerformance(TestWebsitePerformanceCommon, TestWebsitePriceLi
             'list_price': 100,
             'sale_ok': True,
             'website_published': True,
+            'website_sequence': 1,
         })
 
         cls.productB = cls.env['product.product'].create({
@@ -83,6 +84,7 @@ class TestWebsiteAllPerformance(TestWebsitePerformanceCommon, TestWebsitePriceLi
         cls.templateC = cls.env['product.template'].create({
             'name': 'Test Remove Image',
             'image_1920': blue_image,
+            'website_sequence': 1,
         })
         cls.productC = cls.templateC.product_variant_ids[0]
         cls.productC.write({
@@ -130,7 +132,7 @@ class TestWebsiteAllPerformance(TestWebsitePerformanceCommon, TestWebsitePriceLi
         self.assertIn(f'<img src="/web/image/product.template/{self.productA.product_tmpl_id.id}/', html)
         self.assertIn(f'<img src="/web/image/product.image/{self.product_images.ids[1]}/', html)
 
-        self.assertEqual(self._get_url_hot_query('/shop'), 139)
+        self.assertEqual(self._get_url_hot_query('/shop'), 37)  # To increase this number you must ask the permission to al
 
     def _get_cart_quantity(self):
         return int(re.search(
@@ -252,4 +254,4 @@ class TestWebsiteAllPerformancePostInstall(TestWebsiteAllPerformance):
         self.assertIn(f'<img src="/web/image/product.template/{self.productA.product_tmpl_id.id}/', html)
         self.assertIn(f'<img src="/web/image/product.image/{self.product_images.ids[1]}/', html)
 
-        self.assertEqual(self._get_url_hot_query('/shop'), 150)
+        self.assertEqual(self._get_url_hot_query('/shop'), 47)  # To increase this number you must ask the permission to al

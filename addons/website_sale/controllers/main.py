@@ -407,13 +407,15 @@ class WebsiteSale(payment_portal.PaymentPortal):
 
         ProductTag = request.env['product.tag']
         if filter_by_tags_enabled and search_product:
-            all_tags = ProductTag.search(Domain.AND([
+            all_tags = ProductTag.search_fetch(Domain.AND([
                 Domain('product_ids.is_published', '=', True),
                 Domain('visible_to_customers', '=', True),
                 website_domain,
             ]))
         else:
             all_tags = ProductTag
+
+        # categories
 
         Category = request.env['product.public.category']
         categs_domain = Domain('parent_id', '=', False) & website_domain
@@ -426,11 +428,30 @@ class WebsiteSale(payment_portal.PaymentPortal):
             categs_domain &= Domain('id', 'in', search_categories.ids)
         else:
             search_categories = Category
-        categs = lazy(lambda: Category.search(categs_domain))
+        categs = Category.search_fetch(categs_domain)
+
+        category_entries = Category
+        if category:
+            category_entries = not search and category.child_id or category.child_id.filtered(lambda c: c.id in search_categories.ids)
+            if not category_entries:
+                parent = category.parent_id
+                category_entries = not search and parent.child_id or parent.child_id.filtered(lambda c: c.id in search_categories.ids)
+        else:
+            category_entries = categs
+        if not request.env.user._is_internal():
+            category_entries = category_entries.filtered('has_published_products')
+
+        # products for current pager
 
         pager = website.pager(url=url, total=product_count, page=page, step=ppg, scope=5, url_args=post)
         offset = pager['offset']
         products = search_product[offset:offset + ppg]
+        products.fetch()
+
+        # map each product to its variant, and prefetch the variants
+        variants = request.env['product.product'].sudo().browse(product._get_first_possible_variant_id() for product in products)
+        variants.fetch()
+        product_variants = dict(zip(products, variants))
 
         ProductAttribute = request.env['product.attribute']
         if products:
@@ -440,18 +461,20 @@ class WebsiteSale(payment_portal.PaymentPortal):
                     ('product_tmpl_id', 'in', search_product.ids),
                     ('attribute_id.visibility', '=', 'visible'),
                 ],
-                groupby=['attribute_id']
+                groupby=['attribute_id'],
+                order='attribute_id'
             )
-
-            attribute_ids = [attribute.id for attribute, *aggregates in attributes_grouped]
-        attributes = lazy(lambda: ProductAttribute.browse(attribute_ids).sorted())
+            attribute_ids = [attribute.id for attribute, in attributes_grouped]
+            attributes = ProductAttribute.browse(attribute_ids)
+        else:
+            attributes = ProductAttribute.browse(attribute_ids).sorted()
 
         if website.is_view_active('website_sale.products_list_view'):
             layout_mode = 'list'
         else:
             layout_mode = 'grid'
 
-        products_prices = lazy(lambda: products._get_sales_prices(website))
+        products_prices = products._get_sales_prices(website)
         product_query_params = self._get_product_query_params(**post)
 
         grouped_attributes_values = request.env['product.attribute.value'].browse(
@@ -459,9 +482,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         ).sorted().grouped('attribute_id')
 
         values = {
-            'auto_assign_ribbons': lazy(
-                lambda: self.env['product.ribbon'].sudo().search([('assign', '!=', 'manual')])
-            ),
+            'auto_assign_ribbons': self.env['product.ribbon'].sudo().search([('assign', '!=', 'manual')]),
             'search': fuzzy_search_term or search,
             'original_search': fuzzy_search_term and search,
             'order': post.get('order', ''),
@@ -470,19 +491,20 @@ class WebsiteSale(payment_portal.PaymentPortal):
             'attrib_set': attribute_value_ids,
             'pager': pager,
             'products': products,
+            'product_variants': product_variants,
             'search_product': search_product,
             'search_count': product_count,  # common for all searchbox
-            'bins': lazy(lambda: TableCompute().process(products, ppg, ppr)),
+            'bins': TableCompute().process(products, ppg, ppr),
             'ppg': ppg,
             'ppr': ppr,
             'gap': gap,
             'categories': categs,
+            'category_entries': category_entries,
             'attributes': attributes,
             'keep': keep,
             'search_categories_ids': search_categories.ids,
             'layout_mode': layout_mode,
-            'products_prices': products_prices,
-            'get_product_prices': lambda product: lazy(lambda: products_prices[product.id]),
+            'get_product_prices': lambda product: products_prices[product.id],
             'float_round': float_round,
             'shop_path': SHOP_PATH,
             'product_query_params': product_query_params,
