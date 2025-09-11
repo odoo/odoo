@@ -26,6 +26,7 @@ class Driver(Thread):
         self.data = {'value': '', 'result': ''}  # TODO: deprecate "value"?
         self._actions = {}
         self._stopped = Event()
+        self.session_id = None
 
     def __init_subclass__(cls):
         super().__init_subclass__()
@@ -48,9 +49,8 @@ class Driver(Thread):
         :return: the result of the action method
         """
         action = data.get('action', '')
-        session_id = data.get('session_id')
-        if session_id:
-            self.data["owner"] = session_id
+        self.session_id = data.get('session_id')
+
         try:
             response = {'status': 'success', 'result': self._actions[action](data), 'action_args': {**data}}
         except Exception as e:
