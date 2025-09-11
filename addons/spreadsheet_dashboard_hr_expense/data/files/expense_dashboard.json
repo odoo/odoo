@@ -58,6 +58,7 @@
         "A33": "=ODOO.LIST(1,9,\"name\")",
         "A34": "=ODOO.LIST(1,10,\"name\")",
         "A36": "[Top Reinvoiced Orders](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[[\"sale_order_id\",\"!=\",false]],\"context\":{\"group_by\":[\"sale_order_id\"],\"pivot_measures\":[\"__count\",\"total_amount\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"sale_order_id\"]},\"modelName\":\"hr.expense\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"list\"],[false,\"kanban\"],[false,\"form\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Expenses Analysis\"})",
+        "A37": "=PIVOT(9, 10, FALSE, FALSE)",
         "B24": "=ODOO.LIST.HEADER(1, \"employee_id\")",
         "B25": "=ODOO.LIST(1,1,\"employee_id\")",
         "B26": "=ODOO.LIST(1,2,\"employee_id\")",
@@ -81,9 +82,8 @@
         "C33": "=ODOO.LIST(1,9,\"total_amount\")",
         "C34": "=ODOO.LIST(1,10,\"total_amount\")",
         "E23": "[Top Categories](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[[\"product_id\",\"!=\",false]],\"context\":{\"group_by\":[\"product_id\"],\"pivot_measures\":[\"__count\",\"total_amount\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"product_id\"]},\"modelName\":\"hr.expense\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"list\"],[false,\"kanban\"],[false,\"form\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Expenses Analysis\"})",
-        "E36": "[Top Employees](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[[\"product_id\",\"!=\",false]],\"context\":{\"group_by\":[\"product_id\"],\"pivot_measures\":[\"__count\",\"total_amount\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"product_id\"]},\"modelName\":\"hr.expense\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"list\"],[false,\"kanban\"],[false,\"form\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Expenses Analysis\"})",
-        "A37": "=PIVOT(9, 10, FALSE, FALSE)",
         "E24": "=PIVOT(1, 10, FALSE, FALSE)",
+        "E36": "[Top Employees](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[[\"product_id\",\"!=\",false]],\"context\":{\"group_by\":[\"product_id\"],\"pivot_measures\":[\"__count\",\"total_amount\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"product_id\"]},\"modelName\":\"hr.expense\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"list\"],[false,\"kanban\"],[false,\"form\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Expenses Analysis\"})",
         "E37": "=PIVOT(4, 10, FALSE, FALSE)"
       },
       "styles": {
@@ -281,7 +281,7 @@
           "id": "a0aa4a67-4762",
           "col": 3,
           "row": 22,
-          "offset": { "x": 48, "y": 10 },
+          "offset": { "x": 48, "y": 7 },
           "width": 481,
           "height": 393,
           "tag": "carousel",
@@ -315,6 +315,12 @@
               { "type": "chart", "chartId": "8b782675-b8ac" },
               { "type": "carouselDataView", "title": "Top 10" }
             ],
+            "title": {
+              "text": "Top Categories",
+              "fontSize": 21,
+              "bold": true,
+              "color": "#01666B"
+            },
             "fieldMatching": {
               "8b782675-b8ac": {
                 "54e94f8d-739d-4a02-8205-c25be895720e": { "chain": "date", "type": "date" },
@@ -322,12 +328,6 @@
                 "e1b40389-7f46-44c0-acee-52033634fc5f": { "chain": "sale_order_id", "type": "many2one" },
                 "88fbcc54-dcb5-42ec-86e9-1676c4c73c6e": { "chain": "employee_id", "type": "many2one" }
               }
-            },
-            "title": {
-              "text": "Top Categories",
-              "fontSize": 21,
-              "bold": true,
-              "color": "#01666B"
             }
           }
         }
