@@ -11,7 +11,7 @@ class L10nInPanEntity(models.Model):
     _inherit = ['mail.thread', 'mail.activity.mixin']
     _description = 'Indian PAN Entity'
 
-    name = fields.Char(string="PAN", tracking=1)
+    name = fields.Char(string="PAN", tracking=1, required=True)
     type = fields.Selection([
         ('a', 'Association of Persons'),
         ('b', 'Body of Individuals'),
