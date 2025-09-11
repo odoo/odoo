@@ -31,8 +31,8 @@ registry.category("web_tour.tours").add('tour_shop_archived_variant_multi', {
         run: "click",
     },
     {
-        content: "check that brand b is not clickable",
-        trigger: '.css_not_available input[disabled]',
+        content: "check that brand b is not available (but clickable)",
+        trigger: '.css_not_available input.css_not_available:not([disabled])',
     },
     {
         content: "change second variant to make brand b available",
@@ -40,8 +40,8 @@ registry.category("web_tour.tours").add('tour_shop_archived_variant_multi', {
         run: "click",
     },
     {
-        content: "check if brand b is clickable again",
-        trigger: 'input[data-attribute-name="Brand"][data-value-name="Brand B"]',
+        content: "check if brand b is available again",
+        trigger: 'input[data-value-name="Brand B"]:not(:has(.css_not_available))',
         run: "click",
     },
 ]});
