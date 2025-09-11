@@ -25,6 +25,7 @@
                     onSwipeLeft="hasTouch() and canUnpinItem(thread) ? { action: () => thread.unpin(), icon: 'fa-times-circle', bgColor: 'bg-danger' } : undefined"
                     nameMaxLine="1"
                     textMaxLine="2"
+                    thread="thread"
                 >
                     <t t-set-slot="name">
                         <div t-if="thread.parent_channel_id" class="d-flex align-items-center">
