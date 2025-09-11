@@ -4,7 +4,7 @@
 from . import constants
 from . import urls
 from .parse_version import parse_version
-from .cache import ormcache, ormcache_context
+from .cache import ormcache
 from .config import config
 from .float_utils import float_compare, float_is_zero, float_repr, float_round, float_split, float_split_str
 from .func import classproperty, conditional, lazy, lazy_classproperty, reset_cached_properties
