@@ -351,7 +351,7 @@ test("Scheduled date is updated when time passes", async () => {
     await contains(".o-mail-Message-date", { text: "now" });
 });
 
-test("Open chat when clicking on partner mention", async () => {
+test("Open avatar card when clicking on partner mention", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv.user.partner_id;
     pyEnv["mail.scheduled.message"].create({
@@ -363,8 +363,7 @@ test("Open chat when clicking on partner mention", async () => {
     await start();
     await openFormView("res.partner", partnerId);
     await click(".o_mail_redirect");
-    await contains(".o-mail-ChatWindow .o-mail-Thread");
-    await contains(".o-mail-ChatWindow", { text: "Mitchell Admin" });
+    await contains(".o_avatar_card:contains('Mitchell Admin')");
 });
 
 test("Open chat when clicking on channel mention", async () => {

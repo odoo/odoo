@@ -604,7 +604,7 @@ test("activity with a user mention", async () => {
     await start();
     await openFormView("res.partner", partnerId1);
     await click(".o-mail-Activity-note a", { text: "@Partner 2" });
-    await contains(".o-mail-ChatWindow-header", { text: "Partner 2" });
+    await contains(".o_avatar_card:contains('Partner 2')");
 });
 
 test("activity with a channel mention", async () => {
