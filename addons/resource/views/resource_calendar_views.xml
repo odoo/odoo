@@ -67,6 +67,13 @@
                                 <span class="text-muted">/d</span><span class="text-muted">)</span>
                             </span>
                         </group>
+                        <group col="2">
+                            <label for="paid_hours_per_week" string="Paid Hours per Week"/>
+                            <div>
+                                <field name="paid_hours_per_week" style="width: 6ch;" widget="float_time"/>
+                                <span>hours/week</span>
+                            </div>
+                        </group>
                     </group>
                     <field name="attendance_ids" widget="resource_calendar_attendance_filtered_one2many" domain_filter="[('date', '=', False)]"
                            invisible="calendar_type != 'fixed'"/>

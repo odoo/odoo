@@ -71,6 +71,9 @@ class ResourceCalendar(models.Model):
     hours_per_week = fields.Float(
         string="Hours per Week",
         compute="_compute_hours_per_week", store=True, digits=(10, 5), readonly=False, copy=False)
+    paid_hours_per_week = fields.Float(
+        string="Paid Hours per Week",
+        compute="_compute_paid_hours_per_week", store=True, readonly=False, copy=False)
     is_fulltime = fields.Boolean(compute='_compute_is_fulltime', string="Is Full Time")
     work_resources_count = fields.Integer("Work Resources count", compute='_compute_work_resources_count')
     work_time_rate = fields.Float(string='Work Time Rate', compute='_compute_work_time_rate', store=True,
@@ -179,6 +182,11 @@ class ResourceCalendar(models.Model):
                 continue
             attendances = calendar.attendance_ids.filtered(lambda a: a._is_work_period())
             calendar.hours_per_week = sum(attendances.mapped('duration_hours'))
+
+    @api.depends('hours_per_week')
+    def _compute_paid_hours_per_week(self):
+        for calendar in self:
+            calendar.paid_hours_per_week = calendar.hours_per_week
 
     def _compute_work_resources_count(self):
         resources_per_calendar = dict(self.env['resource.resource']._read_group(
