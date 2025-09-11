@@ -107,6 +107,11 @@ test("shows live chat status in discuss sidebar", async () => {
     await click(".o-livechat-ChannelInfoList button", { text: "Looking for help" });
     await contains(".o-livechat-ChannelInfoList button.active", { text: "Looking for help" });
     await contains(".o-mail-DiscussSidebar-item span[title='Looking for help']");
+    // live chat status icon also in messaging menu item
+    await click(".o_menu_systray i[aria-label='Messages']");
+    await contains(
+        ".o-mail-MessagingMenu .o-mail-NotificationItem:contains('Visitor #20') [title='Looking for help']"
+    );
 });
 
 test("editing livechat status is synced between tabs", async () => {
