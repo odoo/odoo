@@ -1,5 +1,6 @@
 import { Store } from "@mail/core/common/store_service";
 import { compareDatetime } from "@mail/utils/common/misc";
+import { AvatarCardPopover } from "@mail/discuss/web/avatar_card/avatar_card_popover";
 
 import { patch } from "@web/core/utils/patch";
 
@@ -30,6 +31,12 @@ const StorePatch = {
         if (!this.env.isSmall && fromThread?.model === "discuss.channel") {
             fromThread.open({ focus: false });
         }
+    },
+    onClickPartnerMention(ev, id) {
+        this.env.services.popover.add(ev.target, AvatarCardPopover, {
+            id,
+            model: "res.partner",
+        });
     },
 };
 patch(Store.prototype, StorePatch);
