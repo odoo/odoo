@@ -33,7 +33,7 @@
                 <group>
                     <filter name="my_count" string="My Counts" domain="[('user_id', '=', uid)]"/>
                     <separator/>
-                    <filter name='internal_loc' string="Internal Locations" domain="[('location_id.usage','=', 'internal')]"/>
+                    <filter name='internal_loc' string="Internal Locations" domain="[('location_id.usage','=', 'internal'), ('location_id.warehouse_id', '!=', False)]"/>
                     <filter name='transit_loc' string="Transit Locations" domain="[('location_id.usage' ,'=', 'transit')]"/>
                     <separator/>
                     <filter name="to_count" string="To Count" domain="[('inventory_date', '&lt;=', 'today')]"/>
