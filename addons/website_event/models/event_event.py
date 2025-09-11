@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from ast import literal_eval
+from datetime import datetime
 from dateutil.relativedelta import relativedelta
 import json
 import werkzeug.urls
@@ -40,6 +41,7 @@ class EventEvent(models.Model):
     # description
     subtitle = fields.Char('Event Subtitle', translate=True)
     # registration
+    event_open_slot_ids = fields.One2many("event.slot", compute="_compute_event_open_slot_ids")
     is_participating = fields.Boolean("Is Participating", compute="_compute_is_participating",
                                       search="_search_is_participating")
     # website
@@ -98,6 +100,18 @@ class EventEvent(models.Model):
         """Fall back on the website_url to share the event."""
         for event in self:
             event.event_share_url = event.event_url or werkzeug.urls.url_join(event.get_base_url(), event.website_url)
+
+    def _compute_event_open_slot_ids(self):
+        for event in self:
+            event.event_open_slot_ids = event.event_slot_ids.filtered(
+                lambda s: s.start_datetime > datetime.now()
+                and any(
+                    availability is None or availability > 0
+                    for availability in event._get_seats_availability([
+                        (s, ticket) for ticket in event.event_ticket_ids or [False]
+                    ])
+                )
+            )
  
     @api.depends('registration_ids')
     @api.depends_context('uid')
