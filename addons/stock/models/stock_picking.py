@@ -1866,10 +1866,10 @@ class StockPicking(models.Model):
             'target': 'new',
         }
 
-    def action_add_entire_packs(self, packages):
+    def action_add_entire_packs(self, package_ids):
         self.ensure_one()
         if self.state not in ('done', 'cancel'):
-            all_packages = self.env['stock.package'].search([('id', 'child_of', packages.ids)])
+            all_packages = self.env['stock.package'].search([('id', 'child_of', package_ids)])
             all_package_ids = set(all_packages.ids)
             # Remove existing move lines that already pulled from these packages, as using them fully now.
             self.move_line_ids.filtered(lambda ml: ml.package_id.id in all_package_ids).unlink()
@@ -1900,6 +1900,7 @@ class StockPicking(models.Model):
             'domain': [('picking_ids', 'in', self.ids)],
             'context': {
                 'picking_id': self.id,
+                'location_id': self.location_id.id,
                 'can_add_entire_packs': self.picking_type_code != 'incoming',
                 'search_default_main_packages': True,
             },

@@ -3,12 +3,71 @@ import { ListRenderer } from "@web/views/list/list_renderer";
 import { X2ManyField, x2ManyField } from "@web/views/fields/x2many/x2many_field";
 import { ProductNameAndDescriptionListRendererMixin } from "@product/product_name_and_description/product_name_and_description";
 import { patch } from "@web/core/utils/patch";
+import { useOwnedDialogs, useService } from "@web/core/utils/hooks";
+import { SelectCreateDialog } from "@web/views/view_dialogs/select_create_dialog";
+import { _t } from "@web/core/l10n/translation";
 
 export class MovesListRenderer extends ListRenderer {
+    static rowsTemplate = "stock.AddPackageListRendererRows";
+
     setup() {
         super.setup();
+        this.addDialog = useOwnedDialogs();
+        this.orm = useService("orm");
+        this.actionService = useService("action");
         this.descriptionColumn = "description_picking";
         this.productColumns = ["product_id", "product_template_id"];
+        this.pickingId = this.props.list.context.default_picking_id || 0;
+        this.locationId = this.props.list.context.default_location_id || 0;
+    }
+
+    async onClickMovePackage() {
+        if (!this.pickingId) {
+            await this.forceSave();
+        }
+        const domain = [];
+        if (this.locationId) {
+            domain.push(["location_id", "child_of", this.locationId]);
+        }
+        this.addDialog(SelectCreateDialog, {
+            title: _t("Select Packages to Move"),
+            noCreate: true,
+            multiSelect: true,
+            resModel: "stock.package",
+            domain,
+            context: {
+                list_view_ref: "stock.stock_package_view_add_list",
+            },
+            onSelected: async (resIds) => {
+                if (resIds.length) {
+                    const done = await this.orm.call("stock.picking", "action_add_entire_packs", [
+                        [this.pickingId],
+                        resIds,
+                    ]);
+                    if (done) {
+                        await this.actionService.doAction({
+                            type: "ir.actions.client",
+                            tag: "soft_reload",
+                        });
+                    }
+                }
+            },
+        });
+    }
+
+    get canAddPackage() {
+        return (
+            !["done", "cancel"].includes(this.props.list.context.picking_state) &&
+            this.props.list.context.picking_type_code !== "incoming"
+        );
+    }
+
+    async forceSave() {
+        // This means the record hasn't been saved once, but we need the picking id to know for which picking we create the move lines.
+        const record = this.env.model.root;
+        await record.save();
+        this.pickingId = record.data.id;
+        this.locationId = record.data.location_id?.id;
     }
 }
 

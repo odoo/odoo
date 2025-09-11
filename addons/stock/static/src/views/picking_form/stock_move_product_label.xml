@@ -24,4 +24,10 @@
             t-ref="labelNodeRef"
         />
     </t>
+
+    <t t-name="stock.AddPackageListRendererRows" t-inherit="web.ListRenderer.Rows" t-inherit-mode="primary">
+        <td class="o_field_x2many_list_row_add" position="inside">
+            <a t-if="canAddPackage" href="#" class="px-3" tabindex="0" t-on-click.stop.prevent="() => this.onClickMovePackage()">Move a Pack</a>
+        </td>
+    </t>
 </templates>
