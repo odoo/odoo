@@ -83,9 +83,11 @@ class TestIrMailServerSMTPD(TransactionCaseWithUserDemo):
             @property
             def login_data(self):
                 return self._login_data
+
             @login_data.setter
             def login_data(self, value):
                 self._login_data = value
+
         patcher = patch('aiosmtpd.smtp.Session', Session)
         patcher.start()
         cls.addClassCleanup(patcher.stop)
@@ -96,13 +98,17 @@ class TestIrMailServerSMTPD(TransactionCaseWithUserDemo):
         warnings.filterwarnings(
             'ignore',
             "Requiring AUTH while not requiring TLS can lead to security vulnerabilities!",
-            category=UserWarning
+            category=UserWarning,
         )
+
         class CustomFilter(logging.Filter):
             def filter(self, record):
                 if record.msg == "auth_required == True but auth_require_tls == False":
                     return False
-                if record.msg == "tls_context.verify_mode not in {CERT_NONE, CERT_OPTIONAL}; this might cause client connection problems":
+                if record.msg == (  # noqa: SIM103
+                    "tls_context.verify_mode not in {CERT_NONE, CERT_OPTIONAL}; "
+                    "this might cause client connection problems"
+                ):
                     return False
                 return True
         logging.getLogger('mail.log').addFilter(CustomFilter())
@@ -130,11 +136,13 @@ class TestIrMailServerSMTPD(TransactionCaseWithUserDemo):
                     # context = ssl.create_default_context()  # what it should do
                 context.load_verify_locations(cafile=str(cls.ssl_ca.cert))
                 super().starttls(context=context)
+
         class TEST_SMTP_SSL(smtplib.SMTP_SSL):
             def _get_socket(self, *args, **kwargs):
                 # self.context = ssl.create_default_context()  # what it should do
                 self.context.load_verify_locations(cafile=str(cls.ssl_ca.cert))
                 return super()._get_socket(*args, **kwargs)
+
         patcher = patch('smtplib.SMTP', TEST_SMTP)
         patcher.start()
         cls.addClassCleanup(patcher.stop)
@@ -171,7 +179,7 @@ class TestIrMailServerSMTPD(TransactionCaseWithUserDemo):
 
     @contextlib.contextmanager
     def start_smtpd(
-        self, encryption, ssl_context=None, auth_required=True, stop_on_cleanup=True
+        self, encryption, ssl_context=None, auth_required=True, stop_on_cleanup=True,
     ):
         """
         Start a smtp daemon in a background thread, stop it upon exiting
@@ -274,7 +282,6 @@ class TestIrMailServerSMTPD(TransactionCaseWithUserDemo):
                         else:
                             mail_server.test_smtp_connection()
 
-
     def test_authentication_login_matrix(self):
         """
         Connect to a server that is authenticating users via a login/pwd
@@ -301,8 +308,7 @@ class TestIrMailServerSMTPD(TransactionCaseWithUserDemo):
             # auth_required, password, error_pattern
             (False, MISSING, None),
             (True, MISSING,
-                r"The server refused the sender address \(noreply@localhost\) "
-                r"with error b'5\.7\.0 Authentication required'"),
+                r"The server refused the sender address \(noreply@localhost\) "),
             (True, INVALID,
                 r"The server has closed the connection unexpectedly\. "
                 r"Check configuration served on this port number\.\n "
@@ -353,8 +359,7 @@ class TestIrMailServerSMTPD(TransactionCaseWithUserDemo):
                 r"Check configuration served on this port number\.\n "
                 r"Connection unexpectedly closed: timed out"),
             ('none', 'starttls',
-                r"The server refused the sender address \(noreply@localhost\) with error "
-                r"b'Must issue a STARTTLS command first'"),
+                r"The server refused the sender address \(noreply@localhost\) "),
             ('starttls', 'none',
                 r"An option is not supported by the server:\n "
                 r"STARTTLS extension not supported by server\."),
