@@ -268,7 +268,7 @@ export class DiscussCommandPalette {
                 action: async () => {
                     const name = this.options.searchValue.trim();
                     if (name) {
-                        makeNewChannel(name, this.store);
+                        await makeNewChannel(name, this.store);
                     } else {
                         this.dialog.add(CreateChannelDialog);
                     }
