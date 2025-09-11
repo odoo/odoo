@@ -129,7 +129,6 @@ const VariantMixin = {
 
         parent.querySelectorAll('option, input, label, .o_variant_pills').forEach(el => {
             el.classList.remove('css_not_available');
-            el.removeAttribute('disabled');
         });
         parent.querySelectorAll('option, input').forEach(el => {
             const li = el.closest('li');
@@ -159,8 +158,8 @@ const VariantMixin = {
             });
         }
         // combination exclusions: array of array of ptav
-        // for example a product with 3 variation and one specific variation is disabled (archived)
-        //  requires the first 2 to be selected for the third to be disabled
+        // for example a product with 3 attributes of which 1 combination is unavailable (archived)
+        // requires the first 2 to be selected for the third to be grayed out
         if (combinationData.archived_combinations) {
             combinationData.archived_combinations.forEach((excludedCombination) => {
                 const ptavCommon = excludedCombination.filter((ptav) => combination.includes(ptav));
@@ -189,14 +188,16 @@ const VariantMixin = {
                     && (ptavCommon.length === (combination.length - 1))
                 ) {
                     // In this case we only need to disable the remaining ptav
-                    const disabledPtav = excludedCombination.find((ptav) => !combination.includes(ptav));
+                    const unavailablePtav = excludedCombination.find(
+                        (ptav) => !combination.includes(ptav)
+                    );
                     excludedCombination.forEach((ptav) => {
-                        if (ptav === disabledPtav) {
+                        if (ptav === unavailablePtav) {
                             return;
                         }
                         this._disableInput(
                             parent,
-                            disabledPtav,
+                            unavailablePtav,
                             ptav,
                             combinationData.mapped_attribute_names,
                         );
@@ -216,7 +217,7 @@ const VariantMixin = {
     },
 
     /**
-     * Will disable the input/option that refers to the passed attributeValueId.
+     * Will gray out the input/option that refers to the passed attributeValueId.
      * This is used for showing the user that some combinations are not available.
      *
      * It will also display a message explaining why the input is not selectable.
@@ -228,7 +229,7 @@ const VariantMixin = {
      * @param {integer} attributeValueId
      * @param {integer} excludedBy The attribute value that excludes this input
      * @param {Object} attributeNames A dict containing all the names of the attribute values
-     *   to show a human readable message explaining why the input is disabled.
+     *   to show a human readable message explaining why the input is grayed out.
      * @param {string} [productName] The parent product. If provided, it will be appended before
      *   the name of the attribute value that excludes this input
      *   e.g: Not available with Customizable Desk (Color: Black)
@@ -238,7 +239,6 @@ const VariantMixin = {
             `option[value="${attributeValueId}"], input[value="${attributeValueId}"]`
         );
         input.classList.add('css_not_available')
-        input.disabled = true;
         input.closest('label')?.classList?.add('css_not_available');
         input.closest('.o_variant_pills')?.classList?.add('css_not_available');
 
