@@ -24,6 +24,31 @@ import { HootStatusPanel } from "./hoot_status_panel";
 const { setTimeout } = globalThis;
 
 //-----------------------------------------------------------------------------
+// Internal
+//-----------------------------------------------------------------------------
+
+// Indenpendant from Hoot style classes since it is not loaded in headless
+const HEADLESS_CONTAINER_STYLE = [
+    "position: absolute",
+    "bottom: 0",
+    "inset-inline-start: 50%",
+    "transform: translateX(-50%)",
+    "display: flex",
+    "z-index: 4",
+    "margin-bottom: 1rem",
+    "padding-left: 1rem",
+    "padding-right: 1rem",
+    "padding-top: 0.5rem",
+    "padding-bottom: 0.5rem",
+    "gap: 0.5rem",
+    "white-space: nowrap",
+    "border-radius: 9999px",
+    "box-shadow: 2px 1px 5px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1)",
+    "background-color: #e2e8f0",
+].join(";");
+const HEADLESS_LINK_STYLE = ["color: #714b67", "text-decoration: underline"].join(";");
+
+//-----------------------------------------------------------------------------
 // Exports
 //-----------------------------------------------------------------------------
 
@@ -44,12 +69,9 @@ export class HootMain extends Component {
 
     static template = xml`
         <t t-if="env.runner.headless">
-            <div class="absolute bottom-0 start-1/2 -translate-x-1/2
-                flex z-4 mb-4 px-4 py-2 gap-2 whitespace-nowrap
-                text-xl rounded-full shadow bg-gray-200 dark:bg-gray-800"
-            >
+            <div style="${HEADLESS_CONTAINER_STYLE}">
                 Running in headless mode
-                <a class="text-primary hover:underline" t-att-href="createUrl({ headless: null })">
+                <a style="${HEADLESS_LINK_STYLE}" t-att-href="createUrl({ headless: null })">
                     Run with UI
                 </a>
             </div>
