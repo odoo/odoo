@@ -50,11 +50,12 @@ class EventSaleReport(models.Model):
         tools.drop_view_if_exists(self._cr, self._table)
         self._cr.execute('CREATE OR REPLACE VIEW %s AS (%s);' % (self._table, self._query()))
 
-    def _query(self, with_=None, select=None, join=None, group_by=None):
+    def _query(self, with_=None, select=None, join=None, group_by=None, where=None):
         return "\n".join([
             self._with_clause(*(with_ or [])),
             self._select_clause(*(select or [])),
             self._from_clause(*(join or [])),
+            self._where_clause(*(where or [])),
             self._group_by_clause(*(group_by or []))
         ])
 
@@ -64,9 +65,9 @@ class EventSaleReport(models.Model):
 WITH
     """ + ',\n    '.join(with_) if with_ else ''
 
-    def _select_clause(self, *select):
+    def _select_clause(self):
         # Extra clauses formatted as `cte1.column1 AS new_column1`, `table1.column2 AS new_column2`...
-        return """
+        select_query = """
 SELECT
     ROW_NUMBER() OVER (ORDER BY event_registration.id) AS id,
 
@@ -108,7 +109,11 @@ SELECT
         sale_order_line.price_subtotal
             / CASE COALESCE(sale_order.currency_rate, 0) WHEN 0 THEN 1.0 ELSE sale_order.currency_rate END
             / sale_order_line.product_uom_qty
-    END AS sale_price_untaxed""" + (',\n    ' + ',\n    '.join(select) if select else '')
+    END AS sale_price_untaxed"""
+        additional_fields = self._select_additional_fields()
+        if additional_fields:
+            select_query += ",\n    " + ",\n    ".join(f"{v} AS {k}" for k, v in additional_fields.items())
+        return select_query
 
     def _from_clause(self, *join_):
         # Extra clauses formatted as `column1`, `column2`...
@@ -125,3 +130,11 @@ LEFT JOIN sale_order_line ON sale_order_line.id = event_registration.sale_order_
         return """
 GROUP BY
     """ + ',\n    '.join(group_by) if group_by else ''
+
+    def _where_clause(self, *where):
+        return """
+WHERE """ + ',\n    '.join(where) if where else ''
+
+    def _select_additional_fields(self):
+        # To be overridden in other modules
+        return {}
