@@ -99,3 +99,7 @@ export class ProductVariantPreview extends Interaction {
 registry
     .category('public.interactions')
     .add('website_sale.product_variant_preview', ProductVariantPreview);
+
+registry
+    .category("public.interactions.edit")
+    .add("website.product_variant_preview", { Interaction: ProductVariantPreview });
