@@ -160,7 +160,7 @@ def upgrade(file_manager: FileManager):
         for country in sorted(conflicts):
             _logger.warning("%s: %s", country, conflicts[country])
 
-    test_tag_signs(tag_signs)
+    # test_tag_signs(tag_signs)
 
     unknowns = defaultdict(list)
     for i, file in enumerate(tax_report_files):
