@@ -87,9 +87,25 @@
         'mass_mailing.assets_iframe_style': [
             # minimal style assets required to view the mail content
             # convert_inline ONLY uses this and inline styles.
-            # TODO EGGMAIL: reduce included bundles
-            ('include', 'mass_mailing.assets_mail_themes'),
-            ('include', 'web.assets_frontend'),
+
+            # useful scss from /web web.assets_frontend
+            ('include', 'web._assets_helpers'),
+            'web/static/src/scss/bootstrap_overridden.scss',
+            ('include', 'web._assets_frontend_helpers'),
+            'web/static/src/scss/pre_variables.scss',
+            'web/static/lib/bootstrap/scss/_variables.scss',
+            'web/static/lib/bootstrap/scss/_maps.scss',
+            ('include', 'web._assets_bootstrap_frontend'),
+
+            # useful scss from /html_editor web.assets_frontend
+            # TODO EGGMAIL: could improve load time by splitting scss from JS files
+            ('include', 'html_editor.assets_media_dialog'),
+            ('include', 'html_editor.assets_readonly'),
+            'html_editor/static/src/public/**/*',
+            'html_editor/static/src/scss/html_editor.common.scss',
+            'html_editor/static/src/scss/html_editor.frontend.scss',
+            'html_editor/static/src/scss/base_style.scss',
+
             ('after', 'web/static/lib/bootstrap/scss/_maps.scss', 'mass_mailing/static/src/scss/mass_mailing.ui.scss'),
 
             # TODO DUAU: change when file is back in html_builder
@@ -103,10 +119,11 @@
             'web/static/src/scss/fontawesome_overridden.scss',
 
             ('include', 'html_builder.assets_inside_builder_iframe'),
+            ('include', 'mass_mailing.assets_mail_themes'),
             'mass_mailing/static/src/scss/mass_mailing_mail.scss',
             'mass_mailing/static/src/iframe_assets/**/*',
         ],
-        'html_builder.iframe_add_dialog': [
+        'mass_mailing.iframe_add_dialog': [
             'mass_mailing/static/src/builder/snippet_viewer/*.scss',
         ],
         'mass_mailing.mailing_assets': [

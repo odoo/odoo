@@ -100,9 +100,14 @@ export class AddSnippetDialog extends Component {
         this.props.editor.dispatchTo("snippet_preview_dialog_stylesheets_handlers", {
             iframe: this.iframeRef.el,
         });
+        const editorPreviewAssetsBundles = this.props.editor.getResource(
+            "snippet_preview_dialog_bundles"
+        );
         const loadOptions = { targetDoc: this.iframeRef.el.contentDocument, js: false };
         await Promise.all([
-            loadCSSBundleFromEditor("web.assets_frontend", loadOptions),
+            ...editorPreviewAssetsBundles.map((assetsBundle) =>
+                loadCSSBundleFromEditor(assetsBundle, loadOptions)
+            ),
             loadBundle("html_builder.iframe_add_dialog", loadOptions),
         ]);
     }
