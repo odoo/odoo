@@ -41,6 +41,25 @@ registry.category("web_tour.tours").add("test_purchase_order_suggest_search_pane
             },
         },
         ...goToPOFromCatalog(),
+        { trigger: ".o_purchase_order" },
+        {
+            content: "Confirm PO (to test suggest hidden on po.state != draft",
+            trigger: 'button[name="button_confirm"]',
+            run: "click",
+        },
+        ...goToCatalogFromPO(),
+        { trigger: 'body:not(:has(div[name="search_panel_suggestion"]' },
+        ...goToPOFromCatalog(),
+        {
+            content: "Cancel PO (to reset to draft)",
+            trigger: 'button[name="button_cancel"]',
+            run: "click",
+        },
+        {
+            content: "Reset to draft",
+            trigger: 'button[name="button_draft"]',
+            run: "click",
+        },
         ...goToCatalogFromPO(),
         { trigger: 'div[name="search-suggest-toggle"] input:not(:checked)' }, // Should still be off
         ...toggleSuggest(true),
@@ -114,32 +133,32 @@ registry.category("web_tour.tours").add("test_purchase_order_suggest_search_pane
          */
         ...setSuggestParameters({ basedOn: "Last 7 days", nbDays: 28, factor: 50 }),
         { trigger: "span[name='suggest_total']:visible:contains('480')" },
-        { trigger: "span[name='o_kanban_monthly_demand_qty']:visible:contains('52')" }, // ceil(12 * 30/ 7)
-        { trigger: "div[name='o_kanban_purchase_suggest'] span:visible:contains('24')" }, // 12 * 4 * 50%
+        { trigger: "span[name='kanban_monthly_demand_qty']:visible:contains('52')" }, // ceil(12 * 30/ 7)
+        { trigger: "div[name='kanban_purchase_suggest'] span:visible:contains('24')" }, // 12 * 4 * 50%
         checkKanbanRecordHighlight("test_product", 1),
 
         ...setSuggestParameters({ basedOn: "Last 30 days" }),
         { trigger: "span[name='suggest_total']:visible:contains('240')" },
-        { trigger: "span[name='o_kanban_monthly_demand_qty']:visible:contains('24')" }, // 2 orders of 12
-        { trigger: "div[name='o_kanban_purchase_suggest'] span:visible:contains('12')" }, // 24 * 1 (28 days ~= 1 month) * 50% = 12
+        { trigger: "span[name='kanban_monthly_demand_qty']:visible:contains('24')" }, // 2 orders of 12
+        { trigger: "div[name='kanban_purchase_suggest'] span:visible:contains('12')" }, // 24 * 1 (28 days ~= 1 month) * 50% = 12
 
         ...setSuggestParameters({ basedOn: "Last 3 months" }),
         { trigger: "span[name='suggest_total']:visible:contains('80')" },
-        { trigger: "span[name='o_kanban_monthly_demand_qty']:visible:contains('8')" }, // 24 / 3 = 8 with quaterly
-        { trigger: "div[name='o_kanban_purchase_suggest'] span:visible:contains('4')" }, // 24 / 3* 1 (28 days ~= 1 month) * 50% = 4
+        { trigger: "span[name='kanban_monthly_demand_qty']:visible:contains('8')" }, // 24 / 3 = 8 with quaterly
+        { trigger: "div[name='kanban_purchase_suggest'] span:visible:contains('4')" }, // 24 / 3* 1 (28 days ~= 1 month) * 50% = 4
         ...toggleSuggest(false),
-        { trigger: "span[name='o_kanban_monthly_demand_qty']:visible:contains('24')" }, // Should come back to normal monthly demand
+        { trigger: "span[name='kanban_monthly_demand_qty']:visible:contains('24')" }, // Should come back to normal monthly demand
         checkKanbanRecordHighlight("test_product", 1, false), // expected order 1 not checked, just that highligh is off
         ...toggleSuggest(true),
 
         ...setSuggestParameters({ basedOn: "Forecasted", factor: 100 }),
         { trigger: "span[name='suggest_total']:visible:contains('2,000')" },
         { trigger: "span[name='o_kanban_forecasted_qty']:visible:contains('100')" }, // Move out of 100 in 20days
-        { trigger: "div[name='o_kanban_purchase_suggest'] span:visible:contains('100')" }, // 100 * 100%
+        { trigger: "div[name='kanban_purchase_suggest'] span:visible:contains('100')" }, // 100 * 100%
         ...setSuggestParameters({ factor: 200 }),
-        { trigger: "div[name='o_kanban_purchase_suggest'] span:visible:contains('200')" }, // 100 * 200%
+        { trigger: "div[name='kanban_purchase_suggest'] span:visible:contains('200')" }, // 100 * 200%
         ...setSuggestParameters({ factor: 50 }),
-        { trigger: "div[name='o_kanban_purchase_suggest'] span:visible:contains('50')" }, // 100 * 50%
+        { trigger: "div[name='kanban_purchase_suggest'] span:visible:contains('50')" }, // 100 * 50%
         /*
          * -------------------  PART 3 : KANBAN ACTIONS ---------------------
          * Tests record button add and remove, and add all filter
@@ -162,8 +181,8 @@ registry.category("web_tour.tours").add("test_purchase_order_suggest_search_pane
             trigger: "div.o_tooltip_div_remove button",
             run: "click",
         },
-        { trigger: "span[name='o_kanban_monthly_demand_qty']:visible:contains('52')" },
-        // { trigger: "div[name='o_kanban_purchase_suggest'] span:visible:contains('24')" }, // TODO Bugs sometime on local
+        { trigger: "span[name='kanban_monthly_demand_qty']:visible:contains('52')" },
+        // { trigger: "div[name='kanban_purchase_suggest'] span:visible:contains('24')" }, // TODO Bugs sometime on local
         checkKanbanRecordHighlight("test_product", 1),
         // Test concurent RPC bug on filter update
         {
@@ -171,7 +190,6 @@ registry.category("web_tour.tours").add("test_purchase_order_suggest_search_pane
             trigger: '.o_facet_value:contains("In the Order")',
             async run(actions) {
                 await actions.click(
-                    // TODO remove await
                     [...document.querySelectorAll(".o_searchview_facet")]
                         .at(-1)
                         .querySelector(".o_facet_remove")
@@ -179,8 +197,8 @@ registry.category("web_tour.tours").add("test_purchase_order_suggest_search_pane
             },
         },
         checkKanbanRecordHighlight("test_product", 1),
-        { trigger: "span[name='o_kanban_monthly_demand_qty']:visible:contains('52')" },
-        { trigger: "div[name='o_kanban_purchase_suggest'] span:visible:contains('24')" }, // 12 * 4 * 50%
+        { trigger: "span[name='kanban_monthly_demand_qty']:visible:contains('52')" },
+        { trigger: "div[name='kanban_purchase_suggest'] span:visible:contains('24')" }, // 12 * 4 * 50%
         // Check adding from record button
         {
             content: "Add back suggestion with Card Button",

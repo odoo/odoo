@@ -7,7 +7,10 @@
         </xpath>
     </t>
     <t t-name="purchase_stock.ProductCatalogSearchPanelContent" t-inherit="account.ProductCatalogSearchPanelContent" t-inherit-mode="primary">
-        <xpath expr="//section[hasclass('o_search_panel_sections')]" position="after">
+         <xpath expr="//section[hasclass('o_search_panel_sections')]" position="attributes">
+            <attribute name="class">o_search_panel_sections mt-4</attribute>
+        </xpath>
+        <xpath expr="//section[hasclass('o_search_panel_sections')]" position="before">
             <t t-if="displaySuggest">
                 <t t-call="PurchaseSuggest.SearchPanel.Header"/>
                 <t t-if="suggest.suggestToggle.isOn">
@@ -22,13 +25,12 @@
     </t>
     <!-- ───────────────── Header ───────────────── -->
     <t t-name="PurchaseSuggest.SearchPanel.Header">
-        <div class="d-flex pb-2 mt-3">
+        <div name="search_panel_suggestion" class="d-flex pt-4 mt-3">
             <header class=" text-uppercase cursor-default" t-att-title="tooltipTitle">
                 <i class="fa fa-lg fa-lightbulb-o text-primary me-2"/>
                 <b class="me-2">Suggest</b>
             </header>
             <div class="d-flex align-items-center ms-auto">
-                <span class="me-2">Activate</span>
                 <div name="search-suggest-toggle" class="form-check form-switch mb-0">
                     <input
                         class="form-check-input"
