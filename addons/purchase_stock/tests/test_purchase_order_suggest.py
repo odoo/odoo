@@ -1,5 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from datetime import datetime, timedelta
+from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
 from odoo import Command, fields
@@ -51,15 +51,12 @@ class TestPurchaseOrderSuggest(PurchaseTestCommon, HttpCase):
         base_warehouse = self.picking_type_out.default_location_src_id.warehouse_id
         warehouse_id = (warehouse or base_warehouse).id
         suggest_context = {
-            "order_id": po.id,
-            "domain": [],
             "warehouse_id": warehouse_id,
             "suggest_based_on": based_on,
             "suggest_percent": factor,
             "suggest_days": days,
         }
-        po_id = self.env["purchase.order"].with_context(suggest_context).browse(po.id).ensure_one()
-        po_id.action_purchase_order_suggest(suggest_context)
+        po.with_context(suggest_context).action_purchase_order_suggest()
 
     def _create_and_process_delivery_at_date(self, products_and_quantities, date=False, warehouse=False, to_validate=True):
         date = date or datetime.now()
@@ -365,7 +362,7 @@ class TestPurchaseOrderSuggest(PurchaseTestCommon, HttpCase):
         today = fields.Datetime.now()
         self.env['stock.quant']._update_available_quantity(self.product_1, self.stock_location, 12)
         # Do a delivery in the past.
-        self._create_and_process_delivery_at_date([(self.product_1, 12)], date=today - timedelta(days=10))
+        self._create_and_process_delivery_at_date([(self.product_1, 12)], date=today - relativedelta(days=10))
 
         # Create a new PO for the vendor then check suggest wizard estimed price.
         po = self.env['purchase.order'].create({'partner_id': self.partner_1.id})
