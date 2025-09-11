@@ -69,7 +69,7 @@ test("clone of editable media inside not editable area should be editable", asyn
             static template = xml`<BuilderButton classAction="'test'">Test Image</BuilderButton>`;
         }
     );
-    const { waitDomUpdated } = await setupHTMLBuilder(`
+    const { waitSidebarUpdated } = await setupHTMLBuilder(`
         <section>
             <div class="o_not_editable">
                 <img class="o_editable_media" src="${dummyBase64Img}"/>
@@ -77,7 +77,7 @@ test("clone of editable media inside not editable area should be editable", asyn
         </section>
     `);
     await contains(":iframe img").click();
-    await waitDomUpdated();
+    await waitSidebarUpdated();
     expect(".options-container[data-container-title='Image']").toBeDisplayed();
     await contains(".oe_snippet_clone").click();
     await contains(":iframe section:last-of-type img").click();

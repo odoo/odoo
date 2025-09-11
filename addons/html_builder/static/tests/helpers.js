@@ -18,6 +18,7 @@ import {
     models,
     mountWithCleanup,
     patchWithCleanup,
+    waitUntilIdle,
 } from "@web/../tests/web_test_helpers";
 import { loadBundle } from "@web/core/assets";
 import { isBrowserFirefox } from "@web/core/browser/feature_detection";
@@ -182,7 +183,7 @@ class IrUiView extends models.Model {
  * getEditableContent: () => HTMLElement,
  * contentEl: HTMLElement,
  * builderEl: HTMLElement,
- * waitDomUpdated: () => Promise<void>
+ * waitSidebarUpdated: () => Promise<void>
  * }>}
 }}
  */
@@ -248,11 +249,13 @@ export async function setupHTMLBuilder(
     Plugins.push(...BuilderPlugins);
 
     let lastUpdatePromise;
-    const waitDomUpdated = async () => {
+    const waitSidebarUpdated = async () => {
+        await attachedEditor.shared.operation.next();
         // The tick ensures that lastUpdatePromise has correctly been assigned
         await tick();
         await lastUpdatePromise;
         await animationFrame();
+        await waitUntilIdle([comp.__owl__.app]);
     };
     patchWithCleanup(Builder.prototype, {
         setup() {
@@ -320,7 +323,7 @@ export async function setupHTMLBuilder(
         getEditableContent: () => editableContent,
         contentEl: comp.iframeRef.el.contentDocument.body.firstChild.firstChild,
         builderEl: comp.env.builderRef.el.querySelector(".o-website-builder_sidebar"),
-        waitDomUpdated,
+        waitSidebarUpdated,
     };
 }
 
