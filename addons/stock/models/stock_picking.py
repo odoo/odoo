@@ -602,7 +602,7 @@ class StockPicking(models.Model):
     has_deadline_issue = fields.Boolean(
         "Is late", compute='_compute_has_deadline_issue', store=True, default=False,
         help="Is late or will be late depending on the deadline and scheduled date")
-    date_done = fields.Datetime('Date of Transfer', copy=False, readonly=True, help="Date at which the transfer has been processed or cancelled.")
+    date_done = fields.Datetime('Date of Transfer', copy=False, help="Date at which the transfer has been processed or cancelled.")
     delay_alert_date = fields.Datetime('Delay Alert Date', compute='_compute_delay_alert_date', search='_search_delay_alert_date')
     json_popover = fields.Char('JSON data for the popover widget', compute='_compute_json_popover')
     location_id = fields.Many2one(
@@ -908,8 +908,10 @@ class StockPicking(models.Model):
 
     def _set_scheduled_date(self):
         for picking in self:
-            if picking.state in ('done', 'cancel'):
-                raise UserError(_("You cannot change the Scheduled Date on a done or cancelled transfer."))
+            if picking.state == 'cancel':
+                raise UserError(_("You cannot change the Scheduled Date on a cancelled transfer."))
+            if picking.state == 'done':
+                continue
             picking.move_ids.write({'date': picking.scheduled_date})
 
     def _has_scrap_move(self):
@@ -1126,6 +1128,8 @@ class StockPicking(models.Model):
                     vals['location_id'] = picking_type.default_location_src_id.id
                     vals['location_dest_id'] = picking_type.default_location_dest_id.id
         res = super().write(vals)
+        if vals.get('date_done'):
+            self.filtered(lambda p: p.state == 'done').move_ids.date = vals['date_done']
         if vals.get('signature'):
             for picking in self:
                 picking._attach_sign()

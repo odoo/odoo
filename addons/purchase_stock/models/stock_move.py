@@ -177,9 +177,7 @@ class StockMove(models.Model):
     def _get_value_from_quotation(self, quantity, at_date=None):
         # TODO: Start from global value
         if not self.purchase_line_id:
-            return super()._get_value_from_quotation(quantity)
-        if at_date and self.purchase_line_id.order_id.date_order > at_date:
-            return super()._get_value_from_quotation(quantity)
+            return super()._get_value_from_quotation(quantity, at_date)
         price_unit = self.purchase_line_id._get_stock_move_price_unit()
         quantity = min(quantity, self.quantity)
         return {

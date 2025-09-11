@@ -781,6 +781,9 @@ Please change the quantity done or the rounding precision in your settings.""",
         if 'product_id' in vals or 'location_id' in vals or 'location_dest_id' in vals:
             self._update_orderpoints()
         res = super().write(vals)
+        moves_done = self.filtered(lambda m: m.state == 'done')
+        if 'date' in vals and moves_done:
+            moves_done.move_line_ids.date = vals['date']
         if move_to_recompute_state:
             move_to_recompute_state._recompute_state()
         if move_to_check_location:
@@ -2079,7 +2082,7 @@ Please change the quantity done or the rounding precision in your settings.""",
         if any(ml.package_id and ml.package_id == ml.result_package_id for ml in moves_todo.move_line_ids):
             self.env['stock.quant']._unlink_zero_quants()
         picking = moves_todo.mapped('picking_id')
-        moves_todo.write({'state': 'done', 'date': self.env.context.get('counting_date') or fields.Datetime.now()})
+        moves_todo.write({'state': 'done', 'date': fields.Datetime.now()})
 
         move_dests_per_company = defaultdict(lambda: self.env['stock.move'])
 
