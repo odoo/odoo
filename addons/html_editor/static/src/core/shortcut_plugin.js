@@ -46,13 +46,16 @@ export class ShortCutPlugin extends Plugin {
     }
 
     addShortcut(hotkey, action, { isAvailable, global }) {
-        this.services.hotkey.add(hotkey, action, {
-            area: () => this.editable,
-            bypassEditableProtection: true,
-            allowRepeat: true,
-            isAvailable: (target) =>
-                (!isAvailable || isAvailable(this.dependencies.selection.getEditableSelection())) &&
-                (global || isValidTargetForDomListener(target)),
-        });
+        this._cleanups.push(
+            this.services.hotkey.add(hotkey, action, {
+                area: () => this.editable,
+                bypassEditableProtection: true,
+                allowRepeat: true,
+                isAvailable: (target) =>
+                    (!isAvailable ||
+                        isAvailable(this.dependencies.selection.getEditableSelection())) &&
+                    (global || isValidTargetForDomListener(target)),
+            })
+        );
     }
 }

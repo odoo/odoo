@@ -1,0 +1,14 @@
+.o_layout .o_mail_wrapper {
+    // Smaller container
+    .o_container_small {
+        @include media-breakpoint-up(lg) {
+            max-width: map-get($container-max-widths, md);
+        }
+    }
+    hr {
+        // override necessary because bootstrap opacity is 0.25 by default
+        // depending on the modules installed.
+        opacity: 1;
+    }
+}
+
