@@ -77,14 +77,14 @@ class StockQuant(models.Model):
             return (sum(records.mapped('value')) for records in column)
         return super()._read_group_postprocess_aggregate(aggregate_spec, raw_values)
 
-    def _apply_inventory(self):
+    def _apply_inventory(self, date=None):
         for accounting_date, inventory_ids in groupby(self, key=lambda q: q.accounting_date):
             inventories = self.env['stock.quant'].concat(*inventory_ids)
             if accounting_date:
-                super(StockQuant, inventories.with_context(force_period_date=accounting_date))._apply_inventory()
+                super(StockQuant, inventories.with_context(force_period_date=accounting_date))._apply_inventory(date)
                 inventories.accounting_date = False
             else:
-                super(StockQuant, inventories)._apply_inventory()
+                super(StockQuant, inventories)._apply_inventory(date)
 
     def _get_inventory_move_values(self, qty, location_id, location_dest_id, package_id=False, package_dest_id=False):
         res_move = super()._get_inventory_move_values(qty, location_id, location_dest_id, package_id, package_dest_id)
