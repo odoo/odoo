@@ -44,7 +44,7 @@ test("Should set a shape on an image", async () => {
     expect(":iframe .test-options-target img").toHaveAttribute("data-shape-colors", ";;;;");
 });
 test("Should change the shape color of an image", async () => {
-    const { getEditor, waitDomUpdated } = await setupWebsiteBuilder(
+    const { waitSidebarUpdated } = await setupWebsiteBuilder(
         `<div class="test-options-target">
             ${testImg}
         </div>`,
@@ -52,14 +52,11 @@ test("Should change the shape color of an image", async () => {
             loadIframeBundles: true,
         }
     );
-    const editor = getEditor();
     await contains(":iframe .test-options-target img").click();
 
     await contains("[data-label='Shape'] .dropdown").click();
     await contains("[data-action-value='html_builder/pattern/pattern_wave_4']").click();
-    // ensure the shape action has been applied
-    await editor.shared.operation.next(() => {});
-    await waitDomUpdated();
+    await waitSidebarUpdated();
 
     await waitFor(`[data-label="Colors"] .o_we_color_preview`);
 
@@ -94,9 +91,7 @@ test("Should change the shape color of an image", async () => {
     await contains(`[data-label="Colors"] .o_we_color_preview:nth-child(1)`).click();
     await contains(`.o_font_color_selector [data-color="#FF0000"]`).click();
 
-    // ensure the shape action has been applied
-    await editor.shared.operation.next(() => {});
-    await waitDomUpdated();
+    await waitSidebarUpdated();
 
     expect(`[data-label="Colors"] .o_we_color_preview:nth-child(1)`).toHaveAttribute(
         "style",
@@ -108,7 +103,7 @@ test("Should change the shape color of an image", async () => {
     );
 });
 test("Should change the shape color of an image with a class color", async () => {
-    const { getEditor, waitDomUpdated } = await setupWebsiteBuilder(
+    const { getEditor, waitSidebarUpdated } = await setupWebsiteBuilder(
         `<div class="test-options-target">
             ${testImg}
         </div>`,
@@ -157,10 +152,7 @@ test("Should change the shape color of an image with a class color", async () =>
     await contains(`[data-label="Colors"] .o_we_color_preview:nth-child(1)`).click();
     await contains(`.o_font_color_selector [data-color="o-color-2"]`).click();
 
-    // ensure the shape action has been applied
-    await editor.shared.operation.next(() => {});
-    // wait for owl to update the dom
-    await waitDomUpdated();
+    await waitSidebarUpdated();
 
     expect(`[data-label="Colors"] .o_we_color_preview:nth-child(1)`).toHaveAttribute(
         "style",

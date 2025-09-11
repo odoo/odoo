@@ -1,9 +1,15 @@
 import { BaseOptionComponent, useDomState } from "@html_builder/core/utils";
 import { describe, expect, test } from "@odoo/hoot";
-import { animationFrame } from "@odoo/hoot-dom";
+import { animationFrame, Deferred, delay } from "@odoo/hoot-dom";
 import { xml } from "@odoo/owl";
 import { contains } from "@web/../tests/web_test_helpers";
-import { addOption, defineWebsiteModels, setupWebsiteBuilder } from "./website_helpers";
+import {
+    addActionOption,
+    addOption,
+    defineWebsiteModels,
+    setupWebsiteBuilder,
+} from "./website_helpers";
+import { BuilderAction } from "@html_builder/core/builder_action";
 
 defineWebsiteModels();
 
@@ -51,5 +57,100 @@ describe("useDomState", () => {
         resolve2("y");
         await animationFrame();
         expect.verifySteps(["state: x", "state: z"]);
+    });
+});
+
+describe("waitSidebarUpdated", () => {
+    test("wait for the operations to end, the async useDomState to be updated, and the new component with async useDomState to be mounted", async () => {
+        const delayAmount = 42;
+        let deferred;
+        addActionOption({
+            testAction: class extends BuilderAction {
+                static id = "testAction";
+                isApplied({ editingElement, value }) {
+                    return editingElement.dataset.value == value;
+                }
+                async apply({ editingElement, value }) {
+                    await delay(delayAmount);
+                    await deferred;
+                    editingElement.dataset.value = value;
+                }
+            },
+        });
+        class TestSubComponent extends BaseOptionComponent {
+            static template = xml`
+                <div class="test-value-sub">
+                    <t t-out="state.value"/>
+                </div>
+            `;
+            setup() {
+                super.setup();
+                this.state = useDomState(async (el) => {
+                    await delay(delayAmount);
+                    await deferred;
+                    return { value: el.dataset.value };
+                });
+            }
+        }
+        class TestOptionComponent extends BaseOptionComponent {
+            static template = xml`
+                <div class="test-value-parent">
+                    <t t-out="state.value"/>
+                </div>
+                <div class="test-button-1">
+                    <BuilderButton action="'testAction'" actionValue="'b'">b</BuilderButton>
+                </div>
+                <div class="test-button-2">
+                    <BuilderButton id="'button_2_opt'" action="'testAction'" actionValue="'c'">c</BuilderButton>
+                </div>
+                <t t-if="state.showOther and isActiveItem('button_2_opt')">
+                    <TestSubComponent/>
+                </t>
+            `;
+            static components = { TestSubComponent };
+            setup() {
+                super.setup();
+                this.state = useDomState(async (el) => {
+                    await delay(delayAmount);
+                    await deferred;
+                    return { value: el.dataset.value, showOther: el.dataset.value === "c" };
+                });
+            }
+        }
+        addOption({
+            selector: "div.test",
+            Component: TestOptionComponent,
+        });
+        const { waitSidebarUpdated } = await setupWebsiteBuilder(
+            `<div class="test" data-value="a">a</div>`
+        );
+
+        deferred = new Deferred();
+        await contains(":iframe div.test").click();
+        expect(".test-value-parent").toHaveCount(0);
+        deferred.resolve();
+
+        await waitSidebarUpdated();
+        expect(".test-value-parent").toHaveText("a");
+
+        deferred = new Deferred();
+        await contains(".test-button-1 button").click();
+        expect(".test-value-parent").toHaveText("a");
+        expect(".test-button-3").toHaveCount(0);
+        deferred.resolve();
+
+        await waitSidebarUpdated();
+        expect(".test-value-parent").toHaveText("b");
+        expect(".test-value-sub").toHaveCount(0);
+
+        deferred = new Deferred();
+        await contains(".test-button-2 button").click();
+        expect(".test-value-parent").toHaveText("b");
+        expect(".test-value-sub").toHaveCount(0);
+        deferred.resolve();
+
+        await waitSidebarUpdated();
+        expect(".test-value-parent").toHaveText("c");
+        expect(".test-value-sub").toHaveText("c");
     });
 });

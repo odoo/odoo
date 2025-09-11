@@ -12,6 +12,7 @@ import {
     advanceTime,
     animationFrame,
     click,
+    Deferred,
     queryOne,
     tick,
     waitFor,
@@ -38,6 +39,8 @@ import { WebsiteBuilderClientAction } from "@website/client_actions/website_prev
 import { WebsiteSystrayItem } from "@website/client_actions/website_preview/website_systray_item";
 import { mockImageRequests } from "./image_test_helpers";
 import { getWebsiteSnippets } from "./snippets_getter.hoot";
+import { onMounted, onPatched, onWillRender } from "@odoo/owl";
+import { BaseOptionComponent } from "@html_builder/core/utils";
 
 class Website extends models.Model {
     _name = "website";
@@ -201,12 +204,29 @@ export async function setupWebsiteBuilder(
     });
 
     let lastUpdatePromise;
-    const waitDomUpdated = async () => {
+    let renderedDeferred;
+    const waitSidebarUpdated = async () => {
+        await editor.shared.operation.next();
         // The tick ensures that lastUpdatePromise has correctly been assigned
         await tick();
         await lastUpdatePromise;
         await animationFrame();
+        await renderedDeferred;
     };
+    patchWithCleanup(BaseOptionComponent.prototype, {
+        setup() {
+            super.setup();
+            onWillRender(() => {
+                renderedDeferred ??= new Deferred();
+            });
+            const cb = () => {
+                renderedDeferred?.resolve();
+                renderedDeferred = null;
+            };
+            onPatched(cb);
+            onMounted(cb);
+        },
+    });
     patchWithCleanup(Builder.prototype, {
         setup() {
             super.setup();
@@ -272,7 +292,7 @@ export async function setupWebsiteBuilder(
         getEditor: () => editor,
         getEditableContent: () => editableContent,
         openBuilderSidebar: async () => await openBuilderSidebar(editAssetsLoaded),
-        waitDomUpdated,
+        waitSidebarUpdated,
     };
 }
 
