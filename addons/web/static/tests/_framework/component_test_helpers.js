@@ -183,3 +183,32 @@ export async function mountWithCleanup(ComponentClass, options) {
 
     return component;
 }
+
+export async function waitUntilIdle(apps = [...App.apps]) {
+    const isOwlIdle = () => apps.every((app) => app.scheduler.tasks.size === 0);
+
+    if (isOwlIdle()) {
+        return Promise.resolve();
+    }
+
+    return new Promise((resolve) => {
+        function cleanup() {
+            for (const cb of unpatch) {
+                cb();
+            }
+            unpatch = [];
+        }
+        after(cleanup);
+        let unpatch = apps.map((app) =>
+            patch(app.scheduler, {
+                processTasks() {
+                    super.processTasks();
+                    if (isOwlIdle()) {
+                        cleanup();
+                        resolve();
+                    }
+                },
+            })
+        );
+    });
+}
