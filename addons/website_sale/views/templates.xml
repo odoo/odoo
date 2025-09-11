@@ -711,8 +711,9 @@
                                         t-att-data-editor-message="editor_msg"
                                     />
                                 </t>
-                                <t t-if="opt_wsale_categories_top"
+                                <t t-if="opt_wsale_categories_top and category_entries"
                                    t-call="website_sale.filmstrip_categories"
+                                   entries="category_entries"
                                 />
                                 <div
                                     t-if="not opt_wsale_floating_bar"
@@ -804,6 +805,7 @@
                                                     t-value="product._get_ribbon(
                                                         price_vals=template_price_vals,
                                                         auto_assign_ribbons=auto_assign_ribbons,
+                                                        variant=product_variants[product],
                                                     )"
                                                 />
                                                 <div
@@ -1423,21 +1425,7 @@
 
     <!-- Top-Nav Categories -->
     <template id="website_sale.filmstrip_categories" name="Categories Filmstrip">
-        <t t-if="category.id">
-            <t t-set="entries" t-value="not search and category.child_id or category.child_id.filtered(lambda c: category.id in search_categories_ids)"/>
-
-            <t t-if="not entries">
-                <t t-set="parent" t-value="category.parent_id"/>
-                <t t-set="entries" t-value="not search and parent.child_id or parent.child_id.filtered(lambda c: parent.id in search_categories_ids)"/>
-            </t>
-        </t>
-        <t t-else="">
-            <t t-set="entries" t-value="categories"/>
-        </t>
-        <t t-set="entries" t-value="request.env.user._is_internal() and entries or entries.filtered('has_published_products')"/>
-
         <div
-            t-if="entries"
             id="o_wsale_categories_filmstrip"
             class="o_wsale_filmstrip_container o_wsale_filmstrip_default d-flex align-items-stretch overflow-hidden"
             role="navigation"
