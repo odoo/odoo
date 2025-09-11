@@ -4,7 +4,7 @@
         <!-- Header & Footer -->
          <t name="l10n_gcc_settings" position="inside">
             <t t-set="additional_footer_text" t-value="o.get_l10n_sa_confirmation_datetime_sa_tz()"/>
-            <t t-if="o.company_id.country_id.code == 'SA' and not o._l10n_sa_is_legal() " t-set="custom_header_sa">
+            <t t-if="o.company_id.country_id.code == 'SA' and o.is_sale_document() and not o._l10n_sa_is_legal() " t-set="custom_header_sa">
                 <div class="fw-bold text-center mt-2">
                     <h5>THIS IS NOT A LEGAL DOCUMENT</h5>
                     <h5>هذا المستند ليس مستنداً قانونياً</h5>
@@ -134,13 +134,13 @@
         </td>
         <t name="account_invoice_line_accountable" position="inside">
             <td name="td_vat_amount" class="text-end">
-                <span t-if="not line.collapse_prices" class="text-nowrap" t-field="line.l10n_gcc_invoice_tax_amount" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}">4.05</span>
+                <span class="text-nowrap" t-field="line.l10n_gcc_invoice_tax_amount" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}">4.05</span>
             </td>
             <td name="td_vat_excl" class="text-end o_price_total">
-                <span t-if="not line.collapse_prices" class="text-nowrap" t-field="line.price_subtotal">27.00</span>
+                <span class="text-nowrap" t-field="line.price_subtotal">27.00</span>
             </td>
             <td name="td_vat_incl" class="text-end o_price_total">
-                <span t-if="not line.collapse_prices" class="text-nowrap" t-field="line.price_total">31.05</span>
+                <span class="text-nowrap" t-field="line.price_total">31.05</span>
             </td>
         </t>
         <xpath expr="//td[@name='td_price_unit']/span" position="attributes">
@@ -148,20 +148,26 @@
         </xpath>
         <td name="td_subtotal_grouped" position="before">
             <td name="td_vat_amount_grouped" t-attf-class="text-end {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}">
-                <span t-if="not line.collapse_prices" t-out="grouped_line['l10n_gcc_invoice_tax_amount']"  t-options='{"widget": "monetary", "display_currency": o.currency_id}' class="text-nowrap">4.05</span>
+                <span t-if="(grouped_line.get('display_type') in ('line_section', 'line_subsection') or hide_details)" t-out="grouped_line['l10n_gcc_invoice_tax_amount']"  t-options='{"widget": "monetary", "display_currency": o.currency_id}' class="text-nowrap">4.05</span>
+            </td>
+        </td>
+        <td name="td_subtotal_grouped" position="attributes">
+            <attribute name="class" separator=" " add="d-none"/>
+        </td>
+        <td name="td_subtotal_grouped" position="after">
+            <td name="td_vat_incl_grouped" t-attf-class="text-end {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}">
+                <span t-if="(grouped_line.get('display_type') in ('line_section', 'line_subsection') or hide_details)" class="text-nowrap" t-out="grouped_line['price_total']" t-options='{"widget": "monetary", "display_currency": o.currency_id}'>27.00</span>
             </td>
         </td>
         <td name="td_subtotal_grouped" position="after">
-            <td name="td_vat_amount_grouped" t-attf-class="text-end {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}">
-                <span t-if="not line.collapse_prices" t-out="grouped_line['price_total']"  t-options='{"widget": "monetary", "display_currency": o.currency_id}' class="text-nowrap">4.05</span>
+            <td name="td_vat_excl_grouped" t-attf-class="text-end {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}">
+                <span t-if="(grouped_line.get('display_type') in ('line_section', 'line_subsection') or hide_details)" class="text-nowrap" t-out="grouped_line['price_subtotal']" t-options='{"widget": "monetary", "display_currency": o.currency_id}'>27.00</span>
             </td>
         </td>
-        <xpath expr="//t[@t-elif=&quot;line.display_type in ('line_section', 'line_subsection')&quot;]//span[@t-out='section_subtotal']/.." position="before">
-            <td colspan="1" class="text-end o_price_total">
-                <span t-out="line._l10n_gcc_get_section_tax_amount()" class="text-nowrap" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
-            </td>
+        <xpath expr="//span[@t-out='section_subtotal']/.." position="attributes">
+            <attribute name="colspan">2</attribute>
         </xpath>
-        <xpath expr="//t[@t-elif=&quot;line.display_type in ('line_section', 'line_subsection')&quot;]//span[@t-out='section_subtotal']/.." position="after">
+        <xpath expr="//span[@t-out='section_subtotal']/.." position="after">
             <td colspan="1" class="text-end o_price_total">
                 <span t-out="line._l10n_gcc_get_section_total()" class="text-nowrap" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
             </td>
