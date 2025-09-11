@@ -81,3 +81,11 @@ class ResPartner(models.Model):
                 assign_partner = assign_partner.parent_id
                 partner = partner.parent_id
 
+    def action_view_opportunity(self):
+        self.ensure_one()  # especially here as we are doing an id, in, IDS domain
+        action = super().action_view_opportunity()
+        action['context'].update({
+            'assign_partner_id': self.id,
+            'search_default_assign_partner': 1,
+        })
+        return action
