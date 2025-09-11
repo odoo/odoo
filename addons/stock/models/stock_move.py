@@ -278,6 +278,8 @@ class StockMove(models.Model):
     @api.depends('product_id', 'product_uom', 'product_uom_qty', 'state')
     def _compute_product_qty(self):
         for move in self:
+            if move.product_id.tracking == 'serial':
+                move.product_uom_qty = float_round(move.product_uom_qty, precision_rounding=1, rounding_method='HALF-UP')
             move.product_qty = move.product_uom._compute_quantity(
                 move.product_uom_qty, move.product_id.uom_id, rounding_method='HALF-UP')
 
@@ -380,18 +382,18 @@ class StockMove(models.Model):
             self.env['stock.move.line'].browse(mls_to_unlink).unlink()
 
         def _process_increase(move, quantity):
-            # move._action_assign(quantity)
             move._set_quantity_done(move.quantity)
 
         err = []
         for move in self:
-            uom_qty = float_round(move.quantity, precision_rounding=move.product_uom.rounding, rounding_method='HALF-UP')
+            precision_rounding = 1 if move.has_tracking == "serial" else move.product_uom.rounding
+            uom_qty = float_round(move.quantity, precision_rounding=precision_rounding, rounding_method='HALF-UP')
             precision_digits = self.env['decimal.precision'].precision_get('Product Unit of Measure')
             qty = float_round(move.quantity, precision_digits=precision_digits, rounding_method='HALF-UP')
             if float_compare(uom_qty, qty, precision_digits=precision_digits) != 0:
                 err.append(_("""
-The quantity done for the product %s doesn't respect the rounding precision defined on the unit of measure %s.
-Please change the quantity done or the rounding precision of your unit of measure.""",
+The quantity for the product %s doesn't respect the rounding precision defined on the unit of measure %s.
+Please change the quantity or the rounding precision of your unit of measure.""",
                              move.product_id.display_name, move.product_uom.display_name))
                 continue
             delta_qty = move.quantity - move._quantity_sml()
