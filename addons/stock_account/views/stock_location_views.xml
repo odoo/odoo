@@ -9,7 +9,9 @@
                 <xpath expr="//group[@name='additional_info']" position="after">
                     <div>
                         <group string="Accounting Information" invisible="usage not in ('inventory', 'production')">
-                            <field name="valuation_account_id" options="{'no_create': True}"/>
+                            <label for="valuation_account_id" string="Cost of Production" invisible="usage != 'production'"/>
+                            <label for="valuation_account_id" string="Inventory Variation" invisible="usage != 'inventory'"/>
+                            <field name="valuation_account_id" nolabel="1" options="{'no_create': True}"/>
                         </group>
                     </div>
                 </xpath>
