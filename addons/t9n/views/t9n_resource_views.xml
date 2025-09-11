@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="t9n.resource_view_form" model="ir.ui.view">
+        <field name="name">t9n.resource.form</field>
+        <field name="model">t9n.resource</field>
+        <field name="arch" type="xml">
+            <form string="Resource Form">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="file_name" readonly="True"/>
+                        </group>
+                        <group>
+                            <field name="file" filename="file_name" options="{'accepted_file_extensions': '.po,.pot'}"/>
+                        </group>
+                    </group>
+                    <field name="message_ids"/>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="t9n.resource_view_list" model="ir.ui.view">
+        <field name="name">t9n.resource.list</field>
+        <field name="model">t9n.resource</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="file_name"/>
+            </tree>
+        </field>
+    </record>
+</odoo>
