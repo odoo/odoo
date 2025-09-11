@@ -46,9 +46,9 @@ class ResCompany(models.Model):
         required=True,
     )
 
-    def action_close_stock_valuation(self, auto_post=False):
+    def action_close_stock_valuation(self, at_date=None, auto_post=False):
         self.ensure_one()
-        aml_vals_list = self._action_close_stock_valuation()
+        aml_vals_list = self._action_close_stock_valuation(at_date=at_date)
 
         if not aml_vals_list:
             # No account moves to create, so nothing to display.
@@ -105,20 +105,20 @@ class ResCompany(models.Model):
             account_data[account] += balance
         return account_data
 
-    def _action_close_stock_valuation(self):
+    def _action_close_stock_valuation(self, at_date=None):
         aml_vals_list = []
         accounts_by_product = self._get_accounts_by_product()
 
-        vals_list = self._get_location_valuation_vals()
+        vals_list = self._get_location_valuation_vals(at_date)
         if vals_list:
             # Needed directly since it will impact the accounting stock valuation.
             aml_vals_list += vals_list
 
-        vals_list = self._get_stock_valuation_account_vals(accounts_by_product, aml_vals_list)
+        vals_list = self._get_stock_valuation_account_vals(accounts_by_product, at_date, aml_vals_list)
         if vals_list:
             aml_vals_list += vals_list
 
-        vals_list = self._get_continental_realtime_variation_vals(accounts_by_product, aml_vals_list)
+        vals_list = self._get_continental_realtime_variation_vals(accounts_by_product, at_date, aml_vals_list)
         if vals_list:
             aml_vals_list += vals_list
         return aml_vals_list
@@ -155,26 +155,28 @@ class ResCompany(models.Model):
             extra_balance[vals['account_id']] += (vals['debit'] - vals['credit'])
         return extra_balance
 
-    def _get_location_valuation_vals(self, location_domain=False):
+    def _get_location_valuation_vals(self, at_date=None, location_domain=False):
         location_domain = (location_domain or []) + [('valuation_account_id', '!=', False)]
         amls_vals_list = []
         valued_location = self.env['stock.location'].search(location_domain)
-
+        moves_base_domain = Domain([('product_id.is_storable', '=', True)])
+        if at_date:
+            moves_base_domain &= Domain([('date', '<=', at_date)])
+        moves_in_domain = Domain([
+            ('is_out', '=', True),
+            ('location_dest_id', 'in', valued_location.ids),
+        ]) & moves_base_domain
         moves_in_by_location = self.env['stock.move']._read_group(
-            [
-                ('is_out', '=', True),
-                ('location_dest_id', 'in', valued_location.ids),
-                ('product_id.is_storable', '=', True),
-            ],
+            moves_in_domain,
             ['location_dest_id'],
             ['value:sum'],
         )
+        moves_out_domain = Domain([
+            ('is_in', '=', True),
+            ('location_id', 'in', valued_location.ids),
+        ]) & moves_base_domain
         moves_out_by_location = self.env['stock.move']._read_group(
-            [
-                ('is_in', '=', True),
-                ('location_id', 'in', valued_location.ids),
-                ('product_id.is_storable', '=', True),
-            ],
+            moves_out_domain,
             ['location_id'],
             ['value:sum'],
         )
@@ -186,12 +188,15 @@ class ResCompany(models.Model):
             # TODO: It would be better to replay the period to get the exact correct value.
             inventory_value = incoming_value_by_location.get(location, 0.0) - outgoing_value_by_location.get(location, 0.0)
             account_balance[location.valuation_account_id] += inventory_value
+        amls_domain = Domain([
+            ('account_id', 'in', valued_location.valuation_account_id.ids),
+            ('company_id', '=', self.id),
+            ('parent_state', '=', 'posted'),
+        ])
+        if at_date:
+            amls_domain &= Domain([('date', '<=', at_date)])
         current_valuation = self.env['account.move.line']._read_group(
-            domain=[
-                ('account_id', 'in', valued_location.valuation_account_id.ids),
-                ('company_id', '=', self.id),
-                ('parent_state', '=', 'posted'),
-            ],
+            amls_domain,
             groupby=['account_id'],
             aggregates=['balance:sum'],
         )
@@ -209,15 +214,15 @@ class ResCompany(models.Model):
             amls_vals_list += amls_vals
         return amls_vals_list
 
-    def _get_stock_valuation_account_vals(self, accounts_by_product, extra_aml_vals_list=None):
+    def _get_stock_valuation_account_vals(self, accounts_by_product, at_date=None, extra_aml_vals_list=None):
         amls_vals_list = []
         if not accounts_by_product:
             return amls_vals_list
 
         extra_balance = self._get_extra_balance(extra_aml_vals_list)
 
-        inventory_data = self.stock_value(accounts_by_product)
-        accounting_data = self.stock_accounting_value(accounts_by_product)
+        inventory_data = self.stock_value(accounts_by_product, at_date)
+        accounting_data = self.stock_accounting_value(accounts_by_product, at_date)
 
         accounts = inventory_data.keys() | accounting_data.keys()
         for account in accounts:
@@ -244,7 +249,7 @@ class ResCompany(models.Model):
 
         return amls_vals_list
 
-    def _get_continental_realtime_variation_vals(self, accounts_by_product, extra_aml_vals_list=None):
+    def _get_continental_realtime_variation_vals(self, accounts_by_product, at_date=None, extra_aml_vals_list=None):
         """ In continental perpetual the inventory variation is never posted.
         This method compute the variation for a period and post it.
         """
@@ -269,11 +274,14 @@ class ResCompany(models.Model):
             balance_last_period = accounting_data_last_period.get(account, 0)
             balance_over_period = balance_today - balance_last_period
 
-            existing_balance = sum(self.env['account.move.line'].search([
+            current_balance_domain = Domain([
                 ('account_id', '=', variation_acc.id),
                 ('company_id', '=', self.id),
                 ('parent_state', '=', 'posted'),
-            ]).mapped('balance'))
+            ])
+            if at_date:
+                current_balance_domain &= Domain([('date', '<=', at_date)])
+            existing_balance = sum(self.env['account.move.line'].search(current_balance_domain).mapped('balance'))
             balance_over_period += existing_balance
 
             if self.currency_id.is_zero(balance_over_period):

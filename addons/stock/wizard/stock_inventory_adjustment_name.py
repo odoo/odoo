@@ -20,4 +20,4 @@ class StockInventoryAdjustmentName(models.TransientModel):
 
     def action_apply(self):
         quants = self.quant_ids.filtered('inventory_quantity_set')
-        return quants.with_context(self._get_quants_context()).action_apply_inventory()
+        return quants.with_context(self._get_quants_context()).action_apply_inventory(self.counting_date)

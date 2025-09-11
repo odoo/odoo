@@ -126,11 +126,14 @@ class ProductProduct(models.Model):
 
         for product in self:
             at_date = product.env.context.get('to_date')
-            qty_available = product.sudo(False).qty_available
+            qty_available = product.sudo(False).with_context(at_date=at_date).qty_available
             if product.lot_valuated:
                 product.total_value = product._get_value_from_lots()
             elif product.cost_method == 'standard':
-                product.total_value = product.standard_price * qty_available
+                standard_price = product.standard_price
+                if at_date:
+                    standard_price = product._get_standard_price_at_date(at_date)
+                product.total_value = standard_price * qty_available
             elif product.cost_method == 'average':
                 product.total_value = product._run_avco(at_date=at_date)[1]
             else:
@@ -166,6 +169,16 @@ class ProductProduct(models.Model):
                     old_price=old_price.get(product), new_price=product.standard_price, user=self.env.user.name)
             })
         return
+
+    def _get_standard_price_at_date(self, date):
+        self.ensure_one()
+        product_value = self.env['product.value'].search([
+            ('product_id', '=', self.id),
+            ('date', '<=', date),
+            ('move_id', '=', False),
+            ('lot_id', '=', False),
+        ], limit=1, order="date DESC, id DESC")
+        return product_value.value if product_value else self.standard_price
 
     def _get_value_from_lots(self):
         lots = self.env['stock.lot'].search([
