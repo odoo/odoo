@@ -25,6 +25,7 @@ import { Deferred, mockDate, tick } from "@odoo/hoot-mock";
 import {
     asyncStep,
     Command,
+    getService,
     makeKwArgs,
     onRpc,
     serverState,
@@ -724,7 +725,7 @@ test("Thread messages are only loaded once", async () => {
 });
 
 test.tags("focus required");
-test("Opening thread with needaction messages should mark all messages of thread as read", async () => {
+test("[text composer] Opening thread with needaction messages should mark all messages of thread as read", async () => {
     const pyEnv = await startServer();
     pyEnv["res.users"].write(serverState.userId, { notification_type: "inbox" });
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
@@ -756,6 +757,55 @@ test("Opening thread with needaction messages should mark all messages of thread
         res_partner_id: serverState.partnerId,
     });
     // simulate receiving a new needaction message
+    const [partner] = pyEnv["res.partner"].read(serverState.partnerId);
+    pyEnv["bus.bus"]._sendone(partner, "mail.message/inbox", {
+        message_id: messageId,
+        store_data: new mailDataHelpers.Store(
+            pyEnv["mail.message"].browse(messageId),
+            makeKwArgs({ for_current_user: true, add_followers: true })
+        ).get_result(),
+    });
+    await contains("button", { text: "Inbox", contains: [".badge", { text: "1" }] });
+    await click("button", { text: "General" });
+    await contains(".o-discuss-badge", { count: 0 });
+    await contains("button", { text: "Inbox", contains: [".badge", { count: 0 }] });
+    await waitForSteps(["mark-all-messages-as-read"]);
+});
+
+test.tags("focus required", "html composer");
+test("Opening thread with needaction messages should mark all messages of thread as read", async () => {
+    const pyEnv = await startServer();
+    pyEnv["res.users"].write(serverState.userId, { notification_type: "inbox" });
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
+    onRpc("mail.message", "mark_all_as_read", ({ args }) => {
+        asyncStep("mark-all-messages-as-read");
+        expect(args[0]).toEqual([
+            ["model", "=", "discuss.channel"],
+            ["res_id", "=", channelId],
+        ]);
+    });
+    await start();
+    const composerService = getService("mail.composer");
+    composerService.setHtmlComposer();
+    await openDiscuss(channelId);
+    await contains(".o-mail-Composer-html.odoo-editor-editable");
+    await triggerEvents(".o-mail-Composer-html.odoo-editor-editable", ["blur", "focusout"]);
+    await click("button", { text: "Inbox" });
+    await contains("h4", { text: "Congratulations, your inbox is empty" });
+    const messageId = pyEnv["mail.message"].create({
+        author_id: partnerId,
+        body: "@Mitchel Admin",
+        needaction: true,
+        model: "discuss.channel",
+        res_id: channelId,
+    });
+    pyEnv["mail.notification"].create({
+        mail_message_id: messageId,
+        notification_status: "sent",
+        notification_type: "inbox",
+        res_partner_id: serverState.partnerId,
+    });
     const [partner] = pyEnv["res.partner"].read(serverState.partnerId);
     pyEnv["bus.bus"]._sendone(partner, "mail.message/inbox", {
         message_id: messageId,

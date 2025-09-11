@@ -293,6 +293,8 @@ export class Composer extends Component {
             Plugins: this.ui.isSmall ? MAIL_SMALL_UI_PLUGINS : MAIL_PLUGINS,
             composerPluginDependencies: {
                 onBeforePaste: (selection, ev) => this.onPaste(ev),
+                onFocusin: this.onFocusin.bind(this),
+                onFocusout: this.onFocusout.bind(this),
                 onInput: this.onInput.bind(this),
                 onKeydown: this.onKeydown.bind(this),
             },
