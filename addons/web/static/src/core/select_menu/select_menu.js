@@ -363,9 +363,7 @@ export class SelectMenu extends Component {
 
         const _choices = [];
         const _sections = new Set();
-        groupsList.sort((a, b) =>
-            a.section && b.section ? a.section.localeCompare(b.section) : 1
-        );
+        groupsList.sort((a, b) => (a.section || "").localeCompare(b.section || ""));
 
         for (const group of groupsList) {
             let filteredOptions = group.choices || [];
