@@ -380,7 +380,7 @@ class StockMove(models.Model):
             self.env['stock.move.line'].browse(mls_to_unlink).unlink()
 
         def _process_increase(move, quantity):
-            # move._action_assign(quantity)
+            move._action_assign(quantity)
             move._set_quantity_done(move.quantity)
 
         err = []
