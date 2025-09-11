@@ -2,46 +2,59 @@ import { markup } from '@odoo/owl';
 import { browser } from '@web/core/browser/browser';
 import { setElementContent } from '@web/core/utils/html';
 
-function animateClone($cart, $elem, offsetTop, offsetLeft) {
-    if (!$cart.length) {
+function animateClone(cart, elem, offsetTop, offsetLeft) {
+    if (!cart) {
         return Promise.resolve();
     }
-    $cart.removeClass('d-none').find('.o_animate_blink').addClass('o_red_highlight o_shadow_animation').delay(500).queue(function () {
-        $(this).removeClass("o_shadow_animation").dequeue();
-    }).delay(2000).queue(function () {
-        $(this).removeClass("o_red_highlight").dequeue();
-    });
-    return new Promise(function (resolve, reject) {
-        if(!$elem) resolve();
-        var $imgtodrag = $elem.find('img').eq(0);
-        if ($imgtodrag.length) {
-            var $imgclone = $imgtodrag.clone()
-                .offset({
-                    top: $imgtodrag.offset().top,
-                    left: $imgtodrag.offset().left
-                })
-                .removeClass()
-                .addClass('o_website_sale_animate')
-                .appendTo(document.body)
-                .css({
-                    // Keep the same size on cloned img.
-                    width: $imgtodrag.width(),
-                    height: $imgtodrag.height(),
-                })
-                .animate({
-                    top: $cart.offset().top + offsetTop,
-                    left: $cart.offset().left + offsetLeft,
-                    width: 75,
-                    height: 75,
-                }, 500);
+    cart.classList.remove("d-none");
 
-            $imgclone.animate({
-                width: 0,
-                height: 0,
-            }, function () {
-                resolve();
-                $(this).detach();
+    const blinkEl = cart.querySelector(".o_animate_blink");
+    blinkEl.classList.add("o_red_highlight", "o_shadow_animation");
+    setTimeout(() => blinkEl.classList.remove("o_shadow_animation"), 500);
+    setTimeout(() => blinkEl.classList.remove("o_red_highlight"), 2000);
+
+    return new Promise(function (resolve, reject) {
+        if (!elem) {
+            return Promise.resolve();
+        }
+        const imgtodrag = elem.querySelector("img");
+        if (imgtodrag) {
+            const rect = imgtodrag.getBoundingClientRect();
+
+            const imgClone = imgtodrag.cloneNode(true);
+            imgClone.className = "o_website_sale_animate";
+
+            Object.assign(imgClone.style, {
+                position: "absolute",
+                top: `${rect.top + window.scrollY}px`,
+                left: `${rect.left + window.scrollX}px`,
+                width: `${imgtodrag.offsetWidth}px`,
+                height: `${imgtodrag.offsetHeight}px`,
+                transition: "all 0.5s ease",
+                zIndex: 9999,
+                pointerEvents: "none",
             });
+
+            document.body.appendChild(imgClone);
+
+            void imgClone.offsetWidth;
+
+            const cartRect = cart.getBoundingClientRect();
+            imgClone.style.top = `${cartRect.top + window.scrollY + offsetTop}px`;
+            imgClone.style.left = `${cartRect.left + window.scrollX + offsetLeft}px`;
+            imgClone.style.width = "75px";
+            imgClone.style.height = "75px";
+
+            setTimeout(() => {
+                imgClone.style.transition = "all 0.3s ease";
+                imgClone.style.width = "0px";
+                imgClone.style.height = "0px";
+
+                setTimeout(() => {
+                    imgClone.remove();
+                    resolve();
+                }, 300);
+            }, 500);
         } else {
             resolve();
         }
@@ -84,7 +97,14 @@ function updateCartNavBar(data) {
         }
     }
 
-    $(".js_cart_lines").first().before(data['website_sale.cart_lines']).end().remove();
+    const cartLines = document.querySelector(".js_cart_lines");
+    if (cartLines) {
+        const temp = document.createElement("div");
+        temp.innerHTML = data["website_sale.cart_lines"];
+        const newCartLines = temp.firstElementChild;
+        cartLines.parentNode.insertBefore(newCartLines, cartLines);
+        cartLines.remove();
+    }
 
     updateCartSummary(data);
 
@@ -143,16 +163,29 @@ function showWarning(message) {
     if (!message) {
         return;
     }
-    var $page = $('.oe_website_sale');
-    var cart_alert = $page.children('#data_warning');
-    if (!cart_alert.length) {
-        cart_alert = $(
-            '<div class="alert alert-danger alert-dismissible" role="alert" id="data_warning">' +
-                '<button type="button" class="btn-close" data-bs-dismiss="alert"></button> ' +
-                '<span></span>' +
-            '</div>').prependTo($page);
+
+    const page = document.querySelector(".oe_website_sale");
+    let cartAlert = page.querySelector("#data_warning");
+
+    if (!cartAlert) {
+        cartAlert = document.createElement("div");
+        cartAlert.className = "alert alert-danger alert-dismissible";
+        cartAlert.setAttribute("role", "alert");
+        cartAlert.id = "data_warning";
+
+        const closeButton = document.createElement("button");
+        closeButton.type = "button";
+        closeButton.className = "btn-close";
+        closeButton.setAttribute("data-bs-dismiss", "alert");
+
+        const span = document.createElement("span");
+
+        cartAlert.appendChild(closeButton);
+        cartAlert.appendChild(span);
+        page.insertBefore(cartAlert, page.firstChild);
     }
-    cart_alert.children('span:last-child').text(message);
+
+    cartAlert.querySelector("span:last-child").textContent = message;
 }
 
 /**

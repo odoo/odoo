@@ -73,7 +73,7 @@ registry.category("web_tour.tours").add('website_links_tour', {
             content: "check that link was created and visit it",
             trigger: '.o_website_links_create_tracked_url #generated_tracked_link .o_website_links_short_url:contains("/r/")',
             run: function () {
-                window.location.href = $('#generated_tracked_link .o_website_links_short_url').text();
+                window.location.href = document.querySelector("#generated_tracked_link .o_website_links_short_url")?.textContent || "";
             },
             expectUnloadPage: true,
         },

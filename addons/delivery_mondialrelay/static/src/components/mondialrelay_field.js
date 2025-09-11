@@ -36,7 +36,7 @@ export class MondialRelayField extends Component {
                 if (!el) {
                     return;
                 }
-                this.insertWidget($(el));
+                this.insertWidget(el);
             },
             () => [this.state.libLoaded && this.root.el],
         )
@@ -46,7 +46,7 @@ export class MondialRelayField extends Component {
         return this.props.record.data.is_mondialrelay;
     }
 
-    insertWidget($el) {
+    insertWidget(el) {
         const params = {
             Target: "", // required but handled by OnParcelShopSelected
             Brand: this.props.record.data.mondialrelay_brand,
@@ -81,9 +81,12 @@ export class MondialRelayField extends Component {
                 }, 10000);
             },
         };
-        $el.show();
-        $el.MR_ParcelShopPicker(params);
-        $el.trigger("MR_RebindMap");
+        el.style.display = "";
+        if (typeof window.MR_ParcelShopPicker === "function") {
+            window.MR_ParcelShopPicker(el, params);
+        }
+        const rebindEvent = new Event("MR_RebindMap", { bubbles: true });
+        el.dispatchEvent(rebindEvent);
     }
 }
 

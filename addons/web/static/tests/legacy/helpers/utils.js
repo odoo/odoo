@@ -540,10 +540,13 @@ export async function clickDiscard(htmlElement) {
     }
     if (htmlElement.querySelectorAll(".o_form_button_cancel").length) {
         return click(htmlElement, ".o_form_button_cancel");
-    } else if ($(htmlElement).find(".o_list_button_discard:visible").length) {
-        return click($(htmlElement).find(".o_list_button_discard:visible").get(0));
     } else {
-        throw new Error("No discard button found to be clicked.");
+        const discardButton = htmlElement.querySelector(".o_list_button_discard:not([style*='display: none'])");
+        if (discardButton) {
+            return click(discardButton);
+        } else {
+            throw new Error("No discard button found to be clicked.");
+        }
     }
 }
 

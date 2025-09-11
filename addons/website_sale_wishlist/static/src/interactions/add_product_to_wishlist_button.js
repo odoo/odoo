@@ -32,8 +32,8 @@ export class AddProductToWishlistButton extends Interaction {
         wishlistUtils.updateWishlistNavBar();
         wishlistUtils.updateDisabled(el, true);
         await wSaleUtils.animateClone(
-            $(document.querySelector('.o_wsale_my_wish')),
-            $(document.querySelector('#product_detail_main') ?? el.closest('.o_cart_product') ?? form),
+            document.querySelector(".o_wsale_my_wish"),
+            document.querySelector("#product_detail_main") ?? el.closest(".o_cart_product") ?? form,
             25,
             40,
         );
