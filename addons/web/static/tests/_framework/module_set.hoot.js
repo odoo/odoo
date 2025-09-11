@@ -466,6 +466,7 @@ const ALLOWED_GLOBAL_KEYS = [
     // Bootstrap.js is voluntarily ignored as it is deprecated
     "Chart", // Chart.js
     "Cropper", // Cropper.js
+    "DiffMatchPatch", // Diff Match Patch
     "DOMPurify", // DOMPurify
     "Diff2Html",
     "FullCalendar", // Full Calendar
