@@ -1,4 +1,4 @@
-import { test, expect, beforeEach, describe } from "@odoo/hoot";
+import { test, expect, beforeEach } from "@odoo/hoot";
 import { click, press, queryAll, queryAllTexts, queryOne } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
 import { getService, mountWithCleanup } from "@web/../tests/web_test_helpers";
@@ -7,8 +7,6 @@ import { Component, xml } from "@odoo/owl";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { useAutofocus } from "@web/core/utils/hooks";
 import { MainComponentsContainer } from "@web/core/main_components_container";
-
-describe.current.tags("desktop");
 
 beforeEach(async () => {
     await mountWithCleanup(MainComponentsContainer);
@@ -25,7 +23,7 @@ test("Simple rendering with a single dialog", async () => {
     await animationFrame();
     expect(".o_dialog").toHaveCount(1);
     expect("header .modal-title").toHaveText("Welcome");
-    await click(".o_dialog footer button");
+    await click(".o_dialog button");
     await animationFrame();
     expect(".o_dialog").toHaveCount(0);
 });
@@ -68,7 +66,7 @@ test("rendering with two dialogs", async () => {
     await animationFrame();
     expect(".o_dialog").toHaveCount(2);
     expect(queryAllTexts("header .modal-title")).toEqual(["Hello", "Sauron"]);
-    await click(".o_dialog footer button");
+    await click(".o_dialog button");
     await animationFrame();
     expect(".o_dialog").toHaveCount(1);
     expect("header .modal-title").toHaveText("Sauron");
@@ -174,7 +172,7 @@ test("Interactions between multiple dialogs", async () => {
     expect(res.active).toEqual([false, true]);
     expect(res.names).toEqual(["Hello", "Sauron"]);
 
-    await click(".o_dialog:not(.o_inactive_modal) footer button");
+    await click(".o_dialog:not(.o_inactive_modal) button");
     await animationFrame();
 
     expect(".o_dialog").toHaveCount(1);
@@ -182,7 +180,7 @@ test("Interactions between multiple dialogs", async () => {
     expect(res.active).toEqual([true]);
     expect(res.names).toEqual(["Hello"]);
 
-    await click("footer button");
+    await click(".o_dialog:not(.o_inactive_modal) button");
     await animationFrame();
     expect(".o_dialog").toHaveCount(0);
 });

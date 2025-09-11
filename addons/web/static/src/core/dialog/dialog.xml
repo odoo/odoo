@@ -22,12 +22,8 @@
                         <main class="modal-body" t-attf-class="{{ props.bodyClass }} {{ !props.withBodyPadding ? 'p-0': '' }}">
                             <t t-slot="default" close="() => this.data.close()" />
                         </main>
-                        <footer t-if="props.footer" class="modal-footer justify-content-around justify-content-md-start flex-wrap gap-1 w-100">
-                            <t t-slot="footer" close="() => this.data.close()">
-                                <button class="btn btn-primary o-default-button" t-on-click="() => this.data.close()">
-                                    <t>Ok</t>
-                                </button>
-                            </t>
+                        <footer t-if="props.footer" class="modal-footer d-empty-none justify-content-around justify-content-md-start flex-wrap gap-1 w-100">
+                            <t t-slot="footer" close="() => this.data.close()"/>
                         </footer>
                     </div>
                 </div>
@@ -37,7 +33,7 @@
 
     <t t-name="web.Dialog.header">
         <t t-if="fullscreen">
-            <button class="btn oi oi-arrow-left oi-large" aria-label="Close" t-on-click="dismiss" />
+            <button class="btn oi oi-arrow-left oi-large" aria-label="Close" tabindex="-1" t-on-click="dismiss" />
         </t>
         <h4 class="modal-title text-break flex-grow-1" t-att-class="{ 'me-auto': fullscreen, 'fs-5': props.size == 'sm' }">
             <t t-esc="props.title"/>

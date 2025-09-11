@@ -235,7 +235,7 @@ test("pointer is added on top of overlay's stack", async () => {
     registry.category("web_tour.tours").add("tour1", {
         steps: () => [
             { trigger: ".modal .a", run: "click" },
-            { trigger: ".btn-primary", run: "click" },
+            { trigger: ".modal .btn-close", run: "click" },
         ],
     });
     class DummyDialog extends Component {
@@ -269,7 +269,7 @@ test("pointer is added on top of overlay's stack", async () => {
     await animationFrame();
     expect(".o_tour_pointer").toHaveCount(1);
 
-    await contains(".btn-primary").click();
+    await contains(".modal .btn-close").click();
     await animationFrame();
     expect(".o_tour_pointer").toHaveCount(0);
 });
