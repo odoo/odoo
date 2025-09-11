@@ -128,7 +128,7 @@ registerThreadAction("member-list", {
         },
     }),
     condition: ({ owner, thread }) =>
-        thread?.hasMemberList &&
+        thread?.channel?.hasMemberList &&
         (!owner.props.chatWindow || owner.props.chatWindow.isOpen) &&
         !owner.isDiscussSidebarChannelActions,
     panelOuterClass: "o-discuss-ChannelMemberList bg-inherit",

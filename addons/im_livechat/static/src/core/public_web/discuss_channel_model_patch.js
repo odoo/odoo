@@ -27,4 +27,7 @@ patch(DiscussChannel.prototype, {
         }
         return super.showCorrespondentCountry;
     },
+    get hasMemberList() {
+        return this.channel_type === "livechat" || super.hasMemberList;
+    },
 });

@@ -105,7 +105,7 @@ export class Thread extends Record {
             return (
                 this.self_member_id?.is_pinned ||
                 (["channel", "group"].includes(this.channel_type) &&
-                    this.hasSelfAsMember &&
+                    this.channel?.hasSelfAsMember &&
                     !this.parent_channel_id)
             );
         },

@@ -23,9 +23,6 @@ patch(Thread.prototype, {
             this.livechat_channel_id?.appCategory ?? this.appAsLivechats?.defaultLivechatCategory
         );
     },
-    get hasMemberList() {
-        return this.channel_type === "livechat" || super.hasMemberList;
-    },
     get allowedToLeaveChannelTypes() {
         return [...super.allowedToLeaveChannelTypes, "livechat"];
     },

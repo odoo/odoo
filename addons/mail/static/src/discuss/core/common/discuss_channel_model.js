@@ -14,6 +14,7 @@ export class DiscussChannel extends Record {
     channel_member_ids = fields.Many("discuss.channel.member", {
         sort: (m1, m2) => m1.id - m2.id,
     });
+    self_member_id = fields.One("discuss.channel.member");
     /** @type {number|undefined} */
     member_count = undefined;
 
@@ -75,6 +76,14 @@ export class DiscussChannel extends Record {
         return this.channel_member_ids.filter(
             (member) => !this.store.onlineMemberStatuses.includes(member.im_status)
         );
+    }
+
+    get hasSelfAsMember() {
+        return Boolean(this.self_member_id);
+    }
+
+    get hasMemberList() {
+        return ["channel", "group"].includes(this.channel_type);
     }
 }
 

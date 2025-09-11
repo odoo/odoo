@@ -69,6 +69,7 @@ const threadPatch = {
                         channel_member_ids: this.channel_member_ids,
                         channel_type: this.channel_type,
                         member_count: this.member_count,
+                        self_member_id: this.self_member_id,
                     };
                 }
                 return undefined;
@@ -298,12 +299,6 @@ const threadPatch = {
         } finally {
             this.isLoadingAttachments = false;
         }
-    },
-    get hasMemberList() {
-        return ["channel", "group"].includes(this.channel_type);
-    },
-    get hasSelfAsMember() {
-        return Boolean(this.self_member_id);
     },
     /** @override */
     get importantCounter() {

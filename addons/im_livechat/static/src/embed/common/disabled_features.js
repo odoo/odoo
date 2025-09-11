@@ -1,12 +1,15 @@
 import { threadActionsRegistry } from "@mail/core/common/thread_actions";
 import { Thread } from "@mail/core/common/thread_model";
+import { DiscussChannel } from "@mail/discuss/core/common/discuss_channel_model";
 
 import { patch } from "@web/core/utils/patch";
 
-patch(Thread.prototype, {
+patch(DiscussChannel.prototype, {
     get hasMemberList() {
         return false;
     },
+});
+patch(Thread.prototype, {
     get hasAttachmentPanel() {
         return this.channel_type !== "livechat" && super.hasAttachmentPanel;
     },
