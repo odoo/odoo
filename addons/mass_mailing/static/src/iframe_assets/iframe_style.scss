@@ -14,6 +14,12 @@ body:not(.o_mass_mailing_iframe_fullscreen, .o_mass_mailing_iframe_mobile) {
 }
 
 body {
+    &.o_mass_mailing_iframe_fullscreen, &.o_mass_mailing_iframe_mobile {
+        .note-editable {
+            overflow: auto;
+            height: 100%;
+        }
+    }
     &.o_mass_mailing_iframe_fullscreen {
         .o_layout {
             display: grid;
@@ -32,11 +38,5 @@ body {
     }
     .o_mass_mailing_value ~ .o_loading_screen {
         display: none !important;
-    }
-}
-// Smaller container
-.o_container_small {
-    @include media-breakpoint-up(lg) {
-        max-width: map-get($container-max-widths, md);
     }
 }
