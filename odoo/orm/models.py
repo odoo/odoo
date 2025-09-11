@@ -5101,14 +5101,6 @@ class BaseModel(metaclass=MetaModel):
         ))
         return bool(cr.fetchone())
 
-    @api.deprecated("Deprecated since 18.0, use _has_cycle() instead")
-    def _check_recursion(self, parent=None):
-        return not self._has_cycle(parent)
-
-    @api.deprecated("Deprecated since 18.0, use _has_cycle() instead")
-    def _check_m2m_recursion(self, field_name):
-        return not self._has_cycle(field_name)
-
     def _get_external_ids(self) -> dict[IdType, list[str]]:
         """Retrieve the External ID(s) of any database record.
 
@@ -5202,14 +5194,6 @@ class BaseModel(metaclass=MetaModel):
             records = records.with_context(context)
 
         return records._read_format(fnames=fields, **read_kwargs)
-
-    @api.deprecated("Deprecated since 19.0, use action_archive or action_unarchive")
-    def toggle_active(self):
-        "Inverses the value of :attr:`active` on the records in ``self``."
-        assert self._active_name, f"No 'active' field on model {self._name}"
-        active_recs = self.filtered(self._active_name)
-        active_recs.action_archive()
-        (self - active_recs).action_unarchive()
 
     def action_archive(self):
         """Set :attr:`active` to ``False`` on a recordset for active records.
