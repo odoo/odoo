@@ -1,8 +1,7 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import Command
-from odoo.tests import tagged, new_test_user
+from odoo.tests import tagged, new_test_user, users
 from odoo.addons.point_of_sale.tests.test_frontend import TestPointOfSaleHttpCommon
 
 
@@ -211,3 +210,11 @@ class TestUi(TestPosHrHttpCommon):
             "test_cost_and_margin_visibility",
             login="pos_admin",
         )
+
+    @users('pos_admin')
+    def test_create_pos_config_without_hr_right(self):
+        self.env['pos.config'].create({
+            'name': 'My cute pos config',
+            'module_pos_hr': True,
+            'advanced_employee_ids': [(6, 0, self.emp2.ids)]
+        })
