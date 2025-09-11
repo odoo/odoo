@@ -356,7 +356,7 @@ class StockMove(models.Model):
         return dict(VALUATION_DICT)
 
     def _get_value_from_std_price(self, quantity, std_price=False, at_date=None):
-        std_price = std_price or self.product_id.standard_price
+        std_price = std_price or self.product_id._get_standard_price_at_date(at_date)
         return {
             'value': std_price * quantity,
             'quantity': quantity,

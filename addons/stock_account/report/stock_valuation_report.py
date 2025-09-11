@@ -73,9 +73,10 @@ class StockValuationReport(models.AbstractModel):
         # Get accounting data.
         accounts_by_product = company._get_accounts_by_product()
         location_valuation_vals = company._get_location_valuation_vals(
-            location_domain=[('usage', '=', 'inventory')]
+            date, location_domain=[('usage', '=', 'inventory')],
         )
-        stock_valuation_account_vals = company._get_stock_valuation_account_vals(accounts_by_product, company._get_location_valuation_vals())
+        stock_valuation_account_vals = company._get_stock_valuation_account_vals(
+            accounts_by_product, date, company._get_location_valuation_vals(date))
 
         report_data = {
             'company_id': company.id,
