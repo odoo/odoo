@@ -111,8 +111,8 @@ class ProductPublicCategory(models.Model):
     def _compute_has_published_products(self):
         for category in self:
             category.has_published_products = (
-                any(category.mapped('product_tmpl_ids.is_published'))
-                or any(category.mapped('child_id.has_published_products'))
+                any(p.is_published for p in category.product_tmpl_ids)
+                or any(c.has_published_products for c in category.child_id)
             )
 
     # === CONSTRAINT METHODS === #

@@ -9,7 +9,7 @@ from werkzeug import urls
 from werkzeug.exceptions import NotFound
 
 from odoo import SUPERUSER_ID, api, fields, models
-from odoo.exceptions import AccessError
+from odoo.exceptions import AccessError, MissingError
 from odoo.fields import Domain
 from odoo.http import request
 from odoo.tools import file_open, ormcache
@@ -276,7 +276,7 @@ class Website(models.Model):
         for website in self:
             website = website.with_company(website.company_id)
             ProductPricelist = website.env['product.pricelist']  # with correct company in env
-            website.pricelist_ids = ProductPricelist.sudo().search(
+            website.pricelist_ids = ProductPricelist.sudo().search_fetch(
                 ProductPricelist._get_website_pricelists_domain(website)
             )
 
@@ -788,12 +788,19 @@ class Website(models.Model):
         SaleOrderSudo = self.env['sale.order'].sudo()
 
         sale_order_sudo = SaleOrderSudo
-        partner_sudo = self.env.user.partner_id
         if CART_SESSION_CACHE_KEY in request.session:
             sale_order_sudo = SaleOrderSudo.browse(request.session[CART_SESSION_CACHE_KEY])
+
+            try:
+                # fetch the record field or raise a missingError
+                # avoids a query with the use of exists()
+                sale_order_sudo and sale_order_sudo.state
+            except MissingError:
+                self.sale_reset()
+                sale_order_sudo = SaleOrderSudo
+
             if sale_order_sudo and (
-                not sale_order_sudo.exists()
-                or sale_order_sudo.state != 'draft'
+                sale_order_sudo.state != 'draft'
                 or sale_order_sudo.get_portal_last_transaction().state in (
                     'pending', 'authorized', 'done'
                 )
@@ -807,20 +814,21 @@ class Website(models.Model):
             if (
                 sale_order_sudo
                 and not self.env.user._is_public()
-                and partner_sudo.id != sale_order_sudo.partner_id.id
+                and self.env.user.partner_id.id != sale_order_sudo.partner_id.id
                 and not request.env.cr.readonly
             ):
-                sale_order_sudo._update_address(partner_sudo.id, ['partner_id'])
+                sale_order_sudo._update_address(self.env.user.partner_id.id, ['partner_id'])
         elif (
             self.env.user
             and not self.env.user._is_public()
             # If the company of the partner doesn't allow them to buy from this website, updating
             # the cart customer would raise because of multi-company checks.
             # No abandoned cart should be returned in this situation.
-            and partner_sudo.filtered_domain(
+            and self.env.user.partner_id.filtered_domain(
                 self.env['res.partner']._check_company_domain(self.company_id.id)
             )
         ):  # Search for abandonned cart.
+            partner_sudo = self.env.user.partner_id
             abandonned_cart_sudo = SaleOrderSudo.search([
                 ('partner_id', '=', partner_sudo.id),
                 ('website_id', '=', self.id),
