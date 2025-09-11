@@ -9,7 +9,7 @@ class ProductCombo(models.Model):
     _description = "Product Combo"
     _order = 'sequence, id'
 
-    name = fields.Char(string="Name", required=True)
+    name = fields.Char(string="Name", required=True, translate=True)
     sequence = fields.Integer(default=10, copy=False)
     company_id = fields.Many2one(string="Company", comodel_name='res.company', index=True)
     combo_item_ids = fields.One2many(
