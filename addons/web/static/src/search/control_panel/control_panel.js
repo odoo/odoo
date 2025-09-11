@@ -39,6 +39,9 @@ const STICKY_CLASS = "o_mobile_sticky";
  * @property {string} context
  */
 
+// Register calls to avoid making them twice during
+// one OWL rendering lifecycle
+const mapCalls = new Map();
 export class ControlPanel extends Component {
     static template = "web.ControlPanel";
     static components = {
@@ -173,15 +176,29 @@ export class ControlPanel extends Component {
             // We need to fetch because it's possible that the config from DB was changed while it wasn't in the browser user settings
             // We then need to keep the browser user settings up to date with the DB
             if (
-                this.env.config.embeddedActions?.length > 0 &&
-                !JSON.parse(browser.localStorage.getItem(this.isFetchedEmbeddedActionsKey)) &&
-                !(this.embeddedActionsKey in this.embeddedActionsConfig)
+                !(this.env.config.embeddedActions?.length > 0) ||
+                JSON.parse(browser.localStorage.getItem(this.isFetchedEmbeddedActionsKey))
             ) {
-                const embeddedSetting = await this.orm.call(
-                    "res.users.settings",
-                    "get_embedded_actions_setting",
-                    [user.settings.id, this.parentActionId, this.currentActiveId]
-                );
+                return;
+            }
+
+            if (!(this.embeddedActionsKey in this.embeddedActionsConfig)) {
+                let call;
+                if (mapCalls.has(this.embeddedActionsKey)) {
+                    call = mapCalls.get(this.embeddedActionsKey);
+                } else {
+                    call = this.env.services.orm.call(
+                        "res.users.settings",
+                        "get_embedded_actions_setting",
+                        [user.settings.id, this.parentActionId, this.currentActiveId]
+                    );
+                    mapCalls.set(this.embeddedActionsKey, call);
+                }
+                this.myPromise = call;
+                const embeddedSetting = await call;
+                mapCalls.delete(this.embeddedActionsKey);
+                browser.localStorage.setItem(this.isFetchedEmbeddedActionsKey, true);
+
                 if (embeddedSetting && Object.keys(embeddedSetting).length > 0) {
                     this.embeddedActionsConfig[this.embeddedActionsKey] =
                         embeddedSetting[this.embeddedActionsKey];
@@ -194,7 +211,6 @@ export class ControlPanel extends Component {
                     this.state.embeddedInfos.showEmbedded =
                         this._getEmbeddedActionsConfig("embedded_visibility");
                 }
-                browser.localStorage.setItem(this.isFetchedEmbeddedActionsKey, true);
             }
         });
 
