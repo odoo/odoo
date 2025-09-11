@@ -92,10 +92,10 @@ class AccountMoveLine(models.Model):
             else:
                 line.l10n_gcc_line_name = line.name
 
-    def get_lines_grouped_by_section(self):
+    def _get_child_lines(self):
         # EXTENDS account
         self.ensure_one()
-        res = super().get_lines_grouped_by_section()
+        res = super()._get_child_lines()
 
         for line in res:
             line['l10n_gcc_invoice_tax_amount'] = line['price_total'] - line['price_subtotal']
