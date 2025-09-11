@@ -61,7 +61,9 @@
             padding: map-get($spacers, 2) !important;
         }
         &.o-sendMessageActive {
-            background-color: $primary;
+            background-color: lighten($primary, 7.5%);
+            outline: 1px solid $primary;
+            outline-offset: -1px;
             opacity: 100% !important;
             &:focus-visible {
                 outline: darken($o-action, 15%) solid 1px;
@@ -220,7 +222,7 @@
     }
 
     &:has(textarea:focus) {
-        --border-color: #{$o-component-active-border};
+        --border-color: #{rgba($o-component-active-border, .65)};
     }
 
     &:has(.o-mail-Composer-html:focus) {
