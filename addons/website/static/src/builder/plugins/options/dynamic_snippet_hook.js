@@ -24,7 +24,6 @@ export function useDynamicSnippetOption(modelNameFilter, contextualFilterDomain 
         numberOfRecords: parseInt(editingElement.dataset.numberOfRecords),
         templateKey: editingElement.dataset.templateKey,
         isSingleMode: dynamicSnippetUtils.isSingleModeSnippet(editingElement.dataset),
-        snippetContentPosition: editingElement.querySelector(".s_dynamic_snippet_content_position"),
     }));
 
     async function fetchDynamicFiltersAndTemplates() {
