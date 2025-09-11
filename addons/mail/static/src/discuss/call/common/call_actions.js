@@ -27,7 +27,7 @@ export function registerCallAction(id, definition) {
 }
 
 registerCallAction("mute", {
-    condition: ({ store, thread }) => thread?.eq(store.rtc?.channel),
+    condition: ({ store, thread }) => thread?.isRtcChannel,
     name: ({ store }) => (store.rtc.selfSession.isMute ? _t("Unmute") : _t("Mute")),
     isActive: ({ store }) => store.rtc.selfSession?.isMute,
     isTracked: true,
@@ -39,7 +39,7 @@ registerCallAction("mute", {
     tags: ({ action }) => (action.isActive ? ACTION_TAGS.DANGER : undefined),
 });
 registerCallAction("deafen", {
-    condition: ({ store, thread }) => thread?.eq(store.rtc?.channel),
+    condition: ({ store, thread }) => thread?.isRtcChannel,
     name: ({ store }) => (store.rtc.selfSession.is_deaf ? _t("Undeafen") : _t("Deafen")),
     isActive: ({ store }) => store.rtc.selfSession?.is_deaf,
     isTracked: true,
@@ -51,7 +51,7 @@ registerCallAction("deafen", {
     tags: ({ action }) => (action.isActive ? ACTION_TAGS.DANGER : undefined),
 });
 registerCallAction("camera-on", {
-    condition: ({ store, thread }) => thread?.eq(store.rtc?.channel),
+    condition: ({ store, thread }) => thread?.isRtcChannel,
     disabledCondition: ({ store }) => store.rtc?.isRemote,
     name: ({ store }) =>
         store.rtc?.isRemote
@@ -69,7 +69,7 @@ registerCallAction("camera-on", {
 });
 registerCallAction("switch-camera", {
     condition: ({ store, thread }) =>
-        thread?.eq(store.rtc?.channel) && isMobileOS() && store.rtc.selfSession?.is_camera_on,
+        thread?.isRtcChannel && isMobileOS() && store.rtc.selfSession?.is_camera_on,
     name: _t("Switch Camera"),
     isActive: false,
     icon: "fa fa-refresh",
@@ -78,7 +78,7 @@ registerCallAction("switch-camera", {
     sequenceGroup: 100,
 });
 registerCallAction("raise-hand", {
-    condition: ({ store, thread }) => thread?.eq(store.rtc?.channel),
+    condition: ({ store, thread }) => thread?.isRtcChannel,
     name: ({ store }) => (store.rtc.selfSession.raisingHand ? _t("Lower Hand") : _t("Raise Hand")),
     isActive: ({ store }) => store.rtc.selfSession?.raisingHand,
     isTracked: true,
@@ -88,7 +88,7 @@ registerCallAction("raise-hand", {
     sequenceGroup: 200,
 });
 registerCallAction("share-screen", {
-    condition: ({ store, thread }) => thread?.eq(store.rtc?.channel) && !isMobileOS(),
+    condition: ({ store, thread }) => thread?.isRtcChannel && !isMobileOS(),
     disabledCondition: ({ store }) => store.rtc?.isRemote,
     name: ({ store }) =>
         store.rtc?.isRemote
@@ -105,7 +105,7 @@ registerCallAction("share-screen", {
     tags: ({ action }) => (action.isActive ? ACTION_TAGS.SUCCESS : undefined),
 });
 registerCallAction("auto-focus", {
-    condition: ({ store, thread }) => thread?.eq(store.rtc?.channel),
+    condition: ({ store, thread }) => thread?.isRtcChannel,
     name: ({ store }) =>
         store.settings.useCallAutoFocus ? _t("Disable speaker autofocus") : _t("Autofocus speaker"),
     isActive: ({ store }) => store.settings?.useCallAutoFocus,
@@ -117,7 +117,7 @@ registerCallAction("auto-focus", {
 registerCallAction("blur-background", {
     condition: ({ store, thread }) =>
         !isBrowserSafari() &&
-        thread?.eq(store.rtc?.channel) &&
+        thread?.isRtcChannel &&
         store.rtc?.selfSession?.is_camera_on &&
         store.rtc?.isHost,
     name: ({ store }) => (store.settings.useBlur ? _t("Remove Blur") : _t("Blur Background")),
@@ -128,7 +128,7 @@ registerCallAction("blur-background", {
     sequenceGroup: 200,
 });
 registerCallAction("fullscreen", {
-    condition: ({ store, thread }) => thread?.eq(store.rtc?.channel),
+    condition: ({ store, thread }) => thread?.isRtcChannel,
     name: ({ store }) => (store.rtc.state.isFullscreen ? _t("Exit Fullscreen") : _t("Fullscreen")),
     isActive: ({ store }) => store.rtc.state.isFullscreen,
     icon: ({ action }) => (action.isActive ? "fa fa-compress" : "fa fa-expand"),
@@ -145,9 +145,7 @@ registerCallAction("fullscreen", {
 });
 registerCallAction("picture-in-picture", {
     condition: ({ store, thread }) =>
-        thread?.eq(store.rtc?.channel) &&
-        store.env.services["discuss.pip_service"] &&
-        !store.env?.isSmall,
+        thread?.isRtcChannel && store.env.services["discuss.pip_service"] && !store.env?.isSmall,
     disabledCondition: ({ store }) => store.rtc?.isRemote,
     name: ({ store }) =>
         store.rtc?.state.isPipMode ? _t("Exit Picture in Picture") : _t("Picture in Picture"),
@@ -179,7 +177,7 @@ registerCallAction("accept-with-camera", {
 registerCallAction("join-back", {
     btnClass: "text-nowrap pe-2 rounded-pill",
     condition: ({ store, thread }) =>
-        !thread?.eq(store.rtc?.channel) && typeof thread?.useCameraByDefault === "boolean",
+        !thread?.isRtcChannel && typeof thread?.useCameraByDefault === "boolean",
     disabledCondition: ({ store }) => store.rtc?.state.hasPendingRequest,
     icon: ({ thread }) => (thread.useCameraByDefault ? "fa fa-video-camera" : "fa fa-phone"),
     inlineName: ({ owner }) => (owner.env.inCallInvitation ? undefined : _t("Join")),
@@ -193,7 +191,7 @@ registerCallAction("join-back", {
 registerCallAction("join-with-camera", {
     btnClass: "text-nowrap",
     condition: ({ store, thread }) =>
-        !thread?.eq(store.rtc?.channel) &&
+        !thread?.isRtcChannel &&
         !thread?.self_member_id?.rtc_inviting_session_id &&
         typeof thread?.useCameraByDefault !== "boolean",
     disabledCondition: ({ store }) => store.rtc?.state.hasPendingRequest,
@@ -206,7 +204,7 @@ registerCallAction("join-with-camera", {
 });
 registerCallAction("join", {
     condition: ({ store, thread }) =>
-        !thread?.eq(store.rtc?.channel) &&
+        !thread?.isRtcChannel &&
         !thread?.self_member_id?.rtc_inviting_session_id &&
         typeof thread?.useCameraByDefault !== "boolean",
     disabledCondition: ({ store }) => store.rtc?.state.hasPendingRequest,
@@ -240,7 +238,7 @@ registerCallAction("reject", {
 });
 registerCallAction("disconnect", {
     condition: ({ store, thread }) =>
-        thread?.eq(store.rtc?.channel) && !thread?.self_member_id?.rtc_inviting_session_id,
+        thread?.isRtcChannel && !thread?.self_member_id?.rtc_inviting_session_id,
     disabledCondition: ({ store }) => store.rtc?.state.hasPendingRequest,
     name: _t("Disconnect"),
     icon: "fa fa-phone",

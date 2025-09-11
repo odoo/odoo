@@ -30,6 +30,11 @@ const ThreadPatch = {
         this.lastSessionIds = new Set();
         /** @type {number|undefined} */
         this.cancelRtcInvitationTimeout;
+        this.isRtcChannel = fields.Attr(false, {
+            compute() {
+                return this.eq(this.store.rtc?.channel);
+            },
+        });
         this.rtc_session_ids = fields.Many("discuss.channel.rtc.session", {
             /** @this {import("models").Thread} */
             onDelete(r) {
@@ -185,7 +190,7 @@ const ThreadPatch = {
      */
     updateCallFocusStack(session) {
         if (
-            this.notEq(this.store.rtc?.channel) ||
+            !this.isRtcChannel ||
             session.eq(this.store.rtc.selfSession) ||
             !this.activeRtcSession ||
             !this.store.settings.useCallAutoFocus ||
