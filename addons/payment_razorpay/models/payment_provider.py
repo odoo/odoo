@@ -139,7 +139,7 @@ class PaymentProvider(models.Model):
         webhook_secret = uuid.uuid4().hex  # Generate a random webhook secret.
         payload = {
             'url': f'{self.get_base_url()}/payment/razorpay/webhook',
-            'alert_email': self.env.user.partner_id.email,
+            'alert_email': self.env.user.partner_id.email or '',
             'secret': webhook_secret,
             'events': const.HANDLED_WEBHOOK_EVENTS,
         }
