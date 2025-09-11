@@ -56,10 +56,10 @@
                  if variant information should be shown later. -->
             <t
                 t-set="variant"
-                t-value="product_variant or request.env['product.product'].browse(product._get_first_possible_variant_id())"
+                t-value="product_variant or product_variants[product]"
             />
             <t
-                t-if="variant and variant.image_128"
+                t-if="variant and variant.with_context(bin_size=True).image_128"
                 t-set="all_images_list"
                 t-value="variant._get_images()"
             />
