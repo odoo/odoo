@@ -384,6 +384,7 @@ class AccountMove(models.Model):
     company_currency_id = fields.Many2one(
         string='Company Currency',
         related='company_id.currency_id', readonly=True,
+        store=True, precompute=True,
     )
     currency_id = fields.Many2one(
         'res.currency',
