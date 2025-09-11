@@ -12,7 +12,6 @@ import sys
 import threading
 import time
 import typing
-import warnings
 
 if typing.TYPE_CHECKING:
     from .lru import LRU
@@ -67,25 +66,15 @@ class ormcache:
         def _compute_domain(self, model_name, mode="read"):
             ...
 
-    For the sake of backward compatibility, the decorator supports the named
-    parameter `skiparg`::
-
-        @ormcache(skiparg=1)
-        def _compute_domain(self, model_name, mode="read"):
-            ...
-
     Methods implementing this decorator should never return a Recordset,
     because the underlying cursor will eventually be closed and raise a
     `psycopg2.InterfaceError`.
     """
     key: Callable[..., tuple]
 
-    def __init__(self, *args: str, cache: str = 'default', skiparg: int | None = None, **kwargs):
+    def __init__(self, *args: str, cache: str = 'default', **kwargs):
         self.args = args
-        self.skiparg = skiparg
         self.cache_name = cache
-        if skiparg is not None:
-            warnings.warn("Deprecated since 19.0, ormcache(skiparg) will be removed", DeprecationWarning)
 
     def __call__(self, method: C) -> C:
         assert not hasattr(self, 'method'), "ormcache is already bound to a method"
@@ -108,10 +97,6 @@ class ormcache:
     def determine_key(self) -> None:
         """ Determine the function that computes a cache key from arguments. """
         assert self.method is not None
-        if self.skiparg is not None:
-            # backward-compatible function that uses self.skiparg
-            self.key = lambda *args, **kwargs: (args[0]._name, self.method, *args[self.skiparg:])
-            return
         # build a string that represents function code and evaluate it
         args = ', '.join(
             # remove annotations because lambdas can't be type-annotated,
@@ -158,26 +143,6 @@ class ormcache:
             return value
         else:
             return self.method(*args, **kwargs)
-
-
-class ormcache_context(ormcache):
-    """ This LRU cache decorator is a variant of :class:`ormcache`, with an
-    extra parameter ``keys`` that defines a sequence of dictionary keys. Those
-    keys are looked up in the ``context`` parameter and combined to the cache
-    key made by :class:`ormcache`.
-    """
-    def __init__(self, *args: str, keys, skiparg=None, **kwargs):
-        assert skiparg is None, "ormcache_context() no longer supports skiparg"
-        warnings.warn("Since 19.0, use ormcache directly, context values are available as `self.env.context.get`", DeprecationWarning)
-        super().__init__(*args, **kwargs)
-
-    def determine_key(self) -> None:
-        assert self.method is not None
-        sign = signature(self.method)
-        cont_expr = "(context or {})" if 'context' in sign.parameters else "self.env.context"
-        keys_expr = "tuple(%s.get(k) for k in %r)" % (cont_expr, self.keys)
-        self.args += (keys_expr,)
-        super().determine_key()
 
 
 def log_ormcache_stats(sig=None, frame=None):    # noqa: ARG001 (arguments are there for signals)
