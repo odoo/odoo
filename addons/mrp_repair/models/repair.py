@@ -81,7 +81,6 @@ class StockMove(models.Model):
         self.ensure_one()
         product = bom_line.product_id
         return {
-            'name': self.name,
             'repair_id': self.repair_id.id,
             'repair_line_type': self.repair_line_type,
             'product_id': product.id,
