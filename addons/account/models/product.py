@@ -291,7 +291,7 @@ class ProductProduct(models.Model):
         if default_code:
             domains.append([('default_code', '=', default_code)])
         if name:
-            domains += [[('name', '=', name)], [('name', 'ilike', name)]]
+            domains += [[('name', '=', name)], [('name', '=ilike', name)]]
 
         company = company or self.env.company
         for company_domain in (
