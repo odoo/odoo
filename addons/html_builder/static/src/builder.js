@@ -222,12 +222,8 @@ export class Builder extends Component {
             triggerDomUpdated: this.triggerDomUpdated.bind(this),
             editColorCombination: this.editColorCombination.bind(this),
         });
-        // onMounted(() => {
-        //     // actionService.setActionMode("fullscreen");
-        // });
         onWillDestroy(() => {
             this.editor.destroy();
-            // actionService.setActionMode("current");
         });
 
         onMounted(() => {
