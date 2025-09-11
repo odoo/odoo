@@ -152,6 +152,7 @@ export class PaymentAdyen extends PaymentInterface {
                     )
                 );
             }
+            return true;
         });
     }
 
@@ -175,7 +176,7 @@ export class PaymentAdyen extends PaymentInterface {
     _adyenHandleResponse(response) {
         var line = this.pendingAdyenline();
 
-        if (response.error && response.error.status_code == 401) {
+        if (!response || (response.error && response.error.status_code == 401)) {
             this._show_error(_t("Authentication failed. Please check your Adyen credentials."));
             line.setPaymentStatus("force_done");
             return false;
