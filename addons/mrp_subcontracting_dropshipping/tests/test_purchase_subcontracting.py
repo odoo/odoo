@@ -562,3 +562,69 @@ class TestSubcontractingDropshippingPortal(TestSubcontractingPortal):
         self.assertRecordValues(move._get_subcontract_production()[0], [{
             'qty_producing': 0.0, 'lot_producing_ids': finished_serial.ids, 'state': 'confirmed',
         }])
+
+
+class TestSubcontractingDropshippingFlowsNoValorisation(TestMrpSubcontractingCommon):
+
+    def test_shared_purchase_from_so(self):
+        customer = self.env['res.partner'].create([
+            {'name': 'customer'},
+        ])
+        vendor = self.env['res.partner'].create([
+            {'name': 'vendor'},
+        ])
+        route_mto = self.env.ref('stock.route_warehouse0_mto')
+        route_mto.active = True
+        component = self.env['product.product'].create([{
+            'name': 'Common Component',
+            'is_storable': True,
+            'route_ids': [Command.set(route_mto.ids)],
+            'seller_ids': [Command.create({'partner_id': vendor.id})],
+        }])
+        finished_products = self.env['product.product']
+        boms = self.env['mrp.bom']
+        for finished_product_name in ['fp1', 'fp2']:
+            finished_product = self.env['product.product'].create([{
+                'name': finished_product_name,
+                'is_storable': True,
+                'route_ids': [Command.set(route_mto.ids)],
+            }])
+            bom_form = Form(self.env['mrp.bom'])
+            bom_form.product_tmpl_id = finished_product.product_tmpl_id
+            with bom_form.bom_line_ids.new() as bom_line:
+                bom_line.product_id = component
+                bom_line.product_qty = 1
+            bom = bom_form.save()
+            finished_products += finished_product
+            boms += bom
+        uom_unit = self.env.ref('uom.product_uom_unit')
+        so = self.env['sale.order'].create({
+            "partner_id": customer.id,
+            "order_line": [
+                Command.create({
+                    'product_id': finished_products[0].id,
+                    'name': finished_products[0].name,
+                    'product_uom_qty': 2,
+                    'product_uom_id': uom_unit.id,
+                }),
+                Command.create({
+                    'product_id': finished_products[1].id,
+                    'name': finished_products[1].name,
+                    'product_uom_qty': 2,
+                    'product_uom_id': uom_unit.id,
+                }),
+            ],
+        })
+        so.action_confirm()
+        mo_1 = self.env['mrp.production'].search([('bom_id', '=', boms[0].id)], limit=1)
+        self.assertTrue(mo_1)
+        mo_2 = self.env['mrp.production'].search([('bom_id', '=', boms[1].id)], limit=1)
+        self.assertTrue(mo_2)
+        po_vendor = self.env['purchase.order'].search([('partner_id', '=', vendor.id)])
+        self.assertTrue(po_vendor)
+        self.assertEqual(len(po_vendor.order_line), 1)
+        self.assertEqual(sum(po_vendor.order_line.mapped('product_qty')), 4)
+        po_vendor.button_confirm()
+        self.assertEqual(len(po_vendor.order_line.move_ids), 1)
+        self.assertFalse(po_vendor.order_line.move_ids.production_group_id)
+        self.assertEqual(po_vendor.order_line.move_dest_ids.production_group_id, mo_1.production_group_id | mo_2.production_group_id)
