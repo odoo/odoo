@@ -159,7 +159,7 @@ export class PurchaseSuggestCatalogKanbanController extends ProductCatalogKanban
         };
     }
 
-    /** Loads last suggest toggle state from local storage (defaults to true) */
+    /** Loads last suggest toggle state from local storage (defaults to false) */
     _loadSuggestToggleState() {
         if (this.props.context.po_state !== "draft") {
             return { isOn: false };
@@ -168,6 +168,6 @@ export class PurchaseSuggestCatalogKanbanController extends ProductCatalogKanban
         if (local_state?.isOn !== undefined) {
             return local_state;
         }
-        return { isOn: true };
+        return { isOn: false };
     }
 }

@@ -3,6 +3,7 @@ import { _t } from "@web/core/l10n/translation";
 import { AccountProductCatalogSearchPanel } from "@account/components/product_catalog/search/search_panel";
 import { TimePeriodSelectionField } from "./time_period_selection_fields";
 import { formatMonetary } from "@web/views/fields/formatters";
+import { clamp } from "@web/core/utils/numbers";
 
 export class PurchaseSuggestCatalogSearchPanel extends AccountProductCatalogSearchPanel {
     static template = "purchase_stock.ProductCatalogSearchPanel";
@@ -33,14 +34,15 @@ export class PurchaseSuggestCatalogSearchPanel extends AccountProductCatalogSear
     }
     onDaysInput(ev) {
         const value = parseInt(ev.target.value, 10) || 0;
-        const bounded_val = value > 0 ? (value < 999 ? value : 999) : 0; // 999 because input is 3 digits wide
-        this.suggest.numberOfDays = bounded_val;
-        ev.target.value = bounded_val;
+        const boundedVal = clamp(value, 0, 999); // 999 because input is 3 digits wide
+        this.suggest.numberOfDays = boundedVal;
+        ev.target.value = boundedVal;
     }
     onPercentFactorInput(ev) {
         const value = parseInt(ev.target.value, 10) || 0;
-        this.suggest.percentFactor = value > 0 ? value : 0; // Negative percent doesn't make sense
-        ev.target.value = value > 0 ? value : 0;
+        const boundedVal = clamp(value, 0, 999); // 999 because input is 3 digits wide
+        this.suggest.percentFactor = boundedVal;
+        ev.target.value = boundedVal;
     }
     async onSuggestToggle() {
         this.suggest.suggestToggle.isOn = !this.suggest.suggestToggle.isOn;
