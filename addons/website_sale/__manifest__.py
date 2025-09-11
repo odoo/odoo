@@ -165,7 +165,7 @@
             'website_sale/static/src/xml/website_sale_utils.xml',
             'website_sale/static/src/xml/website_sale_editor_previews.xml',
         ],
-        'website.assets_edit_frontend': [
+        'website.assets_inside_builder_iframe': [
             'web/static/lib/bootstrap/scss/_variables.scss',
             'website_sale/static/src/website_builder/**/*.edit.*',
         ],
