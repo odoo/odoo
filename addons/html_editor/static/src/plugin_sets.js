@@ -37,6 +37,7 @@ import { ListPlugin } from "./main/list/list_plugin";
 import { LocalOverlayPlugin } from "./main/local_overlay_plugin";
 import { FilePlugin } from "./main/media/file_plugin";
 import { IconPlugin } from "./main/media/icon_plugin";
+import { IconColorPlugin } from "./main/media/icon_color_plugin";
 import { ImageCropPlugin } from "./main/media/image_crop_plugin";
 import { ImagePlugin } from "./main/media/image_plugin";
 import { ImageSavePlugin } from "./main/media/image_save_plugin";
@@ -172,6 +173,7 @@ export const MAIN_PLUGINS = [
     FontPlugin, // note: if before ListPlugin, there are a few split tests that fails
     FontFamilyPlugin,
     IconPlugin,
+    IconColorPlugin,
     ImagePlugin,
     ImagePostProcessPlugin,
     ImageCropPlugin,
