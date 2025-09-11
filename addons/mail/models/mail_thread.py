@@ -3266,7 +3266,7 @@ class MailThread(models.AbstractModel):
             restricting_names=self._get_notify_valid_parameters()
         )
 
-        recipients_data = self._notify_get_recipients(message, msg_vals=msg_vals, **kwargs)
+        recipients_data = self._notify_get_recipients(message, msg_vals=False, **kwargs)
         # cache data fetched by manual query to avoid extra queries when reading user.partner_id
         uid2pid = {r['uid']: r['id'] for r in recipients_data if r['id'] and r['uid']}
         users = self.env['res.users'].browse(uid2pid)
@@ -3274,7 +3274,7 @@ class MailThread(models.AbstractModel):
 
         # check for automated content (OOO), before shortcutting if no recipients
         # as OOO may include more people (parent message author, responsible)
-        self._notify_thread_with_out_of_office(message, recipients_data, msg_vals=msg_vals, **kwargs)
+        self._notify_thread_with_out_of_office(message, recipients_data, msg_vals=False, **kwargs)
 
         if not recipients_data:
             return recipients_data
@@ -3291,9 +3291,9 @@ class MailThread(models.AbstractModel):
         else:
             # generate immediately the <mail.notification>
             # and send the <mail.mail>, <mail.push> and the <bus.bus> notifications
-            self._notify_thread_by_inbox(message, recipients_data, msg_vals=msg_vals, **kwargs)
-            self._notify_thread_by_email(message, recipients_data, msg_vals=msg_vals, **kwargs)
-            self._notify_thread_by_web_push(message, recipients_data, msg_vals=msg_vals, **kwargs)
+            self._notify_thread_by_inbox(message, recipients_data, msg_vals=False, **kwargs)
+            self._notify_thread_by_email(message, recipients_data, msg_vals=False, **kwargs)
+            self._notify_thread_by_web_push(message, recipients_data, msg_vals=False, **kwargs)
 
         return recipients_data
 
@@ -4355,7 +4355,7 @@ class MailThread(models.AbstractModel):
         # message author to notify is either a valid partner, either an email only
         # (e.g. mail gateway, portal with token)
         recipient = self._message_compute_real_author((msg_vals or {}).get('author_id') or message.author_id.id).sudo()
-        email_to = (msg_vals.get('email_from') or message.email_from) if not recipient else False
+        email_to = ((msg_vals or {}).get('email_from') or message.email_from) if not recipient else False
         if not recipient and not email_to:
             return ooo_messages
 
