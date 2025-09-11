@@ -128,12 +128,16 @@ patch(LinkPopover.prototype, {
 
     onSelect(value) {
         this.state.url = value;
-        this.onChange();
+        if (!this.state.isImage) {
+            this.onChange();
+        }
     },
 
     updateValue(val) {
         this.state.url = val;
-        this.onChange();
+        if (!this.state.isImage) {
+            this.onChange();
+        }
     },
     onClickForcePreviewMode(ev) {
         if (this.props.linkElement.href) {

@@ -3,7 +3,7 @@ import { click, press, waitFor, waitForNone, queryOne } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
 import { cleanLinkArtifacts } from "@html_editor/../tests/_helpers/format";
 import { getContent, setContent, setSelection } from "@html_editor/../tests/_helpers/selection";
-import { setupEditor } from "@html_editor/../tests/_helpers/editor";
+import { base64Img, setupEditor } from "@html_editor/../tests/_helpers/editor";
 import {
     contains,
     defineModels,
@@ -91,6 +91,62 @@ test("autocomplete should shown and able to edit the link", async () => {
     // check the default page anchors are in the autocomplete dropdown
     expect(".o-autocomplete--dropdown-item:first").toHaveText("#top");
     expect(".o-autocomplete--dropdown-item:last").toHaveText("#bottom");
+});
+
+test("autocomplete suggestions for image links don’t update preview until applied", async () => {
+    onRpc("/website/get_suggested_links", () => {
+        expect.step("/website/get_suggested_links");
+        return {
+            matching_pages: [
+                {
+                    value: "/contactus",
+                    label: "/contactus (Contact Us)",
+                },
+            ],
+            others: [
+                {
+                    title: "Apps url",
+                    values: [
+                        {
+                            value: "/contactus",
+                            icon: "/website/static/description/icon.png",
+                            label: "/contactus (Contact Us)",
+                        },
+                    ],
+                },
+            ],
+        };
+    });
+    onRpc("/contactus", () => ({}));
+    onRpc("/html_editor/link_preview_internal", () => ({}));
+
+    const { el } = await setupEditor(
+        `<p><a href="http://test.test/">[<img src="${base64Img}">]</a></p>`
+    );
+
+    await waitFor(".o-we-linkpopover");
+    await click(".o_we_edit_link");
+    await animationFrame();
+    // the url input should be autocomplete
+    await contains(".o-autocomplete--input").focus();
+
+    // autocomplete dropdown should be there
+    await press(["ctrl", "a"]);
+    await press("c");
+    // typing URL shouldn’t change image link preview.
+    expect(getContent(el)).toBe(`<p><a href="http://test.test/"><img src="${base64Img}"></a></p>`);
+    await waitFor(".o-autocomplete--dropdown-menu", { timeout: 3000 });
+    expect.verifySteps(["/website/get_suggested_links"]);
+
+    expect(".ui-autocomplete-category").toHaveCount(1);
+    expect(".o-autocomplete--dropdown-item img").toHaveCount(1);
+
+    await click(".o-autocomplete--dropdown-item:first");
+    // selecting suggestion shouldn’t change image link preview.
+    expect(getContent(el)).toBe(`<p><a href="http://test.test/"><img src="${base64Img}"></a></p>`);
+    await click(".o_we_apply_link");
+    // the url should be applied after selecting a dropdown item
+    expect(getContent(el)).toBe(`<p><a href="/contactus">[<img src="${base64Img}">]</a></p>`);
 });
 
 test("LinkPopover opens in full composer", async () => {
