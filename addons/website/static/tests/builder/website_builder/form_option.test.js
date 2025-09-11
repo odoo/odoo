@@ -368,3 +368,23 @@ test("Changing max files number option updates file input 'multiple' attribute",
     expect(":iframe input[type=file]").toHaveAttribute("data-max-files-number", "1");
     expect(":iframe input[type=file]").not.toHaveAttribute("multiple");
 });
+
+test("Form using the Outgoing Mails model includes hidden email_to field", async () => {
+    await setupWebsiteBuilder(
+        `<section class="s_website_form">
+            <form data-model_name="mail.mail">
+                <div class="s_website_form_submit">
+                    <div class="s_website_form_label"/>
+                    <a>Submit</a>
+                </div>
+            </form>
+        </section>`
+    );
+
+    await contains(":iframe section").click();
+    await contains("div:has(>span:contains('Action')) + div button").click();
+    await contains("div.o-dropdown-item:contains('Send an E-mail')").click();
+
+    expect(":iframe input[type='hidden'][name='email_to']").toHaveCount(1);
+    expect(":iframe input[type='hidden'][name='email_to']").toHaveValue("info@yourcompany.example.com");
+});
