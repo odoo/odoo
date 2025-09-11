@@ -14,6 +14,8 @@ export class DiscussChannel extends Record {
     channel_member_ids = fields.Many("discuss.channel.member", {
         sort: (m1, m2) => m1.id - m2.id,
     });
+    /** @type {number|undefined} */
+    member_count = undefined;
 
     correspondent = fields.One("discuss.channel.member", {
         /** @this {import("models").Thread} */
@@ -54,6 +56,10 @@ export class DiscussChannel extends Record {
 
     get showCorrespondentCountry() {
         return false;
+    }
+
+    get areAllMembersLoaded() {
+        return this.member_count === this.channel_member_ids.length;
     }
 }
 

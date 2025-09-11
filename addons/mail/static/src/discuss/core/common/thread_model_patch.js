@@ -68,6 +68,7 @@ const threadPatch = {
                         id: this.id,
                         channel_member_ids: this.channel_member_ids,
                         channel_type: this.channel_type,
+                        member_count: this.member_count,
                     };
                 }
                 return undefined;
@@ -226,9 +227,6 @@ const threadPatch = {
         return this.channel?.channel_member_ids.filter(
             (member) => !this.store.onlineMemberStatuses.includes(member.im_status)
         );
-    },
-    get areAllMembersLoaded() {
-        return this.member_count === this.channel?.channel_member_ids.length;
     },
     get avatarUrl() {
         if (this.channel?.channel_type === "channel" || this.channel?.channel_type === "group") {
