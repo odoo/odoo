@@ -36,6 +36,7 @@ test(`import in cog menu dropdown in list`, async () => {
     mockService("action", {
         doAction(action, options) {
             expect.step(action.tag);
+            expect(action.params.context.foo).toBe("bar");
             return super.doAction(action, options);
         },
     });
@@ -46,6 +47,9 @@ test(`import in cog menu dropdown in list`, async () => {
         arch: `<list><field name="foo"/></list>`,
         config: {
             actionType: "ir.actions.act_window",
+        },
+        context: {
+            foo: "bar",
         },
     });
     await toggleActionMenu();
@@ -102,6 +106,7 @@ test(`import in cog menu dropdown in kanban`, async () => {
     mockService("action", {
         doAction(action, options) {
             expect.step(action.tag);
+            expect(action.params.context.foo).toBe("bar");
             return super.doAction(action, options);
         },
     });
@@ -120,6 +125,9 @@ test(`import in cog menu dropdown in kanban`, async () => {
         `,
         config: {
             actionType: "ir.actions.act_window",
+        },
+        context: {
+            foo: "bar",
         },
     });
     await toggleActionMenu();
