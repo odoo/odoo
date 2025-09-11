@@ -355,18 +355,6 @@ class HrEmployee(models.Model):
             version.write({**vals.get('inherited', {})['hr.version'], 'employee_id': employee.id})
         return result
 
-    @api.model
-    @api.deprecated("Override of a deprecated method")
-    def check_field_access_rights(self, operation, field_names):
-        # DISCLAIMER: Dirty hack to avoid having to create a bridge module to override only a
-        # groups on a field which is not prefetched (because not stored) but would crash anyway
-        # if we try to read them directly (very uncommon use case). Don't add your field on this
-        # list if you can specify the group on the field directly (as all the other fields).
-        result = super().check_field_access_rights(operation, field_names)
-        if not self.env.user.has_group("hr.group_hr_user"):
-            result = [field for field in result if field not in ['activity_calendar_event_id', 'rating_ids', 'website_message_ids', 'message_has_sms_error']]
-        return result
-
     def _has_field_access(self, field, operation):
         # DISCLAIMER: Dirty hack to avoid having to create a bridge module to override only a
         # groups on a field which is not prefetched (because not stored) but would crash anyway

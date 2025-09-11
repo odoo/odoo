@@ -3618,15 +3618,6 @@ class AccountMove(models.Model):
     # -------------------------------------------------------------------------
 
     @api.model
-    @api.deprecated("Override of a deprecated method")
-    def check_field_access_rights(self, operation, field_names):
-        result = super().check_field_access_rights(operation, field_names)
-        if not field_names:
-            weirdos = ['needed_terms', 'quick_encoding_vals', 'payment_term_details']
-            result = [fname for fname in result if fname not in weirdos]
-        return result
-
-    @api.model
     def _get_default_read_fields(self):
         weirdos = {'needed_terms', 'quick_encoding_vals', 'payment_term_details'}
         return [fname for fname in self.fields_get(attributes=()) if fname not in weirdos]

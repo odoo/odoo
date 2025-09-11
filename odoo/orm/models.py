@@ -2851,43 +2851,6 @@ class BaseModel(metaclass=MetaModel):
 
         raise AccessError(error_msg)
 
-    @api.model
-    @api.deprecated(
-        "Deprecated since 19.0, use `_check_field_access` on models."
-        " To get the list of allowed fields, use `fields_get`.",
-    )
-    def check_field_access_rights(self, operation: str, field_names: list[str] | None) -> list[str]:
-        """Check the user access rights on the given fields.
-
-        If `field_names` is not provided, we list accessible fields to the user.
-        Otherwise, an error is raised if we try to access a forbidden field.
-        Note that this function ignores unknown (virtual) fields.
-
-        :param operation: one of ``create``, ``read``, ``write``, ``unlink``
-        :param field_names: names of the fields
-        :return: provided fields if fields is truthy (or the fields
-          readable by the current user).
-        :raise AccessError: if the user is not allowed to access
-          the provided fields.
-        """
-        if self.env.su:
-            return field_names or list(self._fields)
-
-        if not field_names:
-            return [
-                field_name
-                for field_name, field in self._fields.items()
-                if self._has_field_access(field, operation)
-            ]
-
-        for field_name in field_names:
-            # Unknown (or virtual) fields are considered accessible because they will not be read and nothing will be written to them.
-            field = self._fields.get(field_name)
-            if field is None:
-                continue
-            self._check_field_access(field, operation)
-        return field_names
-
     @api.readonly
     def read(self, fields: Sequence[str] | None = None, load: str = '_classic_read') -> list[ValuesType]:
         """Read the requested fields for the records in ``self``, and return their
@@ -3579,40 +3542,6 @@ class BaseModel(metaclass=MetaModel):
                 return forbidden, functools.partial(Rule._make_access_error, operation, forbidden)
 
         return None
-
-    @api.model
-    @api.deprecated("check_access_rights() is deprecated since 18.0; use check_access() instead.")
-    def check_access_rights(self, operation, raise_exception=True):
-        """ Verify that the given operation is allowed for the current user accord to ir.model.access.
-
-        :param str operation: one of ``create``, ``read``, ``write``, ``unlink``
-        :param bool raise_exception: whether an exception should be raise if operation is forbidden
-        :return: whether the operation is allowed
-        :rtype: bool
-        :raise AccessError: if the operation is forbidden and raise_exception is True
-        """
-        if raise_exception:
-            return self.browse().check_access(operation)
-        return self.browse().has_access(operation)
-
-    @api.deprecated("check_access_rule() is deprecated since 18.0; use check_access() instead.")
-    def check_access_rule(self, operation):
-        """ Verify that the given operation is allowed for the current user according to ir.rules.
-
-        :param str operation: one of ``create``, ``read``, ``write``, ``unlink``
-        :return: None if the operation is allowed
-        :raise UserError: if current ``ir.rules`` do not permit this operation.
-        """
-        self.check_access(operation)
-
-    @api.deprecated("_filter_access_rules() is deprecated since 18.0; use _filtered_access() instead.")
-    def _filter_access_rules(self, operation):
-        """ Return the subset of ``self`` for which ``operation`` is allowed. """
-        return self._filtered_access(operation)
-
-    @api.deprecated("_filter_access_rules_python() is deprecated since 18.0; use _filtered_access() instead.")
-    def _filter_access_rules_python(self, operation):
-        return self._filtered_access(operation)
 
     def unlink(self) -> typing.Literal[True]:
         """ Delete the records in ``self``.
