@@ -1399,4 +1399,19 @@ export class WysiwygAdapterComponent extends Wysiwyg {
         }
         this._hideDropdowns();
     }
+    /**
+     * @override
+     */
+    async _onMediaDialogSave(params, element) {
+        await super._onMediaDialogSave(...arguments);
+        // This wasn't needed before activating the "iframe video" public widget
+        // in the edit mode. It should allow destroying newly added iframes and
+        // prevent saving them in the DOM.
+        if (element.classList.contains("media_iframe_video")) {
+            this._websiteRootEvent("widgets_start_request", {
+                editableMode: true,
+                $target: $(element),
+            });
+        }
+    }
 }
