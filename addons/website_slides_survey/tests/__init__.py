@@ -3,3 +3,4 @@
 
 from . import test_course_certification_failure
 from . import test_course_certification_unlink
+from . import test_course_ui_certification
