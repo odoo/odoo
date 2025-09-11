@@ -602,3 +602,33 @@ class TestMassMailing(TestMassMailCommon):
             check_mail=True
         )
         self.assertEqual(mailing.canceled, 2)
+
+    @users('user_marketing')
+    @mute_logger('odoo.addons.mail.models.mail_mail')
+    def test_mailing_contact_bounce_counter(self):
+        # Test that mailing.contact bounce counter correctly gets incremented on a mailing email bounce.
+
+        mailing_contacts = self.env['mailing.contact'].create([
+            {'name': 'Crystal', 'email': 'crystal@odoo.com'},
+            {'name': 'Ruby', 'email': 'ruby@odoo.com'},
+            {'name': 'Sock', 'email': 'sock@odoo.com'},
+        ])
+        self.mailing_bl.write({
+            'mailing_model_id': self.env['ir.model']._get('mailing.contact'),
+            'mailing_domain': [('email_normalized', 'ilike', '@odoo.com')],
+        })
+
+        with self.mock_mail_gateway(mail_unlink_sent=False):
+            self.mailing_bl.action_send_mail()
+
+        self.gateway_mail_trace_bounce(self.mailing_bl, mailing_contacts[1])
+        self.gateway_mail_trace_bounce(self.mailing_bl, mailing_contacts[2], {
+            'bounced_email': 'custom_bounce_replyfrom@odoo.com',
+        })
+
+        self.assertEqual(mailing_contacts[1].message_bounce, 1,
+            "Ruby's email has bounced once, so its bounce counter has incremented")
+        self.assertEqual(mailing_contacts[2].message_bounce, 1,
+            "Despite the bounce response coming from a different email, Sock's email has also bounced, so its bounce counter has incremented")
+        self.assertEqual(mailing_contacts[0].message_bounce, 0,
+            "Crystal's email hasn't bounced, so its counter should stay 0")
