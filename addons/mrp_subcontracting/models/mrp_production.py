@@ -66,7 +66,7 @@ class MrpProduction(models.Model):
         old_lots = [mo.lot_producing_ids for mo in self]
         if self.env.context.get('mrp_subcontracting') and 'product_qty' in vals:
             for mo in self:
-                self.sudo().env['change.production.qty'].with_context(skip_activity=True, mrp_subcontracting=False).create([{
+                self.sudo().env['change.production.qty'].with_context(skip_activity=True, mrp_subcontracting=False, no_procurement=True).create([{
                     'mo_id': mo.id,
                     'product_qty': vals['product_qty'],
                 }]).change_prod_qty()
