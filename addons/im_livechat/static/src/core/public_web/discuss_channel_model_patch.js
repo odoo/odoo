@@ -21,7 +21,8 @@ patch(DiscussChannel.prototype, {
     get showCorrespondentCountry() {
         if (this.channel_type === "livechat") {
             return (
-                this.livechat_operator_id?.eq(this.store.self) && Boolean(this.correspondentCountry)
+                this.thread.livechat_operator_id?.eq(this.store.self) &&
+                Boolean(this.correspondentCountry)
             );
         }
         return super.showCorrespondentCountry;

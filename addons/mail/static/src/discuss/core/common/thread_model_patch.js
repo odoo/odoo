@@ -241,9 +241,6 @@ const threadPatch = {
         }
         return super.avatarUrl;
     },
-    get showCorrespondentCountry() {
-        return false;
-    },
     /** @override */
     async checkReadAccess() {
         const res = await super.checkReadAccess();

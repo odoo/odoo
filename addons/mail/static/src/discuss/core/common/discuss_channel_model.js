@@ -43,12 +43,17 @@ export class DiscussChannel extends Record {
             return this.correspondent?.persona?.country_id ?? this.country_id;
         },
     });
+
     /** @returns {import("models").ChannelMember[]} */
     get correspondents() {
         if (!this.channel_member_ids) {
             return [];
         }
         return this.channel_member_ids?.filter(({ persona }) => persona?.notEq(this.store.self));
+    }
+
+    get showCorrespondentCountry() {
+        return false;
     }
 }
 

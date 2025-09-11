@@ -13,7 +13,7 @@
                     }"/>
                 </t>
             </ImStatus>
-            <CountryFlag t-if="thread?.showCorrespondentCountry" country="thread.channel.correspondentCountry" class="'o-mail-ChatBubble-country position-absolute bottom-0 border shadow-sm'"/>
+            <CountryFlag t-if="thread?.channel?.showCorrespondentCountry" country="thread.channel.correspondentCountry" class="'o-mail-ChatBubble-country position-absolute bottom-0 border shadow-sm'"/>
             <button class="o-mail-ChatHub-bubbleBtn btn shadow">
                 <img class="o-mail-ChatBubble-avatar bg-view rounded-circle object-fit-cover" t-att-class="{ 'o-big': env.embedLivechat }" t-att-src="thread?.avatarUrl" alt="Thread image" draggable="false"/>
             </button>

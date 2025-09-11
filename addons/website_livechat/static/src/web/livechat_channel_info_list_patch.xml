@@ -6,7 +6,7 @@
             <div t-if="props.thread.showCorrespondentCountry or visitor?.lang_id">
                 <h6 class="pt-3" t-out="countryLanguageLabel"/>
                 <div class="d-flex bg-inherit align-items-center gap-1">
-                    <img t-if="props.thread.showCorrespondentCountry" class="o_country_flag" t-att-src="props.thread.correspondentCountry.flagUrl" t-att-title="props.thread.correspondentCountry.code or props.thread.correspondentCountry.name" aria-label="Country"/>
+                    <img t-if="props.thread.channel?.showCorrespondentCountry" class="o_country_flag" t-att-src="props.thread.channel.correspondentCountry.flagUrl" t-att-title="props.thread.channel.correspondentCountry.code or props.thread.channel.correspondentCountry.name" aria-label="Country"/>
                     <span t-if="visitor?.lang_id" title="Language" t-esc="visitor.lang_id.name"/>
                 </div>
             </div>
