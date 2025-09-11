@@ -88,19 +88,21 @@ export class ImportAction extends Component {
             }
         });
 
-        onWillStart(async () => {
-            this.action = await this.actionService.currentAction;
-            if (!this.action) {
-                return this.env.config.historyBack();
-            }
-            if (this.action.type !== "ir.actions.act_window") {
-                return this.actionService.restore(this.actionService.currentController.jsId);
-            }
+        onWillStart(this.onWillStart);
+    }
 
-            this.resModel = this.action.res_model;
-            this.model.setResModel(this.resModel);
-            return this.model.init();
-        });
+    async onWillStart() {
+        this.action = await this.actionService.currentAction;
+        if (!this.action) {
+            return this.env.config.historyBack();
+        }
+        if (this.action.type !== "ir.actions.act_window") {
+            return this.actionService.restore(this.actionService.currentController.jsId);
+        }
+
+        this.resModel = this.action.res_model;
+        this.model.setResModel(this.resModel);
+        return this.model.init();
     }
 
     cancel() {
