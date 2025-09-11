@@ -32,7 +32,7 @@ patch(PaymentForm.prototype, {
      */
     async _prepareInlineForm(providerId, providerCode, paymentOptionId, paymentMethodCode, flow) {
         if (providerCode !== 'mercado_pago' || paymentMethodCode !== 'card') {
-            super._prepareInlineForm(...arguments);
+            await super._prepareInlineForm(...arguments);
             return;
         }
 
