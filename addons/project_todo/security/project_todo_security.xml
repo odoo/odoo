@@ -30,7 +30,7 @@
                 '&amp;',
                     ('project_id', '!=', False),
                     '|',
-                        ('project_id.privacy_visibility', '!=', 'followers'),
+                        ('project_id.privacy_visibility', 'in', ['employees', 'portal']),
                         ('project_id.message_partner_ids', 'in', [user.partner_id.id]),
                 '|',
                     ('message_partner_ids', 'in', [user.partner_id.id]),
