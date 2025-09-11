@@ -544,8 +544,8 @@ const PosLoyaltyOrder = (Order) => class PosLoyaltyOrder extends Order {
         if (this.pos.programs.length === 0) {
             return;
         }
-        dropPrevious.exec(() => {return this._updateLoyaltyPrograms().then(async () => {
-            // Try auto claiming rewards
+        mutex.exec(() => this._updateLoyaltyPrograms().then(async () => {
+        // Try auto claiming rewards
             const claimableRewards = this.getClaimableRewards(false, false, true);
             let changed = false;
             for (const {coupon_id, reward} of claimableRewards) {
@@ -560,7 +560,7 @@ const PosLoyaltyOrder = (Order) => class PosLoyaltyOrder extends Order {
                 await this._updateLoyaltyPrograms();
             }
             this._updateRewardLines();
-        })}).catch(() => {/* catch the reject of dp when calling `add` to avoid unhandledrejection */});
+        }));
     }
     async _updateLoyaltyPrograms() {
         await this._checkMissingCoupons();
@@ -571,7 +571,6 @@ const PosLoyaltyOrder = (Order) => class PosLoyaltyOrder extends Order {
      */
     async _checkMissingCoupons() {
         // This function must stay sequential to avoid potential concurrency errors.
-        await mutex.exec(async () => {
             if (!this.invalidCoupons) {
                 return;
             }
@@ -590,7 +589,6 @@ const PosLoyaltyOrder = (Order) => class PosLoyaltyOrder extends Order {
                 this.codeActivatedCoupons = this.codeActivatedCoupons.filter((coupon) => this.pos.couponCache[coupon.id]);
                 this.couponPointChanges = Object.fromEntries(Object.entries(this.couponPointChanges).filter(([k, pe]) => this.pos.couponCache[pe.coupon_id]));
             }
-        });
     }
     /**
      * Refreshes the currently applied rewards, if they are not applicable anymore they are removed.
