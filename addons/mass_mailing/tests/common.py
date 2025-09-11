@@ -233,12 +233,12 @@ class MassMailCase(MailCase, MockLinkTracker):
             'bounced_message': self.env['mail.message'].sudo(),
             'body': 'This is the bounce email',
         }
-        if bounce_base_values:
-            parsed_bounce_values.update(bounce_base_values)
         parsed_bounce_values.update({
             'bounced_email': trace.email,
             'bounced_msg_ids': [trace.message_id],
         })
+        if bounce_base_values:
+            parsed_bounce_values.update(bounce_base_values)
         self.env['mail.thread']._routing_handle_bounce(False, parsed_bounce_values)
         return trace
 
