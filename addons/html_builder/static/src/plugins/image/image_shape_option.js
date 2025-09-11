@@ -3,6 +3,7 @@ import { toRatio } from "@html_builder/utils/utils";
 import { _t } from "@web/core/l10n/translation";
 import { ShapeSelector } from "@html_builder/plugins/shape/shape_selector";
 import { deepCopy } from "@web/core/utils/objects";
+import { loadImageInfo } from "@html_editor/utils/image_processing";
 
 export class ImageShapeOption extends BaseOptionComponent {
     static template = "html_builder.ImageShapeOption";
@@ -17,12 +18,17 @@ export class ImageShapeOption extends BaseOptionComponent {
         this.customizeTabPlugin = this.env.editor.shared.customizeTab;
         this.imageShapeOption = this.env.editor.shared.imageShapeOption;
         this.toRatio = toRatio;
-        this.state = useDomState((editingElement) => {
+        this.state = useDomState(async (editingElement) => {
             let shape = editingElement.dataset.shape;
+            const hasOriginalSrc = {
+                ...editingElement.dataset,
+                ...(await loadImageInfo(editingElement)),
+            }.originalSrc;
             if (shape) {
                 shape = shape.replace("web_editor", "html_builder");
             }
             return {
+                canUseImageShape: hasOriginalSrc,
                 hasShape: !!shape && !this.imageShapeOption.isTechnicalShape(shape),
                 shapeLabel: this.imageShapeOption.getShapeLabel(shape),
                 showImageShape0: this.isShapeVisible(editingElement, 0),
