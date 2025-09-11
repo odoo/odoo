@@ -1842,10 +1842,6 @@ export function makeActionManager(env, router = _router) {
         doAction,
         doActionButton,
         switchView,
-        // to validate with framework team
-        setActionMode(mode) {
-            env.bus.trigger("ACTION_MANAGER:UI-UPDATED", mode);
-        },
         restore,
         loadState,
         async loadAction(actionRequest, context) {
