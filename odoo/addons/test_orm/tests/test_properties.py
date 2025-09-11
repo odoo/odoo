@@ -513,8 +513,8 @@ class PropertiesCase(TestPropertiesMixin):
                 'discussion': False,
                 'author': self.user.id,
             }])
-            self.env.invalidate_all()
 
+        self.env.invalidate_all()
         with self.assertQueryCount(7):
             messages = self.env['test_orm.message'].create([{
                 'name': 'Test Message',
@@ -552,8 +552,8 @@ class PropertiesCase(TestPropertiesMixin):
                     'definition_changed': True,
                 }],
             }])
-            self.env.invalidate_all()
 
+        self.env.invalidate_all()
         sql_definition = self._get_sql_definition(self.discussion_1)
         self.assertEqual(len(sql_definition), 2)
 
@@ -848,7 +848,6 @@ class PropertiesCase(TestPropertiesMixin):
         self.assertEqual(dict(self.message_2.attributes)['test_html'], expected)
         self.assertEqual(self.message_2.attributes['test_html'], expected)
 
-        self.env.flush_all()
         with self.assertRaises(UserError):
             self.env['test_orm.message']._read_group([], ['attributes.test_html'])
 
@@ -1084,7 +1083,6 @@ class PropertiesCase(TestPropertiesMixin):
              WHERE id = %s
             """, (new_properties, self.discussion_1.id),
         )
-        self.env.flush_all()
         self.env.invalidate_all()
 
         definition = self.discussion_1.read(['attributes_definition'])[0]['attributes_definition']
@@ -1960,7 +1958,6 @@ class PropertiesCase(TestPropertiesMixin):
             'value': ['a', 'b', 'e'],
             'definition_changed': True,
         }]
-        self.env.flush_all()
         self.assertEqual(self.message_1['attributes']['tags'], 'A, B')
         self.assertEqual(self.message_2['attributes']['tags'], False)
         with self.assertRaises(KeyError):
@@ -1973,7 +1970,6 @@ class PropertiesCase(TestPropertiesMixin):
             'value': (self.partner | self.partner_2).ids,
             'definition_changed': True,
         }]
-        self.env.flush_all()
         self.assertEqual(self.message_1['attributes']['many2many'], self.partner | self.partner_2)
         self.assertEqual(self.message_2['attributes']['many2many'], self.env['test_orm.partner'])
         with self.assertRaises(KeyError):
@@ -1986,7 +1982,6 @@ class PropertiesCase(TestPropertiesMixin):
             'value': (self.partner | self.partner_2).ids,
             'definition_changed': True,
         }]
-        self.env.flush_all()
         self.assertEqual(self.message_1['attributes']['many2many'], False)
         self.assertEqual(self.message_2['attributes']['many2many'], False)
         with self.assertRaises(KeyError):
@@ -2012,7 +2007,6 @@ class PropertiesCase(TestPropertiesMixin):
             'value': self.partner_2.ids,
         }]
         messages = self.message_1 | self.message_2 | self.message_3
-        self.env.flush_all()
         self.env.invalidate_all()
 
         with self.assertQueryCount(9):
@@ -2316,8 +2310,6 @@ class PropertiesSearchCase(TransactionExpressionCase, TestPropertiesMixin):
         self.message_2.attributes = {'mychar': 'AA'}
         self.message_3.attributes = {'mychar': 'CC'}
 
-        self.env.flush_all()
-
         result = self.env['test_orm.message'].search(
             domain=[['attributes.mychar', '!=', False]],
             order='attributes.mychar ASC')
@@ -2343,8 +2335,6 @@ class PropertiesSearchCase(TransactionExpressionCase, TestPropertiesMixin):
         }]
         self.message_2.attributes = {'myinteger': 111}
         self.message_3.attributes = {'myinteger': 33}
-
-        self.env.flush_all()
 
         result = self.env['test_orm.message'].search(
             domain=[['attributes.myinteger', '!=', False]],
@@ -2447,7 +2437,6 @@ class PropertiesGroupByCase(TestPropertiesMixin):
         }]
         self.message_2.attributes = {'mychar': 'qsd', 'myinteger': 5}
         self.message_3.attributes = {'mychar': 'boum', 'myinteger': 1337}
-        self.env.flush_all()
 
         # group by the char property
         with self.assertQueryCount(3):
@@ -2655,7 +2644,6 @@ class PropertiesGroupByCase(TestPropertiesMixin):
         self.message_2.attributes = {'mydate': f'2023-02-03{hour}'}
         self.message_3.attributes = {'mydate': f'2023-01-02{hour}'}
         self.message_4.attributes = {'mydate': f'2023-02-05{hour}'}
-        self.env.flush_all()
 
     @mute_logger('odoo.fields')
     def test_properties_field_read_group_date_day(self, date_type='date'):
@@ -2882,7 +2870,6 @@ class PropertiesGroupByCase(TestPropertiesMixin):
             'value': 1337,
             'definition_changed': True,
         }]
-        self.env.flush_all()
 
         with self.assertRaises(ValueError), self.assertQueryCount(0):
             Model.formatted_read_group(
@@ -3179,7 +3166,6 @@ class PropertiesGroupByCase(TestPropertiesMixin):
             'selection': [],
             'definition_changed': True,
         }]
-        self.env.flush_all()
         result = Model.formatted_read_group(
             domain=[],
             groupby=['attributes.myselection'],
@@ -3275,7 +3261,6 @@ class PropertiesGroupByCase(TestPropertiesMixin):
                 'tags': tags,
                 'definition_changed': True,
             }]
-            self.env.flush_all()
             result = Model.formatted_read_group(
                 domain=[('discussion', '!=', self.wrong_discussion_id)],
                 aggregates=['__count'],
