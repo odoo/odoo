@@ -10,5 +10,8 @@
                 ('applicant_id.interviewer_ids', 'in', user.id),
         ]</field>
         <field name="groups" eval="[(4, ref('hr_recruitment.group_hr_recruitment_interviewer'))]"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
     </record>
 </odoo>
