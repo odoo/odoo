@@ -114,7 +114,7 @@ test("Change the background position and click out of the iframe", async () => {
 test("Background position overlay layout", async () => {
     expect.assertions(18);
 
-    const { getEditor, waitDomUpdated } = await setupWebsiteBuilder(
+    const { getEditor, waitSidebarUpdated } = await setupWebsiteBuilder(
         `<section>
             <div class="container">
                 <section style="background-image: url('/web/image/123/transparent.png'); width: 500px; height: 500px">
@@ -138,7 +138,7 @@ test("Background position overlay layout", async () => {
             const iframeContainer = queryOne(".o_website_preview.o_is_mobile .o_iframe_container");
             iframeContainer.style.transform = `translate(-50%, -50%) scale(${iframeContainerScale})`;
         }
-        await openBgPositionOverlay(section, waitDomUpdated);
+        await openBgPositionOverlay(section, waitSidebarUpdated);
 
         // The overlay should cover exactly the iframe
         const iframeRect = iframe.getBoundingClientRect();
@@ -200,7 +200,7 @@ test("Background position overlay behavior", async () => {
         };
     };
 
-    const { getEditor, waitDomUpdated } = await setupWebsiteBuilder(
+    const { getEditor, waitSidebarUpdated } = await setupWebsiteBuilder(
         `<section>
             <div class="container">
                 <section style="background-image: url('/web/image/123/transparent.png'); width: 500px;">
@@ -228,7 +228,7 @@ test("Background position overlay behavior", async () => {
     // Make sure we can scroll
     section.style.height = "1000px";
 
-    await openBgPositionOverlay(section, waitDomUpdated);
+    await openBgPositionOverlay(section, waitSidebarUpdated);
 
     // Scrolling on the overlay should scroll the iframe
     await scroll(queryOne(".o_we_background_position_overlay"), { y: 50 }, { scrollable: false });
@@ -237,7 +237,7 @@ test("Background position overlay behavior", async () => {
 
     // The Scroll Effect should be set to "None"
     expect("[data-label='Scroll Effect'] button").toHaveText("None");
-    await openBgPositionOverlay(section, waitDomUpdated);
+    await openBgPositionOverlay(section, waitSidebarUpdated);
     expect(section).toHaveClass("o_we_background_positioning");
 
     // Drag and check that the background moves properly
@@ -258,7 +258,7 @@ test("Background position overlay behavior", async () => {
     // Set Scroll Effect to "Fixed"
     await contains("[data-label='Scroll Effect'] button").click();
     await contains("[data-action-value='fixed']").click();
-    await openBgPositionOverlay(section, waitDomUpdated);
+    await openBgPositionOverlay(section, waitSidebarUpdated);
     // The element with the background is not the section when the Scroll Effect is not "None".
     // However the section (i.e. its parent element) needs to have this class set to hide its content.
     expect(section).toHaveClass("o_we_background_positioning");
@@ -280,12 +280,10 @@ test("Background position overlay behavior", async () => {
     );
 });
 
-async function openBgPositionOverlay(editingElement, waitDomUpdated) {
+async function openBgPositionOverlay(editingElement, waitSidebarUpdated) {
     await contains(editingElement).click();
-    await waitDomUpdated();
-    // TODO: Remove the timeouts when waitDomUpdated is fixed
-    await contains("button[data-action-id='backgroundPositionOverlay']", { timeout: 2000 }).click();
-    await waitDomUpdated();
+    await waitSidebarUpdated();
+    await contains("button[data-action-id='backgroundPositionOverlay']").click();
     await waitFor(".o-overlay-container .o_we_background_dragger", { timeout: 2000 });
 }
 
@@ -309,13 +307,13 @@ function patchDragBackground(el, from, to) {
 }
 
 async function dragAndDropBgImage() {
-    const { waitDomUpdated } = await setupWebsiteBuilder(`
+    const { waitSidebarUpdated } = await setupWebsiteBuilder(`
         <section style="background-image: url('/web/image/123/transparent.png'); width: 500px; height:500px">
             <div class="o_we_shape o_html_builder_Connections_01">
                 AAAA
             </div>
         </section>`);
-    await openBgPositionOverlay(":iframe section", waitDomUpdated);
+    await openBgPositionOverlay(":iframe section", waitSidebarUpdated);
     const { startDrag, endDrag } = patchDragBackground(
         ".o-overlay-container .o_we_background_dragger",
         { x: 199, y: 199 },
@@ -365,7 +363,7 @@ test("open the media dialog to toggle the image background but do not choose an 
 });
 
 test("remove the background image of a snippet", async () => {
-    const { waitDomUpdated } = await setupWebsiteBuilder(`
+    const { waitSidebarUpdated } = await setupWebsiteBuilder(`
         <section style="background-image: url('/web/image/123/transparent.png'); width: 500px; height:500px">
             <div class="o_we_shape o_html_builder_Connections_01">
                 AAAA
@@ -374,7 +372,7 @@ test("remove the background image of a snippet", async () => {
     await contains(":iframe section").click();
     expect(":iframe section").toHaveStyle("backgroundImage");
     await contains("[data-action-id='toggleBgImage']").click();
-    await waitDomUpdated();
+    await waitSidebarUpdated();
     expect(":iframe section").not.toHaveStyle("backgroundImage", { inline: true });
 });
 

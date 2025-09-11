@@ -1,4 +1,3 @@
-import { waitForEndOfOperation } from "@html_builder/../tests/helpers";
 import { expect, test } from "@odoo/hoot";
 import { waitForNone } from "@odoo/hoot-dom";
 import { contains, dataURItoBlob, defineModels, models, onRpc } from "@web/../tests/web_test_helpers";
@@ -15,7 +14,7 @@ defineWebsiteModels();
 defineModels([ProductRibbon]);
 
 test("Product page options", async () => {
-    const { waitDomUpdated } = await setupWebsiteBuilder(`
+    const { waitSidebarUpdated } = await setupWebsiteBuilder(`
         <main>
             <div class="o_wsale_product_page">
                 <section
@@ -106,12 +105,12 @@ test("Product page options", async () => {
     await contains("button#o_wsale_image_width").click();
     // Avoid selecting the first option to prevent the image layout option from disappearing
     await contains("[data-action-id=productPageImageWidth][data-action-value='50_pc']").click();
+    await waitSidebarUpdated();
     await expect.waitForSteps(["config"]);
-    await waitDomUpdated();
 
     await contains("button#o_wsale_image_layout").click();
     await contains("[data-action-id=productPageImageLayout]").click();
-    await waitForEndOfOperation();
+    await waitSidebarUpdated();
     await expect.waitForSteps([
         // Activate the carousel view and change the shop config
         "config",
