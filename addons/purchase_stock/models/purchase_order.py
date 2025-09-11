@@ -133,7 +133,6 @@ class PurchaseOrder(models.Model):
         (eg. number_of_days) to partner table. """
         self.ensure_one()
         ctx = self.env.context
-
         domain = [('type', '=', 'consu')]
         if ctx.get("domain"):
             domain = fields.Domain.AND([domain, ctx.get("domain")])
