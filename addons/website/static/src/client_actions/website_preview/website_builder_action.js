@@ -296,12 +296,12 @@ export class WebsiteBuilderClientAction extends Component {
         // at this point, the iframe should be loaded. In a normal user flow, the
         // iframe had the time to load and start the js, and has an environment
         // with services. But it could happen (most likely in tours or tests) that
-        // the js is not loaded yet. If we load the assets_edit_frontend bundle
+        // the js is not loaded yet. If we load the assets_inside_builder_iframe bundle
         // now, and if it comes first, we'll get a crash. So we make sure that we
         // properly wait for the iframe to be completely ready.
         await this.waitForIframeReady();
         await Promise.all([
-            loadBundle("website.assets_edit_frontend", {
+            loadBundle("website.assets_inside_builder_iframe", {
                 targetDoc: this.websiteContent.el.contentDocument,
             }),
         ]);

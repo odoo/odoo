@@ -28,7 +28,7 @@
             ('remove', 'website_profile/static/src/interactions/**/*.edit.js'),
             ('include', 'html_editor.assets_editor'),
         ],
-        'website.assets_edit_frontend': [
+        'website.assets_inside_builder_iframe': [
             'website_profile/static/src/**/*.edit.js',
         ],
         'web.assets_tests': [

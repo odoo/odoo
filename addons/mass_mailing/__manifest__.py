@@ -102,7 +102,7 @@
             'web/static/src/scss/ui.scss',
             'web/static/src/scss/fontawesome_overridden.scss',
 
-            ('include', 'html_builder.assets_edit_frontend'),
+            ('include', 'html_builder.assets_inside_builder_iframe'),
             'mass_mailing/static/src/scss/mass_mailing_mail.scss',
             'mass_mailing/static/src/iframe_assets/**/*',
         ],

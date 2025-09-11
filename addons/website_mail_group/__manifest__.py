@@ -18,7 +18,7 @@
             'website_mail_group/static/src/snippets/**/*.js',
             ('remove', 'website_mail_group/static/src/**/*.edit.js'),
         ],
-        'website.assets_edit_frontend': [
+        'website.assets_inside_builder_iframe': [
             'website_mail_group/static/src/**/*.edit.js',
         ],
         'website.website_builder_assets': [

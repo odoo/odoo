@@ -29,7 +29,7 @@ This is a bridge module that adds multi-website support for payment providers.
             'website_payment/static/src/snippets/**/*.js',
             ('remove', 'website_payment/static/src/snippets/**/*.edit.js'),
         ],
-        'website.assets_edit_frontend': [
+        'website.assets_inside_builder_iframe': [
             'website_payment/static/src/**/*.edit.js',
         ],
         'web.assets_tests': [

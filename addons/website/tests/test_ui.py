@@ -316,7 +316,7 @@ class TestUi(HttpCaseWithWebsiteUser):
         self.start_tour("/", 'website_navbar_menu')
 
     def test_05_specific_website_editor(self):
-        asset_bundle_xmlid = "website.assets_edit_frontend"
+        asset_bundle_xmlid = "website.assets_inside_builder_iframe"
         website_default = self.env['website'].search([], limit=1)
 
         new_website = self.env['website'].create({'name': 'New Website'})
@@ -332,7 +332,7 @@ class TestUi(HttpCaseWithWebsiteUser):
 
         self.env['ir.asset'].create({
             'name': 'EditorExtension',
-            'bundle': "website.assets_edit_frontend",
+            'bundle': "website.assets_inside_builder_iframe",
             'path': custom_url,
             'website_id': new_website.id,
         })
@@ -342,7 +342,7 @@ class TestUi(HttpCaseWithWebsiteUser):
         base_website_css_version = base_website_bundle.get_version('css')
         base_website_js_version = base_website_bundle.get_version('js')
 
-        new_website_bundle_modified = self.env['ir.qweb']._get_asset_bundle("website.assets_edit_frontend", assets_params={'website_id': new_website.id})
+        new_website_bundle_modified = self.env['ir.qweb']._get_asset_bundle("website.assets_inside_builder_iframe", assets_params={'website_id': new_website.id})
         self.assertIn(custom_url, [f['url'] for f in new_website_bundle_modified.files])
         self.assertEqual(new_website_bundle_modified.get_version('css'), base_website_css_version)
         self.assertNotEqual(new_website_bundle_modified.get_version('js'), base_website_js_version, "js version for new website should now have been changed")
