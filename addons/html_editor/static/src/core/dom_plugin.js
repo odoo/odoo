@@ -28,6 +28,7 @@ import {
     isUnprotecting,
     listElementSelector,
     isEditorTab,
+    isPhrasingContent,
 } from "../utils/dom_info";
 import {
     childNodes,
@@ -609,6 +610,7 @@ export class DomPlugin extends Plugin {
             if (
                 isParagraphRelatedElement(block) ||
                 isListItemElement(block) ||
+                isPhrasingContent(block) ||
                 block.nodeName === "BLOCKQUOTE"
             ) {
                 if (newCandidate.matches(baseContainerGlobalSelector) && isListItemElement(block)) {
