@@ -7,7 +7,11 @@ import { unformat } from "../_helpers/format";
 import { EMBEDDED_COMPONENT_PLUGINS, MAIN_PLUGINS } from "@html_editor/plugin_sets";
 import { QWebPlugin } from "@html_editor/others/qweb_plugin";
 import { findInSelection } from "@html_editor/utils/selection";
-import { compareHighlightedContent, patchPrism } from "../_helpers/syntax_highlighting";
+import {
+    compareHighlightedContent,
+    highlightedPre,
+    patchPrism,
+} from "../_helpers/syntax_highlighting";
 import { MAIN_EMBEDDINGS } from "@html_editor/others/embedded_components/embedding_sets";
 
 describe("Selection collapsed", () => {
@@ -139,14 +143,12 @@ describe("Selection collapsed", () => {
                 await testEditor({
                     compareFunction: compareHighlightedContent,
                     contentBefore: "<pre>abcd</pre>",
-                    contentBeforeEdit: {
-                        highlightedValue: "abcd",
-                    },
+                    contentBeforeEdit: highlightedPre({ value: "abcd" }),
                     stepFunction: testEnterInCodeBlock(2), // "ab[]cd"
-                    contentAfterEdit: {
-                        highlightedValue: "ab\ncd",
+                    contentAfterEdit: highlightedPre({
+                        value: "ab\ncd",
                         textareaRange: 3, // "ab\n[]cd"
-                    },
+                    }),
                     contentAfter: `<pre data-language-id="plaintext">ab<br>cd</pre>[]`,
                     config: configWithEmbeddings,
                 });
@@ -155,15 +157,13 @@ describe("Selection collapsed", () => {
                 await testEditor({
                     compareFunction: compareHighlightedContent,
                     contentBefore: "<pre>abc</pre>",
-                    contentBeforeEdit: {
-                        highlightedValue: "abc",
-                    },
+                    contentBeforeEdit: highlightedPre({ value: "abc" }),
                     stepFunction: testEnterInCodeBlock(3), // "abc[]"
-                    contentAfterEdit: {
-                        preValue: "abc<br><br>",
-                        highlightedValue: "abc\n",
+                    contentAfterEdit: highlightedPre({
+                        value: "abc\n",
+                        preHtml: "abc<br><br>",
                         textareaRange: 4, // "abc\n[]"
-                    },
+                    }),
                     contentAfter: `<pre data-language-id="plaintext">abc<br><br></pre>[]`,
                     config: configWithEmbeddings,
                 });

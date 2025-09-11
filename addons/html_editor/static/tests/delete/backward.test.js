@@ -8,7 +8,11 @@ import { unformat } from "../_helpers/format";
 import { getContent, setSelection } from "../_helpers/selection";
 import { deleteBackward, insertText, tripleClick, undo } from "../_helpers/user_actions";
 import { EMBEDDED_COMPONENT_PLUGINS, MAIN_PLUGINS } from "@html_editor/plugin_sets";
-import { compareHighlightedContent, patchPrism } from "../_helpers/syntax_highlighting";
+import {
+    compareHighlightedContent,
+    highlightedPre,
+    patchPrism,
+} from "../_helpers/syntax_highlighting";
 import { MAIN_EMBEDDINGS } from "@html_editor/others/embedded_components/embedding_sets";
 
 /**
@@ -828,9 +832,9 @@ describe("Selection collapsed", () => {
                 await testEditor({
                     compareFunction: compareHighlightedContent,
                     contentBefore: "<pre>abcd</pre>",
-                    contentBeforeEdit: { highlightedValue: "abcd" },
+                    contentBeforeEdit: highlightedPre({ value: "abcd" }),
                     stepFunction: testDeleteInCodeBlock(2),
-                    contentAfterEdit: { highlightedValue: "acd", textareaRange: 1 },
+                    contentAfterEdit: highlightedPre({ value: "acd", textareaRange: 1 }),
                     contentAfter: `<pre data-language-id="plaintext">acd</pre>[]`,
                     config: configWithEmbeddings,
                 });
@@ -840,12 +844,9 @@ describe("Selection collapsed", () => {
                 await testEditor({
                     compareFunction: compareHighlightedContent,
                     contentBefore: "<pre>     abcd</pre>",
-                    contentBeforeEdit: { highlightedValue: "     abcd" },
+                    contentBeforeEdit: highlightedPre({ value: "     abcd" }),
                     stepFunction: testDeleteInCodeBlock(7), // ab[]cd
-                    contentAfterEdit: {
-                        highlightedValue: "     acd",
-                        textareaRange: 6,
-                    },
+                    contentAfterEdit: highlightedPre({ value: "     acd", textareaRange: 6 }),
                     contentAfter: `<pre data-language-id="plaintext">     acd</pre>[]`,
                     config: configWithEmbeddings,
                 });
@@ -855,12 +856,9 @@ describe("Selection collapsed", () => {
                 await testEditor({
                     compareFunction: compareHighlightedContent,
                     contentBefore: "<pre>abcd     </pre>",
-                    contentBeforeEdit: { highlightedValue: "abcd     " },
+                    contentBeforeEdit: highlightedPre({ value: "abcd     " }),
                     stepFunction: testDeleteInCodeBlock(2),
-                    contentAfterEdit: {
-                        highlightedValue: "acd     ",
-                        textareaRange: 1,
-                    },
+                    contentAfterEdit: highlightedPre({ value: "acd     ", textareaRange: 1 }),
                     contentAfter: `<pre data-language-id="plaintext">acd     </pre>[]`,
                     config: configWithEmbeddings,
                 });
@@ -870,12 +868,9 @@ describe("Selection collapsed", () => {
                 await testEditor({
                     compareFunction: compareHighlightedContent,
                     contentBefore: "<pre>     abcd     </pre>",
-                    contentBeforeEdit: { highlightedValue: "     abcd     " },
+                    contentBeforeEdit: highlightedPre({ value: "     abcd     " }),
                     stepFunction: testDeleteInCodeBlock(7), // ab[]cd
-                    contentAfterEdit: {
-                        highlightedValue: "     acd     ",
-                        textareaRange: 6,
-                    },
+                    contentAfterEdit: highlightedPre({ value: "     acd     ", textareaRange: 6 }),
                     contentAfter: `<pre data-language-id="plaintext">     acd     </pre>[]`,
                     config: configWithEmbeddings,
                 });
@@ -885,12 +880,9 @@ describe("Selection collapsed", () => {
                 await testEditor({
                     compareFunction: compareHighlightedContent,
                     contentBefore: "<pre>     ab</pre>",
-                    contentBeforeEdit: { highlightedValue: "     ab" },
+                    contentBeforeEdit: highlightedPre({ value: "     ab" }),
                     stepFunction: testDeleteInCodeBlock(3), // "   []  ab"
-                    contentAfterEdit: {
-                        highlightedValue: "    ab",
-                        textareaRange: 2,
-                    },
+                    contentAfterEdit: highlightedPre({ value: "    ab", textareaRange: 2 }),
                     contentAfter: `<pre data-language-id="plaintext">    ab</pre>[]`,
                     config: configWithEmbeddings,
                 });
@@ -900,9 +892,9 @@ describe("Selection collapsed", () => {
                 await testEditor({
                     compareFunction: compareHighlightedContent,
                     contentBefore: "<pre>ab\ncd</pre>",
-                    contentBeforeEdit: { highlightedValue: "ab\ncd" },
+                    contentBeforeEdit: highlightedPre({ value: "ab\ncd" }),
                     stepFunction: testDeleteInCodeBlock(3), // ab\n[]cd
-                    contentAfterEdit: { highlightedValue: "abcd", textareaRange: 2 },
+                    contentAfterEdit: highlightedPre({ value: "abcd", textareaRange: 2 }),
                     contentAfter: `<pre data-language-id="plaintext">abcd</pre>[]`,
                     config: configWithEmbeddings,
                 });
@@ -912,7 +904,7 @@ describe("Selection collapsed", () => {
                 await testEditor({
                     compareFunction: compareHighlightedContent,
                     contentBefore: "<pre>     ab</pre>",
-                    contentBeforeEdit: { highlightedValue: "     ab" },
+                    contentBeforeEdit: highlightedPre({ value: "     ab" }),
                     stepFunction: async (editor) => {
                         await testDeleteInCodeBlock(5)(editor); // "     []ab"
                         await testDeleteInCodeBlock(4)(editor); // "    []ab"
@@ -920,7 +912,7 @@ describe("Selection collapsed", () => {
                         await testDeleteInCodeBlock(2)(editor); // "  []ab"
                         await testDeleteInCodeBlock(1)(editor); // " []ab"
                     },
-                    contentAfterEdit: { highlightedValue: "ab", textareaRange: 0 },
+                    contentAfterEdit: highlightedPre({ value: "ab", textareaRange: 0 }),
                     contentAfter: `<pre data-language-id="plaintext">ab</pre>[]`,
                     config: configWithEmbeddings,
                 });
@@ -930,7 +922,7 @@ describe("Selection collapsed", () => {
                 await testEditor({
                     compareFunction: compareHighlightedContent,
                     contentBefore: "<pre>ab     </pre>",
-                    contentBeforeEdit: { highlightedValue: "ab     " },
+                    contentBeforeEdit: highlightedPre({ value: "ab     " }),
                     stepFunction: async (editor) => {
                         await testDeleteInCodeBlock(7)(editor); // "ab     []"
                         await testDeleteInCodeBlock(6)(editor); // "ab    []"
@@ -938,7 +930,7 @@ describe("Selection collapsed", () => {
                         await testDeleteInCodeBlock(4)(editor); // "ab  []"
                         await testDeleteInCodeBlock(3)(editor); // "ab []"
                     },
-                    contentAfterEdit: { highlightedValue: "ab", textareaRange: 2 },
+                    contentAfterEdit: highlightedPre({ value: "ab", textareaRange: 2 }),
                     contentAfter: `<pre data-language-id="plaintext">ab</pre>[]`,
                     config: configWithEmbeddings,
                 });

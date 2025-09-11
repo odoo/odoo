@@ -44,57 +44,6 @@ const highlight = (html, languageId = DEFAULT_LANGUAGE_ID, ejectBr = false) =>
     }`;
 
 /**
- * Parse the content given as a `HighlightedContent` object (or an array
- * thereof) and return an object containing its value as a string, and
- * information about the targeted textarea if the content contains a
- * `textareaRange` parameter.
- *
- * @param {HighlightedContent} content
- * @param {Editor} editor
- * @returns {{ parsed: string, focusedTextarea?: FocusedTextarea }}
- */
-const parseHighlightedContent = (content, editor) => {
-    content = Array.isArray(content) ? content : [content];
-    /** @type {FocusedTextarea | undefined} */
-    let focusedTextarea;
-    let wrappedIndex = 0;
-    const parsed = content
-        .map((segment) => {
-            if (typeof segment === "string") {
-                return segment;
-            }
-            const {
-                highlightedValue,
-                language = DEFAULT_LANGUAGE_ID,
-                textareaRange = null,
-                preValue = highlightedValue.replaceAll("\n", "<br>"),
-            } = segment;
-            if (textareaRange) {
-                focusedTextarea = {
-                    el: editor.editable.querySelectorAll("textarea")[wrappedIndex],
-                    value: highlightedValue,
-                    range: textareaRange,
-                };
-            }
-            wrappedIndex += 1;
-            return (
-                unformat(`
-                    <div data-embedded="syntaxHighlighting" data-oe-protected="true" contenteditable="false"
-                        class="o_syntax_highlighting"
-                        data-syntax-highlighting-value="${highlightedValue}" data-language-id="${language.toLowerCase()}">
-                        <pre>`) +
-                highlight(preValue || "<br>", language, true) + // Do not trim spaces within the PRE.
-                unformat(`
-                        </pre>${textareaRange !== null ? "[]" : ""}
-                        <textarea class="o_prism_source" contenteditable="true"></textarea>
-                    </div>`)
-            );
-        })
-        .join("");
-    return { parsed, focusedTextarea };
-};
-
-/**
  * Patch the function that loads the Prism library so it doesn't crash when
  * testing and so that its `highlight` function simply wraps the HTML using
  * `highlight`.
@@ -165,13 +114,45 @@ export const compareHighlightedContent = async (content, expected, phase, editor
             /data-language-id="([^"]+)" data-syntax-highlighting-value="(([^"]|\n)+)"/g,
             `data-syntax-highlighting-value="$2" data-language-id="$1"`
         );
-    const { parsed, focusedTextarea } = parseHighlightedContent(expected, editor);
     const message = `(testEditor) ${toExplicitString(
         phase
-    )} is strictly equal to "${toExplicitString(parsed)}"`;
+    )} is strictly equal to "${toExplicitString(expected)}"`;
     await animationFrame();
-    expect(cleanedContent).toBe(parsed, { message });
-    if (focusedTextarea) {
-        testTextareaRange(editor, focusedTextarea, message);
+    // See if `highlightedPre` included textarea range data. If so, parse it,
+    // test it, and remove it.
+    const strings = expected.split("<textarea");
+    strings.shift();
+    const textareaIndex = strings.findIndex((str) => str.startsWith("~~~"));
+    if (textareaIndex !== -1) {
+        const el = editor.editable.querySelectorAll("textarea")[textareaIndex];
+        const [range, value] = strings[textareaIndex].match(/~~~([^~]+)~~~/)[1].split("°°°");
+        const parsedRange = range.split(",").map((v) => +v.replace(/[[\]]/g, "").trim());
+        testTextareaRange(editor, { el, range: parsedRange, value }, message);
+        expected = expected.replace(/<textarea~~~[^~]+~~~/g, "<textarea");
     }
+    // Now test the content.
+    expect(cleanedContent).toBe(expected, { message });
 };
+
+export const highlightedPre = ({
+    value,
+    language = DEFAULT_LANGUAGE_ID,
+    textareaRange = null,
+    preHtml = value.replaceAll("\n", "<br>"),
+}) =>
+    unformat(
+        `<div data-embedded="syntaxHighlighting" data-oe-protected="true" contenteditable="false"
+            class="o_syntax_highlighting"
+            data-syntax-highlighting-value="${value}" data-language-id="${language.toLowerCase()}">
+            <pre>`
+    ) +
+    highlight(preHtml || "<br>", language, true) + // Do not trim spaces within the PRE.
+    unformat(
+        `</pre>${textareaRange === null ? "" : "[]"}
+        <textarea`
+    ) +
+    (textareaRange ? "~~~" + textareaRange + "°°°" + value + "~~~ " : " ") +
+    unformat(
+        `class="o_prism_source" contenteditable="true"></textarea>
+        </div>`
+    );
