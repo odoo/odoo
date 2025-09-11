@@ -217,6 +217,9 @@ class Challenge(models.Model):
             self._generate_goals_from_challenge()
 
         elif vals.get('state') == 'done':
+            self.env['gamification.goal'].search([
+                ('challenge_id', 'in', self.ids),
+            ]).update_goal()
             self._check_challenge_reward(force=True)
 
         elif vals.get('state') == 'draft':
