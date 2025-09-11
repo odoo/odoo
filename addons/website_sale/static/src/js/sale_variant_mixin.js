@@ -232,7 +232,6 @@ var VariantMixin = {
         $parent
             .find('option, input, label, .o_variant_pills')
             .removeClass('css_not_available')
-            .removeAttr('disabled')
             .filter('option, input')
             .closest('li')
             .removeAttr('title')
@@ -334,7 +333,7 @@ var VariantMixin = {
     _disableInput: function ($parent, attributeValueId, excludedBy, attributeNames, productName) {
         var $input = $parent
             .find('option[value=' + attributeValueId + '], input[value=' + attributeValueId + ']');
-        $input.addClass('css_not_available').prop('disabled', true);
+        $input.addClass('css_not_available');
         $input.closest('label').addClass('css_not_available');
         $input.closest('.o_variant_pills').addClass('css_not_available');
 

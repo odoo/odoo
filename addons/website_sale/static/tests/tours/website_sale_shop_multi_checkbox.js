@@ -21,8 +21,8 @@ registry.category("web_tour.tours").add('tour_shop_multi_checkbox', {
         run: "click",
     },
     {
-        content: 'check third option is not selectable',
-        trigger: 'input[data-attribute_name="Options"][data-value_name="Option 3"][disabled]',
+        content: "check third option is not available",
+        trigger: 'input[data-attribute_name="Options"][data-value_name="Option 3"].css_not_available',
     },
     {
         content: 'click on the second option to select it',
