@@ -49,7 +49,7 @@ export class MoOverviewComponentsBlock extends Component {
             this.env.overviewBus.trigger("update-folded", { indexes: Object.keys(this.state.fold), isFolded: false });
         }
 
-        useBus(this.env.overviewBus, "unfold-all", () => this.unfoldAll());
+        useBus(this.env.overviewBus, "toggle-fold-all-mo", () => this._toggleFoldAllMo());
 
         onWillUpdateProps(newProps => {
             // Update the fold indexes so it matches the newly added lines.
@@ -72,11 +72,15 @@ export class MoOverviewComponentsBlock extends Component {
         this.env.overviewBus.trigger("update-folded", { indexes: [foldIndex], isFolded: newState });
     }
 
-    unfoldAll() {
-        this.state.unfoldAll = true;
-        const foldIndexes = Object.keys(this.state.fold);
-        foldIndexes.forEach(index => this.state.fold[index] = false);
-        this.env.overviewBus.trigger("update-folded", { indexes: foldIndexes, isFolded: false });
+    _toggleFoldAllMo() {
+        this.state.unfoldAll = !this.state.unfoldAll;
+        Object.keys(this.state.fold).forEach(index => {
+            this.state.fold[index] = !this.state.unfoldAll;
+        });
+        this.env.overviewBus.trigger("update-folded", {
+            indexes: Object.keys(this.state.fold),
+            isFolded: !this.state.unfoldAll,
+        });
     }
 
     //---- Helpers ----
