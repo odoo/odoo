@@ -18,6 +18,10 @@ export class DiscussChannel extends Record {
         inverse: "channel",
         onDelete: (r) => r.delete(),
     });
+    /** @type {number|undefined} */
+    get member_count() {
+        return this.thread.member_count;
+    }
     correspondent = fields.One("discuss.channel.member", {
         /** @this {import("models").Thread} */
         compute() {
@@ -54,6 +58,10 @@ export class DiscussChannel extends Record {
 
     get showCorrespondentCountry() {
         return false;
+    }
+
+    get areAllMembersLoaded() {
+        return this.member_count === this.channel_member_ids.length;
     }
 }
 

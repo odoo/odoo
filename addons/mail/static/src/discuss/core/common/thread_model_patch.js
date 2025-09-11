@@ -223,9 +223,6 @@ const threadPatch = {
             (member) => !this.store.onlineMemberStatuses.includes(member.im_status)
         );
     },
-    get areAllMembersLoaded() {
-        return this.member_count === this.channel?.channel_member_ids.length;
-    },
     get avatarUrl() {
         if (this.channel?.channel_type === "channel" || this.channel?.channel_type === "group") {
             return imageUrl("discuss.channel", this.id, "avatar_128", {
