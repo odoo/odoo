@@ -337,7 +337,7 @@
         </t>
 </template>
 
-<template id="references_block_href" inherit_id="website_crm_partner_assign.references_block" name="Partner References Block">
+<template id="references_block_href" inherit_id="website_partner.references_block" name="Partner References Block">
     <xpath expr="//div/span" position="replace">
         <a t-attf-href="/customers/#{slug(reference)}">$0</a>
     </xpath>

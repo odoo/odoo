@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="website_partner.PartnersPageOption">
+        <BuilderRow label.translate="Address">
+            <BuilderCheckbox action="'websiteConfig'" actionParam="{views: ['website_partner.o_wcrm_partner_address']}" />
+        </BuilderRow>
+        <BuilderRow label.translate="Companies only">
+            <BuilderCheckbox action="'websiteConfig'" actionParam="{views: ['website_partner.companies_only_setting']}" />
+        </BuilderRow>
+        <BuilderRow label.translate="Search">
+            <BuilderCheckbox action="'websiteConfig'" actionParam="{views: ['website_partner.search_setting']}" />
+        </BuilderRow>
+        <BuilderRow label.translate="Countries">
+            <BuilderCheckbox action="'websiteConfig'" actionParam="{views: ['website_partner.countries_setting']}" />
+        </BuilderRow>
+        <BuilderRow label.translate="Partner page">
+            <BuilderCheckbox action="'websiteConfig'" actionParam="{views: ['website_partner.linked_partner_page_setting']}" />
+        </BuilderRow>
+        <BuilderRow label.translate="Image Format">
+            <BuilderSelect dataAttributeAction="'image_format'">
+                <BuilderSelectItem action="'websiteConfig'" actionParam="{views: ['website_partner.image_one_one_partner_page']}">1:1</BuilderSelectItem>
+                <BuilderSelectItem action="'websiteConfig'" actionParam="{views: ['website_partner.image_six_five_partner_page']}">6:5</BuilderSelectItem>
+                <BuilderSelectItem action="'websiteConfig'" actionParam="{views: ['website_partner.image_four_five_partner_page']}">4:5</BuilderSelectItem>
+            </BuilderSelect>
+        </BuilderRow>
+    </t>
+
+</templates>

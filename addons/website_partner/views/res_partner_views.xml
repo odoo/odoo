@@ -10,6 +10,9 @@
                 <div name="button_box" position="inside">
                     <field name="is_published" widget="website_redirect_button"/>
                 </div>
+                <xpath expr="//field[@name='website']" position="after">
+                    <field name="is_published"/>
+                </xpath>
             </data>
         </field>
     </record>
