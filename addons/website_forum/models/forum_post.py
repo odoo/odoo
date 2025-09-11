@@ -219,7 +219,7 @@ class ForumPost(models.Model):
         for post in self:
             post.self_reply = post.parent_id.create_uid == post.create_uid
 
-    @api.depends('child_ids')
+    @api.depends('child_ids', 'child_ids.active')
     def _compute_child_count(self):
         for post in self:
             post.child_count = len(post.child_ids)
