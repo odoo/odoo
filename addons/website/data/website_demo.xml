@@ -517,10 +517,10 @@
                                                         <p class="small">Small text. Lorem <b>ipsum dolor sit amet</b>, consectetur adipiscing elit. <i>Integer posuere erat a ante</i>.</p>
                                                     </div>
                                                     <div class="col-5 border-start">
-                                                        <a href="#" class="mb-3 btn-block btn btn-primary">btn-primary</a>
-                                                        <a href="#" class="mb-3 btn-block btn btn-secondary">btn-secondary</a>
-                                                        <a href="#" class="mb-3 btn-block btn btn-outline-primary">btn-outline-primary</a>
-                                                        <a href="#" class="mb-3 btn-block btn btn-outline-secondary">btn-outline-secondary</a>
+                                                        <a href="#" class="mb-3 btn btn-primary">btn-primary</a>
+                                                        <a href="#" class="mb-3 btn btn-secondary">btn-secondary</a>
+                                                        <a href="#" class="mb-3 btn btn-outline-primary">btn-outline-primary</a>
+                                                        <a href="#" class="mb-3 btn btn-outline-secondary">btn-outline-secondary</a>
                                                     </div>
                                                 </div>
                                                 <hr class="my-4"/>
@@ -569,8 +569,8 @@
                                                     </div>
                                                     <div class="col-5 border-start">
                                                         <div t-foreach="['info', 'warning', 'danger', 'success']" t-as="btn">
-                                                            <a href="#" t-attf-class="mb-2 btn-block btn btn-#{btn}" t-out="'btn-' + btn"/>
-                                                            <a href="#" t-attf-class="mb-3 btn-block btn btn-outline-#{btn}" t-out="'btn-outline-' + btn"/>
+                                                            <a href="#" t-attf-class="mb-2 btn btn-#{btn}" t-out="'btn-' + btn"/>
+                                                            <a href="#" t-attf-class="mb-3 btn btn-outline-#{btn}" t-out="'btn-outline-' + btn"/>
                                                         </div>
                                                     </div>
                                                 </div>
