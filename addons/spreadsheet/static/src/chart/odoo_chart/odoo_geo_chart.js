@@ -69,7 +69,7 @@ function createOdooChartRuntime(chart, getters) {
             layout: getChartLayout(definition, chartData),
             scales: getGeoChartScales(definition, chartData),
             plugins: {
-                title: getChartTitle(definition),
+                title: getChartTitle(definition, getters),
                 tooltip: getGeoChartTooltip(definition, chartData),
                 legend: { display: false },
             },
