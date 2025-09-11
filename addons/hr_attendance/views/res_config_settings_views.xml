@@ -23,6 +23,13 @@
                             <field name="auto_check_out"/>
                             <div invisible="not auto_check_out">
                                 <span class="me-2">Tolerance</span><field name="auto_check_out_tolerance" class="text-center" style="width: 5ch;"/><span class="ms-2">Hours</span>
+                                <div class="mt-3 d-flex">
+                                    <field name="single_check_in" class="w-auto"/>
+                                    <div>
+                                        <label string="Single Check-In Attendance System" for="single_check_in"/><br/>
+                                        <span class="text-muted">When enabled, only the first check-in of the day recorded. Further check-ins within the scheduled working hours will be ignored.</span>
+                                    </div>
+                                </div>
                             </div>
                         </setting>
                         <setting string="Absence Management" company_dependent="1" help="If checked, days not covered by an attendance will be visible in the Report. Does not apply to employees with a flexible working schedule.">
