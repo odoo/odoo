@@ -252,7 +252,7 @@ class configmanager:
 
         # HTTP
         group = optparse.OptionGroup(parser, "HTTP Service Configuration")
-        group.add_option("--http-interface", dest="http_interface", my_default='0.0.0.0',
+        group.add_option("--http-interface", dest="http_interface", my_default='127.0.0.1',
                          help="Listen interface address for HTTP services.")
         group.add_option("-p", "--http-port", dest="http_port", my_default=8069,
                          help="Listen port for the main HTTP service", type="int", metavar="PORT")
@@ -662,6 +662,10 @@ class configmanager:
                 self._log(logging.INFO, "adding missing %r to %s", mod, self.options_index['server_wide_modules'])
                 self._runtime_options['server_wide_modules'] = [mod] + self['server_wide_modules']
 
+        # ensure default http_interface is set
+        if not self['http_interface']:
+            self._runtime_options['http_interface'] = '127.0.0.1'
+
         # accumulate all log_handlers
         self._runtime_options['log_handler'] = list(_deduplicate_loggers([
             *self._default_options.get('log_handler', []),
@@ -720,16 +724,6 @@ class configmanager:
                     "Empty %s, tests won't run", self.options_index['db_name'])
 
     def _warn_deprecated_options(self):
-        if self['http_enable'] and not self.http_socket_activation:
-            for map_ in self.options.maps:
-                if 'http_interface' in map_:
-                    if map_ is self._file_options and map_['http_interface'] == '':  # noqa: PLC1901
-                        del map_['http_interface']
-                    elif map_ is self._default_options:
-                        self._log(logging.WARNING, "missing %s, using 0.0.0.0 by default, will change to 127.0.0.1 in 20.0", self.options_index['http_interface'])
-                    else:
-                        break
-
         for old_option_name, new_option_name in self.aliases.items():
             for source_name, deprecated_value in self._get_sources(old_option_name).items():
                 if deprecated_value is EMPTY:
