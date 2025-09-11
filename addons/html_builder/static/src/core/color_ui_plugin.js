@@ -1,7 +1,7 @@
-import { ColorPlugin as EditorColorPlugin } from "@html_editor/main/font/color_plugin";
+import { ColorUIPlugin as EditorColorUIPlugin } from "@html_editor/main/font/color_ui_plugin";
 import { getAllUsedColors } from "@html_builder/utils/utils_css";
 
-export class ColorPlugin extends EditorColorPlugin {
+export class ColorUIPlugin extends EditorColorUIPlugin {
     getUsedCustomColors(mode) {
         return getAllUsedColors(this.editable);
     }

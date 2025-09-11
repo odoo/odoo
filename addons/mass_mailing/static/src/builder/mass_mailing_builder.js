@@ -25,7 +25,7 @@ export class MassMailingBuilder extends Component {
             "SavePlugin",
             "SaveSnippetPlugin",
             "AnchorPlugin",
-            "ColorPlugin",
+            "ColorUIPlugin",
             "EmbeddedFilePlugin",
             "FilePlugin",
             "AddDocumentsAttachmentPlugin",

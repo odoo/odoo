@@ -7,7 +7,7 @@ import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 
 export class IconPlugin extends Plugin {
     static id = "icon";
-    static dependencies = ["history", "selection", "color", "dialog"];
+    static dependencies = ["history", "selection", "colorUi", "dialog"];
     resources = {
         user_commands: [
             {
@@ -79,7 +79,7 @@ export class IconPlugin extends Plugin {
                 groupId: "icon_color",
                 description: _t("Select Font Color"),
                 Component: ColorSelector,
-                props: this.dependencies.color.getPropsForColorSelector("foreground"),
+                props: this.dependencies.colorUi.getPropsForColorSelector("foreground"),
                 isAvailable: isHtmlContentSupported,
             },
             {
@@ -87,7 +87,7 @@ export class IconPlugin extends Plugin {
                 groupId: "icon_color",
                 description: _t("Select Background Color"),
                 Component: ColorSelector,
-                props: this.dependencies.color.getPropsForColorSelector("background"),
+                props: this.dependencies.colorUi.getPropsForColorSelector("background"),
                 isAvailable: isHtmlContentSupported,
             },
             {
