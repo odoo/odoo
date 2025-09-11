@@ -780,6 +780,7 @@ export function makeActionManager(env, router = _router) {
                 actionName: action.name,
                 cache: action.cache,
                 actionType: "ir.actions.act_window",
+                actionXmlId: action.xml_id,
                 embeddedActions,
                 parentActionId,
                 currentEmbeddedActionId,
