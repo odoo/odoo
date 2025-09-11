@@ -101,7 +101,7 @@
             t-att-data-address-type="address_type"
             t-att-data-partner-id="contact.id"
         >
-            <div class="card-body d-flex flex-column flex-md-row justify-content-between gap-3">
+            <div class="card-body d-flex flex-column flex-md-row justify-content-between gap-2">
                 <t
                     t-out="contact"
                     t-options="dict(widget='contact', fields=['name', 'address'], no_marker=True, no_tag_br=True)"
@@ -126,7 +126,7 @@
                     >
                         Billing Address
                     </span>
-                    <div t-if="can_be_edited" class="d-flex gap-1 mt-auto me-n2 mb-n2">
+                    <div t-if="can_be_edited" class="d-flex gap-1 mt-auto ms-n2 ms-md-auto me-auto me-md-n2 mb-n2">
                         <t
                             t-set="address_update_url"
                             t-value="address_update_url or (new_address_url + '&amp;partner_id=' + str(contact.id))"
