@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="ga_unidad_educativa_view_form" model="ir.ui.view">
+        <field name="name">ga.unidad.educativa.form</field>
+        <field name="model">ga.unidad.educativa</field>
+        <field name="arch" type="xml">
+          <tree string="Unidad Educativa" create="false" edit="true">
+              <field name="codigo"/>
+              <field name="descripcion"/>
+          </tree>
+      </field>
+    </record>
+    
+    <record id="ga_unidad_educativa_action" model="ir.actions.act_window">
+        <field name="name">Unidad Educativa</field>
+        <field name="res_model">ga.unidad.educativa</field>
+        <field name="view_mode">form</field>
+    </record>
+</odoo>

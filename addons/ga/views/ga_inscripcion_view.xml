@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="ga_inscripcion_list" >
+            <field name="name">Ga Inscripcion List</field>
+            <field name="model">ga.inscripcion.alumno</field>
+            <field name="arch" type="xml">
+                <tree string="Inscripcion " create="true" edit="true">
+                    <field name="gestion_id"/>
+                    <field name="grado_id"/>
+                    <field name="paralelo_id"/>
+                    <field name="apoderado_id"/>
+                    <field name="alumno_id"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="ga_inscripcion" >
+            <field name="name">Ga Inscripcion Form</field>
+            <field name="model">ga.inscripcion.alumno</field>
+            <field name="arch" type="xml">
+                <form>
+                    <group>
+                    <field name="gestion_id"/>
+                    <field name="grado_id"/>
+                    <field name="paralelo_id"/>
+                    <field name="apoderado_id" />
+                    <field name="alumno_id"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo>

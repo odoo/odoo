@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+          <!-- BOTONES DE ACCION -->
+        
+          <record model="ir.actions.act_window" id="ga.action_apoderado_window" >
+            <field name="name">Apoderados</field>
+            <field name="res_model">ga.apoderado</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <record model="ir.actions.act_window" id="ga.action_alumno_window" >
+            <field name="name">Alumnos</field>
+            <field name="res_model">ga.alumno</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <record model="ir.actions.act_window" id="ga.action_inscripcion_window" >
+            <field name="name">Alumnos Inscritos</field>
+            <field name="res_model">ga.inscripcion.alumno</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <record model="ir.actions.act_window" id="ga.action_chofer_window" >
+            <field name="name">Choferes</field>
+            <field name="res_model">hr.employee</field>
+            <field name="domain">[('is_chofer','=','True')]</field>
+            <field name="context">{'default_is_chofer':True}</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <record model="ir.actions.act_window" id="ga.action_ruta_chofer_window" >
+            <field name="name">Rutas Choferes</field>
+            <field name="res_model">ga.ruta.chofer</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <record model="ir.actions.act_window" id="ga.action_ruta_window" >
+            <field name="name">Rutas</field>
+            <field name="res_model">ga.ruta</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <record model="ir.actions.act_window" id="ga.action_registro_academico_window" >
+            <field name="name">Registro Academico</field>
+            <field name="res_model">ga.registro.academico</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <record model="ir.actions.act_window" id="ga.action_actividad_academica_window" >
+            <field name="name">Actividad Academica</field>
+            <field name="res_model">ga.actividad.academica</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        
+        <!-- BOTONES DE NAVEGACION -->
+
+        <menuitem name= "Gestion Academica" id="ga.menu_root"/>
+                
+        <menuitem name= "Creacion" id="ga.menu_1" parent="ga.menu_root"/>
+        <menuitem name= "Apoderado" id="ga.menu_1_apoderado_list" parent="ga.menu_1" action="ga.action_apoderado_window"/>
+        <menuitem name= "Alumno" id="ga.menu_1_alumno_list" parent="ga.menu_1" action="ga.action_alumno_window"/>
+        <menuitem name= "Inscritos" id="ga.menu_1_inscripcion_list" parent="ga.menu_1" action="ga.action_inscripcion_window"/>
+        <menuitem name= "Chofer" id="ga.menu_1_chofer_list" parent="ga.menu_1" action="ga.action_chofer_window"/>
+        <menuitem name= "Rutas Chofer" id="ga.menu_1_ruta_chofer_list" parent="ga.menu_1" action="ga.action_ruta_chofer_window"/>
+        <menuitem name= "Rutas" id="ga.menu_1_ruta_list" parent="ga.menu_1" action="ga.action_ruta_window"/>
+        <menuitem name= "Registro Academico" id="ga.menu_1_registro_academico_list" parent="ga.menu_1" action="ga.action_registro_academico_window"/>
+        <menuitem name= "Actividad Academica" id="ga.menu_1_actividad_academica_list" parent="ga.menu_1" action="ga.action_actividad_academica_window"/>
+
+
+    </data>
+</odoo>

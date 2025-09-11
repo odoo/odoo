@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record model="ir.ui.view" id="ga_chofer_list" >
+            <field name="name">Ga Chofer List</field>
+            <field name="model">hr.employee</field>
+            <field name="arch" type="xml">
+                <tree string="Chofer" create="true" edit="true">
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+    </data>
+</odoo>
