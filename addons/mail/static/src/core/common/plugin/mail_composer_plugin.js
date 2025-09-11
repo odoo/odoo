@@ -38,5 +38,15 @@ export class MailComposerPlugin extends Plugin {
             "keydown",
             this.config.composerPluginDependencies.onKeydown
         );
+        this.addDomListener(
+            this.editable,
+            "focusin",
+            this.config.composerPluginDependencies.onFocusin
+        );
+        this.addDomListener(
+            this.editable,
+            "focusout",
+            this.config.composerPluginDependencies.onFocusout
+        );
     }
 }
