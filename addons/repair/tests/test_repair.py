@@ -7,8 +7,7 @@ from odoo.tests import tagged, common, Form, HttpCase
 from odoo.tools import float_compare, float_is_zero
 
 
-@tagged('post_install', '-at_install')
-class TestRepair(common.TransactionCase):
+class TestRepairCommon(common.TransactionCase):
 
     @classmethod
     def setUpClass(cls):
@@ -163,6 +162,10 @@ class TestRepair(common.TransactionCase):
             vals.append(qDict)
 
         return cls.env['stock.quant'].create(vals)
+
+
+@tagged('post_install', '-at_install')
+class TestRepair(TestRepairCommon):
 
     def test_01_repair_states_transition(self):
         repair = self._create_simple_repair_order()
