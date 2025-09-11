@@ -7,6 +7,7 @@ from datetime import timedelta
 from urllib.parse import urlencode
 
 import requests
+from werkzeug import urls
 
 from odoo import _, api, fields, models
 from odoo.exceptions import RedirectWarning, ValidationError
@@ -61,7 +62,7 @@ class PaymentProvider(models.Model):
             )
 
         params = {
-            'return_url': f'{self.get_base_url()}{RazorpayController.OAUTH_RETURN_URL}',
+            'return_url': urls.url_join(self.get_base_url(), RazorpayController.OAUTH_RETURN_URL),
             'provider_id': self.id,
             'csrf_token': request.csrf_token(),
         }
@@ -103,7 +104,7 @@ class PaymentProvider(models.Model):
 
         webhook_secret = uuid.uuid4().hex  # Generate a random webhook secret.
         payload = {
-            'url': f'{self.get_base_url()}/payment/razorpay/webhook',
+            'url': urls.url_join(self.get_base_url(), 'payment/razorpay/webhook'),
             'alert_email': self.env.user.partner_id.email,
             'secret': webhook_secret,
             'events': const.HANDLED_WEBHOOK_EVENTS,

@@ -8,6 +8,7 @@ import inspect
 import json
 import logging
 import re
+import types
 from itertools import zip_longest
 
 import requests
@@ -1342,25 +1343,42 @@ class Website(models.Model):
 
         sitemap_endpoint_done = set()
 
-        for rule in router.iter_rules():
-            if 'sitemap' in rule.endpoint.routing and rule.endpoint.routing['sitemap'] is not True:
-                endpoint_func = rule.endpoint.func
-                if isinstance(endpoint_func, functools.partial): # follow partial in case of redirect
-                    endpoint_func = endpoint_func.func
-                if endpoint_func.__func__ in sitemap_endpoint_done:
-                    continue
-                sitemap_endpoint_done.add(endpoint_func.__func__)
+        # Helper to normalize URLs while keeping '/' intact
+        def _norm(url):
+            return '/' if url == '/' else url.rstrip('/')
 
-                func = rule.endpoint.routing['sitemap']
-                if func is False:
+        # Avoid recomputing identical sitemap callables more than once
+        def _unwrap_callable(f):
+            # Unwrap functools.partial and bound methods to a stable function key
+            if isinstance(f, functools.partial):
+                f = f.func
+            # Unwrap bound methods (obj.method) to their underlying function
+            if isinstance(f, types.MethodType):
+                return f.__func__
+            return f
+
+        for rule in router.iter_rules():
+            sitemap_func = rule.endpoint.routing.get('sitemap')
+            if sitemap_func is False:
+                continue
+
+            if callable(sitemap_func):
+                func_key = _unwrap_callable(sitemap_func)
+                if func_key in sitemap_endpoint_done:
                     continue
-                for loc in func(self.with_context(lang=self.default_lang_id.code).env, rule, query_string):
-                    yield loc
+                sitemap_endpoint_done.add(func_key)
+                for loc in sitemap_func(self.with_context(lang=self.default_lang_id.code).env, rule, query_string):
+                    loc_norm = {**loc, 'loc': _norm(loc['loc'])}
+                    url = loc_norm['loc']
+                    if url not in url_set:
+                        yield loc_norm
+                        url_set.add(url)
                 continue
 
             if not self.rule_is_enumerable(rule):
                 continue
 
+            # Warn only if the 'sitemap' key is absent from routing (legacy behavior)
             if 'sitemap' not in rule.endpoint.routing:
                 logger.warning('No Sitemap value provided for controller %s (%s)' %
                                (rule.endpoint.original_endpoint, ','.join(rule.endpoint.routing['routes'])))
@@ -1395,6 +1413,8 @@ class Website(models.Model):
 
             for value in values:
                 domain_part, url = rule.build(value, append_unknown=False)
+                # Normalize trailing slash but keep '/'
+                url = _norm(url)
                 pattern = query_string and '*%s*' % "*".join(query_string.split('/'))
                 if not query_string or fnmatch.fnmatch(url.lower(), pattern):
                     page = {'loc': url}

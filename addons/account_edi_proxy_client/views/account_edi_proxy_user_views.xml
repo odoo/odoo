@@ -11,6 +11,7 @@
                             <group>
                                 <field name="company_id" groups="base.group_multi_company" invisible="1"/>
                                 <field name="proxy_type" readonly="1" options="{'no_open': True}"/>
+                                <field name="edi_mode" readonly="1"/>
                                 <field name="id_client" readonly="1"/>
                                 <field name="edi_identification" readonly="1"/>
                                 <field name="private_key_filename" invisible="1"/>
@@ -31,6 +32,8 @@
                 <tree create="false" delete="false" edit="false" decoration-muted="not active">
                     <field name="active" invisible="1"/>  <!-- Required for the decoration -->
                     <field name="company_id" groups="base.group_multi_company" column_invisible="True"/>
+                    <field name="proxy_type" readonly="1"/>
+                    <field name="edi_mode" readonly="1"/>
                     <field name="id_client" readonly="1"/>
                     <field name="edi_identification" readonly="1"/>
                     <field name="private_key_filename" column_invisible="True"/>
