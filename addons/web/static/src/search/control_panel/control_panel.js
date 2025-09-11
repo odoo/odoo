@@ -39,9 +39,10 @@ const STICKY_CLASS = "o_mobile_sticky";
  * @property {string} context
  */
 
-// Register calls to avoid making them twice during
-// one OWL rendering lifecycle
-const mapCalls = new Map();
+// Register calls related to embedded actions configurations
+// to avoid making them twice during one OWL rendering lifecycle
+const embeddedConfigCallsMap = new Map();
+
 export class ControlPanel extends Component {
     static template = "web.ControlPanel";
     static components = {
@@ -96,9 +97,9 @@ export class ControlPanel extends Component {
             "";
         this.currentActiveId = this.env.searchModel?.globalContext.active_id || false;
         this.embeddedActionsKey = `${this.parentActionId}+${this.currentActiveId || ""}`;
-        this.isFetchedEmbeddedActionsKey = `isFetched${this.parentActionId}+${
+        this.isEmbeddedFetchedKey = `isEmbeddedFetched${this.parentActionId}+${
             this.currentActiveId || ""
-        }`;
+        }+${user.userId}`;
         this.embeddedActionsConfig = user.settings.embedded_actions_config_ids || {};
 
         this.state = useState({
@@ -171,51 +172,55 @@ export class ControlPanel extends Component {
             () => [this.root.el, this.state.embeddedInfos.showEmbedded]
         );
 
-        onWillStart(async () => {
+        onWillStart(() => {
             // If there are embedded actions and no config has been found in the settings, we will fetch it from DB
             // We need to fetch because it's possible that the config from DB was changed while it wasn't in the browser user settings
             // We then need to keep the browser user settings up to date with the DB
+            // We will only fetch once (the first time the top bar is being loaded for a given record)
+            // as we keep track in localStorage when we already fetched it
             if (
-                !(this.env.config.embeddedActions?.length > 0) ||
-                JSON.parse(browser.localStorage.getItem(this.isFetchedEmbeddedActionsKey))
+                !(this.state.embeddedInfos.embeddedActions?.length > 0) ||
+                JSON.parse(browser.localStorage.getItem(this.isEmbeddedFetchedKey))
             ) {
                 return;
             }
 
-            if (!(this.embeddedActionsKey in this.embeddedActionsConfig)) {
-                let call;
-                if (mapCalls.has(this.embeddedActionsKey)) {
-                    call = mapCalls.get(this.embeddedActionsKey);
-                } else {
-                    call = this.env.services.orm.call(
-                        "res.users.settings",
-                        "get_embedded_actions_setting",
-                        [user.settings.id, this.parentActionId, this.currentActiveId]
-                    );
-                    mapCalls.set(this.embeddedActionsKey, call);
-                }
-                this.myPromise = call;
-                const embeddedSetting = await call;
-                mapCalls.delete(this.embeddedActionsKey);
-                browser.localStorage.setItem(this.isFetchedEmbeddedActionsKey, true);
-
-                if (embeddedSetting && Object.keys(embeddedSetting).length > 0) {
-                    this.embeddedActionsConfig[this.embeddedActionsKey] =
-                        embeddedSetting[this.embeddedActionsKey];
-                    user.updateUserSettings(
-                        "embedded_actions_config_ids",
-                        this.embeddedActionsConfig
-                    );
-                    this.state.embeddedInfos.visibleEmbeddedActions =
-                        this._getEmbeddedActionsConfig("embedded_actions_visibility") || [];
-                    this.state.embeddedInfos.showEmbedded =
-                        this._getEmbeddedActionsConfig("embedded_visibility");
-                }
+            if (
+                !(this.embeddedActionsKey in this.embeddedActionsConfig) &&
+                !embeddedConfigCallsMap.has(this.embeddedActionsKey)
+            ) {
+                const embeddedConfigCall = this.env.services.orm.call(
+                    "res.users.settings",
+                    "get_embedded_actions_setting",
+                    [user.settings.id, this.parentActionId, this.currentActiveId]
+                );
+                embeddedConfigCallsMap.set(this.embeddedActionsKey, embeddedConfigCall);
+                browser.localStorage.setItem(this.isEmbeddedFetchedKey, true);
             }
         });
 
-        onMounted(() => {
+        onMounted(async () => {
             if (this.state.embeddedInfos.embeddedActions?.length > 0) {
+                if (
+                    !(this.embeddedActionsKey in this.embeddedActionsConfig) &&
+                    embeddedConfigCallsMap.has(this.embeddedActionsKey)
+                ) {
+                    const embeddedConfigCall = embeddedConfigCallsMap.get(this.embeddedActionsKey);
+                    const embeddedSetting = await embeddedConfigCall;
+                    embeddedConfigCallsMap.delete(this.embeddedActionsKey);
+                    if (embeddedSetting && Object.keys(embeddedSetting).length > 0) {
+                        this.embeddedActionsConfig[this.embeddedActionsKey] =
+                            embeddedSetting[this.embeddedActionsKey];
+                        user.updateUserSettings(
+                            "embedded_actions_config_ids",
+                            this.embeddedActionsConfig
+                        );
+                        this.state.embeddedInfos.visibleEmbeddedActions =
+                            this._getEmbeddedActionsConfig("embedded_actions_visibility") || [];
+                        this.state.embeddedInfos.showEmbedded =
+                            this._getEmbeddedActionsConfig("embedded_visibility");
+                    }
+                }
                 const embeddedOrderLocalStorageKey =
                     this._getEmbeddedActionsConfig("embedded_actions_order");
                 if (embeddedOrderLocalStorageKey) {
@@ -320,14 +325,13 @@ export class ControlPanel extends Component {
                         this.state.embeddedInfos.visibleEmbeddedActions;
                 }
             }
-            this.state.embeddedInfos.showEmbedded = !this.state.embeddedInfos.showEmbedded;
             this._setEmbeddedActionsConfig(config);
         } else {
-            this.state.embeddedInfos.showEmbedded = !this.state.embeddedInfos.showEmbedded;
             this._setEmbeddedActionsConfig({
-                embedded_visibility: this.state.embeddedInfos.showEmbedded,
+                embedded_visibility: !this.state.embeddedInfos.showEmbedded,
             });
         }
+        this.state.embeddedInfos.showEmbedded = !this.state.embeddedInfos.showEmbedded;
     }
 
     /**
