@@ -77,6 +77,7 @@ class ImportO2mChild(models.Model):
     _name = 'import.o2m.child'
     _description = 'Tests: Base Import Model, One to Many child'
 
+    name = fields.Char()
     parent_id = fields.Many2one('import.o2m')
     value = fields.Integer()
 

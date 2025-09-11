@@ -9,7 +9,7 @@ import unittest
 from PIL import Image
 
 from odoo.tests.common import TransactionCase, can_import, RecordCapturer
-from odoo.tools import mute_logger
+from odoo.tools import mute_logger, DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
 from odoo.tools.misc import file_open
 from odoo.addons.base_import.models.base_import import ImportValidationError
 
@@ -203,6 +203,9 @@ class TestO2M(BaseImportCase):
                                  'fields': [], 'type': 'id'},
                             ]
                         },
+                        {'id': 'name', 'name': 'name', 'string': 'Name',
+                         'required': False, 'fields': [], 'type': 'char', 'model_name': 'import.o2m.child',
+                        },
                         {'id': 'value', 'name': 'value', 'string': 'Value',
                          'required': False, 'fields': [], 'type': 'integer', 'model_name': 'import.o2m.child',
                         },
@@ -234,6 +237,9 @@ class TestO2M(BaseImportCase):
                                     'string': 'Database ID', 'required': False,
                                     'fields': [], 'type': 'id'},
                                 ]
+                            },
+                            {'id': 'name', 'name': 'name', 'string': 'Name',
+                             'required': False, 'fields': [], 'type': 'char', 'model_name': 'import.o2m.child',
                             },
                             {'id': 'value', 'name': 'value', 'string': 'Value',
                             'required': False, 'fields': [], 'type': 'integer', 'model_name': 'import.o2m.child',
@@ -983,12 +989,12 @@ foo3,US,0,persons\n""",
                 self.assertFalse(response.get('messages'))
 
     @unittest.skipUnless(can_import('xlwt') and can_import('openpyxl'), "xlwt/openpyxl not available")
-    def test_xlsx_datetime_values_assigned_to_wrong_field(self):
-        """Test that importing datetime values into any field that is not DateTime triggers an error."""
+    def test_xlsx_datetime_values_assigned_to_char_field(self):
+        """Test that importing datetime values to char field is converted"""
 
         file_content = generate_xlsx({
-            'Some Value': [1, datetime.date(2025, 7, 1)],  # Invalid Datetime object in an integer field
-            'Name': ['foo', datetime.date(2025, 7, 1)]     # Invalid Datetime object in an char field
+            'Some Value': [1, 3, 5],
+            'Name': ['foo', datetime.datetime(2020, 1, 6, 8, 10), datetime.date(2025, 7, 1)]   # Invalid Date like object in a char field
         })
 
         file_type = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
@@ -999,9 +1005,7 @@ foo3,US,0,persons\n""",
             'file_type': file_type,
         })
 
-        result = import_wizard.parse_preview({'has_headers': True})
-
-        options = result.get('options', {})
+        import_wizard.parse_preview({'has_headers': True})
 
         response = import_wizard.execute_import(
             ['somevalue', 'name'],
@@ -1010,18 +1014,80 @@ foo3,US,0,persons\n""",
                 'has_headers': True,
                 'quoting': '"',
                 'separator': ',',
-                'date_format': options.get('date_format'),
-                'datetime_format': options.get('datetime_format'),
+                'datetime_format': '%H:%M:%S %d/%m/%Y',
+                'date_format': '%d/%m/%Y',
             }
         )
-        self.assertTrue(response.get('messages'), "Expected error messages due to date/time values in non-date fields")
-        self.assertEqual(len(response['messages']), 2)
+        self.assertFalse(response.get('messages'))
+        self.assertEqual(response['name'], ['foo', '08:10:00 06/01/2020', '01/07/2025', '', '', ''])
 
-        self.assertEqual(response['messages'][0]['type'], 'error')
-        self.assertIn("Field 'somevalue' does not accept date/time values.", response['messages'][0]['message'])
+    @unittest.skipUnless(can_import('xlwt') and can_import('openpyxl'), "xlwt/openpyxl not available")
+    def test_xlsx_datetime_values_assigned_to_related_char_field(self):
+        """Test that importing datetime values to a related char field is converted"""
+        file_content = generate_xlsx(
+            {
+                'Child/Name': ['foo', datetime.datetime(2020, 1, 6, 8, 10), datetime.date(2024, 7, 1)],
+            }
+        )
+        file_type = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        import_wizard = self.env["base_import.import"].create({
+            'res_model': "import.o2m",
+            'file': file_content,
+            'file_type': file_type,
+        })
+        import_wizard.parse_preview({'has_headers': True})
+        response = import_wizard.execute_import(
+            ["value/name"],
+            ["Child/Name"],
+            {
+                'quoting': '"', 'separator': ',', 'has_headers': True,
+                'datetime_format': '%H:%M:%S %d/%m/%Y', 'date_format': '%d/%m/%Y',
+            }
+        )
+        self.assertFalse(response.get('messages'))
+        self.assertEqual(
+            self.env['import.o2m'].browse(response['ids']).value.mapped('name'),
+            ['foo', '08:10:00 06/01/2020', '01/07/2024']
+        )
 
-        self.assertEqual(response['messages'][1]['type'], 'error')
-        self.assertIn("Field 'name' does not accept date/time values.", response['messages'][1]['message'])
+    @unittest.skipUnless(can_import('xlwt') and can_import('openpyxl'), "xlwt/openpyxl not available")
+    def test_xlsx_datetime_values_assigned_to_property_char_field(self):
+        """Test that importing datetime values to a property char field is converted"""
+        def_record = self.env['import.properties.definition'].create([
+            {
+                'properties_definition': [
+                    {'name': 'char_prop', 'type': 'char', 'string': 'TextType'},
+                    {'name': 'date_prop', 'type': 'date', 'string': 'DateType'},
+                ]
+            },
+        ])
+        file_content = generate_xlsx({
+            "Property Definition": [def_record.id, def_record.id],
+            f"TextType ({def_record.display_name})": [datetime.datetime(2020, 1, 6, 8, 10), datetime.date(2025, 7, 1)],
+            f"DateType ({def_record.display_name})": [datetime.datetime(2020, 2, 6, 8, 10), datetime.date(2025, 7, 2)],
+        })
+        file_type = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        import_wizard = self.env['base_import.import'].create({
+            'res_model': 'import.properties',
+            'file': file_content,
+            'file_type': file_type,
+        })
+        import_wizard.parse_preview({'has_headers': True})
+        response = import_wizard.execute_import(
+            ["record_definition_id", "properties.char_prop", "properties.date_prop"],
+            ["Property Definition", "Property/TextType", "Property/DateType"],
+            {
+                'quoting': '"', 'separator': ',', 'has_headers': True,
+            }
+        )
+        self.assertFalse(response.get('messages'))
+        self.assertEqual(
+            [prop['char_prop'] for prop in self.env['import.properties'].browse(response['ids']).mapped('properties')],
+            [
+                datetime.datetime(2020, 1, 6, 8, 10).strftime(DEFAULT_SERVER_DATETIME_FORMAT),
+                datetime.date(2025, 7, 1).strftime(DEFAULT_SERVER_DATE_FORMAT),
+            ],
+        )
 
 
 class TestBatching(TransactionCase):
