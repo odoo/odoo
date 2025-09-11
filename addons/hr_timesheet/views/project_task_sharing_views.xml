@@ -65,36 +65,61 @@
                         </kanban>
                     </field>
                     <group invisible="not analytic_account_active">
-                        <group class="oe_subtotal_footer" name="project_hours">
-                            <span class="o_td_label float-start">
-                                <label class="fw-bold" for="effective_hours" string="Time Spent"/>
-                            </span>
-                            <field name="effective_hours" widget="timesheet_uom" nolabel="1"/>
-                            <button name="action_view_subtask_timesheet" type="object" class="ps-0 border-0 oe_inline oe_link mb-2 o_td_label float-start" invisible="subtask_effective_hours == 0.0" context="{'is_project_sharing': True}">
-                                <span class="text-nowrap">Time Spent on Sub-tasks:</span>
-                            </button>
-                            <field name="subtask_effective_hours" class="mt-2" widget="timesheet_uom"
-                                  invisible="subtask_effective_hours == 0.0" nolabel="1"/>
-                            <span id="total_hours_spent_label" invisible="subtask_effective_hours == 0.0" class="o_td_label float-start">
-                                <label class="fw-bold" for="total_hours_spent" string="Total Time Spent"
-                                      invisible="encode_uom_in_days"/>
-                                <label class="fw-bold" for="total_hours_spent" string="Total Days Spent"
-                                      invisible="not encode_uom_in_days"/>
-                            </span>
-                            <field name="total_hours_spent" widget="timesheet_uom" class="oe_subtotal_footer_separator" nolabel="1"
-                                  invisible="subtask_effective_hours == 0.0" />
-                            <span class="o_td_label float-start">
-                                <label class="fw-bold" for="remaining_hours" string="Time Remaining"
-                                       invisible="allocated_hours == 0.0 or encode_uom_in_days or remaining_hours &lt; 0"/>
-                                <label class="fw-bold" for="remaining_hours" string="Days Remaining"
-                                       invisible="allocated_hours == 0.0 or not encode_uom_in_days or remaining_hours &lt; 0"/>
-                                <label class="fw-bold text-danger" for="remaining_hours" string="Time Remaining"
-                                       invisible="allocated_hours == 0.0 or encode_uom_in_days or remaining_hours &gt;= 0"/>
-                                <label class="fw-bold text-danger" for="remaining_hours" string="Days Remaining"
-                                       invisible="allocated_hours == 0.0 or not encode_uom_in_days or remaining_hours &gt;= 0"/>
-                            </span>
-                            <field name="remaining_hours" widget="timesheet_uom" class="oe_subtotal_footer_separator"
-                                  invisible="allocated_hours == 0.0" nolabel="1"/>
+                        <group class="oe_subtotal_footer d-flex justify-content-end mb-0" name="project_hours">
+                            <div class="container">
+                                <!-- Time Spent -->
+                                <div class="row align-items-center mb-2">
+                                    <div class="col-8">
+                                        <label class="fw-bold" for="effective_hours">Time Spent</label>
+                                    </div>
+                                    <div class="col-4">
+                                        <field name="effective_hours" widget="timesheet_uom" nolabel="1" />
+                                    </div>
+                                </div>
+
+                                <!-- Time Spent on Sub-tasks -->
+                                <div class="row align-items-center mb-2" invisible="subtask_effective_hours == 0.0">
+                                    <div class="col-8">
+                                        <button name="action_view_subtask_timesheet" type="object" class="ps-0 border-0 oe_inline oe_link mb-2 o_td_label text-start">
+                                        Time Spent on Sub-tasks:
+                                        </button>
+                                    </div>
+                                    <div class="col-4">
+                                        <field name="subtask_effective_hours" widget="timesheet_uom" class="mt-2" nolabel="1" />
+                                    </div>
+                                </div>
+
+                                <!-- Total Hours Spent -->
+                                <div id="total_hours_spent_div" class="row align-items-center mb-2" invisible="subtask_effective_hours == 0.0">
+                                    <div id="total_hours_spent_label" class="col-8" >
+                                        <label class="fw-bold" for="total_hours_spent" invisible="not encode_uom_in_days">Total Hours Spent</label>
+                                        <label class="fw-bold" for="total_hours_spent" invisible="encode_uom_in_days">Total Days Spent</label>
+                                    </div>
+                                    <div class="col-4">
+                                        <field name="total_hours_spent" widget="timesheet_uom" class="oe_subtotal_footer_separator" nolabel="1" />
+                                    </div>
+                                </div>
+
+                                <!-- Remaining Hours -->
+                                <div id="remaining_hours_div" class="row align-items-center mb-2" invisible="allocated_hours == 0.0">
+                                    <div class="col-8">
+                                        <label class="fw-bold" for="remaining_hours" string="Time Remaining"
+                                        invisible="allocated_hours == 0.0 or encode_uom_in_days or remaining_hours &lt; 0"/>
+                                        <label class="fw-bold" for="remaining_hours" string="Days Remaining"
+                                            invisible="allocated_hours == 0.0 or not encode_uom_in_days or remaining_hours &lt; 0"/>
+                                        
+                                        <label class="fw-bold text-danger" for="remaining_hours" string="Time Remaining"
+                                            invisible="allocated_hours == 0.0 or encode_uom_in_days or remaining_hours &gt;= 0"/>
+                                        <label class="fw-bold text-danger" for="remaining_hours" string="Days Remaining"
+                                            invisible="allocated_hours == 0.0 or not encode_uom_in_days or remaining_hours &gt;= 0"/>
+                                    </div>
+                                    <div class="col-4">
+                                        <field name="remaining_hours" widget="timesheet_uom" class="oe_subtotal_footer_separator"
+                                            invisible="allocated_hours == 0.0" nolabel="1"/>
+                                    </div>
+                                </div>
+                            </div>
+
                         </group>
                     </group>
                 </page>
