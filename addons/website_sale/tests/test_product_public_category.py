@@ -19,6 +19,8 @@ class TestProductPublicCategory(TransactionCase):
             {'name': 'Unpublished Product', 'is_published': False},
         ])
 
+        cls.env['product.public.category'].search([]).unlink()
+
         cls.env['product.public.category'].create([
             {
                 'name': '1',
