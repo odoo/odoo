@@ -19,6 +19,7 @@ export const dashboardActionRegistry = new Registry();
 
 export class SpreadsheetDashboardAction extends Component {
     static template = "spreadsheet_dashboard.DashboardAction";
+    static path = "dashboards";
     static components = {
         ControlPanel,
         SpreadsheetComponent,
