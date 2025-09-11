@@ -123,24 +123,28 @@ class PurchaseOrder(models.Model):
             'vendor_name': self.partner_id.display_name,
             'vendor_suggest_days': self.partner_id.suggest_days,
             'vendor_suggest_based_on': self.partner_id.suggest_based_on,
-            'vendo_suggest_percent': self.partner_id.suggest_percent,
+            'vendor_suggest_percent': self.partner_id.suggest_percent,
             'po_state': self.state,
         }
 
-    @api.model
-    def action_purchase_order_suggest(self, suggest_ctx):
+    def action_purchase_order_suggest(self):
         """ Adds suggested products to PO, removing products with no suggested_qty, and
         collapsing existing po_lines into at most 1 orderline. Saves suggestion params
         (eg. number_of_days) to partner table. """
-        po = self.browse(suggest_ctx.get("order_id")).ensure_one()
-        domain = [('type', '=', 'consu')]
-        if self.env.context.get('domain'):
-            domain = fields.Domain.AND([domain, self.env.context.get('domain')])
-        products = self.env['product.product'].with_context(suggest_ctx).search(domain)
+        self.ensure_one()
+        ctx = self.env.context
 
-        po.partner_id.suggest_days = suggest_ctx.get('suggest_days')
-        po.partner_id.suggest_based_on = suggest_ctx.get('suggest_based_on')
-        po.partner_id.suggest_percent = suggest_ctx.get('suggest_percent')
+        domain = [('type', '=', 'consu')]
+        if ctx.get("domain"):
+            domain = fields.Domain.AND([domain, ctx.get("domain")])
+
+        products = self.env['product.product'].search(domain)
+
+        self.partner_id.write({
+            'suggest_days': ctx.get('suggest_days'),
+            'suggest_based_on': ctx.get('suggest_based_on'),
+            'suggest_percent': ctx.get('suggest_percent'),
+        })
 
         po_lines_commands = []
         for product in products:
@@ -148,11 +152,11 @@ class PurchaseOrder(models.Model):
                 product,
                 product.suggested_qty,
                 product.uom_id,
-                po.company_id,
-                po.partner_id,
-                po
+                self.company_id,
+                self.partner_id,
+                self
             )
-            existing_po_lines = po.order_line.filtered(lambda pol: pol.product_id == product)
+            existing_po_lines = self.order_line.filtered(lambda pol: pol.product_id == product)
             if existing_po_lines:
                 # Collapse into 1 or 0 po line, discarding previous data in favor of suggested qtys
                 to_unlink = existing_po_lines if product.suggested_qty == 0 else existing_po_lines[:-1]
@@ -162,7 +166,7 @@ class PurchaseOrder(models.Model):
             elif product.suggested_qty > 0:
                 po_lines_commands.append(Command.create(suggest_line))
 
-        po.order_line = po_lines_commands
+        self.order_line = po_lines_commands
 
     def button_approve(self, force=False):
         result = super(PurchaseOrder, self).button_approve(force=force)
