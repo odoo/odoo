@@ -3124,13 +3124,10 @@
     </template>
 
     <template id="quick_reorder_button">
-        <!-- TODO SHRM: Make title translatable -->
-        <t
-            t-set="quick_reorder_button_title"
-            t-value="'Login to reorder' if request.website.is_public_user()
-                     else 'No previous products available for reorder.' if not order_history
-                     else ''"
-        />
+        <t t-set="quick_reorder_button_title">
+            <t t-if="request.website.is_public_user()">Login to reorder</t>
+            <t t-elif="not order_history">No previous products available for reorder.</t>
+        </t>
         <span t-att-title="quick_reorder_button_title">
             <button
                 id="quick_reorder_button"

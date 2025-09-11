@@ -1,5 +1,6 @@
 import { markup } from '@odoo/owl';
 import { browser } from '@web/core/browser/browser';
+import { _t } from '@web/core/l10n/translation';
 import { setElementContent } from '@web/core/utils/html';
 
 function animateClone($cart, $elem, offsetTop, offsetLeft) {
@@ -127,9 +128,11 @@ function updateQuickReorderSidebar(data) {
             'afterbegin', data['website_sale.quick_reorder_history']
         );
         quickReorderButton.removeAttribute('disabled');
+        quickReorderButton.parentElement.title = "";
     } else {
         quickReorderButton.click();
         quickReorderButton.setAttribute('disabled', 'true');
+        quickReorderButton.parentElement.title = _t("No previous products available for reorder.");
     }
 }
 
