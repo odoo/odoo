@@ -58,12 +58,12 @@ export class BuilderActionsPlugin extends Plugin {
             },
             {
                 ...action,
-                load: async () => {
-                    if (action.load) {
-                        const loadResult = await action.load(spec);
-                        spec.loadResult = loadResult;
-                    }
-                },
+                load: action.load
+                    ? async () => {
+                          const loadResult = await action.load(spec);
+                          spec.loadResult = loadResult;
+                      }
+                    : undefined,
             }
         );
     }

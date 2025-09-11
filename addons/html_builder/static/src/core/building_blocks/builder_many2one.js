@@ -5,6 +5,7 @@ import {
     useBuilderComponent,
     useDependencyDefinition,
     useDomState,
+    useHasPreview,
 } from "../utils";
 import { BuilderComponent } from "./builder_component";
 import { SelectMany2X } from "./select_many2x";
@@ -34,6 +35,7 @@ export class BuilderMany2One extends Component {
         const { getAllActions, callOperation } = getAllActionsAndOperations(this);
         this.cachedModel = useCachedModel();
         this.callOperation = callOperation;
+        this.hasPreview = useHasPreview(getAllActions);
         this.applyOperation = this.env.editor.shared.history.makePreviewableAsyncOperation(
             this.callApply.bind(this)
         );
@@ -105,11 +107,27 @@ export class BuilderMany2One extends Component {
             userInputValue: newSelected && JSON.stringify(newSelected),
         });
     }
+    preview(newSelected) {
+        this.callOperation(this.applyOperation.preview, {
+            preview: true,
+            userInputValue: newSelected && JSON.stringify(newSelected),
+            operationParams: { cancel: () => this.applyOperation.revert() },
+        });
+    }
+    revert() {
+        // The `next` will cancel the previous operation, which will revert
+        // the operation in case of a preview.
+        this.env.editor.shared.operation.next();
+    }
     create(name) {
         const args = { editingElement: this.env.getEditingElement(), value: name };
         this.env.editor.shared.operation.next(() => this.createOperation.commit(args), {
-            load: () =>
-                this.createAction.load?.(args).then((loadResult) => (args.loadResult = loadResult)),
+            load: this.createAction.load
+                ? () =>
+                      this.createAction
+                          .load(args)
+                          .then((loadResult) => (args.loadResult = loadResult))
+                : undefined,
         });
     }
 }

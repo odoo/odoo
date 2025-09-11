@@ -1,16 +1,18 @@
-import { Mutex } from "@web/core/utils/concurrency";
+import { Deferred, delay, Mutex } from "@web/core/utils/concurrency";
 
 // TODO when making apply async:
 // - check `isDestroyed` instead of `this.editableDocument.defaultView`
 
 /**
  * @typedef OperationParams
- * @property {Function} load an async function for which the mutex should wait
- *   before executing the main function
- * @property {Boolean} cancellable tells if the operation is cancellable (if it
- *   is a preview for example)
- * @property {Function} cancelPrevious the function to run when cancelling
- * @property {Number} [cancelTime=50] TODO
+ * @property {Function?} load an async function called before taking the mutex,
+ *   whose result is given to the operation's main function
+ * @property {Function?} cancel the function to run when cancelling. If truthy,
+ *   the operation is cancellable, and `fn` and `load` may not be called if the
+ *   operation is cancelled (which happens when another operation is scheduled)
+ * @property {Number} [loadCost=50] the number of millisecond to delay the
+ *   cancel of a load (if the load does not finish). This avoids starting too
+ *   many concurrent loads
  * @property {Boolean} [withLoadingEffect=true] specifies if a spinner should
  *   appear on the editable during the operation
  * @property {Number} [loadingEffectDelay=500] the delay after which the
@@ -24,11 +26,11 @@ export class Operation {
     constructor(editableDocument = document) {
         this.mutex = new Mutex();
         this.editableDocument = editableDocument;
+        this.cancellableLoadLimiter = new Mutex();
     }
 
     /**
      * Allows to execute a function in the mutex.
-     * See `OperationParams.load` to make it async.
      *
      * @param {Function} fn the function
      * @param {OperationParams} params
@@ -37,53 +39,63 @@ export class Operation {
     next(
         fn,
         {
-            load = () => Promise.resolve(),
-            cancellable,
-            cancelPrevious,
-            cancelTime = 50,
+            load,
+            cancel,
+            loadCost = 50,
             withLoadingEffect = true,
             loadingEffectDelay = 500,
             shouldInterceptClick = false,
         } = {}
     ) {
-        this.cancelPrevious?.();
-        let isCancel = false;
-        let cancelResolve;
-        this.cancelPrevious =
-            cancellable &&
-            (() => {
-                this.cancelPrevious = null;
-                isCancel = true;
-                cancelResolve?.();
-                // Cancel in the mutex to wait for the revert before the next
-                // apply.
-                this.mutex.exec(async () => {
-                    await cancelPrevious?.();
-                });
-            });
+        this.stopPrevious?.resolve();
 
-        const cancelTimePromise = new Promise((resolve) => setTimeout(resolve, cancelTime));
-        const cancelLoadPromise = new Promise((resolve) => {
-            cancelResolve = resolve;
-        });
+        const cancelPrevious = this.cancelPrevious ?? (() => Promise.resolve());
+        const stopPromise = new Deferred();
+        let stopped = false;
 
-        return this.mutex.exec(async () => {
-            if (isCancel) {
+        let loadPromise;
+        if (cancel) {
+            stopPromise.then(() => (stopped = true));
+            this.stopPrevious = stopPromise;
+
+            let cancelled = false;
+            this.cancelPrevious = async () => {
+                if (!cancelled) {
+                    cancelled = true;
+                    await cancelPrevious().catch(() => {});
+                    await cancel();
+                }
+            };
+
+            loadPromise = load
+                ? this.cancellableLoadLimiter.exec(
+                      () =>
+                          stopped ||
+                          Promise.race([Promise.all([stopPromise, delay(loadCost)]), load()])
+                  )
+                : Promise.resolve();
+        } else {
+            delete this.stopPrevious;
+            delete this.cancelPrevious;
+            loadPromise = load?.();
+        }
+
+        const work = this.mutex.exec(async () => {
+            if (stopped) {
                 return;
             }
-
             const removeLoadingElement = this.addLoadingElement(
                 withLoadingEffect,
                 loadingEffectDelay,
                 shouldInterceptClick
             );
-            const applyOperation = async () => {
-                const loadResult = await load();
-
-                if (isCancel) {
+            try {
+                const loadResult = await Promise.race([stopPromise, loadPromise]);
+                if (stopped) {
                     return;
                 }
-                this.previousLoadResolve = null;
+
+                await cancelPrevious().catch(() => {});
 
                 // Cancel the operation if the iframe has been reloaded
                 // and does not have a browsing context anymore.
@@ -92,17 +104,11 @@ export class Operation {
                 }
 
                 await fn?.(loadResult);
-            };
-
-            try {
-                await Promise.race([
-                    Promise.all([cancelLoadPromise, cancelTimePromise]),
-                    applyOperation(),
-                ]);
             } finally {
                 removeLoadingElement();
             }
         });
+        return Promise.race([stopPromise, work]);
     }
 
     /**

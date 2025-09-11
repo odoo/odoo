@@ -78,9 +78,12 @@ export class SelectMenu extends Component {
         multiSelect: { type: Boolean, optional: true },
         onInput: { type: Function, optional: true },
         onSelect: { type: Function, optional: true },
+        onNavigated: { type: Function, optional: true },
+        onDropdownStateChanged: { type: Function, optional: true },
         slots: { type: Object, optional: true },
         disabled: { type: Boolean, optional: true },
         fuzzyLookupFn: { type: Function, optional: true },
+        menuRef: { type: Function, optional: true },
     };
 
     static SCROLL_SETTINGS = {
@@ -97,6 +100,7 @@ export class SelectMenu extends Component {
         });
         this.inputRef = useRef("inputRef");
         this.menuRef = useChildRef();
+        this.props.menuRef?.(this.menuRef);
         this.debouncedOnInput = useDebounced(
             () => this.onInput(this.inputRef.el ? this.inputRef.el.value.trim() : ""),
             250
@@ -135,6 +139,14 @@ export class SelectMenu extends Component {
                         }
                     },
                 },
+            },
+            onItemActivated: (element) => {
+                const index = parseInt(element.dataset.choiceIndex);
+                if (index >= 0 && this.state.displayedOptions[index]) {
+                    this.props.onNavigated?.(this.state.displayedOptions[index]);
+                } else {
+                    this.props.onNavigated?.();
+                }
             },
         };
     }
@@ -183,6 +195,7 @@ export class SelectMenu extends Component {
                 scrollTo(selectedElement);
             }
         }
+        this.props.onDropdownStateChanged?.(open);
     }
 
     isOptionSelected(choice) {

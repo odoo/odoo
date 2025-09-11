@@ -10,6 +10,8 @@
             domain="props.domain"
             selected="domState.selected ? [domState.selected] : []"
             select="select.bind(this)"
+            preview="hasPreview ? preview.bind(this) : undefined"
+            revert.bind="revert"
             create="props.createAction ? create.bind(this) : undefined"
 
             message="domState.selected?.display_name || props.defaultMessage"

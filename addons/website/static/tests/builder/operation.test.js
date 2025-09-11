@@ -112,7 +112,7 @@ describe("Block editable", () => {
         await contains(":iframe .test-options-target").click();
         await contains("[data-action-id='customAction']").click();
         expect(":iframe .o_loading_screen:not(.o_we_ui_loading)").toHaveCount(1);
-        await advanceTime(50); // cancelTime=50 trigger by the preview
+        await advanceTime(50); // loadCost=50 trigger by the preview
         await advanceTime(500); // setTimeout in addLoadingElement
         expect(":iframe .o_loading_screen.o_we_ui_loading").toHaveCount(1);
 
