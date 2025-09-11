@@ -382,6 +382,15 @@ export class FormOptionPlugin extends Plugin {
                 );
                 locationEl.insertAdjacentElement("beforebegin", renderField(_field));
             });
+            // Special case: handle hidden fields separately.
+            // In some forms (e.g., contact forms), the "email_to" field must be included as hidden.
+            // For example, this may force the 'email_to' value to a dummy/default one on the
+            // contact us form just by interacting with it.
+            formInfo.fields?.forEach(field => {
+                if (field.defaultValue) {
+                    this.addHiddenField(el, field.defaultValue, field.name);
+                }
+            });
         }
     }
     /**
