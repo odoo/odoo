@@ -119,3 +119,8 @@ export function getCellFormattedValue(model, xc, sheetId = model.getters.getActi
     const { col, row } = toCartesian(xc);
     return model.getters.getCellText({ sheetId, col, row }, false);
 }
+
+export function getCellIcons(model, xc) {
+    const sheetId = model.getters.getActiveSheetId();
+    return model.getters.getCellIcons({ ...toCartesian(xc), sheetId });
+}
