@@ -18,7 +18,7 @@ const actionListProps = [
 class Action extends Component {
     static props = [
         "action",
-        "group",
+        "group?",
         "isFirstInGroup?",
         "isLastInGroup?",
         "style?",
@@ -53,10 +53,6 @@ class Action extends Component {
 
     get action() {
         return this.props.action;
-    }
-
-    get groupSize() {
-        return this.props.group.length;
     }
 
     get hasBtnBg() {
