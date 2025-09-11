@@ -118,7 +118,7 @@ export function touching(elements, targetRect) {
 //  - redefine this selector in tests env with ":not(#qunit *)" ?
 
 // Following selector is based on this spec: https://html.spec.whatwg.org/multipage/interaction.html#dom-tabindex
-const TABABLE_SELECTOR = [
+const FOCUSABLE_SELECTORS = [
     "[tabindex]",
     "a",
     "area",
@@ -130,9 +130,17 @@ const TABABLE_SELECTOR = [
     "select",
     "textarea",
     "details > summary:nth-child(1)",
-]
-    .map((sel) => `${sel}:not([tabindex="-1"]):not(:disabled)`)
-    .join(",");
+].map((sel) => `${sel}:not(:disabled)`);
+const TABABLE_SELECTORS = FOCUSABLE_SELECTORS.map((sel) => `${sel}:not([tabindex="-1"])`);
+
+/**
+ * Check if an element is focusable
+ *
+ * @param {HTMLElement} element
+ */
+export function isFocusable(el) {
+    return el.matches(FOCUSABLE_SELECTORS.join(",")) && isVisible(el) && !el.closest("[inert]");
+}
 
 /**
  * Returns all focusable elements in the given container.
@@ -140,7 +148,7 @@ const TABABLE_SELECTOR = [
  * @param {HTMLElement} [container=document.body]
  */
 export function getTabableElements(container = document.body) {
-    const elements = [...container.querySelectorAll(TABABLE_SELECTOR)].filter(
+    const elements = [...container.querySelectorAll(TABABLE_SELECTORS.join(","))].filter(
         (el) => isVisible(el) && !el.closest("[inert]")
     );
     /** @type {Record<number, HTMLElement[]>} */

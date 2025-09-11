@@ -480,7 +480,7 @@ test("clickbot show rpc error when an error dialog is detected", async () => {
                 </details>
             </div>
         </main>
-        <footer class="modal-footer justify-content-around justify-content-md-start flex-wrap gap-1 w-100">
+        <footer class="modal-footer d-empty-none justify-content-around justify-content-md-start flex-wrap gap-1 w-100">
             <button class="btn btn-primary o-default-button">Close</button>
         </footer>`
         .trim()

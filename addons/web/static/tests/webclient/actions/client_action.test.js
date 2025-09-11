@@ -116,7 +116,7 @@ test("can display client actions in Dialog and close the dialog", async () => {
 
     expect(".modal .test_client_action").toHaveCount(1);
     expect(".modal-title").toHaveText("Dialog Test");
-    await contains(".modal footer .btn.btn-primary").click();
+    await contains(".modal .btn-close").click();
     expect(".modal .test_client_action").toHaveCount(0);
 });
 
