@@ -4355,7 +4355,7 @@ class MailThread(models.AbstractModel):
         # message author to notify is either a valid partner, either an email only
         # (e.g. mail gateway, portal with token)
         recipient = self._message_compute_real_author((msg_vals or {}).get('author_id') or message.author_id.id).sudo()
-        email_to = (msg_vals.get('email_from') or message.email_from) if not recipient else False
+        email_to = ((msg_vals or {}).get('email_from') or message.email_from) if not recipient else False
         if not recipient and not email_to:
             return ooo_messages
 
