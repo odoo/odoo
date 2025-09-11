@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from datetime import timedelta
 from freezegun import freeze_time
 
-from odoo import Command
+from odoo import Command, fields
 from odoo.addons.stock_account.tests.test_anglo_saxon_valuation_reconciliation_common import ValuationReconciliationTestCommon
 from odoo.tests import common, Form
 from odoo.exceptions import UserError
@@ -2628,3 +2629,86 @@ class TestSaleMrpFlow(TestSaleMrpFlowCommon):
 
             mo.button_mark_done()
             self.assertEqual(mo.state, 'done')
+
+    def test_products_availability_with_mto_manufactured_product_from_interwarehouse_transfer(self):
+        """
+        Confirmed SOs containing MTO + manufactured products supplied from multiple 3-step delivery warehouses
+        create 7 pickings and 1 MO. The deliveries from each warehouse should have consistent forecast dates
+        and be linked to the correct IN and reserved moves.
+        """
+        mto_route = self.env.ref('stock.route_warehouse0_mto')
+        mrp_route = self.env.ref('mrp.route_warehouse0_manufacture')
+        vendor = self.env['res.partner'].create({'name': 'vendor'})
+        customer = self.env['res.partner'].create({'name': 'customer'})
+        grp_multi_loc = self.env.ref('stock.group_stock_multi_locations')
+        grp_multi_routes = self.env.ref('stock.group_adv_location')
+        self.env.user.write({'groups_id': [(4, grp_multi_loc.id)]})
+        self.env.user.write({'groups_id': [(4, grp_multi_routes.id)]})
+
+        # Create product and BOM
+        mto_product = self.env['product.product'].create({
+            'name': 'cool product',
+            'type': 'product',
+            'route_ids': [(6, 0, (mto_route + mrp_route).ids)],
+            'seller_ids': [(0, 0, {
+                'partner_id': vendor.id,
+            })],
+        })
+        bom = self.bom_kit_1
+        bom.write({'product_tmpl_id': mto_product.product_tmpl_id, 'type': 'normal'})
+
+        # Configure warehouse 1, 3 step delivery
+        wh1 = self.company_data['default_warehouse']
+        wh1.code, wh1.delivery_steps = 'WH1', 'pick_pack_ship'
+        # Create warehouse 2, 3 step delivery and resupplied from WH1
+        wh2 = self.env['stock.warehouse'].create({
+            'name': 'WH2',
+            'code': 'WH2',
+            'delivery_steps': 'pick_pack_ship',
+            'resupply_wh_ids': [(6, 0, [wh1.id])]
+        })
+        # Route WH2: Supply Product from WH1, check Sale Order Line
+        route = self.env['stock.route'].search([('supplied_wh_id', '=', wh2.id), ('supplier_wh_id', '=', wh1.id)])
+        route.sale_selectable = True
+        commitment_date = fields.Date.today() + timedelta(days=10)
+
+        sale_order = self.env['sale.order'].create({
+            'partner_id': customer.id,
+            'order_line': [(0, 0, {
+                'name': mto_product.name,
+                'product_id': mto_product.id,
+                'product_uom_qty': 3,
+                'product_uom': mto_product.uom_id.id,
+                'route_id': route.id,
+            })],
+            'warehouse_id': wh2.id,
+            'picking_policy': 'one',
+            'commitment_date': commitment_date,
+        })
+        sale_order.action_confirm()
+        pickings = sale_order.picking_ids
+
+        # 7 pickings and 1 MO should have been created
+        self.assertEqual(len(sale_order.picking_ids), 7)
+        self.assertEqual(sale_order.mrp_production_count, 1)
+
+        # Both OUTS (WH1 -> WH2 and WH2 -> Customer) products availability should be the commitment date
+        out_pickings = pickings.filtered(lambda p: "OUT" in p.name)
+        wh2_in_picking = pickings.filtered(lambda p: "IN" in p.name)
+        for out in out_pickings:
+            self.assertEqual(out.products_availability, commitment_date.strftime('Exp %m/%d/%Y'))
+
+        # Check forecast report, two lines should have been made
+        report_lines = self.env['stock.forecasted_product_product'].with_context(warehouse=wh2.id).get_report_values(docids=mto_product.ids)['docs']['lines']
+        line_1, line_2 = report_lines[0], report_lines[1]
+        self.assertEqual(len(report_lines), 2)
+
+        # Check that line one's in move and reserved move is the WH2/IN, and line two is In Transit move
+        self.assertEqual(
+            [line_1.get('document_in')['name'], line_1.get('document_out')['name'], line_1.get('reservation')['name']],
+            [wh2_in_picking.name, sale_order.name, wh2_in_picking.name]
+        )
+        self.assertEqual(
+            [line_2.get('document_in'), line_2.get('document_out'), line_2.get('in_transit')],
+            [False, False, True]
+        )

@@ -25,13 +25,7 @@
                 </tr>
                 <tr t-foreach="props.docs.lines" t-as="line" t-key="line_index" t-attf-class="#{line.is_matched and 'o_grid_match table-info'}">
                     <td t-attf-class="#{line.is_late and 'o_grid_warning table-danger'}">
-                        <a t-if="line.document_in"
-                            href="#"
-                            t-on-click.prevent="() => this.props.openView(line.document_in._name, 'form', line.document_in.id)"
-                            t-out="line.document_in.name"
-                            class="fw-bold"/>
-
-                        <t t-elif="line.reservation">
+                        <t t-if="line.reservation">
                             <a t-out="line.reservation.name" href="#" class="fw-bold"
                                t-on-click.prevent="() => this.props.openView(line.reservation._name, 'form', line.reservation.id)"
                                 /> reserved
@@ -42,6 +36,13 @@
                                 Unreserve
                             </button>
                         </t>
+
+                        <a t-elif="line.document_in"
+                            href="#"
+                            t-on-click.prevent="() => this.props.openView(line.document_in._name, 'form', line.document_in.id)"
+                            t-out="line.document_in.name"
+                            class="fw-bold"/>
+
                         <t t-elif="line.in_transit">
                             <t t-if="line.move_out">
                                 <span>Stock In Transit</span>
