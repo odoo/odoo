@@ -72,7 +72,7 @@ function createOdooChartRuntime(chart, getters) {
             cutout: chart.pieHolePercentage === undefined ? "25%" : `${chart.pieHolePercentage}%`,
             layout: getChartLayout(definition, chartData),
             plugins: {
-                title: getChartTitle(definition),
+                title: getChartTitle(definition, getters),
                 legend: getSunburstChartLegend(definition, chartData),
                 tooltip: getSunburstChartTooltip(definition, chartData),
                 sunburstLabelsPlugin: getSunburstShowValues(definition, chartData),
