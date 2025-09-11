@@ -148,6 +148,9 @@ registry.category("web_tour.tours").add("test_purchase_order_suggest_search_pane
          * ------------------------------------------------------------------
          */
         ...setSuggestParameters({ basedOn: "Last 7 days", nbDays: 28, factor: 50 }),
+        // Tricky test 1: Add All, remove manually and re add all again should still
+        // add the product to the PO (even if domain contains inOrder = True and the
+        // product we manually remove is not in order)
         {
             content: "Add all suggestion to the PO",
             trigger: 'button[name="suggest_add_all"]',
@@ -162,8 +165,13 @@ registry.category("web_tour.tours").add("test_purchase_order_suggest_search_pane
             trigger: "div.o_tooltip_div_remove button",
             run: "click",
         },
+        {
+            content: "Add all suggestion to the PO AGAIN",
+            trigger: 'button[name="suggest_add_all"]',
+            run: "click",
+        },
         { trigger: "span[name='o_kanban_monthly_demand_qty']:visible:contains('52')" },
-        // { trigger: "div[name='o_kanban_purchase_suggest'] span:visible:contains('24')" }, // TODO Bugs sometime on local
+        { trigger: "div[name='o_kanban_purchase_suggest'] span:visible:contains('24')" },
         checkKanbanRecordHighlight("test_product", 1),
         // Test concurent RPC bug on filter update
         {

@@ -6,15 +6,15 @@ import { useBus } from "@web/core/utils/hooks";
 /* Controller reacts to most UI events on product catalog view (eg. next page, filters, suggestion changes),
  * pass suggestion inputs to backend through context, and reorders kanban records based on backend computations.
  * Eg. Toggle suggest OFF -> loose suggest ctx -> product.suggested_qty set to 0 -> re-render normal catalog
- * Context passed to product.product AND purchase.order because record card is based both on
- * product.product (eg. monthly demand, forecast) and purchase.order (card highlighted, Add button) */
+ * Context passed to product.product AND purchase.order (see ./kaban_model.js) because record card is based on
+ * both product.product (eg. monthly demand, forecast) and purchase.order (card highlighted, Add button) */
 export class PurchaseSuggestCatalogKanbanController extends ProductCatalogKanbanController {
     setup() {
         super.setup();
         this.state = useState({
             numberOfDays: this.props.context.vendor_suggest_days,
             basedOn: this.props.context.vendor_suggest_based_on,
-            percentFactor: this.props.context.vendo_suggest_percent,
+            percentFactor: this.props.context.vendor_suggest_percent,
             poState: this.props.context.po_state,
             totalEstimatedPrice: 0.0,
             currencyId: this.props.context.product_catalog_currency_id,
@@ -70,7 +70,12 @@ export class PurchaseSuggestCatalogKanbanController extends ProductCatalogKanban
 
         const onAddAll = async () => {
             const ctx = this._filter_add_all_ctx(this._getCatalogContext()); // IMPROVE: Quickfix
-            await this.model.orm.call("purchase.order", "action_purchase_order_suggest", [ctx]);
+            await this.model.orm.call(
+                "purchase.order",
+                "action_purchase_order_suggest",
+                [ctx["order_id"]],
+                { context: ctx }
+            );
             this._filterInTheOrder(); // Apply filter to show what was added
         };
 
@@ -102,9 +107,9 @@ export class PurchaseSuggestCatalogKanbanController extends ProductCatalogKanban
      */
     async _reorderKanbanGrid() {
         const sortBySuggested = (list) => {
-            const suggest_products = list.filter((record) => record.data.suggested_qty > 0);
-            const not_suggested_products = list.filter((record) => record.data.suggested_qty == 0);
-            return [...suggest_products, ...not_suggested_products];
+            const suggestProducts = list.filter((record) => record.data.suggested_qty > 0);
+            const notSuggestedProducts = list.filter((record) => record.data.suggested_qty == 0);
+            return [...suggestProducts, ...notSuggestedProducts];
         };
 
         const isGroupFilterOff = this.model.config.groupBy.length === 0;
@@ -141,12 +146,11 @@ export class PurchaseSuggestCatalogKanbanController extends ProductCatalogKanban
      * @returns {Object} base context or base + suggest context
      */
     _getCatalogContext() {
-        const ctx = { ...this._baseContext };
         if (this.state.suggestToggle.isOn === false) {
-            return ctx; // removes suggest context
+            return this._baseContext; // removes suggest context
         }
         return {
-            ...ctx,
+            ...this._baseContext,
             domain: this.model.config.domain,
             warehouse_id: this.props.context.warehouse_id,
             suggest_based_on: this.state.basedOn,
@@ -155,7 +159,7 @@ export class PurchaseSuggestCatalogKanbanController extends ProductCatalogKanban
         };
     }
 
-    /**  Loads last suggest toggle state from local storage (defaults to true) */
+    /** Loads last suggest toggle state from local storage (defaults to true) */
     _loadSuggestToggleState() {
         if (this.props.context.po_state !== "draft") {
             return { isOn: false };
