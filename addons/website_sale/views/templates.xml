@@ -3616,12 +3616,12 @@
 
     <template id="address_edit_button" name="Address edit button">
         <t t-if="xmlid != 'website_sale.confirmation'">
-            <a t-if="order.partner_invoice_id.country_id" class="float-end no-decoration pe-1" href="/shop/checkout">
+            <a t-if="order.partner_invoice_id.country_id" class="float-end no-decoration" href="/shop/checkout">
                 <i class="fa fa-pencil me-1"/>Edit
             </a>
             <a
                 t-else=""
-                class="float-end no-decoration pe-1"
+                class="float-end no-decoration"
                 t-attf-href="/shop/address?partner_id={{order.partner_invoice_id.id}}&amp;address_type=billing"
             >
                 <i class="fa fa-pencil me-1"/>Want an invoice?
@@ -3639,10 +3639,10 @@
                     t-set="use_delivery_as_billing"
                     t-value="order.partner_invoice_id == order.partner_shipping_id and not order.pickup_location_data"
                 />
-                <div class="row">
+                <div class="d-flex flex-column flex-md-row gap-4">
                     <div
                         t-if="not use_delivery_as_billing and order._has_deliverable_products()"
-                        t-attf-class="{{not use_delivery_as_billing and not only_services and 'col-md-6'}}"
+                        t-attf-class="{{not use_delivery_as_billing and not only_services and 'col'}}"
                     >
                         <t t-if="order.pickup_location_data">
                             <p t-att-class="delivery_title_classes">Deliver to pickup point</p>
@@ -3666,7 +3666,7 @@
                             />
                         </t>
                     </div>
-                    <div t-attf-class="{{not use_delivery_as_billing and not only_services and 'col-md-6'}}">
+                    <div t-attf-class="{{not use_delivery_as_billing and not only_services and 'col'}}">
                         <p t-if="use_delivery_as_billing and not only_services" t-att-class="delivery_title_classes">Delivery &amp; Billing</p>
                         <p t-else="" t-att-class="delivery_title_classes">Billing</p>
                         <t
