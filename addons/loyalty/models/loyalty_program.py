@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from collections import defaultdict
+from collections import Counter, defaultdict
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
@@ -445,6 +445,27 @@ class LoyaltyProgram(models.Model):
         return res
 
     def write(self, vals):
+        # Handle the case of unarchiving a program
+        if vals.get('active'):
+            all_codes = [c for c in self.with_context(active_test=False).mapped('rule_ids.code') if c]
+            # Find active rules that conflict with these codes
+            conflicting_rules = self.env['loyalty.rule'].read_group(
+                [('code', 'in', all_codes), ('program_id.active', '=', True)],
+                ['code'],
+                ['code']
+            )
+            conflicting_codes = [r['code'] for r in conflicting_rules]
+            # Detect duplicate codes within this batch
+            duplicates_in_batch = [c for c, count in Counter(all_codes).items() if count > 1]
+            if conflicting_codes:
+                raise ValidationError(_(
+                    'Cannot unarchive programs because active programs with the same code already exist: %s', ','.join(conflicting_codes)
+                ))
+            if duplicates_in_batch:
+                raise ValidationError(_(
+                    'Cannot unarchive programs because multiple programs in this batch have the same code: %s', ','.join(duplicates_in_batch)
+                ))
+
         # There is an issue when we change the program type, since we clear the rewards and create new ones.
         # The orm actually does it in this order upon writing, triggering the constraint before creating the new rewards.
         # However we can check that the result of reward_ids would actually be empty or not, and if not, skip the constraint.
