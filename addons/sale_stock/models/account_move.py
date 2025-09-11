@@ -135,9 +135,11 @@ class AccountMove(models.Model):
 
     def _get_anglo_saxon_price_ctx(self):
         ctx = super()._get_anglo_saxon_price_ctx()
-        move_is_downpayment = self.invoice_line_ids.filtered(
-            lambda line: any(line.sale_line_ids.mapped("is_downpayment"))
-        )
+        move_is_downpayment = None
+        if not self.reversed_entry_id and self.move_type == "out_refund":
+            move_is_downpayment = self.invoice_line_ids.filtered(
+                lambda line: any(line.sale_line_ids.mapped("is_downpayment"))
+            )
         return dict(ctx, move_is_downpayment=move_is_downpayment)
 
 
@@ -154,10 +156,10 @@ class AccountMoveLine(models.Model):
 
         so_line = self.sale_line_ids and self.sale_line_ids[-1] or False
         move_is_downpayment = self.env.context.get("move_is_downpayment")
-        if move_is_downpayment is None:
+        if move_is_downpayment is None and not self.move_id.reversed_entry_id and self.move_type == "out_refund":
             move_is_downpayment = self.move_id.invoice_line_ids.filtered(
-            lambda line: any(line.sale_line_ids.mapped("is_downpayment"))
-        )
+                lambda line: any(line.sale_line_ids.mapped("is_downpayment"))
+            )
         if so_line:
             is_line_reversing = False
             if self.move_id.move_type == 'out_refund' and not move_is_downpayment:
