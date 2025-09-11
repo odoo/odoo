@@ -22,6 +22,7 @@ import {
     mountWithCleanup,
     onRpc,
     patchWithCleanup,
+    waitUntilIdle,
 } from "@web/../tests/web_test_helpers";
 import { loadBundle } from "@web/core/assets";
 import { isBrowserFirefox } from "@web/core/browser/feature_detection";
@@ -104,7 +105,7 @@ export async function setupWebsiteBuilder(
     registry.category("services").remove("website_edit");
     let editor;
     let editableContent;
-    await mountWithCleanup(WebClient);
+    const comp = await mountWithCleanup(WebClient);
     let originalIframeLoaded;
     let resolveIframeLoaded = () => {};
     const bodyHTML = `${beforeWrapwrapContent}
@@ -199,11 +200,13 @@ export async function setupWebsiteBuilder(
     });
 
     let lastUpdatePromise;
-    const waitDomUpdated = async () => {
+    const waitSidebarUpdated = async () => {
+        await editor.shared.operation.next();
         // The tick ensures that lastUpdatePromise has correctly been assigned
         await tick();
         await lastUpdatePromise;
         await animationFrame();
+        await waitUntilIdle([comp.__owl__.app]);
     };
     patchWithCleanup(Builder.prototype, {
         setup() {
@@ -270,7 +273,7 @@ export async function setupWebsiteBuilder(
         getEditor: () => editor,
         getEditableContent: () => editableContent,
         openBuilderSidebar: async () => await openBuilderSidebar(editAssetsLoaded),
-        waitDomUpdated,
+        waitSidebarUpdated,
     };
 }
 

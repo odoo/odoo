@@ -1,4 +1,3 @@
-import { waitForEndOfOperation } from "@html_builder/../tests/helpers";
 import { expect, test } from "@odoo/hoot";
 import { waitForNone } from "@odoo/hoot-dom";
 import { contains, dataURItoBlob, onRpc } from "@web/../tests/web_test_helpers";
@@ -10,7 +9,7 @@ import {
 defineWebsiteModels();
 
 test("Product page options", async () => {
-    const { waitDomUpdated } = await setupWebsiteBuilder(`
+    const { waitSidebarUpdated } = await setupWebsiteBuilder(`
         <main>
             <div class="o_wsale_product_page">
                 <div id="product_detail_main" data-image_width="66_pc" data-image_layout="carousel">
@@ -91,12 +90,12 @@ test("Product page options", async () => {
     // Avoid selecting the first option to prevent the image layout option from disappearing
     await contains("[data-action-id=productPageImageWidth][data-action-value='50_pc']").click();
 
+    await waitSidebarUpdated();
     await expect.waitForSteps(["config", "modify_image", "save", "theme_customize_data_get"]);
-    await waitDomUpdated();
 
     await contains("button#o_wsale_image_layout").click();
     await contains("[data-action-id=productPageImageLayout]").click();
-    await waitForEndOfOperation();
+    await waitSidebarUpdated();
     await expect.waitForSteps(["theme_customize_data", "config", "theme_customize_data_get"]);
  
     // Make sure that clicking quickly on a builder button after an clicking on
