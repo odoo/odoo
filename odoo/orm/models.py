@@ -2188,11 +2188,17 @@ class BaseModel(metaclass=MetaModel):
                 orderby_terms.append(SQL("%s %s %s", sql_expr, sql_direction, sql_nulls))
                 continue
 
-            field = self._fields.get(term)
-            __, __, granularity = parse_read_group_spec(term)
+            field_name, property_name, granularity = parse_read_group_spec(term)
+            field = self._fields.get(field_name)
             if (
-                traverse_many2one and field and field.type == 'many2one'
-                and self.env[field.comodel_name]._order != 'id'
+                traverse_many2one and field and (
+                    (field.type == 'many2one' and self.env[field.comodel_name]._order != 'id')
+                    or (
+                        field.type == 'properties' and
+                        (definition := self.get_property_definition(f'{field_name}.{property_name}')) and
+                        definition.get('type') == 'many2one' and 'comodel' in definition
+                    )
+                )
             ):
                 if sql_order := self._order_to_sql(f'{term} {direction} {nulls}', query):
                     orderby_terms.append(sql_order)
@@ -2366,7 +2372,7 @@ class BaseModel(metaclass=MetaModel):
 
         # JOIN on the JSON array
         if property_type in ('tags', 'many2many'):
-            property_alias = query.make_alias(alias, f'{fname}_{property_name}')
+            property_alias = query.make_alias(alias, f'{fname}__{property_name}')
             sql_property = SQL(
                 """ CASE
                         WHEN jsonb_typeof(%(property)s) = 'array'
@@ -2410,7 +2416,7 @@ class BaseModel(metaclass=MetaModel):
             options = [option[0] for option in definition.get('selection') or ()]
 
             # check the existence of the option
-            property_alias = query.make_alias(alias, f'{fname}_{property_name}')
+            property_alias = query.make_alias(alias, f'{fname}__{property_name}')
             query.add_join(
                 "LEFT JOIN",
                 property_alias,
@@ -2428,16 +2434,12 @@ class BaseModel(metaclass=MetaModel):
                     property_name=definition.get('string', property_name), model_name=definition.get('comodel'),
                 ))
 
-            return SQL(
-                """ CASE
-                        WHEN jsonb_typeof(%(property)s) = 'number'
-                         AND (%(property)s)::int IN (SELECT id FROM %(table)s)
-                        THEN %(property)s
-                        ELSE NULL
-                     END """,
-                property=sql_property,
-                table=SQL.identifier(comodel._table),
-            )
+            property_alias = query.make_alias(comodel._table, f'{fname}__{property_name}')
+            property_int_sql = SQL("(CASE WHEN jsonb_typeof(%(property)s) = 'number' THEN %(property)s::int ELSE NULL END)", property=sql_property)
+            comodel_id_sql = comodel._field_to_sql(property_alias, 'id', query)
+            condition = SQL('%s = %s', comodel_id_sql, property_int_sql)
+            query.add_join('LEFT JOIN', property_alias, comodel._table, condition)
+            return comodel_id_sql
 
         elif property_type == 'date':
             return SQL(
@@ -4736,8 +4738,29 @@ class BaseModel(metaclass=MetaModel):
         if field.type == 'boolean':
             sql_field = SQL("COALESCE(%s, FALSE)", sql_field)
 
-        query._order_groupby.append(sql_field)
+        if (
+            field.type == 'properties' and property_name and
+            (definition := self.get_property_definition(field_name)) and
+            definition.get('type') == 'many2one' and 'comodel' in definition
+        ):
+            comodel_name = definition['comodel']
+            comodel = self.env[comodel_name]
 
+            # Add a left in the same way that we do in _read_group_groupby_propreties
+            property_alias = query.make_alias(comodel._table, f'{fname}__{property_name}')
+            property_int_sql = SQL(
+                "(CASE WHEN jsonb_typeof(%(property)s) = 'number' THEN %(property)s::int ELSE NULL END)",
+                property=sql_field,
+            )
+            comodel_id_sql = comodel._field_to_sql(property_alias, 'id', query)
+            condition = SQL('%s = %s', comodel_id_sql, property_int_sql)
+            query.add_join('LEFT JOIN', property_alias, comodel._table, condition)
+
+            coorder = comodel._order
+            reverse = direction.code == 'DESC'
+            return comodel._order_to_sql(coorder, query, alias=property_alias, reverse=reverse)
+
+        query._order_groupby.append(sql_field)
         return SQL("%s %s %s", sql_field, direction, nulls)
 
     @api.model

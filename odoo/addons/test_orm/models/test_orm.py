@@ -258,6 +258,7 @@ class TestOrmPartner(models.Model):
     """
     _name = 'test_orm.partner'
     _description = 'Discussion Partner'
+    _order = 'name, id'
 
     name = fields.Char(string='Name')
 
