@@ -19,11 +19,10 @@
                     'o-hasSelfAvatar': showComposerAvatar,
                     'o-focused': props.composer.isFocused,
                     'o-editing': props.composer.message,
-                    'o-chatWindow mx-2': env.inChatWindow,
-                    'mb-3': env.inChatWindow and !props.composer.message,
+                    'o-chatWindow mx-2 my-1': env.inChatWindow,
+                    'mb-2': env.inChatWindow and !props.composer.message,
                     'o-discussApp pt-1 ps-2 pe-4 pb-2': env.inDiscussApp,
                     'ps-xl-3': env.inDiscussApp and !ui.isSmall,
-                    'm-1': env.inChatWindow,
                 }" t-attf-class="{{ props.className }}">
             <FileUploader t-if="allowUpload" multiUpload="isMultiUpload" onUploaded.bind="(data) => { attachmentUploader.uploadData(data) }">
                 <t t-set-slot="toggler">
