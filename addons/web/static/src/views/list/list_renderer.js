@@ -779,9 +779,10 @@ export class ListRenderer extends Component {
         }
         if (this.props.list.isGrouped && !this.props.list.selection.length) {
             return values.reduce((set, value) => {
-                value[currencyField].forEach((c) => {
-                    set.add(c);
-                });
+                const currVal = value[currencyField];
+                if (Array.isArray(currVal)) {
+                    currVal.forEach((c) => set.add(c));
+                }
                 return set;
             }, new Set());
         }
