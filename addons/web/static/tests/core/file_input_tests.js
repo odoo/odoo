@@ -212,7 +212,6 @@ QUnit.module("Components", ({ beforeEach }) => {
         await createFileInput({
             props: {
                 onWillUploadFiles(files) {
-                    // This code should be unreachable in this case
                     assert.step(files[0].name);
                     return files;
                 },
