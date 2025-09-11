@@ -11,9 +11,8 @@ class BackgroundOptionPlugin extends Plugin {
                 OptionComponent: BackgroundOption,
                 props: {
                     withImages: true,
-                    withShapes: false,
-                    withColors: true,
-                    withColorCombinations: true,
+                    withColors: false,
+                    withColorCombinations: false,
                 },
             },
         ],
