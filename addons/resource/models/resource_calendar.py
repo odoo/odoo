@@ -104,6 +104,9 @@ class ResourceCalendar(models.Model):
     hours_per_week = fields.Float(
         string="Hours per Week",
         compute="_compute_hours_per_week", store=True, readonly=False, copy=False)
+    paid_hours_per_week = fields.Float(
+        string="Paid Hours per Week",
+        compute="_compute_paid_hours_per_week", store=True, readonly=False, copy=False)
     is_fulltime = fields.Boolean(compute='_compute_work_time_rate', string="Is Full Time")
     two_weeks_calendar = fields.Boolean(string="Calendar in 2 weeks mode")
     two_weeks_explanation = fields.Char('Explanation', compute="_compute_two_weeks_explanation")
@@ -219,6 +222,11 @@ class ResourceCalendar(models.Model):
         """ Compute the average hours per week """
         for calendar in self.filtered(lambda c: not c.flexible_hours):
             calendar.hours_per_week = float_round(calendar._get_hours_per_week(), precision_digits=2)
+
+    @api.depends('hours_per_week')
+    def _compute_paid_hours_per_week(self):
+        for calendar in self:
+            calendar.paid_hours_per_week = calendar.hours_per_week
 
     @api.depends('two_weeks_calendar')
     def _compute_two_weeks_explanation(self):
