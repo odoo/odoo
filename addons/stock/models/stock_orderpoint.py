@@ -115,9 +115,15 @@ class StockWarehouseOrderpoint(models.Model):
     @api.depends('rule_ids', 'product_id.seller_ids', 'product_id.seller_ids.delay')
     def _compute_lead_days(self):
         orderpoints_to_compute = self.filtered(lambda orderpoint: orderpoint.product_id and orderpoint.location_id)
-        for orderpoint in orderpoints_to_compute.with_context(bypass_delay_description=True):
-            values = orderpoint._get_lead_days_values()
-            lead_days, dummy = orderpoint.rule_ids._get_lead_days(orderpoint.product_id, **values)
+        lead_day_values_by_orderpoint = {}
+        orderpoint_combinations = []
+        for orderpoint in orderpoints_to_compute:
+            lead_day_values = frozendict(orderpoint._get_lead_days_values())
+            lead_day_values_by_orderpoint[orderpoint.id] = lead_day_values
+            orderpoint_combinations.append((orderpoint.rule_ids, orderpoint.product_id, lead_day_values))
+        lead_days_delays = self.env['stock.rule'].with_context(bypass_delay_description=True)._get_lead_days_for_combinations(orderpoint_combinations)
+        for orderpoint in orderpoints_to_compute:
+            lead_days, _ = lead_days_delays[orderpoint.rule_ids, orderpoint.product_id, lead_day_values_by_orderpoint[orderpoint.id]]
             lead_days_date = fields.Date.today() + relativedelta.relativedelta(days=lead_days['total_delay'])
             orderpoint.lead_days_date = lead_days_date
         (self - orderpoints_to_compute).lead_days_date = False
