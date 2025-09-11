@@ -24,8 +24,9 @@ export function getFirstAndLastTabableElements(el) {
  * to delegate the UI active element to another element than itself.
  *
  * @param {string} refName
+ * @param {string?} startupContainerSelector
  */
-export function useActiveElement(refName) {
+export function useActiveElement(refName, startupContainerSelector) {
     if (!refName) {
         throw new Error("refName not given to useActiveElement");
     }
@@ -60,7 +61,8 @@ export function useActiveElement(refName) {
     useEffect(
         (el) => {
             if (el) {
-                const [firstTabableEl] = getFirstAndLastTabableElements(el);
+                const tabableEls = getTabableElements(el);
+                const [firstTabableEl] = tabableEls;
                 if (!firstTabableEl) {
                     // no tabable elements: no need to trap focus nor become the UI active element
                     return;
@@ -71,7 +73,22 @@ export function useActiveElement(refName) {
                 el.addEventListener("keydown", trapFocus);
 
                 if (!el.contains(document.activeElement)) {
-                    firstTabableEl.focus();
+                    let focusableEl = firstTabableEl;
+                    if (startupContainerSelector) {
+                        const startup = el.querySelector(startupContainerSelector);
+                        if (startup) {
+                            const startupSiblings = [...startup.parentNode.childNodes];
+                            const idxStartup = startupSiblings.findIndex((c) => c === startup);
+                            const startupContainers = startupSiblings.slice(idxStartup);
+                            for (const tabableEl of tabableEls) {
+                                if (startupContainers.some((c) => c.contains(tabableEl))) {
+                                    focusableEl = tabableEl;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                    focusableEl.focus();
                 }
                 return async () => {
                     // Components are destroyed from top to bottom, meaning that this cleanup is

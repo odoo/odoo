@@ -234,3 +234,39 @@ test("UI active element: trap focus is not bypassed using invisible elements", a
     expect(firstEvent.defaultPrevented).toBe(true);
     expect("input[placeholder=withFocus]").toBeFocused();
 });
+
+test("UI active element: trap focus with a startup container", async () => {
+    class MyComponent extends Component {
+        static template = xml`
+            <div>
+                <h1>My Component</h1>
+                <input type="text" placeholder="outerUIActiveElement"/>
+                <div t-ref="delegatedRef">
+                    <header>
+                        <input type="text" placeholder="notFocusedAtFirst"/>
+                    </header>
+                    <main>
+                        <input type="text" placeholder="withFocus"/>
+                    </main>
+                </div>
+            </div>
+        `;
+        static props = ["*"];
+        setup() {
+            useActiveElement("delegatedRef", "main");
+        }
+    }
+
+    await mountWithCleanup(MyComponent);
+
+    expect("input[placeholder=withFocus]").toBeFocused();
+    let [firstEvent] = await press("Tab", { shiftKey: false });
+    await animationFrame();
+    expect(firstEvent.defaultPrevented).toBe(true);
+    expect("input[placeholder=notFocusedAtFirst]").toBeFocused();
+
+    [firstEvent] = await press("Tab", { shiftKey: true });
+    await animationFrame();
+    expect(firstEvent.defaultPrevented).toBe(true);
+    expect("input[placeholder=withFocus]").toBeFocused();
+});
