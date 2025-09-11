@@ -1,7 +1,7 @@
 import { _t } from "@web/core/l10n/translation";
 import { Plugin } from "../plugin";
 import { closestBlock } from "../utils/blocks";
-import { closestElement } from "../utils/dom_traversal";
+import { closestElement, firstLeaf } from "../utils/dom_traversal";
 import {
     isEmptyBlock,
     isListItemElement,
@@ -42,15 +42,23 @@ export class SeparatorPlugin extends Plugin {
     };
 
     insertSeparator() {
-        const selection = this.dependencies.selection.getEditableSelection();
-        const sep = this.document.createElement("hr");
+        const selection = this.dependencies.selection.getSelectionData().deepEditableSelection;
         const block = closestBlock(selection.startContainer);
         const element =
             closestElement(selection.startContainer, paragraphRelatedElementsSelector) ||
             (block && !isListItemElement(block) ? block : null);
 
         if (element && element !== this.editable) {
-            if (isEmptyBlock(element)) {
+            const sep = this.document.createElement("hr");
+            const firstLeafNode = firstLeaf(block);
+            /**
+             * Insert the separator before the element when it’s empty
+             * or when the caret is at the very start of the block.
+             */
+            if (
+                isEmptyBlock(element) ||
+                (selection.anchorNode === firstLeafNode && selection.anchorOffset === 0)
+            ) {
                 element.before(sep);
             } else {
                 element.after(sep);
