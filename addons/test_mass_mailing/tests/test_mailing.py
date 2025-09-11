@@ -124,6 +124,20 @@ class TestMassMailing(TestMassMailCommon):
             'trace_status': 'bounce',
         }], mailing, recipients[1], check_mail=False)
 
+        # simulate a bounce from a different email
+        self.gateway_mail_trace_bounce(mailing, recipients[2], {
+            'bounced_email': 'custom_bounce_replyfrom@test2.example.com',
+        })
+        mailing.invalidate_recordset()
+        self.assertMailingStatistics(mailing, expected=5, delivered=3, sent=5, opened=1, clicked=1, bounced=2)
+        self.assertEqual(recipients[2].message_bounce, 1)
+        self.assertMailTraces([{
+            'email': 'test.record.02@test.example.com',
+            'failure_reason': 'This is the bounce email',
+            'failure_type': 'mail_bounce',
+            'trace_status': 'bounce',
+        }], mailing, recipients[2], check_mail=False)
+
     @users('user_marketing')
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_mailing_recipients(self):
