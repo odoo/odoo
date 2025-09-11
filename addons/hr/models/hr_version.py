@@ -7,7 +7,7 @@ from babel.dates import format_date, get_date_format
 
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
-from odoo.tools import get_lang, babel_locale_parse
+from odoo.tools import get_lang, babel_locale_parse, SQL
 
 import logging
 _logger = logging.getLogger(__name__)
@@ -497,10 +497,56 @@ class HrVersion(models.Model):
                 version.date_end = version.contract_date_end
 
     def _search_start_date(self, operator, value):
-        return [('contract_date_start', operator, value)]
+        if operator not in ['in', '<', '<=', '>', '>=']:
+            return NotImplemented
+        if operator == 'in':
+            where_clause = SQL("WHERE start_date IN (%(value)s)", value=SQL(',').join(tuple(
+                self._fields['date_start'].convert_to_column(val, self.browse())
+                for val in value
+            )))
+        else:
+            where_clause = SQL("WHERE start_date %(op)s %(value)s", op=SQL(operator), value=self._fields['date_start'].convert_to_column(value, self.browse()))
+        query = SQL("""
+            WITH start_dates AS (
+                SELECT id,
+                       GREATEST(COALESCE(date_version, contract_date_start)) AS start_date
+                  FROM hr_version
+            )
+            SELECT id
+              FROM start_dates
+              %(where_clause)s
+        """, where_clause=where_clause)
+        return [('id', 'in', query)]
 
     def _search_end_date(self, operator, value):
-        return [('contract_date_end', operator, value)]
+        """Implement strict comparison and equality for the minimum between contract end and version end."""
+        if operator not in ['in', '<', '<=', '>', '>=']:
+            return NotImplemented
+        if operator == 'in':
+            where_clause = SQL("WHERE end_date IN (%(value)s)", value=SQL(',').join(tuple(
+                self._fields['date_end'].convert_to_column(val, self.browse())
+                for val in value
+            )))
+        else:
+            where_clause = SQL("WHERE end_date %(op)s %(value)s", op=SQL(operator), value=self._fields['date_end'].convert_to_column(value, self.browse()))
+        query = SQL("""
+            WITH version_pairs AS (
+                SELECT id,
+                       LEAD(date_version) OVER (ORDER BY date_version, id) AS next_start_date,
+                       contract_date_end
+                  FROM hr_version
+            ),
+            min_dates AS (
+                SELECT
+                    id,
+                    LEAST(COALESCE(next_start_date, contract_date_end)) AS end_date
+                FROM version_pairs
+            )
+            SELECT id
+              FROM min_dates
+              %(where_clause)s
+        """, where_clause=where_clause)
+        return [('id', 'in', query)]
 
     @api.model
     def _get_marital_status_selection(self):
