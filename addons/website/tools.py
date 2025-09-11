@@ -270,3 +270,13 @@ def create_image_attachment(env, image_path, image_name):
         'url': Attachments.get_base_url() + image_path,
     })
     return img
+
+
+def get_stored_models(env):
+    """ Returns the list of models that are stored in the database.
+    This excludes models with attribute `_auto = False`
+    """
+    return [
+        model_name for model_name, model in env.items()
+        if getattr(model, '_auto', True)
+    ]
