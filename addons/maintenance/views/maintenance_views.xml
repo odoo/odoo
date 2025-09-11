@@ -336,7 +336,7 @@
         <field name="name">equipment.form</field>
         <field name="model">maintenance.equipment</field>
         <field name="arch" type="xml">
-            <form string="Equipments">
+            <form string="Equipment">
                 <sheet>
                     <field name="company_id" invisible="1"/>
                     <div class="oe_button_box" name="button_box">
@@ -514,7 +514,7 @@
                     ('name', 'ilike', self), ('model', 'ilike', self), ('serial_no', 'ilike', self), ('partner_ref', 'ilike', self)]"/>
                 <field string="Category" name="category_id"/>
                 <field name="owner_user_id"/>
-                <filter string="My Equipments" name="my" domain="[('owner_user_id', '=', uid)]"/>
+                <filter string="My Equipment" name="my" domain="[('owner_user_id', '=', uid)]"/>
                 <filter string="Assigned" name="assigned" domain="[('owner_user_id', '!=', False)]"/>
                 <filter string="Unassigned" name="available" domain="[('owner_user_id', '=', False)]"/>
                 <separator/>
@@ -542,7 +542,7 @@
     </record>
 
     <record id="hr_equipment_action" model="ir.actions.act_window">
-        <field name="name">Equipments</field>
+        <field name="name">Equipment</field>
         <field name="res_model">maintenance.equipment</field>
         <field name="view_mode">kanban,tree,form</field>
         <field name="view_id" ref="hr_equipment_view_kanban"/>
@@ -550,7 +550,7 @@
             <p class="o_view_nocontent_smiling_face">
                 Add a new equipment
             </p><p>
-                Track equipments and link it to an employee or department.
+                Track equipment and link it to an employee or department.
                 You will be able to manage allocations, issues and maintenance of your equipment.
             </p>
         </field>
@@ -558,7 +558,7 @@
 
     <!-- equiment : actions -->
     <record id="hr_equipment_action_from_category_form" model="ir.actions.act_window">
-        <field name="name">Equipments</field>
+        <field name="name">Equipment</field>
         <field name="res_model">maintenance.equipment</field>
         <field name="view_mode">kanban,tree,form</field>
         <field name="search_view_id" ref="hr_equipment_view_search"/>
@@ -571,7 +571,7 @@
             <p class="o_view_nocontent_smiling_face">
                 Add a new equipment
             </p><p>
-                Track equipments and link it to an employee or department.
+                Track equipment and link it to an employee or department.
                 You will be able to manage allocations, issues and maintenance of your equipment.
             </p>
         </field>
@@ -670,7 +670,7 @@
                             <div class="row mt4">
                                 <div class="col-6">
                                     <span class="badge rounded-pill">
-                                        <strong>Equipments:</strong> <field name="equipment_count"/>
+                                        <strong>Equipment:</strong> <field name="equipment_count"/>
                                     </span>
                                 </div>
                                 <div class="col-6 text-end">
@@ -1006,7 +1006,7 @@
 
     <menuitem
         id="menu_equipment_form"
-        name="Equipments"
+        name="Equipment"
         parent="menu_maintenance_title"
         action="hr_equipment_action"
         groups="group_equipment_manager,base.group_user"
