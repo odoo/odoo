@@ -167,6 +167,22 @@ test("Chat is pinned on other tabs when joined", async () => {
     await contains(`${env2.selector} .o-mail-DiscussSidebar-item`, { text: "Jerry Golay" });
 });
 
+test("Auto-open OdooBot chat when opening discuss for the first time", async () => {
+    // Odoobot chat has onboarding for using Discuss app.
+    // We assume pinned odoobot chat without any message seen means user just started using Discuss app.
+    const pyEnv = await startServer();
+    pyEnv["discuss.channel"].create({
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: serverState.odoobotId }),
+        ],
+        channel_type: "chat",
+    });
+    await start();
+    await openDiscuss();
+    await contains(".o-mail-DiscussContent-threadName", { value: "OdooBot" });
+});
+
 test("no conversation selected when opening non-existing channel in discuss", async () => {
     await startServer();
     await start();
