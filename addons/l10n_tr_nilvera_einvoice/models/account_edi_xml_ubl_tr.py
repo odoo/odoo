@@ -169,9 +169,8 @@ class AccountEdiXmlUblTr(models.AbstractModel):
         state = partner['state' if model == 'res.bank' else 'state_id']
 
         return {
-            'cbc:StreetName': {'_text': partner.street},
+            'cbc:StreetName': {'_text': ' '.join(s for s in [partner.street, partner.street2] if s)},
             'cbc:CitySubdivisionName': {'_text': partner.city},
-            'cbc:AdditionalStreetName': {'_text': partner.street2},
             'cbc:CityName': {'_text': state.name},
             'cbc:PostalZone': {'_text': partner.zip},
             'cac:Country': {
