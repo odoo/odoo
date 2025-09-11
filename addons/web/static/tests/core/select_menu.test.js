@@ -1,5 +1,5 @@
 import { expect, test } from "@odoo/hoot";
-import { click, edit, press, queryAllTexts, queryOne } from "@odoo/hoot-dom";
+import { click, edit, press, queryAllTexts, queryOne, queryAll } from "@odoo/hoot-dom";
 import { animationFrame, runAllTimers } from "@odoo/hoot-mock";
 import { Component, useState, xml } from "@odoo/owl";
 import {
@@ -1289,4 +1289,56 @@ test("In the BottomSheet, a 'Clear' button is present", async () => {
     expect(".o_select_menu_menu .o_clear_button").toHaveCount(1);
     await contains(".o_select_menu_menu .o_clear_button").click();
     expect.verifySteps(["Cleared"]);
+});
+
+test("Ensure items are properly sorted", async () => {
+    class MyParent extends Component {
+        static props = ["*"];
+        static components = { SelectMenu };
+        static template = xml`
+            <SelectMenu
+                groups="state.groups"
+                choices="state.choices"
+            />
+        `;
+
+        setup() {
+            this.state = useState({
+                choices: [{ label: "item-group-none", value: 0 }],
+                groups: [
+                    {
+                        label: "Group Z",
+                        section: "Group Z",
+                        choices: [{ label: "item-group-z", value: 1 }],
+                    },
+                    {
+                        label: "Group A",
+                        section: "Group A",
+                        choices: [{ label: "item-group-a", value: 2 }],
+                    },
+                    {
+                        section: "Z",
+                        choices: [{ label: "item-z", value: 3 }],
+                    },
+                    {
+                        section: "World",
+                        choices: [{ label: "item-world", value: 5 }],
+                    },
+                ],
+            });
+        }
+    }
+
+    await mountSingleApp(MyParent);
+    await click(".o_select_menu_toggler");
+    await animationFrame();
+
+    const elements = [...queryAll(".o_select_menu_group, .o_select_menu_item")];
+    expect(elements[0]).toHaveText("item-group-none");
+    expect(elements[1]).toHaveText("Group A");
+    expect(elements[2]).toHaveText("item-group-a");
+    expect(elements[3]).toHaveText("Group Z");
+    expect(elements[4]).toHaveText("item-group-z");
+    expect(elements[5]).toHaveText("item-world");
+    expect(elements[6]).toHaveText("item-z");
 });
