@@ -79,7 +79,7 @@
 
     <t t-name="web.SelectMenu.ChoiceItem">
         <div
-            t-if="choice.isGroup"
+            t-if="choice.isGroup and choice.label"
             class="o_select_menu_group position-sticky start-0 px-1 fw-bolder user-select-none"
             t-att-class="{'o_select_menu_searchable_group': displayInputInDropdown, 'ms-2': !!choice.section }"
         >
