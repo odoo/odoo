@@ -411,7 +411,6 @@ class ResUsers(models.Model):
                     [
                         "active",
                         "avatar_128",
-                        "im_status",
                         Store.One(
                             "main_user_id",
                             [
@@ -422,6 +421,7 @@ class ResUsers(models.Model):
                             ],
                         ),
                         "name",
+                        *self.env["res.partner"]._get_store_im_status_fields(),
                     ],
                 ),
                 settings=settings._res_users_settings_format(),

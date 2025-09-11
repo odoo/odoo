@@ -2204,7 +2204,12 @@ class ProjectTask(models.Model):
         partners = self.env["res.partner"].sudo()._search_mention_suggestions(domain, limit)
         return (
             Store()
-            .add(partners, ["email", "im_status", "name", *partners._get_store_mention_fields()])
+            .add(partners, [
+                "email",
+                "name",
+                *partners._get_store_im_status_fields(),
+                *partners._get_store_mention_fields()
+            ])
             .get_result()
         )
 

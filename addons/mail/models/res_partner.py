@@ -253,14 +253,20 @@ class ResPartner(models.Model):
         self.ensure_one()
         return limited_field_access_token(self, "id", scope="mail.message_mention")
 
+    def _get_store_im_status_fields(self):
+        return [
+            "im_status",
+            Store.Attr("im_status_access_token", lambda p: p._get_im_status_access_token()),
+        ]
+
     def _get_store_mention_fields(self):
         return [Store.Attr("mention_token", lambda p: p._get_mention_token())]
 
     def _get_store_avatar_card_fields(self, target):
         fields = [
-            "im_status",
             "name",
             "partner_share",
+            *self._get_store_im_status_fields(),
         ]
         if target.is_internal(self.env):
             fields.extend(["email", "phone"])
@@ -272,18 +278,13 @@ class ResPartner(models.Model):
                 Store.Attr("avatar_128_access_token", lambda p: p._get_avatar_128_access_token()),
                 "write_date",
             ]
-        if field_name == "im_status":
-            return [
-                "im_status",
-                Store.Attr("im_status_access_token", lambda p: p._get_im_status_access_token()),
-            ]
         return [field_name]
 
     def _to_store_defaults(self, target: Store.Target):
         res = [
             "active",
             "avatar_128",
-            "im_status",
+            *self._get_store_im_status_fields(),
             "is_company",
             Store.One("main_user_id", ["share"], sudo=True),  # sudo: to access portal user of another company in chatter
             "name",
