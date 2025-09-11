@@ -21,11 +21,9 @@ export class ProductCatalogPurchaseSuggestKanbanRecord extends ProductCatalogKan
         return ProductCatalogPurchaseSuggestOrderLine;
     }
 
-    // Adds 1 OR suggested_qty if it is > pricelist_min_qty ELSE pricelist_min_qty
+    /** Add suggested_qty or pricelist_min_qty (the greater one) if positive, otherwise add 1. */
     addProduct() {
         const { min_qty = 1, suggested_qty = 0 } = this.productCatalogData;
-        Math.max(min_qty, suggested_qty) > 0
-            ? super.addProduct(Math.max(min_qty, suggested_qty))
-            : super.addProduct(1); // Don't add 0 if a vendor pricelist min_qty = 0;
+        super.addProduct(Math.max(min_qty, suggested_qty, 1));
     }
 }
