@@ -266,11 +266,10 @@
                                 widget="stock_move_one2many"
                                 add-label="Add a Product"
                                 readonly="state == 'done' and is_locked"
-                                context="{'default_company_id': company_id, 'default_date': scheduled_date, 'default_date_deadline': date_deadline, 'picking_type_code': picking_type_code, 'default_picking_id': id, 'form_view_ref': 'stock.view_stock_move_operations', 'address_in_id': partner_id, 'default_picking_type_id': picking_type_id, 'default_location_id': location_id, 'default_location_dest_id': location_dest_id, 'default_partner_id': partner_id}">
+                                context="{'default_company_id': company_id, 'default_date': scheduled_date, 'default_date_deadline': date_deadline, 'picking_type_code': picking_type_code, 'default_picking_id': id, 'form_view_ref': 'stock.view_stock_move_operations', 'address_in_id': partner_id, 'default_picking_type_id': picking_type_id, 'default_location_id': location_id, 'default_location_dest_id': location_dest_id, 'default_partner_id': partner_id, 'picking_state': state}">
                                 <list decoration-muted="scrap_id or state == 'cancel' or (state == 'done' and is_locked == True)" string="Stock Moves" editable="bottom">
                                     <control>
                                         <create string="Add a Product"/>
-                                        <button name="action_add_packages" context="{'picking_id': parent.id, 'show_src_package': 1}" string="Move a Pack" type="object" invisible="parent.picking_type_code == 'incoming'" class="px-4 btn-link" groups="stock.group_tracking_lot"/>
                                     </control>
                                     <field name="company_id" column_invisible="True"/>
                                     <field name="state" readonly="0" column_invisible="True"/>
