@@ -75,7 +75,7 @@ class PurchaseOrderLine(models.Model):
 
     def _prepare_stock_moves(self, picking):
         res = super()._prepare_stock_moves(picking)
-        if self.order_id.reference_ids.move_ids.production_group_id:
+        if len(self.order_id.reference_ids.move_ids.production_group_id) == 1:
             for re in res:
                 re['production_group_id'] = self.order_id.reference_ids.move_ids.production_group_id.id
         return res
