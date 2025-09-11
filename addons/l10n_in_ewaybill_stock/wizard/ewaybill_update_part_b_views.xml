@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_ewaybill_update_part_b" model="ir.actions.act_window">
+        <field name="name">Update Part B</field>
+        <field name="res_model">ewaybill.update.part.b</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <record id="view_ewaybill_update_part_b" model="ir.ui.view">
+        <field name="name">Update Part B</field>
+        <field name="model">ewaybill.update.part.b</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <group>
+                        <field name="ewaybill_id" invisible="1"/>
+                        <field name="mode"/>
+                        <field name="vehicle_type" attrs="{'invisible': [('mode','!=','1')], 'required': [('mode','=','1')]}"/>
+                        <field name="vehicle_no" attrs="{'invisible': [('mode','!=','1')], 'required': [('mode','=','1')]}"/>
+                        <field name="transportation_doc_no" attrs="{'required': [('mode','in',('2','3','4'))]}"/>
+                        <field name="transportation_doc_date" attrs="{'required': [('mode','in',('2','3','4'))]}"/>
+                    </group>
+                    <group>
+                        <field name="update_reason_code"/>
+                        <field name="update_remarks"/>
+                        <field name="update_place"/>
+                        <field name="update_state_id" options="{'no_create': True, 'no_create_edit': True}"/>
+                    </group>
+                </group>
+                <footer>
+                    <button name="update_part_b" string="Update" type="object" class="btn-primary" data-hotkey="q"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel" data-hotkey="z" />
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>
