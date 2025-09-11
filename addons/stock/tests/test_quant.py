@@ -1637,7 +1637,7 @@ class TestStockQuantRemovalStrategy(TestStockCommon):
         delivery.action_confirm()
         # Make an internal transfer to move Pack 001 in a sublocation
         self.picking_type_int.show_entire_packs = True
-        internal_transfer.action_add_entire_packs(packages[0])
+        internal_transfer.action_add_entire_packs(packages[0].id)
         internal_transfer.action_confirm()
         internal_transfer.button_validate()
         quants = self.env['stock.quant'].search([('product_id', 'in', products.ids)])

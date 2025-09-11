@@ -107,7 +107,7 @@ class TestPacking(TestPackingCommon):
             'location_dest_id': self.stock_location.id,
             'state': 'draft',
         })
-        picking.action_add_entire_packs(pack)
+        picking.action_add_entire_packs(pack.id)
         picking.action_confirm()
         self.assertEqual(len(picking.move_ids), 1,
                          'One move should be created when the package has been added')
@@ -154,12 +154,12 @@ class TestPacking(TestPackingCommon):
             'location_dest_id': self.stock_location.id,
             'state': 'draft',
         })
-        picking.action_add_entire_packs(pack)
+        picking.action_add_entire_packs(pack.id)
         self.assertEqual(len(picking.move_line_ids), 1)
         self.assertEqual(picking.move_line_ids.location_id, shelf1_location)
         self.assertEqual(pack.location_id, shelf1_location)
 
-        picking.action_add_entire_packs(pack)
+        picking.action_add_entire_packs(pack.id)
         self.assertEqual(len(picking.move_line_ids), 1)
         self.assertEqual(picking.move_line_ids.location_id, shelf1_location)
         self.assertEqual(pack.location_id, shelf1_location)
@@ -441,7 +441,7 @@ class TestPacking(TestPackingCommon):
             'state': 'draft',
             'picking_type_id':  self.warehouse.store_type_id.id,
             })
-        picking.action_add_entire_packs(receipt_package)
+        picking.action_add_entire_packs(receipt_package.id)
         internal_transfer = picking
 
         # Checks the package fields have been correctly set.
@@ -563,7 +563,7 @@ class TestPacking(TestPackingCommon):
             'state': 'draft',
             'picking_type_id':  self.warehouse.store_type_id.id,
             })
-        picking.action_add_entire_packs(package)
+        picking.action_add_entire_packs(package.id)
         internal_transfer = picking
 
         # Checks the package fields have been correctly set.
@@ -738,7 +738,7 @@ class TestPacking(TestPackingCommon):
                 move.product_uom_qty = 75
         picking.action_confirm()
         picking.action_assign()
-        picking.action_add_entire_packs(package)
+        picking.action_add_entire_packs(package.id)
         self.assertEqual(len(picking.move_ids), 1, 'Should have only 1 stock move')
         self.assertEqual(len(picking.move_line_ids), 1, 'Should have only 1 stock move line')
         action = picking.button_validate()
@@ -868,7 +868,7 @@ class TestPacking(TestPackingCommon):
             'location_dest_id': shelf2_location.id,
             'state': 'draft',
         })
-        picking.action_add_entire_packs(pack)
+        picking.action_add_entire_packs(pack.id)
         self.assertEqual(picking.move_line_ids.location_id, shelf1_location)
 
         picking.button_validate()
@@ -1640,7 +1640,7 @@ class TestPacking(TestPackingCommon):
         delivery.action_confirm()
         self.assertEqual(delivery.move_line_ids.package_id, pack1 | pack2, 'The two first packages should be picked')
         delivery.move_line_ids[-1].unlink()
-        delivery.action_add_entire_packs(pack3)
+        delivery.action_add_entire_packs(pack3.id)
 
         self.assertRecordValues(delivery.move_line_ids.sorted('id'), [
             {'package_id': pack1.id, 'state': 'assigned'},
@@ -1889,7 +1889,7 @@ class TestPackagePropagation(TestPackingCommon):
             'location_dest_id': self.customer_location.id,
         })
 
-        delivery.action_add_entire_packs(pack)
+        delivery.action_add_entire_packs(pack.id)
         self.assertEqual(delivery.move_line_ids.result_package_id, pack)
         self.assertTrue(delivery.move_line_ids.is_entire_pack)
         self.assertFalse(pack.package_dest_id)
@@ -1897,7 +1897,7 @@ class TestPackagePropagation(TestPackingCommon):
         pack.with_context(picking_id=delivery.id).action_remove_package()
         self.assertFalse(pack.move_line_ids)
 
-        delivery.action_add_entire_packs(container)
+        delivery.action_add_entire_packs(container.id)
         self.assertEqual(delivery.move_line_ids.result_package_id, pack)
         self.assertTrue(delivery.move_line_ids.is_entire_pack)
         self.assertEqual(pack.package_dest_id, container)
@@ -1919,7 +1919,7 @@ class TestPackagePropagation(TestPackingCommon):
             'location_dest_id': self.customer_location.id,
         })
 
-        delivery.action_add_entire_packs(pack1 | pack2)
+        delivery.action_add_entire_packs((pack1 | pack2).ids)
         self.assertEqual(delivery.move_line_ids.mapped('is_entire_pack'), [True, True, True])
 
         # Remove some quantity from one move line. The package should not be considered as 'entire' for both move lines.

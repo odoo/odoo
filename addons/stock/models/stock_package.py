@@ -317,7 +317,7 @@ class StockPackage(models.Model):
     def action_add_to_picking(self):
         picking = self.env['stock.picking'].browse(self.env.context.get('picking_id'))
         if picking and self:
-            picking.action_add_entire_packs(self)
+            picking.action_add_entire_packs(self.ids)
 
     def _pre_put_in_pack_hook(self, package_id=False, package_type_id=False, package_name=False, from_package_wizard=False):
         if self.move_line_ids._should_display_put_in_pack_wizard(package_id, package_type_id, package_name, from_package_wizard):
