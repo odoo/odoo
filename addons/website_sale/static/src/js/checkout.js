@@ -3,6 +3,8 @@ import {
 } from '@delivery/js/location_selector/location_selector_dialog/location_selector_dialog';
 import { _t } from '@web/core/l10n/translation';
 import { rpc } from '@web/core/network/rpc';
+import { markup } from "@odoo/owl";
+import { setElementContent } from "@web/core/utils/html";
 import publicWidget from '@web/legacy/js/public/public_widget';
 
 publicWidget.registry.WebsiteSaleCheckout = publicWidget.Widget.extend({
@@ -19,6 +21,10 @@ publicWidget.registry.WebsiteSaleCheckout = publicWidget.Widget.extend({
 
     // #=== WIDGET LIFECYCLE ===#
 
+    init() {
+        this._super(...arguments);
+        this.notification = this.bindService("notification");
+    },
     async start() {
         this.mainButton = document.querySelector('a[name="website_sale_main_button"]');
         this.use_delivery_as_billing_toggle = document.querySelector('#use_delivery_as_billing');
@@ -61,9 +67,15 @@ publicWidget.registry.WebsiteSaleCheckout = publicWidget.Widget.extend({
                 await this._selectMatchingBillingAddress(selectedPartnerId);
             }
             // Update the available delivery methods.
-            document.getElementById('o_delivery_form').innerHTML = await rpc(
-                '/shop/delivery_methods'
-            );
+            const res = await rpc('/shop/delivery_methods');
+            if (!res || Object.keys(res).length === 0) {
+                this.notification.add(
+                    _t("You can't change the delivery address because your cart is empty. Please refresh the page."),
+                    { title: _t("User Error"), type: 'warning' }
+                );
+                return;
+            }
+            setElementContent(document.getElementById('o_delivery_form'), markup(res));
             await this._prepareDeliveryMethods();
         }
         this._enableMainButton();  // Try to enable the main button.

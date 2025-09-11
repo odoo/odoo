@@ -19,6 +19,8 @@ class Delivery(WebsiteSale):
         :rtype: str
         """
         order_sudo = request.website.sale_get_order()
+        if not order_sudo:
+            return {}
         values = {
             'delivery_methods': order_sudo._get_delivery_methods(),
             'selected_dm_id': order_sudo.carrier_id.id,
