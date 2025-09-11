@@ -751,6 +751,7 @@ export function makeActionManager(env, router = _router) {
                 actionId: action.id,
                 actionName: action.name,
                 actionType: "ir.actions.act_window",
+                actionXmlId: action.xml_id,
                 embeddedActions,
                 parentActionId,
                 currentEmbeddedActionId,
