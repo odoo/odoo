@@ -127,7 +127,9 @@ class ProductProduct(models.Model):
         for product in self:
             at_date = product.env.context.get('to_date')
             qty_available = product.sudo(False).qty_available
-            if product.cost_method == 'standard':
+            if product.lot_valuated:
+                product.total_value = product._get_value_from_lots()
+            elif product.cost_method == 'standard':
                 product.total_value = product.standard_price * qty_available
             elif product.cost_method == 'average':
                 product.total_value = product._run_avco(at_date=at_date)[1]
@@ -164,6 +166,13 @@ class ProductProduct(models.Model):
                     old_price=old_price.get(product), new_price=product.standard_price, user=self.env.user.name)
             })
         return
+
+    def _get_value_from_lots(self):
+        lots = self.env['stock.lot'].search([
+            ('product_id', 'in', self.ids),
+            ('product_qty', '!=', 0),
+        ])
+        return sum(lots.mapped('total_value'))
 
     def _get_remaining_moves(self):
         moves_qty_by_product = {}
