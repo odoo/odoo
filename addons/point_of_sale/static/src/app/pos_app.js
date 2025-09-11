@@ -25,9 +25,11 @@ export class Chrome extends Component {
             if (stopEventPropagation.includes(ev.type)) {
                 ev.stopPropagation();
             }
-            const page = this.pos.firstPage;
-            this.pos.navigate(page.page, page.params);
+            this.pos.navigateToFirstPage();
         });
+        if (this.pos.router.state.current === "SaverScreen") {
+            this.pos.navigateToFirstPage();
+        }
 
         const reactivePos = reactive(this.pos);
         window.posmodel = reactivePos;

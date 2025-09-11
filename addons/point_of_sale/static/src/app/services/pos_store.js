@@ -183,6 +183,11 @@ export class PosStore extends WithLazyGetterTrap {
         this.router.navigate(routeName, routeParams);
     }
 
+    navigateToFirstPage() {
+        const page = this.firstPage;
+        this.navigate(page.page, page.params);
+    }
+
     navigateToOrderScreen(order) {
         const orderPage = order.getScreenData();
         const page = orderPage?.name || "ProductScreen";
