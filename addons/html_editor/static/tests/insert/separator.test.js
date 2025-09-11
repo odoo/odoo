@@ -19,6 +19,15 @@ describe("insert separator", () => {
         });
     });
 
+    test("should insert a separator inside editable with contenteditable set to false before the block", async () => {
+        await testEditor({
+            contentBefore: "<p>[]abc<br></p>",
+            stepFunction: insertSeparator,
+            contentAfterEdit: `<hr contenteditable="false"><p>[]abc<br></p>`,
+            contentAfter: "<hr><p>[]abc<br></p>",
+        });
+    });
+
     test("should insert a separator before current element if empty", async () => {
         await testEditor({
             contentBefore: "<p>content</p><p>[]<br></p>",
