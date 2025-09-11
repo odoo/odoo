@@ -25,6 +25,8 @@ export class FaResizeAction extends ClassAction {
     apply(context) {
         const { editingElement } = context;
         editingElement.classList.remove("fa-1x", "fa-lg");
+        editingElement.classList.remove("o_sm_custom_size");
+        editingElement.style.removeProperty("--s-social-media-icon-size");
         super.apply(context);
     }
 }

@@ -6,7 +6,7 @@ import {
 } from "@website/../tests/builder/website_helpers";
 import { contains, onRpc } from "@web/../tests/web_test_helpers";
 import { getDragHelper, waitForEndOfOperation } from "@html_builder/../tests/helpers";
-import { click, queryOne } from "@odoo/hoot-dom";
+import { click, queryOne, setInputRange, waitFor } from "@odoo/hoot-dom";
 
 defineWebsiteModels();
 
@@ -196,6 +196,48 @@ test("share snippet should not be editable (except title) nor user-selectable", 
     expect(queryOne(":iframe .s_share").isContentEditable).toBe(false);
     expect(queryOne(":iframe .s_share_title").isContentEditable).toBe(true);
     expect(":iframe .s_share").toHaveStyle({ "user-select": "none" });
+});
+
+test("social media size slider cooperates with font awesome buttons", async () => {
+    await setupWebsiteBuilder(`
+        <div class="s_social_media text-start o_not_editable" data-snippet="s_social_media" data-name="Social Media" contenteditable="false">
+            <h5 class="s_social_media_title d-none" contenteditable="true">Follow us</h5>
+            <div class="alert alert-info css_non_editable_mode_hidden text-center o_empty_social_media_alert" contenteditable="false">
+                <span>Click here to setup your social networks</span>
+            </div>
+            <a href="/website/social/facebook" class="s_social_media_facebook" target="_blank" aria-label="Facebook">
+                <i class="fa fa-facebook rounded-circle shadow-sm o_editable_media" contenteditable="false"></i>
+            </a>
+        </div>
+    `);
+
+    const iconSelector = ":iframe .s_social_media > a:first-of-type > i";
+    await waitFor(iconSelector);
+    await click(":iframe .s_social_media");
+    await waitFor("[data-style-action*='s-social-media-icon-size'] input");
+    await click(iconSelector);
+
+    const doubleSizeBtn = "[data-action-id='faResize'][data-action-param='fa-2x']";
+    const tripleSizeBtn = "[data-action-id='faResize'][data-action-param='fa-3x']";
+    await contains(doubleSizeBtn).click();
+
+    expect(iconSelector).toHaveClass("fa-2x");
+    expect(iconSelector).not.toHaveClass("o_sm_custom_size");
+
+    await setInputRange("[data-style-action*='s-social-media-icon-size'] input", 72);
+    await waitForEndOfOperation();
+
+    expect(iconSelector).not.toHaveClass("fa-2x");
+    expect(iconSelector).toHaveClass("o_sm_custom_size");
+    expect(queryOne(iconSelector).style.getPropertyValue("--s-social-media-icon-size")).toBe(
+        "4.5rem"
+    );
+
+    await contains(tripleSizeBtn).click();
+
+    expect(iconSelector).toHaveClass("fa-3x");
+    expect(iconSelector).not.toHaveClass("o_sm_custom_size");
+    expect(queryOne(iconSelector).style.getPropertyValue("--s-social-media-icon-size")).toBe("");
 });
 
 test("Edit share icon", async () => {

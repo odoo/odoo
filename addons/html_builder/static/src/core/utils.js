@@ -88,6 +88,7 @@ export function useBuilderComponent() {
     const newEnv = {};
     const oldEnv = useEnv();
     let editingElements;
+    const unregisterSyncedComponent = oldEnv.registerSyncedBuilderComponent?.(comp);
     let applyTo = comp.props.applyTo;
     const updateEditingElements = () => {
         editingElements = applyTo
@@ -105,6 +106,7 @@ export function useBuilderComponent() {
     });
     onWillDestroy(() => {
         oldEnv.editorBus.removeEventListener("UPDATE_EDITING_ELEMENT", updateEditingElements);
+        unregisterSyncedComponent?.();
     });
     newEnv.getEditingElements = () => editingElements;
     newEnv.getEditingElement = () => editingElements[0];
@@ -699,6 +701,11 @@ export function useInputBuilderComponent({
         // If the parsed value is not equivalent to the user input, we want to
         // normalize the displayed value. It is useful in cases of invalid
         // input and allows to fall back to the output of parseDisplayValue.
+        comp.env.onBuilderComponentStateChange?.({
+            component: comp,
+            reason: "commit",
+            value: rawValue,
+        });
         return rawValue !== undefined ? formatRawValue(rawValue) : "";
     }
 
@@ -706,13 +713,19 @@ export function useInputBuilderComponent({
     function preview(userInputValue) {
         if (shouldPreview) {
             userInputValue = getValueWithDefault(userInputValue, defaultValue, formatRawValue);
+            const parsedValue = parseDisplayValue(userInputValue);
             callOperation(applyOperation.preview, {
                 preview: true,
-                userInputValue: parseDisplayValue(userInputValue),
+                userInputValue: parsedValue,
                 operationParams: {
                     cancellable: true,
                     cancelPrevious: () => applyOperation.revert(),
                 },
+            });
+            comp.env.onBuilderComponentStateChange?.({
+                component: comp,
+                reason: "preview",
+                value: parsedValue,
             });
         }
     }
