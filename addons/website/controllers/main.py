@@ -110,6 +110,8 @@ class Website(Home):
 
         # Fallback on first accessible menu
         def is_reachable(menu):
+            if not isinstance(menu.url, str):
+                return False
             return menu.is_visible and menu.url not in ('/', '', '#') and not menu.url.startswith(('/?', '/#', ' '))
 
         reachable_menus = top_menu.child_id.filtered(is_reachable)
