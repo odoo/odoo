@@ -808,10 +808,11 @@ class SaleOrder(models.Model):
         :rtype: bool
         :raise: UserError if trying to confirm locked or cancelled SO's
         """
-        if self._get_forbidden_state_confirm() & set(self.mapped('state')):
+        sale_state = self._get_forbidden_state_confirm()
+        if sale_state & set(self.mapped('state')):
             raise UserError(_(
                 "It is not allowed to confirm an order in the following states: %s",
-                ", ".join(self._get_forbidden_state_confirm()),
+                ", ".join(sale_state),
             ))
 
         self.order_line._validate_analytic_distribution()
