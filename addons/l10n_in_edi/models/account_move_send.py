@@ -44,7 +44,7 @@ class AccountMoveSend(models.AbstractModel):
 
     def _get_invoice_extra_attachments(self, invoice):
         # EXTENDS 'account'
-        return super()._get_invoice_extra_attachments(invoice) + invoice.l10n_in_edi_attachment_id
+        return super()._get_invoice_extra_attachments(invoice) + invoice.l10n_in_edi_response_attachment_id
 
     def _call_web_service_before_invoice_pdf_render(self, invoices_data):
         # EXTENDS 'account'

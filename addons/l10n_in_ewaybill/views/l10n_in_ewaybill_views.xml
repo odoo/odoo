@@ -33,8 +33,7 @@
                             string="Download Content JSON"
                             type="object"
                             class="oe_highlight"
-                            invisible="not error_message"
-                            groups="base.group_no_one"/>
+                            invisible="state not in ['generated', 'cancel']"/>
                     <field name="state" widget="statusbar" statusbar_visible="pending,generated"/>
                 </header>
                 <div class="alert alert-danger"

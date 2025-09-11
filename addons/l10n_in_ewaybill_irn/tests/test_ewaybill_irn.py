@@ -47,11 +47,11 @@ class TestEwaybillJson(L10nInTestInvoicingCommon):
         })
         cls.invoice_a.write({
             "l10n_in_edi_status": "sent",
-            "l10n_in_edi_attachment_id": attachment_a.id,
+            "l10n_in_edi_response_attachment_id": attachment_a.id,
         })
         cls.invoice_b.write({
             "l10n_in_edi_status": "sent",
-            "l10n_in_edi_attachment_id": attachment_b.id,
+            "l10n_in_edi_response_attachment_id": attachment_b.id,
         })
         cls.invoice_b.l10n_in_gst_treatment = 'overseas'
 

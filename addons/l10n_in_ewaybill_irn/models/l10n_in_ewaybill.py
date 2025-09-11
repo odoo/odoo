@@ -79,8 +79,16 @@ class L10nInEwaybill(models.Model):
         self.ensure_one()
         self._log_retry_message_on_generate()
         self._lock_ewaybill()
+        generate_json = self._ewaybill_generate_irn_json()
+        self.request_attachment_id = self.env['ir.attachment']._l10n_in_generate_json_attachment({
+            'name': f"{self.document_number}_sent_request.json",
+            'raw': generate_json,
+            'res_model': self._name,
+            'res_id': self.id,
+            'company_id': self.company_id.id,
+        })
         try:
-            response = self._ewaybill_generate_by_irn(self._ewaybill_generate_irn_json())
+            response = self._ewaybill_generate_by_irn(generate_json)
         except EWayBillError as error:
             self._handle_error(error)
             return False

@@ -30,16 +30,19 @@
                     </div>
                 </div>
             </xpath>
-            <xpath expr="//button[@name='button_draft']" position="after">
-                <button name="action_export_l10n_in_edi_content_json"
-                        type="object"
-                        class="btn-secondary"
-                        invisible="not l10n_in_edi_error"
-                        groups="base.group_no_one"
-                        string="Download EDI JSON"/>
-            </xpath>
             <xpath expr="//div[@name='journal_div']" position="after">
-                <field name="l10n_in_edi_status" invisible="not l10n_in_edi_status or state == 'draft'"/>
+                <label for="l10n_in_edi_status" />
+                <div class="d-flex">
+                    <field name="l10n_in_edi_status" style="width:auto" invisible="not l10n_in_edi_status or state == 'draft'"/>
+                    <div class="d-flex flex-column justify-content-center" style="margin-left:10px;  margin-top: -4px;">
+                        <button name="action_export_l10n_in_edi_content_json"
+                            title="Download EDI JSON"
+                            type="object"
+                            icon="fa-download"
+                            class="btn"
+                            invisible="l10n_in_edi_status not in ['sent', 'cancelled']"/>
+                    </div>
+                </div>
             </xpath>
         </field>
     </record>
