@@ -23,42 +23,40 @@
         <td name="td_taxes" position="after">
             <t t-if="display_taxes">
                 <td name="td_vat_amount" class="text-end">
-                    <span t-if="not line.collapse_prices" name="td_vat_amount_span" t-field="line.l10n_gcc_invoice_tax_amount"/>
+                    <span t-if="not hide_prices" name="td_vat_amount_span" t-field="line.l10n_gcc_invoice_tax_amount"/>
                 </td>
             </t>
         </td>
         <td name="td_subtotal" position="after">
             <t t-if="o.currency_id != o.company_currency_id">
                 <td name="td_subtotal_curr" class="text-end">
-                    <span name="td_subtotal_curr_excl_span" class="text-nowrap" t-if="o.company_price_include == 'tax_excluded' and not line.collapse_prices"
-                          t-out="line.currency_id._convert(line.price_subtotal, o.company_currency_id, o.company_id, o.invoice_date or datetime.date.today())"
+                    <span name="td_subtotal_curr_excl_span" class="text-nowrap" t-if="o.company_price_include == 'tax_excluded' and not hide_prices"
+                          t-out="line.price_subtotal * 1 / o.invoice_currency_rate"
                           t-options="{'widget': 'monetary', 'display_currency': o.company_currency_id}"/>
-                    <span name="td_subtotal_curr_incl_span" class="text-nowrap" t-if="o.company_price_include == 'tax_included' and not line.collapse_prices"
-                          t-out="line.currency_id._convert(line.price_total, o.company_currency_id, o.company_id, o.invoice_date or datetime.date.today())"
+                    <span name="td_subtotal_curr_incl_span" class="text-nowrap" t-if="o.company_price_include == 'tax_included' and not hide_prices"
+                          t-out="line.price_total * 1 / o.invoice_currency_rate"
                           t-options="{'widget': 'monetary', 'display_currency': o.company_currency_id}"/>
                 </td>
             </t>
         </td>
         <td name="td_subtotal_grouped" position="before">
             <td name="td_vat_amount_grouped" t-attf-class="text-end">
-                <span t-if="not line.collapse_prices" t-out="grouped_line['l10n_gcc_invoice_tax_amount']"  t-options='{"widget": "monetary", "display_currency": o.currency_id}' class="text-nowrap">4.05</span>
+                <span t-if="(grouped_line.get('display_type') in ('line_section', 'line_subsection') or hide_details)" t-out="grouped_line['l10n_gcc_invoice_tax_amount']"  t-options='{"widget": "monetary", "display_currency": o.currency_id}' class="text-nowrap">4.05</span>
             </td>
         </td>
         <td name="td_subtotal_grouped" position="after">
             <td name="th_subtotal_curr_grouped" class="text-end" t-if="o.currency_id != o.company_currency_id">
-                <span t-if="not line.collapse_prices and o.company_price_include == 'tax_excluded'" class="text-nowrap" t-out="line.currency_id._convert(grouped_line['price_subtotal'], o.company_currency_id, o.company_id, o.invoice_date or datetime.date.today())" t-options='{"widget": "monetary", "display_currency": o.company_currency_id}'>27.00</span>
-                <span t-if="not line.collapse_prices and o.company_price_include == 'tax_included'" class="text-nowrap" t-out="line.currency_id._convert(grouped_line['price_total'], o.company_currency_id, o.company_id, o.invoice_date or datetime.date.today())" t-options='{"widget": "monetary", "display_currency": o.company_currency_id}'>27.00</span>
+                <span t-if="(grouped_line.get('display_type') in ('line_section', 'line_subsection') or hide_details) and o.company_price_include == 'tax_excluded'" class="text-nowrap" t-out="grouped_line['price_subtotal'] * 1 / o.invoice_currency_rate" t-options='{"widget": "monetary", "display_currency": o.company_currency_id}'>27.00</span>
+                <span t-if="(grouped_line.get('display_type') in ('line_section', 'line_subsection') or hide_details) and o.company_price_include == 'tax_included'" class="text-nowrap" t-out="grouped_line['price_total'] * 1 / o.invoice_currency_rate" t-options='{"widget": "monetary", "display_currency": o.company_currency_id}'>27.00</span>
             </td>
         </td>
-        <xpath expr="//t[@t-elif=&quot;line.display_type in ('line_section', 'line_subsection')&quot;]//span[@t-out='section_subtotal']/.." position="before">
-            <td colspan="1" class="text-end o_price_total">
-                <span t-out="line._l10n_gcc_get_section_tax_amount()" class="text-nowrap" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
-            </td>
+        <xpath expr="//span[@t-out='section_subtotal']/.." position="attributes">
+            <attribute name="colspan">2</attribute>
         </xpath>
         <xpath expr="//t[@t-elif=&quot;line.display_type in ('line_section', 'line_subsection')&quot;]//span[@t-out='section_subtotal']/.." position="after">
             <td colspan="1" class="text-end o_price_total" t-if="o.currency_id != o.company_currency_id">
                 <span class="text-nowrap"
-                      t-out="line.currency_id._convert(section_subtotal, o.company_currency_id, o.company_id, o.invoice_date or datetime.date.today())"
+                      t-out="section_subtotal * 1 / o.invoice_currency_rate"
                       t-options='{"widget": "monetary", "display_currency": o.company_currency_id}'/>
             </td>
         </xpath>
