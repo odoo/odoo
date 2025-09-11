@@ -44,9 +44,8 @@
         'web.assets_web_dark': [
             'html_builder/static/src/**/*.dark.scss',
         ],
-        'html_builder.assets_edit_frontend': [
+        'html_builder.assets_inside_builder_iframe': [
             ('include', 'web._assets_helpers'),
-
             'web/static/src/scss/bootstrap_overridden.scss',
             'html_builder/static/src/**/*.edit.*',
             'html_editor/static/src/main/chatgpt/chatgpt_plugin.scss',

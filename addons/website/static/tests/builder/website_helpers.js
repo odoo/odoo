@@ -157,7 +157,7 @@ export async function setupWebsiteBuilder(
             // (location, rpc, ...). So we don't load the js part of the bundle
 
             if (loadIframeBundles) {
-                await loadBundle("website.assets_edit_frontend", {
+                await loadBundle("website.assets_inside_builder_iframe", {
                     targetDoc: queryOne("iframe[data-src^='/website/force/1']").contentDocument,
                     js: false,
                 });
