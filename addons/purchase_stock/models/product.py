@@ -57,12 +57,10 @@ class ProductProduct(models.Model):
     @api.depends_context("suggest_based_on", "suggest_days", "suggest_percent", "warehouse_id")
     def _compute_suggest_estimated_price(self):
         """ IMPROVE: computes too many time for one suggestion """
-        ctx = self.env.context
         seller_args = {
-            "partner_id": self.env['res.partner'].browse(ctx.get("partner_id")),
-            "params": {'order_id': self.env['purchase.order'].browse(ctx.get("order_id"))}
+            "partner_id": self.env['res.partner'].browse(self.env.context.get("partner_id")),
+            "params": {'order_id': self.env['purchase.order'].browse(self.env.context.get("order_id"))}
         }
-        # for product in products.filtered(lambda p: p.suggested_qty > 0):
         for product in self:
             product.suggest_estimated_price = 0.0
             if product.suggested_qty <= 0:
