@@ -122,15 +122,16 @@ class MailGuest(models.Model):
                 Store.Attr("avatar_128_access_token", lambda g: g._get_avatar_128_access_token()),
                 "write_date",
             ]
-        if field_name == "im_status":
-            return [
-                "im_status",
-                Store.Attr("im_status_access_token", lambda g: g._get_im_status_access_token()),
-            ]
         return [field_name]
 
+    def _get_store_im_status_fields(self):
+        return [
+            "im_status",
+            Store.Attr("im_status_access_token", lambda g: g._get_im_status_access_token()),
+        ]
+
     def _to_store_defaults(self, target):
-        return ["avatar_128", "im_status", "name"]
+        return ["avatar_128", *self._get_store_im_status_fields(), "name"]
 
     def _set_auth_cookie(self):
         """Add a cookie to the response to identify the guest. Every route
