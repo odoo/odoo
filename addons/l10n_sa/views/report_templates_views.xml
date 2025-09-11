@@ -47,6 +47,9 @@
         <xpath expr="//span[hasclass('page')]/.." position="before">
             <t t-call="l10n_sa.l10n_sa_additional_footer"/>
         </xpath>
+        <t t-set="header_shape_height" position="after">
+            <t t-set="header_shape_height" t-if="o and o._name == 'account.move' and o.country_code == 'SA'">215</t>
+        </t>
     </template>
     <template id="l10n_sa_external_layout_wave" inherit_id="web.external_layout_wave">
         <!-- support for custom header -->
