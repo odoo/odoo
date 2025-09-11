@@ -107,6 +107,7 @@ export function getDefaultConfig() {
         actionId: false,
         actionType: false,
         cache: true,
+        actionXmlId: false,
         embeddedActions: [],
         currentEmbeddedActionId: false,
         parentActionId: false,
