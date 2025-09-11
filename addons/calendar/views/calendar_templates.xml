@@ -44,7 +44,8 @@
                                     <th>Attendees</th>
                                     <td>
                                         <ul>
-                                            <li t-foreach="event.attendee_ids" t-as="attendee" t-attf-class="o_#{attendee.state}">
+                                            <li t-foreach="event.attendee_ids" t-as="attendee"
+                                                t-attf-class="o_attendee_status_#{attendee.state}">
                                                 <t t-esc="attendee.common_name"/>
                                             </li>
                                         </ul>
