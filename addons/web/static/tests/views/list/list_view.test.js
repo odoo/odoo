@@ -4670,7 +4670,7 @@ test(`monetary aggregates in grouped list`, async () => {
     expect(".o_multi_currency_popover").toHaveText("2,800.00 € at $ 0.50");
 });
 
-test(`monetary aggregates in grouped list (different currencies in same group)`, async () => {
+test(`monetary aggregates in grouped list (!= currencies in same group)`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
@@ -4689,6 +4689,33 @@ test(`monetary aggregates in grouped list (different currencies in same group)`,
     expect(`.o_group_header:first`).toHaveText("No (1)\n $ 0.00");
     expect(`.o_group_header:last`).toHaveText("Yes (3)\n $ 2,000.00?");
     expect(`.o_list_footer .o_list_number span`).toHaveText("$ 2,000.00?");
+});
+
+test(`monetary aggregates in grouped list (!= currencies in same group, delete)`, async () => {
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `
+            <list>
+                <field name="foo"/>
+                <field name="amount" widget="monetary" sum="Sum"/>
+                <field name="currency_id"/>
+            </list>
+        `,
+        groupBy: ["bar"],
+        actionMenus: {},
+    });
+    expect(`.o_group_header`).toHaveCount(2);
+    expect(`.o_group_header:last`).toHaveText("Yes (3)\n $ 2,000.00?");
+    await contains(`.o_group_header:last`).click();
+    expect(`.o_data_row`).toHaveCount(3);
+    await selectAllRecords();
+    expect(`.o_data_row_selected`).toHaveCount(3);
+    await toggleActionMenu();
+    await toggleMenuItem("Delete");
+    await contains(`.o_dialog footer .btn-primary`).click(); // confirm
+    expect(`.o_data_row`).toHaveCount(0);
+    expect(`.o_group_header:last`).toHaveText("Yes (0)\n 0.00");
 });
 
 test(`handle false values in aggregates`, async () => {
