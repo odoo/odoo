@@ -106,14 +106,14 @@ class TestManual(common.TestAr):
     def test_15_liquido_producto_sales(self):
         """ Manual Numbering: Sales and not POS (Liquido Producto) """
 
-        # Verify that the default sales journals ara created as is AFIP POS
+        # Verify that the default sales journals ara created as is ARCA POS
         self.assertTrue(self.journal.l10n_ar_is_pos)
 
         # If we create an invoice it will not use manual numbering
         invoice = self._create_invoice({'partner': self.partner})
         self.assertFalse(invoice.l10n_latam_manual_document_number)
 
-        # Create a new sale journal that is not AFIP POS
+        # Create a new sale journal that is not ARCA POS
         self.journal = self._create_journal('preprinted', data={'l10n_ar_is_pos': False})
         self.assertFalse(self.journal.l10n_ar_is_pos)
 
@@ -144,7 +144,7 @@ class TestManual(common.TestAr):
     def test_16_liquido_producto_purchase(self):
         """ Manual Numbering: Purchase POS/ NOT POS (Liquido Producto) """
 
-        # By default purchase journals ar not AFIP POS journal
+        # By default purchase journals ar not ARCA POS journal
         purchase_not_pos_journal = self.env["account.journal"].search([
             ('type', '=', 'purchase'), ('company_id', '=', self.env.company.id), ('l10n_latam_use_documents', '=', True)])
         self.assertFalse(purchase_not_pos_journal.l10n_ar_is_pos)
@@ -163,7 +163,7 @@ class TestManual(common.TestAr):
 
             self.assertEqual(bill.journal_id, purchase_not_pos_journal)
 
-        # Create a new journal that is an AFIP POS
+        # Create a new journal that is an ARCA POS
         purchase_pos_journal = self._create_journal('preprinted', data={'type': 'purchase', 'l10n_ar_is_pos': True})
 
         with Form(self.env['account.move'].with_context(default_move_type='in_invoice')) as bill_form:

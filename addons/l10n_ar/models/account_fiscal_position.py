@@ -7,7 +7,7 @@ class AccountFiscalPosition(models.Model):
 
     l10n_ar_afip_responsibility_type_ids = fields.Many2many(
         'l10n_ar.afip.responsibility.type', 'l10n_ar_afip_reponsibility_type_fiscal_pos_rel',
-        string='AFIP Responsibility Types', help='List of AFIP responsibilities where this fiscal position '
+        string='ARCA Responsibility Types', help='List of ARCA responsibilities where this fiscal position '
         'should be auto-detected')
 
     def _get_fpos_validation_functions(self, partner):

@@ -28,7 +28,7 @@ class L10nARPortalAccount(L10nLatamBasePortalAccount):
         return mandatory_fields
 
     def _validate_address_values(self, address_values, partner_sudo, address_type, *args, **kwargs):
-        """ We extend the method to add a new validation. If AFIP Resposibility is:
+        """ We extend the method to add a new validation. If ARCA Resposibility is:
 
         * Final Consumer or Foreign Customer: then it can select any identification type.
         * Any other (Monotributista, RI, etc): should select always "CUIT" identification type
@@ -37,7 +37,7 @@ class L10nARPortalAccount(L10nLatamBasePortalAccount):
             address_values, partner_sudo, address_type, *args, **kwargs
         )
 
-        # Identification type and AFIP Responsibility Combination
+        # Identification type and ARCA Responsibility Combination
         if address_type == 'billing' and self._is_argentinean_company():
             if (missing_fields
                 and (
@@ -58,12 +58,12 @@ class L10nARPortalAccount(L10nLatamBasePortalAccount):
                 # Those two values were not provided and are not required, skip the validation
                 return invalid_fields, missing_fields, error_messages
 
-            # Check if the AFIP responsibility is different from Final Consumer or Foreign Customer,
+            # Check if the ARCA responsibility is different from Final Consumer or Foreign Customer,
             # and if the identification type is different from CUIT
             if afip_resp.code not in ['5', '9'] and id_type != request.env.ref('l10n_ar.it_cuit'):
                 invalid_fields.add('l10n_latam_identification_type_id')
                 error_messages.append(request.env._(
-                    "For the selected AFIP Responsibility you will need to set CUIT Identification Type"
+                    "For the selected ARCA Responsibility you will need to set CUIT Identification Type"
                 ))
 
         return invalid_fields, missing_fields, error_messages
