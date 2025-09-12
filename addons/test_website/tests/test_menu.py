@@ -41,3 +41,7 @@ class TestWebsiteMenu(HttpCase):
             tree = html.fromstring(self.url_open(record_url).content)
             menu_link_el = tree.xpath(".//*[@id='top_menu']//a[@href='%s' and hasclass('active')]" % record_url)
             self.assertEqual(len(menu_link_el), 1, "The menu link related to the current record should be active")
+
+    def test_site_menu_dynamic_items(self):
+        """Ensure dynamic Site menu items appear while the menu is already open."""
+        self.start_tour('/', 'website_site_menu_dynamic_items', login='admin')
