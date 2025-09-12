@@ -8,6 +8,7 @@ from odoo.addons.iot_drivers.tools.helpers import (
     path_file,
     require_db,
     toggleable,
+    unlink_file,
 )
 from odoo.addons.iot_drivers.tools.system import rpi_only, IS_RPI, IS_TEST
 
@@ -89,6 +90,7 @@ def check_git_branch(server_url=None):
 
         if db_branch != local_branch:
             # Repository updates
+            unlink_file("odoo/.git/shallow.lock")  # In case of previous crash/power-off, clean old lockfile
             checkout(db_branch)
             update_requirements()
 
