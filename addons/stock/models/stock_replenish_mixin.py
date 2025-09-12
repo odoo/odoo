@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
+from odoo.fields import Domain
 
 
 class StockReplenishMixin(models.AbstractModel):
@@ -24,8 +25,15 @@ class StockReplenishMixin(models.AbstractModel):
     # OVERWRITE in 'Drop Shipping', 'Dropship and Subcontracting Management' and 'Dropship and Subcontracting Management' to hide it
     def _get_allowed_route_domain(self):
         stock_location_inter_company_id = self.env.ref('stock.stock_location_inter_company').id
-        return [
-            ('product_selectable', '=', True),
-            ('rule_ids.location_src_id', '!=', stock_location_inter_company_id),
-            ('rule_ids.location_dest_id', '!=', stock_location_inter_company_id)
-        ]
+
+        base_domain = Domain('product_selectable', '=', True)
+        if self.warehouse_id:
+            wh_route_ids = self.warehouse_id.route_ids.filtered(lambda r: r._is_valid_resupply_route_for_product(self.product_id)).ids
+            if wh_route_ids:
+                base_domain |= Domain('id', 'in', wh_route_ids)
+
+        return Domain.AND([
+            base_domain,
+            Domain('rule_ids.location_src_id', '!=', stock_location_inter_company_id),
+            Domain('rule_ids.location_dest_id', '!=', stock_location_inter_company_id),
+        ])

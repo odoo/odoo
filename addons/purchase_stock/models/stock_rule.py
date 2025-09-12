@@ -163,6 +163,13 @@ class StockRule(models.Model):
 
             self.env['purchase.order.line'].sudo().create(po_line_values)
 
+    def _filter_warehouse_routes(self, product, warehouses, route):
+        if any(rule.action == 'buy' for rule in route.rule_ids):
+            if product.seller_ids:
+                return super()._filter_warehouse_routes(product, warehouses, route)
+            return False
+        return super()._filter_warehouse_routes(product, warehouses, route)
+
     def _get_matching_supplier(self, product_id, product_qty, product_uom, company_id, values):
         supplier = False
         # Get the schedule date in order to find a valid seller
@@ -388,3 +395,12 @@ class StockRule(models.Model):
 
     def _get_partner_id(self, values, rule):
         return values.get("supplierinfo_name") or (values.get("force_uom") and values.get("partner"))
+
+
+class StockRoute(models.Model):
+    _inherit = "stock.route"
+
+    def _is_valid_resupply_route_for_product(self, product):
+        if any(rule.action == 'buy' for rule in self.rule_ids):
+            return bool(product.seller_ids)
+        return super()._is_valid_resupply_route_for_product(product)

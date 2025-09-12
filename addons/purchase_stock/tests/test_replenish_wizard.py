@@ -39,6 +39,9 @@ class TestReplenishWizard(PurchaseTestCommon):
         a purchase order is created with the correct values
         """
         self.product_uom_qty = 42
+        # Even though product1 doesn't have the 'Buy' route enabled, as it is enable through the wh it should pick it up regardless.
+        self.wh.buy_to_resupply = True
+        self.product1.route_ids = [Command.clear()]
 
         replenish_wizard = self.env['product.replenish'].with_context(default_product_tmpl_id=self.product1.product_tmpl_id.id).create({
             'product_id': self.product1.id,

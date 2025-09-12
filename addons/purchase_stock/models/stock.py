@@ -245,13 +245,6 @@ class StockWarehouseOrderpoint(models.Model):
 
         return result
 
-    def _filter_warehouse_routes(self, product, warehouses, route):
-        if any(rule.action == 'buy' for rule in route.rule_ids):
-            if product.seller_ids:
-                return super()._filter_warehouse_routes(product, warehouses, route)
-            return False
-        return super()._filter_warehouse_routes(product, warehouses, route)
-
     def _get_default_route(self):
         route_ids = self.env['stock.rule'].search([
             ('action', '=', 'buy')
