@@ -66,7 +66,7 @@
                     <!-- Use t-set in order to be able to translate, if put in the attribute directly then export POT file will not exist this text-->
                     <label class="o_configurator_industry_wrapper me-2" t-ref="industrySelection">
                         <AutoComplete
-                            placeholder.translate="Clothes, Marketing, ..."
+                            placeholder.translate="Restaurant, Hair Salon, Clothing Store,..."
                             value="state.selectedIndustry?.label ?? ''"
                             sources="sources"
                             onInput.bind="onAutocompleteInput"
