@@ -3079,3 +3079,13 @@ class MrpProduction(models.Model):
         if res:
             res = OrderedSet(topological_sort(self.fields_get(res, ('depends'))))
         return res
+
+    def _add_reference(self, reference):
+        """ link the given reference to the list of references. """
+        self.ensure_one()
+        self.reference_ids = [Command.link(reference.id)]
+
+    def _remove_reference(self, reference):
+        """ remove the given reference to the list of references. """
+        self.ensure_one()
+        self.reference_ids = [Command.unlink(reference.id)]
