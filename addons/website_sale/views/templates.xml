@@ -8,7 +8,7 @@
             <a href="/shop/cart" t-attf-class="#{_link_class}" aria-label="eCommerce cart">
                 <div t-attf-class="#{_icon_wrap_class}">
                     <i t-if="_icon" class="fa fa-shopping-cart fa-stack"/>
-                    <sup t-attf-class="my_cart_quantity badge bg-primary #{_badge_class} #{'d-none' if (website_sale_cart_quantity == 0) else ''}" t-out="website_sale_cart_quantity" t-att-data-order-id="request.session.get('sale_order_id', '')"/>
+                    <sup t-attf-class="my_cart_quantity badge bg-primary #{_badge_class} #{'d-none' if (website_sale_cart_quantity == 0) else ''}" t-out="website_sale_cart_quantity" t-att-data-order-id="request.session.get('sale_order_id', None) if website_sale_cart_quantity else None"/>
                 </div>
                 <span t-if="_text" t-attf-class="#{_text_class}">My Cart</span>
             </a>

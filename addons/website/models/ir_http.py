@@ -3,7 +3,6 @@ import contextlib
 import functools
 import logging
 from lxml import etree
-import os
 import unittest
 
 import pytz
@@ -17,7 +16,6 @@ from odoo.fields import Domain
 from odoo.http import request
 from odoo.tools.json import scriptsafe as json_scriptsafe
 from odoo.tools.safe_eval import safe_eval
-from odoo.addons.base.models.ir_http import EXTENSION_TO_WEB_MIMETYPES
 from odoo.addons.http_routing.models import ir_http
 from odoo.addons.portal.controllers.portal import _build_url_w_params
 
@@ -189,14 +187,15 @@ class IrHttp(models.AbstractModel):
             return False
         template = False
         if hasattr(response, '_cached_page'):
-            website_page, template = response._cached_page, response._cached_template
+            website_page, template = response._cached_page, response._cached_view_id
         elif hasattr(response, 'qcontext'):  # classic response
             main_object = response.qcontext.get('main_object')
             website_page = getattr(main_object, '_name', False) == 'website.page' and main_object
             template = response.qcontext.get('response_template')
+            if isinstance(template, str) and '.' not in template:
+                template = 'website.%s' % template
 
-        view = template and request.env['website'].get_template(template)
-        if not request.env.cr.readonly and view and view.track:
+        if template and not request.env.cr.readonly and request.env['ir.ui.view']._get_cached_template_info(template)['track']:
             request.env['website.visitor']._handle_webpage_dispatch(website_page)
 
         return False
@@ -298,31 +297,16 @@ class IrHttp(models.AbstractModel):
     @classmethod
     def _serve_page(cls):
         req_page = request.httprequest.path
+        WebsitePage = request.env['website.page'].sudo()
+        page_info = WebsitePage._get_page_info(request)
 
-        def _search_page(comparator='='):
-            page_domain = Domain('url', comparator, req_page) & request.website.website_domain()
-
-            # fetch on all preffetchable fields to get all data at once (e.g., 'website_meta').
-            fields_to_fetch = [name for name, field in request.env['website.page']._fields.items() if field.prefetch]
-            page = request.env['website.page'].sudo().search_fetch(page_domain, field_names=fields_to_fetch, order='website_id asc', limit=1)
-
-            # fetch on all preffetchable fields to get all data at once (e.g., 'website_meta').
-            fields_to_fetch = [name for name, field in page.view_id._fields.items() if field.prefetch]
-            page.view_id.fetch(fields_to_fetch)
-            return page
-
-        # specific page first
-        page = _search_page()
-
-        # case insensitive search
-        if not page:
-            page = _search_page('=ilike')
-            if page:
-                logger.info("Page %r not found, redirecting to existing page %r", req_page, page.url)
-                return request.redirect(page.url)
+        # redirect to the right url
+        if page_info and page_info['url'] != req_page:
+            logger.info("Page %r not found, redirecting to existing page %r", req_page, page_info['url'])
+            return request.redirect(page_info['url'])
 
         # redirect without trailing /
-        if not page and req_page != "/" and req_page.endswith("/"):
+        if not page_info and req_page != "/" and req_page.endswith("/"):
             # mimick `_postprocess_args()` redirect
             path = request.httprequest.path[:-1]
             if request.lang != cls._get_default_lang():
@@ -331,22 +315,9 @@ class IrHttp(models.AbstractModel):
                 path += '?' + request.httprequest.query_string.decode('utf-8')
             return request.redirect(path, code=301)
 
-        if (
-            page
-            and (request.env.user.has_group('website.group_website_designer') or page.is_visible)
-            and (
-                # If a generic page (niche case) has been COWed and that COWed
-                # page received a URL change, it should not let you access the
-                # generic page anymore, despite having a different URL.
-                page.website_id
-                or not page.view_id._get_specific_views().filtered(lambda view: view.website_id == request.website)
-            )
-        ):
-            _, ext = os.path.splitext(req_page)
-            response = request.render(page.view_id.id, {
-                'main_object': page,
-            }, mimetype=EXTENSION_TO_WEB_MIMETYPES.get(ext, 'text/html'))
-            return response
+        if page_info:
+            return WebsitePage.browse(page_info['id'])._get_response(request)
+
         return False
 
     @classmethod
