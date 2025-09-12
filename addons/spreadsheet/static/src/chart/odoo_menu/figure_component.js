@@ -18,17 +18,9 @@ patch(spreadsheet.components.FigureComponent.prototype, {
         return this.env.model.getters.getChartOdooMenu(this.props.figureUI.id) !== undefined;
     },
     async onClick() {
-        try {
-            const definition = this.env.model.getters.getChartDefinition(this.props.figureUI.id);
-            if (
-                this.env.isDashboard() &&
-                this.hasOdooMenu &&
-                (definition.type === "scorecard" || definition.type === "gauge")
-            ) {
-                await this.navigateToOdooMenu();
-            }
-        } catch {
-            // Throws if the figure isn't a chart
+        const definition = this.env.model.getters.getChartDefinition(this.props.figureUI.id);
+        if (this.hasOdooMenu && (definition.type === "scorecard" || definition.type === "gauge")) {
+            await this.navigateToOdooMenu();
         }
     },
 });
