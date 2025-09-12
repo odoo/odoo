@@ -34,7 +34,7 @@ class RazorpayController(Controller):
         # Retrieve the Razorpay data and Odoo metadata from the redirect data.
         provider_id = int(data['provider_id'])
         authorization_code = data.get('authorization_code')
-        csrf_token = data['csrf_token']
+        csrf_token = data.get('csrf_token')
         provider_sudo = request.env['payment.provider'].sudo().browse(provider_id).exists()
         if not provider_sudo or provider_sudo.code != 'razorpay':
             raise ValidationError(_("Could not find Razorpay provider with id %s", provider_sudo))
