@@ -204,6 +204,14 @@ class ResConfigSettings(models.TransientModel):
             }
         )
 
+    def pos_close_ui(self):
+        if self.pos_self_ordering_mode == "kiosk":
+            if self.env.context.get('pos_config_id'):
+                pos_config_id = self.env.context['pos_config_id']
+                pos_config = self.env['pos.config'].browse(pos_config_id)
+                return pos_config.action_close_kiosk_session()
+        return super().pos_close_ui()
+
     def preview_self_order_app(self):
         self.ensure_one()
         return self.pos_config_id.preview_self_order_app()
