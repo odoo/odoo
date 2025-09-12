@@ -39,7 +39,7 @@ class ResCompany(models.Model):
         if 'l10n_ar_afip_responsibility_type_id' in vals:
             for company in self:
                 if vals['l10n_ar_afip_responsibility_type_id'] != company.l10n_ar_afip_responsibility_type_id.id and company.sudo()._existing_accounting():
-                    raise UserError(_('Could not change the AFIP Responsibility of this company because there are already accounting entries.'))
+                    raise UserError(_('Could not change the ARCA Responsibility of this company because there are already accounting entries.'))
 
         return super().write(vals)
 

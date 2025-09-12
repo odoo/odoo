@@ -21,24 +21,24 @@ class AccountMove(models.Model):
         return {'invoice_number': int(invoice_number), 'point_of_sale': int(pos)}
 
     l10n_ar_afip_responsibility_type_id = fields.Many2one(
-        'l10n_ar.afip.responsibility.type', string='AFIP Responsibility Type', help='Defined by AFIP to'
+        'l10n_ar.afip.responsibility.type', string='ARCA Responsibility Type', help='Defined by ARCA to'
         ' identify the type of responsibilities that a person or a legal entity could have and that impacts in the'
         ' type of operations and requirements they need.')
 
     # Mostly used on reports
     l10n_ar_afip_concept = fields.Selection(
-        compute='_compute_l10n_ar_afip_concept', selection='_get_afip_invoice_concepts', string="AFIP Concept",
+        compute='_compute_l10n_ar_afip_concept', selection='_get_afip_invoice_concepts', string="ARCA Concept",
         help="A concept is suggested regarding the type of the products on the invoice.")
-    l10n_ar_afip_service_start = fields.Date(string='AFIP Service Start Date')
-    l10n_ar_afip_service_end = fields.Date(string='AFIP Service End Date')
+    l10n_ar_afip_service_start = fields.Date(string='ARCA Service Start Date')
+    l10n_ar_afip_service_end = fields.Date(string='ARCA Service End Date')
 
     def _is_manual_document_number(self):
         """ Document number should be manual input by user when the journal use documents and
 
-        * if sales journal and not a AFIP pos (liquido producto case)
-        * if purchase journal and not a AFIP pos (regular case of vendor bills)
+        * if sales journal and not a ARCA pos (liquido producto case)
+        * if purchase journal and not a ARCA pos (regular case of vendor bills)
 
-        All the other cases the number should be automatic set, wiht only one exception, for pre-printed/online AFIP
+        All the other cases the number should be automatic set, wiht only one exception, for pre-printed/online ARCA
         POS type, the first numeber will be always set manually by the user and then will be computed automatically
         from there """
         if self.country_code != 'AR':
@@ -94,7 +94,7 @@ class AccountMove(models.Model):
         expo_invoice = self.l10n_latam_document_type_id.code in ['19', '20', '21']
 
         # WSFEX 1668 - If Expo invoice and we have a "IVA Liberado – Ley Nº 19.640" (Zona Franca) partner
-        # then AFIP concept to use should be type "Others (4)"
+        # then ARCA concept to use should be type "Others (4)"
         is_zona_franca = self.partner_id.l10n_ar_afip_responsibility_type_id == self.env.ref("l10n_ar.res_IVA_LIB")
         # Default value "product"
         afip_concept = '1'
@@ -162,7 +162,7 @@ class AccountMove(models.Model):
            and not self.partner_id.l10n_ar_afip_responsibility_type_id:
             return {'warning': {
                 'title': _('Missing Partner Configuration'),
-                'message': _('Please configure the AFIP Responsibility for "%s" in order to continue',
+                'message': _('Please configure the ARCA Responsibility for "%s" in order to continue',
                     self.partner_id.name)}}
 
     @api.onchange('partner_id')
