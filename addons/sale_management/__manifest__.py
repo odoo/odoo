@@ -61,6 +61,9 @@ The Dashboard for the Sales Manager will include
         'web.assets_frontend': [
             'sale_management/static/src/interactions/**/*',
         ],
+        'web.assets_unit_tests': [
+            'sale_management/static/tests/**/*.test.js',
+        ],
     },
     'application': True,
     'pre_init_hook': 'pre_init_hook',
