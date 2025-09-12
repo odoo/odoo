@@ -2071,10 +2071,6 @@ class StockPicking(models.Model):
                 package_ids.update(picking.move_line_ids.result_package_id._get_all_package_dest_ids())
         return self.env['stock.package'].browse(package_ids)
 
-    def _can_return(self):
-        self.ensure_one()
-        return self.state == 'done'
-
     def _prepare_entire_pack_move_line_vals(self, packages):
         """ Prepares the move line values for every packages within packages and their children that contain products.
         """
