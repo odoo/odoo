@@ -300,7 +300,8 @@ class Im_LivechatChannel(models.Model):
             operator_model=operator_model,
             **kwargs
         ))]
-        if guest := self.env["mail.guest"]._get_guest_from_context():
+        guest = self.env["mail.guest"]._get_guest_from_context()
+        if guest and self.env.user._is_public():
             members_to_add.append(
                 Command.create({"livechat_member_type": "visitor", "guest_id": guest.id})
             )
