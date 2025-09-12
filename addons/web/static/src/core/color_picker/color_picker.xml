@@ -1,27 +1,14 @@
 <templates xml:space="preserve">
 <t t-name="web.ColorPicker">
-    <div t-attf-class="o_font_color_selector user-select-none {{this.props.className}}" t-on-pointerdown.stop="() => {}" data-prevent-closing-overlay="true" t-ref="root">
+    <div t-attf-class="o_font_color_selector user-select-none {{this.props.className}}"
+        t-on-pointerdown.stop="() => {}" data-prevent-closing-overlay="true" t-ref="root">
         <div class="mb-1 pt-2 d-flex">
-            <button t-attf-class="btn btn-sm ms-1 text-truncate btn-tab theme-tab #{ isDarkTheme ? 'btn-secondary' : 'btn-light'} #{state.activeTab === 'theme' ? 'active' : ''}"
-                t-if="this.props.enabledTabs.includes('theme')"
-                t-on-click="() => this.setTab('theme')">
-                Theme
-            </button>
-            <button t-attf-class="btn btn-sm ms-1 text-truncate btn-tab solid-tab #{ isDarkTheme ? 'btn-secondary' : 'btn-light'} #{state.activeTab === 'solid' ? 'active' : ''}"
-                t-if="this.props.enabledTabs.includes('solid')"
-                t-on-click="() => this.setTab('solid')">
-                Solid
-            </button>
-            <button t-attf-class="btn btn-sm text-truncate btn-tab custom-tab #{ isDarkTheme ? 'btn-secondary' : 'btn-light'} #{state.activeTab === 'custom' ? 'active' : ''}"
-                t-if="this.props.enabledTabs.includes('custom')"
-                t-on-click="() => this.setTab('custom')">
-                Custom
-            </button>
-            <button t-attf-class="btn btn-sm text-truncate btn-tab gradient-tab #{ isDarkTheme ? 'btn-secondary' : 'btn-light'} #{state.activeTab === 'gradient' ? 'active' : ''}"
-                t-if="this.props.enabledTabs.includes('gradient')"
-                t-on-click="() => this.setTab('gradient')">
-                Gradient
-            </button>
+            <t t-foreach="this.tabs" t-as="tab" t-key="tab.id">
+                <button t-attf-class="btn btn-sm ms-1 text-truncate btn-tab #{tab.id}-tab #{ isDarkTheme ? 'btn-secondary' : 'btn-light'} #{state.activeTab === tab.id ? 'active' : ''}"
+                    t-on-click="() => this.setTab(tab.id)">
+                    <t t-out="tab.name" />
+                </button>
+            </t>
             <div class="flex-grow-1" />
             <button t-attf-class="btn btn-sm fa fa-trash me-1 #{ isDarkTheme ? 'btn-secondary' : 'btn-light'}"
                     title="Reset"
@@ -31,114 +18,33 @@
                     t-on-focusin="onColorFocusin"
                     t-on-focusout="onColorFocusout"/>
         </div>
-        <!-- TODO: move the theme tab to html_builder. It shouldn't be in web. -->
-        <t t-if="state.activeTab==='theme'">
-            <div class="p-2 d-flex flex-column gap-1 o_cc_preview_wrapper"
-                t-on-click="onColorApply"
-                t-on-mouseover="onColorHover"
-                t-on-mouseout="onColorHoverOut"
-                t-on-mouseleave="() => this.applyColorResetPreview()"
-                t-on-focusin="onColorFocusin"
-                t-on-focusout="onColorFocusout"
-                >
-                <!-- List all Presets -->
-                <t t-foreach="[1, 2, 3, 4, 5]" t-as="number" t-key="number">
-                    <t t-set="className" t-value="'o_cc' + number"/>
-                    <t t-set="activeClass" t-value="this.props.state.selectedColorCombination === className ? 'selected' : ''"/>
-                    <div class="d-flex align-items-center">
-                        <button
-                                type="button"
-                                class="w-100 p-0 border-0 color-combination-button"
-                                t-att-class="[className, activeClass].join(' ')"
-                                t-att-data-color="className"
-                                t-attf-title="Preset {{number}}">
-                            <div inert="" class="p-2 d-flex justify-content-between align-items-center">
-                                <h1 class="m-0 fs-4">Title</h1>
-                                <p class="m-0 flex-grow-1">Text</p>
-                                <span class="py-1 px-1 rounded-1 fs-6 btn btn-sm lh-1 btn btn-sm me-1 d-flex flex-column justify-content-center btn-primary"><small>Button</small></span>
-                                <span class="py-1 px-1 rounded-1 fs-6 btn btn-sm lh-1 btn btn-sm d-flex flex-column justify-content-center btn-secondary"><small>Button</small></span>
-                            </div>
-                        </button>
-                        <button t-on-click="() => this.props.editColorCombination(number)" class="o-hb-edit-color-combination o_colorpicker_ignore fa fa-pencil btn ms-1 px-1" title="Edit"/>
-                    </div>
-                </t>
-            </div>
-        </t>
-        <t t-if="state.activeTab==='solid'">
-            <div class="d-flex flex-column align-items-center p-2"
-                t-on-click="onColorApply"
-                t-on-mouseover="onColorHover"
-                t-on-mouseout="onColorHoverOut"
-                t-ref="solidTabRef"
-                t-on-keydown="colorPickerNavigation"
-                t-on-focusin="onColorFocusin"
-                t-on-focusout="onColorFocusout">
-                <div class="o_colorpicker_section">
-                    <t t-foreach="DEFAULT_THEME_COLOR_VARS" t-as="color" t-key="color">
-                        <button t-att-data-color="color" t-att-class="{'selected': color === defaultColorSet}"
-                            t-att-style="`background-color: var(--${props.themeColorPrefix + color})` + (color_index === 3 ? '; grid-column: 5' : '')" class="btn p-0 o_color_button"/>
-                    </t>
-                </div>
-
-                <div class="o_color_section">
-                    <t t-foreach="DEFAULT_COLORS" t-as="line" t-key="line_index">
-                        <t t-foreach="line" t-as="color" t-key="color_index">
-                            <button class="o_color_button btn p-0" t-att-class="{'selected': color === this.state.currentCustomColor.toUpperCase() and !defaultColorSet}" t-att-data-color="color" t-attf-style="background-color: {{color}}"/>
-                        </t>
-                    </t>
-                </div>
-            </div>
-        </t>
-        <t t-if="state.activeTab==='custom'">
-            <div class="d-flex flex-column align-items-start p-2 pb-0" t-on-keydown="colorPickerNavigation">
-                <div class="o_colorpicker_section" t-on-click="onColorApply" t-on-mouseover="onColorHover" t-on-mouseout="onColorHoverOut" t-on-focusin="onColorFocusin" t-on-focusout="onColorHoverOut">
-                    <t t-foreach="this.usedCustomColors" t-as="color" t-key="color_index">
-                        <button t-if="color !== this.state.currentCustomColor?.toLowerCase()" class="o_color_button btn p-0" t-att-data-color="color" t-attf-style="background-color: {{color}}"/>
-                    </t>
-                    <button t-if="!defaultColorSet" class="o_color_button btn p-0" t-att-class="{'selected': defaultColorSet === false}" t-att-data-color="this.state.currentCustomColor" t-attf-style="background-color: {{this.state.currentCustomColor}}"/>
-                    <button t-if="!!state.currentColorPreview" class="o_color_button btn p-0" t-att-class="{ 'selected': !!state.currentColorPreview }" t-att-data-color="this.state.currentColorPreview" t-attf-style="background-color: {{this.state.currentColorPreview}}"/>
-                </div>
-                <t t-foreach="Object.values(this.grayscales)" t-as="grayscaleColors" t-key="grayscaleColors">
-                    <div class="o_colorpicker_section" t-on-click="onColorApply" t-on-mouseover="onColorHover" t-on-mouseout="onColorHoverOut" t-on-focusin="onColorFocusin" t-on-focusout="onColorHoverOut">
-                        <t t-foreach="grayscaleColors" t-as="color" t-key="color">
-                            <button t-att-data-color="color" class="o_color_button btn p-0" t-att-class="{'selected': color === defaultColorSet}" t-attf-style="background-color: var(--{{props.themeColorPrefix}}{{color}})" />
-                        </t>
-                    </div>
-                </t>
-                <CustomColorPicker
-                    selectedColor="this.state.currentCustomColor"
-                    setOnCloseCallback.bind="props.setOnCloseCallback"
-                    setOperationCallbacks.bind="setOperationCallbacks"
-                    onColorSelect.bind="(color) => this.applyColor(color.hex)"
-                    onColorPreview.bind="onColorPreview"
-                    noTransparency="props.noTransparency"
-                    defaultOpacity="props.defaultOpacity" />
-            </div>
-        </t>
-        <t t-if="state.activeTab==='gradient'">
-            <t t-set="selectedGradient" t-value="this.defaultColor" />
-            <t t-set="currentGradient" t-value="getCurrentGradientColor()" />
-            <div class="o_colorpicker_sections p-2 d-grid gap-1" style="grid-template-columns: 1fr 1fr;" t-on-click="onColorApply" t-on-mouseover="onColorHover" t-on-mouseout="onColorHoverOut" t-on-focusin="onColorFocusin" t-on-focusout="onColorHoverOut">
-                <t t-set="gradientsWithOpacity" t-value="
-                    this.DEFAULT_GRADIENT_COLORS.map((gradient) => applyOpacityToGradient(gradient, this.props.defaultOpacity))" />
-                <t t-foreach="gradientsWithOpacity"
-                    t-as="gradient" t-key="gradient">
-                    <button class="w-100 m-0 o_color_button o_gradient_color_button btn p-0" t-att-class="{'selected': selectedGradient?.includes(gradient)}" t-attf-style="background-image: #{gradient};" t-att-data-color="gradient"/>
-                </t>
-            </div>
-            <div class="px-2">
-                <button t-attf-style="{{ currentGradient ? `background-image: ${currentGradient}` : '' }};"
-                    class="w-50 border btn mb-2 o_custom_gradient_button" t-att-class="{'selected': currentGradient and !gradientsWithOpacity.includes(currentGradient)}" t-att-data-color="currentGradient" t-on-click="this.toggleGradientPicker" title="Define a custom gradient">
-                    Custom
-                </button>
-                <GradientPicker t-if="state.showGradientPicker"
-                    onGradientChange.bind="applyColor"
-                    onGradientPreview.bind="onColorPreview"
-                    setOnCloseCallback.bind="props.setOnCloseCallback"
-                    setOperationCallbacks.bind="setOperationCallbacks"
-                    selectedGradient="getCurrentGradientColor()"/>
-            </div>
-        </t>
+        <t t-set="activeTab" t-value="this.tabs.find((tab) => state.activeTab === tab.id)" />
+        <t t-component="activeTab.component" t-props="{
+            applyColor: this.applyColor.bind(this),
+            onColorClick: this.onColorApply.bind(this),
+            onColorPointerOver: this.onColorHover.bind(this),
+            onColorPointerOut: this.onColorHoverOut.bind(this),
+            onColorPointerLeave: this.applyColorResetPreview.bind(this),
+            onFocusin: this.onColorFocusin.bind(this),
+            onFocusout: this.onColorFocusout.bind(this),
+            colorPickerNavigation: this.colorPickerNavigation.bind(this),
+            onColorPreview: this.onColorPreview.bind(this),
+            setOnCloseCallback: this.props.setOnCloseCallback.bind(this),
+            setOperationCallbacks: this.setOperationCallbacks.bind(this),
+            editColorCombination: this.props.editColorCombination,
+            selectedColorCombination: this.props.state.selectedColorCombination,
+            defaultOpacity: this.props.defaultOpacity,
+            noTransparency: this.props.noTransparency,
+            defaultThemeColorVars: this.DEFAULT_THEME_COLOR_VARS,
+            defaultColorSet: this.defaultColorSet,
+            themeColorPrefix: this.props.themeColorPrefix,
+            defaultColors: this.DEFAULT_COLORS,
+            getUsedCustomColors: this.props.getUsedCustomColors,
+            grayscales: this.grayscales,
+            currentCustomColor: this.state.currentCustomColor,
+            currentColorPreview: this.state.currentColorPreview,
+            selectedColor: this.props.state.selectedColor,
+        }" />
     </div>
 </t>
 
