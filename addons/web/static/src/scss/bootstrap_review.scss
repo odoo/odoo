@@ -121,3 +121,13 @@ $o-calendar-today-color: color-contrast($o-calendar-today-background-color);
 // by 5. This ratio has been chosen to have enough space for different language (e.g. Vietnamese)
 // Finally, we have to take into account the gaps.
 $o-datetime-picker-width: calc(5px * 7 * 8 + (2 * #{map-get($spacers, 2)}));
+
+
+// Buttons
+
+.btn {
+    &:focus-visible {
+        // Make sure to have a fallback for :focus-visible state when the element use only the `.btn` class.
+        box-shadow: var(--#{$prefix}btn-focus-box-shadow, 0 0 0 #{$btn-focus-width} RGBA(#{$btn-link-focus-shadow-rgb}, .5));
+    }
+}
