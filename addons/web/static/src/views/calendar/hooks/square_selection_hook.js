@@ -97,6 +97,9 @@ const useBlockSelection = makeDraggableHook({
     onDrop({ ctx }) {
         return getSelectedCellsInBlock(ctx);
     },
+    onDragEnd() {
+        return {};
+    },
 });
 
 export function useSquareSelection(params = {}) {
@@ -155,6 +158,7 @@ export function useSquareSelection(params = {}) {
             prevSelectedCell = null;
             action = ctrlPressed ? "add" : "replace";
             update({ selectedCells });
+            ref.el.classList.add("o_interacting", "o_selecting");
         },
         onDrag: update,
         onDrop: ({ selectedCells }) => {
@@ -162,6 +166,9 @@ export function useSquareSelection(params = {}) {
             action = null;
             highlight({ selectedCells: allSelectedCells });
             component.props.onSquareSelection([...allSelectedCells]);
+        },
+        onDragEnd() {
+            ref.el.classList.remove("o_interacting", "o_selecting");
         },
     });
 
