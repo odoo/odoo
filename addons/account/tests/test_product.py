@@ -21,6 +21,40 @@ class TestProduct(AccountTestInvoicingCommon):
             login="account_manager_user",
             groups="account.group_account_manager",
         )
+        cls.tax_active = cls.env['account.tax'].create({
+            'name': 'Active Tax',
+            'amount': 10,
+            'type_tax_use': 'sale',
+            'active': True,
+        })
+        cls.tax_inactive = cls.env['account.tax'].create({
+            'name': 'Inactive Tax',
+            'amount': 20,
+            'type_tax_use': 'sale',
+            'active': False,
+        })
+        cls.prod_with_active = cls.env['product.template'].create({
+            'name': 'Product Active Tax',
+            'list_price': 100,
+            'taxes_id': [(6, 0, [cls.tax_active.id])],
+        })
+        cls.prod_with_inactive = cls.env['product.template'].create({
+            'name': 'Product Inactive Tax',
+            'list_price': 200,
+            'taxes_id': [(6, 0, [cls.tax_inactive.id])],
+        })
+
+    def test_groupby_taxes_id_filters_inactive(self):
+        """Inactive taxes should not appear in read_group results"""
+        res = self.env['product.template'].read_group(
+            domain=[],
+            fields=['list_price', 'taxes_id'],
+            groupby=['taxes_id'],
+        )
+
+        tax_ids = {r['taxes_id'][0] for r in res if r['taxes_id']}
+        self.assertIn(self.tax_active.id, tax_ids, "Active tax should appear in group by")
+        self.assertNotIn(self.tax_inactive.id, tax_ids, "Inactive tax should not appear in group by")
 
     def test_internal_user_can_read_product_with_tax_and_tags(self):
         """Internal users need read access to products, no matter their taxes."""

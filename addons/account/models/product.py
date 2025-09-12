@@ -59,6 +59,20 @@ class ProductTemplate(models.Model):
         help="Tags to be set on the base and tax journal items created for this product.")
     fiscal_country_codes = fields.Char(compute='_compute_fiscal_country_codes')
 
+    def _read_group(self, domain, groupby=(), aggregates=(), having=(), offset=0, limit=None, order=None):
+        res = super()._read_group(domain, groupby, aggregates, having, offset, limit, order)
+        if "taxes_id" in groupby:
+            filtered = []
+            for r in res:
+                tax_record = r[0]
+                if not tax_record:
+                    filtered.append(r)
+                else:
+                    if tax_record.active:
+                        filtered.append(r)
+            res = filtered
+        return res
+
     def _get_product_accounts(self):
         return {
             'income': self.property_account_income_id or self.categ_id.property_account_income_categ_id,
