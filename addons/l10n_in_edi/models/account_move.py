@@ -147,6 +147,7 @@ class AccountMove(models.Model):
         return (
             self.country_code == 'IN'
             and self.company_id.l10n_in_edi_feature
+            and not self.l10n_in_edi_status == 'cancelled'
             and self.is_sale_document(include_receipts=True)
             and self.journal_id.type == 'sale'
             and self.l10n_in_gst_treatment in (
