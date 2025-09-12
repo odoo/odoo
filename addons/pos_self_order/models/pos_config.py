@@ -352,6 +352,11 @@ class PosConfig(models.Model):
         for record in self:
             record.self_ordering_url = record.get_base_url() + record._get_self_order_route()
 
+    def close_ui(self):
+        if self.self_ordering_mode == "kiosk":
+            return self.action_close_kiosk_session()
+        return super().close_ui()
+
     def action_close_kiosk_session(self):
         if self.current_session_id and self.current_session_id.order_ids:
             self.current_session_id.order_ids.filtered(lambda o: o.state == 'draft').unlink()
