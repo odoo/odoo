@@ -1798,11 +1798,31 @@ export class PosStore extends WithLazyGetterTrap {
     }
 
     getStrNotes(note) {
-        return note && typeof note === "string"
-            ? JSON.parse(note)
-                  .map((n) => n.text)
-                  .join(", ")
-            : "";
+        if (!note) {
+            return "";
+        }
+        if (Array.isArray(note)) {
+            return note.map((n) => (typeof n === "string" ? n : n.text)).join(", ");
+        }
+        if (typeof note === "string") {
+            try {
+                const parsed = JSON.parse(note);
+                if (Array.isArray(parsed)) {
+                    return parsed.map((n) => (typeof n === "string" ? n : n.text)).join(", ");
+                }
+                return note;
+            } catch (error) {
+                logPosMessage(
+                    "Store",
+                    "getStrNotes",
+                    "Error while parsing note, not valid JSON",
+                    CONSOLE_COLOR,
+                    [error]
+                );
+                return note;
+            }
+        }
+        return "";
     }
 
     getOrderData(order, reprint) {

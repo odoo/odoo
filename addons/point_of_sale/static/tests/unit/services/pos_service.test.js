@@ -34,6 +34,16 @@ describe("pos_store.js", () => {
         expect(order.lines.length).toBe(3); // 2 original lines + 1 tip line
     });
 
+    test("orderNoteFormat", async () => {
+        const store = await setupPosEnv();
+        const str = store.getStrNotes("string");
+        expect(str).toBeOfType("string");
+        expect(str).toBe("string");
+        const json2str = store.getStrNotes([{ text: "json", colorIndex: 0 }]);
+        expect(json2str).toBeOfType("string");
+        expect(json2str).toBe("json");
+    });
+
     describe("syncAllOrders", () => {
         test("simple sync", async () => {
             const store = await setupPosEnv();
