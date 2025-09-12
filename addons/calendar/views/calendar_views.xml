@@ -343,6 +343,12 @@
                 </div>
                 <div class="d-flex align-items-center" colspan="2">
                     <i class="fa fa-clock-o text-600" title="Dates"/>
+                    <!--when "stop" is set manually, "duration" is computed. When "start" is changed
+                    "stop" is computed based on the previously-computed "duration". Hence we need to
+                    keep the last computed duration in the front-end model and send it with "start"
+                    when it changes-->
+                    <!--field is also used for custom behavior in default_get, check before removing-->
+                    <field name="duration" invisible="1" force_save="1"/>
                     <field name="start" nolabel="1"
                         widget="daterange" options="{'end_date_field': 'stop'}"
                         placeholder="Dates" class="w-100 mb-0"
