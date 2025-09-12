@@ -292,6 +292,15 @@ class Ewaybill(models.Model):
         self.ensure_one()
         return self._get_gst_treatment()[1] in ('overseas', 'special_economic_zone')
 
+    @api.model
+    def _get_default_help_message(self, status):
+        return self.env._(
+            "Somehow this E-waybill has been %s in the government portal before. "
+            "You can verify by checking the details into the government "
+            "(https://ewaybillgst.gov.in/Others/EBPrintnew.aspx)",
+            status
+        )
+
     def _check_configuration(self):
         error_message = []
         methods_to_check = [

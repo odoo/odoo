@@ -654,13 +654,33 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
                             connect(field, record, record2);
                         }
                     } else if (type === "set") {
+                        // Set can only be used on One2many and Many2many records. Since we are
+                        // using “Set,” we can manually disconnect all previous relationships
+                        // to avoid performance issues.
                         const linkedRecs = record[name];
+                        const inverse = inverseMap.get(field);
                         const existingRecords = items.filter((record) =>
                             exists(comodelName, record.id)
                         );
-                        for (const record2 of [...linkedRecs]) {
-                            disconnect(field, record, record2);
+
+                        // Disconnect `record` from all previously linked records
+                        for (const linkedRec of [...linkedRecs]) {
+                            if (!linkedRec[inverse.name]) {
+                                continue;
+                            }
+
+                            if (field.type === "one2many") {
+                                linkedRec[inverse.name] = undefined;
+                            } else {
+                                removeItem(linkedRec, inverse.name, record);
+                            }
                         }
+
+                        // Clear indexes and linked records from `record`
+                        record.getIndexMaps(name).clear();
+                        record[name] = [];
+
+                        // Reconnect new records
                         for (const record2 of existingRecords) {
                             connect(field, record, record2);
                         }

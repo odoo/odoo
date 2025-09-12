@@ -526,7 +526,11 @@ export class Runner {
             try {
                 result = fn();
             } catch (err) {
-                error = String(err);
+                if (err instanceof HootError) {
+                    throw err;
+                } else {
+                    error = String(err);
+                }
             }
         }
         this.suiteStack.pop();
@@ -1798,7 +1802,12 @@ export class Runner {
         safePrevent(ev);
 
         // Log error
-        logger.error(error);
+        if (this.dry || error.global) {
+            // Stringify the error to avoid logging whole traceback on CI
+            logger.logGlobalError(String(error));
+        } else {
+            logger.error(error);
+        }
     }
 
     /**
@@ -1956,9 +1965,7 @@ export class Runner {
                 continue;
             }
             const siblingIds = item.parent.jobs.map((job) => job.id);
-            if (
-                siblingIds.every((siblingId) => siblingId === id || remaining.includes(siblingId))
-            ) {
+            if (siblingIds.every((siblingId) => idSpecs[siblingId] === INCLUDE_LEVEL.url)) {
                 remaining = remaining.filter((id) => !siblingIds.includes(id));
                 this._include(idSpecs, [item.parent.id], INCLUDE_LEVEL.url, true);
                 this._include(idSpecs, siblingIds, 0, true);
