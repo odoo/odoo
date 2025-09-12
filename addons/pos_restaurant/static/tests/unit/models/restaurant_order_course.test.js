@@ -37,9 +37,9 @@ test("isReadyToFire", async () => {
     expect(course.isReadyToFire()).toBe(true);
 });
 
-test("isNew", async () => {
+test("isSynced", async () => {
     const store = await setupPosEnv();
     store.addNewOrder();
     const course = store.addCourse();
-    expect(course.isNew()).toBe(true);
+    expect(course.isSynced).toBe(false);
 });

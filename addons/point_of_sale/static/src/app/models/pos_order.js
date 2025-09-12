@@ -14,7 +14,7 @@ export class PosOrder extends PosOrderAccounting {
     setup(vals) {
         super.setup(vals);
 
-        if (!this.session_id?.id && (!this.finalized || typeof this.id !== "number")) {
+        if (!this.session_id?.id && (!this.finalized || !this.isSynced)) {
             this.session_id = this.session;
 
             if (this.state === "draft" && this.lines.length == 0 && this.payment_ids.length == 0) {
@@ -108,7 +108,7 @@ export class PosOrder extends PosOrderAccounting {
     }
 
     get isUnsyncedPaid() {
-        return this.finalized && typeof this.id === "string";
+        return this.finalized && !this.isSynced;
     }
 
     get originalSplittedOrder() {
@@ -200,7 +200,7 @@ export class PosOrder extends PosOrderAccounting {
     }
 
     get isBooked() {
-        return Boolean(this.uiState.booked || !this.isEmpty() || typeof this.id === "number");
+        return Boolean(this.uiState.booked || !this.isEmpty() || this.isSynced);
     }
 
     get hasChange() {

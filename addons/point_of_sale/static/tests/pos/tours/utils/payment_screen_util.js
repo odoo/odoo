@@ -400,7 +400,7 @@ export function syncCurrentOrder() {
                 const currentOrder = posmodel.getOrder();
                 const order = await posmodel.syncAllOrders({ orders: [currentOrder] });
 
-                if (typeof order[0].id !== "number") {
+                if (!order[0].isSynced) {
                     throw new Error("Order ID is not a number after sync.");
                 }
             },

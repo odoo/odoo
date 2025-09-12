@@ -388,7 +388,7 @@ test("recursive relationship with group of lines", async () => {
         const result = models.serializeForORM(order);
         expect(keepCommandResult).toEqual(result);
 
-        expect(result.lines.length).toBe(1);
+        expect(result.lines.length).toBe(2);
         expect(result.lines[0][0]).toBe(3);
         expect(result.lines[0][1]).toBe(111);
         expect(result.relations_uuid_mapping).toBe(undefined);
@@ -399,7 +399,7 @@ test("recursive relationship with group of lines", async () => {
         const keepCommandResult = models.serializeForORM(order, { keepCommands: true });
         const result = models.serializeForORM(order);
         expect(keepCommandResult).toEqual(result);
-        expect(result.lines).toBeEmpty();
+        expect(result.lines).toHaveLength(1);
     }
 });
 

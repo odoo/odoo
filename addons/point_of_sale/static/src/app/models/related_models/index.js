@@ -233,7 +233,7 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
         }
 
         _sanitizeRawData(vals, options = {}) {
-            const { connectRecords = true, serverData = false } = options;
+            const { connectRecords = true, serverData = false, existingRecord = false } = options;
             let dataToConnect;
             if (!vals.uuid && database[this.name]?.key === "uuid") {
                 vals.uuid = uuidv4();
@@ -259,6 +259,12 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
                     }
                     const isX2Many = X2MANY_TYPES.has(field.type);
                     const rawValue = isX2Many ? new Set(value) : value;
+                    const data = existingRecord?.[field.name];
+                    let localIds = [];
+                    if (isX2Many && existingRecord && opts.databaseTable[field.relation]?.key) {
+                        localIds = data.filter((r) => r.isSynced === false)?.map((r) => r.id) || [];
+                    }
+
                     if (connectRecords) {
                         if (!dataToConnect) {
                             dataToConnect = {
@@ -267,14 +273,24 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
                             };
                         }
                         dataToConnect.updateFields[field.name] = value;
-                        if (serverData) {
+                        if (serverData && !isX2Many) {
                             dataToConnect.rawValues[field.name] = rawValue;
+                        } else if (serverData) {
+                            dataToConnect.rawValues[field.name] = new Set([
+                                ...localIds,
+                                ...rawValue,
+                            ]);
                         }
+
                         if (isX2Many) {
                             rawData[field.name] = new Set(); //Default value
                         }
                     } else {
-                        rawData[field.name] = rawValue;
+                        if (isX2Many) {
+                            rawData[field.name] = new Set([...localIds, ...rawValue]);
+                        } else {
+                            rawData[field.name] = rawValue;
+                        }
                     }
                 } else {
                     rawData[fieldName] = DATE_TIME_TYPE.has(field.type)
@@ -459,7 +475,7 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
             const id = record.id;
             const ownFields = getFields(this.name);
             const handleCommand = (inverse, field, record, backend = false) => {
-                if (inverse && !inverse.dummy && typeof id === "number") {
+                if (inverse && !inverse.dummy && record.isSynced) {
                     const modelCommands = commands[field.relation];
                     const map = backend ? modelCommands.delete : modelCommands.unlink;
                     const oldVal = map.get(inverse.name);
@@ -593,8 +609,6 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
                             uiState,
                             isUpdate = false;
                         if (existingRecord) {
-                            // Remove olds references (id string -> id number)
-                            recordStore.remove(existingRecord);
                             const {
                                 rawData,
                                 uiState: newUiState,
@@ -602,8 +616,11 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
                             } = modelInstance._sanitizeRawData(vals, {
                                 connectRecords,
                                 serverData,
+                                existingRecord,
                             });
 
+                            // Remove olds references (id string -> id number)
+                            recordStore.remove(existingRecord);
                             existingRecord[RAW_SYMBOL] = rawData;
                             recordStore.add(existingRecord);
                             if (dataToConnect) {

@@ -4,7 +4,7 @@ import { patch } from "@web/core/utils/patch";
 patch(PosStore.prototype, {
     async getServerOrders() {
         if (this.session._self_ordering) {
-            await this.loadServerOrders([
+            await this.data.loadServerOrders([
                 ["company_id", "=", this.config.company_id.id],
                 ["state", "=", "draft"],
                 ["source", "in", ["kiosk", "mobile"]],

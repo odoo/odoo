@@ -10,7 +10,7 @@ patch(DataServiceOptions.prototype, {
                 condition: (record) =>
                     record
                         .backLink("<-pos.order.line.coupon_id")
-                        .find((l) => !(l.order_id?.finalized && typeof l.order_id.id === "number")),
+                        .find((l) => !(l.order_id?.finalized && l.order_id.isSynced)),
             },
         };
     },
