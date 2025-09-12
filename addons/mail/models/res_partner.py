@@ -253,6 +253,12 @@ class ResPartner(models.Model):
         self.ensure_one()
         return limited_field_access_token(self, "id", scope="mail.message_mention")
 
+    def _get_store_avatar_fields(self):
+        return [
+            Store.Attr("avatar_128_access_token", lambda p: p._get_avatar_128_access_token()),
+            "write_date",
+        ]
+
     def _get_store_im_status_fields(self):
         return [
             "im_status",
@@ -272,18 +278,10 @@ class ResPartner(models.Model):
             fields.extend(["email", "phone"])
         return fields
 
-    def _field_store_repr(self, field_name):
-        if field_name == "avatar_128":
-            return [
-                Store.Attr("avatar_128_access_token", lambda p: p._get_avatar_128_access_token()),
-                "write_date",
-            ]
-        return [field_name]
-
     def _to_store_defaults(self, target: Store.Target):
         res = [
             "active",
-            "avatar_128",
+            *self._get_store_avatar_fields(),
             *self._get_store_im_status_fields(),
             "is_company",
             Store.One("main_user_id", ["share"], sudo=True),  # sudo: to access portal user of another company in chatter

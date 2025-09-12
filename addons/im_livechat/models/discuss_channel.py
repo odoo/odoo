@@ -432,7 +432,10 @@ class DiscussChannel(models.Model):
 
     def _store_livechat_operator_id_fields(self):
         """Return the standard fields to include in Store for livechat_operator_id."""
-        return ["avatar_128", *self.env["res.partner"]._get_store_livechat_username_fields()]
+        return [
+            *self.env["res.partner"]._get_store_avatar_fields(),
+            *self.env["res.partner"]._get_store_livechat_username_fields()
+        ]
 
     def _to_store_defaults(self, target: Store.Target):
         fields = [

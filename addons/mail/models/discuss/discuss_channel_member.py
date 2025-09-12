@@ -365,7 +365,7 @@ class DiscussChannelMember(models.Model):
     def _to_store_persona(self, fields=None):
         if fields == "avatar_card":
             fields = [
-                "avatar_128",
+                *self.env["res.partner"]._get_store_avatar_fields(),
                 *self.env["res.partner"]._get_store_im_status_fields(),
                 "name"
             ]
