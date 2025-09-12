@@ -407,6 +407,26 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
         }
     }
 
+    function rebuildIndexMapForField(record, fieldName) {
+        const indexMap = record.getIndexMaps(fieldName);
+        if (typeof indexMap.clear === "function") {
+            indexMap.clear();
+        } else {
+            for (const k of indexMap.keys()) {
+                indexMap.delete(k);
+            }
+        }
+        const list = record[fieldName] || [];
+        for (let i = 0; i < list.length; i++) {
+            const item = list[i];
+            const itemKey = (item?.model?.modelName && database[item.model.modelName]?.key) || "id";
+            const keyVal = item[itemKey];
+            if (keyVal !== undefined) {
+                indexMap.set(keyVal, i);
+            }
+        }
+    }
+
     function connect(field, ownerRecord, recordToConnect) {
         const inverse = inverseMap.get(field);
 
@@ -658,9 +678,26 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
                         const existingRecords = items.filter((record) =>
                             exists(comodelName, record.id)
                         );
-                        for (const record2 of [...linkedRecs]) {
-                            disconnect(field, record, record2);
+                        const inverse = inverseMap.get(field);
+
+                        for (const record2 of linkedRecs) {
+                            if (field.type === "many2many") {
+                                if (inverse && inverse.name in record2) {
+                                    removeItem(record2, inverse.name, record);
+                                }
+                            } else if (field.type === "one2many") {
+                                // Detach the back-reference many2one
+                                if (inverse && record2[inverse.name] === record) {
+                                    record2[inverse.name] = undefined;
+                                }
+                            }
                         }
+
+                        // Clear our x2many array and rebuild index in one shot.
+                        // This avoids o(n^2) complexity of otherwise using removeItem.
+                        record[name] = [];
+                        rebuildIndexMapForField(record, name);
+
                         for (const record2 of existingRecords) {
                             connect(field, record, record2);
                         }
