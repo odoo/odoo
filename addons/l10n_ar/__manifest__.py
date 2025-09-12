@@ -9,17 +9,17 @@
 Functional
 ----------
 
-This module add accounting features for the Argentinean localization, which represent the minimal configuration needed for a company  to operate in Argentina and under the AFIP (Administración Federal de Ingresos Públicos) regulations and guidelines.
+This module add accounting features for the Argentinean localization, which represent the minimal configuration needed for a company  to operate in Argentina and under the ARCA (Administración Federal de Ingresos Públicos) regulations and guidelines.
 
 Follow the next configuration steps for Production:
 
-1. Go to your company and configure your VAT number and AFIP Responsibility Type
+1. Go to your company and configure your VAT number and ARCA Responsibility Type
 2. Go to Accounting / Settings and set the Chart of Account that you will like to use.
-3. Create your Sale journals taking into account AFIP POS info.
+3. Create your Sale journals taking into account ARCA POS info.
 
 Demo data for testing:
 
-* 3 companies were created, one for each AFIP responsibility type with the respective Chart of Account installed. Choose the company that fix you in order to make tests:
+* 3 companies were created, one for each ARCA responsibility type with the respective Chart of Account installed. Choose the company that fix you in order to make tests:
 
   * (AR) Responsable Inscripto
   * (AR) Exento
@@ -38,7 +38,7 @@ Demo data for testing:
 
 Highlights:
 
-* Chart of account will not be automatically installed, each CoA Template depends on the AFIP Responsibility of the company, you will need to install the CoA for your needs.
+* Chart of account will not be automatically installed, each CoA Template depends on the ARCA Responsibility of the company, you will need to install the CoA for your needs.
 * No sales journals will be generated when installing a CoA, you will need to configure your journals manually.
 * The Document type will be properly pre selected when creating an invoice depending on the fiscal responsibility of the issuer and receiver of the document and the related journal.
 * A CBU account type has been added and also CBU Validation
@@ -51,21 +51,21 @@ This module adds both models and fields that will be eventually used for the ele
 
 Master Data:
 
-* Chart of Account: one for each AFIP responsibility that is related to a legal entity:
+* Chart of Account: one for each ARCA responsibility that is related to a legal entity:
 
   * Responsable Inscripto (RI)
   * Exento (EX)
   * Monotributo (Mono)
 
 * Argentinean Taxes and Account Tax Groups (VAT taxes with the existing aliquots and other types)
-* AFIP Responsibility Types
+* ARCA Responsibility Types
 * Fiscal Positions (in order to map taxes)
 * Legal Documents Types in Argentina
 * Identification Types valid in Argentina.
-* Country AFIP codes and Country VAT codes for legal entities, natural persons and others
-* Currency AFIP codes
-* Unit of measures AFIP codes
-* Partners: Consumidor Final and AFIP
+* Country ARCA codes and Country VAT codes for legal entities, natural persons and others
+* Currency ARCA codes
+* Unit of measures ARCA codes
+* Partners: Consumidor Final and ARCA
 """,
     'author': 'ADHOC SA',
     'category': 'Accounting/Localizations/Account Charts',
