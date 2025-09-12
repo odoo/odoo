@@ -928,6 +928,8 @@ class One2many(_RelationalMulti):
         comodel = records.env[self.comodel_name].with_context(**context)
         inverse = self.inverse_name
         inverse_field = comodel._fields[inverse]
+        if self.bypass_search_access:
+            comodel = comodel.sudo()
 
         # optimization: fetch the inverse and active fields with search()
         domain = self.get_comodel_domain(records) & Domain(inverse, 'in', records.ids)
@@ -1355,6 +1357,8 @@ class Many2many(_RelationalMulti):
         context = {'active_test': False}
         context.update(self.context)
         comodel = records.env[self.comodel_name].with_context(**context)
+        if self.bypass_search_access:
+            comodel = comodel.sudo()
 
         # make the query for the lines
         domain = self.get_comodel_domain(records)
