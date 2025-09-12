@@ -44,9 +44,10 @@ export class StockValuationReportController {
         // Prepare the "Initial Balance" lines.
         this.data.initial_balance.lines = [];
         this.data.initial_balance.accounts = [];
-        for (let [code, data] of Object.entries(this.data.initial_balance.lines_by_account_id)) {
+        for (let [accountId, data] of Object.entries(this.data.initial_balance.lines_by_account_id)) {
+            const account = this.data.accounts_by_id[accountId];
             this.data.initial_balance.lines.push({
-                label: code,
+                label: account.display_name,
                 value: data.value,
             });
             this.data.initial_balance.accounts.push(...data.accounts);
