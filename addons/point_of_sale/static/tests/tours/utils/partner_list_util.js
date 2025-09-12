@@ -21,6 +21,14 @@ export function checkDropDownItemText(text) {
     };
 }
 
+export function clickDropDownItem(text) {
+    return {
+        content: `click for dropdown item containing text`,
+        trigger: `.o-dropdown-item:contains("${text}")`,
+        run: "click",
+    };
+}
+
 export function checkContactValues(name, address = "", phone = "", mobile = "", email = "") {
     const steps = [
         {
