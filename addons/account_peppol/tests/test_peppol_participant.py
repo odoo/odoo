@@ -7,10 +7,15 @@ from urllib.parse import parse_qs, quote_plus
 from psycopg2 import IntegrityError
 from requests import PreparedRequest, Response, Session
 
-from odoo.exceptions import ValidationError, UserError, AccessError
-from odoo.tests.common import tagged, TransactionCase, freeze_time
+from psycopg2 import IntegrityError
+from requests import PreparedRequest, Response, Session
+
+from odoo.exceptions import AccessError, UserError, ValidationError
+from odoo.tests.common import TransactionCase, freeze_time, tagged
 from odoo.tools import mute_logger
 from odoo.tools.misc import file_open
+
+from odoo.addons.account_peppol.models.res_company import peppol_feature
 
 ID_CLIENT = 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx'
 FAKE_UUID = 'yyyyyyyy-yyyy-yyyy-yyyy-yyyyyyyyyyyy'
@@ -374,3 +379,59 @@ class TestPeppolParticipant(TransactionCase):
             'account_peppol_contact_email': wizard_independent['contact_email'],
             'account_peppol_phone_number': wizard_independent['phone_number'],
         }])
+
+    def test_canary_features(self):
+        company = self.env.company
+        company.peppol_metadata = {
+            'features': {
+                'shiny_new_feature': {'arg1': 'value1', 'arg2': 'value2'},
+            },
+        }
+        wizard = self.env['peppol.registration'].create(self._get_participant_vals())
+        wizard.button_register_peppol_participant()
+
+        side_effects = []
+
+        @peppol_feature('shiny_new_feature', expected_kwargs=('arg1', 'arg2'))
+        def feature1(self, arg1: str, arg2: str) -> str:
+            side_effects.append('feature1')
+            return f'feature_a:{arg1}:{arg2}'
+        feature_a_result = feature1(company)
+        self.assertEqual(feature_a_result, 'feature_a:value1:value2')
+        self.assertEqual(side_effects, ['feature1'])
+
+        @peppol_feature('shiny_new_feature', expected_kwargs=('non_existing_arg',))
+        def feature2(self, non_existing_arg: str) -> str:
+            side_effects.append('feature2')
+            return f'feature_b:{non_existing_arg}'
+        feature_b_result = feature2(company)
+        self.assertIsNone(feature_b_result)
+        self.assertEqual(side_effects, ['feature1'])  # not called
+
+        @peppol_feature('non_existing_feature', expected_kwargs=())
+        def feature3(self) -> str:
+            side_effects.append('feature3')
+            return 'feature_c'
+        feature_c_result = feature3(company)
+        self.assertIsNone(feature_c_result)
+        self.assertEqual(side_effects, ['feature1'])  # not called
+
+    def test_peppol_canary_handles_empty_metadata(self):
+        # when the edi user has just been created, there is no metadata yet
+        # so we have to be able to fallback to default values
+        company = self.env.company
+        self.assertFalse(company.peppol_metadata)
+
+        side_effects = []
+        default_features = company._peppol_get_default_feature_flags()
+
+        self.assertIn('proactive_peppol_prompt_countries', default_features)
+
+        @peppol_feature('proactive_peppol_prompt_countries', expected_kwargs=('country_codes',))
+        def feature1(self, country_codes: str) -> str:
+            side_effects.append('feature1')
+            return country_codes
+
+        feature_a_result = feature1(company)
+        self.assertIn('BE', feature_a_result)
+        self.assertEqual(side_effects, ['feature1'])

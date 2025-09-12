@@ -217,6 +217,24 @@ class TestPeppolMessage(TestAccountMoveSendCommon, MailCommon):
             response.json = lambda: {'result': {uuid: response_content}}
             return response
 
+        if url == '/api/peppol/1/get_features':
+            response.json = lambda: {
+                'result': {
+                    'rate_limiting_ui': {
+                        'help_url': 'https://help.example.com/'
+                    }
+                }
+            }
+            return response
+
+        if url == '/api/peppol/1/get_quota':
+            response.json = lambda: {
+                'result': {
+                    'remaining_quota': 2,
+                }
+            }
+            return response
+
         return super()._request_handler(s, r, **kw)
 
     def test_attachment_placeholders(self):
@@ -798,3 +816,60 @@ class TestPeppolMessage(TestAccountMoveSendCommon, MailCommon):
                 'currency_id': self.env.ref('base.EUR').id,
             },
         ])
+
+    def test_rate_limit_ui_feature(self):
+        # get rate limit feature configuration
+        self.env.company.account_peppol_edi_user._peppol_update_metadata()
+
+        # check that rate limit feature is activated
+        quota = self.env.company._peppol_get_remaining_send_quota()
+        self.assertEqual(quota, 2)
+
+        # now check if it switches to email when we try to batch send more than 2 invoices over peppol
+        move_1 = self.create_move(self.valid_partner)
+        move_2 = self.create_move(self.valid_partner)
+        move_3 = self.create_move(self.valid_partner)
+
+        company_2 = self.setup_other_company()['company']
+        company_2.write({
+            'country_id': self.env.ref('base.be').id,
+            'account_peppol_proxy_state': 'sender',
+            'peppol_eas': '0208',
+            'peppol_endpoint': '0477472701',
+        })
+
+        self.env['account_edi_proxy_client.user'].create([
+            {
+                'company_id': company_2.id,
+                'id_client': ID_CLIENT.replace('x', 'a'),
+                'proxy_type': 'peppol',
+                'edi_mode': 'test',
+                'edi_identification': '0208:0477472701',
+                'private_key_id': self.private_key.id,
+                'refresh_token': FAKE_UUID[0],
+            },
+        ])
+        move_other_company = self.create_move(self.valid_partner, company=company_2)
+        moves = (move_1 + move_2 + move_3 + move_other_company)
+
+        # now try to send & print all 4.
+        # Company 1 has a quota of 2, but we want to send 3. We therefore prevent the sending by peppol
+        # to prevent partial sending and IAP-errors
+        # Company 2 also has a quota of 2, but we only have 1 invoice to send, so it should be sent by peppol
+        moves.action_post()
+
+        wizard = self.create_send_and_print(moves, default=True)
+        self.assertEqual(wizard.summary_data, {
+            'email': {'count': 4, 'label': 'by Email'},  # company 2 sends with email & peppol
+            'peppol': {'count': 1, 'label': 'by Peppol'},
+        })
+
+        self.assertEqual(wizard.alerts['account_peppol_warning_quota']['action']['url'], 'https://help.example.com/')
+
+        wizard.action_send_and_print()
+
+        with self.enter_registry_test_mode():
+            self.env.ref('account.ir_cron_account_move_send').with_company(move_other_company.company_id).method_direct_trigger()
+
+        # all should be sent (either mail or mail and peppol)
+        self.assertEqual(set(moves.mapped('peppol_move_state')), {'processing'})
