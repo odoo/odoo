@@ -12,7 +12,7 @@
             'o-hasVideo': channel.videoCount > 0,
             'o-selfInCall': isActiveCall,
             'border-bottom': !isActiveCall,
-        }">
+        }" t-ref="root">
             <div class="o-discuss-Call-main d-flex flex-grow-1 flex-column align-items-center justify-content-center position-relative overflow-auto o-scrollbar-thin" t-on-mouseleave="onMouseleaveMain">
                 <BlurPerformanceWarning t-if="store.settings.blurPerformanceWarning"/>
                 <div
