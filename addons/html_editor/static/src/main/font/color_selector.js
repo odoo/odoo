@@ -30,6 +30,7 @@ export class ColorSelector extends Component {
     };
     static defaultProps = {
         themeColorPrefix: "",
+        enabledTabs: ["solid", "gradient", "custom"],
     };
 
     setup() {

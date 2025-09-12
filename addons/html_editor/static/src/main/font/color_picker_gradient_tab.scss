@@ -1,0 +1,98 @@
+.o_gradient_color_button {
+    border-width: 0px;
+    background: unset;
+
+    &:hover, &:focus {
+        background: unset;
+    }
+}
+
+.o_color_button.o_gradient_color_button {
+    &:focus,
+    &:hover {
+        transform: none;
+    }
+}
+
+.o_custom_gradient_button[style*="background-image"] {
+    background: unset;
+}
+
+// custom gradients
+.custom-gradient-configurator {
+    .gradient-checkers {
+        background-image: url('/web/static/img/transparent.png');
+        background-size: var(--PreviewAlphaBg-background-size, 10px) auto;
+        padding: 10px 0;
+        margin-bottom: -20px;
+    }
+    .gradient-preview {
+        padding: 10px 0;
+        cursor: copy;
+    }
+    .gradient-colors {
+        height: 18px;
+        div {
+            height: 0;
+            overflow: visible;
+        }
+    }
+    input[type="range"] {
+        -webkit-appearance: none;
+        appearance: none;
+        background: transparent;
+        width: 100%;
+        pointer-events: none;
+        position: relative;
+    }
+    input::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 8px;
+        height: 16px;
+        cursor: pointer;
+        pointer-events: auto;
+        background: #000;
+        border-radius: 4px;
+        border: 1px solid #666;
+    }
+    input::-moz-range-thumb {
+        width: 8px;
+        height: 16px;
+        cursor: pointer;
+        pointer-events: auto;
+        background: #000;
+        border-radius: 4px;
+        border: 1px solid #666;
+    }
+
+    input[type=range]:focus-visible {
+        outline: none;
+
+        &::-webkit-slider-thumb {
+            box-shadow: 0 0 0 1px var(--bg, $white), 0 0 0 3px var(--o-color-picker-active-color, $o-enterprise-action-color);
+        }
+        &::-moz-range-thumb {
+            box-shadow: 0 0 0 1px var(--bg, $white), 0 0 0 3px var(--o-color-picker-active-color, $o-enterprise-action-color);
+        }
+        &::-ms-thumb {
+            box-shadow: 0 0 0 1px var(--bg, $white), 0 0 0 3px var(--o-color-picker-active-color, $o-enterprise-action-color);
+        }
+    }
+}
+
+.custom-gradient-configurator + .o_colorpicker_widget {
+    padding-bottom: 8px;
+}
+
+.gradient-color-bin {
+    position: relative;
+    margin: 0 12px;
+    height: 22px;
+    > a.btn {
+        padding: 0 2px 2px;
+        margin-top: 0;
+        margin-left: -12px;
+        position: absolute;
+    }
+}
