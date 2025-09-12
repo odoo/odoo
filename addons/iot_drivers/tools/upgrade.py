@@ -10,6 +10,7 @@ from odoo.addons.iot_drivers.tools.helpers import (
     path_file,
     require_db,
     toggleable,
+    unlink_file,
     writable,
 )
 
@@ -99,6 +100,7 @@ def check_git_branch(server_url=None):
         _logger.info("IoT Box git branch: %s / Associated Odoo db's git branch: %s", local_branch, db_branch)
 
         if db_branch != local_branch:
+            unlink_file("odoo/.git/shallow.lock")  # In case of previous crash/power-off, clean old lockfile
             with writable():
                 # Repository updates
                 checkout(db_branch)

@@ -41,6 +41,7 @@ localremote=$(sudo -u odoo git config branch.$localbranch.remote)
 mount -o remount,rw /
 mount -o remount,rw /root_bypass_ramdisks
 
+sudo -u odoo rm -f /home/pi/odoo/.git/shallow.lock
 sudo -u odoo git remote set-url "${localremote}" "https://github.com/odoo/odoo.git"
 
 sudo -u odoo GIT_SSL_NO_VERIFY=1 git fetch "${localremote}" "${localbranch}" --depth=1
