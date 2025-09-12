@@ -479,27 +479,27 @@ export const imageShapeDefinitions = {
                     "html_builder/solid/solid_blob_shadow_1": {
                         selectLabel: _t("Blob Shadow 1"),
                         transform: false,
-                        anmated: true,
+                        animated: true,
                     },
                     "html_builder/solid/solid_blob_shadow_2": {
                         selectLabel: _t("Blob Shadow 2"),
                         transform: false,
-                        anmated: true,
+                        animated: true,
                     },
                     "html_builder/solid/solid_square_1": {
                         selectLabel: _t("Square 1"),
                         transform: false,
-                        anmated: true,
+                        animated: true,
                     },
                     "html_builder/solid/solid_square_2": {
                         selectLabel: _t("Square 2"),
                         transform: false,
-                        anmated: true,
+                        animated: true,
                     },
                     "html_builder/solid/solid_square_3": {
                         selectLabel: _t("Square 3"),
                         transform: false,
-                        anmated: true,
+                        animated: true,
                     },
                 },
             },
