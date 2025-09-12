@@ -34,7 +34,7 @@ export class CartPage extends Component {
         return (
             this.selfOrder.config.self_ordering_mode === "mobile" &&
             this.selfOrder.config.self_ordering_pay_after === "each" &&
-            typeof this.selfOrder.currentOrder.id === "number"
+            this.selfOrder.currentOrder.isSynced
         );
     }
 
