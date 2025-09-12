@@ -32,11 +32,14 @@ class MailMessageReaction(models.Model):
             data = {
                 "content": content,
                 "count": len(reactions),
-                "guests": Store.Many(reactions.guest_id, ["avatar_128", "name"]),
+                "guests": Store.Many(reactions.guest_id, [*self.env["mail.guest"]._get_store_avatar_fields(), "name"]),
                 "message": message.id,
                 "partners": Store.Many(
                     reactions.partner_id,
-                    ["avatar_128", *message._get_store_partner_name_fields()],
+                    [
+                        *self.env["res.partner"]._get_store_avatar_fields(),
+                        *message._get_store_partner_name_fields()
+                    ],
                 ),
                 "sequence": min(reactions.ids),
             }

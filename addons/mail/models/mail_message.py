@@ -1068,11 +1068,15 @@ class MailMessage(models.Model):
                 sudo=True,
             ),
             # sudo: mail.message: access to author_guest_id is allowed
-            Store.One("author_guest_id", ["avatar_128", "name"], sudo=True),
+            Store.One("author_guest_id", [*self.env["mail.guest"]._get_store_avatar_fields(), "name"], sudo=True),
             # sudo: mail.message: access to author_id is allowed
             Store.One(
                 "author_id",
-                ["avatar_128", "is_company", Store.One("main_user_id", "share")],
+                [
+                    "is_company",
+                    Store.One("main_user_id", "share"),
+                    *self.env["res.partner"]._get_store_avatar_fields(),
+                ],
                 dynamic_fields=lambda m: m._get_store_partner_name_fields(),
                 sudo=True,
             ),
@@ -1092,7 +1096,10 @@ class MailMessage(models.Model):
             "message_type",
             "model",  # keep for iOS app
             # sudo: res.partner: reading limited data of recipients is acceptable
-            Store.Many("partner_ids", ["avatar_128", "name"], sort="id", sudo=True),
+            Store.Many("partner_ids", [
+                *self.env["res.partner"]._get_store_avatar_fields(),
+                "name"
+            ], sort="id", sudo=True),
             "pinned_at",
             # sudo: mail.message - reading reactions on accessible message is allowed
             Store.Attr("reactions", value=lambda m: Store.Many(m.sudo().reaction_ids)),
