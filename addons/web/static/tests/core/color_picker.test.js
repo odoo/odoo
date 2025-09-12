@@ -1,8 +1,10 @@
 import { test, expect } from "@odoo/hoot";
 import { press, click, animationFrame, queryOne } from "@odoo/hoot-dom";
+import { Component, xml } from "@odoo/owl";
 import { defineStyle, mountWithCleanup } from "@web/../tests/web_test_helpers";
 import { ColorPicker, DEFAULT_COLORS } from "@web/core/color_picker/color_picker";
 import { CustomColorPicker } from "@web/core/color_picker/custom_color_picker/custom_color_picker";
+import { registry } from "@web/core/registry";
 
 test("basic rendering", async () => {
     await mountWithCleanup(ColorPicker, {
@@ -19,7 +21,7 @@ test("basic rendering", async () => {
         },
     });
     expect(".o_font_color_selector").toHaveCount(1);
-    expect(".o_font_color_selector .btn-tab").toHaveCount(3);
+    expect(".o_font_color_selector .btn-tab").toHaveCount(2);
     expect(".o_font_color_selector .btn.fa-trash").toHaveCount(1);
     expect(".o_font_color_selector .o_colorpicker_section").toHaveCount(1);
     expect(".o_font_color_selector .o_colorpicker_section .o_color_button").toHaveCount(5);
@@ -235,21 +237,35 @@ test("custom color picker change color on click in hue slider", async () => {
     expect("input.o_hex_input").not.toHaveValue("#FF0000");
 });
 
-test("custom gradient must be defined", async () => {
+class ExtraTab extends Component {
+    static template = xml`<p>Color picker extra tab</p>`;
+    static props = ["*"];
+}
+
+test("can register an extra tab", async () => {
+    registry.category("color_picker_tabs").add("web.extra", {
+        id: "extra",
+        name: "Extra",
+        component: ExtraTab,
+    });
     await mountWithCleanup(ColorPicker, {
         props: {
             state: {
-                selectedColor: "#FF0000", //linear-gradient(0deg, rgb(0,0,0) 0%, rgb(100,100,100) 100%)",
-                defaultTab: "gradient",
+                selectedColor: "#FF0000",
+                defaultTab: "",
             },
             getUsedCustomColors: () => [],
             applyColor() {},
             applyColorPreview() {},
             applyColorResetPreview() {},
             colorPrefix: "",
+            enabledTabs: ["solid", "custom", "extra"],
         },
     });
-    await click(".o_custom_gradient_button");
+    expect(".o_font_color_selector .btn-tab").toHaveCount(3);
+    await click("button.extra-tab");
     await animationFrame();
-    expect(".gradient-colors input[type='range']").toHaveCount(2);
+    expect("button.extra-tab").toHaveClass("active");
+    expect(".o_font_color_selector>p:last-child").toHaveText("Color picker extra tab");
+    registry.category("color_picker_tabs").remove("web.extra");
 });

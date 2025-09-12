@@ -1,0 +1,52 @@
+@mixin preview-outline-button($type, $ccIndex) {
+    .btn-#{$type} {
+        background-color: transparent;
+        color: var(--hb-cp-o-cc#{$ccIndex}-btn-#{$type});
+        border-color: var(--hb-cp-o-cc#{$ccIndex}-btn-#{$type});
+    }
+    .btn-#{$type}:hover {
+        background-color: var(--hb-cp-o-cc#{$ccIndex}-btn-#{$type});
+        color: var(--hb-cp-o-cc#{$ccIndex}-btn-#{$type}-text);
+    }
+}
+
+.o_cc_preview_wrapper {
+    @for $index from 1 through 5 {
+        .o_cc#{$index} {
+            background-color: var(--hb-cp-o-cc#{$index}-bg);
+            background-image: var(--hb-cp-o-cc#{$index}-bg-gradient), url('/web/static/img/transparent.png');
+            color: var(--hb-cp-o-cc#{$index}-text);
+            h1 {
+                color: var(--hb-cp-o-cc#{$index}-headings);
+            }
+            .btn-primary {
+                background-color: var(--hb-cp-o-cc#{$index}-btn-primary);
+                color: var(--hb-cp-o-cc#{$index}-btn-primary-text);
+                border-color: var(--hb-cp-o-cc#{$index}-btn-primary-border);
+            }
+            .btn-secondary {
+                background-color: var(--hb-cp-o-cc#{$index}-btn-secondary);
+                color: var(--hb-cp-o-cc#{$index}-btn-secondary-text);
+                border-color: var(--hb-cp-o-cc#{$index}-btn-secondary-border);
+            }
+        }
+    }
+    &.o_we_has_btn_outline_primary {
+        .o_cc_preview_wrapper {
+            @for $index from 1 through 5 {
+                &.o_cc#{$index} {
+                    @include preview-outline-button('primary', $index)
+                }
+            }
+        }
+    }
+    &.o_we_has_btn_outline_secondary {
+        .o_cc_preview_wrapper {
+            @for $index from 1 through 5 {
+                &.o_cc#{$index} {
+                    @include preview-outline-button('secondary', $index)
+                }
+            }
+        }
+    }
+}
