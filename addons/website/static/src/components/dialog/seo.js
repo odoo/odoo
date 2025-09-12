@@ -624,6 +624,7 @@ export class SeoChecks extends Component {
         onWillStart(async () => {
             this.state.altAttributes = await this.getAltAttributes();
             this.state.headingsScan = this.getHeadingsScan();
+            this.seoContext.updatedAlts = [];
         });
     }
 
