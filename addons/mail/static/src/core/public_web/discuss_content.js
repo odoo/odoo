@@ -62,6 +62,26 @@ export class DiscussContent extends Component {
         return this.props.thread || this.store.discuss.thread;
     }
 
+    get showImStatus() {
+        return this.thread.channel_type === "chat";
+    }
+
+    get showThreadAvatar() {
+        return ["channel", "group", "chat"].includes(this.thread.channel_type);
+    }
+
+    get isThreadAvatarEditable() {
+        return (
+            !this.thread.parent_channel_id &&
+            this.thread.is_editable &&
+            ["channel", "group"].includes(this.thread.channel_type)
+        );
+    }
+
+    get showCorrespondentCountry() {
+        return this.thread.showCorrespondentCountry;
+    }
+
     async onFileUploaded(file) {
         await this.thread.notifyAvatarToServer(file.data);
         this.notification.add(_t("The avatar has been updated!"), { type: "success" });
