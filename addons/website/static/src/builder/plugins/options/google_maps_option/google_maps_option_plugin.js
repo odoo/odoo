@@ -4,7 +4,7 @@ import { renderToElement } from "@web/core/utils/render";
 import { Plugin } from "@html_editor/plugin";
 import { GoogleMapsApiKeyDialog } from "./google_maps_api_key_dialog";
 import { GoogleMapsOption } from "./google_maps_option";
-import { Deferred } from "@odoo/hoot-dom";
+import { Deferred } from "@web/core/utils/concurrency";
 import { BuilderAction } from "@html_builder/core/builder_action";
 
 /**
