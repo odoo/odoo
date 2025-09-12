@@ -21,7 +21,7 @@ class WebsiteTechnicalPage(models.Model):
         """
         return self.env["website"].get_client_action(self.website_url)
 
-    @ormcache()
+    @ormcache(cache='routing')
     def get_static_routes(self):
         """
         Returns a set of website content static routes.

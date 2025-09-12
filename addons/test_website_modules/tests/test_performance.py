@@ -158,21 +158,25 @@ class TestWebsiteAllPerformance(TestWebsitePerformanceCommon, TestWebsitePriceLi
         # self.url_open('/web/set_profiling?profile=1&execution_context_qweb=1')
 
         self.assertEqual(self._get_cart_quantity(), 0)
+
+        origin_allow_to_use_cache = odoo.addons.website.models.website_page.WebsitePage._allow_to_use_cache
+
+        def _allow_to_use_cache(request):
+            can_use = origin_allow_to_use_cache(request.env['website.page'], request)
+            self.assertTrue(can_use, 'The homepage should be cached for the public user')
+
+        with patch('odoo.addons.website.models.website_page.WebsitePage._allow_to_use_cache', wraps=_allow_to_use_cache) as mocked:
+            self.url_open(self.page.url)
+            mocked.assert_called_once()
+
         select_tables_perf = {
             # website queries
             'orm_signaling_registry': 1,
             'ir_attachment': 1,
-            'website_page': 2,
-            'website_menu': 1,
-            'website': 1,
-            'ir_ui_view': 1,
-            'res_company': 1,
             # website_livechat _post_process_response_from_cache queries
             'website': 1,
             # website_crm_iap_reveal _serve_page queries
             'website_visitor': 1,
-            # website_sale queries
-            'res_users': 1,
         }
         expected_query_count = sum(select_tables_perf.values())
         self._check_url_hot_query(self.page.url, expected_query_count, select_tables_perf, {})
@@ -196,22 +200,10 @@ class TestWebsiteAllPerformance(TestWebsitePerformanceCommon, TestWebsitePriceLi
             # website queries
             'orm_signaling_registry': 1,
             'ir_attachment': 1,
-            'website_page': 2,
-            'website': 1,
-            'website_menu': 1,
-            'ir_ui_view': 1,
-            'res_company': 1,
             # website_livechat _post_process_response_from_cache queries
             'website': 1,
             # website_crm_iap_reveal _serve_page queries
             'website_visitor': 1,
-            # website_sale queries
-            'res_users': 1,
-            'sale_order': 2,
-            'sale_order_line': 2,
-            'product_product': 1,
-            'product_template': 1,
-            'payment_transaction': 1,
         }
         expected_query_count = sum(select_tables_perf.values())
         self._check_url_hot_query(self.page.url, expected_query_count, select_tables_perf, {})
@@ -232,20 +224,10 @@ class TestWebsiteAllPerformance(TestWebsitePerformanceCommon, TestWebsitePriceLi
             # website queries
             'orm_signaling_registry': 1,
             'ir_attachment': 1,
-            'website_page': 2,
-            'website': 1,
-            'website_menu': 1,
-            'ir_ui_view': 1,
-            'res_company': 1,
             # website_livechat _post_process_response_from_cache queries
             'website': 1,
             # website_crm_iap_reveal _serve_page queries
             'website_visitor': 1,
-            # website_sale queries
-            'res_users': 1,
-            'sale_order': 2,
-            'sale_order_line': 1,
-            'payment_transaction': 1,
         }
         expected_query_count = sum(select_tables_perf.values())
         self._check_url_hot_query(self.page.url, expected_query_count, select_tables_perf, {})
