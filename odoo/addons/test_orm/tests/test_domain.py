@@ -964,6 +964,34 @@ class TestDomainOptimize(TransactionCase):
             self.number_domain,
         )
 
+    def test_optimize_common_nary_terms(self):
+        model = self.env['test_orm.mixed']
+        self.assertEqual(
+            list((Domain('number', '=', 5) | Domain.OR(
+                Domain('currency_id', '=', v) & Domain('foo', '=', False)
+                for v in (10, 11, 12)
+            )).optimize(model)),
+            ['|', ('number', 'in', [5]), '&', ('currency_id', 'in', [10, 11, 12]), ('foo', 'in', [False])],
+        )
+        self.assertEqual(
+            list((Domain('number', '=', 5) & Domain.AND(
+                Domain('currency_id', '=', v) | Domain('foo', '=', False)
+                for v in (10, 11, 12)
+            )).optimize(model)),
+            ['&', ('foo', 'in', [False]), ('number', 'in', [5])],
+        )
+        self.assertEqual(
+            list((Domain('number', '=', 5) & Domain.AND(
+                Domain('currency_id', '=', v) | Domain('foo', '=', False) | Domain('count', '>', v)
+                for v in (10, 11, 12)
+            )).optimize(model)),
+            ['&', ('number', 'in', [5]), '|', ('foo', 'in', [False]), '&', '&', *(
+                x
+                for v in (10, 11, 12)
+                for x in ('|', ('count', '>', v), ('currency_id', 'in', [v]))
+            )],
+        )
+
     def test_optimize_level_by_level(self):
         def search_foo(model, operator, value):
             # groups values to check that it is called once
