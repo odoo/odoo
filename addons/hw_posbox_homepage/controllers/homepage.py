@@ -335,7 +335,7 @@ class IotBoxOwlHomePage(http.Controller):
     def enable_remote_connection(self, auth_token):
         # check if the service exists for retro-compatibility TODO: remove in v18.4
         p = subprocess.run(
-            ['systemctl', 'is-active', 'odoo-ngrok.service'],
+            ['systemctl', 'is-enabled', 'odoo-ngrok.service'],
             stdout=subprocess.DEVNULL,
             stderr=subprocess.DEVNULL,
             check=False,
