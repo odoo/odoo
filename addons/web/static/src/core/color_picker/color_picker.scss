@@ -1,16 +1,3 @@
-// TODO: move this with the theme tab to html_builder. It shouldn't be in web.
-@mixin preview-outline-button($type, $ccIndex) {
-    .btn-#{$type} {
-        background-color: transparent;
-        color: var(--hb-cp-o-cc#{$ccIndex}-btn-#{$type});
-        border-color: var(--hb-cp-o-cc#{$ccIndex}-btn-#{$type});
-    }
-    .btn-#{$type}:hover {
-        background-color: var(--hb-cp-o-cc#{$ccIndex}-btn-#{$type});
-        color: var(--hb-cp-o-cc#{$ccIndex}-btn-#{$type}-text);
-    }
-}
-
 .o_font_color_selector {
     @include o-input-number-no-arrows();
     --bg: #{$o-we-toolbar-bg};
@@ -33,29 +20,13 @@
     box-shadow: inset 0 0 0 1px rgba(var(--border-rgb), .5);
     margin: 0.5px;
 
-    &:not(.o_gradient_color_button) {
-        &:focus,
-        &:hover {
-            transform: scale(1.1);
-        }
+    &:focus,
+    &:hover {
+        transform: scale(1.1);
     }
 }
 
-.o_gradient_color_button {
-    border-width: 0px;
-    background: unset;
-
-    &:hover, &:focus {
-        background: unset;
-    }
-}
-
-.o_custom_gradient_button[style*="background-image"] {
-    background: unset;
-}
-
-.o_custom_gradient_button,
-.o_color_button {
+.o_color_picker_button {
     @extend %o-preview-alpha-background;
 
     &:not(.selected):focus,
@@ -72,6 +43,10 @@
         padding: 3px;
         font-size: 12px;
     }
+
+    .o_color_picker_button.selected {
+        border: 3px solid $o-enterprise-action-color !important;
+    }
 }
 
 .o_font_color_selector .o_colorpicker_section {
@@ -86,86 +61,6 @@
     }
 }
 
-.o_font_color_selector {
-    // todo: check web_editor
-    .o_color_button.selected,
-    .o_custom_gradient_button.selected {
-        border: 3px solid $o-enterprise-action-color !important;
-    }
-}
-// custom gradients
-.custom-gradient-configurator {
-    .gradient-checkers {
-        background-image: url('/web/static/img/transparent.png');
-        background-size: var(--PreviewAlphaBg-background-size, 10px) auto;
-        padding: 10px 0;
-        margin-bottom: -20px;
-    }
-    .gradient-preview {
-        padding: 10px 0;
-        cursor: copy;
-    }
-    .gradient-colors {
-        height: 18px;
-        div {
-            height: 0;
-            overflow: visible;
-        }
-    }
-    input[type="range"] {
-        -webkit-appearance: none;
-        appearance: none;
-        background: transparent;
-        width: 100%;
-        pointer-events: none;
-        position: relative;
-    }
-    input::-webkit-slider-thumb {
-        -webkit-appearance: none;
-        appearance: none;
-        width: 8px;
-        height: 16px;
-        cursor: pointer;
-        pointer-events: auto;
-        background: #000;
-        border-radius: 4px;
-        border: 1px solid #666;
-    }
-    input::-moz-range-thumb {
-        width: 8px;
-        height: 16px;
-        cursor: pointer;
-        pointer-events: auto;
-        background: #000;
-        border-radius: 4px;
-        border: 1px solid #666;
-    }
-
-    input[type=range]:focus-visible {
-        outline: none;
-
-        &::-webkit-slider-thumb {
-            box-shadow: 0 0 0 1px var(--bg, $white), 0 0 0 3px var(--o-color-picker-active-color, $o-enterprise-action-color);
-        }
-        &::-moz-range-thumb {
-            box-shadow: 0 0 0 1px var(--bg, $white), 0 0 0 3px var(--o-color-picker-active-color, $o-enterprise-action-color);
-        }
-        &::-ms-thumb {
-            box-shadow: 0 0 0 1px var(--bg, $white), 0 0 0 3px var(--o-color-picker-active-color, $o-enterprise-action-color);
-        }
-    }
-}
-.gradient-color-bin {
-    position: relative;
-    margin: 0 12px;
-    height: 22px;
-    > a.btn {
-        padding: 0 2px 2px;
-        margin-top: 0;
-        margin-left: -12px;
-        position: absolute;
-    }
-}
 .o_font_color_selector .o_colorpicker_widget {
     width: 100%;
     margin-top: 2px;
@@ -175,10 +70,6 @@
         width: 10ch !important;
         opacity: 0.7;
     }
-}
-
-.custom-gradient-configurator + .o_colorpicker_widget {
-    padding-bottom: 8px;
 }
 
 :root {
@@ -203,46 +94,4 @@
     $-color: map-get($colors, $-color-name);
     @include bg-variant(".bg-#{$-color-name}", $-color);
     @include text-emphasis-variant(".text-#{$-color-name}", $-color);
-}
-
-// TODO: move this with the theme tab to html_builder. It shouldn't be in web.
-.o_cc_preview_wrapper {
-    @for $index from 1 through 5 {
-        .o_cc#{$index} {
-            background-color: var(--hb-cp-o-cc#{$index}-bg);
-            background-image: var(--hb-cp-o-cc#{$index}-bg-gradient), url('/web/static/img/transparent.png');
-            color: var(--hb-cp-o-cc#{$index}-text);
-            h1 {
-                color: var(--hb-cp-o-cc#{$index}-headings);
-            }
-            .btn-primary {
-                background-color: var(--hb-cp-o-cc#{$index}-btn-primary);
-                color: var(--hb-cp-o-cc#{$index}-btn-primary-text);
-                border-color: var(--hb-cp-o-cc#{$index}-btn-primary-border);
-            }
-            .btn-secondary {
-                background-color: var(--hb-cp-o-cc#{$index}-btn-secondary);
-                color: var(--hb-cp-o-cc#{$index}-btn-secondary-text);
-                border-color: var(--hb-cp-o-cc#{$index}-btn-secondary-border);
-            }
-        }
-    }
-    &.o_we_has_btn_outline_primary {
-        .o_cc_preview_wrapper {
-            @for $index from 1 through 5 {
-                &.o_cc#{$index} {
-                    @include preview-outline-button('primary', $index)
-                }
-            }
-        }
-    }
-    &.o_we_has_btn_outline_secondary {
-        .o_cc_preview_wrapper {
-            @for $index from 1 through 5 {
-                &.o_cc#{$index} {
-                    @include preview-outline-button('secondary', $index)
-                }
-            }
-        }
-    }
 }
