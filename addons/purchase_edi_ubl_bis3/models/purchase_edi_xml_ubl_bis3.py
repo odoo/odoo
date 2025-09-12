@@ -70,7 +70,7 @@ class PurchaseEdiXmlUbl_Bis3(models.AbstractModel):
         purchase_order = vals['purchase_order']
         AccountTax = self.env['account.tax']
 
-        base_lines = [line._prepare_base_line_for_taxes_computation() for line in purchase_order.order_line]
+        base_lines = [line._prepare_base_line_for_taxes_computation() for line in purchase_order.order_line.filtered(lambda line: not line.display_type)]
         AccountTax._add_tax_details_in_base_lines(base_lines, purchase_order.company_id)
         AccountTax._round_base_lines_tax_details(base_lines, purchase_order.company_id)
 

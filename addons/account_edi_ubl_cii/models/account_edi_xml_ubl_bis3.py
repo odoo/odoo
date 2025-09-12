@@ -520,5 +520,3 @@ class AccountEdiXmlUbl_Bis3(models.AbstractModel):
             order.message_post(body=Markup("<strong>%s</strong>") % _("Format used to import the document: %s", self._description))
             if logs:
                 order._create_activity_set_details(Markup("<ul>%s</ul>") % Markup().join(Markup("<li>%s</li>") % l for l in logs))
-
-        return True
