@@ -40,3 +40,45 @@ Order = {
     'cac:AnticipatedMonetaryTotal': cac.MonetaryTotal,
     'cac:OrderLine': OrderLine,
 }
+
+ChangeOrderLine = {
+    'cac:LineItem': {
+        'cbc:ID': {},
+        'cbc:LineStatusCode': {},
+        'cbc:UUID': {},
+        'cbc:Note': {},
+        'cbc:Quantity': {},
+        'cbc:LineExtensionAmount': {},
+        'cbc:TotalTaxAmount': {},
+        'cac:AllowanceCharge': cac.AllowanceCharge,
+        'cac:Price': cac.Price,
+        'cac:Item': cac.Item,
+        'cac:TaxTotal': cac.TaxTotal,
+        'cac:ItemPriceExtension': cac.ItemPriceExtension,
+    },
+}
+
+OrderChange = {
+    '_tag': 'OrderChange',
+    'cbc:CustomizationID': {},
+    'cbc:ProfileID': {},
+    'cbc:ID': {},
+    'cbc:IssueDate': {},
+    'cbc:SequenceNumberID': {},
+    'cbc:Note': {},
+    'cbc:DocumentCurrencyCode': {},
+    'cac:ValidityPeriod': cac.Period,
+    'cac:OrderReference': {
+        'cbc:ID': {},
+    },
+    'cac:QuotationDocumentReference': cac.DocumentReference,
+    'cac:OriginatorDocumentReference': cac.DocumentReference,
+    'cac:BuyerCustomerParty': cac.CustomerParty,
+    'cac:SellerSupplierParty': cac.SupplierParty,
+    'cac:Delivery': cac.Delivery,
+    'cac:PaymentTerms': cac.PaymentTerms,
+    'cac:AllowanceCharge': cac.AllowanceCharge,
+    'cac:TaxTotal': cac.TaxTotal,
+    'cac:AnticipatedMonetaryTotal': cac.MonetaryTotal,
+    'cac:OrderLine': ChangeOrderLine,
+}
