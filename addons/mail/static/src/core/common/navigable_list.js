@@ -18,10 +18,12 @@ export class NavigableList extends Component {
         options: { type: Array },
         optionTemplate: { type: String, optional: true },
         position: { type: String, optional: true },
+        inline: { type: Boolean, optional: true },
         isLoading: { type: Boolean, optional: true },
     };
     static defaultProps = {
         position: "bottom",
+        inline: false,
         isLoading: false,
     };
 
@@ -81,6 +83,9 @@ export class NavigableList extends Component {
     }
 
     close() {
+        if (this.props.inline) {
+            return;
+        }
         this.state.open = false;
         this.state.activeIndex = null;
     }
