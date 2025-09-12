@@ -608,7 +608,8 @@ export class RelationalModel extends Model {
                 ) {
                     const aggregates = Object.assign({}, group.aggregates);
                     for (const key in aggregates) {
-                        aggregates[key] = 0;
+                        // the `array_agg_distinct` aggregator's value is an array
+                        aggregates[key] = Array.isArray(aggregates[key]) ? [] : 0;
                     }
                     groups.splice(
                         index,
