@@ -1069,7 +1069,7 @@
 <!-- Right Side Bar -->
 <template id="job_right_side_bar" inherit_id="website_hr_recruitment.index" active="True" name="Right Side Bar">
     <xpath expr="//div[@id='jobs_grid']" position="after">
-        <div class="col-lg-4 oe_structure oe_empty" id="jobs_grid_right">
+        <div class="col-lg-4 oe_structure oe_empty" id="jobs_grid_right" t-ignore="true">
             <section class="">
                 <div class="container">
                     <div class="row">
@@ -1089,18 +1089,7 @@
                                     <li><i class="fa fa-phone fa-fw me-2"></i><span class="o_force_ltr"><a href="tel:+1 (650) 555-0187">+1 (650) 555-0187</a></span></li>
                                 </ul>
                                 <!-- Social media -->
-                                <div class="s_social_media text-start" data-name="Social Media" data-snippet="s_social_media">
-                                    <h5 class="s_social_media_title d-none">Follow us</h5>
-                                    <a href="/website/social/facebook" class="s_social_media_facebook text-decoration-none" target="_blank" aria-label="Facebook">
-                                        <i class="fa fa-facebook rounded-empty-circle btn btn-outline-primary shadow-sm"></i>
-                                    </a>
-                                    <a href="/website/social/twitter" class="s_social_media_twitter text-decoration-none" target="_blank" aria-label="X">
-                                        <i class="fa fa-twitter rounded-empty-circle btn btn-outline-primary shadow-sm"></i>
-                                    </a>
-                                    <a href="/website/social/linkedin" class="s_social_media_linkedin text-decoration-none" target="_blank" aria-label="LinkedIn">
-                                        <i class="fa fa-linkedin rounded-empty-circle btn btn-outline-primary shadow-sm"></i>
-                                    </a>
-                                </div>
+                                <t t-snippet-call="website.s_social_media"/>
                             </div>
                         </div>
                     </div>
