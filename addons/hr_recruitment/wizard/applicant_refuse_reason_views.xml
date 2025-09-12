@@ -6,7 +6,7 @@
             <field name="arch" type="xml">
                 <form string="Refuse Reason" disable_autofocus="true">
                     <group col="1">
-                        <field name="refuse_reason_id" string="Reason" widget="selection_badge" options="{'horizontal': true, 'no_create': True, 'no_open': True}"/>
+                        <field name="refuse_reason_id" string="Reason" widget="selection_badge" options="{'horizontal': true, 'no_create': True, 'no_open': True}" class="mb-3"/>
                         <group invisible="not refuse_reason_id">
                             <field name="duplicates"
                                 widget="boolean_toggle"
