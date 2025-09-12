@@ -1912,3 +1912,56 @@ def _optimize_same_conditions(cls, conditions, model):
         if a == b:
             continue
         yield b
+
+
+@nary_optimization
+def _optimize_distribute_to_nary(cls, conditions, model):
+    """Distribute simple conditions into nary conditions to simplify them.
+
+    ```
+    a in x & (a in y | b)  =>  a in x & ((a in y & a in x) | b)
+    x & (x | b) => x
+    x | (x & b) => x
+    ```
+    """
+    inv = cls.INVERSE
+    inv_conditions, other_conditions = partition(lambda c: isinstance(c, inv), conditions)
+    if not inv_conditions:
+        return conditions
+    for condition in other_conditions:
+        not_condition = ~condition
+        if not_condition.__class__ is not condition.__class__:
+            continue
+
+        def similar_condition(c):
+            return (
+                c.field_expr == condition.field_expr
+                and NEGATIVE_CONDITION_OPERATORS.get(c.operator, c.operator) == NEGATIVE_CONDITION_OPERATORS.get(condition.operator, condition.operator)
+            )
+
+        def count_similar(c):
+            return sum(map(similar_condition, c.iter_conditions()))
+
+        def remove_not_condition(c):
+            return inv.ZERO if c == not_condition else c
+
+        updated = 0
+        for ncondition_index, ncondition in enumerate(inv_conditions):
+            similar_count = count_similar(ncondition)
+            if not similar_count:
+                continue
+            # a | b => a | (~a & b)
+            # a & b => a & (~a | b)
+            # where `a is condition and b is ncondition`
+            # then remove the injected condition
+            new_ncondition = inv.apply((not_condition, ncondition)).optimize(model).map_conditions(remove_not_condition)
+            # swap new condition when it is different and
+            # - for | swap when we have strictly reduced the condition
+            # - for & swap when we have reduced the condition
+            #   we could have the same number of conditions, but they are more restricted now
+            if count_similar(new_ncondition) - similar_count < (1 if cls is DomainAnd else 0) and new_ncondition != ncondition:
+                updated += 1
+                inv_conditions[ncondition_index] = new_ncondition
+        if updated:
+            return [*other_conditions, *inv_conditions]
+    return conditions
