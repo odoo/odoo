@@ -4,7 +4,7 @@ from typing import Literal
 
 from odoo import models, _
 from odoo.addons.account.tools import dict_to_xml
-from odoo.addons.account_edi_ubl_cii.models.account_edi_xml_ubl_20 import UBL_NAMESPACES
+from odoo.addons.account_edi_ubl_cii.models.account_edi_xml_ubl_20 import FloatFmt, UBL_NAMESPACES
 
 from stdnum.no import mva
 
@@ -290,8 +290,9 @@ class AccountEdiXmlUbl_Bis3(models.AbstractModel):
 
     def _add_document_line_price_nodes(self, line_node, vals):
         super()._add_document_line_price_nodes(line_node, vals)
-        if vals['base_line']['price_unit'] < 0.0:
-            line_node['cac:Price']['cbc:PriceAmount']['_text'] = -line_node['cac:Price']['cbc:PriceAmount']['_text']
+        currency_suffix = vals['currency_suffix']
+        sign = 1 if vals['base_line']['price_unit'] >= 0.0 else -1
+        line_node['cac:Price']['cbc:PriceAmount']['_text'] = FloatFmt(sign * vals[f'gross_price_unit{currency_suffix}'], 1, 8)
 
     # -------------------------------------------------------------------------
     # EXPORT: Constraints
