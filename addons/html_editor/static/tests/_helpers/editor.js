@@ -192,7 +192,7 @@ export async function testEditor(config) {
     if (contentBeforeEdit) {
         // we should do something before (sanitize)
         await compareFunction(
-            getContent(el),
+            getContent(el, config.options),
             contentBeforeEdit,
             "Editor content, before edit",
             editor
@@ -205,7 +205,7 @@ export async function testEditor(config) {
 
     if (contentAfterEdit) {
         await compareFunction(
-            getContent(el),
+            getContent(el, config.options),
             contentAfterEdit,
             "Editor content, after edit",
             editor
@@ -216,7 +216,12 @@ export async function testEditor(config) {
         const content = editor.getContent(); // Saved value.
         dispatchCleanForSave(editor, { root: el, preserveSelection: true });
         const innerHTML = el.innerHTML; // Cleaned value without cursors.
-        await compareFunction(getContent(el), contentAfter, "Editor content, after clean", editor);
+        await compareFunction(
+            getContent(el, config.options),
+            contentAfter,
+            "Editor content, after clean",
+            editor
+        );
         // Test that the saved value matches the cleaned value tested above.
         await compareFunction(content, innerHTML, "Value from editor.getContent()", editor);
     }
