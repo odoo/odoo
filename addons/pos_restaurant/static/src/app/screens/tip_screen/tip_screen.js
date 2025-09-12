@@ -49,7 +49,7 @@ export class TipScreen extends Component {
     async validateTip() {
         const amount = this.env.utils.parseValidFloat(this.state.inputTipAmount);
         const order = this.pos.getOrder();
-        const serverId = typeof order.id === "number" && order.id;
+        const serverId = order.isSynced && order.id;
 
         if (!serverId) {
             this.dialog.add(AlertDialog, {

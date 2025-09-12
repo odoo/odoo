@@ -344,7 +344,7 @@ export class PosStore extends WithLazyGetterTrap {
 
         try {
             const paidOrderNotSynced = this.models["pos.order"].filter(
-                (order) => order.state === "paid" && typeof order.id !== "number"
+                (order) => order.state === "paid" && !order.isSynced
             );
             this.addPendingOrder(paidOrderNotSynced.map((o) => o.id));
             await this.syncAllOrders({ throw: true });
@@ -363,7 +363,7 @@ export class PosStore extends WithLazyGetterTrap {
         } finally {
             // All orders saved on the server should be cancelled by the device that closes
             // the session. If some orders are not cancelled, we need to cancel them here.
-            const orders = this.models["pos.order"].filter((o) => typeof o.id === "number");
+            const orders = this.models["pos.order"].filter((o) => o.isSynced);
             for (const order of orders) {
                 if (!order.finalized) {
                     order.state = "cancel";
@@ -538,7 +538,7 @@ export class PosStore extends WithLazyGetterTrap {
             if (order && (await this._onBeforeDeleteOrder(order))) {
                 if (
                     !ignoreChange &&
-                    typeof order.id === "number" &&
+                    order.isSynced &&
                     Object.keys(order.last_order_preparation_change).length > 0
                 ) {
                     const orderPresetDate = DateTime.fromISO(order.preset_time);
@@ -555,7 +555,7 @@ export class PosStore extends WithLazyGetterTrap {
                 this.removePendingOrder(order);
                 if (!cancelled) {
                     return false;
-                } else if (typeof order.id === "number") {
+                } else if (order.isSynced) {
                     ids.add(order.id);
                 }
             } else {
@@ -612,14 +612,7 @@ export class PosStore extends WithLazyGetterTrap {
         const orderPathUuid = this.router.state.params.orderUuid;
         const order = this.models["pos.order"].find((order) => order.uuid === orderPathUuid);
         if (orderPathUuid && !order) {
-            await this.data.callRelated(
-                "pos.order",
-                "read_pos_orders",
-                [[["uuid", "=", orderPathUuid]]],
-                {},
-                false,
-                true
-            );
+            await this.data.loadServerOrders([["uuid", "=", orderPathUuid]]);
             const order = this.models["pos.order"].find((order) => order.uuid === orderPathUuid);
             if (order) {
                 this.setOrder(order);
@@ -1118,13 +1111,13 @@ export class PosStore extends WithLazyGetterTrap {
      */
     removeOrder(order, removeFromServer = true) {
         if (this.config.isShareable || removeFromServer) {
-            if (typeof order.id === "number" && !order.finalized) {
+            if (order.isSynced && !order.finalized) {
                 this.addPendingOrder([order.id], true);
                 this.syncAllOrdersDebounced();
             }
         }
 
-        if (typeof order.id === "string" && order.finalized) {
+        if (!order.isSynced && order.finalized) {
             this.addPendingOrder([order.id]);
             return;
         }
@@ -1205,8 +1198,6 @@ export class PosStore extends WithLazyGetterTrap {
 
         order.pos_reference = posReference;
         order.tracking_number = deviceIdentifier + `${parseInt(number) % 1000}`.padStart(3, "0");
-
-        this.data.debouncedSynchronizeLocalDataInIndexedDB();
     }
 
     selectNextOrder() {
@@ -1453,26 +1444,10 @@ export class PosStore extends WithLazyGetterTrap {
     }
     async getServerOrders() {
         await this.syncAllOrders();
-        return await this.loadServerOrders([
+        return await this.data.loadServerOrders([
             ["config_id", "in", [...this.config.raw.trusted_config_ids, this.config.id]],
             ["state", "=", "draft"],
         ]);
-    }
-    async loadServerOrders(domain) {
-        const result = await this.data.callRelated(
-            "pos.order",
-            "read_pos_orders",
-            [domain],
-            {},
-            false,
-            true
-        );
-        const orders = result["pos.order"] || [];
-        for (const order of orders) {
-            order.config_id = this.config;
-            order.session_id = this.session;
-        }
-        return orders;
     }
     async getProductInfo(productTemplate, quantity, priceExtra = 0, productProduct = false) {
         const order = this.getOrder();
@@ -1669,7 +1644,7 @@ export class PosStore extends WithLazyGetterTrap {
         );
         if (!printBillActionTriggered) {
             order.nb_print = order.nb_print ? order.nb_print + 1 : 1;
-            if (typeof order.id === "number" && result) {
+            if (order.isSynced && result) {
                 await this.data.write("pos.order", [order.id], { nb_print: order.nb_print });
             }
         } else if (!order.nb_print) {
@@ -1690,7 +1665,7 @@ export class PosStore extends WithLazyGetterTrap {
         return changesToOrder(order, skipped, orderPreparationCategories, cancelled);
     }
     async checkPreparationStateAndSentOrderInPreparation(order, opts = {}) {
-        if (typeof order.id !== "number") {
+        if (!order.isSynced) {
             return this.sendOrderInPreparation(order, opts);
         }
 
@@ -2066,14 +2041,7 @@ export class PosStore extends WithLazyGetterTrap {
             resModel: "pos.order",
             resId: order.id,
             onRecordSaved: async (record) => {
-                await this.data.callRelated(
-                    "pos.order",
-                    "read_pos_orders",
-                    [[["id", "=", record.evalContext.id]]],
-                    {},
-                    false,
-                    true
-                );
+                await this.data.loadServerOrders([["id", "=", record.evalContext.id]]);
                 this.action.doAction({
                     type: "ir.actions.act_window_close",
                 });

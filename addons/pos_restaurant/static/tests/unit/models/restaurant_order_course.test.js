@@ -37,11 +37,4 @@ describe("restaurant.order.course", () => {
         course.line_ids = [line];
         expect(course.isReadyToFire()).toBe(true);
     });
-
-    test("isNew", async () => {
-        const store = await setupPosEnv();
-        store.addNewOrder();
-        const course = store.addCourse();
-        expect(course.isNew()).toBe(true);
-    });
 });

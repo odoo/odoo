@@ -48,7 +48,7 @@ export class EventConfiguratorPopup extends Component {
         }
         const ticketAvailability = this.props.availabilityPerTicket[ticket.id][this.slotId];
         const existingUnsyncRegistration = this.pos.models["event.registration"].filter(
-            (r) => typeof r.id === "string" && r.event_slot_id.id === this.slotId
+            (r) => !r.isSynced && r.event_slot_id.id === this.slotId
         );
         if (ticketAvailability === "unlimited") {
             return ticket.event_id.seats_limited ? ticket.event_id.seats_available : "unlimited";
