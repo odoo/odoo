@@ -86,6 +86,10 @@ export class BuilderNumberInput extends Component {
                     unit,
                     getHtmlStyle(this.env.getEditingElement().ownerDocument)
                 );
+                // Round displayed px values to an integer for cleaner UX
+                if (unit === "px") {
+                    value = Math.round(parseFloat(value));
+                }
             }
             return value;
         });
