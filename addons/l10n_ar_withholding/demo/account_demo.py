@@ -31,6 +31,4 @@ class AccountChartTemplate(models.AbstractModel):
             earnings_wth_tax_78.l10n_ar_withholding_sequence_id = wth_sequence_id
             self.env['l10n_ar.partner.tax'].create({'tax_id': arba_wth_applied.id, 'partner_id': self.env.ref('l10n_ar.res_partner_mipyme').id, 'company_id': company.id})
 
-            # Because in demo we want to skip the config, while in data we want to require them to configure
-            self.env['account.tax'].search([('l10n_ar_withholding_payment_type', '!=', False), ('l10n_ar_tax_type', 'in', ('iibb_untaxed', 'iibb_total'))]).copy(default={'amount_type': 'percent', 'amount': 1})
         return result
