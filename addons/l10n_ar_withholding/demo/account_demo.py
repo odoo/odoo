@@ -6,19 +6,6 @@ from odoo.addons.account.models.chart_template import template
 class AccountChartTemplate(models.AbstractModel):
     _inherit = "account.chart.template"
 
-    def _post_load_demo_data(self, template_code):
-        super()._post_load_demo_data(template_code)
-        if template_code == 'ar_ri':
-            # Because in demo we want to skip the config, while in data we want to require them to configure
-            self._ar_withholding_copy_tax_demo()
-
-    def _ar_withholding_copy_tax_demo(self):
-        self.env['account.tax'].search([
-            *self.env['account.tax']._check_company_domain(self.env.company),
-            ('l10n_ar_withholding_payment_type', '!=', False),
-            ('l10n_ar_tax_type', 'in', ('iibb_untaxed', 'iibb_total')),
-        ]).copy(default={'amount_type': 'percent', 'amount': 1})
-
     @template(template='ar_ri', model='ir.sequence', demo=True)
     def _get_ar_withholding_ir_sequence_demo(self):
         return {
