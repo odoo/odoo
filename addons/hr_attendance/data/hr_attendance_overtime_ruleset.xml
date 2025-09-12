@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="hr_attendance_default_ruleset" model="hr.attendance.overtime.ruleset">
+            <field name="name">Ruleset Default</field>
+            <field name="country_id" model="res.company" eval="obj(ref('base.main_company')).country_id"/>
+            <field name="company_id" ref="base.main_company"/>
+            <field name="rate_combination_mode">max</field>
+        </record>
+    </data>
+</odoo>

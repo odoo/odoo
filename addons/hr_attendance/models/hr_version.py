@@ -17,7 +17,8 @@ class HrVersion(models.Model):
     ruleset_id = fields.Many2one(
          "hr.attendance.overtime.ruleset",
          domain=_domain_current_countries,
-         groups="hr.group_hr_manager"
+         groups="hr.group_hr_manager",
+         default=lambda self: self.env.ref("hr_attendance.hr_attendance_default_ruleset", raise_if_not_found=False),
     )
 
     @api.model
