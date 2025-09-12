@@ -1,8 +1,5 @@
 import { Interaction } from "@web/public/interaction";
 import { registry } from "@web/core/registry";
-
-import { SIZES, utils as uiUtils } from "@web/core/ui/ui_service";
-
 export class CarouselProduct extends Interaction {
     static selector = "#o-carousel-product";
     dynamicContent = {
@@ -15,11 +12,6 @@ export class CarouselProduct extends Interaction {
         _window: {
             "t-on-resize.noUpdate": this.throttled(this.onSlideCarouselProduct),
         },
-        ".carousel-indicators": {
-            "t-att-style": () => ({
-                "justify-content": this.indicatorJustify,
-            }),
-        },
         ".o_carousel_product_indicators": {
             "t-on-wheel.prevent": this.onMouseWheel,
         },
@@ -27,15 +19,11 @@ export class CarouselProduct extends Interaction {
 
     setup() {
         this.top = undefined;
-        this.indicatorJustify = "start";
     }
 
     start() {
         this.updateCarouselPosition();
         this.registerCleanup(this.services.website_menus.registerCallback(this.updateCarouselPosition.bind(this)));
-        if (this.el.querySelector(".carousel-indicators")) {
-            this.updateJustifyContent();
-        }
     }
 
     updateCarouselPosition() {
@@ -74,28 +62,11 @@ export class CarouselProduct extends Interaction {
         const scrollSize = isVertical ? indicatorsDivEl.scrollHeight : indicatorsDivEl.scrollWidth;
         let indicatorsPositionDiff = (indicatorPosition + (indicatorSize / 2)) - (indicatorsDivSize / 2);
         indicatorsPositionDiff = Math.min(indicatorsPositionDiff, scrollSize - indicatorsDivSize);
-        this.updateJustifyContent();
         this.updateContent();
         const indicatorsPositionX = isVertical ? "0" : "-" + indicatorsPositionDiff;
         const indicatorsPositionY = isVertical ? "-" + indicatorsPositionDiff : "0";
         const translate3D = indicatorsPositionDiff > 0 ? "translate3d(" + indicatorsPositionX + "px," + indicatorsPositionY + "px,0)" : "";
         indicatorsDivEl.style.setProperty("transform", translate3D);
-    }
-
-    updateJustifyContent() {
-        this.indicatorJustify = "start";
-        if (uiUtils.getSize() <= SIZES.MD) {
-            const indicatorsDivEl = this.el.querySelector(".carousel-indicators");
-            const indicatorsDivRect = indicatorsDivEl.getBoundingClientRect();
-            const lastIndicatorEl = indicatorsDivEl.children[indicatorsDivEl.children.length - 1];
-            const lastIndicatorRect = lastIndicatorEl.getBoundingClientRect();
-            const lastIndicatorStyle = window.getComputedStyle(lastIndicatorEl);
-            const firstLiEl = indicatorsDivEl.querySelector("li");
-            const firstLiRect = firstLiEl.getBoundingClientRect();
-            if ((lastIndicatorRect.left - indicatorsDivRect.left - parseFloat(lastIndicatorStyle.marginLeft) + firstLiRect.width) < indicatorsDivRect.width) {
-                this.indicatorJustify = "center";
-            }
-        }
     }
 
     /**
