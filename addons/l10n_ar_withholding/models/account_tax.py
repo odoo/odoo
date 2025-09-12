@@ -34,7 +34,7 @@ class AccountTax(models.Model):
         string='WTH Sequence',
         copy=False, check_company=True,
         help='If no sequence provided then it will be required for you to enter withholding number when registering one.')
-    l10n_ar_code = fields.Char('AFIP Code')
+    l10n_ar_code = fields.Char('ARCA Code')
     l10n_ar_non_taxable_amount = fields.Float(
         string='Non Taxable Amount',
         digits='Account',

@@ -23,7 +23,7 @@ class ResPartner(models.Model):
         [('multilateral', 'Multilateral'), ('local', 'Local'), ('exempt', 'Exempt')],
         'Gross Income Type', help='Argentina: Type of gross income: exempt, local, multilateral.')
     l10n_ar_afip_responsibility_type_id = fields.Many2one(
-        'l10n_ar.afip.responsibility.type', string='AFIP Responsibility Type', index='btree_not_null', help='Defined by AFIP to'
+        'l10n_ar.afip.responsibility.type', string='ARCA Responsibility Type', index='btree_not_null', help='Defined by ARCA to'
         ' identify the type of responsibilities that a person or a legal entity could have and that impacts in the'
         ' type of operations and requirements they need.')
 

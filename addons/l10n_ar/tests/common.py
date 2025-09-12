@@ -297,14 +297,14 @@ class TestAr(AccountTestInvoicingCommon):
             'name': 'Service WO TAX',
             'type': 'service',
             'uom_id': uom_unit.id,
-            'default_code': 'AFIP_DESPACHO',
+            'default_code': 'ARCA_DESPACHO',
         })
         cls.service_iva_no_gravado = cls.env['product.product'].create({
             # demo product_product_arancel
             'name': 'Server VAT Untaxed',
             'type': 'service',
             'uom_id': uom_unit.id,
-            'default_code': 'AFIP_ARANCEL',
+            'default_code': 'ARCA_ARANCEL',
             "supplier_taxes_id": [(6, 0, (cls.tax_no_gravado_purchase).ids)],
         })
 
@@ -640,8 +640,8 @@ class TestAr(AccountTestInvoicingCommon):
         return {'PREPRINTED': 'II_IM'}
 
     def _create_journal(self, afip_ws, data=None):
-        """ Create a journal of a given AFIP ws type.
-        If there is a problem because we are using a AFIP certificate that is already been in use then change the certificate and try again """
+        """ Create a journal of a given ARCA ws type.
+        If there is a problem because we are using a ARCA certificate that is already been in use then change the certificate and try again """
         data = data or {}
         afip_ws = afip_ws.upper()
         pos_number = str(random.randint(0, 99999))
