@@ -8,6 +8,7 @@ import {
     isProtected,
     isProtecting,
     paragraphRelatedElementsSelector,
+    isContentEditable,
 } from "@html_editor/utils/dom_info";
 import { _t } from "@web/core/l10n/translation";
 import { MediaDialog, TABS } from "./media_dialog/media_dialog";
@@ -110,10 +111,12 @@ export class MediaPlugin extends Plugin {
     }
 
     isEditableMediaElement(node) {
-        return (
+        if (
             (isMediaElement(node) || node.nodeName === "IMG") &&
-            node.classList.contains(EDITABLE_MEDIA_CLASS)
-        );
+            (node.classList.contains(EDITABLE_MEDIA_CLASS) || isContentEditable(node))
+        ) {
+            return true;
+        }
     }
 
     replaceImage() {
