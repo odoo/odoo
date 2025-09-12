@@ -108,19 +108,19 @@ export class PosKanbanRenderer extends KanbanRenderer {
                 name: _t("Clothes"),
                 description: _t("Multi colors and sizes"),
                 functionName: "load_onboarding_clothes_scenario",
-                iconFile: this.isDarkTheme ? "clothes-icon-dark.png" : "clothes-icon.png",
+                iconFile: "clothes-icon.svg",
             },
             {
                 name: _t("Furniture"),
                 description: _t("Stock, product configurator, replenishment, discounts"),
                 functionName: "load_onboarding_furniture_scenario",
-                iconFile: this.isDarkTheme ? "furniture-icon-dark.png" : "furniture-icon.png",
+                iconFile: "furniture-icon.svg",
             },
             {
                 name: _t("Bakery"),
                 description: _t("Food, but over the counter"),
                 functionName: "load_onboarding_bakery_scenario",
-                iconFile: this.isDarkTheme ? "bakery-icon-dark.png" : "bakery-icon.png",
+                iconFile: "bakery-icon.svg",
             },
         ];
     }
@@ -132,14 +132,14 @@ export class PosKanbanRenderer extends KanbanRenderer {
                 isRestaurant: true,
                 description: _t("Tables, menus, kitchen display, etc."),
                 functionName: "load_onboarding_restaurant_scenario",
-                iconFile: this.isDarkTheme ? "restaurant-icon-dark.png" : "restaurant-icon.png",
+                iconFile: "restaurant-icon.svg",
             },
             {
                 name: _t("Bar"),
                 isRestaurant: true,
                 description: _t("Floor plan, tips, self order, etc."),
                 functionName: "load_onboarding_bar_scenario",
-                iconFile: this.isDarkTheme ? "cocktail-icon-dark.png" : "cocktail-icon.png",
+                iconFile: "cocktail-icon.svg",
             },
         ];
     }
@@ -150,7 +150,7 @@ export class PosKanbanRenderer extends KanbanRenderer {
             isRestaurant: false,
             description: _t("Any shop"),
             functionName: "load_onboarding_retail_scenario",
-            iconFile: this.isDarkTheme ? "retail-icon-dark.png" : "retail-icon.png",
+            iconFile: "retail-icon.svg",
         };
     }
 
