@@ -16,7 +16,7 @@
                             <field name="partner_ids" widget="many2many_tags_avatar" options="{'no_create': True}"/>
                             <field name="tds_deduction" required="1"/>
                             <field name="tds_certificate"
-                                   widget="binary"
+                                   widget="tds_binary_field"
                                    filename="tds_certificate_filename"
                                    options="{'accepted_file_extensions': '.pdf', 'allowed_mime_type' : 'application/pdf'}"
                             />
