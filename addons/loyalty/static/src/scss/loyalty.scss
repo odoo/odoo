@@ -24,37 +24,17 @@
     }
 }
 
-.loyalty-templates-container {
-    pointer-events: auto;
+.o_loyalty_program_list_view_view .o_list_renderer:has(.o_view_nocontent) > .o_list_table {
+    display: none;
+}
 
-    .loyalty-template {
-        &, * {
-            transition: all .15s;
-        }
-
-        cursor: pointer !important;
-
-        img {
-            filter: invert(.5);
-        }
-
-        &:hover {
-            * {
-                color: #7C6576 !important;
-            }
-
-            background-color: var(--o-color-4);
-            box-shadow: 0 6px 10px 0 rgba(0, 0, 0, 0.1), 0 2px 2px 0 rgba(0, 0, 0, 0.05);
-            border-color: #7C6576 !important;
-
-            img {
-                filter: invert(0);
-            }
-
-            .card-body {
-                background-color: var(--o-color-4) !important;
-            }
-        }
+.loyalty-template {
+    &:hover {
+        background: var(--LoyaltyTemplate-background--hover, #{$o-gray-200});
+    }
+    &:focus-visible {
+        box-shadow: 0 0 0 #{$btn-focus-width} RGBA(#{$btn-link-focus-shadow-rgb}, .5);
+        outline: none;
     }
 }
 
@@ -68,5 +48,17 @@
 .o_loyalty_program_list_view_view .o_list_renderer .o_view_nocontent{
     @include media-breakpoint-down(lg){
         height: fit-content;
+    }
+}
+
+.o_nocontent_help:has(.loyalty-template) {
+    max-width: unset;
+
+    @include media-breakpoint-up(sm) {
+        max-width: 90%;
+    }
+
+    @include media-breakpoint-up(lg) {
+        max-width: 80%;
     }
 }
