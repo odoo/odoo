@@ -648,7 +648,7 @@ export class SelfOrder extends Reactive {
     async getUserDataFromServer(tokens = []) {
         const tableIdentifier = this.router.getTableIdentifier([]);
         const dbAccessToken = this.models["pos.order"]
-            .filter((o) => o.state === "draft" && typeof o.id === "number")
+            .filter((o) => o.state === "draft" && o.isSynced)
             .map((order) => ({
                 access_token: order.access_token,
                 state: order.state,

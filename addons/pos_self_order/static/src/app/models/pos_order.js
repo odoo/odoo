@@ -40,7 +40,7 @@ patch(PosOrder.prototype, {
     recomputeChanges() {
         const lines = this.lines;
         for (const line of lines) {
-            if (typeof line.id === "string") {
+            if (!line.isSynced) {
                 continue;
             }
 

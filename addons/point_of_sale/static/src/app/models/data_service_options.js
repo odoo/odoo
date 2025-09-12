@@ -7,18 +7,17 @@ export class DataServiceOptions {
                 key: "uuid",
                 condition: (record) =>
                     record.finalized &&
-                    typeof record.id === "number" &&
+                    record.isSynced &&
                     record.pos_session_id !== parseInt(odoo.pos_session_id),
             },
             "pos.order.line": {
                 key: "uuid",
-                condition: (record) =>
-                    record.order_id?.finalized && typeof record.order_id.id === "number",
+                condition: (record) => record.order_id?.finalized && record.order_id.isSynced,
             },
             "pos.payment": {
                 key: "uuid",
                 condition: (record) =>
-                    record.pos_order_id?.finalized && typeof record.pos_order_id.id === "number",
+                    record.pos_order_id?.finalized && record.pos_order_id.isSynced,
             },
             "product.attribute.custom.value": {
                 key: "id",
