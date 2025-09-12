@@ -87,3 +87,41 @@ class TestReplenishment(TestStockCommon):
         # Buy is still the effective route
         self.assertEqual(orderpoint.effective_vendor_id, self.partner_1)
         self.assertFalse(orderpoint.effective_bom_id)
+
+    def test_replenishment_wizard_warehouse_routes(self):
+        def create_replenish_wizard(warehouse, product):
+            return self.env['product.replenish'].create({
+                'product_id': product.id,
+                'product_tmpl_id': product.product_tmpl_id.id,
+                'product_uom_id': product.uom_id.id,
+                'quantity': 1,
+                'warehouse_id': warehouse.id,
+            })
+
+        self.warehouse_1.write({
+            'buy_to_resupply': True,
+            'manufacture_to_resupply': True,
+        })
+        manufacture_route = self.warehouse_1.route_ids.filtered(lambda r: any(rule.action == 'manufacture' for rule in r.rule_ids))
+        buy_route = self.warehouse_1.route_ids.filtered(lambda r: any(rule.action == 'buy' for rule in r.rule_ids))
+
+        # No resupply methods should be set for Product A
+        self.assertRecordValues(self.productA, [{'route_ids': self.env['stock.route'], 'seller_ids': self.env['product.supplierinfo'], 'bom_ids': self.env['mrp.bom']}])
+        replenish_empty = create_replenish_wizard(self.warehouse_1, self.productA)
+        self.assertFalse(replenish_empty.allowed_route_ids)
+
+        # Add a BoM for Product A. This should make it eligible for Manufacture routes
+        self.env['mrp.bom'].create({
+            'product_tmpl_id': self.productA.product_tmpl_id.id,
+            'product_qty': 1,
+        })
+        replenish_manufacture = create_replenish_wizard(self.warehouse_1, self.productA)
+        self.assertEqual(replenish_manufacture.allowed_route_ids, manufacture_route)
+
+        # Now add a seller for Product A. This should make it eligible for Buy routes
+        self.env['product.supplierinfo'].create({
+            'product_id': self.productA.id,
+            'partner_id': self.partner_1.id,
+        })
+        replenish_both = create_replenish_wizard(self.warehouse_1, self.productA)
+        self.assertEqual(set(replenish_both.allowed_route_ids.ids), set((manufacture_route | buy_route).ids))

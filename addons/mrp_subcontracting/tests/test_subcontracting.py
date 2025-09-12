@@ -920,6 +920,18 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
             {'product_qty': 19.8, 'qty_producing': 19.8, 'state': 'done'},
         ])
 
+    def test_replenish_with_subcontracting_bom(self):
+        """ Checks that a subcontracting bom cannot trigger a 'Manufacture' replenish.
+        """
+        self.assertEqual(self.finished.bom_ids.type, 'subcontract')
+        replenish_wizard = self.env['product.replenish'].create({
+            'product_id': self.finished.id,
+            'product_tmpl_id': self.finished.product_tmpl_id.id,
+            'product_uom_id': self.finished.uom_id.id,
+            'quantity': 1,
+            'warehouse_id': self.warehouse.id,
+        })
+        self.assertFalse(replenish_wizard.allowed_route_ids)
 
 @tagged('post_install', '-at_install')
 class TestSubcontractingTracking(TransactionCase):
