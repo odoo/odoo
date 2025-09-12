@@ -131,6 +131,8 @@ class StockMove(models.Model):
         moves_in = moves.filtered(lambda m: m.is_in or m.is_dropship)
         moves_in._set_value()
         moves._create_account_move()
+        # Update standard price on outgoing fifo products
+        moves_out.product_id.filtered(lambda p: p.cost_method == 'fifo')._update_standard_price()
         return moves
 
     def _create_account_move(self):
