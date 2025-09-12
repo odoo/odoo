@@ -27,7 +27,7 @@ export class CopyButton extends Component {
     async onClick() {
         let write, content;
         if (typeof this.props.content === "function") {
-            content = this.props.content();
+            content = await this.props.content();
         } else {
             content = this.props.content;
         }
