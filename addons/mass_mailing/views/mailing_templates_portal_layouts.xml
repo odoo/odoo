@@ -8,7 +8,7 @@
                 <header>
                     <div><title>Odoo</title></div>
                     <div class="text-center">
-                        <img t-attf-src="/web/binary/company_logo?company={{ res_company.id }}"/>
+                        <img t-if="not res_company.uses_default_logo" t-attf-src="/web/binary/company_logo?company={{ res_company.id }}"/>
                     </div>
                 </header>
                 <div id="wrap" class="oe_structure oe_empty"/>
@@ -20,7 +20,7 @@
                 <t t-call-assets="mass_mailing.mailing_assets" lazy_load="True"/>
             </xpath>
             <xpath expr="//header" position="before">
-                <t t-set="no_header" t-value="True"/>
+                <t t-if="not website" t-set="no_header" t-value="True"/>
             </xpath>
          </t>
      </template>
