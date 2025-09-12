@@ -88,8 +88,6 @@ class ProductReplenish(models.TransientModel):
         return fields.Datetime.add(now, days=delay)
 
     def launch_replenishment(self):
-        if not self.route_id:
-            raise UserError(_("You need to select a route to replenish your products"))
         try:
             now = self.env.cr.now()
             self.env['stock.rule'].with_context(clean_context(self.env.context)).run([
