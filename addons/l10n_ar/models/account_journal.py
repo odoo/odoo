@@ -8,21 +8,21 @@ class AccountJournal(models.Model):
     _inherit = "account.journal"
 
     l10n_ar_afip_pos_system = fields.Selection(
-        selection='_get_l10n_ar_afip_pos_types_selection', string='AFIP POS System',
+        selection='_get_l10n_ar_afip_pos_types_selection', string='ARCA POS System',
         compute='_compute_l10n_ar_afip_pos_system', store=True, readonly=False,
         help="Argentina: Specify which type of system will be used to create the electronic invoice. This will depend on the type of invoice to be created.",
     )
     l10n_ar_afip_pos_number = fields.Integer(
-        'AFIP POS Number', help='This is the point of sale number assigned by AFIP in order to generate invoices')
+        'ARCA POS Number', help='This is the point of sale number assigned by ARCA in order to generate invoices')
     company_partner = fields.Many2one('res.partner', related='company_id.partner_id')
     l10n_ar_afip_pos_partner_id = fields.Many2one(
-        'res.partner', 'AFIP POS Address', help='This is the address used for invoice reports of this POS',
+        'res.partner', 'ARCA POS Address', help='This is the address used for invoice reports of this POS',
         domain="['|', ('id', '=', company_partner), '&', ('id', 'child_of', company_partner), ('type', '!=', 'contact')]"
     )
     l10n_ar_is_pos = fields.Boolean(
         compute="_compute_l10n_ar_is_pos", store=True, readonly=False,
-        string="Is AFIP POS?",
-        help="Argentina: Specify if this Journal will be used to send electronic invoices to AFIP.",
+        string="Is ARCA POS?",
+        help="Argentina: Specify if this Journal will be used to send electronic invoices to ARCA.",
     )
 
     @api.depends('country_code', 'type', 'l10n_latam_use_documents')
@@ -48,7 +48,7 @@ class AccountJournal(models.Model):
         ]
 
     def _get_journal_letter(self, counterpart_partner=False):
-        """ Regarding the AFIP responsibility of the company and the type of journal (sale/purchase), get the allowed
+        """ Regarding the ARCA responsibility of the company and the type of journal (sale/purchase), get the allowed
         letters. Optionally, receive the counterpart partner (customer/supplier) and get the allowed letters to work
         with him. This method is used to populate document types on journals and also to filter document types on
         specific invoices to/from customer/supplier
@@ -84,7 +84,7 @@ class AccountJournal(models.Model):
         }
         if not self.company_id.l10n_ar_afip_responsibility_type_id:
             action = self.env.ref('base.action_res_company_form')
-            msg = _('Can not create chart of account until you configure your company AFIP Responsibility and VAT.')
+            msg = _('Can not create chart of account until you configure your company ARCA Responsibility and VAT.')
             raise RedirectWarning(msg, action.id, _('Go to Companies'))
 
         letters = letters_data['issued' if self.l10n_ar_is_pos else 'received'][
@@ -152,14 +152,14 @@ class AccountJournal(models.Model):
     @api.constrains('l10n_ar_afip_pos_number')
     def _check_afip_pos_number(self):
         if self.filtered(lambda j: j.l10n_ar_is_pos and j.l10n_ar_afip_pos_number == 0):
-            raise ValidationError(_('Please define an AFIP POS number'))
+            raise ValidationError(_('Please define an ARCA POS number'))
 
         if self.filtered(lambda j: j.l10n_ar_is_pos and j.l10n_ar_afip_pos_number > 99999):
-            raise ValidationError(_('Please define a valid AFIP POS number (5 digits max)'))
+            raise ValidationError(_('Please define a valid ARCA POS number (5 digits max)'))
 
     @api.onchange('l10n_ar_afip_pos_number', 'type')
     def _onchange_set_short_name(self):
-        """ Will define the AFIP POS Address field domain taking into account the company configured in the journal
+        """ Will define the ARCA POS Address field domain taking into account the company configured in the journal
         The short code of the journal only admit 5 characters, so depending on the size of the pos_number (also max 5)
         we add or not a prefix to identify sales journal.
         """

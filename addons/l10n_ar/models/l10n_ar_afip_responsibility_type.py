@@ -6,7 +6,7 @@ from odoo import models, fields
 class L10n_ArAfipResponsibilityType(models.Model):
     _name = 'l10n_ar.afip.responsibility.type'
 
-    _description = 'AFIP Responsibility Type'
+    _description = 'ARCA Responsibility Type'
     _order = 'sequence'
 
     name = fields.Char(required=True, index='trigram')
