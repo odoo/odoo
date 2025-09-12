@@ -537,7 +537,8 @@ class AccountTestInvoicingCommon(ProductCommon):
         if not move_form._get_modifier('date', 'invisible'):
             move_form.date = move_form.invoice_date
         move_form.partner_id = partner or cls.partner_a
-        if journal:
+        # The journal_id field is invisible when there is only one available journal for the move type.
+        if journal and not move_form._get_modifier('journal_id', 'invisible'):
             move_form.journal_id = journal
         if currency:
             move_form.currency_id = currency
