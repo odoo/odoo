@@ -1,6 +1,8 @@
 import * as spreadsheet from "@odoo/o-spreadsheet";
 
 import { Component, useSubEnv } from "@odoo/owl";
+import { navigateToOdooMenu } from "@spreadsheet/chart/odoo_chart/odoo_chart_helpers";
+import { useService } from "@web/core/utils/hooks";
 const { registries, stores } = spreadsheet;
 const { figureRegistry } = registries;
 const { ModelStore, useStoreProvider } = stores;
@@ -16,6 +18,8 @@ export class MobileFigureContainer extends Component {
     setup() {
         const stores = useStoreProvider();
         stores.inject(ModelStore, this.props.spreadsheetModel);
+        this.actionService = useService("action");
+        this.notificationService = useService("notification");
         useSubEnv({
             model: this.props.spreadsheetModel,
             isDashboard: () => this.props.spreadsheetModel.getters.isDashboard(),
@@ -60,5 +64,13 @@ export class MobileFigureContainer extends Component {
         }
         const definition = this.props.spreadsheetModel.getters.getChartDefinition(figure.id);
         return definition.type === "scorecard";
+    }
+
+    async onClick(figureId) {
+        const definition = this.env.model.getters.getChartDefinition(figureId);
+        const menu = this.env.model.getters.getChartOdooMenu(figureId);
+        if (menu && (definition.type === "scorecard" || definition.type === "gauge")) {
+            await navigateToOdooMenu(menu, this.actionService, this.notificationService);
+        }
     }
 }
