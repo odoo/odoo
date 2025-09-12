@@ -789,6 +789,9 @@ class PosConfig(models.Model):
 
         return self._action_to_open_ui()
 
+    def close_ui(self):
+        return self.open_ui()
+
     def open_existing_session_cb(self):
         """ close session button
 
