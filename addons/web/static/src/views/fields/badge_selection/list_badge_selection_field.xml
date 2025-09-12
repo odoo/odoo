@@ -2,9 +2,6 @@
 <templates xml:space="preserve">
 
     <t t-name="web.ListBadgeSelectionField" t-inherit="web.BadgeSelectionField" t-inherit-mode="primary">
-        <xpath expr="//div" position="attributes">
-            <attribute name="class" separator=" " remove="mb-3"/>
-        </xpath>
         <xpath expr="//t[@t-if='props.readonly']/span[@t-esc='string']" position="attributes">
             <attribute name="class">badge rounded-pill</attribute>
             <attribute name="t-att-class">getBadgeClassNames()</attribute>
