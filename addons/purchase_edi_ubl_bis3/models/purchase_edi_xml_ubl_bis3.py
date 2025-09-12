@@ -16,6 +16,7 @@ class PurchaseEdiXmlUbl_Bis3(models.AbstractModel):
     # -------------------------------------------------------------------------
 
     def _export_order(self, purchase_order):
+        purchase_order.order_line = purchase_order.order_line.filtered(lambda l: not l.display_type)
         vals = {'purchase_order': purchase_order}
         document_node = self._get_purchase_order_node(vals)
         xml_content = dict_to_xml(document_node, template=Order, nsmap=self._get_document_nsmap(vals))
