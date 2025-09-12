@@ -4,6 +4,7 @@ import json
 import logging
 
 from odoo import api, fields, models, _
+from odoo.fields import Command
 from odoo.exceptions import UserError
 from odoo.tools import float_compare
 
@@ -318,3 +319,13 @@ class SaleOrder(models.Model):
 
     def _is_display_stock_in_catalog(self):
         return True
+
+    def _add_reference(self, reference):
+        """ link the given reference to the list of references. """
+        self.ensure_one()
+        self.stock_reference_ids = [Command.link(reference.id)]
+
+    def _remove_reference(self, reference):
+        """ remove the given reference to the list of references. """
+        self.ensure_one()
+        self.stock_reference_ids = [Command.unlink(reference.id)]
