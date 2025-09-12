@@ -13,6 +13,7 @@
         'views/account_payment_views.xml',
     ],
     'auto_install': True,
+    'post_init_hook': '_pos_online_payment_post_init',
     'assets': {
         'point_of_sale.assets_prod': [
             'pos_online_payment/static/src/app/**/*',
