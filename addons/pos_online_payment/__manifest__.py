@@ -15,6 +15,7 @@
     ],
     'auto_install': True,
     'installable': True,
+    'post_init_hook': '_pos_online_payment_post_init',
     'assets': {
         'point_of_sale.assets_prod': [
             'pos_online_payment/static/src/app/**/*',
