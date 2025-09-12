@@ -34,6 +34,11 @@
             'loyalty/static/src/xml/*.xml',
 
             ('remove', 'loyalty/static/src/js/portal/**/*'),
+            # Don't include dark mode files in light mode
+            ('remove', 'loyalty/static/src/scss/*.dark.scss'),
+        ],
+        "web.assets_web_dark": [
+            'loyalty/static/src/scss/*.dark.scss',
         ],
         'web.assets_frontend': [
             'loyalty/static/src/js/portal/**/*',
