@@ -90,7 +90,7 @@ export default class DevicesSynchronisation {
      * and synchronize the records with other devices.
      */
     async readDataFromServer() {
-        const serverOpenOrders = this.pos.getOpenOrders().filter((o) => typeof o.id === "number");
+        const serverOpenOrders = this.pos.getOpenOrders().filter((o) => o.isSynced);
         const { domain, recordIds } = this.constructOrdersDomain(serverOpenOrders);
         let response = {};
         try {
@@ -178,7 +178,7 @@ export default class DevicesSynchronisation {
 
         const recordIdsByModel = {};
         const domainByModel = Object.entries(recordsToCheck).reduce((acc, [model, records]) => {
-            const serverRecs = records.filter((r) => typeof r.id === "number");
+            const serverRecs = records.filter((r) => r.isSynced);
             const ids = serverRecs.map((r) => r.id);
             const config = this.pos.config;
             const domains = [];

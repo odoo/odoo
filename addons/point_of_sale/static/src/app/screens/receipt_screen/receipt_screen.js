@@ -84,7 +84,7 @@ export class ReceiptScreen extends Component {
         );
     async _sendReceiptToCustomer({ action, destination }) {
         const order = this.currentOrder;
-        if (typeof order.id !== "number") {
+        if (!order.isSynced) {
             this.dialog.add(ConfirmationDialog, {
                 title: _t("Unsynced order"),
                 body: _t(

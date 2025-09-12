@@ -53,13 +53,13 @@ const deepSerialization = (
                         continue;
                     }
 
-                    if (typeof childRecord.id === "number" && childRecord._dirty) {
+                    if (childRecord.isSynced && childRecord._dirty) {
                         toUpdate.push(childRecord);
 
                         if (!opts.keepCommands) {
                             childRecord._dirty = false;
                         }
-                    } else if (typeof childRecord.id !== "number") {
+                    } else if (!childRecord.isSynced) {
                         toCreate.push(childRecord);
                     }
                     serialized[relatedModel][childRecord.uuid] = childRecord.uuid;
@@ -87,7 +87,7 @@ const deepSerialization = (
                 result[fieldName] = record[fieldName]
                     .filter((childRecord) => childRecord.id)
                     .map((childRecord) => {
-                        if (typeof childRecord.id !== "number") {
+                        if (!childRecord.isSynced) {
                             throw new Error(
                                 `Trying to create a non serializable record '${relatedModel}'`
                             );
@@ -142,7 +142,7 @@ const deepSerialization = (
                     record.uuid &&
                     serialized[relatedModel][record[fieldName].uuid]
                 ) {
-                    if (typeof recordId !== "number") {
+                    if (!record[fieldName].isSynced) {
                         //  mapping is only needed for newly created records
                         uuidMapping[targetModel][record.uuid] ??= {};
                         uuidMapping[targetModel][record.uuid][fieldName] = record[fieldName].uuid;

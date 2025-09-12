@@ -20,9 +20,6 @@ export class RestaurantOrderCourse extends Base {
     isReadyToFire() {
         return !this.fired && !this.isEmpty();
     }
-    isNew() {
-        return typeof this.id === "string";
-    }
 }
 
 registry
