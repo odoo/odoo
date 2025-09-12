@@ -11,7 +11,7 @@ from odoo import _, api, fields, models
 from odoo.addons.stock.models.stock_move import PROCUREMENT_PRIORITIES
 from odoo.addons.web.controllers.utils import clean_action
 from odoo.exceptions import UserError
-from odoo.fields import Domain
+from odoo.fields import Domain, Command
 from odoo.tools import format_datetime, format_date, groupby, OrderedSet, SQL
 from odoo.tools.float_utils import float_compare, float_is_zero
 
@@ -2082,6 +2082,16 @@ class StockPicking(models.Model):
     def _can_return(self):
         self.ensure_one()
         return self.state == 'done'
+
+    def _add_reference(self, reference=False):
+        """ link the given reference to the list of references. """
+        self.ensure_one()
+        self.move_ids.reference_ids = [Command.link(reference.id)]
+
+    def _remove_reference(self, reference):
+        """ remove the given reference to the list of references. """
+        self.ensure_one()
+        self.move_ids.reference_ids = [Command.unlink(reference.id)]
 
     def _prepare_entire_pack_move_line_vals(self, packages):
         """ Prepares the move line values for every packages within packages and their children that contain products.
