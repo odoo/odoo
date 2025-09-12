@@ -1,27 +1,26 @@
-const COMPARISON_PRODUCT_IDS_SESSION_NAME = 'comparison_product_ids';
+import { cookie } from '@web/core/browser/cookie';
+
+const COMPARISON_PRODUCT_IDS_COOKIE_NAME = 'comparison_product_ids';
 const MAX_COMPARISON_PRODUCTS = 4;
 const COMPARISON_EVENT = 'comparison_products_changed'
 
 /**
- * Get the IDs of the products to compare from the session.
+ * Get the IDs of the products to compare from the cookie.
  *
  * @return {Array<number>} The IDs of the products to compare.
  */
 function getComparisonProductIds() {
-    return JSON.parse(sessionStorage.getItem(COMPARISON_PRODUCT_IDS_SESSION_NAME) || '[]');
+    return JSON.parse(cookie.get(COMPARISON_PRODUCT_IDS_COOKIE_NAME) || '[]');
 }
 
 /**
- * Set the IDs of the products to compare in the session.
+ * Set the IDs of the products to compare in the cookie.
  *
  * @param {ArrayLike<number>} productIds The IDs of the products to compare.
  * @param {EventBus} bus
  */
 function setComparisonProductIds(productIds, bus) {
-    sessionStorage.setItem(
-        COMPARISON_PRODUCT_IDS_SESSION_NAME,
-        JSON.stringify(Array.from(productIds),
-    ));
+    cookie.set(COMPARISON_PRODUCT_IDS_COOKIE_NAME, JSON.stringify(Array.from(productIds)));
     notifyComparisonListeners(bus);
 }
 
@@ -56,7 +55,7 @@ function removeComparisonProduct(productId, bus) {
  */
 function clearComparisonProducts(bus) {
     const productIds = getComparisonProductIds();
-    sessionStorage.removeItem(COMPARISON_PRODUCT_IDS_SESSION_NAME);
+    cookie.delete(COMPARISON_PRODUCT_IDS_COOKIE_NAME);
     notifyComparisonListeners(bus);
     enableDisabledProducts(productIds);
 }
