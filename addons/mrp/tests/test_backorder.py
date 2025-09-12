@@ -1033,3 +1033,29 @@ class TestMrpWorkorderBackorder(TransactionCase):
         wizard = Form(self.env[action['res_model']].with_context(action['context']))
         wizard.max_batch_size = 1
         wizard.save().action_split()
+
+    def test_adding_line_workorder_in_progress(self):
+        self.env.ref('base.group_user').implied_ids += (
+            self.env.ref('mrp.group_mrp_routings')
+        )
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.bom_id = self.bom_finished1
+        mo_form.product_id = self.finished1
+        mo_form.product_qty = 1
+        mo = mo_form.save()
+        mo.action_confirm()
+        op_1 = mo.workorder_ids
+        with Form(mo) as fmo:
+            fmo.qty_producing = 1
+        op_1.button_start()
+        mo.write({
+            'move_raw_ids': [(0, 0, {
+                'product_id': self.compfinished1.id,
+                'name': self.compfinished1.display_name,
+                'product_uom': self.compfinished1.uom_id.id,
+                'product_uom_qty': 1,
+                'quantity': 1,
+                'state': 'draft',
+            })]
+        })
+        self.assertEqual(mo.move_raw_ids.mapped('state'), ['assigned', 'assigned', 'confirmed'])

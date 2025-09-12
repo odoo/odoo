@@ -923,6 +923,10 @@ class MrpProduction(models.Model):
                     moves_to_reassign |= production.move_raw_ids
 
         res = super(MrpProduction, self).write(vals)
+        if any(wo.state == "progress" for wo in self.workorder_ids) and any(move.state == "assigned" for move in self.move_raw_ids) and "move_raw_ids" in vals:
+            for i in range(len(vals['move_raw_ids'])):
+                if any(isinstance(x, dict) and x.get("state") == "draft" for x in vals['move_raw_ids'][0]):
+                    self.move_raw_ids[-(i + 1)].state = 'draft'
 
         for production in self:
             if 'date_start' in vals and not self.env.context.get('force_date', False):
