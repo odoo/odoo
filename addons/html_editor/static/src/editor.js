@@ -4,7 +4,7 @@ import { fillShrunkPhrasingParent, removeClass } from "./utils/dom";
 import { isEmpty } from "./utils/dom_info";
 import { resourceSequenceSymbol, withSequence } from "./utils/resource";
 import { fixInvalidHTML, initElementForEdition } from "./utils/sanitize";
-import { setElementContent } from "@web/core/utils/html";
+import { getInnerHtml, setElementContent } from "@web/core/utils/html";
 
 /**
  * @typedef { import("./plugin_sets").SharedMethods } SharedMethods
@@ -240,7 +240,7 @@ export class Editor {
     }
 
     getContent() {
-        return this.getElContent().innerHTML;
+        return getInnerHtml(this.getElContent());
     }
 
     getElContent() {

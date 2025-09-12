@@ -1,7 +1,8 @@
-import { Component, markup, useRef } from "@odoo/owl";
+import { Component, useRef } from "@odoo/owl";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
+import { getOuterHtml } from "@web/core/utils/html";
 import { InputConfirmationDialog } from "./input_confirmation_dialog";
 import { fuzzyLookup } from "@web/core/utils/search";
 
@@ -17,6 +18,7 @@ export class SnippetViewer extends Component {
     };
 
     setup() {
+        this.getOuterHtml = getOuterHtml;
         this.dialog = useService("dialog");
         this.content = useRef("content");
     }
@@ -78,10 +80,6 @@ export class SnippetViewer extends Component {
         if (hotkey === "enter" || hotkey === "space") {
             this.onClick(snippet);
         }
-    }
-
-    getContent(elem) {
-        return markup(elem.outerHTML);
     }
 
     getButtonInstallName(snippet) {

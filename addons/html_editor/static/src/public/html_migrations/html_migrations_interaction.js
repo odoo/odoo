@@ -2,7 +2,7 @@ import { registry } from "@web/core/registry";
 import { Interaction } from "@web/public/interaction";
 import { VERSION_SELECTOR } from "@html_editor/html_migrations/html_migrations_utils";
 import { HtmlUpgradeManager } from "@html_editor/html_migrations/html_upgrade_manager";
-import { markup } from "@odoo/owl";
+import { getInnerHtml } from "@web/core/utils/html";
 
 const upgradeElementToInteractionMap = new Map();
 
@@ -41,7 +41,7 @@ export class HtmlMigrationsInteraction extends Interaction {
         this.isUpgrading = true;
         this.services["public.interactions"].stopInteractions(this.container);
         const htmlUpgradeManager = new HtmlUpgradeManager();
-        const initialValue = markup(this.container.innerHTML);
+        const initialValue = getInnerHtml(this.container);
         const upgradedValue = htmlUpgradeManager.processForUpgrade(initialValue);
         if (initialValue !== upgradedValue) {
             this.container.innerHTML = upgradedValue;

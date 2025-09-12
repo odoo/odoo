@@ -35,7 +35,7 @@ test("Search highlight", async () => {
         },
         {
             input: '<a href="https://www.odoo.com">https://www.odoo.com</a>',
-            output: `&lt;a href="https://www.<span class="${HIGHLIGHT_CLASS}">odoo</span>.com"&gt;https://www.<span class="${HIGHLIGHT_CLASS}">odoo</span>.com&lt;/a&gt;`,
+            output: `&lt;a href=&quot;https://www.<span class="${HIGHLIGHT_CLASS}">odoo</span>.com&quot;&gt;https://www.<span class="${HIGHLIGHT_CLASS}">odoo</span>.com&lt;/a&gt;`,
             searchTerm: "odoo",
         },
         {

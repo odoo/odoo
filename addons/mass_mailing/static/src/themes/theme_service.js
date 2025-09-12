@@ -1,8 +1,8 @@
 import { children } from "@html_editor/utils/dom_traversal";
 import { parseHTML } from "@html_editor/utils/html";
-import { markup } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { Deferred } from "@web/core/utils/concurrency";
+import { getInnerHtml, htmlTrim } from "@web/core/utils/html";
 import { Reactive } from "@web/core/utils/reactive";
 import { renderToMarkup } from "@web/core/utils/render";
 
@@ -35,7 +35,7 @@ export class ThemeModel extends Reactive {
             const themeOptions = {
                 className: getClassName(theme.dataset.name),
                 hideFromMobile: hasDataOption(theme, "hide-from-mobile"),
-                html: markup(theme.innerHTML.trim()),
+                html: htmlTrim(getInnerHtml(theme)),
                 imgPath: theme.dataset.img || "",
                 layoutStyles: theme.dataset.layoutStyles || "",
                 name: theme.dataset.name,

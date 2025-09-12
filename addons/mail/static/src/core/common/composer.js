@@ -35,6 +35,7 @@ import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 import {
     createElementWithContent,
+    getOuterHtml,
     htmlJoin,
     isHtmlEmpty,
     isMarkup,
@@ -619,7 +620,7 @@ export class Composer extends Component {
                 document.createElement("br"),
                 ...createElementWithContent("div", signature).childNodes
             );
-            signature = markup(divElement.outerHTML);
+            signature = getOuterHtml(divElement);
         }
         default_body = this.formatDefaultBodyForFullComposer(
             default_body,
@@ -857,8 +858,7 @@ export class Composer extends Component {
 
     onChangeWysiwygContent() {
         this.updateFromEditor = true;
-        // markup: editor content is trusted
-        this.props.composer.composerHtml = markup(this.editor.getContent());
+        this.props.composer.composerHtml = this.editor.getContent();
         if (!this.props.composer.isDirty) {
             this.props.composer.isDirty = true;
         }
