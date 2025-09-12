@@ -333,6 +333,10 @@ class ProductProduct(models.Model):
         for product in self:
             if product.cost_method == 'standard':
                 continue
+            elif product.cost_method == 'fifo':
+                fifo_price = product.total_value / product.qty_available if product.qty_available else 0
+                product.with_context(disable_auto_revaluation=True).standard_price = fifo_price
+                continue
             product.with_context(disable_auto_revaluation=True).standard_price = product._run_avco()[0]
 
 
