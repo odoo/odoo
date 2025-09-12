@@ -7,7 +7,7 @@ import { defineWebsiteLivechatModels } from "./website_livechat_test_helpers";
 describe.current.tags("desktop");
 defineWebsiteLivechatModels();
 
-test("shows recent page views", async () => {
+test("shows language, country and recent page views", async () => {
     mockTimeZone(11);
     const pyEnv = await startServer();
     const country_id = pyEnv["res.country"].create({ code: "BE" });
@@ -34,12 +34,17 @@ test("shows recent page views", async () => {
             Command.create({ partner_id: serverState.partnerId, livechat_member_type: "agent" }),
             Command.create({ guest_id: guestId, livechat_member_type: "visitor" }),
         ],
+        country_id,
         channel_type: "livechat",
         livechat_operator_id: serverState.partnerId,
         livechat_visitor_id: visitorId,
     });
     await start();
     await openDiscuss(channelId);
+    await contains("h6", { text: "Country & Language" });
+    await contains("span[title='Language']", { text: "English" });
+    const [country] = pyEnv["res.country"].search_read([["id", "=", country_id]]);
+    await contains(`.o_country_flag[data-src*='/country_flags/${country.code.toLowerCase()}.png']`);
     await contains("h6", { text: "Recent page views" });
     await contains("div > span", { text: "General website" });
     await contains("span", { text: "Home (21:00) → Contact (21:20)" });

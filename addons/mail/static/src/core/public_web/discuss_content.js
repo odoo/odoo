@@ -2,7 +2,6 @@ import { Component, useEffect, useRef, useState } from "@odoo/owl";
 
 import { useThreadActions } from "@mail/core/common/thread_actions";
 import { AutoresizeInput } from "@mail/core/common/autoresize_input";
-import { CountryFlag } from "@mail/core/common/country_flag";
 import { ActionList } from "@mail/core/common/action_list";
 import { Thread } from "@mail/core/common/thread";
 import { ThreadIcon } from "@mail/core/common/thread_icon";
@@ -17,7 +16,6 @@ export class DiscussContent extends Component {
     static components = {
         ActionList,
         AutoresizeInput,
-        CountryFlag,
         Thread,
         ThreadIcon,
         Composer,
@@ -60,6 +58,22 @@ export class DiscussContent extends Component {
 
     get thread() {
         return this.props.thread || this.store.discuss.thread;
+    }
+
+    get showImStatus() {
+        return this.thread.channel_type === "chat";
+    }
+
+    get showThreadAvatar() {
+        return ["channel", "group", "chat"].includes(this.thread.channel_type);
+    }
+
+    get isThreadAvatarEditable() {
+        return (
+            !this.thread.parent_channel_id &&
+            this.thread.is_editable &&
+            ["channel", "group"].includes(this.thread.channel_type)
+        );
     }
 
     async onFileUploaded(file) {
