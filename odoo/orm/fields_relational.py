@@ -1227,6 +1227,9 @@ class Many2many(_RelationalMulti):
         :meth:`~odoo.models.Model._check_company`. Add a default company
         domain depending on the field attributes.
 
+    :param bool bypass_search_access: whether access rights are bypassed on the
+        comodel (default: ``False``)
+
     """
     type = 'many2many'
 
@@ -1359,7 +1362,7 @@ class Many2many(_RelationalMulti):
         # make the query for the lines
         domain = self.get_comodel_domain(records)
         try:
-            query = comodel._search(domain, order=comodel._order)
+            query = comodel._search(domain, order=comodel._order, bypass_access=self.bypass_search_access)
         except AccessError as e:
             raise AccessError(records.env._("Failed to read field %s", self) + '\n' + str(e)) from e
 
