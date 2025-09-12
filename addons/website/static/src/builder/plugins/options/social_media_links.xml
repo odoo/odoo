@@ -33,10 +33,9 @@
                             action="'toggleRecordedSocialMediaLink'"
                             actionParam="item.domPosition ? { domPosition: item.domPosition } : { media: item.media, elementAfter: item.nextLink }"
                         />
-                        <div t-else="" style="margin: 0 3px">
+                        <div t-else="">
                             <BuilderButton
-                                type="'danger'"
-                                className="'fa fa-fw fa-minus'"
+                                className="'fa fa-fw fa-minus text-danger bg-transparent border-0'"
                                 title.translate="Remove link"
                                 action="'deleteSocialMediaLink'"
                                 applyTo="`a:nth-of-type(${item.domPosition})`"
