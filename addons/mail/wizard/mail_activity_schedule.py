@@ -83,6 +83,8 @@ class MailActivitySchedule(models.TransientModel):
         'res.users', 'Assigned to', compute='_compute_activity_user_id',
         readonly=False, store=True)
     chaining_type = fields.Selection(related='activity_type_id.chaining_type', readonly=True)
+    # used in both (plan- and activity- based)
+    activity_user_id_fname = fields.Char('User Field', help="Field name of the user to choose on the record")
 
     @api.depends('res_model')
     def _compute_res_model_id(self):
@@ -209,6 +211,7 @@ class MailActivitySchedule(models.TransientModel):
                     if record.exists():
                         responsible_user = template._determine_responsible(
                             scheduler.plan_on_demand_user_id,
+                            scheduler.activity_user_id_fname,
                             record,
                         )['responsible']
 
@@ -330,10 +333,10 @@ class MailActivitySchedule(models.TransientModel):
             body = _('The plan "%(plan_name)s" has been started', plan_name=self.plan_id.name)
             activity_descriptions = []
             for template in self._plan_filter_activity_templates_to_schedule():
-                if template.responsible_type == 'on_demand':
+                if template.responsible_type == 'on_demand' and self.plan_on_demand_user_id:
                     responsible = self.plan_on_demand_user_id
                 else:
-                    responsible = template._determine_responsible(self.plan_on_demand_user_id, record)['responsible']
+                    responsible = template._determine_responsible(self.plan_on_demand_user_id, self.activity_user_id_fname, record)['responsible']
                 date_deadline = template._get_date_deadline(self.plan_date)
                 record.activity_schedule(
                     activity_type_id=template.activity_type_id.id,
@@ -371,7 +374,7 @@ class MailActivitySchedule(models.TransientModel):
         self.ensure_one()
         return filter(
             None, [
-                activity_template._determine_responsible(self.plan_on_demand_user_id, record)['error']
+                activity_template._determine_responsible(self.plan_on_demand_user_id, self.activity_user_id_fname, record)['error']
                 for activity_template in self.plan_id.template_ids
                 for record in applied_on
             ]
@@ -381,7 +384,7 @@ class MailActivitySchedule(models.TransientModel):
         self.ensure_one()
         return filter(
             None, [
-                activity_template._determine_responsible(self.plan_on_demand_user_id, record)['warning']
+                activity_template._determine_responsible(self.plan_on_demand_user_id, self.activity_user_id_fname, record)['warning']
                 for activity_template in self.plan_id.template_ids
                 for record in applied_on
             ]
@@ -406,7 +409,8 @@ class MailActivitySchedule(models.TransientModel):
             summary=self.summary,
             note=self.note,
             user_id=self.activity_user_id.id,
-            date_deadline=self.date_deadline
+            date_deadline=self.date_deadline,
+            activity_user_id_fname=self.activity_user_id_fname
         )
 
     def _action_schedule_activities_personal(self):

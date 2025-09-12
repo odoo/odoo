@@ -6,7 +6,8 @@ from datetime import datetime
 import logging
 import pytz
 
-from odoo import api, fields, models
+from odoo import _, api, fields, models
+from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Domain
 from odoo.tools import partition, SQL
 
@@ -442,7 +443,26 @@ class MailActivityMixin(models.AbstractModel):
                 'res_model_id': model_id,
                 'res_id': record.id,
             }
+            activity_user_id_fname = act_values.pop('activity_user_id_fname', None)
             create_vals.update(act_values)
+            if not create_vals.get('user_id') and activity_user_id_fname:
+                try:
+                    record._find_value_from_field_path(activity_user_id_fname)
+                except UserError as err:
+                    raise ValidationError(_(
+                        'Unable to determine the responsible for the activity to schedule.\n\n%(error)s',
+                        error=err.args[0],
+                    ))
+                user = record.mapped(activity_user_id_fname)
+                if user._name != 'res.users':
+                    raise ValidationError(_(
+                        'The field "%(field_name)s" must be related to the res.users model.',
+                        field_name=activity_user_id_fname,
+                    ))
+                if user:
+                    # if x2m field, assign to the first user found
+                    # (same behavior as Field.traverse_related)
+                    create_vals['user_id'] = user.ids[0]
             if not create_vals.get('user_id') and activity_type.default_user_id:
                 create_vals['user_id'] = activity_type.default_user_id.id
             create_vals_list.append(create_vals)
