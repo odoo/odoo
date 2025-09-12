@@ -49,9 +49,9 @@ class PortalChatter(ThreadController):
                                 portal_partner,
                                 fields=[
                                     "active",
-                                    "avatar_128",
                                     Store.One("main_user_id", "share"),
                                     "name",
+                                    *portal_partner._get_store_avatar_fields(),
                                 ],
                             )
                         },
