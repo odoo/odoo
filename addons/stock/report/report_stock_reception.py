@@ -335,12 +335,20 @@ class ReportStockReport_Reception(models.AbstractModel):
         return True
 
     def _action_assign(self, in_move, out_move):
-        """ For extension purposes only """
-        return
+        """ share reference across source documents """
+        in_ref = in_move.reference_ids
+        out_ref = out_move.reference_ids
+        if out_ref:
+            in_move._get_source_document()._add_reference(out_ref)
+        if in_ref:
+            out_move._get_source_document()._add_reference(in_ref)
 
     def _action_unassign(self, in_move, out_move):
-        """ For extension purposes only """
-        return
+        """ remove shared reference across source documents if any"""
+        in_ref = in_move.reference_ids
+        out_ref = out_move.reference_ids
+        in_move._get_source_document()._remove_reference(out_ref)
+        out_move._get_source_document()._remove_reference(in_ref)
 
     def _format_html_docs(self, docs):
         """ Format docs to be sent in an html request. """
