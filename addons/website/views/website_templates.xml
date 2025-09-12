@@ -3139,4 +3139,20 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
         </li>
     </xpath>
 </template>
+
+  <function model="ir.ui.view" name="write">
+    <value model="ir.ui.view" eval="obj().search([('key', '=', 'website.template_header_default')], limit=1).id"/>
+    <value eval="{'active': False}"/>
+  </function>
+
+ <function model="ir.ui.view" name="write" context="{'active_test': False}">
+    <value model="ir.ui.view" eval="obj().search([('key', '=', 'website.template_header_boxed')], limit=1).id"/>
+    <value eval="{'active': True}"/>
+  </function>
+
+ <function model="ir.ui.view" name="write" context="{'active_test': False}">
+    <value model="ir.ui.view" eval="obj().search([('key', '=', 'website.header_navbar_pills_style')], limit=1).id"/>
+    <value eval="{'active': True}"/>
+  </function>
+  
 </odoo>
