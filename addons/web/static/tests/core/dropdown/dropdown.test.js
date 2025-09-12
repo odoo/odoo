@@ -226,6 +226,85 @@ test("close on item selection", async () => {
     expect(DROPDOWN_MENU).toHaveCount(0);
 });
 
+test("renders dropdown slot content added asynchronously", async () => {
+    class DynamicSlotDropdown extends Component {
+        static components = { Dropdown, DropdownItem };
+        static props = [];
+        static template = xml`
+            <Dropdown t-props="dropdownProps">
+                <button class="'dyn-toggle'">Dropdown</button>
+                <t t-set-slot="content">
+                    <t t-foreach="slotState.items" t-as="item" t-key="item.id">
+                        <DropdownItem class="'dyn-item'">
+                            <t t-esc="item.label"/>
+                        </DropdownItem>
+                    </t>
+                </t>
+            </Dropdown>
+        `;
+        setup() {
+            this.slotState = useState({
+                items: [{ id: 1, label: "Initial" }],
+                nextId: 2,
+            });
+            this.dropdownProps = { state: startOpenState() };
+            setTimeout(() => {
+                this.slotState.items = [
+                    ...this.slotState.items,
+                    { id: this.slotState.nextId++, label: "Delayed" },
+                ];
+            }, 2000);
+        }
+    }
+
+    await mountWithCleanup(DynamicSlotDropdown);
+
+    await animationFrame();
+    expect(`${DROPDOWN_MENU} .dyn-item`).toHaveCount(1);
+    expect(`${DROPDOWN_MENU} .dyn-item`).toHaveText("Initial");
+
+    await runAllTimers();
+    await animationFrame();
+    expect(queryAllTexts(`${DROPDOWN_MENU} .dyn-item`)).toEqual(["Initial", "Delayed"]);
+});
+
+test("dropdown content updates after forced render", async () => {
+    class ForceRenderDropdown extends Component {
+        static components = { Dropdown, DropdownItem };
+        static props = [];
+        static template = xml`
+            <Dropdown state="dropdownState">
+                <button>Dropdown</button>
+                <t t-set-slot="content">
+                    <t t-foreach="items" t-as="item" t-key="item">
+                        <DropdownItem class="'force-item'">
+                            <t t-esc="item"/>
+                        </DropdownItem>
+                    </t>
+                </t>
+            </Dropdown>
+        `;
+        setup() {
+            this.dropdownState = startOpenState();
+            this.items = ["Initial"];
+        }
+        addItem(label) {
+            this.items = [...this.items, label];
+            this.render(true);
+        }
+    }
+
+    const component = await mountWithCleanup(ForceRenderDropdown);
+
+    await animationFrame();
+    expect(`${DROPDOWN_MENU} .force-item`).toHaveCount(1);
+    expect(`${DROPDOWN_MENU} .force-item`).toHaveText("Initial");
+
+    component.addItem("Forced");
+    await animationFrame();
+    expect(queryAllTexts(`${DROPDOWN_MENU} .force-item`)).toEqual(["Initial", "Forced"]);
+});
+
 test.tags("desktop");
 test("hold position on hover", async () => {
     // Disable popover animations for this test
