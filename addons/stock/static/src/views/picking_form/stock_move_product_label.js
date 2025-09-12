@@ -10,8 +10,8 @@ export class MoveProductLabelField extends ProductNameAndDescriptionField {
         const record = this.props.record.data;
         let label = record[this.descriptionColumn];
         const productName = record.product_id.display_name;
-        if (label.includes(productName)) {
-            label = label.replace(productName, "");
+        if (label === productName) {
+            label = "";
         }
         return label.trim();
     }
