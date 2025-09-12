@@ -432,11 +432,11 @@
                 <div class="py-4 float-end">
                     <strong class="mb-3 text-white me-2">Rank by:</strong>
                     <div class="mb-3 btn-group">
-                        <a t-attf-class="btn btn-secondary #{ 'active' if group_by == 'week' else ''}"
+                        <a t-attf-class="btn btn-light #{ 'active' if group_by == 'week' else ''}"
                             t-att-href="'/profile/users?' + keep_query('search', group_by='week')">This week</a>
-                        <a t-attf-class="btn btn-secondary #{ 'active' if group_by == 'month' else ''}"
+                        <a t-attf-class="btn btn-light #{ 'active' if group_by == 'month' else ''}"
                             t-att-href="'/profile/users?' + keep_query('search', group_by='month')">This month</a>
-                        <a t-attf-class="btn btn-secondary #{ 'active' if group_by == 'all' else ''}"
+                        <a t-attf-class="btn btn-light #{ 'active' if group_by == 'all' else ''}"
                             t-att-href="'/profile/users?' + keep_query('search')">All time</a>
                     </div>
                 </div>
