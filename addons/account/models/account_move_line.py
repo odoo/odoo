@@ -1091,11 +1091,15 @@ class AccountMoveLine(models.Model):
                 if line.tax_repartition_line_id:
                     is_refund = line.tax_repartition_line_id.document_type == 'refund'
                 else:
-                    tax_type = line.tax_ids[:1].type_tax_use
-                    if tax_type == 'sale' and line.credit == 0:
-                        is_refund = True
-                    elif tax_type == 'purchase' and line.debit == 0:
-                        is_refund = True
+                    # If we have both purchase and sale taxes on a line (which can happen in bank rec).
+                    # We choose invoice by default
+                    tax_type = line.tax_ids.mapped('type_tax_use')
+                    if 'sale' in tax_type and 'purchase' in tax_type:
+                        is_refund = line.credit == 0
+                    else:
+                        tax_type = line.tax_ids[:1].type_tax_use
+                        if (tax_type == 'sale' and line.credit == 0) or (tax_type == 'purchase' and line.debit == 0):
+                            is_refund = True
 
                     if line.tax_ids and line.move_id.reversed_entry_id:
                         is_refund = not is_refund
@@ -3393,7 +3397,7 @@ class AccountMoveLine(models.Model):
             'reconcile_model_id': self.reconcile_model_id.id,
             'analytic_distribution': self.analytic_distribution,
             'tax_repartition_line_id': self.tax_repartition_line_id.id,
-            'tax_ids': [Command.set(self.tax_ids.ids)],
+            'tax_ids': [Command.set(self.tax_ids.ids)] + kwargs.pop('tax_ids', []),
             'tax_tag_ids': [Command.set(self.tax_tag_ids.ids)],
             'group_tax_id': self.group_tax_id.id,
             'partner_id': self.partner_id.id,
