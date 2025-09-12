@@ -3200,3 +3200,54 @@ input[value*="data-oe-translation-source-sha"] {
       width: 100%;
     }
 }
+
+.s_social_media, .s_share {
+    $-size: map-get($spacers, 5);
+    a {
+        text-decoration: none;
+        &:hover {
+            text-decoration: none;
+        }
+    }
+    &[data-icon-underline="hover"] a {
+        text-decoration: none;
+        &:hover {
+            text-decoration: underline;
+        }
+    }
+    &[data-icon-underline="always"] a {
+        text-decoration: underline;
+    }
+    .small_social_icon {
+        width: $-size - 1rem;
+        height: $-size - 1rem;
+        font-size: 0.875em;
+    }
+    a {
+        .fa-stack{
+            /*
+            Ensures consistent size and padding around icons when the
+            layout is set to "none" and the size is "huge" or "large".
+            For "small", this is handled above, and for "medium",
+            it is handled in the respective SCSS files (@see
+            s_social_media/000.scss and s_share/000.scss).
+            */
+            @for $i from 2 through 3 {
+                &.fa-#{$i}x {
+                    width: $-size + $i;
+                    height: $-size + $i;
+                    line-height: $-size + $i;
+                }
+            }
+        }
+    }
+    /*
+    This rule makes social media icons inherit the text color of their parent
+    container when no explicit color is set.
+    */
+    &.no_icon_color {
+        a {
+            color: inherit !important;
+        }
+    }
+}

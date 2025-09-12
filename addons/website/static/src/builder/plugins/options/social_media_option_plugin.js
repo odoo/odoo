@@ -7,8 +7,9 @@ import { registry } from "@web/core/registry";
 import { renderToFragment } from "@web/core/utils/render";
 import { SocialMediaLinks } from "./social_media_links";
 import { selectElements } from "@html_editor/utils/dom_traversal";
-import { SNIPPET_SPECIFIC, TITLE_LAYOUT_SIZE } from "@html_builder/utils/option_sequence";
+import { SNIPPET_SPECIFIC, TITLE_LAYOUT_SIZE, ANIMATE } from "@html_builder/utils/option_sequence";
 import { BuilderAction } from "@html_builder/core/builder_action";
+import { AnimateOption } from "./animate_option";
 
 /**
  * @typedef { Object } SocialMediaInfo
@@ -108,7 +109,7 @@ const defaultAriaLabel = _t("Other social network");
 
 class SocialMediaOptionPlugin extends Plugin {
     static id = "socialMediaOptionPlugin";
-    static dependencies = ["history"];
+    static dependencies = ["history", "animateOption"];
     static shared = [
         "newLinkElement",
         "getRecordedSocialMedia",
@@ -118,6 +119,15 @@ class SocialMediaOptionPlugin extends Plugin {
         "removeSocialMediaClasses",
         "removeIconClasses",
     ];
+    animateOptionProps = {
+        getDirectionsItems: this.dependencies.animateOption.getDirectionsItems.bind(this),
+        getEffectsItems: this.dependencies.animateOption.getEffectsItems.bind(this),
+        canHaveHoverEffect: async (el) => {
+            const proms = this.getResource("hover_effect_allowed_predicates").map((p) => p(el));
+            const allowed = (await Promise.all(proms)).filter((allowed) => allowed != null);
+            return allowed.length && allowed.every(Boolean);
+        },
+    };
     resources = {
         builder_options: [
             withSequence(TITLE_LAYOUT_SIZE, {
@@ -131,6 +141,12 @@ class SocialMediaOptionPlugin extends Plugin {
                     reorderSocialMediaLink: this.reorderSocialMediaLink.bind(this),
                 },
                 selector: ".s_social_media",
+            }),
+            withSequence(ANIMATE, {
+                OptionComponent: AnimateOption,
+                selector: ".s_social_media, .s_share",
+                applyTo: ".s_social_media i.fa, .s_share i.fa",
+                props: this.animateOptionProps,
             }),
         ],
         so_content_addition_selector: [".s_share", ".s_social_media"],

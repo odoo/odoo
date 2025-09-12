@@ -31,7 +31,7 @@ export class AnimateOptionPlugin extends Plugin {
                 OptionComponent: AnimateOption,
                 selector: ".o_animable, section .row > div, img, .fa, .btn",
                 exclude:
-                    "[data-oe-xpath], .o_not-animable, .s_col_no_resize.row > div, .s_col_no_resize",
+                    "[data-oe-xpath], .o_not-animable, .s_col_no_resize.row > div, .s_col_no_resize, .s_social_media i.fa, .s_share i.fa",
                 props: this.animateOptionProps,
                 // todo: to implement
                 // textSelector: ".o_animated_text",
