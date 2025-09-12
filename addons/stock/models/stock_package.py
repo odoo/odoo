@@ -346,7 +346,11 @@ class StockPackage(models.Model):
                 'package_type_id': package_type_id,
                 'name': package_name,
             })
+        previous_dest_packages = self.env['stock.package'].browse(self._get_all_package_dest_ids())
         self.package_dest_id = package
+        if packs_to_clear := previous_dest_packages.filtered(lambda p: not p.move_line_ids):
+            # If following the put in pack, we broke the existing chain somehow, we need to free all now irrelevant packages
+            packs_to_clear.package_dest_id = False
         return package._post_put_in_pack_hook()
 
     def action_remove_package(self):

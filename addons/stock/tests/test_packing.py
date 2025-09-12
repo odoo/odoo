@@ -1927,3 +1927,51 @@ class TestPackagePropagation(TestPackingCommon):
         pack1_ml[0].quantity = 1
         self.assertEqual(pack1_ml.mapped('is_entire_pack'), [False, False])
         self.assertTrue(delivery.move_line_ids.filtered(lambda ml: ml.package_id == pack2).is_entire_pack)
+
+    def test_pack_in_pack_already_packed(self):
+        """ Checks that if a package is already in another pack and we call put in pack again on it, it replaces its destination
+            container with the new one, and clears destination packages for now isolated packages.
+        """
+        # Make sure `Set Package Type` is disabled as we don't want to bother with wizards.
+        self.warehouse.in_type_id.set_package_type = False
+        supplier_loc_id = self.ref('stock.stock_location_suppliers')
+        receipt = self.env['stock.picking'].create({
+            'picking_type_id': self.warehouse.in_type_id.id,
+            'location_id': supplier_loc_id,
+            'location_dest_id': self.stock_location.id,
+            'move_ids': [
+                Command.create({
+                    'location_id': supplier_loc_id,
+                    'location_dest_id': self.stock_location.id,
+                    'product_id': self.productA.id,
+                    'product_uom_qty': 1,
+                }),
+                Command.create({
+                    'location_id': supplier_loc_id,
+                    'location_dest_id': self.stock_location.id,
+                    'product_id': self.productB.id,
+                    'product_uom_qty': 1,
+                }),
+            ],
+        })
+        receipt.action_confirm()
+
+        # Set a different package on each move
+        receipt.move_ids[0].move_line_ids.action_put_in_pack(package_name='Box1')
+        receipt.move_ids[1].move_line_ids.action_put_in_pack(package_name='Box2')
+        boxes = receipt.move_ids.package_ids
+        self.assertEqual(len(boxes), 2)
+
+        # Put both boxes on a pallet, then the pallet on a container
+        boxes.action_put_in_pack(package_name='Pallet')
+        pallet = boxes.package_dest_id
+        pallet.action_put_in_pack(package_name='Container')
+        container = pallet.package_dest_id
+        self.assertEqual(set(boxes._get_all_package_dest_ids()), set((boxes | pallet | container).ids))
+
+        # Now put both boxes in another pallet, the original pallet and the container should not be set anymore.
+        boxes.action_put_in_pack(package_name='Better Pallet')
+        self.assertEqual(boxes.package_dest_id.name, 'Better Pallet')
+        self.assertEqual(boxes.package_dest_id.picking_ids, receipt)
+        self.assertFalse((pallet | container).package_dest_id)
+        self.assertFalse((pallet | container).picking_ids)
