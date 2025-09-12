@@ -3,8 +3,31 @@
 import { click, getFixture, triggerEvent } from "@web/../tests/helpers/utils";
 import { createSpreadsheetDashboard } from "../utils/dashboard_action";
 import { getDashboardServerData } from "../utils/data";
+import { registry } from "@web/core/registry";
+import { actionService } from "@web/webclient/actions/action_service";
 
 QUnit.module("spreadsheet_dashboard > Mobile Dashboard action");
+
+function getServerData(spreadsheetData) {
+    const serverData = getDashboardServerData();
+    serverData.models["spreadsheet.dashboard.group"].records = [
+        {
+            dashboard_ids: [789],
+            id: 1,
+            name: "Chart",
+        },
+    ];
+    serverData.models["spreadsheet.dashboard"].records = [
+        {
+            id: 789,
+            name: "Spreadsheet with chart figure",
+            json_data: JSON.stringify(spreadsheetData),
+            spreadsheet_data: JSON.stringify(spreadsheetData),
+            dashboard_group_id: 1,
+        },
+    ];
+    return serverData;
+}
 
 QUnit.test("is empty with no figures", async (assert) => {
     await createSpreadsheetDashboard();
@@ -55,26 +78,77 @@ QUnit.test("displays figures in first sheet", async (assert) => {
             },
         ],
     };
-    const serverData = getDashboardServerData();
-    serverData.models["spreadsheet.dashboard.group"].records = [
-        {
-            dashboard_ids: [789],
-            id: 1,
-            name: "Chart",
-        },
-    ];
-    serverData.models["spreadsheet.dashboard"].records = [
-        {
-            id: 789,
-            name: "Spreadsheet with chart figure",
-            json_data: JSON.stringify(spreadsheetData),
-            spreadsheet_data: JSON.stringify(spreadsheetData),
-            dashboard_group_id: 1,
-        },
-    ];
+    const serverData = getServerData(spreadsheetData);
     const fixture = getFixture();
     await createSpreadsheetDashboard({ serverData });
     assert.containsOnce(fixture, ".o-chart-container");
+});
+
+QUnit.test("clicking on a chart navigates to its linked Odoo menu", async (assert) => {
+    const serviceRegistry = registry.category("services");
+    serviceRegistry.add("actionMain", actionService);
+    const fakeActionService = {
+        dependencies: ["actionMain"],
+        start(env, { actionMain }) {
+            return {
+                ...actionMain,
+                doAction: (actionRequest, options = {}) => {
+                    if (actionRequest === "menuAction") {
+                        assert.step("redirect to odoo menu");
+                    }
+                    return actionMain.doAction(actionRequest, options);
+                },
+            };
+        },
+    };
+    serviceRegistry.add("action", fakeActionService, { force: true });
+    const figure = {
+        tag: "chart",
+        data: {
+            type: "line",
+            dataSets: ["A1"],
+        },
+    };
+    const spreadsheetData = {
+        sheets: [
+            {
+                id: "sheet1",
+                figures: [{ ...figure, id: "figure1" }],
+            },
+        ],
+        chartOdooMenusReferences: {
+            figure1: "documents_spreadsheet.test.menu",
+        },
+    };
+    const serverData = getServerData(spreadsheetData);
+    serverData.menus = {
+        root: {
+            id: "root",
+            children: [1],
+        },
+        1: {
+            id: 1,
+            xmlid: "documents_spreadsheet.test.menu",
+            actionID: "menuAction",
+        },
+    };
+    serverData.actions = {
+        menuAction: {
+            id: 99,
+            res_model: "ir.ui.menu",
+            type: "ir.actions.act_window",
+            views: [[false, "list"]],
+        },
+    };
+    serverData.models["ir.ui.menu"] = {};
+    serverData.views["ir.ui.menu,false,list"] = `<tree></tree>`;
+    serverData.views["ir.ui.menu,false,search"] = `<search></search>`;
+    const fixture = getFixture();
+    await createSpreadsheetDashboard({ serverData });
+    assert.verifySteps(["redirect to odoo menu"]);
+
+    await triggerEvent(fixture, ".o-chart-container", "click");
+    assert.verifySteps(["redirect to odoo menu"]);
 });
 
 QUnit.test("double clicking on a figure doesn't open the side panel", async (assert) => {
@@ -101,23 +175,7 @@ QUnit.test("double clicking on a figure doesn't open the side panel", async (ass
             },
         ],
     };
-    const serverData = getDashboardServerData();
-    serverData.models["spreadsheet.dashboard.group"].records = [
-        {
-            dashboard_ids: [789],
-            id: 1,
-            name: "Chart",
-        },
-    ];
-    serverData.models["spreadsheet.dashboard"].records = [
-        {
-            id: 789,
-            name: "Spreadsheet with chart figure",
-            json_data: JSON.stringify(spreadsheetData),
-            spreadsheet_data: JSON.stringify(spreadsheetData),
-            dashboard_group_id: 1,
-        },
-    ];
+    const serverData = getServerData(spreadsheetData);
     const fixture = getFixture();
     await createSpreadsheetDashboard({ serverData });
     await triggerEvent(fixture, ".o-chart-container", "focus");
