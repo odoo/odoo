@@ -9,7 +9,7 @@ import {
 
 export class GradientPicker extends Component {
     static components = { ColorPicker };
-    static template = "web.GradientPicker";
+    static template = "html_editor.GradientPicker";
     static props = {
         onGradientChange: { type: Function, optional: true },
         onGradientPreview: { type: Function, optional: true },

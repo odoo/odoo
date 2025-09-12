@@ -51,11 +51,7 @@ function addCheck(steps, checkX, checkNoX, xType, noSwitch = false) {
 
     const name = typeToName(xType);
     const selectorCheckX = checkX && `[data-color="${checkX}"].selected`;
-    const selectorCheckNoX = checkNoX
-        ? xType === "bg"
-            ? `.o_color_button.selected:not([data-color="${checkNoX}"])`
-            : `[data-color="${checkNoX}"]:not(.selected)`
-        : null;
+    const selectorCheckNoX = checkNoX ? `[data-color="${checkNoX}"]:not(.selected)` : null;
 
     const step = {
         trigger: selectorCheckX || selectorCheckNoX,
