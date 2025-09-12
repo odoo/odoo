@@ -8,11 +8,8 @@ export class PaymentButton extends Interaction {
         this.paymentButton = this.el;
         this.iconClass = this.paymentButton.dataset.iconClass;
         this._enable();
-    }
-
-    start() {
         this.env.bus.addEventListener('enablePaymentButton', this._enable.bind(this));
-        this.env.bus.addEventListener('disablePaymentButton',this._disable.bind(this));
+        this.env.bus.addEventListener('disablePaymentButton', this._disable.bind(this));
         this.env.bus.addEventListener('hidePaymentButton', this._hide.bind(this));
         this.env.bus.addEventListener('showPaymentButton', this._show.bind(this));
     }
