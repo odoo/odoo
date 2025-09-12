@@ -7,11 +7,11 @@ class StockTraceabilityReport(models.TransientModel):
     @api.model
     def _get_reference(self, move_line):
         res_model, res_id, ref = super()._get_reference(move_line)
-        if move_line.move_id.production_id and move_line.move_id.location_dest_usage != 'inventory':
+        if move_line.move_id.production_id and not move_line.move_id.scrap_id:
             res_model = 'mrp.production'
             res_id = move_line.move_id.production_id.id
             ref = move_line.move_id.production_id.name
-        if move_line.move_id.raw_material_production_id and move_line.move_id.location_dest_usage != 'inventory':
+        if move_line.move_id.raw_material_production_id and not move_line.move_id.scrap_id:
             res_model = 'mrp.production'
             res_id = move_line.move_id.raw_material_production_id.id
             ref = move_line.move_id.raw_material_production_id.name
