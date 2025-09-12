@@ -167,7 +167,7 @@ export class CalendarController extends Component {
     get rendererProps() {
         return {
             model: this.model,
-            isWeekendVisible: this.model.scale === "day" || this.state.isWeekendVisible,
+            isWeekendVisible: ["day", "year"].includes(this.model.scale) || this.state.isWeekendVisible,
             createRecord: this.createRecord.bind(this),
             deleteRecord: this.deleteRecord.bind(this),
             editRecord: this.editRecord.bind(this),

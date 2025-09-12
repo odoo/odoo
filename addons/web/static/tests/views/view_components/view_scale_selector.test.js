@@ -66,7 +66,7 @@ test("basic ViewScaleSelector component usage", async () => {
     await contains(".dropdown-item:contains(Yearly)").click();
     await click(".scale_button_selection");
     await contains(".dropdown-item:last").click();
-    expect.verifySteps(["year", "toggleWeekendVisibility"]);
+    expect.verifySteps(["year"]);
 });
 
 test("ViewScaleSelector with only one scale available", async () => {
