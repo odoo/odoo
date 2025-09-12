@@ -12,7 +12,7 @@ import { useCalendarPopover } from "@web/views/calendar/hooks/calendar_popover_h
 import { useFullCalendar } from "@web/views/calendar/hooks/full_calendar_hook";
 import { useSquareSelection } from "@web/views/calendar/hooks/square_selection_hook";
 
-import { Component, useEffect } from "@odoo/owl";
+import { Component, useEffect, useRef } from "@odoo/owl";
 
 const SCALE_TO_FC_VIEW = {
     day: "timeGridDay",
@@ -85,6 +85,8 @@ export class CalendarCommonRenderer extends Component {
             },
             () => [this.fc.el]
         );
+
+        this.ref = useRef("fullCalendar");
         useSquareSelection({
             cellIsSelectable: this.constructor.cellIsSelectable,
         });
@@ -334,6 +336,7 @@ export class CalendarCommonRenderer extends Component {
     onEventDrop(info) {
         this.fc.api.unselect();
         this.props.model.updateRecord(this.fcEventToRecord(info.event));
+        this.ref.el.classList.remove("o_interacting", "o_grabbing");
     }
     onEventResize(info) {
         this.fc.api.unselect();
@@ -383,6 +386,7 @@ export class CalendarCommonRenderer extends Component {
         info.el.classList.add(info.view.type);
         this.fc.api.unselect();
         this.highlightEvent(info.event, "o_cw_custom_highlight");
+        this.ref.el.classList.add("o_interacting", "o_grabbing");
     }
     onEventResizeStart(info) {
         this.props.cleanSquareSelection();

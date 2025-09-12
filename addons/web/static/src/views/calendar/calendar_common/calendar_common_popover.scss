@@ -118,3 +118,18 @@ $o-web-calendar-colors: o-build-web-calendar-colors();
         }
     }
 }
+
+.o_interacting .fc-event,
+.o_interacting .fc-day,
+.o_interacting .fc-more-link {
+    cursor: inherit !important;
+}
+
+.o_multi_create_mode.o_selecting,
+.o_multi_create_mode .fc-day {
+    cursor: cell;
+}
+
+.o_grabbing {
+    cursor: move;
+}
