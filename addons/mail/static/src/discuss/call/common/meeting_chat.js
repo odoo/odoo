@@ -1,6 +1,7 @@
 import { Composer } from "@mail/core/common/composer";
 import { Thread } from "@mail/core/common/thread";
 import { ActionPanel } from "@mail/discuss/core/common/action_panel";
+import { Typing } from "@mail/discuss/typing/common/typing";
 
 import { Component, useState, useSubEnv } from "@odoo/owl";
 
@@ -18,6 +19,7 @@ export class MeetingChat extends Component {
         ActionPanel,
         Composer,
         Thread,
+        Typing,
     };
     static props = ["thread?"];
 
