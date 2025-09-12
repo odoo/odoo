@@ -215,6 +215,13 @@
                                 <td>Reference</td>
                                 <td><t t-out="o.ref"/></td>
                             </tr>
+                            <div t-if="o.partner_id">
+                                <tr><td colspan="2" style="height:20px;"></td></tr>
+                                <tr t-if="o.partner_id.commercial_partner_id == o.partner_id and o.partner_id.commercial_partner_id.vat">
+                                    <td>VAT</td>
+                                    <td><t t-out="o.partner_id.commercial_partner_id.vat"/></td>
+                                </tr>
+                            </div>
                         </table>
                     </div>
                 </t>
