@@ -122,11 +122,12 @@
 
 .o_survey_sample_card {
     &:hover {
-        * { 
-            color: $primary !important;
-        }
-        box-shadow: $box-shadow;
-        border-color: $primary !important;
+        background: var(--SurveySampleCard-background--hover, #{$o-gray-200});
+    }
+
+    &:focus-visible {
+        box-shadow: 0 0 0 #{$btn-focus-width} RGBA(#{$btn-link-focus-shadow-rgb}, .5);
+        outline: none;
     }
 }
 
@@ -136,5 +137,13 @@
 }
 
 .o_nocontent_help:has(.o_survey_load_sample) {
-    max-width: unset !important;
+    max-width: unset;
+
+    @include media-breakpoint-up(sm) {
+        max-width: 90%;
+    }
+
+    @include media-breakpoint-up(lg) {
+        max-width: 80%;
+    }
 }

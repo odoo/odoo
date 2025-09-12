@@ -10,24 +10,32 @@
         <div class="d-flex flex-column">
             <t t-call="web.KanbanRenderer" />
             <div class="position-relative container" t-att-class="{ 'border-top mt-2': showTopBorder() }" t-if="this.posState.show_predefined_scenarios">
-                <div class="flex-grow-1 text-center" t-att-class="{ 'disable-buttons': !posState.has_chart_template || loadScenario.status === 'loading' }">
-                    <p class="h1 text-primary mt-4" t-if="!posState.has_pos_config">Choose your store</p>
+                <div class="flex-grow-1 mb-3 text-center" t-att-class="{ 'disable-buttons': !posState.has_chart_template || loadScenario.status === 'loading' }">
+                    <h1 class="mt-4" t-if="!posState.has_pos_config">Choose your store</h1>
                     <p t-if="!posState.has_chart_template" class="h2 m-3">
                         Please <a href="#" class="btn-link o_form_uri" role="button" t-on-click="() => action.doAction('account.action_account_config')">install a chart of accounts</a> to activate the buttons.
                     </p>
                     <br />
-                    <div t-attf-class="d-flex {{posState.is_restaurant_installed ? 'flex-column' : 'flex-column-reverse'}}">
-                        <div class="shop-scenarios row p-3">
-                            <t t-foreach="shopScenarios" t-as="item" t-key="item_index">
-                                <t t-call="point_of_sale.ScenarioCard" />
-                            </t>
+                    <div class="d-flex flex-column gap-4">
+                        <div class="shop-scenarios">
+                            <h2 class="mb-2 mb-md-0">Shop Templates</h2>
+                            <div class="row g-2 g-md-3 mx-auto my-auto justify-content-center">
+                                <div class="col-12 col-md-4" t-foreach="shopScenarios" t-as="item" t-key="item_index">
+                                    <t t-call="point_of_sale.ScenarioCard" />
+                                </div>
+                            </div>
                         </div>
-                        <div class="restaurant-scenarios row p-3 justify-content-center">
-                            <t t-foreach="restaurantScenarios" t-as="item" t-key="item_index">
-                                <t t-call="point_of_sale.ScenarioCard" />
-                            </t>
-                            <t t-set="item" t-value="retailScenario" />
-                            <t t-call="point_of_sale.ScenarioCard" />
+                        <div class="restaurant-scenarios">
+                            <h2 class="mt-2 mt-md-3 mb-2 mb-md-0">Restaurant Templates</h2>
+                            <div class="row g-2 g-md-3 mx-auto my-auto justify-content-center">
+                                <div class="col-12 col-md-4" t-foreach="restaurantScenarios" t-as="item" t-key="item_index">
+                                    <t t-call="point_of_sale.ScenarioCard" />
+                                </div>
+                                <div class="col-12 col-md-4">
+                                    <t t-set="item" t-value="retailScenario" />
+                                    <t t-call="point_of_sale.ScenarioCard" />
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -36,23 +44,16 @@
     </t>
 
     <t t-name="point_of_sale.ScenarioCard">
-        <div class="col-lg-4">
-            <div class="card mb-3 rounded-3 pos-scenario-card" style="max-width: 540px;"
-                t-on-click="() => this.clickLoadScenario(item)">
-                <div class="row g-0">
-                    <div class="col-lg-4">
-                        <div class="img-container m-2 d-flex align-items-center justify-content-center">
-                            <img t-attf-src="/point_of_sale/static/img/{{item.iconFile}}" class="scenario-img" />
-                        </div>
-                    </div>
-                    <div class="col-lg-8">
-                        <div class="card-body text-start p-3 m-2">
-                            <h3 class="card-title fw-bolder" t-esc="item.name"/>
-                            <p class="card-text text-large" t-esc="item.description"/>
-                        </div>
-                    </div>
-                </div>
+        <button
+            type="button"
+            class="pos-scenario-card card flex-row flex-md-column align-items-center w-100 h-100 gap-4 gap-md-3 p-3 border rounded"
+            t-on-click="() => this.clickLoadScenario(item)"
+            t-attf-aria-label="Select {{item.name}} scenario">
+            <img t-attf-src="/point_of_sale/static/img/{{item.iconFile}}" t-attf-alt="{{item.name}}" class="o_image_64_contain mx-auto" />
+            <div class="card-body p-0 text-start text-md-center">
+                <h3 class="card-title" t-esc="item.name"/>
+                <p class="card-text" t-esc="item.description"/>
             </div>
-        </div>
+        </button>
     </t>
 </odoo>
