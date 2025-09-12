@@ -238,7 +238,7 @@
         </div>
         <!-- === Provider name (only for mobile) === -->
         <p name="o_payment_secured_by_mobile"
-           t-att-class="'align-self-end d-block d-md-none mb-0 small text-600'
+           t-att-class="'align-self-center d-block d-md-none mb-0 small text-600'
                         + (' d-none' if hide_secured_by else '')"
         >
             <span><i class="fa fa-lock"/> Secured by</span>
@@ -329,8 +329,8 @@
             >
                 <t t-set="provider_id" t-value="provider_sudo.id"/>
             </t>
-            <div class="d-flex flex-column flex-md-row align-md-items-center justify-content-between
-                        gap-2 mt-2"
+            <div class="d-flex flex-column flex-sm-row align-md-items-center justify-content-between
+                        gap-3 mt-2"
             >
                 <!-- === Tokenization checkbox === -->
                 <div t-if="mode == 'payment'
@@ -350,7 +350,7 @@
                 <!-- === Provider name === -->
                 <t t-set="hide_secured_by" t-value="False"/>
                 <p name="o_payment_secured_by"
-                   t-att-class="'align-self-end mb-0 ms-auto small text-600'
+                   t-att-class="'align-self-end mb-0 mx-auto me-sm-0 small text-600'
                                 + (' d-none' if hide_secured_by else '')"
                 >
                     <span><i class="fa fa-lock"/> Secured by</span>
