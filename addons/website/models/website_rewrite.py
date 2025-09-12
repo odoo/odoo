@@ -26,6 +26,15 @@ class WebsiteRoute(models.Model):
             self._refresh()
         return domain
 
+    @api.model
+    @api.readonly
+    def name_search(self, name='', domain=None, operator='ilike', limit=100):
+        result = super().name_search(name, domain=domain, operator=operator, limit=limit)
+        if not result:
+            self._refresh()
+            result = super().name_search(name, domain=domain, operator=operator, limit=limit)
+        return result
+
     def _refresh(self):
         _logger.debug("Refreshing website.route")
         ir_http = self.env['ir.http']
