@@ -12,6 +12,7 @@ import { setupEditor } from "./_helpers/editor";
 import { getContent } from "./_helpers/selection";
 import { insertText } from "./_helpers/user_actions";
 import { execCommand } from "./_helpers/userCommands";
+import { expandToolbar } from "./_helpers/toolbar";
 
 const configWithEmbeddedFile = {
     Plugins: [...MAIN_PLUGINS, ...EMBEDDED_COMPONENT_PLUGINS],
@@ -68,6 +69,28 @@ describe("file command", () => {
         // No download button in file card.
         expect(".o_file_box .fa-download").toHaveCount(0);
     });
+});
+
+test("Should not apply color to file box", async () => {
+    const { editor } = await setupEditor("<p>a[]b</p>", {
+        config: configWithEmbeddedFile,
+    });
+    const mockedUpload = patchUpload(editor);
+    await insertText(editor, "/file");
+    await animationFrame();
+    await press("Enter");
+    await animationFrame();
+    expect(".o_select_media_dialog").toHaveCount(0);
+    await mockedUpload;
+    await press(["Ctrl", "a"]);
+    await animationFrame();
+    await expandToolbar();
+    await click(".o-we-toolbar .o-select-color-foreground");
+    await animationFrame();
+    await click('.o_colorpicker_section [data-color="o-color-1"]');
+    await animationFrame();
+    const fileBox = queryOne(".o_file_box");
+    expect(fileBox).not.toHaveClass("text-o-color-1");
 });
 
 describe("document tab in media dialog", () => {
