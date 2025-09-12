@@ -704,6 +704,7 @@ export class SeoChecks extends Component {
         this.imgUpdated = this.imgUpdated.bind(this);
         onWillStart(async () => {
             this.state.altAttributes = await this.getAltAttributes();
+            this.seoContext.updatedAlts = [];
         });
         onMounted(() => {
             this.getBrokenLinks();
