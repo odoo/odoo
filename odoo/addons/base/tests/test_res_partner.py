@@ -1105,8 +1105,7 @@ class TestPartnerForm(TransactionCase):
     def test_lang_computation_form_view(self):
         """ Check computation of lang: coming from installed languages, forced
         default value and propagation from parent."""
-        default_lang_info = self.env['res.lang'].get_installed()[0]
-        default_lang_code = default_lang_info[0]
+        default_lang_code = self.env['ir.default']._get('res.partner', 'lang') or False
         self.assertNotEqual(default_lang_code, 'de_DE')  # should not be the case, just to ease test
         self.assertNotEqual(default_lang_code, 'fr_FR')  # should not be the case, just to ease test
 
