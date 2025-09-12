@@ -1167,6 +1167,40 @@ class TestDomainOptimize(TransactionCase):
             self.number_domain,
         )
 
+    def test_optimize_distribute_to_nary(self):
+        model = self.env['test_orm.mixed']
+        self.assertEqual(
+            list((Domain('numeric', '=', 5) & (Domain('numeric', '=', 5) | Domain('number', '=', 0))).optimize(model)),
+            [('numeric', 'in', [5])],
+        )
+        self.assertEqual(
+            list((Domain('numeric', '=', 5) & (Domain('numeric', '!=', 5) | Domain('number', '=', 0))).optimize(model)),
+            ['&', ('number', 'in', [0]), ('numeric', 'in', [5])],
+        )
+        self.assertEqual(
+            list((Domain('numeric', '=', 5) & (Domain('numeric', '=', 8) | Domain('number', '=', 0))).optimize(model)),
+            ['&', ('number', 'in', [0]), ('numeric', 'in', [5])],
+        )
+        # XXX needed?
+        # and to fix the tests
+        # This needs for m2o   f any a & f not any b  =>  f any (a & ~b)
+        self.assertEqual(
+            list((Domain('currency_id.name', 'in', ['USD']) & (Domain('currency_id.name', 'in', ['EUR', 'USD']) | Domain('number', '=', 0))).optimize(model)),
+            ['&', ('currency_id', 'any', [('name', 'in', ['USD'])]), '|', ('currency_id', 'any', [('name', 'in', ['EUR'])]), ('number', 'in', [0])],
+        )
+        self.assertEqual(
+            list((Domain('currency_id.name', 'in', ['test']) & (Domain('currency_id.name', 'not in', ['USD']) | Domain('number', '=', 0))).optimize(model)),
+            [('currency_id', 'any', [('name', 'in', ['test'])])],
+        )
+        self.assertEqual(
+            list((Domain('currency_id.display_name', 'in', ['test']) & (Domain('currency_id.id', '>', 8) | Domain('number', '=', 0))).optimize(model)),
+            ['&', ('currency_id', 'any', [('display_name', 'in', ['test'])]), '|', ('currency_id', 'any', ['&', ('id', '>', 8), ('display_name', 'in', ['test'])]), ('number', 'in', [0])],
+        )
+        self.assertEqual(
+            list((Domain('numeric', 'in', [5, 8]) & (Domain('numeric', '!=', 8) | Domain('number', '=', 0))).optimize(model)),
+            ['&', ('numeric', 'in', [5, 8]), '|', ('numeric', 'in', [5]), ('number', 'in', [0])],
+        )
+
     def test_optimize_level_by_level(self):
         def search_foo(model, operator, value):
             # groups values to check that it is called once
