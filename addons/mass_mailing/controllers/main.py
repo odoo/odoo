@@ -121,45 +121,22 @@ class MassMailController(http.Controller):
         if mailing.mailing_model_real == 'mailing.contact':
             unsubscribed_lists = ', '.join(mailing_list.name for mailing_list in mailing.contact_list_ids if mailing_list.is_public)
 
+        form_target = f'/mailing/{int(mailing_id)}/unsubscribe?email={email}&document_id={document_id}&hash_token={hash_token}'
         return request.render('mass_mailing.page_mailing_confirm_unsubscribe', {
             'mailing_id': mailing_id,
             'document_id': document_id,
             'email': email,
             'hash_token': hash_token,
             'unsubscribed_lists': unsubscribed_lists,
+            'form_target': form_target,
         })
 
-    # POST method
-    # kept for backwards compatibility, must eventually be merged with mailing/<mailing_id>/unsubscribe
-    @http.route('/mailing/confirm_unsubscribe', type='http', website=True, auth='public', methods=['POST'])
-    def mailing_confirm_unsubscribe_post(self, mailing_id, document_id=None, email=None, hash_token=None):
-        # Unsubscribe user
-        email_found, hash_token_found = self._fetch_user_information(email, hash_token)
-        try:
-            mailing_sudo = self._check_mailing_email_token(
-                int(mailing_id), document_id, email_found, hash_token_found,
-                required_mailing_id=True
-            )
-        except NotFound as e:  # fails if mailing doesn't exist or token is wrong
-            raise Unauthorized() from e
-
-        if mailing_sudo.mailing_on_mailing_list:
-            self._mailing_unsubscribe_from_list(mailing_sudo, document_id, email_found, hash_token_found)
-        else:
-            self._mailing_unsubscribe_from_document(mailing_sudo, document_id, email_found, hash_token_found)
-
-        url_params = urllib.parse.urlencode({
-            'email': email,
-            'document_id': document_id,
-            'hash_token': hash_token,
-        })
-        return request.render('mass_mailing.page_mailing_has_unsubscribed', {
-            'settings_url': f'/mailing/{int(mailing_id)}/unsubscribe?{url_params}',
-        })
-
-    # todo: merge this route with /mail/mailing/confirm_unsubscribe on next minor version
     @http.route(['/mailing/<int:mailing_id>/unsubscribe'], type='http', website=True, auth='public')
-    def mailing_unsubscribe(self, mailing_id, document_id=None, email=None, hash_token=None):
+    def mailing_unsubscribe(self, mailing_id, document_id=None, email=None, hash_token=None, methods=['GET', 'POST']):
+        """
+        The mailing unsubscribe route only unsubscribes if the method is POST.
+        If the method is GET, the page can still be accessed so that users may update their subscription.
+        """
         email_found, hash_token_found = self._fetch_user_information(email, hash_token)
         try:
             mailing_sudo = self._check_mailing_email_token(
@@ -168,6 +145,19 @@ class MassMailController(http.Controller):
             )
         except NotFound as e:  # avoid leaking ID existence
             raise Unauthorized() from e
+
+        # Do not unsubscribe if method is GET
+        if request.httprequest.method == 'GET':
+            return request.render(
+            'mass_mailing.page_mailing_unsubscribe',
+            dict(
+                self._prepare_mailing_subscription_values(
+                    mailing_sudo, document_id, email, hash_token
+                ),
+                last_action='idle',
+                feedback_enabled=False,
+            ),
+        )
 
         if mailing_sudo.mailing_on_mailing_list:
             return self._mailing_unsubscribe_from_list(mailing_sudo, document_id, email_found, hash_token_found)
