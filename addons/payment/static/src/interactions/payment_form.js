@@ -27,9 +27,10 @@ export class PaymentForm extends Interaction {
         )?.textContent;
 
         // Enable tooltips.
-        for (const el of this.el.querySelectorAll('[data-bs-toggle="tooltip"]')) {
-            new Tooltip(el);
-        }
+        this.el.querySelectorAll('[data-bs-toggle="tooltip"]').forEach(el => {
+            const tooltip = window.Tooltip.getOrCreateInstance(el);
+            this.registerCleanup(() => tooltip.dispose());
+        });
     }
 
     async willStart() {
