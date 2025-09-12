@@ -581,7 +581,7 @@ patch(PosStore.prototype, {
             startingValue: order.floating_order_name || "",
         });
         if (payload) {
-            if (typeof order.id == "number") {
+            if (order.isSynced) {
                 this.data.write("pos.order", [order.id], {
                     floating_order_name: payload,
                 });

@@ -20,6 +20,10 @@ export class Base extends WithLazyGetterTrap {
         return this[RAW_SYMBOL].id;
     }
 
+    get isSynced() {
+        return typeof this.id === "number";
+    }
+
     get raw() {
         return deepImmutable(clone(this[RAW_SYMBOL]), "Raw data cannot be modified");
     }
@@ -30,7 +34,7 @@ export class Base extends WithLazyGetterTrap {
      * @param {*} _vals
      */
     setup(_vals) {
-        this._dirty = typeof this.id !== "number";
+        this._dirty = !this.isSynced;
     }
 
     /**
