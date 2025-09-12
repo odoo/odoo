@@ -223,6 +223,9 @@ class ResConfigSettings(models.TransientModel):
             'res_id': False,
         }
 
+    def pos_close_ui(self):
+        return self.pos_open_ui()
+
     def pos_open_ui(self):
         if self.env.context.get('pos_config_id'):
             pos_config_id = self.env.context['pos_config_id']
