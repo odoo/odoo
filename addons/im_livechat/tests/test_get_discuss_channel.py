@@ -399,3 +399,19 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
             self.env["discuss.channel.member"].with_user(bob_user).search([("channel_id", "=", livechat_session.id)]),
             livechat_session.channel_member_ids
         )
+
+    def test_user_prevails_over_guest_when_creating_member(self):
+        test_user = new_test_user(self.env, "meow_user")
+        guest = self.env["mail.guest"].create({"name": "Guest"})
+        self.authenticate(test_user.login, test_user.password)
+        data = self.make_jsonrpc_request(
+            "/im_livechat/get_session",
+            {"channel_id": self.livechat_channel.id},
+            cookies={guest._cookie_name: guest._format_auth_cookie()},
+        )
+        channel_members = self.env["discuss.channel"].browse(data["channel_id"]).channel_member_ids
+        agent = channel_members.filtered(lambda member: member.livechat_member_type == "agent")
+        visitor = channel_members.filtered(lambda member: member.livechat_member_type == "visitor")
+        self.assertEqual(len(agent), 1)
+        self.assertEqual(len(visitor), 1)
+        self.assertEqual(visitor.partner_id, test_user.partner_id)
