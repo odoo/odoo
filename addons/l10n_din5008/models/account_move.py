@@ -24,6 +24,8 @@ class AccountMove(models.Model):
                 data.append((_("Source"), record.invoice_origin))
             if record.ref:
                 data.append((_("Reference"), record.ref))
+            if record.partner_id.commercial_partner_id == record.partner_id and record.partner_id.commercial_partner_id.vat:
+                data.append((_("VAT"), record.partner_id.commercial_partner_id.vat))
 
     def _compute_l10n_din5008_document_title(self):
         for record in self:
