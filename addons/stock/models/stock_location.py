@@ -587,3 +587,6 @@ class StockRoute(models.Model):
                         rule_company=rule.company_id.display_name,
                         route_company=route.company_id.display_name,
                     ))
+
+    def _is_valid_resupply_route_for_product(self, product):
+        return False
