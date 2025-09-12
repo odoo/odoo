@@ -1959,3 +1959,67 @@ def _optimize_same_conditions(cls, conditions, model):
         for condition in conditions
         if prev != (prev := condition)
     ]
+
+
+@nary_optimization
+def _optimize_distribute_to_nary(cls, conditions, model):
+    """Distribute simple conditions into nary conditions to simplify them.
+
+    The optimization is taking each condition and tries to inject its inverse
+    into existing sibling nary-condition.
+
+    ```
+    a & (b | c) & (d | a)
+    # inject the inverse condition into siblings
+    a & (~a | b | c) & (~a | d | a)
+    # keep simpler siblings
+    a & (b | c)
+    ```
+    """
+    inv = cls.INVERSE
+    inv_domains, other_conditions = partition(lambda c: isinstance(c, inv), conditions)
+    if not inv_domains:
+        return conditions
+    for condition in other_conditions:
+        not_condition = ~condition
+        if not isinstance(not_condition, DomainCondition):
+            continue
+        field_expr = not_condition.field_expr
+        condition_positive_operator = NEGATIVE_CONDITION_OPERATORS.get(not_condition.operator, not_condition.operator)
+
+        def similar_condition(c):
+            return (
+                c.field_expr == field_expr
+                and NEGATIVE_CONDITION_OPERATORS.get(c.operator, c.operator) == condition_positive_operator
+            )
+
+        def count_similar(c):
+            return sum(map(similar_condition, c.iter_conditions()))
+
+        def remove_not_condition(c):
+            return inv.ZERO if c == not_condition else c
+
+        updated = 0
+        for inv_condition_index, inv_condition in enumerate(inv_domains):
+            similar_count = count_similar(inv_condition)
+            if not similar_count:
+                continue
+            # * Inject not_condition:
+            # a | b => a | (~a & b)
+            # a & b => a & (~a | b)
+            # where `a is condition and b is inv_condition`
+            new_condition = inv((not_condition, *inv_condition.children))
+            # * Simplify (optimize).
+            new_condition = new_condition.optimize(model)
+            # * Remove the condition if it is still there (in case of nested nary that are now simpler)
+            new_condition = new_condition.map_conditions(remove_not_condition)
+            # * Swap for the new condition when it is different and
+            #   - for | swap when we have strictly reduced the condition
+            #   - for & swap when we have reduced the condition
+            #     we have the same number of conditions, but they are more restricted now
+            if count_similar(new_condition) - similar_count < (1 if cls is DomainAnd else 0) and new_condition != inv_condition:
+                updated += 1
+                inv_domains[inv_condition_index] = new_condition
+        if updated:
+            return [*other_conditions, *inv_domains]
+    return conditions
