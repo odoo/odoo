@@ -65,6 +65,10 @@ function getElemContent(el, selection, options) {
     const tag = el.tagName.toLowerCase();
     let attributes = [...el.attributes];
     if (options.sortAttrs) {
+        if (el.className) {
+            el.className = [...el.classList].sort().join(" ");
+            attributes = [...el.attributes];
+        }
         attributes.sort((attr1, attr2) => {
             if (attr1.name === attr2.name) {
                 return 0;
