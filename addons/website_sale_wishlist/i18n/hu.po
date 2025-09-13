@@ -3,14 +3,13 @@
 # 	* website_sale_wishlist
 # 
 # Translators:
-# A . <tiboreu@protonmail.com>, 2023
 # Ákos Nagy <akos.nagy@oregional.hu>, 2023
-# gezza <geza.nagy@oregional.hu>, 2023
 # Tamás Dombos, 2023
+# Tamás Németh <ntomasz81@gmail.com>, 2023
 # Martin Trigaux, 2023
 # krnkris, 2023
-# Tamás Németh <ntomasz81@gmail.com>, 2023
-# Szabolcs Rádi, 2023
+# 5768b353f27900ae76ad88cc42dfd5b8_3bb349f, 2023
+# gezza <geza.nagy@oregional.hu>, 2024
 # 
 msgid ""
 msgstr ""
@@ -18,7 +17,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:56+0000\n"
 "PO-Revision-Date: 2023-10-26 23:10+0000\n"
-"Last-Translator: Szabolcs Rádi, 2023\n"
+"Last-Translator: gezza <geza.nagy@oregional.hu>, 2024\n"
 "Language-Team: Hungarian (https://app.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -42,27 +41,29 @@ msgid ""
 "wishlist\"/>Add to wishlist"
 msgstr ""
 "<i class=\"fa fa-heart-o me-2\" role=\"img\" aria-label=\"Add to "
-"wishlist\"/>Kívánságlistához ad"
+"wishlist\"/>Kívánságlistához adás"
 
 #. module: website_sale_wishlist
 #: model_terms:ir.ui.view,arch_db:website_sale_wishlist.product_wishlist
 msgid "<small><i class=\"fa fa-trash-o\"/> Remove</small>"
-msgstr "<small><i class=\"fa fa-trash-o\"/> Eltávolít</small>"
+msgstr "<small><i class=\"fa fa-trash-o\"/> Eltávolítás</small>"
+
+#. module: website_sale_wishlist
+#: model_terms:ir.ui.view,arch_db:website_sale_wishlist.product_wishlist
+msgid ""
+"<span class=\"fa fa-fw fa-shopping-cart\"/>\n"
+"                                                <span class=\"d-none d-md-inline\">Add</span>"
+msgstr ""
 
 #. module: website_sale_wishlist
 #: model_terms:ir.ui.view,arch_db:website_sale_wishlist.add_to_wishlist
 msgid "<span class=\"fa fa-heart\" role=\"img\" aria-label=\"Add to wishlist\"/>"
-msgstr ""
+msgstr "<span class=\"fa fa-heart\" role=\"img\" aria-label=\"Add to wishlist\"/>"
 
 #. module: website_sale_wishlist
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_product_wishlist__active
 msgid "Active"
 msgstr "Aktív"
-
-#. module: website_sale_wishlist
-#: model_terms:ir.ui.view,arch_db:website_sale_wishlist.product_wishlist
-msgid "Add <span class=\"d-none d-md-inline\">to Cart</span>"
-msgstr "Hozzáadás <span class=\"d-none d-md-inline\">a kosárhoz</span>"
 
 #. module: website_sale_wishlist
 #: model_terms:ir.ui.view,arch_db:website_sale_wishlist.product_wishlist
@@ -72,12 +73,12 @@ msgstr "Kosárba teszem, de megtartom a Kívánságlistámon is"
 #. module: website_sale_wishlist
 #: model_terms:ir.ui.view,arch_db:website_sale_wishlist.add_to_wishlist
 msgid "Add to Wishlist"
-msgstr ""
+msgstr "Kivánságlistához adás"
 
 #. module: website_sale_wishlist
 #: model_terms:ir.ui.view,arch_db:website_sale_wishlist.product_add_to_wishlist
 msgid "Add to wishlist"
-msgstr "Kívánságlistára"
+msgstr "Kivánságlistához adás"
 
 #. module: website_sale_wishlist
 #: model:ir.model,name:website_sale_wishlist.model_res_partner
@@ -87,7 +88,7 @@ msgstr "Kapcsolat"
 #. module: website_sale_wishlist
 #: model_terms:ir.ui.view,arch_db:website_sale_wishlist.product_wishlist
 msgid "Contact Us"
-msgstr "Vegye fel a kapcsolatot velünk"
+msgstr "Kapcsolatfelvétel"
 
 #. module: website_sale_wishlist
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_product_wishlist__create_uid
@@ -112,12 +113,12 @@ msgstr "Megjelenített név"
 #. module: website_sale_wishlist
 #: model:ir.model.constraint,message:website_sale_wishlist.constraint_product_wishlist_product_unique_partner_id
 msgid "Duplicated wishlisted product for this partner."
-msgstr ""
+msgstr "Duplikált kivánságlista termék ehhez a partnerhez."
 
 #. module: website_sale_wishlist
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_product_wishlist__id
 msgid "ID"
-msgstr "Azonosító"
+msgstr "ID"
 
 #. module: website_sale_wishlist
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_product_wishlist__write_uid
@@ -147,7 +148,7 @@ msgstr "Ár"
 #. module: website_sale_wishlist
 #: model:ir.model.fields,help:website_sale_wishlist.field_product_wishlist__price
 msgid "Price of the product when it has been added in the wishlist"
-msgstr "A Kívánságlistához adáskor érvényes termék ár"
+msgstr "Kívánságlistához adáskor érvényes termék ár"
 
 #. module: website_sale_wishlist
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_product_wishlist__pricelist_id
@@ -173,7 +174,7 @@ msgstr "Termékváltozat"
 #. module: website_sale_wishlist
 #: model:ir.model,name:website_sale_wishlist.model_product_wishlist
 msgid "Product Wishlist"
-msgstr "Termék Kívánságlista"
+msgstr "Termék kívánságlista"
 
 #. module: website_sale_wishlist
 #: model_terms:ir.ui.view,arch_db:website_sale_wishlist.product_wishlist
@@ -183,12 +184,12 @@ msgstr "Termékkép"
 #. module: website_sale_wishlist
 #: model_terms:ir.ui.view,arch_db:website_sale_wishlist.product_wishlist
 msgid "Shop Wishlist"
-msgstr "Üzlet Kívánságlita"
+msgstr "Üzlet kívánságlista"
 
 #. module: website_sale_wishlist
 #: model_terms:ir.ui.view,arch_db:website_sale_wishlist.snippet_options
 msgid "Show/hide empty wishlist"
-msgstr ""
+msgstr "Üres kívánságlista megjelenítése/elrejtése"
 
 #. module: website_sale_wishlist
 #: model:ir.model,name:website_sale_wishlist.model_res_users
@@ -198,7 +199,7 @@ msgstr "Felhasználó"
 #. module: website_sale_wishlist
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_product_wishlist__website_id
 msgid "Website"
-msgstr "Honlap"
+msgstr "Weboldal"
 
 #. module: website_sale_wishlist
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_res_partner__wishlist_ids

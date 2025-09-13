@@ -1,65 +1,71 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* payment_payulatam
-#
+# 
 # Translators:
-# Karolina Tonković <karolina.tonkovic@storm.hr>, 2019
-#
+# Martin Trigaux, 2024
+# Davor Bojkić <davor.bojkic@storm.hr>, 2024
+# Bole <bole@dajmi5.com>, 2024
+# Luka Carević <luka@uvid.hr>, 2025
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-06-09 14:05+0000\n"
-"PO-Revision-Date: 2019-08-26 09:12+0000\n"
-"Last-Translator: Karolina Tonković <karolina.tonkovic@storm.hr>, 2019\n"
-"Language-Team: Croatian (https://www.transifex.com/odoo/teams/41243/hr/)\n"
-"Language: hr\n"
+"POT-Creation-Date: 2023-10-26 21:56+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Luka Carević <luka@uvid.hr>, 2025\n"
+"Language-Team: Croatian (https://app.transifex.com/odoo/teams/41243/hr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: hr\n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
 
 #. module: payment_payulatam
+#: model:ir.model.fields,field_description:payment_payulatam.field_payment_provider__code
+msgid "Code"
+msgstr "Šifra"
+
+#. module: payment_payulatam
+#. odoo-python
 #: code:addons/payment_payulatam/models/payment_transaction.py:0
 #, python-format
 msgid "Invalid payment status."
 msgstr ""
 
 #. module: payment_payulatam
+#. odoo-python
 #: code:addons/payment_payulatam/models/payment_transaction.py:0
 #, python-format
 msgid "No transaction found matching reference %s."
 msgstr ""
 
 #. module: payment_payulatam
-#: model:ir.model.fields.selection,name:payment_payulatam.selection__payment_acquirer__provider__payulatam
+#: model:ir.model.fields.selection,name:payment_payulatam.selection__payment_provider__code__payulatam
+#: model:payment.provider,name:payment_payulatam.payment_provider_payulatam
 msgid "PayU Latam"
-msgstr ""
+msgstr "PayU Latam"
 
 #. module: payment_payulatam
-#: model:ir.model.fields,field_description:payment_payulatam.field_payment_acquirer__payulatam_api_key
+#: model:ir.model.fields,field_description:payment_payulatam.field_payment_provider__payulatam_api_key
 msgid "PayU Latam API Key"
 msgstr ""
 
 #. module: payment_payulatam
-#: model:ir.model.fields,field_description:payment_payulatam.field_payment_acquirer__payulatam_account_id
+#: model:ir.model.fields,field_description:payment_payulatam.field_payment_provider__payulatam_account_id
 msgid "PayU Latam Account ID"
 msgstr ""
 
 #. module: payment_payulatam
-#: model:ir.model.fields,field_description:payment_payulatam.field_payment_acquirer__payulatam_merchant_id
+#: model:ir.model.fields,field_description:payment_payulatam.field_payment_provider__payulatam_merchant_id
 msgid "PayU Latam Merchant ID"
 msgstr ""
 
 #. module: payment_payulatam
-#: model:ir.model,name:payment_payulatam.model_payment_acquirer
-msgid "Payment Acquirer"
-msgstr "Stjecatelj plaćanja"
-
-#. module: payment_payulatam
-#: model:ir.model,name:payment_payulatam.model_account_payment_method
-msgid "Payment Methods"
-msgstr ""
+#: model:ir.model,name:payment_payulatam.model_payment_provider
+msgid "Payment Provider"
+msgstr "Pružatelj usluge naplate"
 
 #. module: payment_payulatam
 #: model:ir.model,name:payment_payulatam.model_payment_transaction
@@ -67,26 +73,45 @@ msgid "Payment Transaction"
 msgstr "Transakcija plaćanja"
 
 #. module: payment_payulatam
-#: model:ir.model.fields,field_description:payment_payulatam.field_payment_acquirer__provider
-msgid "Provider"
-msgstr "Davatelj "
-
-#. module: payment_payulatam
-#: model:ir.model.fields,help:payment_payulatam.field_payment_acquirer__payulatam_merchant_id
+#: model:ir.model.fields,help:payment_payulatam.field_payment_provider__payulatam_merchant_id
 msgid "The ID solely used to identify the account with PayULatam"
 msgstr ""
 
 #. module: payment_payulatam
-#: model:ir.model.fields,help:payment_payulatam.field_payment_acquirer__payulatam_account_id
-msgid "The ID solely used to identify the country-dependent shop with PayULatam"
+#: model:ir.model.fields,help:payment_payulatam.field_payment_provider__payulatam_account_id
+msgid ""
+"The ID solely used to identify the country-dependent shop with PayULatam"
 msgstr ""
 
 #. module: payment_payulatam
-#: model:ir.model.fields,help:payment_payulatam.field_payment_acquirer__provider
-msgid "The Payment Service Provider to use with this acquirer"
+#: model:ir.model.fields,help:payment_payulatam.field_payment_provider__code
+msgid "The technical code of this payment provider."
 msgstr ""
 
 #. module: payment_payulatam
-#: model:account.payment.method,name:payment_payulatam.payment_method_payulatam
-msgid "payulatam"
+#: model_terms:ir.ui.view,arch_db:payment_payulatam.payment_provider_form
+msgid ""
+"This provider is deprecated.\n"
+"                    Consider disabling it and moving to <strong>Mercado Pago</strong>."
 msgstr ""
+
+#. module: payment_payulatam
+#: model_terms:payment.provider,auth_msg:payment_payulatam.payment_provider_payulatam
+msgid "Your payment has been authorized."
+msgstr "Vaše plaćanje je odobreno."
+
+#. module: payment_payulatam
+#: model_terms:payment.provider,cancel_msg:payment_payulatam.payment_provider_payulatam
+msgid "Your payment has been cancelled."
+msgstr "Vaše plaćanje je otkazano."
+
+#. module: payment_payulatam
+#: model_terms:payment.provider,pending_msg:payment_payulatam.payment_provider_payulatam
+msgid ""
+"Your payment has been successfully processed but is waiting for approval."
+msgstr "Vaše plaćanje je uspješno obrađeno, ali čeka na odobrenje."
+
+#. module: payment_payulatam
+#: model_terms:payment.provider,done_msg:payment_payulatam.payment_provider_payulatam
+msgid "Your payment has been successfully processed."
+msgstr "Vaša uplata je uspješno obrađena."

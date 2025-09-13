@@ -6,7 +6,8 @@ from unittest.mock import patch
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.addons.account.models.account_payment_method import AccountPaymentMethod
 from odoo.addons.mail.tests.common import MailCommon
-from odoo.tests import Form, tagged
+from odoo.addons.test_mail.data.test_mail_data import MAIL_EML_ATTACHMENT
+from odoo.tests import Form, tagged, new_test_user
 from odoo.exceptions import UserError, ValidationError
 
 
@@ -147,6 +148,46 @@ class TestAccountJournal(AccountTestInvoicingCommon):
         ])
 
         self.assertEqual(sorted(new_journals.mapped("code")), ["GEN1", "OD_BL"], "The journals should be set correctly")
+
+    def test_archive_used_journal(self):
+        journal = self.env['account.journal'].create({
+            'name': 'Test Journal',
+            'type': 'sale',
+            'code': 'A',
+        })
+        check_method = self.env['account.payment.method'].sudo().create({
+                'name': 'Test',
+                'code': 'check_printing_expense_test',
+                'payment_type': 'outbound',
+        })
+        self.env['account.payment.method.line'].create({
+            'name': 'Check',
+            'payment_method_id': check_method.id,
+            'journal_id': journal.id
+            })
+        journal.action_archive()
+        self.assertFalse(journal.active)
+
+    def test_archive_multiple_journals(self):
+        journals = self.env['account.journal'].create([{
+                'name': 'Test Journal 1',
+                'type': 'sale',
+                'code': 'A1'
+            }, {
+                'name': 'Test Journal 2',
+                'type': 'sale',
+                'code': 'A2'
+            }])
+
+        # Archive the Journals
+        journals.action_archive()
+        self.assertFalse(journals[0].active)
+        self.assertFalse(journals[1].active)
+
+        # Unarchive the Journals
+        journals.action_unarchive()
+        self.assertTrue(journals[0].active)
+        self.assertTrue(journals[1].active)
 
 
 @tagged('post_install', '-at_install', 'mail_alias')
@@ -310,3 +351,22 @@ class TestAccountJournalAlias(AccountTestInvoicingCommon, MailCommon):
         })
         self.assertEqual(journal.alias_name, f'test-journal-{company_name}')
         self.assertEqual(journal2.alias_name, f'test-journal-{company_name}-b')
+
+    def test_send_email_to_alias_from_other_company(self):
+        user_company_2 = new_test_user(
+            self.env,
+            name='company 2 user',
+            login='company_2_user',
+            password='company_2_user',
+            email='company_2_user@test.com',
+            company_id=self.company_data_2['company'].id
+        )
+        self.format_and_process(
+            MAIL_EML_ATTACHMENT,
+            user_company_2.email,
+            self.company_data['default_journal_purchase'].alias_email,
+            subject='purchase test mail',
+            target_model='account.move',
+            msg_id='<test-account-move-alias-id>',
+        )
+        self.assertTrue(self.env['account.move'].search([('invoice_source_email', '=', 'company_2_user@test.com')]))

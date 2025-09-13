@@ -1,7 +1,7 @@
 /** @odoo-module */
 
 import wTourUtils from '@website/js/tours/tour_utils';
-import { boundariesIn, setSelection } from '@web_editor/js/editor/odoo-editor/src/utils/utils';
+import { boundariesIn, setSelection, nodeSize } from '@web_editor/js/editor/odoo-editor/src/utils/utils';
 
 const clickOnImgStep = {
     content: "Click somewhere else to save.",
@@ -33,6 +33,13 @@ wTourUtils.registerWebsitePreviewTour('link_tools', {
         run: 'text odoo.com'
     },
     clickOnImgStep,
+    {
+        content: "Select the newly created link",
+        trigger: 'iframe #wrap .s_text_image a[href="http://odoo.com"]:contains("odoo.com")',
+        run() {
+            setSelection(this.$anchor[0], 0, this.$anchor[0], nodeSize(this.$anchor[0]));
+        }
+    },
     // Remove the link.
     {
         content: "Click on the newly created link",
@@ -214,7 +221,7 @@ wTourUtils.registerWebsitePreviewTour('link_tools', {
     wTourUtils.clickOnElement("mega menu", "iframe header .o_mega_menu_toggle"),
     wTourUtils.changeOption("MegaMenuLayout", "we-toggler"),
     wTourUtils.changeOption("MegaMenuLayout", '[data-select-label="Cards"]'),
-    wTourUtils.clickOnElement("card's text", "iframe header .s_mega_menu_cards p"),
+    wTourUtils.clickOnElement("card's text", "iframe header .s_mega_menu_cards span"),
     {
         content: "Enter an URL",
         trigger: "#o_link_dialog_url_input",
@@ -222,7 +229,7 @@ wTourUtils.registerWebsitePreviewTour('link_tools', {
     },
     {
         content: "Check nothing is lost",
-        trigger: "iframe header .s_mega_menu_cards a[href='https://www.odoo.com']:has(img):has(h4):has(p)",
+        trigger: "iframe header .s_mega_menu_cards a[href='https://www.odoo.com']:has(img):has(h4):has(span)",
         isCheck: true,
     },
     // 7. Create new a link from a URL-like text.

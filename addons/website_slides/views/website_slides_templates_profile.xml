@@ -57,7 +57,7 @@
 
                             <div class="overflow-hidden mb-1" style="height:24px">
                                 <t t-foreach="course.channel_id.tag_ids.filtered(lambda tag: tag.color)" t-as="tag">
-                                    <a t-att-href="'/slides/all/tag/%s' % slug(tag)" t-attf-class="badge o_wslides_channel_tag post_link #{'o_tag_color_'+str(tag.color)}" t-esc="tag.name"/>
+                                    <a t-att-href="'/slides/all/tag/%s' % slug(tag)" onclick="event.stopPropagation()" t-attf-class="badge o_wslides_channel_tag post_link #{'o_tag_color_'+str(tag.color)}" t-esc="tag.name"/>
                                 </t>
                             </div>
 

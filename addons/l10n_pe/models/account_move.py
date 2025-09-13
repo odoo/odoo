@@ -20,7 +20,7 @@ class AccountMove(models.Model):
             ).ids))
         return result
 
-    @api.onchange('l10n_latam_document_type_id', 'l10n_latam_document_number')
+    @api.onchange('l10n_latam_document_type_id', 'l10n_latam_document_number', 'partner_id')
     def _inverse_l10n_latam_document_number(self):
         """Inherit to complete the l10n_latam_document_number with the expected 8 characters after that a '-'
         Example: Change FFF-32 by FFF-00000032, to avoid incorrect values on the reports"""

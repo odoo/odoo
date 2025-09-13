@@ -1,25 +1,29 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* analytic
-# 
+# * analytic
+#
 # Translators:
 # Lucia Pacheco, 2023
-# Wil Odoo, 2023
-# Larissa Manderfeld, 2024
-# 
+# Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2024
+# Wil Odoo, 2025
+# Larissa Manderfeld, 2025
+# "Larissa Manderfeld (lman)" <lman@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
-"PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Larissa Manderfeld, 2024\n"
-"Language-Team: Spanish (https://app.transifex.com/odoo/teams/41243/es/)\n"
+"POT-Creation-Date: 2025-05-07 20:36+0000\n"
+"PO-Revision-Date: 2025-08-26 01:40+0000\n"
+"Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
+"Language-Team: Spanish <https://translate.odoo.com/projects/odoo-17/analytic/"
+"es/>\n"
+"Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: es\n"
-"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
+"Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n != 0 && n % 1000000 == 0)"
+" ? 1 : 2);\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: analytic
 #. odoo-python
@@ -81,13 +85,13 @@ msgstr "Cuenta activa"
 #: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.xml:0
 #, python-format
 msgid "Add a Line"
-msgstr "Agregar una línea"
+msgstr "Añadir una línea"
 
 #. module: analytic
 #: model_terms:ir.actions.act_window,help:analytic.action_account_analytic_account_form
 #: model_terms:ir.actions.act_window,help:analytic.action_analytic_account_form
 msgid "Add a new analytic account"
-msgstr "Agregar una nueva cuenta analítica"
+msgstr "Añadir una nueva cuenta analítica"
 
 #. module: analytic
 #: model:account.analytic.account,name:analytic.analytic_administratif
@@ -317,7 +321,7 @@ msgstr "Hijos"
 #. module: analytic
 #: model_terms:ir.actions.act_window,help:analytic.account_analytic_plan_action
 msgid "Click to add a new analytic account plan."
-msgstr "Haga clic para agregar un nuevo plan de cuenta analítica."
+msgstr "Haga clic para añadir un nuevo plan de cuenta analítica."
 
 #. module: analytic
 #. odoo-javascript
@@ -381,8 +385,8 @@ msgid ""
 "Costs will be created automatically when you register supplier\n"
 "                invoices, expenses or timesheets."
 msgstr ""
-"Los costes se crearán automáticamente cuando registre las facturas de "
-"proveedor, gastos o hojas de asistencia."
+"Los costes se crearán automáticamente cuando registre facturas de proveedor "
+"gastos o partes de horas."
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__create_uid
@@ -406,7 +410,7 @@ msgstr "Creado el"
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__credit
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_list
 msgid "Credit"
-msgstr "Crédito"
+msgstr "Haber"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__currency_id
@@ -434,7 +438,7 @@ msgstr "Desactive la cuenta."
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__debit
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_list
 msgid "Debit"
-msgstr "Débito"
+msgstr "Debe"
 
 #. module: analytic
 #: model:account.analytic.account,name:analytic.analytic_agrolait
@@ -481,7 +485,13 @@ msgstr "Deshabilitar guardar"
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line__display_name
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__display_name
 msgid "Display Name"
-msgstr "Nombre mostrado"
+msgstr "Nombre para mostrar"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_distribution_model__distribution_analytic_account_ids
+#: model:ir.model.fields,field_description:analytic.field_analytic_mixin__distribution_analytic_account_ids
+msgid "Distribution Analytic Account"
+msgstr "Cuenta analítica de distribución"
 
 #. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.account_analytic_distribution_model_form_view
@@ -633,6 +643,13 @@ msgid "Nebula"
 msgstr "Nebula"
 
 #. module: analytic
+#. odoo-javascript
+#: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.xml:0
+#, python-format
+msgid "New Model"
+msgstr "Nuevo modelo"
+
+#. module: analytic
 #: model_terms:ir.actions.act_window,help:analytic.account_analytic_line_action_entries
 msgid "No activity yet"
 msgstr "Sin actividad "
@@ -781,9 +798,8 @@ msgid ""
 msgstr ""
 "Los ingresos se crearán automáticamente cuando crea facturas para el "
 "cliente. Las facturas de cliente se pueden crear a partir de los pedidos de "
-"venta (facturas de precio fijo), en hojas de asistencia (dependiendo el "
-"trabajo realizado) o en los gastos (por ejemplo, refacturación de gastos de "
-"viaje)."
+"venta (facturas de precio fijo), en partes de horas (dependiendo el trabajo "
+"realizado) o en los gastos (por ejemplo, refacturación de gastos de viaje)."
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__root_id
@@ -813,6 +829,13 @@ msgid "Search Analytic Lines"
 msgstr "Buscar líneas analíticas"
 
 #. module: analytic
+#. odoo-python
+#: code:addons/analytic/models/analytic_account.py:0
+#, python-format
+msgid "See them"
+msgstr "Mostrar"
+
+#. module: analytic
 #: model:ir.model.fields,help:analytic.field_account_analytic_distribution_model__company_id
 msgid ""
 "Select a company for which the analytic distribution will be used (e.g. "
@@ -820,7 +843,7 @@ msgid ""
 "will automatically take this as an analytic account)"
 msgstr ""
 "Seleccione la compañía que hará que se aplique la distribución analítica. "
-"(p. ej. al crear un nueva factura de cliente o un pedido de venta a esta "
+"(p. ej. al crear una nueva factura de cliente o un pedido de venta a esta "
 "compañía se aplique automáticamente esta distribución analítica a la cuenta "
 "analítica seleccionada)"
 
@@ -832,7 +855,7 @@ msgid ""
 "it will automatically take this as an analytic account)"
 msgstr ""
 "Seleccione la categoría del contacto que hará que se aplique la distribución"
-" analítica. (p. ej. al crear un nueva factura de cliente o un pedido de "
+" analítica. (p. ej. al crear una nueva factura de cliente o un pedido de "
 "venta a este contacto se aplique automáticamente esta distribución analítica"
 " a la cuenta analítica seleccionada)"
 
@@ -904,11 +927,29 @@ msgstr "Vista"
 #: code:addons/analytic/models/analytic_account.py:0
 #, python-format
 msgid ""
+"Whoa there! Making this change would wipe out your current data. Let's avoid"
+" that, shall we?"
+msgstr ""
+"¡Un momento! Realizar este cambio borraría sus datos actuales. Evitemos eso,"
+" ¿de acuerdo?"
+
+#. module: analytic
+#. odoo-python
+#: code:addons/analytic/models/analytic_account.py:0
+#, python-format
+msgid ""
 "You can't set a different company on your analytic account since there are "
 "some analytic items linked to it."
 msgstr ""
 "No puede establecer una empresa diferente en su cuenta analítica ya que hay "
 "algunos apuntes analíticos vinculados a ella."
+
+#. module: analytic
+#. odoo-python
+#: code:addons/analytic/models/analytic_plan.py:0
+#, python-format
+msgid "You cannot add a parent to the base plan '%s'"
+msgstr "No puede añadir un plan principal al plan base \"%s\""
 
 #. module: analytic
 #. odoo-python

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import defaultdict
@@ -369,7 +368,7 @@ class SaleOrderLine(models.Model):
         if not self.product_custom_attribute_value_ids and not no_variant_ptavs:
             return ""
 
-        name = "\n"
+        name = ""
 
         custom_ptavs = self.product_custom_attribute_value_ids.custom_product_template_attribute_value_id
         multi_ptavs = no_variant_ptavs.filtered(lambda ptav: ptav.display_type == 'multi').sorted()
@@ -457,7 +456,7 @@ class SaleOrderLine(models.Model):
                     line.product_id,
                     quantity=line.product_uom_qty or 1.0,
                     uom=line.product_uom,
-                    date=line.order_id.date_order,
+                    date=line._get_order_date(),
                 )
 
     @api.depends('product_id', 'product_uom', 'product_uom_qty')
@@ -472,14 +471,17 @@ class SaleOrderLine(models.Model):
             else:
                 line = line.with_company(line.company_id)
                 price = line._get_display_price()
+                product_taxes = line.product_id.taxes_id._filter_taxes_by_company(line.company_id)
                 line.price_unit = line.product_id._get_tax_included_unit_price_from_price(
                     price,
                     line.currency_id or line.order_id.currency_id,
-                    product_taxes=line.product_id.taxes_id.filtered(
-                        lambda tax: tax.company_id == line.env.company
-                    ),
+                    product_taxes=product_taxes,
                     fiscal_position=line.order_id.fiscal_position_id,
                 )
+
+    def _get_order_date(self):
+        self.ensure_one()
+        return self.order_id.date_order
 
     def _get_display_price(self):
         """Compute the displayed unit price for a given line.
@@ -519,7 +521,7 @@ class SaleOrderLine(models.Model):
             product=self.product_id.with_context(**self._get_product_price_context()),
             quantity=self.product_uom_qty or 1.0,
             uom=self.product_uom,
-            date=self.order_id.date_order,
+            date=self._get_order_date(),
             currency=self.currency_id,
         )
 
@@ -543,7 +545,7 @@ class SaleOrderLine(models.Model):
             'pricelist': self.order_id.pricelist_id.id,
             'uom': self.product_uom.id,
             'quantity': self.product_uom_qty,
-            'date': self.order_id.date_order,
+            'date': self._get_order_date(),
         }
 
     def _get_pricelist_price_before_discount(self):
@@ -559,7 +561,7 @@ class SaleOrderLine(models.Model):
             product=self.product_id.with_context(**self._get_product_price_context()),
             quantity=self.product_uom_qty or 1.0,
             uom=self.product_uom,
-            date=self.order_id.date_order,
+            date=self._get_order_date(),
             currency=self.currency_id,
         )
 
@@ -711,6 +713,8 @@ class SaleOrderLine(models.Model):
             return ''
 
         invoice_lines = self._get_invoice_lines()
+        if self.invoice_status == 'invoiced' and not invoice_lines:
+            return ''
         if all(line.parent_state == 'draft' for line in invoice_lines):
             return 'draft'
         if all(line.parent_state == 'cancel' for line in invoice_lines):
@@ -848,7 +852,7 @@ class SaleOrderLine(models.Model):
         for line in self:
             amount_invoiced = 0.0
             for invoice_line in line._get_invoice_lines():
-                if invoice_line.move_id.state == 'posted':
+                if invoice_line.move_id.state == 'posted' or invoice_line.move_id.payment_state == 'invoicing_legacy':
                     invoice_date = invoice_line.move_id.invoice_date or fields.Date.today()
                     if invoice_line.move_id.move_type == 'out_invoice':
                         amount_invoiced += invoice_line.currency_id._convert(invoice_line.price_subtotal, line.currency_id, line.company_id, invoice_date)
@@ -1001,6 +1005,13 @@ class SaleOrderLine(models.Model):
     def write(self, values):
         if 'display_type' in values and self.filtered(lambda line: line.display_type != values.get('display_type')):
             raise UserError(_("You cannot change the type of a sale order line. Instead you should delete the current line and create a new line of the proper type."))
+
+        if 'product_id' in values and any(
+            sol.product_id.id != (values.get('product_id') and int(values['product_id']))
+            and not sol.product_updatable
+            for sol in self
+        ):
+            raise UserError(_("You cannot modify the product of this order line."))
 
         if 'product_uom_qty' in values:
             precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
@@ -1176,6 +1187,13 @@ class SaleOrderLine(models.Model):
                 'company_id': line.company_id.id,
             })
 
+    def _get_downpayment_line_price_unit(self, invoices):
+        return sum(
+            l.price_unit if l.move_id.move_type == 'out_invoice' else -l.price_unit
+            for l in self.invoice_lines
+            if l.move_id.state == 'posted' and l.move_id not in invoices  # don't recompute with the final invoice
+        )
+
     #=== CORE METHODS OVERRIDES ===#
 
     def _get_partner_display(self):
@@ -1291,3 +1309,13 @@ class SaleOrderLine(models.Model):
 
     def has_valued_move_ids(self):
         return self.move_ids
+
+    def _sellable_lines_domain(self):
+        discount_products_ids = self.env.companies.sale_discount_product_id.ids
+        domain = [('is_downpayment', '=', False)]
+        if discount_products_ids:
+            domain = expression.AND([
+                domain,
+                [('product_id', 'not in', discount_products_ids)],
+            ])
+        return domain

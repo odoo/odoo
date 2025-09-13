@@ -7,16 +7,17 @@
 # Сергей Шебанин <sergey@shebanin.ru>, 2023
 # Alena Vlasova, 2023
 # Martin Trigaux, 2023
-# Wil Odoo, 2024
 # Collex100, 2024
+# Wil Odoo, 2024
+# Ilya Rozhkov, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2024-08-13 10:27+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Collex100, 2024\n"
+"Last-Translator: Ilya Rozhkov, 2024\n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -540,6 +541,11 @@ msgstr ""
 "партнеров найден и заменяет поле author_id в чате."
 
 #. module: mail_group
+#: model:ir.model.fields,help:mail_group.field_mail_group__alias_domain
+msgid "Email domain e.g. 'example.com' in 'odoo@example.com'"
+msgstr "Домен электронной почты, например, 'example.com' в 'odoo@example.com'"
+
+#. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
 msgid "Emails"
 msgstr "Emails"
@@ -1034,6 +1040,15 @@ msgstr ""
 #, python-format
 msgid "Only members can send email to the mailing list."
 msgstr "Только члены клуба могут отправлять письма в список рассылки."
+
+#. module: mail_group
+#. odoo-python
+#: code:addons/mail_group/models/mail_group.py:0
+#, python-format
+msgid "Only selected groups of users can send email to the mailing list."
+msgstr ""
+"Только выбранные группы пользователей могут отправлять электронные письма в "
+"список рассылки."
 
 #. module: mail_group
 #: model:ir.model.fields,help:mail_group.field_mail_group__alias_force_thread_id

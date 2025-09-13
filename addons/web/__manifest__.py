@@ -434,6 +434,7 @@ This module provides the core of the Odoo Web Client.
             'web/static/tests/dependencies_tests.js',
             'web/static/tests/reactivity_tests.js',
             'web/static/tests/core/**/*.js',
+            'web/static/tests/l10n/**/*.js',
             'web/static/tests/search/**/*.js',
             'web/static/tests/model/**/*.js',
             ('remove', 'web/static/tests/search/helpers.js'),

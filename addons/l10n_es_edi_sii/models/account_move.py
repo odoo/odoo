@@ -11,7 +11,7 @@ class AccountMove(models.Model):
         string="Is the Spanish EDI needed",
         compute='_compute_l10n_es_edi_is_required'
     )
-    l10n_es_edi_csv = fields.Char(string="CSV return code", copy=False)
+    l10n_es_edi_csv = fields.Char(string="CSV return code", copy=False, tracking=True)
     # Technical field to keep the date the invoice was sent the first time as
     # the date the invoice was registered into the system.
     l10n_es_registration_date = fields.Date(
@@ -35,12 +35,18 @@ class AccountMove(models.Model):
                                            and move.company_id.l10n_es_edi_tax_agency \
                                            and has_tax
 
-    @api.depends('l10n_es_edi_is_required')
-    def _compute_edi_show_cancel_button(self):
-        super()._compute_edi_show_cancel_button()
-        for move in self.filtered('l10n_es_edi_is_required'):
-            move.edi_show_cancel_button = False
-
     def _l10n_es_is_dua(self):
         self.ensure_one()
         return any(t.l10n_es_type == 'dua' for t in self.invoice_line_ids.tax_ids.flatten_taxes_hierarchy())
+
+    def _check_edi_documents_for_reset_to_draft(self):
+        docs = self.edi_document_ids.filtered(lambda d: d.edi_format_id._needs_web_services())
+        if len(docs) == 1 and docs.edi_format_id.code == 'es_sii' and docs.state != 'to_cancel':
+            return True
+        return super()._check_edi_documents_for_reset_to_draft()
+
+    def _edi_allow_button_draft(self):
+        docs = self.edi_document_ids.filtered(lambda d: d.edi_format_id._needs_web_services())
+        if len(docs) == 1 and docs.edi_format_id.code == 'es_sii' and docs.state != 'to_cancel':
+            return True
+        return super()._edi_allow_button_draft()

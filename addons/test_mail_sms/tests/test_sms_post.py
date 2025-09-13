@@ -34,9 +34,9 @@ class TestSMSPost(SMSCommon, TestSMSRecipients, CronMixinCase):
             test_record = self.env['mail.test.sms'].browse(self.test_record.id)
             messages = test_record._message_sms('<p>Mega SMS<br/>Top moumoutte</p>', partner_ids=self.partner_1.ids)
 
-        self.assertEqual(messages.body, '<p>Mega SMS<br>Top moumoutte</p>')
+        self.assertEqual(messages.body, '<p>&lt;p&gt;Mega SMS&lt;br/&gt;Top moumoutte&lt;/p&gt;</p>')  # html should not be interpreted
         self.assertEqual(messages.subtype_id, self.env.ref('mail.mt_note'))
-        self.assertSMSNotification([{'partner': self.partner_1}], 'Mega SMS\nTop moumoutte', messages)
+        self.assertSMSNotification([{'partner': self.partner_1}], '<p>Mega SMS<br/>Top moumoutte</p>', messages)
 
     def test_message_sms_internals_resend_existingd(self):
         with self.with_user('employee'), self.mockSMSGateway(sim_error='wrong_number_format'):
@@ -80,9 +80,9 @@ class TestSMSPost(SMSCommon, TestSMSRecipients, CronMixinCase):
             test_record = self.env['mail.test.sms'].browse(self.test_record.id)
             messages = test_record._message_sms('<p>Mega SMS<br/>Top moumoutte</p>', subtype_id=self.env.ref('mail.mt_comment').id, partner_ids=self.partner_1.ids)
 
-        self.assertEqual(messages.body, '<p>Mega SMS<br>Top moumoutte</p>')
+        self.assertEqual(messages.body, '<p>&lt;p&gt;Mega SMS&lt;br/&gt;Top moumoutte&lt;/p&gt;</p>')  # html should not be interpreted
         self.assertEqual(messages.subtype_id, self.env.ref('mail.mt_comment'))
-        self.assertSMSNotification([{'partner': self.partner_1}], 'Mega SMS\nTop moumoutte', messages)
+        self.assertSMSNotification([{'partner': self.partner_1}], '<p>Mega SMS<br/>Top moumoutte</p>', messages)
 
     def test_message_sms_internals_pid_to_number(self):
         pid_to_number = {

@@ -791,6 +791,40 @@ class TestTemplating(ViewCase):
         super(TestTemplating, self).setUp()
         self.patch(self.registry, '_init', False)
 
+    def test_branding_t0(self):
+        view1 = self.View.create({
+            'name': "Base view",
+            'type': 'qweb',
+            'arch': """<root>
+                <div role="search">
+                    <input type="search" name="search"/>
+                    <button type="submit">
+                        <i class="oi-search"/>
+                    </button>
+                </div>
+            </root>
+            """
+        })
+        self.View.create({
+            'name': "Extension view",
+            'type': 'qweb',
+            'inherit_id': view1.id,
+            'arch': """<xpath expr="//div[@role='search']" position="replace">
+                <form>
+                    <t>$0</t>
+                </form>
+            </xpath>
+            """
+        })
+        arch_string = view1.with_context(inherit_branding=True).get_combined_arch()
+        arch = etree.fromstring(arch_string)
+        self.View.distribute_branding(arch)
+        [initial] = arch.xpath("//div[@role='search']")
+        self.assertEqual(
+            '1',
+            initial.get('data-oe-no-branding'),
+            'Injected view must be marked as no-branding')
+
     def test_branding_inherit(self):
         view1 = self.View.create({
             'name': "Base view",
@@ -1526,6 +1560,42 @@ class TestTemplating(ViewCase):
             " the main view's"
         )
 
+    def test_branding_remove_add_text(self):
+        view1 = self.View.create({
+            'name': "Base view",
+            'type': 'qweb',
+            'arch': """<root>
+                <item order="1">
+                    <item/>
+                </item>
+            </root>""",
+        })
+        view2 = self.View.create({
+            'name': "Extension",
+            'type': 'qweb',
+            'inherit_id': view1.id,
+            'arch': """
+            <data>
+                <xpath expr="/root/item/item" position="replace" />
+                <xpath expr="/root/item" position="inside">A<div/>B</xpath>
+            </data>
+            """
+        })
+
+        arch_string = view1.with_context(inherit_branding=True).get_combined_arch()
+        arch = etree.fromstring(arch_string)
+        self.View.distribute_branding(arch)
+
+        expected = etree.fromstring(f"""
+        <root>
+            <item order="1">
+                A
+                <div data-oe-id="{view2.id}" data-oe-xpath="/data/xpath[2]/div" data-oe-model="ir.ui.view" data-oe-field="arch"/>
+                B
+            </item>
+        </root>
+        """)
+        self.assertEqual(arch, expected)
 
 class TestViews(ViewCase):
 
@@ -3397,6 +3467,29 @@ class TestViewTranslations(common.TransactionCase):
         self.assertIn("<i>", view_fr.arch_db)
         self.assertIn("<i>", view_fr.arch)
 
+    def test_no_groups_for_inherited(self):
+        parent = self.env["ir.ui.view"].create({
+            "name": "test_no_groups_for_inherited_parent",
+            "model": "ir.ui.view",
+            "arch": "<form></form>",
+        })
+
+        view = self.env["ir.ui.view"].create({
+            "name": "test_no_groups_for_inherited_child",
+            "model": "ir.ui.view",
+            "arch": "<data></data>",
+            "inherit_id": parent.id,
+            "mode": "extension",
+        })
+
+        with self.assertRaises(ValidationError):
+            view.write({'groups_id': [1]})
+
+        view.write({'mode': 'primary'})
+        view.write({'groups_id': [1]})
+
+        with self.assertRaises(ValidationError):
+            view.write({'mode': 'extension'})
 
 class ViewModeField(ViewCase):
     """

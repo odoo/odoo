@@ -107,11 +107,12 @@ class AccountInvoiceReport(models.Model):
                    * (NULLIF(COALESCE(uom_line.factor, 1), 0.0) / NULLIF(COALESCE(uom_template.factor, 1), 0.0)),
                    0.0) * currency_table.rate                               AS price_average,
                 CASE
-                    WHEN move.move_type NOT IN ('out_invoice', 'out_receipt') THEN 0.0
-                    ELSE -line.balance * currency_table.rate - (line.quantity / NULLIF(COALESCE(uom_line.factor, 1) / COALESCE(uom_template.factor, 1), 0.0)) * COALESCE(product_standard_price.value_float, 0.0)
+                    WHEN move.move_type NOT IN ('out_invoice', 'out_receipt', 'out_refund') THEN 0.0
+                    WHEN move.move_type = 'out_refund' THEN currency_table.rate * (-line.balance + (line.quantity / NULLIF(COALESCE(uom_line.factor, 1) / COALESCE(uom_template.factor, 1), 0.0)) * COALESCE(product_standard_price.value_float, 0.0))
+                    ELSE currency_table.rate * (-line.balance - (line.quantity / NULLIF(COALESCE(uom_line.factor, 1) / COALESCE(uom_template.factor, 1), 0.0)) * COALESCE(product_standard_price.value_float, 0.0))
                 END
                                                                             AS price_margin,
-                line.quantity / NULLIF(COALESCE(uom_line.factor, 1) / COALESCE(uom_template.factor, 1), 0.0) * (CASE WHEN move.move_type IN ('out_invoice','in_refund','out_receipt') THEN -1 ELSE 1 END)
+                currency_table.rate * line.quantity / NULLIF(COALESCE(uom_line.factor, 1) / COALESCE(uom_template.factor, 1), 0.0) * (CASE WHEN move.move_type IN ('out_invoice','in_refund','out_receipt') THEN -1 ELSE 1 END)
                     * product_standard_price.value_float                    AS inventory_value,
                 COALESCE(partner.country_id, commercial_partner.country_id) AS country_id,
                 line.currency_id                                            AS currency_id
@@ -145,6 +146,30 @@ class AccountInvoiceReport(models.Model):
                 AND line.account_id IS NOT NULL
                 AND line.display_type = 'product'
         '''
+
+    @api.model
+    def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
+        """
+        This is a hack to allow us to correctly calculate the average price.
+        """
+        set_fields = set(fields)
+
+        if 'price_average:avg' in fields:
+            set_fields.add('quantity')
+            set_fields.add('price_subtotal')
+
+        res = super().read_group(domain, list(set_fields), groupby, offset, limit, orderby, lazy)
+
+        if 'price_average:avg' in fields:
+            for data in res:
+                data['price_average'] = data['price_subtotal'] / data['quantity'] if data['quantity'] else 0
+
+                if 'quantity:sum' not in fields:
+                    del data['quantity']
+                if 'price_subtotal:sum' not in fields:
+                    del data['price_subtotal']
+
+        return res
 
 
 class ReportInvoiceWithoutPayment(models.AbstractModel):

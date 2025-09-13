@@ -52,7 +52,7 @@ class AccountMove(models.Model):
         if not edi_format:
             self.l10n_in_edi_ewaybill_show_send_button = False
             return
-        posted_moves = self.filtered(lambda x: x.is_invoice() and x.state == 'posted' and x.country_code == "IN")
+        posted_moves = self.filtered(lambda x: x.move_type in ('out_invoice', 'in_invoice', 'in_refund') and x.state == 'posted' and x.country_code == "IN")
         for move in posted_moves:
             already_sent = move.edi_document_ids.filtered(lambda x: x.edi_format_id == edi_format and x.state in ('sent', 'to_cancel', 'to_send'))
             if already_sent:
@@ -124,3 +124,8 @@ class AccountMove(models.Model):
                 })
         self.env['account.edi.document'].create(edi_document_vals_list)
         self.env.ref('account_edi.ir_cron_edi_network')._trigger()
+
+    def _can_force_cancel(self):
+        # OVERRIDE
+        self.ensure_one()
+        return any(document.edi_format_id.code == 'in_ewaybill_1_03' and document.state == 'to_cancel' for document in self.edi_document_ids) or super()._can_force_cancel()

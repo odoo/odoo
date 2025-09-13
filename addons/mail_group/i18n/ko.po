@@ -3,14 +3,14 @@
 # 	* mail_group
 # 
 # Translators:
-# Wil Odoo, 2023
+# Wil Odoo, 2024
 # Daye Jeong, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2024-08-13 10:27+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Daye Jeong, 2024\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
@@ -518,6 +518,11 @@ msgid ""
 msgstr "보낸 사람의 이메일 주소입니다. 이 필드는 일치하는 협력사가 없는 경우에 설정되어 메시지 창에서 작성자 필드를 대체합니다."
 
 #. module: mail_group
+#: model:ir.model.fields,help:mail_group.field_mail_group__alias_domain
+msgid "Email domain e.g. 'example.com' in 'odoo@example.com'"
+msgstr "이메일 도메인 예: 'odoo@example.com'의 'example.com'"
+
+#. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
 msgid "Emails"
 msgstr "이메일"
@@ -997,6 +1002,13 @@ msgstr "관리자나 중재자만 그룹 회원에게 가이드라인을 전송�
 #, python-format
 msgid "Only members can send email to the mailing list."
 msgstr "회원만 메일링 리스트에 이메일을 전송할 수 있습니다."
+
+#. module: mail_group
+#. odoo-python
+#: code:addons/mail_group/models/mail_group.py:0
+#, python-format
+msgid "Only selected groups of users can send email to the mailing list."
+msgstr "선택한 사용자 그룹만 메일링 리스트에 이메일을 보낼 수 있습니다."
 
 #. module: mail_group
 #: model:ir.model.fields,help:mail_group.field_mail_group__alias_force_thread_id

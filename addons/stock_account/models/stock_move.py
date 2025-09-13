@@ -56,7 +56,7 @@ class StockMove(models.Model):
             layers |= layers.stock_valuation_layer_ids
             quantity = sum(layers.mapped("quantity"))
             return sum(layers.mapped("value")) / quantity if not float_is_zero(quantity, precision_rounding=layers.uom_id.rounding) else 0
-        return price_unit if not float_is_zero(price_unit, precision) or self._should_force_price_unit() else self.product_id.standard_price
+        return price_unit if not float_is_zero(price_unit, precision) or self._should_force_price_unit() else self.product_id.with_company(self.company_id).standard_price
 
     @api.model
     def _get_valued_types(self):
@@ -180,13 +180,15 @@ class StockMove(models.Model):
         :param forced_quantity: under some circunstances, the quantity to value is different than
             the initial demand of the move (Default value = None)
         """
+        svl_vals_list = self._get_out_svl_vals(forced_quantity)
+        return self.env['stock.valuation.layer'].sudo().create(svl_vals_list)
+
+    def _get_out_svl_vals(self, forced_quantity):
         svl_vals_list = []
         for move in self:
             move = move.with_company(move.company_id)
             valued_move_lines = move._get_out_move_lines()
-            valued_quantity = 0
-            for valued_move_line in valued_move_lines:
-                valued_quantity += valued_move_line.product_uom_id._compute_quantity(valued_move_line.quantity, move.product_id.uom_id)
+            valued_quantity = sum(valued_move_lines.mapped("quantity_product_uom"))
             if float_is_zero(forced_quantity or valued_quantity, precision_rounding=move.product_id.uom_id.rounding):
                 continue
             svl_vals = move.product_id._prepare_out_svl_vals(forced_quantity or valued_quantity, move.company_id)
@@ -195,7 +197,7 @@ class StockMove(models.Model):
                 svl_vals['description'] = 'Correction of %s (modification of past move)' % (move.picking_id.name or move.name)
             svl_vals['description'] += svl_vals.pop('rounding_adjustment', '')
             svl_vals_list.append(svl_vals)
-        return self.env['stock.valuation.layer'].sudo().create(svl_vals_list)
+        return svl_vals_list
 
     def _create_dropshipped_svl(self, forced_quantity=None):
         """Create a `stock.valuation.layer` from `self`.
@@ -203,13 +205,15 @@ class StockMove(models.Model):
         :param forced_quantity: under some circunstances, the quantity to value is different than
             the initial demand of the move (Default value = None)
         """
+        svl_vals_list = self._get_dropshipped_svl_vals(forced_quantity)
+        return self.env['stock.valuation.layer'].sudo().create(svl_vals_list)
+
+    def _get_dropshipped_svl_vals(self, forced_quantity):
         svl_vals_list = []
         for move in self:
             move = move.with_company(move.company_id)
             valued_move_lines = move.move_line_ids
-            valued_quantity = 0
-            for valued_move_line in valued_move_lines:
-                valued_quantity += valued_move_line.product_uom_id._compute_quantity(valued_move_line.quantity, move.product_id.uom_id)
+            valued_quantity = sum(valued_move_lines.mapped("quantity_product_uom"))
             quantity = forced_quantity or valued_quantity
 
             unit_cost = move._get_price_unit()
@@ -238,7 +242,7 @@ class StockMove(models.Model):
                 out_vals.update(common_vals)
                 svl_vals_list.append(out_vals)
 
-        return self.env['stock.valuation.layer'].sudo().create(svl_vals_list)
+        return svl_vals_list
 
     def _create_dropshipped_returned_svl(self, forced_quantity=None):
         """Create a `stock.valuation.layer` from `self`.
@@ -252,6 +256,8 @@ class StockMove(models.Model):
         # Init a dict that will group the moves by valuation type, according to `move._is_valued_type`.
         valued_moves = {valued_type: self.env['stock.move'] for valued_type in self._get_valued_types()}
         for move in self:
+            if move.state == 'done':
+                continue
             if float_is_zero(move.quantity, precision_rounding=move.product_uom.rounding):
                 continue
             if not any(move.move_line_ids.mapped('picked')):
@@ -325,9 +331,7 @@ class StockMove(models.Model):
             rounding = move.product_id.uom_id.rounding
 
             valued_move_lines = move._get_in_move_lines()
-            quantity = 0
-            for valued_move_line in valued_move_lines:
-                quantity += valued_move_line.product_uom_id._compute_quantity(valued_move_line.quantity, move.product_id.uom_id)
+            quantity = sum(valued_move_lines.mapped("quantity_product_uom"))
 
             qty = forced_qty or quantity
             if float_is_zero(product_tot_qty_available, precision_rounding=rounding):
@@ -374,9 +378,7 @@ class StockMove(models.Model):
         for move in self:
             move = move.with_company(move.company_id)
             valued_move_lines = move._get_in_move_lines()
-            valued_quantity = 0
-            for valued_move_line in valued_move_lines:
-                valued_quantity += valued_move_line.product_uom_id._compute_quantity(valued_move_line.quantity, move.product_id.uom_id)
+            valued_quantity = sum(valued_move_lines.mapped("quantity_product_uom"))
             unit_cost = move.product_id.standard_price
             if move.product_id.cost_method != 'standard':
                 unit_cost = abs(move._get_price_unit())  # May be negative (i.e. decrease an out move).
@@ -541,7 +543,8 @@ class StockMove(models.Model):
             'stock_move_id': self.id,
             'stock_valuation_layer_ids': [(6, None, [svl_id])],
             'move_type': 'entry',
-            'is_storno': self.env.context.get('is_returned') and self.env.company.account_storno,
+            'is_storno': self.env.context.get('is_returned') and self.company_id.account_storno,
+            'company_id': self.company_id.id,
         }
 
     def _account_analytic_entry_move(self):
@@ -605,9 +608,7 @@ class StockMove(models.Model):
                 cost = -1 * cost
                 anglosaxon_am_vals = self.with_company(self.company_id)._prepare_account_move_vals(acc_valuation, acc_dest, journal_id, qty, description, svl_id, cost)
         elif self._is_dropshipped_returned():
-            if cost > 0 and self.location_dest_id._should_be_valued():
-                anglosaxon_am_vals = self.with_company(self.company_id).with_context(is_returned=True)._prepare_account_move_vals(acc_valuation, acc_src, journal_id, qty, description, svl_id, cost)
-            elif cost > 0:
+            if cost > 0:
                 anglosaxon_am_vals = self.with_company(self.company_id).with_context(is_returned=True)._prepare_account_move_vals(acc_dest, acc_valuation, journal_id, qty, description, svl_id, cost)
             else:
                 cost = -1 * cost
@@ -635,3 +636,7 @@ class StockMove(models.Model):
 
     def _get_all_related_sm(self, product):
         return self.filtered(lambda m: m.product_id == product)
+
+    def _get_layer_candidates(self):
+        self.ensure_one()
+        return self.stock_valuation_layer_ids

@@ -318,10 +318,9 @@ class SequenceMixin(models.AbstractModel):
                 # 23P01 ExclusionViolation
                 # 23505 UniqueViolation
                 if e.pgcode not in ('23P01', '23505'):
-                    raise e
+                    raise
         self._compute_split_sequence()
         self.flush_recordset(['sequence_prefix', 'sequence_number'])
-
 
     def _is_last_from_seq_chain(self):
         """Tells whether or not this element is the last one of the sequence chain.

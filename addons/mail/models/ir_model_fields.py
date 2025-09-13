@@ -45,6 +45,9 @@ class IrModelField(models.Model):
             )
             field_to_trackings = groupby(tracking_values, lambda track: track.field_id)
             for field, trackings in field_to_trackings:
+                if field.model_id.model not in self.env:
+                    # Model is already deleted
+                    continue
                 self.env['mail.tracking.value'].concat(*trackings).write({
                     'field_info': {
                         'desc': field.field_description,

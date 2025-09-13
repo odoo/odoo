@@ -6,6 +6,9 @@ import re
 from odoo import api, fields, models, _
 from odoo.exceptions import AccessError, UserError
 from odoo.osv import expression
+from odoo.tools import create_index
+
+PHONE_REGEX_PATTERN = r'[\s\\./\(\)\-]'
 
 
 class PhoneMixin(models.AbstractModel):
@@ -47,6 +50,30 @@ class PhoneMixin(models.AbstractModel):
             when there is both a mobile and phone field in a model.")
     phone_mobile_search = fields.Char("Phone/Mobile", store=False, search='_search_phone_mobile_search')
 
+    def init(self):
+        super().init()
+        phone_fields = [
+            fname for fname in self._phone_get_number_fields()
+            if fname in self._fields and self._fields[fname].store
+        ]
+        # Add supporting indexes for searching on `phone_mobile_search`
+        for fname in phone_fields:
+            regex_expression = rf"regexp_replace(({fname}::text), '{PHONE_REGEX_PATTERN}'::text, ''::text, 'g'::text)"
+            # The btree index covers operators '=' and '=like' with a known prefix
+            create_index(self.env.cr,
+                         indexname=f'{self._table}_{fname}_partial_tgm',
+                         tablename=self._table,
+                         expressions=[regex_expression],
+                         where=f'{fname} IS NOT NULL')
+            if self.env.registry.has_trigram:
+                # The trigram index covers operators 'like', 'ilike' and '=like' starting with a wildcard
+                create_index(self.env.cr,
+                             indexname=f'{self._table}_{fname}_partial_gin_idx',
+                             tablename=self._table,
+                             method='gin',
+                             expressions=[regex_expression + ' gin_trgm_ops'],
+                             where=f'{fname} IS NOT NULL')
+
     def _search_phone_mobile_search(self, operator, value):
         value = value.strip() if isinstance(value, str) else value
         phone_fields = [
@@ -67,7 +94,6 @@ class PhoneMixin(models.AbstractModel):
         if self._phone_search_min_length and len(value) < self._phone_search_min_length:
             raise UserError(_('Please enter at least 3 characters when searching a Phone/Mobile number.'))
 
-        pattern = r'[\s\\./\(\)\-]'
         sql_operator = {'=like': 'LIKE', '=ilike': 'ILIKE'}.get(operator, operator)
 
         if value.startswith('+') or value.startswith('00'):
@@ -93,11 +119,11 @@ class PhoneMixin(models.AbstractModel):
                 )
             query = f"SELECT model.id FROM {self._table} model WHERE {where_str};"
 
-            term = re.sub(pattern, '', value[1 if value.startswith('+') else 2:])
+            term = re.sub(PHONE_REGEX_PATTERN, '', value[1 if value.startswith('+') else 2:])
             if operator not in ('=', '!='):  # for like operators
                 term = f'{term}%'
             self._cr.execute(
-                query, (pattern, '00' + term, pattern, '+' + term) * len(phone_fields)
+                query, (PHONE_REGEX_PATTERN, '00' + term, PHONE_REGEX_PATTERN, '+' + term) * len(phone_fields)
             )
         else:
             if operator in expression.NEGATIVE_TERM_OPERATORS:
@@ -111,10 +137,10 @@ class PhoneMixin(models.AbstractModel):
                     for phone_field in phone_fields
                 )
             query = f"SELECT model.id FROM {self._table} model WHERE {where_str};"
-            term = re.sub(pattern, '', value)
+            term = re.sub(PHONE_REGEX_PATTERN, '', value)
             if operator not in ('=', '!='):  # for like operators
                 term = f'%{term}%'
-            self._cr.execute(query, (pattern, term) * len(phone_fields))
+            self._cr.execute(query, (PHONE_REGEX_PATTERN, term) * len(phone_fields))
         res = self._cr.fetchall()
         if not res:
             return [(0, '=', 1)]
@@ -193,7 +219,10 @@ class PhoneMixin(models.AbstractModel):
     def _phone_get_sanitize_triggers(self):
         """ Tool method to get all triggers for sanitize """
         res = [self._phone_get_country_field()] if self._phone_get_country_field() else []
-        return res + self._phone_get_number_fields()
+        # if partner changes, fallback country may change
+        res += [fname for fname in self._mail_get_partner_fields() if self._fields[fname].store]
+        res += self._phone_get_number_fields()
+        return res
 
     def _phone_set_blacklisted(self):
         return self.env['phone.blacklist'].sudo()._add([r.phone_sanitized for r in self])
@@ -207,11 +236,11 @@ class PhoneMixin(models.AbstractModel):
         can_access = self.env['phone.blacklist'].check_access_rights('write', raise_exception=False)
         if can_access:
             return {
-                'name': 'Are you sure you want to unblacklist this Phone Number?',
+                'name': _('Are you sure you want to unblacklist this Phone Number?'),
                 'type': 'ir.actions.act_window',
                 'view_mode': 'form',
                 'res_model': 'phone.blacklist.remove',
                 'target': 'new',
             }
         else:
-            raise AccessError("You do not have the access right to unblacklist phone numbers. Please contact your administrator.")
+            raise AccessError(_("You do not have the access right to unblacklist phone numbers. Please contact your administrator."))

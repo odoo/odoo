@@ -205,7 +205,7 @@ msgstr "Ya está disponible el siguiente producto."
 #: code:addons/website_sale_stock/models/sale_order.py:0
 #, python-format
 msgid "The item has not been added to your cart since it is not available."
-msgstr "El artículo no está disponible y no se agregó a su cesta."
+msgstr "El artículo no está disponible y no se añadió a su cesta."
 
 #. module: website_sale_stock
 #. odoo-python
@@ -264,14 +264,14 @@ msgstr ""
 #: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
 #, python-format
 msgid "You already added"
-msgstr "Ya ha agregado"
+msgstr "Ya ha añadido"
 
 #. module: website_sale_stock
 #. odoo-javascript
 #: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
 #, python-format
 msgid "You already added all the available product in your cart."
-msgstr "Ya ha agregado todos los productos disponibles en su cesta."
+msgstr "Ya ha añadido todos los productos disponibles en su cesta."
 
 #. module: website_sale_stock
 #. odoo-javascript
@@ -282,8 +282,18 @@ msgstr "Ya tiene %s unidades en su cesta."
 
 #. module: website_sale_stock
 #. odoo-python
-#: code:addons/website_sale_stock/models/sale_order.py:0
 #: code:addons/website_sale_stock/models/sale_order_line.py:0
+#, python-format
+msgid ""
+"You ask for %(desired_qty)s %(product_name)s but only %(new_qty)s is "
+"available"
+msgstr ""
+"Ha solicitado %(desired_qty)s %(product_name)s, pero solo hay %(new_qty)s "
+"disponible(s)"
+
+#. module: website_sale_stock
+#. odoo-python
+#: code:addons/website_sale_stock/models/sale_order.py:0
 #, python-format
 msgid "You ask for %(desired_qty)s products but only %(new_qty)s is available"
 msgstr ""

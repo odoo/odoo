@@ -487,6 +487,16 @@ class TestMailingControllers(TestMailingControllersCommon):
         _test_email, test_email_normalized = portal_user.email, portal_user.email_normalized
         opt_out_reasons = self.env['mailing.subscription.optout'].search([])
 
+        # list opted-out and non-public should not be displayed
+        private_list = self.env['mailing.list'].with_context(self._test_context).create({
+            'contact_ids': [
+                (0, 0, {'name': 'Déboulonneur User', 'email': 'fleurus@example.com'}),
+            ],
+            'name': 'List5',
+            'is_public': False
+        })
+        private_list.subscription_ids[0].opt_out = True
+
         # launch 'my' mailing' tour
         self.authenticate(portal_user.login, portal_user.login)
         with freeze_time(self._reference_now):
@@ -648,7 +658,8 @@ class TestMailingTracking(TestMailingControllersCommon):
             f'r/{link_tracker_code.code}/m/{mailing_trace.id}'
         )
         with freeze_time(self._reference_now):
-            _response = self.url_open(short_link_url)
+            response = self.url_open(short_link_url, allow_redirects=False)
+            self.assertTrue(response.headers['Location'].startswith('https://www.example.com/foo/bar?baz=qux'))
 
         self.assertEqual(link_tracker_code.link_id.count, 1)
         self.assertEqual(mailing_trace.links_click_datetime, self._reference_now)

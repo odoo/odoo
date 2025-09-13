@@ -5,14 +5,15 @@
 # Translators:
 # Wil Odoo, 2023
 # Jolien De Paepe, 2023
+# Manon Rondou, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-05 12:32+0000\n"
+"POT-Creation-Date: 2025-05-09 20:37+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Jolien De Paepe, 2023\n"
+"Last-Translator: Manon Rondou, 2025\n"
 "Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -185,8 +186,8 @@ msgid ""
 "A boolean indicating whether to use A1 style notation (TRUE) or R1C1 style "
 "notation (FALSE)."
 msgstr ""
-"Un booléen indiquant s'il faut utiliser la notation de style A1 (VRAI) ou la"
-" notation de style R1C1 (FAUX)."
+"Un booléen indiquant s'il faut utiliser la notation de style A1 (TRUE) ou la"
+" notation de style R1C1 (FALSE)."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -196,7 +197,7 @@ msgid ""
 "A boolean; if TRUE, empty cells selected in the text arguments won't be "
 "included in the result."
 msgstr ""
-"Un booléen; si VRAI, cellules vides sélectionnées dans l'argument de texte "
+"Un booléen; si TRUE, cellules vides sélectionnées dans l'argument de texte "
 "ne seront pas comprises dans le résultat."
 
 #. module: spreadsheet
@@ -507,7 +508,7 @@ msgstr "Intérêts courus concernant les titres payés à l'échéance."
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/global_filters/plugins/global_filters_ui_plugin.js:0
-#: code:addons/spreadsheet/static/src/helpers/model.js:0
+#: code:addons/spreadsheet/static/src/global_filters/plugins/global_filters_ui_plugin.js:0
 #, python-format
 msgid "Active Filters"
 msgstr "Filtres actifs"
@@ -563,7 +564,7 @@ msgstr ""
 msgid "Additional conditions to be evaluated if the previous ones are FALSE."
 msgstr ""
 "Conditions supplémentaires à évaluer si les conditions précédentes sont "
-"FAUSSES."
+"FALSE."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -748,7 +749,7 @@ msgid ""
 "Additional values to be returned if their corresponding conditions are TRUE."
 msgstr ""
 "Valeurs supplémentaires à renvoyer si leurs conditions correspondantes sont "
-"VRAIES."
+"TRUE."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -854,7 +855,7 @@ msgid ""
 " be coerced to a logical value."
 msgstr ""
 "Une expression ou référence à une cellule contenant une expression qui "
-"représente une valeur logique, c'est-à-dire VRAI ou FAUX ou une expression "
+"représente une valeur logique, c'est-à-dire TRUE ou FALSE ou une expression "
 "qui peut être convertie en une valeur logique."
 
 #. module: spreadsheet
@@ -866,7 +867,7 @@ msgid ""
 "represents some logical value, i.e. TRUE or FALSE."
 msgstr ""
 "Une expression ou une référence à une cellule contenant une expression qui "
-"représente une valeur logique, c'est-à-dire VRAI ou FAUX."
+"représente une valeur logique, c'est-à-dire TRUE ou FALSE."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1995,6 +1996,13 @@ msgstr "Convertit une chaîne de caractères spécifiée en majuscules."
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
+msgid "Converts a string to a numeric value."
+msgstr "Convertit une chaîne de caractères en une valeur numérique."
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
 msgid "Converts a time string into its serial number representation."
 msgstr ""
 "Convertit une chaîne de temps en sa représentation sous forme de numéro de "
@@ -2081,7 +2089,7 @@ msgstr "Cotangente d'un angle défini en radians."
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/pivot/pivot_model.js:0
+#: code:addons/spreadsheet/static/src/pivot/pivot_data_source.js:0
 #, python-format
 msgid "Count"
 msgstr "Comptage"
@@ -2810,6 +2818,7 @@ msgstr "Modifier"
 
 #. module: spreadsheet
 #. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "Edit link"
@@ -2955,6 +2964,7 @@ msgstr "Février"
 
 #. module: spreadsheet
 #. odoo-javascript
+#: code:addons/spreadsheet/static/src/pivot/pivot_data_source.js:0
 #: code:addons/spreadsheet/static/src/pivot/pivot_model.js:0
 #, python-format
 msgid "Field %s does not exist"
@@ -3001,7 +3011,6 @@ msgstr "Couleur de remplissage"
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/helpers/model.js:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Filter"
@@ -3367,6 +3376,17 @@ msgstr ""
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
+msgid ""
+"Function [[FUNCTION_NAME]] expects the parameter '%s' to be a single value "
+"or a single cell reference, not a range."
+msgstr ""
+"La fonction [[FUNCTION_NAME]] s'attend à ce que le paramètre '%s' soit une "
+"valeur unique ou une référence de cellule unique, et non un intervalle."
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Function [[FUNCTION_NAME]] parameter 2 value (%s) is out of range."
@@ -3477,8 +3497,8 @@ msgid ""
 "if TRUE or forces b to be 1 and only calculates the m values if FALSE."
 msgstr ""
 "Avec une forme exponentielle générale de y = b*m^x pour un ajustement de "
-"courbe, calcule b si VRAI ou contraint b à équivaloir à 1 et calcule "
-"uniquement les valeurs m si FAUX."
+"courbe, calcule b si TRUE ou contraint b à équivaloir à 1 et calcule "
+"uniquement les valeurs m si FALSE."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3490,9 +3510,9 @@ msgid ""
 "forces the curve fit to pass through the origin."
 msgstr ""
 "Avec une forme linéaire générale de y = m*x+b pour un ajustement de courbe, "
-"calcule b si VRAI ou contraint b à équivaloir à 0 et calcule uniquement les "
-"valeurs m si FAUX, c'est-à-dire force l'ajustement de la courbe à passer par"
-" l'origine."
+"calcule b si TRUE ou contraint b à équivaloir à 0 et calcule uniquement les "
+"valeurs m si FALSE, c'est-à-dire force l'ajustement de la courbe à passer "
+"par l'origine."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -5073,6 +5093,7 @@ msgstr "Aucune valeur unique trouvée"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #: code:addons/spreadsheet/static/src/pivot/pivot_model.js:0
 #: code:addons/spreadsheet/static/src/pivot/pivot_time_adapters.js:0
+#: code:addons/spreadsheet/static/src/pivot/pivot_time_adapters.js:0
 #, python-format
 msgid "None"
 msgstr "Aucun"
@@ -5901,6 +5922,15 @@ msgstr "Arrondit un nombre selon des règles standard."
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
+msgid ""
+"Rounds a number down to the nearest integer that is less than or equal to "
+"it."
+msgstr "Arrondit un nombre à l'entier inférieur ou égal le plus proche."
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
 msgid "Rounds a number up to the nearest odd integer."
 msgstr "Arrondit un nombre à l'entier impair le plus proche."
 
@@ -6337,7 +6367,7 @@ msgstr "Fichier de feuille de calcul"
 #. module: spreadsheet
 #: model:ir.model,name:spreadsheet.model_spreadsheet_mixin
 msgid "Spreadsheet mixin"
-msgstr "Mixin de feuille de calcu"
+msgstr "Mixin de feuille de calcul"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -6519,8 +6549,8 @@ msgid ""
 "TRUE or FALSE indicating whether to sort sort_column in ascending order. "
 "FALSE sorts in descending order."
 msgstr ""
-"VRAI ou FAUX indiquant si la colonne doit être triée par ordre croissant. "
-"FAUX permet de trier par ordre décroissant."
+"TRUE ou FALSE indiquant si la colonne doit être triée par ordre croissant. "
+"FALSE permet de trier par ordre décroissant."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -6601,7 +6631,7 @@ msgstr "Le texte est exactement \"%s\""
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Text is valid email"
-msgstr "Le texte est un email valide"
+msgstr "Le texte est un e-mail valide"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -6961,6 +6991,27 @@ msgstr "Le tableau qui sera transformé."
 #, python-format
 msgid "The base (%s) must be between 2 and 36 inclusive."
 msgstr "La base (%s) doit être comprise entre 2 et 36 inclus."
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
+msgid "The base (%s) must be strictly positive."
+msgstr "La base (%s) doit être strictement positive."
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
+msgid "The base must be different from 1."
+msgstr "La base doit être différente de 1."
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
+msgid "The base of the logarithm."
+msgstr "La base du logarithme."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -8194,6 +8245,13 @@ msgstr "Le logarithme d'un nombre, base e (nombre d'Euler)."
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
+msgid "The logarithm of a number, for a given base."
+msgstr "Le logarithme d’un nombre pour une base donnée."
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
 msgid "The low end of the random range."
 msgstr "L'extrémité inférieure de la plage aléatoire."
 
@@ -8259,7 +8317,7 @@ msgid ""
 "TRUE."
 msgstr ""
 "Le maximum (%s) et le minimum (%s) doivent être des entiers lorsque "
-"whole_number est VRAI."
+"whole_number est TRUE."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -8478,7 +8536,7 @@ msgstr "Le nombre de périodes de composition par an."
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The number of decimal places to which to round."
-msgstr "Le nombre de décimes à arrondir."
+msgstr "Le nombre de décimales à arrondir."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -8753,6 +8811,13 @@ msgstr "Le nombre à renvoyer."
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
+msgid "The number to round down to the nearest integer."
+msgstr "Le nombre à arrondir à l'entier le plus proche."
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
@@ -8867,7 +8932,7 @@ msgid ""
 "evaluates to TRUE will be included in the filtered set."
 msgstr ""
 "Le modèle ou le test à appliquer à criteria_range1, de sorte que chaque "
-"cellule évaluée à VRAI soit comprise dans l'ensemble filtré."
+"cellule évaluée à TRUE soit comprise dans l'ensemble filtré."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -9419,7 +9484,7 @@ msgstr ""
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The returned value if condition1 is TRUE."
-msgstr "La valeur renvoyée si condition1 est VRAIE."
+msgstr "La valeur renvoyée si condition1 est TRUE."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -10031,6 +10096,7 @@ msgstr "La valeur (%s) doit être positive ou nulle."
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The value (%s) must be strictly positive."
 msgstr "La valeur (%s) doit être strictement positive."
@@ -10126,6 +10192,13 @@ msgstr "La valeur pour laquelle il faut calculer l'arctangente."
 #, python-format
 msgid "The value for which to calculate the logarithm, base e."
 msgstr "La valeur pour laquelle il faut calculer le logarithme, base e."
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
+msgid "The value for which to calculate the logarithm."
+msgstr "La valeur pour laquelle calculer le logarithme."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -10372,14 +10445,14 @@ msgstr "La valeur ou les valeurs à ajouter grâce au délimiteur."
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The value the function returns if logical_expression is FALSE."
-msgstr "La valeur renvoyée par la fonction si logical_expression est FAUX."
+msgstr "La valeur renvoyée par la fonction si logical_expression est FALSE."
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The value the function returns if logical_expression is TRUE."
-msgstr "La valeur renvoyée par la fonction si logical_expression est VRAI."
+msgstr "La valeur renvoyée par la fonction si logical_expression est TRUE."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -10421,7 +10494,7 @@ msgstr "La valeur à tronquer."
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The value to be verified as a logical TRUE or FALSE."
-msgstr "La valeur à vérifier en tant que VRAI ou FAUX logique."
+msgstr "La valeur à vérifier en tant que TRUE ou FALSE logique."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -10903,7 +10976,7 @@ msgstr "Haut"
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/pivot/plugins/pivot_ui_plugin.js:0
+#: code:addons/spreadsheet/static/src/pivot/pivot_data_source.js:0
 #, python-format
 msgid "Total"
 msgstr "Total"
@@ -11111,7 +11184,6 @@ msgstr "Utiliser la ligne"
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/helpers/model.js:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
@@ -11540,7 +11612,7 @@ msgid ""
 "        consecutive delimiters as one (if TRUE). If FALSE, empty cells values are added between consecutive delimiters."
 msgstr ""
 "Suppression ou non des messages textuels vides dans les résultats du fractionnement. Le comportement par défaut est de traiter\n"
-"les délimiteurs consécutifs comme un seul (si VRAI). Si FAUX, les valeurs des cellules vides sont ajoutées entre les délimiteurs consécutifs."
+"les délimiteurs consécutifs comme un seul (si TRUE). Si FALSE, les valeurs des cellules vides sont ajoutées entre les délimiteurs consécutifs."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -12011,6 +12083,13 @@ msgstr "searchMode doit être une valeur comprise entre [-1, 1, -2, 2]."
 #, python-format
 msgid "start_date (%s) should be on or before end_date (%s)."
 msgstr "la start_date (%s) doit être antérieure ou égale à la end_date (%s)."
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
+msgid "the string to be converted"
+msgstr "la chaîne de caractères à convertir"
 
 #. module: spreadsheet
 #. odoo-javascript

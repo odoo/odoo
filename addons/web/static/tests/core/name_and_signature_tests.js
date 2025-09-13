@@ -5,7 +5,16 @@ import { hotkeyService } from "@web/core/hotkeys/hotkey_service";
 import { registry } from "@web/core/registry";
 import { NameAndSignature } from "@web/core/signature/name_and_signature";
 import { makeTestEnv } from "../helpers/mock_env";
-import { click, editInput, getFixture, mount, nextTick } from "../helpers/utils";
+import {
+    click,
+    editInput,
+    getFixture,
+    mount,
+    mockTimeout,
+    nextTick,
+    patchWithCleanup,
+    triggerEvent,
+} from "../helpers/utils";
 
 const serviceRegistry = registry.category("services");
 
@@ -127,4 +136,44 @@ QUnit.module("Components", ({ beforeEach }) => {
             );
         }
     );
+
+    QUnit.test(
+        "test name_and_signature widget update signmode with onSignatureChange prop",
+        async function (assert) {
+            const defaultName = "Noi dea";
+            let currentSignMode = "";
+            props = {
+                ...props,
+                onSignatureChange: function (signMode) {
+                    if (currentSignMode !== signMode) {
+                        currentSignMode = signMode;
+                        assert.step(signMode);
+                    }
+                },
+            };
+            props.signature.name = defaultName;
+            await mount(NameAndSignature, target, { env, props });
+            await click(target, ".o_web_sign_draw_button");
+            assert.verifySteps(["auto", "draw"], "should be draw");
+        }
+    );
+
+    QUnit.test("resize events are handled", async function (assert) {
+        patchWithCleanup(NameAndSignature.prototype, {
+            resizeSignature() {
+                assert.step("resized");
+                return super.resizeSignature();
+            },
+        });
+        const { advanceTime } = mockTimeout();
+        await mount(NameAndSignature, target, { env, props });
+        await editInput(target, ".o_web_sign_name_group input", "plop");
+        await nextTick();
+        await click(target, ".o_web_sign_draw_button");
+        await nextTick();
+        assert.verifySteps(["resized"]);
+        await triggerEvent(window, null, "resize");
+        await advanceTime(300);
+        assert.verifySteps(["resized"]);
+    });
 });

@@ -4,7 +4,8 @@
 # 
 # Translators:
 # Wil Odoo, 2023
-# Marianna Ciofani, 2023
+# Marianna Ciofani, 2024
+# Sergio Zanchetta <primes2h@gmail.com>, 2025
 # 
 msgid ""
 msgstr ""
@@ -12,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:56+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Marianna Ciofani, 2023\n"
+"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2025\n"
 "Language-Team: Italian (https://app.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -280,12 +281,23 @@ msgstr "Hai già %s unità nel tuo carrello."
 
 #. module: website_sale_stock
 #. odoo-python
-#: code:addons/website_sale_stock/models/sale_order.py:0
 #: code:addons/website_sale_stock/models/sale_order_line.py:0
+#, python-format
+msgid ""
+"You ask for %(desired_qty)s %(product_name)s but only %(new_qty)s is "
+"available"
+msgstr ""
+"Hai chiesto %(desired_qty)s %(product_name)s ma è disponibile soltanto "
+"%(new_qty)s "
+
+#. module: website_sale_stock
+#. odoo-python
+#: code:addons/website_sale_stock/models/sale_order.py:0
 #, python-format
 msgid "You ask for %(desired_qty)s products but only %(new_qty)s is available"
 msgstr ""
-"Hai chiesto %(desired_qty)s prodotti ma è disponibile soltanto %(new_qty)s "
+"Sono stati richiesti %(desired_qty)s prodotti ma ne sono disponibili solo "
+"%(new_qty)s"
 
 #. module: website_sale_stock
 #. odoo-javascript
@@ -293,7 +305,7 @@ msgstr ""
 #: code:addons/website_sale_stock/static/src/js/website_sale_reorder.js:0
 #, python-format
 msgid "You ask for %s Units but only %s are available."
-msgstr "Hai chiesto %sunità ma ne sono disponibili soltanto %s."
+msgstr "Sono state richieste %s unità ma ne sono disponibili solo %s"
 
 #. module: website_sale_stock
 #. odoo-javascript

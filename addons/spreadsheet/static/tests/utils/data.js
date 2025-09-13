@@ -123,6 +123,7 @@ export function getBasicData() {
                 name: { string: "Name", type: "char" },
                 spreadsheet_data: { string: "Data", type: "text" },
                 thumbnail: { string: "Thumbnail", type: "text" },
+                display_thumbnail: { string: "Thumbnail", type: "text" },
                 favorited_ids: { string: "Name", type: "many2many" },
                 is_favorited: { string: "Name", type: "boolean" },
                 is_multipage: { string: "Is multipage", type: "boolean" },
@@ -227,6 +228,7 @@ export function getBasicData() {
                 name: { string: "Name", type: "char" },
                 spreadsheet_data: { string: "Spreadsheet Data", type: "text" },
                 thumbnail: { string: "Thumbnail", type: "binary" },
+                display_thumbnail: { string: "Thumbnail", type: "text" },
             },
             records: [
                 { id: 1, name: "Template 1", spreadsheet_data: {} },
@@ -372,6 +374,11 @@ export function getBasicData() {
                     string: "Users",
                     type: "many2many",
                     searchable: true,
+                },
+                id: {
+                    type: "integer",
+                    searchable: true,
+                    string: "ID",
                 },
             },
             records: [

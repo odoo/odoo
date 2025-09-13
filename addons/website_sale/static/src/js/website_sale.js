@@ -5,6 +5,7 @@ import VariantMixin from "@website_sale/js/variant_mixin";
 import wSaleUtils from "@website_sale/js/website_sale_utils";
 const cartHandlerMixin = wSaleUtils.cartHandlerMixin;
 import "@website/libs/zoomodoo/zoomodoo";
+import { browser } from "@web/core/browser/browser";
 import {extraMenuUpdateCallbacks} from "@website/js/content/menu";
 import { ProductImageViewer } from "@website_sale/js/components/website_sale_image_viewer";
 import { jsonrpc } from "@web/core/network/rpc_service";
@@ -41,6 +42,7 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, cartHandlerM
         'mousemove .o_wsale_filmstip_wrapper': '_onMouseMove',
         'click .o_wsale_filmstip_wrapper' : '_onClickHandler',
         'submit': '_onClickConfirmOrder',
+        "change select[name='state_id']": "_onChangeState",
     }),
 
     /**
@@ -96,8 +98,15 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, cartHandlerM
         });
 
         // This allows conditional styling for the filmstrip
-        if (isBrowserFirefox() || hasTouch()) {
-            this.el.querySelector('.o_wsale_filmstip_container')?.classList.add('o_wsale_filmstip_fancy_disabled');
+        const filmstripContainer = this.el.querySelector('.o_wsale_filmstip_container');
+        const filmstripContainerWidth = filmstripContainer
+            ? filmstripContainer.getBoundingClientRect().width : 0;
+        const filmstripWrapper = this.el.querySelector('.o_wsale_filmstip_wrapper');
+        const filmstripWrapperWidth = filmstripWrapper
+            ? filmstripWrapper.getBoundingClientRect().width : 0;
+        const isFilmstripScrollable = filmstripWrapperWidth < filmstripContainerWidth
+        if (isBrowserFirefox() || hasTouch() || isFilmstripScrollable) {
+            filmstripContainer?.classList.add('o_wsale_filmstip_fancy_disabled');
         }
 
         this.getRedirectOption();
@@ -228,6 +237,8 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, cartHandlerM
                 return;
             }
             if (!data.cart_quantity) {
+                // Ensures last cart removal is recorded
+                browser.sessionStorage.setItem('website_sale_cart_quantity', 0);
                 return window.location = '/shop/cart';
             }
             $input.val(data.quantity);
@@ -336,15 +347,14 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, cartHandlerM
      * @private
      */
     _startZoom: function () {
-        // Do not activate image zoom on hover for mobile devices
         const salePage = document.querySelector(".o_wsale_product_page");
-        if (!salePage || uiUtils.isSmall() || this._getProductImageWidth() === "none") {
+        if (!salePage || this._getProductImageWidth() === "none") {
             return;
         }
         this._cleanupZoom();
         this.zoomCleanup = [];
-        // Zoom on hover
-        if (salePage.dataset.ecomZoomAuto) {
+        // Zoom on hover (except on mobile)
+        if (salePage.dataset.ecomZoomAuto && !uiUtils.isSmall()) {
             const images = salePage.querySelectorAll("img[data-zoom]");
             for (const image of images) {
                 const $image = $(image);
@@ -642,6 +652,13 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, cartHandlerM
      * @private
      * @param {Event} ev
      */
+    _onChangeState: function (ev) {
+        return Promise.resolve();
+    },
+    /**
+     * @private
+     * @param {Event} ev
+     */
     _onChangeShippingUseSame: function (ev) {
         $('.ship_to_other').toggle(!$(ev.currentTarget).prop('checked'));
     },
@@ -800,6 +817,19 @@ publicWidget.registry.websiteSaleCart = publicWidget.Widget.extend({
         'click .js_change_shipping': '_onClickChangeShipping',
         'click .js_edit_address': '_onClickEditAddress',
         'click .js_delete_product': '_onClickDeleteProduct',
+    },
+
+    /**
+     * @override
+     */
+    async start() {
+        document.querySelector('.o_cta_navigation_placeholder')?.classList.remove('d-none')
+        const ctaContainer = document.querySelector('.o_cta_navigation_container');
+        if (ctaContainer) {
+            const placeholder = document.querySelector('.o_cta_navigation_placeholder');
+            placeholder.style.height = `${ctaContainer.offsetHeight}px`;
+            ctaContainer.style.top = `calc(100% - ${ctaContainer.offsetHeight}px)`;
+        }
     },
 
     //--------------------------------------------------------------------------

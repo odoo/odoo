@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <template id="report_invoice_document" inherit_id="account.report_invoice_document" primary="True">
+        <xpath expr="//div[@id='qrcode']" position="after">
+            <div t-if="o.l10n_jo_edi_qr" name="qr_code">
+                <p>
+                    <strong class="text-center">JoFotara QR Code</strong>
+                    <img style="display:block;"
+                        t-att-src="o._l10n_jo_qr_code_src()"/>
+                </p>
+            </div>
+        </xpath>
+    </template>
+
+    <!-- Workaround for Studio reports, see odoo/odoo#60660 -->
+    <template id="report_invoice" inherit_id="account.report_invoice">
+        <xpath expr='//t[@t-call="account.report_invoice_document"]' position="after">
+            <t t-elif="o._get_name_invoice_report() == 'l10n_jo_edi.report_invoice_document'"
+                t-call="l10n_jo_edi.report_invoice_document"
+                t-lang="lang"/>
+        </xpath>
+    </template>
+</odoo>

@@ -3,14 +3,14 @@
 # 	* account_edi
 # 
 # Translators:
-# Wil Odoo, 2023
+# Wil Odoo, 2024
 # Abe Manyo, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2024-08-13 10:27+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Abe Manyo, 2024\n"
 "Language-Team: Indonesian (https://app.transifex.com/odoo/teams/41243/id/)\n"
@@ -59,6 +59,15 @@ msgstr "Permintaan pembatalan EDI telah dibatalkan."
 #: model:ir.model,name:account_edi.model_account_move_send
 msgid "Account Move Send"
 msgstr "Kirim Account Move"
+
+#. module: account_edi
+#: model_terms:ir.ui.view,arch_db:account_edi.view_move_form_inherit
+msgid ""
+"Are you sure you want to cancel this invoice without waiting for the EDI "
+"document to be canceled?"
+msgstr ""
+"Apakah Anda yakin ingin membatalkan faktur ini tanpa menunggu dokumen EDI "
+"untuk dibatalkan?"
 
 #. module: account_edi
 #: model:ir.model,name:account_edi.model_ir_attachment
@@ -212,6 +221,13 @@ msgid "Edi Show Cancel Button"
 msgstr "EDI Tunjukkan Tombol Batal"
 
 #. module: account_edi
+#: model:ir.model.fields,field_description:account_edi.field_account_bank_statement_line__edi_show_force_cancel_button
+#: model:ir.model.fields,field_description:account_edi.field_account_move__edi_show_force_cancel_button
+#: model:ir.model.fields,field_description:account_edi.field_account_payment__edi_show_force_cancel_button
+msgid "Edi Show Force Cancel Button"
+msgstr "EDI Tunjukkan Tombol Paksakan Pembatalan"
+
+#. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_bank_statement_line__edi_web_services_to_process
 #: model:ir.model.fields,field_description:account_edi.field_account_move__edi_web_services_to_process
 #: model:ir.model.fields,field_description:account_edi.field_account_payment__edi_web_services_to_process
@@ -248,6 +264,11 @@ msgstr "Status faktur elektronik"
 #: model:ir.model.fields.selection,name:account_edi.selection__account_move__edi_blocking_level__error
 msgid "Error"
 msgstr "Error!"
+
+#. module: account_edi
+#: model_terms:ir.ui.view,arch_db:account_edi.view_move_form_inherit
+msgid "Force Cancel"
+msgstr "Paksakan Pembatalan"
 
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_edi_document__edi_format_name
@@ -330,6 +351,11 @@ msgid "Process now"
 msgstr "Proses sekarang"
 
 #. module: account_edi
+#: model:ir.model,name:account_edi.model_account_resequence_wizard
+msgid "Remake the sequence of Journal Entries."
+msgstr "Buat kembali nomor urut dari Entri Jurnal"
+
+#. module: account_edi
 #: model:ir.model,name:account_edi.model_ir_actions_report
 msgid "Report Action"
 msgstr "Report Action"
@@ -378,6 +404,7 @@ msgstr ""
 "diproses)."
 
 #. module: account_edi
+#. odoo-python
 #: code:addons/account_edi/wizard/account_resequence.py:0
 #, python-format
 msgid ""
@@ -408,6 +435,17 @@ msgstr "Kode ini sudah tersedia"
 #, python-format
 msgid "This document is being sent by another process already. "
 msgstr "Dokumen ini sedang dikirim oleh proses yang lain."
+
+#. module: account_edi
+#. odoo-python
+#: code:addons/account_edi/models/account_move.py:0
+#, python-format
+msgid ""
+"This invoice was canceled while the EDIs %s still had a pending cancellation"
+" request."
+msgstr ""
+"Faktur ini dibatalkan selagi EDI %s masih memiliki permintaan pembatalan "
+"yang pending."
 
 #. module: account_edi
 #: model:ir.model.fields.selection,name:account_edi.selection__account_edi_document__state__to_cancel

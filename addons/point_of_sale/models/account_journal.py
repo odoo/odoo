@@ -15,6 +15,27 @@ class AccountJournal(models.Model):
         if methods:
             raise ValidationError(_("This journal is associated with a payment method. You cannot modify its type"))
 
+    def _check_no_active_payments(self):
+        hanging_journal_entries = self.env['pos.payment'].search(
+        [
+            ('payment_method_id', 'in', self.pos_payment_method_ids.ids),
+            ('session_id.state', '=', 'opened')
+        ], limit=1)
+        if(hanging_journal_entries):
+            payment_method = hanging_journal_entries.payment_method_id.name
+            pos_order = hanging_journal_entries.pos_order_id.name
+            pos_session = hanging_journal_entries.session_id.name
+            raise ValidationError(_("This journal is associated with payment method %s that is being used by order %s in the active pos session %s", payment_method, pos_order, pos_session))
+
+    @api.ondelete(at_uninstall=False)
+    def _unlink_journal_except_with_active_payments(self):
+        for journal in self:
+            journal._check_no_active_payments()
+
+    def action_archive(self):
+        self._check_no_active_payments()
+        return super().action_archive()
+
     def _get_journal_inbound_outstanding_payment_accounts(self):
         res = super()._get_journal_inbound_outstanding_payment_accounts()
         account_ids = set(res.ids)

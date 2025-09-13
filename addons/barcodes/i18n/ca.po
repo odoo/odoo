@@ -4,7 +4,7 @@
 # 
 # Translators:
 # Óscar Fonseca <tecnico@pyming.com>, 2023
-# Quim - eccit <quim@eccit.com>, 2023
+# Quim - coopdevs <quim.rebull@coopdevs.org>, 2023
 # jabiri7, 2023
 # Arnau Ros, 2023
 # Manel Fernandez Ramirez <manelfera@outlook.com>, 2023
@@ -13,15 +13,16 @@
 # Josep Anton Belchi, 2023
 # Martin Trigaux, 2023
 # RGB Consulting <odoo@rgbconsulting.com>, 2023
-# AncesLatino2004, 2023
+# 7b9408628f00af852f513eb4f12c005b_f9c6891, 2023
+# Noemi Pla, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2025-05-22 18:36+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: AncesLatino2004, 2023\n"
+"Last-Translator: Noemi Pla, 2025\n"
 "Language-Team: Catalan (https://app.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -35,6 +36,8 @@ msgstr ""
 #, python-format
 msgid " '*' is not a valid Regex Barcode Pattern. Did you mean '.*'?"
 msgstr ""
+" '*' no és un patró Regex vàlid per a codi de barres. Potser volia utilitzar"
+" '.*'?"
 
 #. module: barcodes
 #: model_terms:ir.ui.view,arch_db:barcodes.view_barcode_nomenclature_form
@@ -195,6 +198,15 @@ msgid "ID"
 msgstr "ID"
 
 #. module: barcodes
+#. odoo-python
+#: code:addons/barcodes/models/barcode_events_mixin.py:0
+#, python-format
+msgid ""
+"In order to use barcodes.barcode_events_mixin, method on_barcode_scanned "
+"must be implemented"
+msgstr ""
+
+#. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature__write_uid
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule__write_uid
 msgid "Last Updated by"
@@ -226,13 +238,19 @@ msgid ""
 "                                the barcode field on the associated records <i>must</i> show these digits as\n"
 "                                zeroes."
 msgstr ""
+"Els patrons també poden definir com es codifiquen els valors numèrics, tals com el pes o el preu,\n"
+"                                en el codi de barres. S'indica amb <code>{NNN}</code>, on les N\n"
+"                                defineixen en quina posició es codifiquen els dígits. També es permeten\n"
+"                                 nombres reals si els decimals s'indiquen amb D, com ara <code>{NNNDD}</code>. En aquests casos,\n"
+"                                el camp del codi de barres en els registres associats <i>ha</i> de mostrar zeros\n"
+"                                en aquestes posicions."
 
 #. module: barcodes
 #. odoo-javascript
 #: code:addons/barcodes/static/src/components/barcode_scanner.js:0
 #, python-format
 msgid "Please, Scan again!"
-msgstr ""
+msgstr "Si us plau, escaneja de nou!"
 
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule__name
@@ -265,6 +283,16 @@ msgstr "Toca per escanejar"
 #: model:ir.model.fields,help:barcodes.field_barcode_rule__pattern
 msgid "The barcode matching pattern"
 msgstr "El patró de coincidència de codis de barres"
+
+#. module: barcodes
+#. odoo-python
+#: code:addons/barcodes/models/barcode_rule.py:0
+#, python-format
+msgid ""
+"The barcode pattern %(pattern)s does not lead to a valid regular expression."
+msgstr ""
+"El patró de codi de barres %(pattern)s no condueix a una expressió regular "
+"vàlida."
 
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_nomenclature__rule_ids

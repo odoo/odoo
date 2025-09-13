@@ -1,26 +1,28 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* payment
-# 
+# * payment
+#
 # Translators:
-# Wil Odoo, 2023
 # Ryoko Tsuda <ryoko@quartile.co>, 2024
-# Junko Augias, 2024
 # Yoshi Tashiro (Quartile) <tashiro@roomsfor.hk>, 2024
-# 
+# Wil Odoo, 2024
+# Junko Augias, 2025
+# "Junko Augias (juau)" <juau@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-29 10:45+0000\n"
-"PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Yoshi Tashiro (Quartile) <tashiro@roomsfor.hk>, 2024\n"
-"Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
+"POT-Creation-Date: 2025-05-07 20:36+0000\n"
+"PO-Revision-Date: 2025-08-15 14:21+0000\n"
+"Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
+"Language-Team: Japanese <https://translate.odoo.com/projects/odoo-17/payment/"
+"ja/>\n"
+"Language: ja\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ja\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider_onboarding_wizard___data_fetched
@@ -138,7 +140,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:payment.method_form
 #: model_terms:ir.ui.view,arch_db:payment.token_form
 msgid "<span><i class=\"fa fa-lock\"/> Secured by</span>"
-msgstr "<span><i class=\"fa fa-lock\"/> 以下によりセキュア</span>"
+msgstr "<span><i class=\"fa fa-lock\"/> 次により保護:</span>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_onboarding_wizard_form
@@ -146,11 +148,6 @@ msgid ""
 "<span><i class=\"oi oi-arrow-right\"/> How to configure your PayPal "
 "account</span>"
 msgstr "<span><i class=\"oi oi-arrow-right\"/> PayPalアカウント設定方法 </span>"
-
-#. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.form
-msgid "<span>Your payment methods</span>"
-msgstr "<span>お客様の支払方法</span>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay
@@ -761,7 +758,9 @@ msgid ""
 "that provides all required billing and shipping information, thus allowing "
 "to skip the checkout process."
 msgstr ""
-"エクスプレス支払では、必要な請求先情報と配送先情報を全て提供する支払方法を利用することで、支払のプロセスを省略し、より迅速に支払いを済ませることができます。"
+"エクスプレスチェックアウトでは、必要な請求先情報と配送先情報を全て提供する支"
+"払方法を利用することで、チェックアウトプロセスを省略し、より迅速に支払いを済"
+"ませることができます。"
 
 #. module: payment
 #: model:payment.provider,name:payment.payment_provider_flutterwave
@@ -793,7 +792,7 @@ msgstr "支払リンクを作成してコピーする"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.confirm
 msgid "Go to my Account <i class=\"oi oi-arrow-right ms-2\"/>"
-msgstr "自分のアカウントへ移動<i class=\"oi oi-arrow-right ms-2\"/>"
+msgstr "マイアカウントへ移動<i class=\"oi oi-arrow-right ms-2\"/>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_search
@@ -1158,7 +1157,7 @@ msgstr "取引先名"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.form
 msgid "Pay"
-msgstr "お支払い"
+msgstr "支払"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_provider_onboarding_wizard__payment_method__paypal
@@ -1191,7 +1190,7 @@ msgstr "支払フォーム"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider_onboarding_wizard__manual_post_msg
 msgid "Payment Instructions"
-msgstr "お支払い方法"
+msgstr "支払方法"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_link_wizard__link
@@ -1569,7 +1568,7 @@ msgstr "キャプチャしようとしている取引の中には、全額しか
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__source_transaction_id
 msgid "Source Transaction"
-msgstr "ソース取引"
+msgstr "元取引"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__state
@@ -1626,6 +1625,11 @@ msgstr "以下によりサポート:"
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
 msgid "Test Mode"
 msgstr "テストモード"
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.transaction_status
+msgid "Thank you!"
+msgstr "回答にご協力頂き、誠に有難う御座います！"
 
 #. module: payment
 #. odoo-python
@@ -1808,7 +1812,7 @@ msgstr "取引後にユーザがリダイレクトされるルート"
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__source_transaction_id
 msgid "The source transaction of the related child transactions"
-msgstr "関連する子取引のソース取引"
+msgstr "関連する子取引の元取引"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_method__code
@@ -2115,6 +2119,13 @@ msgstr "Safariを開き、プリンタのIPアドレスに移動します。そ�
 
 #. module: payment
 #. odoo-python
+#: code:addons/payment/models/payment_method.py:0
+#, python-format
+msgid "You cannot delete the default payment method."
+msgstr "デフォルトの支払方法は削除できません。"
+
+#. module: payment
+#. odoo-python
 #: code:addons/payment/models/payment_provider.py:0
 #, python-format
 msgid ""
@@ -2210,7 +2221,7 @@ msgstr "お支払は取消されました。"
 #, python-format
 msgid ""
 "Your payment has been successfully processed but is waiting for approval."
-msgstr "お支払いは無事処理されましたが、承認待ちとなっています。"
+msgstr "お支払いは正常に処理されましたが、承認待ちです。"
 
 #. module: payment
 #. odoo-python
@@ -2233,12 +2244,17 @@ msgstr "お支払いは無事処理されましたが、承認待ちとなって
 #: model_terms:payment.provider,done_msg:payment.payment_provider_xendit
 #, python-format
 msgid "Your payment has been successfully processed."
-msgstr "お支払いは無事処理されました。"
+msgstr "お支払いは正常に処理されました。"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.transaction_status
 msgid "Your payment has not been processed yet."
 msgstr "支払はまだ処理されていません。"
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.form
+msgid "Your payment methods"
+msgstr "あなたの支払方法"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
@@ -2249,16 +2265,6 @@ msgstr "郵便番号"
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_zip
 msgid "Zip"
 msgstr "郵便番号"
-
-#. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.transaction_status
-msgid "danger"
-msgstr "危険"
-
-#. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.transaction_status
-msgid "info"
-msgstr "情報"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_search
@@ -2277,11 +2283,6 @@ msgid "provider"
 msgstr "プロバイダ"
 
 #. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.transaction_status
-msgid "success"
-msgstr "成功"
-
-#. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.company_mismatch_warning
 msgid ""
 "to make this\n"
@@ -2289,8 +2290,3 @@ msgid ""
 msgstr ""
 "この支払\n"
 "                    をするために。"
-
-#. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.transaction_status
-msgid "warning"
-msgstr "警告"

@@ -15,11 +15,16 @@ export class CountedQuantityWidgetField extends FloatField {
         useEffect(
             (inputEl) => {
                 if (inputEl) {
-                    inputEl.addEventListener("input", this.onInput.bind(this));
-                    inputEl.addEventListener("keydown", this.onKeydown.bind(this));
+                    const boundOnInput = this.onInput.bind(this);
+                    const boundOnKeydown = this.onKeydown.bind(this);
+                    const boundOnBlur = this.onBlur.bind(this);
+                    inputEl.addEventListener("input", boundOnInput);
+                    inputEl.addEventListener("keydown", boundOnKeydown);
+                    inputEl.addEventListener("blur", boundOnBlur);
                     return () => {
-                        inputEl.removeEventListener("input", this.onInput.bind(this));
-                        inputEl.removeEventListener("keydown", this.onKeydown.bind(this));
+                        inputEl.removeEventListener("input", boundOnInput);
+                        inputEl.removeEventListener("keydown", boundOnKeydown);
+                        inputEl.removeEventListener("blur", boundOnBlur);
                     };
                 }
             },
@@ -31,13 +36,24 @@ export class CountedQuantityWidgetField extends FloatField {
         return this.props.record.update({ inventory_quantity_set: true });
     }
 
+    updateValue(ev){
+        try {
+           const val = this.parse(ev.target.value);
+            this.props.record.update({ [this.props.name]: val });
+        } catch {} // ignore since it will be handled later
+    }
+
+    onBlur(ev) {
+         if (!this.props.record.data.inventory_quantity_set) {
+           return;
+        }
+        this.updateValue(ev);
+    }
+
     onKeydown(ev) {
         const hotkey = getActiveHotkey(ev);
         if (["enter", "tab", "shift+tab"].includes(hotkey)) {
-            try {
-                const val = this.parse(ev.target.value);
-                this.props.record.update({ [this.props.name]: val });
-            } catch {} // ignore since it will be handled later
+            this.updateValue(ev);
             this.onInput(ev);
         }
     }

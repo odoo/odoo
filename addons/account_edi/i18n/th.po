@@ -3,14 +3,14 @@
 # 	* account_edi
 # 
 # Translators:
-# Wil Odoo, 2023
+# Wil Odoo, 2024
 # Rasareeyar Lappiam, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2024-08-13 10:27+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Rasareeyar Lappiam, 2024\n"
 "Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
@@ -59,6 +59,15 @@ msgstr "คำขอยกเลิก EDI ถูกยกเลิก"
 #: model:ir.model,name:account_edi.model_account_move_send
 msgid "Account Move Send"
 msgstr "ส่งย้ายบัญชี"
+
+#. module: account_edi
+#: model_terms:ir.ui.view,arch_db:account_edi.view_move_form_inherit
+msgid ""
+"Are you sure you want to cancel this invoice without waiting for the EDI "
+"document to be canceled?"
+msgstr ""
+"คุณแน่ใจหรือไม่ว่าต้องการยกเลิกใบแจ้งหนี้ฉบับนี้โดยไม่ต้องรอให้เอกสาร EDI "
+"ถูกยกเลิก?"
 
 #. module: account_edi
 #: model:ir.model,name:account_edi.model_ir_attachment
@@ -212,6 +221,13 @@ msgid "Edi Show Cancel Button"
 msgstr "Edi แสดงปุ่มยกเลิก"
 
 #. module: account_edi
+#: model:ir.model.fields,field_description:account_edi.field_account_bank_statement_line__edi_show_force_cancel_button
+#: model:ir.model.fields,field_description:account_edi.field_account_move__edi_show_force_cancel_button
+#: model:ir.model.fields,field_description:account_edi.field_account_payment__edi_show_force_cancel_button
+msgid "Edi Show Force Cancel Button"
+msgstr "ปุ่มบังคับยกเลิกการแสดง Edi"
+
+#. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_bank_statement_line__edi_web_services_to_process
 #: model:ir.model.fields,field_description:account_edi.field_account_move__edi_web_services_to_process
 #: model:ir.model.fields,field_description:account_edi.field_account_payment__edi_web_services_to_process
@@ -248,6 +264,11 @@ msgstr "สถานะการออกใบแจ้งหนี้อิเ
 #: model:ir.model.fields.selection,name:account_edi.selection__account_move__edi_blocking_level__error
 msgid "Error"
 msgstr "ผิดพลาด"
+
+#. module: account_edi
+#: model_terms:ir.ui.view,arch_db:account_edi.view_move_form_inherit
+msgid "Force Cancel"
+msgstr "บังคับยกเลิก"
 
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_edi_document__edi_format_name
@@ -330,6 +351,11 @@ msgid "Process now"
 msgstr "ดำเนินการตอนนี้"
 
 #. module: account_edi
+#: model:ir.model,name:account_edi.model_account_resequence_wizard
+msgid "Remake the sequence of Journal Entries."
+msgstr "สร้างลำดับของรายการสมุดรายวันใหม่"
+
+#. module: account_edi
 #: model:ir.model,name:account_edi.model_ir_actions_report
 msgid "Report Action"
 msgstr "การดําเนินการรายงาน"
@@ -377,6 +403,7 @@ msgstr ""
 "(และเอกสารนี้ได้รับการประมวลผล)"
 
 #. module: account_edi
+#. odoo-python
 #: code:addons/account_edi/wizard/account_resequence.py:0
 #, python-format
 msgid ""
@@ -407,6 +434,16 @@ msgstr "รหัสนี้มีอยู่แล้ว"
 #, python-format
 msgid "This document is being sent by another process already. "
 msgstr "เอกสารนี้กำลังถูกส่งโดยขั้นตอนอื่นอยู่แล้ว"
+
+#. module: account_edi
+#. odoo-python
+#: code:addons/account_edi/models/account_move.py:0
+#, python-format
+msgid ""
+"This invoice was canceled while the EDIs %s still had a pending cancellation"
+" request."
+msgstr ""
+"ใบแจ้งหนี้นี้ถูกยกเลิกในขณะที่ EDI %s ยังคงมีคำขอการยกเลิกที่รอดำเนินการอยู่"
 
 #. module: account_edi
 #: model:ir.model.fields.selection,name:account_edi.selection__account_edi_document__state__to_cancel

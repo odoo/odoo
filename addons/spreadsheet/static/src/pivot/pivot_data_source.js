@@ -4,6 +4,7 @@ import { _t } from "@web/core/l10n/translation";
 import { OdooViewsDataSource } from "../data_sources/odoo_views_data_source";
 import { SpreadsheetPivotModel } from "./pivot_model";
 import { Domain } from "@web/core/domain";
+import { omit } from "@web/core/utils/objects";
 
 export class PivotDataSource extends OdooViewsDataSource {
     /**
@@ -15,7 +16,19 @@ export class PivotDataSource extends OdooViewsDataSource {
      * @param {import("./pivot_model").PivotSearchParams} params.searchParams
      */
     constructor(services, params) {
-        super(services, params);
+        const filteredParams = {
+            ...params,
+            searchParams: {
+                ...params.searchParams,
+                context: omit(
+                    params.searchParams.context,
+                    "pivot_measures",
+                    "pivot_row_groupby",
+                    "pivot_column_groupby"
+                ),
+            },
+        };
+        super(services, filteredParams);
     }
 
     async _load() {

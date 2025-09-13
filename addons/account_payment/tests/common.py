@@ -59,12 +59,3 @@ class AccountPaymentCommon(PaymentCommon, AccountTestInvoicingCommon):
 
         with patch.object(self.env.registry['account.payment.method'], '_get_payment_method_information', _get_payment_method_information):
             yield
-
-    @contextmanager
-    def mocked_get_default_payment_method_id(self):
-
-        def _get_default_payment_method_id(*args, **kwargs):
-            return self.dummy_provider_method.id
-
-        with patch.object(self.env.registry['payment.provider'], '_get_default_payment_method_id', _get_default_payment_method_id):
-            yield

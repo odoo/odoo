@@ -24,6 +24,10 @@ class PaymentProvider(models.Model):
         if not self.id:
             return
 
+        default_payment_method = self._get_provider_payment_method(self._get_code())
+        if not default_payment_method:
+            return
+
         pay_method_line = self.env['account.payment.method.line'].search([
             ('payment_provider_id', '=', self.id),
             ('journal_id', '!=', False),
@@ -49,14 +53,22 @@ class PaymentProvider(models.Model):
             pay_method_line.journal_id = self.journal_id
             pay_method_line.name = self.name
         elif allow_create:
-            default_payment_method = self._get_provider_payment_method(self._get_code())
-            if default_payment_method:
-                self.env['account.payment.method.line'].create({
-                    'name': self.name,
-                    'payment_method_id': default_payment_method.id,
-                    'journal_id': self.journal_id.id,
-                    'payment_provider_id': self.id,
-                })
+            create_values = {
+                'name': self.name,
+                'payment_method_id': default_payment_method.id,
+                'journal_id': self.journal_id.id,
+                'payment_provider_id': self.id,
+            }
+            pay_method_line_same_code = self.env['account.payment.method.line'].search(
+                [
+                    *self.env['account.payment.method.line']._check_company_domain(self.company_id),
+                    ('code', '=', self._get_code()),
+                ],
+                limit=1,
+            )
+            if pay_method_line_same_code:
+                create_values['payment_account_id'] = pay_method_line_same_code.payment_account_id.id
+            self.env['account.payment.method.line'].create(create_values)
 
     @api.depends('code', 'state', 'company_id')
     def _compute_journal_id(self):
@@ -82,13 +94,6 @@ class PaymentProvider(models.Model):
     def _inverse_journal_id(self):
         for provider in self:
             provider._ensure_payment_method_line()
-
-    @api.model
-    def _get_default_payment_method_id(self, code):
-        provider_payment_method = self._get_provider_payment_method(code)
-        if provider_payment_method:
-            return provider_payment_method.id
-        return self.env.ref('account.account_payment_method_manual_in').id
 
     @api.model
     def _get_provider_payment_method(self, code):

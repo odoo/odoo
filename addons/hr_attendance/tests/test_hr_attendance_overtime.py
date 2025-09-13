@@ -18,11 +18,13 @@ class TestHrAttendanceOvertime(TransactionCase):
             'overtime_company_threshold': 10,
             'overtime_employee_threshold': 10,
         })
+        cls.company.resource_calendar_id.tz = 'Europe/Brussels'
         cls.company_1 = cls.env['res.company'].create({
             'name': 'Overtime Inc.',
             'hr_attendance_overtime': True,
             'overtime_start_date': datetime(2024, 5, 27),
         })
+        cls.company_1.resource_calendar_id.tz = 'Europe/Brussels'
         cls.user = new_test_user(cls.env, login='fru', groups='base.group_user,hr_attendance.group_hr_attendance_manager', company_id=cls.company.id).with_company(cls.company)
         cls.employee = cls.env['hr.employee'].create({
             'name': "Marie-Edouard De La Court",
@@ -45,7 +47,7 @@ class TestHrAttendanceOvertime(TransactionCase):
             'company_id': cls.company.id,
             'tz': 'Pacific/Honolulu',
         })
-        cls.europe_employee = cls.env['hr.employee'].create({
+        cls.europe_employee = cls.env['hr.employee'].with_company(cls.company_1).create({
             'name': 'Schmitt',
             'company_id': cls.company_1.id,
             'tz': 'Europe/Brussels',
@@ -379,3 +381,21 @@ class TestHrAttendanceOvertime(TransactionCase):
         overtime_record = self.env['hr.attendance.overtime'].search([('employee_id', '=', self.europe_employee.id),
                                                               ('date', '=', datetime(2024, 5, 28))])
         self.assertAlmostEqual(overtime_record.duration, 5)
+    
+    def test_attendance_negative_overtime_duration(self):
+        attendance = self.env['hr.attendance'].create({
+            'employee_id': self.employee.id,
+            'check_in': datetime(2021, 1, 4, 8, 0),
+            'check_out': datetime(2021, 1, 4, 14, 0)
+        })
+
+        self.assertEqual(attendance.overtime_hours, -3)
+
+        attendance_2 = self.env['hr.attendance'].create({
+            'employee_id': self.employee.id,
+            'check_in': datetime(2021, 1, 4, 15, 0),
+            'check_out': datetime(2021, 1, 4, 16, 0)
+        })
+
+        self.assertEqual(attendance.overtime_hours, 0)
+        self.assertEqual(attendance_2.overtime_hours, -2)

@@ -150,19 +150,23 @@ class AccountReport(models.Model):
         for report in self.sorted(lambda x: not x.section_report_ids):
             # Reports are sorted in order to first treat the composite reports, in case they need to compute their filters a the same time
             # as their sections
+            is_accessible = self.env['ir.actions.client'].search_count([('context', 'ilike', f"'report_id': {report.id}"), ('tag', '=', 'account_report')])
+            is_variant = bool(report.root_report_id)
+            if (is_accessible or is_variant) and report.section_main_report_ids:
+                continue  # prevent updating the filters of a report when being added as a section of a report
             if report.root_report_id:
                 report[field_name] = report.root_report_id[field_name]
-            elif len(report.section_main_report_ids) == 1 and not self.env['ir.actions.client'].search_count([('context', 'ilike', f"'report_id': {report.id}"), ('tag', '=', 'account_report')]):
+            elif len(report.section_main_report_ids) == 1 and not is_accessible:
                 report[field_name] = report.section_main_report_ids[field_name]
             else:
                 report[field_name] = default_value
 
-    @api.depends('root_report_id')
+    @api.depends('root_report_id', 'country_id')
     def _compute_default_availability_condition(self):
         for report in self:
-            if report.root_report_id:
+            if report.root_report_id and report.country_id:
                 report.availability_condition = 'country'
-            else:
+            elif not report.availability_condition:
                 report.availability_condition = 'always'
 
     @api.depends('section_report_ids')
@@ -191,6 +195,12 @@ class AccountReport(models.Model):
         for record in self:
             if any(section.section_report_ids for section in record.section_report_ids):
                 raise ValidationError(_("The sections defined on a report cannot have sections themselves."))
+
+    @api.constrains('availability_condition', 'country_id')
+    def _validate_availability_condition(self):
+        for record in self:
+            if record.availability_condition == 'country' and not record.country_id:
+                raise ValidationError(_("The Availability is set to 'Country Matches' but the field Country is not set."))
 
     @api.onchange('availability_condition')
     def _onchange_availability_condition(self):
@@ -243,6 +253,12 @@ class AccountReport(models.Model):
                 for old_code, new_code in code_mapping.items():
                     copied_formula = re.sub(f"(?<=\\W){old_code}(?=\\W)", new_code, copied_formula)
                 expression.formula = copied_formula.strip() # Remove the spaces introduced for lookahead/lookbehind
+                # Repeat the same logic for the subformula, if it is set.
+                if expression.subformula:
+                    copied_subformula = f" {expression.subformula} "
+                    for old_code, new_code in code_mapping.items():
+                        copied_subformula = re.sub(f"(?<=\\W){old_code}(?=\\W)", new_code, copied_subformula)
+                    expression.subformula = copied_subformula.strip()
 
         for column in self.column_ids:
             column.copy({'report_id': copied_report.id})
@@ -541,8 +557,7 @@ class AccountReportExpression(models.Model):
     carryover_target = fields.Char(
         string="Carry Over To",
         help="Formula in the form line_code.expression_label. This allows setting the target of the carryover for this expression "
-             "(on a _carryover_*-labeled expression), in case it is different from the parent line. 'custom' is also allowed as value"
-             " in case the carryover destination requires more complex logic."
+             "(on a _carryover_*-labeled expression), in case it is different from the parent line."
     )
 
     _sql_constraints = [
@@ -557,6 +572,14 @@ class AccountReportExpression(models.Model):
             "The expression label must be unique per report line."
         ),
     ]
+
+    @api.constrains('carryover_target', 'label')
+    def _check_carryover_target(self):
+        for expression in self:
+            if expression.carryover_target and not expression.label.startswith('_carryover_'):
+                raise UserError(_("You cannot use the field carryover_target in an expression that does not have the label starting with _carryover_"))
+            elif expression.carryover_target and not expression.carryover_target.split('.')[1].startswith('_applied_carryover_'):
+                raise UserError(_("When targeting an expression for carryover, the label of that expression must start with _applied_carryover_"))
 
     @api.constrains('formula')
     def _check_domain_formula(self):
@@ -577,11 +600,13 @@ class AccountReportExpression(models.Model):
     @api.constrains('engine', 'report_line_id')
     def _validate_engine(self):
         for expression in self:
-            if expression.engine == 'aggregation' and (expression.report_line_id.groupby or expression.report_line_id.user_groupby):
+            if expression.engine in ('aggregation', 'external') and (expression.report_line_id.groupby or expression.report_line_id.user_groupby):
+                engine_description = dict(expression._fields['engine']._description_selection(self.env))
                 raise ValidationError(_(
-                    "Groupby feature isn't supported by aggregation engine. Please remove the groupby value on '%s'",
-                    expression.report_line_id.display_name,
-                ))
+                    "Groupby feature isn't supported by '%(engine)s' engine. Please remove the groupby value on '%(report_line)s'",
+                        engine=engine_description[expression.engine],
+                        report_line=expression.report_line_id.display_name
+                    ))
 
     def _get_auditable_engines(self):
         return {'tax_tags', 'domain', 'account_codes', 'external', 'aggregation'}
@@ -618,17 +643,26 @@ class AccountReportExpression(models.Model):
 
         self._strip_formula(vals)
 
+        tax_tags_expressions = self.filtered(lambda x: x.engine == 'tax_tags')
+
         if vals.get('engine') == 'tax_tags':
-            tag_name = vals.get('formula') or self.formula
-            country = self.report_line_id.report_id.country_id
-            self._create_tax_tags(tag_name, country)
-            return super().write(vals)
+            # We already generate the tags for the expressions receiving a new engine
+            tags_create_vals = []
+            for expression_with_new_engine in self - tax_tags_expressions:
+                tag_name = vals.get('formula') or expression_with_new_engine.formula
+                country = expression_with_new_engine.report_line_id.report_id.country_id
+                if not self.env['account.account.tag']._get_tax_tags(tag_name, country.id):
+                    tags_create_vals += self.env['account.report.expression']._get_tags_create_vals(
+                        tag_name,
+                        country.id,
+                    )
+
+            self.env['account.account.tag'].create(tags_create_vals)
 
         # In case the engine is changed we don't propagate any change to the tags themselves
         if 'formula' not in vals or (vals.get('engine') and vals['engine'] != 'tax_tags'):
             return super().write(vals)
 
-        tax_tags_expressions = self.filtered(lambda x: x.engine == 'tax_tags')
         former_formulas_by_country = defaultdict(lambda: [])
         for expr in tax_tags_expressions:
             former_formulas_by_country[expr.report_line_id.report_id.country_id].append(expr.formula)
@@ -646,7 +680,12 @@ class AccountReportExpression(models.Model):
                     if former_tax_tags and all(tag_expr in self for tag_expr in former_tax_tags._get_related_tax_report_expressions()):
                         # If we're changing the formula of all the expressions using that tag, rename the tag
                         positive_tags, negative_tags = former_tax_tags.sorted(lambda x: x.tax_negate)
-                        positive_tags.name, negative_tags.name = f"+{vals['formula']}", f"-{vals['formula']}"
+                        if self.pool['account.tax'].name.translate:
+                            positive_tags._update_field_translations('name', {'en_US': f"+{vals['formula']}"})
+                            negative_tags._update_field_translations('name', {'en_US': f"-{vals['formula']}"})
+                        else:
+                            positive_tags.name = f"+{vals['formula']}"
+                            negative_tags.name = f"-{vals['formula']}"
                     else:
                         # Else, create a new tag. Its the compute functions will make sure it is properly linked to the expressions
                         tag_vals = self.env['account.report.expression']._get_tags_create_vals(vals['formula'], country.id)
@@ -666,7 +705,7 @@ class AccountReportExpression(models.Model):
         for tag in expressions_tags:
             other_expression_using_tag = self.env['account.report.expression'].sudo().search([
                 ('engine', '=', 'tax_tags'),
-                ('formula', '=', tag.name[1:]),  # we escape the +/- sign
+                ('formula', '=', tag.with_context(lang='en_US').name[1:]),  # we escape the +/- sign
                 ('report_line_id.report_id.country_id', '=', tag.country_id.id),
                 ('id', 'not in', self.ids),
             ], limit=1)
@@ -757,7 +796,7 @@ class AccountReportExpression(models.Model):
             country = tag_expression.report_line_id.report_id.country_id
             or_domains.append(self.env['account.account.tag']._get_tax_tags_domain(tag_expression.formula, country.id, sign))
 
-        return self.env['account.account.tag'].with_context(active_test=False).search(osv.expression.OR(or_domains))
+        return self.env['account.account.tag'].with_context(active_test=False, lang='en_US').search(osv.expression.OR(or_domains))
 
     @api.model
     def _get_tags_create_vals(self, tag_name, country_id, existing_tag=None):

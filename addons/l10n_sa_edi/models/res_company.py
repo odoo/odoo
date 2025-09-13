@@ -20,7 +20,7 @@ class ResCompany(models.Model):
 
             See https://cryptography.io/en/latest/hazmat/primitives/asymmetric/ec/
         """
-        private_key = ec.generate_private_key(ec.SECP256K1, default_backend())
+        private_key = ec.generate_private_key(ec.SECP256K1(), default_backend())
         return private_key.private_bytes(
             encoding=serialization.Encoding.PEM,
             format=serialization.PrivateFormat.TraditionalOpenSSL,
@@ -43,12 +43,6 @@ class ResCompany(models.Model):
         related='partner_id.l10n_sa_additional_identification_scheme', readonly=False)
     l10n_sa_additional_identification_number = fields.Char(
         related='partner_id.l10n_sa_additional_identification_number', readonly=False)
-
-    def _get_company_root_delegated_field_names(self):
-        return super()._get_company_root_delegated_field_names() + [
-            'l10n_sa_api_mode',
-            'l10n_sa_private_key',
-        ]
 
     def write(self, vals):
         for company in self:

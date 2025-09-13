@@ -20,6 +20,7 @@ E-invoice implementation
         'data/invoice_it_template.xml',
         'data/invoice_it_simplified_template.xml',
         'data/ir_cron.xml',
+        'data/account.account.tag.csv',
         'views/res_config_settings_views.xml',
         'views/l10n_it_view.xml',
         'views/report_invoice.xml',

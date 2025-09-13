@@ -1,28 +1,12 @@
 import odoo
 from odoo import Command
-from odoo.tests import HttpCase
-from odoo.tests.common import new_test_user
+from odoo.addons.im_livechat.tests.common import TestImLivechatCommon
 
 from unittest.mock import patch
 
 
 @odoo.tests.tagged("-at_install", "post_install")
-class TestGetOperator(HttpCase):
-    def _create_operator(self, lang_code=None, country_code=None):
-        operator = new_test_user(self.env, login=f"operator_{lang_code or country_code}_{self.operator_id}")
-        operator.partner_id = self.env["res.partner"].create(
-            {
-                "name": f"Operator {lang_code or country_code}",
-                "lang": lang_code,
-                "country_id": self.env["res.country"].search([("code", "=", country_code)]).id
-                if country_code
-                else None,
-            }
-        )
-        self.env["bus.presence"].create({"user_id": operator.id, "status": "online"})  # Simulate online status
-        self.operator_id += 1
-        return operator
-
+class TestGetOperator(TestImLivechatCommon):
     def _create_chat(self, livechat, operator, in_call=False):
         channel = self.env["discuss.channel"].create(
             {
@@ -34,6 +18,7 @@ class TestGetOperator(HttpCase):
                 "channel_member_ids": [Command.create({"partner_id": operator.partner_id.id})],
             }
         )
+        channel.with_user(operator).message_post(body="Hello, how can I help you?")
         if in_call:
             self.env["discuss.channel.rtc.session"].create(
                 {
@@ -48,9 +33,6 @@ class TestGetOperator(HttpCase):
     def setUp(self):
         super().setUp()
         self.operator_id = 0
-        self.env["res.lang"].with_context(active_test=False).search(
-            [("code", "in", ["fr_FR", "es_ES", "de_DE", "en_US"])]
-        ).write({"active": True})
         random_choice_patch = patch("random.choice", lambda arr: arr[0])
         self.startPatcher(random_choice_patch)
 
@@ -220,4 +202,20 @@ class TestGetOperator(HttpCase):
         self._create_chat(livechat_channel, second_operator, in_call=True)
         self._create_chat(livechat_channel, second_operator)
         self._create_chat(livechat_channel, second_operator)
+        self.assertEqual(first_operator, livechat_channel._get_operator())
+
+    def test_operator_freed_after_chat_ends(self):
+        first_operator = self._create_operator()
+        second_operator = self._create_operator()
+        livechat_channel = self.env["im_livechat.channel"].create(
+            {
+                "name": "Livechat Channel",
+                "user_ids": [first_operator.id, second_operator.id],
+            }
+        )
+        self.assertEqual(first_operator, livechat_channel._get_operator())
+        chat = self._create_chat(livechat_channel, first_operator)
+        self.assertEqual(second_operator, livechat_channel._get_operator())
+        chat.livechat_active = False
+        chat.flush_recordset(["livechat_active"])
         self.assertEqual(first_operator, livechat_channel._get_operator())

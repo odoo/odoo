@@ -19,15 +19,17 @@
 # Martin Trigaux, 2023
 # Ivan Kropotkin <yelizariev@itpp.dev>, 2023
 # Wil Odoo, 2024
-# nadia martynova, 2024
+# Nadia Martynova, 2024
+# Ilya Rozhkov, 2024
+# Anastasiia Koroleva, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-05 12:32+0000\n"
+"POT-Creation-Date: 2025-05-09 20:37+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: nadia martynova, 2024\n"
+"Last-Translator: Anastasiia Koroleva, 2025\n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -513,7 +515,7 @@ msgstr ""
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/global_filters/plugins/global_filters_ui_plugin.js:0
-#: code:addons/spreadsheet/static/src/helpers/model.js:0
+#: code:addons/spreadsheet/static/src/global_filters/plugins/global_filters_ui_plugin.js:0
 #, python-format
 msgid "Active Filters"
 msgstr "Активные фильтры"
@@ -1992,6 +1994,13 @@ msgstr "Преобразует указанную строку в верхний
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
+msgid "Converts a string to a numeric value."
+msgstr "Преобразует строку текста в числовое значение."
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
 msgid "Converts a time string into its serial number representation."
 msgstr "Преобразует строку времени в представление ее серийного номера."
 
@@ -2076,7 +2085,7 @@ msgstr "Котангенс угла, представленного в ради�
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/pivot/pivot_model.js:0
+#: code:addons/spreadsheet/static/src/pivot/pivot_data_source.js:0
 #, python-format
 msgid "Count"
 msgstr "Количество"
@@ -2800,6 +2809,7 @@ msgstr "Редактировать"
 
 #. module: spreadsheet
 #. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "Edit link"
@@ -2942,6 +2952,7 @@ msgstr "Февраль"
 
 #. module: spreadsheet
 #. odoo-javascript
+#: code:addons/spreadsheet/static/src/pivot/pivot_data_source.js:0
 #: code:addons/spreadsheet/static/src/pivot/pivot_model.js:0
 #, python-format
 msgid "Field %s does not exist"
@@ -2988,7 +2999,6 @@ msgstr "Цвет заливки"
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/helpers/model.js:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Filter"
@@ -3341,6 +3351,17 @@ msgstr ""
 msgid "Function [[FUNCTION_NAME]] expects number values for %s, but got a %s."
 msgstr ""
 "Функция [[FUNCTION_NAME]] ожидает числовые значения для %s, но получила %s."
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
+msgid ""
+"Function [[FUNCTION_NAME]] expects the parameter '%s' to be a single value "
+"or a single cell reference, not a range."
+msgstr ""
+"Функция [[FUNCTION_NAME]] ожидает, что параметр «%s» будет единичным "
+"значением или ссылкой на одну ячейку, а не диапазоном."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -5040,6 +5061,7 @@ msgstr "Уникальные значения не найдены"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #: code:addons/spreadsheet/static/src/pivot/pivot_model.js:0
 #: code:addons/spreadsheet/static/src/pivot/pivot_time_adapters.js:0
+#: code:addons/spreadsheet/static/src/pivot/pivot_time_adapters.js:0
 #, python-format
 msgid "None"
 msgstr "Нет"
@@ -5855,6 +5877,15 @@ msgstr "Справа"
 #, python-format
 msgid "Rounds a number according to standard rules."
 msgstr "Округляет число по стандартным правилам."
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
+msgid ""
+"Rounds a number down to the nearest integer that is less than or equal to "
+"it."
+msgstr "Округляет число вниз до ближайшего целого, не превышающего его."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -6919,6 +6950,27 @@ msgstr "Массив, который будет преобразован."
 #, python-format
 msgid "The base (%s) must be between 2 and 36 inclusive."
 msgstr "Основание (%s) должно быть от 2 до 36 включительно."
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
+msgid "The base (%s) must be strictly positive."
+msgstr "Основание (%s) должно быть строго положительным числом."
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
+msgid "The base must be different from 1."
+msgstr "Основание должно отличаться от 1."
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
+msgid "The base of the logarithm."
+msgstr "Основание логарифма."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -8153,6 +8205,13 @@ msgstr "Логарифм числа с основанием e (число Эйл
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
+msgid "The logarithm of a number, for a given base."
+msgstr "Логарифм числа по заданному основанию."
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
 msgid "The low end of the random range."
 msgstr "Низкая граница случайного диапазона."
 
@@ -8707,6 +8766,13 @@ msgstr "Число, которое нужно возвести в степень
 #, python-format
 msgid "The number to return."
 msgstr "Номер, который нужно вернуть."
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
+msgid "The number to round down to the nearest integer."
+msgstr "Число, которое нужно округлить вниз до ближайшего целого."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -9981,6 +10047,7 @@ msgstr "Значение (%s) должно быть положительным �
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The value (%s) must be strictly positive."
 msgstr "Значение (%s) должно быть строго положительным."
@@ -10075,6 +10142,13 @@ msgstr "Значение, для которого вычисляется обр�
 #, python-format
 msgid "The value for which to calculate the logarithm, base e."
 msgstr "Значение, для которого вычисляется логарифм, основание e."
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
+msgid "The value for which to calculate the logarithm."
+msgstr "Значение, для которого нужно вычислить логарифм."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -10859,7 +10933,7 @@ msgstr "Сверху"
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/pivot/plugins/pivot_ui_plugin.js:0
+#: code:addons/spreadsheet/static/src/pivot/pivot_data_source.js:0
 #, python-format
 msgid "Total"
 msgstr "Всего"
@@ -11069,7 +11143,6 @@ msgstr "Используйте ряд"
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/helpers/model.js:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
@@ -11960,6 +12033,13 @@ msgstr "searchMode должно быть значением из [-1, 1, -2, 2].
 #, python-format
 msgid "start_date (%s) should be on or before end_date (%s)."
 msgstr "начальная_дата (%s) должна быть на или перед конечной_датой (%s)."
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
+msgid "the string to be converted"
+msgstr "строка для преобразования"
 
 #. module: spreadsheet
 #. odoo-javascript

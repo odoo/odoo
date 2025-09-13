@@ -771,9 +771,13 @@ class O2MValue(X2MValue):
 
 
 class M2MValue(X2MValue):
+    def __init__(self, iterable_of_vals=()):
+        super().__init__(iterable_of_vals)
+        self._given = list(self._data)
+
     def to_commands(self):
-        ids = []
-        result = [Command.set(ids)]
+        given = set(self._given)
+        result = []
         for id_, vals in self._data.items():
             if isinstance(id_, str) and id_.startswith('virtual_'):
                 result.append((Command.CREATE, id_, {
@@ -781,12 +785,16 @@ class M2MValue(X2MValue):
                     for key, val in vals.changed_items()
                 }))
                 continue
-            ids.append(id_)
+            if id_ not in given:
+                result.append(Command.link(id_))
             if vals._changed:
                 result.append(Command.update(id_, {
                     key: val.to_commands() if isinstance(val, X2MValue) else val
                     for key, val in vals.changed_items()
                 }))
+        for id_ in self._given:
+            if id_ not in self._data:
+                result.append(Command.unlink(id_))
         return result
 
 

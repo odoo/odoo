@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import logging
 
 from lxml import html
 from werkzeug.urls import url_encode
@@ -9,9 +10,17 @@ from odoo.addons.website.tools import MockRequest
 from odoo.tests.common import HOST
 from odoo.tools import config
 
+_logger = logging.getLogger(__name__)
+
 
 @tagged('post_install', '-at_install', 'website_snippets')
 class TestSnippets(HttpCase):
+
+    def fetch_proxy(self, url):
+        if 'twitter.com' in url or 'youtube.com' in url:
+            _logger.info('External chrome request during tests: Sending dummy page for %s', url)
+            return self.make_fetch_proxy_response('<body>Dummy page</body>')
+        return super().fetch_proxy(url)
 
     def test_01_empty_parents_autoremove(self):
         self.start_tour(self.env['website'].get_client_action_url('/'), 'snippet_empty_parent_autoremove', login='admin')
@@ -129,3 +138,12 @@ class TestSnippets(HttpCase):
 
     def test_dropdowns_and_header_hide_on_scroll(self):
         self.start_tour(self.env['website'].get_client_action_url('/'), 'dropdowns_and_header_hide_on_scroll', login='admin')
+
+    def test_custom_popup_snippet(self):
+        self.start_tour(self.env["website"].get_client_action_url("/"), "custom_popup_snippet", login="admin")
+
+    def test_snippet_popup_open_on_top(self):
+        self.start_tour(self.env['website'].get_client_action_url('/'), 'snippet_popup_open_on_top', login='admin')
+
+    def test_tabs_snippet(self):
+        self.start_tour(self.env["website"].get_client_action_url("/"), "snippet_tabs", login="admin")

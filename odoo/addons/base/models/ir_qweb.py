@@ -424,6 +424,7 @@ _SAFE_QWEB_OPCODES = _EXPR_OPCODES.union(to_opcodes([
     'LOAD_FAST', 'STORE_FAST', 'UNPACK_SEQUENCE',
     'STORE_SUBSCR',
     'LOAD_GLOBAL',
+    'EXTENDED_ARG',
     # Following opcodes were added in 3.11 https://docs.python.org/3/whatsnew/3.11.html#new-opcodes
     'RESUME',
     'CALL',
@@ -443,6 +444,12 @@ _SAFE_QWEB_OPCODES = _EXPR_OPCODES.union(to_opcodes([
     'POP_JUMP_IF_NOT_NONE', 'POP_JUMP_IF_NONE',
     'RERAISE',
     'CALL_INTRINSIC_1',
+    'STORE_SLICE',
+    # 3.13
+    'CALL_KW', 'LOAD_FAST_LOAD_FAST',
+    'STORE_FAST_STORE_FAST', 'STORE_FAST_LOAD_FAST',
+    'CONVERT_VALUE', 'FORMAT_SIMPLE', 'FORMAT_WITH_SPEC',
+    'SET_FUNCTION_ATTRIBUTE',
 ])) - _BLACKLIST
 
 
@@ -680,6 +687,8 @@ class IrQWeb(models.AbstractModel):
 
             :returns: tuple containing code, options and main method name
         """
+        if not isinstance(template, (int, str, etree._Element)):
+            template = str(template)
         # The `compile_context`` dictionary includes the elements used for the
         # cache key to which are added the template references as well as
         # technical information useful for generating the function. This
@@ -1724,7 +1733,7 @@ class IrQWeb(models.AbstractModel):
         if el.text is not None:
             self._append_text(el.text, compile_context)
         body = []
-        for item in el:
+        for item in list(el):
             if isinstance(item, etree._Comment):
                 if compile_context.get('preserve_comments'):
                     self._append_text(f"<!--{item.text}-->", compile_context)

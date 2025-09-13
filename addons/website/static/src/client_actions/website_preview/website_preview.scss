@@ -56,6 +56,23 @@
             }
         }
     }
+
+    // Fix for Edge with 150% zoom: when entering edit mode, the page switches
+    // to mobile view because Edge adds extra border around the window, causing
+    // the width to fall below the mobile breakpoint. To prevent this, we reduce
+    // the sidebar width by 5px to keep the page in desktop view.
+    // TODO: In the next sidebar redesign, adjust the sidebar width properly to
+    // avoid this workaround.
+    &.o_is_microsoft_edge.editor_enable.editor_has_snippets {
+        @media (min-resolution: 1.5dppx) and (max-resolution: 1.51dppx) {
+            $o-we-sidebar-width-for-edge: $o-we-sidebar-width - 5px;
+            margin-right: $o-we-sidebar-width-for-edge !important;
+
+            #oe_snippets, .o_we_website_top_actions, we-selection-items.o_we_has_pager {
+                width: $o-we-sidebar-width-for-edge !important;
+            }
+        }
+    }
 }
 
 .o_we_website_top_actions button[data-action="mobile"], .o_mobile_preview {

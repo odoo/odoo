@@ -55,9 +55,21 @@ class PaymentProvider(models.Model):
 
     @api.constrains('available_currency_ids', 'state')
     def _limit_available_currency_ids(self):
+        allowed_codes = set(const.CURRENCY_MAPPING.keys())
         for provider in self.filtered(lambda p: p.code == 'asiapay'):
             if len(provider.available_currency_ids) > 1 and provider.state != 'disabled':
                 raise ValidationError(_("Only one currency can be selected by AsiaPay account."))
+
+            unsupported_currency_codes = [
+                currency.name
+                for currency in provider.available_currency_ids
+                if currency.name not in allowed_codes
+            ]
+            if provider.available_currency_ids.filtered(lambda c: c.name not in allowed_codes):
+                raise ValidationError(_(
+                    "AsiaPay does not support the following currencies: %(currencies)s.",
+                    currencies=", ".join(unsupported_currency_codes),
+                ))
 
     # === BUSINESS METHODS ===#
 

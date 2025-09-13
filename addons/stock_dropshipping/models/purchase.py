@@ -31,6 +31,13 @@ class PurchaseOrderLine(models.Model):
         res = super(PurchaseOrderLine, self)._prepare_stock_moves(picking)
         for re in res:
             re['sale_line_id'] = self.sale_line_id.id
+            if self.order_id.dest_address_id:
+                # In a dropshipping context we do not need the description of the purchase order or it will be displayed
+                # in Delivery slip report and it may be confusing for the customer to see several times the same text (product name + description_picking).
+                product = self.product_id.with_context(lang=self.order_id.dest_address_id.lang or self.env.user.lang)
+                re['description_picking'] = product._get_description(
+                    self.env['stock.picking.type'].browse(re['picking_type_id'])
+                )
         return res
 
     def _find_candidate(self, product_id, product_qty, product_uom, location_id, name, origin, company_id, values):

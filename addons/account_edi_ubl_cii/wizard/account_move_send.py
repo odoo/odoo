@@ -77,7 +77,7 @@ class AccountMoveSend(models.TransientModel):
         for wizard in self:
             wizard.show_ubl_company_warning = False
             wizard.ubl_partner_warning = False
-            if not set(wizard.move_ids.partner_id.commercial_partner_id.mapped('ubl_cii_format')) - {False, 'facturx', 'oioubl_201'}:
+            if not set(wizard.move_ids.partner_id.commercial_partner_id.mapped('ubl_cii_format')) - {False, 'facturx', 'oioubl_201', 'ubl_tr'}:
                 return
 
             wizard.show_ubl_company_warning = not (wizard.company_id.partner_id.peppol_eas and wizard.company_id.partner_id.peppol_endpoint)
@@ -173,7 +173,7 @@ class AccountMoveSend(models.TransientModel):
 
         # during tests, no wkhtmltopdf, create the attachment for test purposes
         if tools.config['test_enable']:
-            self.env['ir.attachment'].create({
+            self.env['ir.attachment'].sudo().create({
                 'name': 'factur-x.xml',
                 'raw': xml_facturx,
                 'res_id': invoice.id,
@@ -225,6 +225,7 @@ class AccountMoveSend(models.TransientModel):
         if not anchor_elements:
             return
 
+        xmlns_move_type = 'Invoice' if invoice.move_type == 'out_invoice' else 'CreditNote'
         pdf_values = invoice_data.get('pdf_attachment_values') or invoice_data['proforma_pdf_attachment_values']
         filename = pdf_values['name']
         content = pdf_values['raw']
@@ -237,7 +238,7 @@ class AccountMoveSend(models.TransientModel):
             doc_type_node = f"<cbc:DocumentTypeCode {doc_type_code_attrs}>{doc_type_code_vals['value']}</cbc:DocumentTypeCode>"
         to_inject = f'''
             <cac:AdditionalDocumentReference
-                xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2"
+                xmlns="urn:oasis:names:specification:ubl:schema:xsd:{xmlns_move_type}-2"
                 xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
                 xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2">
                 <cbc:ID>{escape(filename)}</cbc:ID>

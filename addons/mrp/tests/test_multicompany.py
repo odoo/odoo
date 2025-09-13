@@ -182,6 +182,34 @@ class TestMrpMulticompany(common.TransactionCase):
         with self.assertRaises(UserError):
             mo.button_mark_done()
 
+    def test_is_kit_in_multi_company_env(self):
+        """ Check that is_kits is company dependant """
+        product1, product2 = self.env['product.product'].create([{'name': 'Kit Kat'}, {'name': 'twix'}])
+        self.env['mrp.bom'].create([{
+            'product_id': product1.id,
+            'product_tmpl_id': product1.product_tmpl_id.id,
+            'company_id': self.company_a.id,
+            'type': 'phantom',
+        }, {
+            'product_id': product2.id,
+            'product_tmpl_id': product2.product_tmpl_id.id,
+            'company_id': False,
+            'type': 'phantom',
+        }])
+        template1 = product1.product_tmpl_id
+        template2 = product2.product_tmpl_id
+
+        self.assertFalse(product1.with_context(allowed_company_ids=[self.company_b.id, self.company_a.id]).is_kits)
+        self.assertFalse(template1.with_context(allowed_company_ids=[self.company_b.id, self.company_a.id]).is_kits)
+        self.assertTrue(product1.with_company(self.company_a).is_kits)
+        self.assertTrue(template1.with_company(self.company_a).is_kits)
+        self.assertFalse(product1.with_company(self.company_b).is_kits)
+        self.assertFalse(template1.with_company(self.company_b).is_kits)
+
+        self.assertTrue(product2.with_company(self.company_a).is_kits)
+        self.assertTrue(template2.with_company(self.company_a).is_kits)
+        self.assertTrue(product2.with_company(self.company_b).is_kits)
+        self.assertTrue(template2.with_company(self.company_b).is_kits)
 
     def test_partner_1(self):
         """ On a product without company, as a user of Company B, check it is not possible to use a
@@ -221,3 +249,35 @@ class TestMrpMulticompany(common.TransactionCase):
         new_company = self.env['res.company'].create({'name': 'Super Company'})
         new_warehouse = self.env['stock.warehouse'].search([('company_id', '=', new_company.id)], limit=1)
         self.assertEqual(new_warehouse.manufacture_pull_id.route_id.company_id, new_company)
+
+    def test_company_specific_routes_and_warehouse_creation(self):
+        """ Check that we are able to create a new warehouse when the generic manufacture route
+        is in a different company. """
+        group_stock_manager = self.env.ref('stock.group_stock_manager')
+        self.user_a.write({'groups_id': [(4, group_stock_manager.id)]})
+
+        manufacture_route = self.env.ref('mrp.route_warehouse0_manufacture')
+        for rule in manufacture_route.rule_ids.sudo():
+            rule_company = rule.company_id
+            if not rule_company or rule_company == self.company_a:
+                continue
+            manufacture_route.copy({
+                'company_id': rule_company.id,
+                'rule_ids': [(4, rule.id)],
+            })
+        manufacture_route.company_id = self.company_a
+
+        # Enable multi warehouse
+        group_user = self.env.ref('base.group_user')
+        group_stock_multi_warehouses = self.env.ref('stock.group_stock_multi_warehouses')
+        group_stock_multi_locations = self.env.ref('stock.group_stock_multi_locations')
+        self.env['res.config.settings'].create({
+            'group_stock_multi_locations': True,
+        }).execute()
+        group_user.write({'implied_ids': [(4, group_stock_multi_warehouses.id), (4, group_stock_multi_locations.id)]})
+
+        new_warehouse = self.env['stock.warehouse'].with_user(self.user_a).with_context(allowed_company_ids=[self.company_b.id]).create({
+            'name': 'Warehouse #2',
+            'code': 'WH2',
+        })
+        self.assertEqual(new_warehouse.manufacture_pull_id.route_id.company_id, self.company_b)

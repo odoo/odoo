@@ -54,3 +54,23 @@ class TestExpenseStandardPriceUpdateWarning(TestExpenseCommon):
         with Form(self.expense_cat_C, view="hr_expense.product_product_expense_form_view") as form:
             form.standard_price = 5
             self.assertFalse(form.standard_price_update_warning)
+
+    def test_compute_standard_price_update_warning_product_with_and_without_expense(self):
+        self.product_expensed = self.env['product.product'].create({
+            'name': 'Category A',
+            'default_code': 'CA',
+            'standard_price': 0.0,
+        })
+        self.product_not_expensed = self.env['product.product'].create({
+            'name': 'Category B',
+            'default_code': 'CB',
+            'standard_price': 0.0,
+        })
+        self.expense_1 = self.env['hr.expense'].create({
+            'employee_id': self.expense_employee.id,
+            'name': 'Expense 1',
+            'product_id': self.product_expensed.id,
+            'total_amount': 1,
+        })
+
+        (self.product_expensed | self.product_not_expensed)._compute_standard_price_update_warning()

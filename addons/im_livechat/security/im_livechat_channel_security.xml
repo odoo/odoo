@@ -31,11 +31,10 @@
         </record>
 
         <record id="ir_rule_discuss_channel_member_group_im_livechat_group_manager" model="ir.rule">
-            <field name="name">discuss.channel.member: livechat manager can read all livechat channel members</field>
+            <field name="name">discuss.channel.member: livechat manager can read all livechat channel members and can invite anyone</field>
             <field name="model_id" ref="mail.model_discuss_channel_member"/>
             <field name="groups" eval="[(4, ref('im_livechat_group_manager'))]"/>
             <field name="domain_force">[('channel_id.channel_type', '=', 'livechat')]</field>
-            <field name="perm_create" eval="False"/>
             <field name="perm_write" eval="False"/>
             <field name="perm_unlink" eval="False"/>
         </record>

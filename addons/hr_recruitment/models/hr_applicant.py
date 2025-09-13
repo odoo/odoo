@@ -6,7 +6,7 @@ from markupsafe import Markup
 from odoo import api, fields, models, tools, SUPERUSER_ID
 from odoo.exceptions import AccessError, UserError
 from odoo.osv import expression
-from odoo.tools import Query
+from odoo.tools import clean_context
 from odoo.tools.translate import _
 
 from dateutil.relativedelta import relativedelta
@@ -53,7 +53,7 @@ class Applicant(models.Model):
     user_id = fields.Many2one(
         'res.users', "Recruiter", compute='_compute_user', domain="[('share', '=', False), ('company_ids', 'in', company_id)]",
         tracking=True, store=True, readonly=False)
-    date_closed = fields.Datetime("Hire Date", compute='_compute_date_closed', store=True, readonly=False, tracking=True)
+    date_closed = fields.Datetime("Hire Date", compute='_compute_date_closed', store=True, readonly=False, tracking=True, copy=False)
     date_open = fields.Datetime("Assigned", readonly=True)
     date_last_stage_update = fields.Datetime("Last Stage Update", index=True, default=fields.Datetime.now)
     priority = fields.Selection(AVAILABLE_PRIORITIES, "Evaluation", default='0')
@@ -102,7 +102,7 @@ class Applicant(models.Model):
     medium_id = fields.Many2one(ondelete='set null')
     source_id = fields.Many2one(ondelete='set null')
     interviewer_ids = fields.Many2many('res.users', 'hr_applicant_res_users_interviewers_rel',
-        string='Interviewers', index=True, tracking=True,
+        string='Interviewers', index=True, tracking=True, copy=False,
         domain="[('share', '=', False), ('company_ids', 'in', company_id)]")
     linkedin_profile = fields.Char('LinkedIn Profile')
     application_status = fields.Selection([
@@ -114,6 +114,7 @@ class Applicant(models.Model):
     applicant_properties = fields.Properties('Properties', definition='job_id.applicant_properties_definition', copy=True)
 
     def init(self):
+        super().init()
         self.env.cr.execute("""
             CREATE INDEX IF NOT EXISTS hr_applicant_job_id_stage_id_idx
             ON hr_applicant(job_id, stage_id)
@@ -320,7 +321,7 @@ class Applicant(models.Model):
             if not applicant.partner_id:
                 if not applicant.partner_name:
                     raise UserError(_('You must define a Contact Name for this applicant.'))
-                applicant.partner_id = self.env['res.partner'].find_or_create(applicant.email_from)
+                applicant.partner_id = self.env['res.partner'].with_context(default_lang=self.env.lang).find_or_create(applicant.email_from)
             if applicant.partner_name and not applicant.partner_id.name:
                 applicant.partner_id.name = applicant.partner_name
             if tools.email_normalize(applicant.email_from) != tools.email_normalize(applicant.partner_id.email):
@@ -592,7 +593,7 @@ class Applicant(models.Model):
         # do not want to explicitly set user_id to False; however we do not
         # want the gateway user to be responsible if no other responsible is
         # found.
-        self = self.with_context(default_user_id=False)
+        self = self.with_context(default_user_id=False, mail_notify_author=True)  # Allows sending stage updates to the author
         stage = False
         if custom_values and 'job_id' in custom_values:
             stage = self.env['hr.job'].browse(custom_values['job_id'])._get_first_stage()
@@ -647,14 +648,14 @@ class Applicant(models.Model):
         if not self.partner_id:
             if not self.partner_name:
                 raise UserError(_('Please provide an applicant name.'))
-            self.partner_id = self.env['res.partner'].create({
+            self.partner_id = self.env['res.partner'].with_context(clean_context(self.env.context)).create({
                 'is_company': False,
                 'name': self.partner_name,
                 'email': self.email_from,
             })
 
         action = self.env['ir.actions.act_window']._for_xml_id('hr.open_view_employee_list')
-        employee = self.env['hr.employee'].create(self._get_employee_create_vals())
+        employee = self.env['hr.employee'].with_context(clean_context(self.env.context)).create(self._get_employee_create_vals())
         action['res_id'] = employee.id
         return action
 

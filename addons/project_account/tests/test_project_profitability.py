@@ -50,9 +50,9 @@ class TestProjectAccountProfitability(TestProjectProfitabilityCommon):
         self.assertDictEqual(
             project._get_profitability_items(False),
             {
-                'revenues': {'data': [{'id': 'other_revenues', 'sequence': self.project._get_profitability_sequence_per_invoice_type()['other_revenues'],
+                'revenues': {'data': [{'id': 'other_revenues_aal', 'sequence': self.project._get_profitability_sequence_per_invoice_type()['other_revenues_aal'],
                     'invoiced': 30.0, 'to_invoice': 0.0}], 'total': {'invoiced': 30.0, 'to_invoice': 0.0}},
-                'costs': {'data': [{'id': 'other_costs', 'sequence': self.project._get_profitability_sequence_per_invoice_type()['other_costs'],
+                'costs': {'data': [{'id': 'other_costs_aal', 'sequence': self.project._get_profitability_sequence_per_invoice_type()['other_costs_aal'],
                     'billed': -30.0, 'to_bill': 0.0}], 'total': {'billed': -30.0, 'to_bill': 0.0}}
             },
             'The profitability data of the project should return the total amount for the revenues and costs from tha AAL of the account of the project.'
@@ -78,10 +78,36 @@ class TestProjectAccountProfitability(TestProjectProfitabilityCommon):
         self.assertDictEqual(
             project._get_profitability_items(False),
             {
-                'revenues': {'data': [{'id': 'other_revenues', 'sequence': project._get_profitability_sequence_per_invoice_type()['other_revenues'],
+                'revenues': {'data': [{'id': 'other_revenues_aal', 'sequence': project._get_profitability_sequence_per_invoice_type()['other_revenues_aal'],
                     'invoiced': 180.0, 'to_invoice': 0.0}], 'total': {'invoiced': 180.0, 'to_invoice': 0.0}},
-                'costs': {'data': [{'id': 'other_costs', 'sequence': project._get_profitability_sequence_per_invoice_type()['other_costs'],
+                'costs': {'data': [{'id': 'other_costs_aal', 'sequence': project._get_profitability_sequence_per_invoice_type()['other_costs_aal'],
                     'billed': -180.0, 'to_bill': 0.0}], 'total': {'billed': -180.0, 'to_bill': 0.0}}
             },
             'The profitability data of the project should return the total amount for the revenues and costs from tha AAL of the account of the project.'
+        )
+
+    def test_project_profitability_with_custom_analytic_account_plan(self):
+        plan = self.env['account.analytic.plan'].create({'name': 'Custom Plan'})
+        project = self.env['project.project'].create({'name': 'Project'})
+        project._create_analytic_account()
+        project.analytic_account_id.update({'plan_id': plan.id})
+
+        self.env['account.analytic.line'].create({
+            'name': 'Cost',
+            plan._column_name(): project.analytic_account_id.id,
+            'amount': -100,
+        })
+
+        self.assertDictEqual(
+            project._get_profitability_items(False)['costs'],
+            {
+                'data': [{
+                    'id': 'other_costs_aal',
+                    'sequence': project._get_profitability_sequence_per_invoice_type()['other_costs_aal'],
+                    'billed': -100.0,
+                    'to_bill': 0.0,
+                }],
+                'total': {'billed': -100.0, 'to_bill': 0.0},
+            },
+            'Lines from different analytic plans should count towards project profitability'
         )

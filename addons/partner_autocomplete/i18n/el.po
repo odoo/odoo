@@ -1,21 +1,24 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * partner_autocomplete
-#
+# 	* partner_autocomplete
+# 
 # Translators:
-# Martin Trigaux, 2018
+# Alexandros Kapetanios <alexandros@gnugr.org>, 2024
+# Martin Trigaux, 2024
+# Charalampos Loukas, 2025
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:49+0000\n"
-"PO-Revision-Date: 2018-10-02 10:06+0000\n"
-"Last-Translator: Martin Trigaux, 2018\n"
-"Language-Team: Greek (https://www.transifex.com/odoo/teams/41243/el/)\n"
-"Language: el\n"
+"POT-Creation-Date: 2025-05-07 20:36+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Charalampos Loukas, 2025\n"
+"Language-Team: Greek (https://app.transifex.com/odoo/teams/41243/el/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: el\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: partner_autocomplete
@@ -37,13 +40,6 @@ msgid "Companies"
 msgstr "Εταιρίες"
 
 #. module: partner_autocomplete
-#. odoo-python
-#: code:addons/partner_autocomplete/models/res_company.py:0
-#, python-format
-msgid "Company auto-completed by Odoo Partner Autocomplete Service"
-msgstr ""
-
-#. module: partner_autocomplete
 #: model:ir.model.fields,field_description:partner_autocomplete.field_res_company__partner_gid
 #: model:ir.model.fields,field_description:partner_autocomplete.field_res_partner__partner_gid
 #: model:ir.model.fields,field_description:partner_autocomplete.field_res_users__partner_gid
@@ -53,7 +49,7 @@ msgstr ""
 #. module: partner_autocomplete
 #: model:ir.model,name:partner_autocomplete.model_res_config_settings
 msgid "Config Settings"
-msgstr ""
+msgstr "Ρυθμίσεις διαμόρφωσης"
 
 #. module: partner_autocomplete
 #: model:ir.model,name:partner_autocomplete.model_res_partner
@@ -83,7 +79,7 @@ msgstr ""
 #. module: partner_autocomplete
 #: model:ir.model,name:partner_autocomplete.model_ir_http
 msgid "HTTP Routing"
-msgstr ""
+msgstr "HTTP Routing"
 
 #. module: partner_autocomplete
 #. odoo-javascript
@@ -152,17 +148,10 @@ msgid "Partner Autocomplete: Sync with remote DB"
 msgstr ""
 
 #. module: partner_autocomplete
-#. odoo-python
-#: code:addons/partner_autocomplete/models/res_partner.py:0
-#, python-format
-msgid "Partner created by Odoo Partner Autocomplete Service"
-msgstr ""
-
-#. module: partner_autocomplete
 #. odoo-javascript
 #: code:addons/partner_autocomplete/static/src/xml/partner_autocomplete.xml:0
 #, python-format
-msgid "Placeholder"
+msgid "Search Worldwide 🌎"
 msgstr ""
 
 #. module: partner_autocomplete
@@ -185,4 +174,11 @@ msgstr ""
 #: code:addons/partner_autocomplete/models/iap_autocomplete_api.py:0
 #, python-format
 msgid "Test mode"
+msgstr ""
+
+#. module: partner_autocomplete
+#. odoo-python
+#: code:addons/partner_autocomplete/models/res_partner.py:0
+#, python-format
+msgid "Unable to enrich company (no credit was consumed)."
 msgstr ""

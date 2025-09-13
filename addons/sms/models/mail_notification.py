@@ -14,7 +14,7 @@ class MailNotification(models.Model):
     # Used to give links on form view without foreign key. In most cases, you'd want to use sms_id_int or sms_tracker_ids.sms_uuid.
     sms_id = fields.Many2one('sms.sms', string='SMS', store=False, compute='_compute_sms_id')
     sms_tracker_ids = fields.One2many('sms.tracker', 'mail_notification_id', string="SMS Trackers")
-    sms_number = fields.Char('SMS Number')
+    sms_number = fields.Char('SMS Number', groups='base.group_user')
     failure_type = fields.Selection(selection_add=[
         ('sms_number_missing', 'Missing Number'),
         ('sms_number_format', 'Wrong Number Format'),

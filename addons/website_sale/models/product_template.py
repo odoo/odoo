@@ -536,6 +536,9 @@ class ProductTemplate(models.Model):
             'taxes': taxes,  # taxes after fpos mapping
         })
 
+        if combination_info['prevent_zero_price_sale']:
+            combination_info['compare_list_price'] = 0
+
         if pricelist.discount_policy != 'without_discount':
             # Leftover from before cleanup, different behavior between ecommerce & backend configurator
             # probably to keep product sales price hidden from customers ?
@@ -808,14 +811,14 @@ class ProductTemplate(models.Model):
         return results_data
 
     def _search_render_results_prices(self, mapping, combination_info):
-        monetary_options = {'display_currency': mapping['detail']['display_currency']}
         if combination_info.get('prevent_zero_price_sale'):
             website = self.env['website'].get_current_website()
-            price = website.prevent_zero_price_sale_text
-        else:
-            price = self.env['ir.qweb.field.monetary'].value_to_html(
-                combination_info['price'], monetary_options
-            )
+            return website.prevent_zero_price_sale_text, None
+
+        monetary_options = {'display_currency': mapping['detail']['display_currency']}
+        price = self.env['ir.qweb.field.monetary'].value_to_html(
+            combination_info['price'], monetary_options
+        )
         list_price = None
         if combination_info['has_discounted_price']:
             list_price = self.env['ir.qweb.field.monetary'].value_to_html(

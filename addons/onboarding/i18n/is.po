@@ -4,14 +4,15 @@
 # 
 # Translators:
 # jonasyngvi, 2024
+# Kristófer Arnþórsson, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:56+0000\n"
+"POT-Creation-Date: 2024-08-13 10:29+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: jonasyngvi, 2024\n"
+"Last-Translator: Kristófer Arnþórsson, 2024\n"
 "Language-Team: Icelandic (https://app.transifex.com/odoo/teams/41243/is/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -71,7 +72,7 @@ msgstr "Eyða"
 #. module: onboarding
 #: model_terms:ir.ui.view,arch_db:onboarding.onboarding_container
 msgid "Close"
-msgstr ""
+msgstr "Loka"
 
 #. module: onboarding
 #: model_terms:ir.ui.view,arch_db:onboarding.onboarding_container
@@ -87,6 +88,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:onboarding.field_onboarding_onboarding__panel_close_action_name
 msgid "Closing action"
 msgstr ""
+
+#. module: onboarding
+#: model:ir.model,name:onboarding.model_res_company
+msgid "Companies"
+msgstr "Fyrirtæki"
 
 #. module: onboarding
 #: model:ir.model.fields,field_description:onboarding.field_onboarding_progress__company_id
@@ -106,7 +112,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:onboarding.field_onboarding_progress__create_uid
 #: model:ir.model.fields,field_description:onboarding.field_onboarding_progress_step__create_uid
 msgid "Created by"
-msgstr ""
+msgstr "Búið til af"
 
 #. module: onboarding
 #: model:ir.model.fields,field_description:onboarding.field_onboarding_onboarding__create_date
@@ -114,12 +120,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:onboarding.field_onboarding_progress__create_date
 #: model:ir.model.fields,field_description:onboarding.field_onboarding_progress_step__create_date
 msgid "Created on"
-msgstr ""
+msgstr "Búið til þann"
 
 #. module: onboarding
 #: model:ir.model.fields,field_description:onboarding.field_onboarding_onboarding_step__description
 msgid "Description"
-msgstr ""
+msgstr "Lýsing"
 
 #. module: onboarding
 #: model:ir.model.fields,field_description:onboarding.field_onboarding_onboarding__display_name
@@ -127,7 +133,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:onboarding.field_onboarding_progress__display_name
 #: model:ir.model.fields,field_description:onboarding.field_onboarding_progress_step__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Birtingarnafn"
 
 #. module: onboarding
 #: model:ir.model.fields.selection,name:onboarding.selection__onboarding_onboarding__current_onboarding_state__done
@@ -135,7 +141,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:onboarding.selection__onboarding_progress__onboarding_state__done
 #: model:ir.model.fields.selection,name:onboarding.selection__onboarding_progress_step__step_state__done
 msgid "Done"
-msgstr ""
+msgstr "Lokið"
 
 #. module: onboarding
 #: model:ir.model.fields,field_description:onboarding.field_onboarding_onboarding_step__done_icon
@@ -158,7 +164,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:onboarding.field_onboarding_progress__id
 #: model:ir.model.fields,field_description:onboarding.field_onboarding_progress_step__id
 msgid "ID"
-msgstr ""
+msgstr "Auðkenni (ID)"
 
 #. module: onboarding
 #: model:ir.model.fields,field_description:onboarding.field_onboarding_onboarding_step__is_per_company
@@ -179,7 +185,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:onboarding.field_onboarding_progress__write_uid
 #: model:ir.model.fields,field_description:onboarding.field_onboarding_progress_step__write_uid
 msgid "Last Updated by"
-msgstr ""
+msgstr "Síðast uppfært af"
 
 #. module: onboarding
 #: model:ir.model.fields,field_description:onboarding.field_onboarding_onboarding__write_date
@@ -187,7 +193,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:onboarding.field_onboarding_progress__write_date
 #: model:ir.model.fields,field_description:onboarding.field_onboarding_progress_step__write_date
 msgid "Last Updated on"
-msgstr ""
+msgstr "Síðast uppfært þann"
 
 #. module: onboarding
 #. odoo-python
@@ -278,7 +284,7 @@ msgstr ""
 #: model:ir.model,name:onboarding.model_onboarding_onboarding_step
 #: model:ir.model.fields,field_description:onboarding.field_onboarding_progress_step__step_id
 msgid "Onboarding Step"
-msgstr ""
+msgstr "Inngönguskref"
 
 #. module: onboarding
 #: model:ir.model.fields,field_description:onboarding.field_onboarding_progress_step__step_state
@@ -349,7 +355,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:onboarding.field_onboarding_onboarding__sequence
 #: model:ir.model.fields,field_description:onboarding.field_onboarding_onboarding_step__sequence
 msgid "Sequence"
-msgstr ""
+msgstr "Röð"
 
 #. module: onboarding
 #: model:ir.model.fields,field_description:onboarding.field_onboarding_onboarding__is_per_company
@@ -366,7 +372,7 @@ msgstr ""
 #: code:addons/onboarding/models/onboarding_onboarding_step.py:0
 #, python-format
 msgid "Step Completed!"
-msgstr ""
+msgstr "Skrefi lokið!"
 
 #. module: onboarding
 #: model:ir.model.fields,field_description:onboarding.field_onboarding_onboarding_step__step_image

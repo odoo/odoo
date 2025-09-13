@@ -74,7 +74,7 @@ def resolve_mro(model, name, predicate):
         classes are ignored.
     """
     result = []
-    for cls in model._model_classes:
+    for cls in model._model_classes__:
         value = cls.__dict__.get(name, Default)
         if value is Default:
             continue
@@ -276,7 +276,7 @@ class Field(MetaField('DummyField', (object,), {})):
     column_type = None                  # database column type (ident, spec)
     write_sequence = 0                  # field ordering for write()
 
-    args = None                         # the parameters given to __init__()
+    _args__ = None                      # the parameters given to __init__()
     _module = None                      # the field's module name
     _modules = None                     # modules that define this field
     _setup_done = True                  # whether the field is completely set up
@@ -330,7 +330,7 @@ class Field(MetaField('DummyField', (object,), {})):
     def __init__(self, string=Default, **kwargs):
         kwargs['string'] = string
         self._sequence = next(_global_seq)
-        self.args = {key: val for key, val in kwargs.items() if val is not Default}
+        self.args = self._args__ = {key: val for key, val in kwargs.items() if val is not Default}
 
     def __str__(self):
         if self.name is None:
@@ -349,7 +349,7 @@ class Field(MetaField('DummyField', (object,), {})):
     # The base field setup is done by field.__set_name__(), which determines the
     # field's name, model name, module and its parameters.
     #
-    # The dictionary field.args gives the parameters passed to the field's
+    # The dictionary field._args__ gives the parameters passed to the field's
     # constructor.  Most parameters have an attribute of the same name on the
     # field.  The parameters as attributes are assigned by the field setup.
     #
@@ -359,7 +359,7 @@ class Field(MetaField('DummyField', (object,), {})):
     # are given to the new field as the parameter '_base_fields'; it is a list
     # of fields in override order (or reverse MRO).
     #
-    # In order to save memory, a field should avoid having field.args and/or
+    # In order to save memory, a field should avoid having field._args__ and/or
     # many attributes when possible.  We call "direct" a field that can be set
     # up directly from its definition class.  Direct fields are non-related
     # fields defined on models, and can be shared across registries.  We call
@@ -367,15 +367,15 @@ class Field(MetaField('DummyField', (object,), {})):
     # therefore specific to the registry.
     #
     # Toplevel field are set up once, and are no longer set up from scratch
-    # after that.  Those fields can save memory by discarding field.args and
+    # after that.  Those fields can save memory by discarding field._args__ and
     # field._base_fields once set up, because those are no longer necessary.
     #
     # Non-toplevel non-direct fields are the fields on definition classes that
     # may not be shared.  In other words, those fields are never used directly,
     # and are always recreated as toplevel fields.  On those fields, the base
-    # setup is useless, because only field.args is used for setting up other
+    # setup is useless, because only field._args__ is used for setting up other
     # fields.  We therefore skip the base setup for those fields.  The only
-    # attributes of those fields are: '_sequence', 'args', 'model_name', 'name'
+    # attributes of those fields are: '_sequence', '_args__', 'model_name', 'name'
     # and '_module', which makes their __dict__'s size minimal.
 
     def __set_name__(self, owner, name):
@@ -392,13 +392,13 @@ class Field(MetaField('DummyField', (object,), {})):
             self._module = owner._module
             owner._field_definitions.append(self)
 
-        if not self.args.get('related'):
+        if not self._args__.get('related'):
             self._direct = True
         if self._direct or self._toplevel:
             self._setup_attrs(owner, name)
             if self._toplevel:
-                # free memory, self.args and self._base_fields are no longer useful
-                self.__dict__.pop('args', None)
+                # free memory, self._args__ and self._base_fields are no longer useful
+                self.__dict__.pop('_args__', None)
                 self.__dict__.pop('_base_fields', None)
 
     #
@@ -410,21 +410,21 @@ class Field(MetaField('DummyField', (object,), {})):
         # determine all inherited field attributes
         attrs = {}
         modules = []
-        for field in self.args.get('_base_fields', ()):
+        for field in self._args__.get('_base_fields', ()):
             if not isinstance(self, type(field)):
                 # 'self' overrides 'field' and their types are not compatible;
                 # so we ignore all the parameters collected so far
                 attrs.clear()
                 modules.clear()
                 continue
-            attrs.update(field.args)
+            attrs.update(field._args__)
             if field._module:
                 modules.append(field._module)
-        attrs.update(self.args)
+        attrs.update(self._args__)
         if self._module:
             modules.append(self._module)
 
-        attrs['args'] = self.args
+        attrs['_args__'] = dict(self._args__)
         attrs['model_name'] = model_class._name
         attrs['name'] = name
         attrs['_module'] = modules[-1] if modules else None
@@ -484,7 +484,7 @@ class Field(MetaField('DummyField', (object,), {})):
         attrs = self._get_attrs(model_class, name)
 
         # determine parameters that must be validated
-        extra_keys = [key for key in attrs if not hasattr(self, key)]
+        extra_keys = tuple(key for key in attrs if not hasattr(self, key))
         if extra_keys:
             attrs['_extra_keys'] = extra_keys
 
@@ -1192,9 +1192,21 @@ class Field(MetaField('DummyField', (object,), {})):
             value = env.cache.get(record, self)
 
         elif self.store and record._origin and not (self.compute and self.readonly):
-            # new record with origin: fetch from origin
-            value = self.convert_to_cache(record._origin[self.name], record, validate=False)
-            value = env.cache.patch_and_set(record, self, value)
+            # new record with origin: fetch from origin, and assign the
+            # records to prefetch in cache (which is necessary for
+            # relational fields to "map" prefetching ids to their value)
+            recs = record._in_cache_without(self)
+            try:
+                for rec in recs:
+                    if (rec_origin := rec._origin):
+                        value = self.convert_to_cache(rec_origin[self.name], rec, validate=False)
+                        env.cache.patch_and_set(rec, self, value)
+                value = env.cache.get(record, self)
+            except (AccessError, MissingError):
+                if len(recs) == 1:
+                    raise
+                value = self.convert_to_cache(record._origin[self.name], record, validate=False)
+                value = env.cache.patch_and_set(record, self, value)
 
         elif self.compute: #pylint: disable=using-constant-test
             # non-stored field or new record without origin: compute
@@ -1810,8 +1822,13 @@ class _String(Field):
 
         # not dirty fields
         if not dirty:
-            lang = self._lang(records.env)
-            cache.update_raw(records, self, [{lang: cache_value} for _id in records._ids], dirty=False)
+            if self.compute and self.inverse:
+                # invalidate the values in other languages to force their recomputation
+                lang = self._lang(records.env)
+                values = [{lang: cache_value} for _id in records._ids]
+                cache.update_raw(records, self, values, dirty=False)
+            else:
+                cache.update(records, self, itertools.repeat(cache_value), dirty=False)
             return
 
         # model translation
@@ -1851,7 +1868,9 @@ class _String(Field):
             translation_dictionary = self.get_translation_dictionary(from_lang_value, old_translations)
             text2terms = defaultdict(list)
             for term in new_terms:
-                text2terms[self.get_text_content(term)].append(term)
+                term_text = self.get_text_content(term)
+                if term_text:
+                    text2terms[term_text].append(term)
 
             is_text = self.translate.is_text if hasattr(self.translate, 'is_text') else lambda term: True
             term_adapter = self.translate.term_adapter if hasattr(self.translate, 'term_adapter') else None
@@ -1868,6 +1887,8 @@ class _String(Field):
                         if old_is_text or not closest_is_text:
                             if not closest_is_text and records.env.context.get("install_mode") and lang == 'en_US' and term_adapter:
                                 adapter = term_adapter(closest_term)
+                                if adapter(old_term) is None:  # old term and closest_term have different structures
+                                    continue
                                 translation_dictionary[closest_term] = {k: adapter(v) for k, v in translation_dictionary.pop(old_term).items()}
                             else:
                                 translation_dictionary[closest_term] = translation_dictionary.pop(old_term)
@@ -2424,6 +2445,11 @@ class Binary(Field):
             super().compute_value(records)
 
     def read(self, records):
+        def _encode(s: str | bool) -> bytes | bool:
+            if isinstance(s, str):
+                return s.encode("utf-8")
+            return s
+
         # values are stored in attachments, retrieve them
         assert self.attachment
         domain = [
@@ -2431,9 +2457,9 @@ class Binary(Field):
             ('res_field', '=', self.name),
             ('res_id', 'in', records.ids),
         ]
-        # Note: the 'bin_size' flag is handled by the field 'datas' itself
+        bin_size = records.env.context.get('bin_size')
         data = {
-            att.res_id: att.datas
+            att.res_id: _encode(human_size(att.file_size)) if bin_size else att.datas
             for att in records.env['ir.attachment'].sudo().search(domain)
         }
         records.env.cache.insert_missing(records, self, map(data.get, records._ids))
@@ -2706,10 +2732,10 @@ class Selection(Field):
         for field in self._base_fields:
             # We cannot use field.selection or field.selection_add here
             # because those attributes are overridden by ``_setup_attrs``.
-            if 'selection' in field.args:
+            if 'selection' in field._args__:
                 if self.related:
                     _logger.warning("%s: selection attribute will be ignored as the field is related", self)
-                selection = field.args['selection']
+                selection = field._args__['selection']
                 if isinstance(selection, list):
                     if values is not None and values != [kv[0] for kv in selection]:
                         _logger.warning("%s: selection=%r overrides existing selection; use selection_add instead", self, selection)
@@ -2722,16 +2748,16 @@ class Selection(Field):
                     self.selection = selection
                     self.ondelete = None
 
-            if 'selection_add' in field.args:
+            if 'selection_add' in field._args__:
                 if self.related:
                     _logger.warning("%s: selection_add attribute will be ignored as the field is related", self)
-                selection_add = field.args['selection_add']
+                selection_add = field._args__['selection_add']
                 assert isinstance(selection_add, list), \
                     "%s: selection_add=%r must be a list" % (self, selection_add)
                 assert values is not None, \
                     "%s: selection_add=%r on non-list selection %r" % (self, selection_add, self.selection)
 
-                ondelete = field.args.get('ondelete') or {}
+                ondelete = field._args__.get('ondelete') or {}
                 new_values = [kv[0] for kv in selection_add if kv[0] not in values]
                 for key in new_values:
                     ondelete.setdefault(key, 'set null')
@@ -2787,13 +2813,13 @@ class Selection(Field):
             module = field._module
             if not module:
                 continue
-            if 'selection' in field.args:
+            if 'selection' in field._args__:
                 value_modules.clear()
-                if isinstance(field.args['selection'], list):
-                    for value, label in field.args['selection']:
+                if isinstance(field._args__['selection'], list):
+                    for value, label in field._args__['selection']:
                         value_modules[value].add(module)
-            if 'selection_add' in field.args:
-                for value_label in field.args['selection_add']:
+            if 'selection_add' in field._args__:
+                for value_label in field._args__['selection_add']:
                     if len(value_label) > 1:
                         value_modules[value_label[0]].add(module)
         return value_modules
@@ -3342,9 +3368,10 @@ class Properties(Field):
             assert self.definition.count(".") == 1
             self.definition_record, self.definition_record_field = self.definition.rsplit('.', 1)
 
-            # make the field computed, and set its dependencies
-            self._depends = (self.definition_record, )
-            self.compute = self._compute
+            if not self.inherited_field:
+                # make the field computed, and set its dependencies
+                self._depends = (self.definition_record, )
+                self.compute = self._compute
 
     def setup_related(self, model):
         super().setup_related(model)
@@ -3731,8 +3758,7 @@ class Properties(Field):
                 # E.G. convert zero to False
                 property_value = bool(property_value)
 
-            elif property_type == 'char' and not isinstance(property_value, str) \
-                    and property_value is not None:
+            elif property_type == 'char' and not isinstance(property_value, str):
                 property_value = False
 
             elif property_value and property_type == 'selection':
@@ -4203,8 +4229,9 @@ class _RelationalMulti(_Relational):
                 browse = lambda it: comodel.browse((it and NewId(it),))
             else:
                 browse = comodel.browse
-            # determine the value ids
-            ids = OrderedSet(record[self.name]._ids if validate else ())
+            # determine the value ids: in case of a real record or a new record
+            # with origin, take its current value
+            ids = OrderedSet(record[self.name]._ids if record._origin else ())
             # modify ids with the commands
             for command in value:
                 if isinstance(command, (tuple, list)):
@@ -4426,11 +4453,12 @@ class One2many(_RelationalMulti):
                 raise UserError(_("No inverse field %r found for %r") % (self.inverse_name, self.comodel_name))
 
     def get_domain_list(self, records):
-        comodel = records.env.registry[self.comodel_name]
-        inverse_field = comodel._fields[self.inverse_name]
-        domain = super(One2many, self).get_domain_list(records)
-        if inverse_field.type == 'many2one_reference':
-            domain = domain + [(inverse_field.model_field, '=', records._name)]
+        domain = super().get_domain_list(records)
+        if self.comodel_name and self.inverse_name:
+            comodel = records.env.registry[self.comodel_name]
+            inverse_field = comodel._fields[self.inverse_name]
+            if inverse_field.type == 'many2one_reference':
+                domain = domain + [(inverse_field.model_field, '=', records._name)]
         return domain
 
     def __get__(self, records, owner):

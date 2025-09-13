@@ -40,7 +40,13 @@ class TimesheetAttendance(models.Model):
                     hr_attendance.employee_id AS employee_id,
                     hr_attendance.worked_hours AS attendance,
                     NULL AS timesheet,
-                    hr_attendance.check_in::date AS date,
+                    CAST(hr_attendance.check_in
+                            at time zone 'utc'
+                            at time zone
+                                (SELECT calendar.tz FROM resource_calendar as calendar
+                                INNER JOIN hr_employee as employee ON employee.id = employee_id
+                                WHERE calendar.id = employee.resource_calendar_id)
+                    as DATE) as date,
                     hr_employee.company_id as company_id
                 FROM hr_attendance
                 LEFT JOIN hr_employee ON hr_employee.id = hr_attendance.employee_id

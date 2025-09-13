@@ -166,7 +166,7 @@ class MassMailing(models.Model):
         compute='_compute_mailing_on_mailing_list')
     mailing_domain = fields.Char(
         string='Domain',
-        compute='_compute_mailing_domain', readonly=False, store=True)
+        compute='_compute_mailing_domain', readonly=False, store=True, compute_sudo=False)
     mail_server_available = fields.Boolean(
         compute='_compute_mail_server_available',
         help="Technical field used to know if the user has activated the outgoing mail server option in the settings")
@@ -367,7 +367,8 @@ class MassMailing(models.Model):
 
     @api.depends('email_from', 'mail_server_id')
     def _compute_warning_message(self):
-        for mailing in self:
+        self.warning_message = False
+        for mailing in self.filtered(lambda mailing: mailing.mailing_type == "mail"):
             mail_server = mailing.mail_server_id
             if mail_server and not mail_server._match_from_filter(mailing.email_from, mail_server.from_filter):
                 mailing.warning_message = _(
@@ -1037,7 +1038,7 @@ class MassMailing(models.Model):
 
     def _get_unsubscribe_url(self, email_to, res_id):
         url = werkzeug.urls.url_join(
-            self.get_base_url(), 'mailing/%(mailing_id)s/unsubscribe?%(params)s' % {
+            self.get_base_url(), 'mailing/%(mailing_id)s/confirm_unsubscribe?%(params)s' % {
                 'mailing_id': self.id,
                 'params': werkzeug.urls.url_encode({
                     'document_id': res_id,
@@ -1079,7 +1080,7 @@ class MassMailing(models.Model):
                 'auto_delete_keep_log': mailing.reply_to_mode == 'update',
                 'author_id': author_id,
                 'attachment_ids': [(4, attachment.id) for attachment in mailing.attachment_ids],
-                'body': mailing._prepend_preview(mailing.body_html, mailing.preview),
+                'body': mailing._prepend_preview(mailing.body_html or '', mailing.preview),
                 'composition_mode': 'mass_mail',
                 'email_from': mailing.email_from,
                 'mail_server_id': mailing.mail_server_id.id,
@@ -1316,7 +1317,7 @@ class MassMailing(models.Model):
         root = lxml.html.fromstring(html_content)
         did_modify_body = False
 
-        conversion_info = []  # list of tuples (image: base64 image, node: lxml node, old_url: string or None))
+        conversion_info = []  # list of tuples (image: base64 image, node: lxml node, old_url: string or None, original_id))
         with requests.Session() as session:
             for node in root.iter(lxml.etree.Element, lxml.etree.Comment):
                 if node.tag == 'img':
@@ -1324,12 +1325,12 @@ class MassMailing(models.Model):
                     match = image_re.match(node.attrib.get('src', ''))
                     if match:
                         image = match.group(2).encode()  # base64 image as bytes
-                        conversion_info.append((image, node, None))
+                        conversion_info.append((image, node, None, int(node.attrib.get('data-original-id') or "0")))
                 elif 'base64' in (node.attrib.get('style') or ''):
                     # Convert base64 images in inline styles to attachments.
                     for match in re.findall(r'data:image/[A-Za-z]+;base64,.+?(?=&\#34;|\"|\'|&quot;|\))', node.attrib.get('style')):
                         image = re.sub(r'data:image/[A-Za-z]+;base64,', '', match).encode()  # base64 image as bytes
-                        conversion_info.append((image, node, match))
+                        conversion_info.append((image, node, match, int(node.attrib.get('data-original-id') or "0")))
                 elif mso_re.match(node.text or ''):
                     # Convert base64 images (in img tags or inline styles) in mso comments to attachments.
                     base64_in_element_regex = re.compile(r"""
@@ -1337,7 +1338,7 @@ class MassMailing(models.Model):
                     """, re.VERBOSE)
                     for match in re.findall(base64_in_element_regex, node.text):
                         image = re.sub(r'data:image/[A-Za-z]+;base64,', '', match).encode()  # base64 image as bytes
-                        conversion_info.append((image, node, match))
+                        conversion_info.append((image, node, match, int(node.attrib.get('data-original-id') or "0")))
                     # Crop VML images.
                     for match in re.findall(r'<v:image[^>]*>', node.text):
                         url = re.search(r'src=\s*\"([^\"]+)\"', match)[1]
@@ -1359,11 +1360,11 @@ class MassMailing(models.Model):
                             else:
                                 image_processor = tools.ImageProcess(image)
                                 image = image_processor.crop_resize(target_width, target_height, 0, 0)
-                                conversion_info.append((base64.b64encode(image.source), node, url))
+                                conversion_info.append((base64.b64encode(image.source), node, url, int(node.attrib.get('data-original-id') or "0")))
 
         # Apply the changes.
-        urls = self._create_attachments_from_inline_images([image for (image, _, _) in conversion_info])
-        for ((image, node, old_url), new_url) in zip(conversion_info, urls):
+        urls = self._create_attachments_from_inline_images([(image, original_id) for (image, _, _, original_id) in conversion_info])
+        for ((image, node, old_url, original_id), new_url) in zip(conversion_info, urls):
             did_modify_body = True
             if node.tag == 'img':
                 node.attrib['src'] = new_url
@@ -1386,27 +1387,47 @@ class MassMailing(models.Model):
             ('res_id', '=', self.id),
         ]).mapped(lambda record: (record.checksum, record)))
 
-        attachments, vals_for_attachs = [], []
+        attachments, vals_for_attachs, checksums = [], [], []
+        checksums_set, checksum_original_id, new_attachment_by_checksum = set(), {}, {}
         next_img_id = len(existing_attachments)
-        for b64image in b64images:
+        for (b64image, original_id) in b64images:
             checksum = IrAttachment._compute_checksum(base64.b64decode(b64image))
+            checksums.append(checksum)
             existing_attach = existing_attachments.get(checksum)
             # Existing_attach can be None, in which case it acts as placeholder
             # for attachment to be created.
             attachments.append(existing_attach)
-            if not existing_attach:
+            if original_id:
+                checksum_original_id[checksum] = original_id
+            if not existing_attach and not checksum in checksums_set:
+                # We create only one attachment per checksum
                 vals_for_attachs.append({
                     'datas': b64image,
                     'name': f"image_mailing_{self.id}_{next_img_id}",
                     'type': 'binary',
                     'res_id': self.id,
-                    'res_model': 'mailing.mailing'
+                    'res_model': 'mailing.mailing',
+                    'checksum': checksum,
                 })
+                checksums_set.add(checksum)
                 next_img_id += 1
+        for vals in vals_for_attachs:
+            if vals['checksum'] in checksum_original_id:
+                vals['original_id'] = checksum_original_id[vals['checksum']]
+            del vals['checksum']
 
         new_attachments = iter(IrAttachment.create(vals_for_attachs))
+        checksum_iter = iter(checksums)
         # Replace None entries by newly created attachments.
-        attachments = [(attach or next(new_attachments)) for attach in attachments]
+        for i in range(len(attachments)):
+            checksum = next(checksum_iter)
+            if attachments[i]:
+                continue
+            if checksum in new_attachment_by_checksum:
+                attachments[i] = new_attachment_by_checksum[checksum]
+            else:
+                attachments[i] = next(new_attachments)
+                new_attachment_by_checksum[checksum] = attachments[i]
 
         urls = []
         for attachment in attachments:

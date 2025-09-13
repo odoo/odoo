@@ -566,7 +566,8 @@ class SurveyQuestion(models.Model):
         table_data = [{
             'value': _('Other (see comments)') if not sug_answer else sug_answer.value,
             'suggested_answer': sug_answer,
-            'count': count_data[sug_answer]
+            'count': count_data[sug_answer],
+            'count_text': _("%s Votes", count_data[sug_answer]),
             }
             for sug_answer in suggested_answers]
         graph_data = [{

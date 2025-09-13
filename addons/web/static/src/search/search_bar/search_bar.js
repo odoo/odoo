@@ -327,9 +327,11 @@ export class SearchBar extends Component {
         this.inputRef.el.focus();
     }
 
-    resetState() {
+    resetState(options = { focus: true }) {
         this.computeState({ expanded: [], focusedIndex: 0, query: "", subItems: [] });
-        this.inputRef.el.focus();
+        if (options.focus) {
+            this.inputRef.el.focus();
+        }
     }
 
     /**
@@ -498,7 +500,7 @@ export class SearchBar extends Component {
                 break;
             case "ArrowRight":
                 if (ev.target.selectionStart === this.state.query.length) {
-                    if (focusedItem && focusedItem.isParent) {
+                    if (focusedItem && focusedItem.isParent && !ev.repeat) {
                         ev.preventDefault();
                         if (focusedItem.isExpanded) {
                             focusedIndex = this.state.focusedIndex + 1;
@@ -565,7 +567,7 @@ export class SearchBar extends Component {
      */
     onWindowClick(ev) {
         if (this.items.length && !this.root.el.contains(ev.target)) {
-            this.resetState();
+            this.resetState({ focus: false });
         }
     }
 

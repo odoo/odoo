@@ -31,6 +31,7 @@ class SaleOrder(models.Model):
     delivery_count = fields.Integer(string='Delivery Orders', compute='_compute_picking_ids')
     delivery_status = fields.Selection([
         ('pending', 'Not Delivered'),
+        ('started', 'Started'),
         ('partial', 'Partially Delivered'),
         ('full', 'Fully Delivered'),
     ], string='Delivery Status', compute='_compute_delivery_status', store=True)
@@ -53,15 +54,19 @@ class SaleOrder(models.Model):
         """
         if column_name != "warehouse_id":
             return super(SaleOrder, self)._init_column(column_name)
-        field = self._fields[column_name]
-        default = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
-        value = field.convert_to_write(default, self)
-        value = field.convert_to_column(value, self)
-        if value is not None:
-            _logger.debug("Table '%s': setting default value of new column %s to %r",
-                self._table, column_name, value)
-            query = f'UPDATE "{self._table}" SET "{column_name}" = %s WHERE "{column_name}" IS NULL'
-            self._cr.execute(query, (value,))
+
+        default_warehouse = self.env["stock.warehouse"].search([], limit=1)
+
+        query = """
+        UPDATE sale_order so
+        SET warehouse_id = COALESCE(wh.id, %s)
+        FROM stock_warehouse wh
+        WHERE so.company_id = wh.company_id and so.warehouse_id IS NULL and wh.active
+        """
+        params = [default_warehouse.id]
+
+        _logger.debug("Initializing column '%s' in table '%s'", column_name, self._table)
+        self._cr.execute(query, params)
 
     @api.depends('picking_ids.date_done')
     def _compute_effective_date(self):
@@ -77,8 +82,11 @@ class SaleOrder(models.Model):
                 order.delivery_status = False
             elif all(p.state in ['done', 'cancel'] for p in order.picking_ids):
                 order.delivery_status = 'full'
-            elif any(p.state == 'done' for p in order.picking_ids):
+            elif any(p.state == 'done' for p in order.picking_ids) and any(
+                    l.qty_delivered for l in order.order_line):
                 order.delivery_status = 'partial'
+            elif any(p.state == 'done' for p in order.picking_ids):
+                order.delivery_status = 'started'
             else:
                 order.delivery_status = 'pending'
 

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="account_move_send_inherit_l10n_tr_nilvera_einvoice">
+            <field name="name">account.move.send.form.inherit.l10n.tr.nilvera.einvoice</field>
+            <field name="model">account.move.send</field>
+            <field name="inherit_id" ref="account.account_move_send_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[@name='warnings']" position="inside">
+                    <field name="l10n_tr_nilvera_warnings" class="o_field_html" widget="actionable_errors"/>
+                </xpath>
+                <xpath expr="//div[@name='advanced_options']" position='after'>
+                    <field name="l10n_tr_nilvera_einvoice_enable_xml" invisible="1"/>
+                    <div name="option_send_nilvera"
+                         invisible="not l10n_tr_nilvera_einvoice_enable_xml">
+                        <field name="l10n_tr_nilvera_einvoice_checkbox_xml"/>
+                        <span class="fw-bold">
+                            <label for="l10n_tr_nilvera_einvoice_checkbox_xml"/>
+                        </span>
+                    </div>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

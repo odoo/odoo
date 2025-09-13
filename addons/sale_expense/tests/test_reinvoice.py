@@ -471,3 +471,101 @@ class TestReInvoice(TestExpenseCommon, TestSaleCommon):
                 'is_expense': True,
             },
         ])
+
+    def test_expense_reinvoice_tax_multine_line(self):
+        """
+        Tests that when a tax has multine distribution, the creation of an expense can go forward without issues
+        """
+        multi_distribution_tax = self.env['account.tax'].create({
+            'name': 'Tax 10.00%',
+            'amount': 10.00,
+            'amount_type': 'percent',
+            'type_tax_use': 'purchase',
+            'invoice_repartition_line_ids': [
+                Command.create({
+                    'repartition_type': 'base',
+                    'use_in_tax_closing': False,
+                }),
+                Command.create({
+                    'repartition_type': 'tax',
+                    'factor_percent': 70,
+                    'use_in_tax_closing': False,
+                }),
+                Command.create({
+                    'repartition_type': 'tax',
+                    'factor_percent': 30,
+                    'account_id': self.company_data['default_account_tax_purchase'].id,
+                    'use_in_tax_closing': True,
+                }),
+            ],
+            'refund_repartition_line_ids': [
+                Command.create({
+                    'repartition_type': 'base',
+                    'use_in_tax_closing': False,
+                }),
+                Command.create({
+                    'repartition_type': 'tax',
+                    'factor_percent': 70,
+                    'use_in_tax_closing': False,
+                }),
+                Command.create({
+                    'repartition_type': 'tax',
+                    'factor_percent': 30,
+                    'account_id': self.company_data['default_account_tax_purchase'].id,
+                    'use_in_tax_closing': True,
+                }),
+            ],
+        })
+        (self.company_data['product_order_sales_price'] + self.company_data['product_delivery_sales_price']).write({
+            'can_be_expensed': True,
+        })
+
+        # create SO line and confirm SO (with only one line)
+        sale_order = self.env['sale.order'].with_context(mail_notrack=True, mail_create_nolog=True).create({
+            'partner_id': self.partner_a.id,
+            'partner_invoice_id': self.partner_a.id,
+            'partner_shipping_id': self.partner_a.id,
+            'order_line': [Command.create({
+                'name': self.company_data['product_order_sales_price'].name,
+                'product_id': self.company_data['product_order_sales_price'].id,
+                'product_uom_qty': 1.0,
+                'price_unit': 1000.0,
+            })],
+        })
+        sale_order.action_confirm()
+
+        expense_sheet = self.env['hr.expense.sheet'].create({
+            'name': 'First Expense for employee',
+            'employee_id': self.expense_employee.id,
+            'journal_id': self.company_data['default_journal_purchase'].id,
+            'accounting_date': '2017-01-01',
+            'expense_line_ids': [
+                Command.create({
+                    'name': 'expense_1',
+                    'date': '2016-01-01',
+                    'product_id': self.company_data['product_order_sales_price'].id,
+                    'quantity': 1,
+                    'employee_id': self.expense_employee.id,
+                    'sale_order_id': sale_order.id,
+                    'tax_ids': multi_distribution_tax.ids,
+                }),
+            ],
+        })
+
+        expense_sheet.action_approve_expense_sheets()
+        expense_sheet.action_sheet_move_create()
+
+        self.assertRecordValues(sale_order.order_line, [
+            # Original SO line:
+            {
+                'qty_delivered': 0.0,
+                'product_uom_qty': 1.0,
+                'is_expense': False,
+            },
+            # Expense lines:
+            {
+                'qty_delivered': 1.0,
+                'product_uom_qty': 1.0,
+                'is_expense': True,
+            },
+        ])

@@ -4,15 +4,16 @@
 # 
 # Translators:
 # Wil Odoo, 2023
-# Marianna Ciofani, 2024
+# Marianna Ciofani, 2025
+# Sergio Zanchetta <primes2h@gmail.com>, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:56+0000\n"
+"POT-Creation-Date: 2025-05-22 18:37+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Marianna Ciofani, 2024\n"
+"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2025\n"
 "Language-Team: Italian (https://app.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -52,6 +53,7 @@ msgstr "In archivio"
 
 #. module: phone_validation
 #. odoo-python
+#: code:addons/phone_validation/models/mail_thread_phone.py:0
 #: code:addons/phone_validation/models/phone_blacklist.py:0
 #, python-format
 msgid "Are you sure you want to unblacklist this Phone Number?"
@@ -76,7 +78,7 @@ msgstr "Lista nera"
 #. module: phone_validation
 #: model_terms:ir.ui.view,arch_db:phone_validation.phone_blacklist_view_tree
 msgid "Blacklist Date"
-msgstr "Data in lista nera"
+msgstr "Data lista nera"
 
 #. module: phone_validation
 #: model:ir.model.fields,field_description:phone_validation.field_mail_thread_phone__mobile_blacklisted
@@ -195,7 +197,7 @@ msgid ""
 " mass mailing sms anymore, from any list"
 msgstr ""
 "Se il numero di telefono pulito è in lista nera, il contatto non sarà più "
-"soggetto all'invio massivo di sms, da nessuna lista."
+"soggetto all'invio massivo di SMS, da nessuna lista."
 
 #. module: phone_validation
 #. odoo-python
@@ -235,7 +237,7 @@ msgid ""
 "mobile and phone field in a model."
 msgstr ""
 "Indica se un numero di telefono pulito in lista nera è un cellulare. Aiuta a"
-" distinguere qual'è il numero in lista nera             quando in un modello"
+" distinguere qual è il numero in lista nera             quando in un modello"
 " sono presenti sia il campo cellulare che telefono."
 
 #. module: phone_validation
@@ -246,7 +248,7 @@ msgid ""
 "mobile and phone field in a model."
 msgstr ""
 "Indica se un numero di telefono pulito in lista nera è un fisso. Aiuta a "
-"distinguere qual'è il numero in lista nera             quando in un modello "
+"distinguere qual è il numero in lista nera             quando in un modello "
 "sono presenti sia il campo cellulare che telefono."
 
 #. module: phone_validation
@@ -389,7 +391,7 @@ msgstr "Motivo"
 #. module: phone_validation
 #: model:ir.model,name:phone_validation.model_phone_blacklist_remove
 msgid "Remove phone from blacklist"
-msgstr "Rimuovere il telefono dalla blacklist"
+msgstr "Rimozione telefono da lista nera"
 
 #. module: phone_validation
 #: model:ir.model.fields,field_description:phone_validation.field_mail_thread_phone__phone_sanitized
@@ -419,6 +421,17 @@ msgstr "Motivo di sblocco: %(reason)s"
 #: model:ir.model,name:phone_validation.model_res_users
 msgid "User"
 msgstr "Utente"
+
+#. module: phone_validation
+#. odoo-python
+#: code:addons/phone_validation/models/mail_thread_phone.py:0
+#, python-format
+msgid ""
+"You do not have the access right to unblacklist phone numbers. Please "
+"contact your administrator."
+msgstr ""
+"Nessun diritto di accesso per rimuovere i numeri di telefono dalla lista "
+"nera. Contatta l'amministratore."
 
 #. module: phone_validation
 #: model_terms:ir.ui.view,arch_db:phone_validation.phone_blacklist_remove_view_form

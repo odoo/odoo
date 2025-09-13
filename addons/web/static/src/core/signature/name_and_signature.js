@@ -7,9 +7,18 @@ import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { useService, useAutofocus } from "@web/core/utils/hooks";
 import { pick } from "@web/core/utils/objects";
 import { renderToString } from "@web/core/utils/render";
+import { debounce } from "@web/core/utils/timing";
 import { getDataURLFromFile } from "@web/core/utils/urls";
 
-import { Component, useState, onWillStart, useRef, useEffect } from "@odoo/owl";
+import {
+    Component,
+    useState,
+    onWillStart,
+    useRef,
+    useEffect,
+    useExternalListener,
+    status,
+} from "@odoo/owl";
 
 let htmlId = 0;
 export class NameAndSignature extends Component {
@@ -56,6 +65,7 @@ export class NameAndSignature extends Component {
                     this.$signatureField = $(".o_web_sign_signature");
                     this.$signatureField.on("change", () => {
                         this.props.signature.isSignatureEmpty = this.isSignatureEmpty;
+                        this.props.onSignatureChange(this.state.signMode);
                     });
                     this.jSignature();
                     this.resetSignature();
@@ -69,6 +79,8 @@ export class NameAndSignature extends Component {
             },
             () => [this.signatureRef.el]
         );
+
+        useExternalListener(window, "resize", debounce(this.onResize, 250));
     }
 
     /**
@@ -206,6 +218,13 @@ export class NameAndSignature extends Component {
         this.drawCurrentName();
     }
 
+    onResize() {
+        // May happen since this is debounced
+        if (status(this) !== "destroyed") {
+            this.resizeSignature();
+        }
+    }
+
     /**
      * Displays the given image in the signature field.
      * If needed, resizes the image to fit the existing area.
@@ -253,6 +272,7 @@ export class NameAndSignature extends Component {
                 );
                 Object.assign(context, ignoredContext);
                 this.props.signature.isSignatureEmpty = this.isSignatureEmpty;
+                this.props.onSignatureChange(this.state.signMode);
                 return this.isSignatureEmpty;
             }, 0);
         };
@@ -287,6 +307,9 @@ export class NameAndSignature extends Component {
     }
 
     resizeSignature() {
+        if (!this.signatureRef.el) {
+            return;
+        }
         // recompute size based on the current width
         this.signatureRef.el.style.width = "unset";
         const width = this.signatureRef.el.clientWidth;
@@ -361,6 +384,7 @@ NameAndSignature.props = {
     signatureType: { type: String, optional: true },
     noInputName: { type: Boolean, optional: true },
     mode: { type: String, optional: true },
+    onSignatureChange: { type: Function, optional: true },
 };
 NameAndSignature.defaultProps = {
     defaultFont: "",
@@ -368,4 +392,5 @@ NameAndSignature.defaultProps = {
     fontColor: "DarkBlue",
     signatureType: "signature",
     noInputName: false,
+    onSignatureChange: () => {},
 };

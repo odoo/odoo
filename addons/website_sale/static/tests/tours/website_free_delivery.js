@@ -14,14 +14,14 @@ registry.category("web_tour.tours").add('check_free_delivery', {
         {
             content: "Check Free Delivery value to be zero",
             extra_trigger: '#delivery_carrier label:containsExact("Delivery Now Free Over 10")',
-            trigger: "#delivery_carrier span:contains('0.0')"
+            trigger: "#delivery_carrier span:contains('Free')",
         },
         // Part 2: check multiple delivery & price loaded asynchronously
         {
             content: "Ensure price was loaded asynchronously",
             extra_trigger: '#delivery_carrier input[name="delivery_type"]:checked',
-            trigger: '#delivery_method .o_delivery_carrier_select:contains("20.0"):contains("The Poste")',
-            run: function () {}, // it's a check
+            trigger: '#delivery_method .o_delivery_carrier_select:contains("The Poste")',
+            run: "click",
         },
         {
             content: "Select `Wire Transfer` payment method",

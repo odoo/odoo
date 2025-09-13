@@ -4,12 +4,12 @@
         <t t-if="!figures.length">
             Only chart figures are displayed in small screens but this dashboard doesn't contain any
         </t>
-        <t
+        <div
             t-foreach="figures" t-as="figure"
-            t-component="getFigureComponent(figure)"
-            onFigureDeleted="() => {}"
-            figure="figure"
-            t-key="figure.id"/>
+            t-key="figure.id"
+            t-attf-style="min-height: #{figure.height}px; direction: ltr;"
+        >
+            <t t-component="getFigureComponent(figure)" figure="figure" onFigureDeleted="() => {}"/>
+        </div>
     </t>
 </templates>
-

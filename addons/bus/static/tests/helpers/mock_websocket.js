@@ -64,6 +64,7 @@ class WorkerMock extends SharedWorkerMock {
 }
 
 let websocketWorker;
+QUnit.testDone(() => (websocketWorker = null));
 /**
  * @param {*} params Parameters used to patch the websocket worker.
  * @returns {WebsocketWorker} Instance of the worker which will run during the
@@ -76,8 +77,8 @@ export function patchWebsocketWorkerWithCleanup(params = {}) {
             return new WebSocketMock();
         },
     });
-    patchWithCleanup(websocketWorker || WebsocketWorker.prototype, params);
     websocketWorker = websocketWorker || new WebsocketWorker();
+    patchWithCleanup(websocketWorker, params);
     websocketWorker.INITIAL_RECONNECT_DELAY = 0;
     websocketWorker.RECONNECT_JITTER = 0;
     patchWithCleanup(browser, {

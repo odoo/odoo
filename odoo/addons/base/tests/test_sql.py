@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.tests.common import BaseCase
-from odoo.tools import SQL
+from psycopg2.errors import CheckViolation
+
+from odoo.tests.common import BaseCase, TransactionCase
+from odoo.tools import SQL, mute_logger, sql
 
 
 class TestSQL(BaseCase):
@@ -92,6 +94,10 @@ class TestSQL(BaseCase):
         self.assertEqual(sql.code, '"foo"')
         self.assertEqual(sql.params, [])
 
+        sql = SQL.identifier('année')
+        self.assertEqual(sql.code, '"année"')
+        self.assertEqual(sql.params, [])
+
         sql = SQL.identifier('foo', 'bar')
         self.assertEqual(sql.code, '"foo"."bar"')
         self.assertEqual(sql.params, [])
@@ -154,3 +160,18 @@ class TestSQL(BaseCase):
             repr(sql),
             """SQL('SELECT "id" FROM "table" WHERE "table"."foo"=%s AND "table"."bar"=%s', 1, 2)"""
         )
+
+class TestSqlTools(TransactionCase):
+
+    def test_add_constraint(self):
+        definition = "CHECK (name !~ '%')"
+        sql.add_constraint(self.env.cr, 'res_bank', 'test_constraint_dummy', definition)
+
+        # ensure the constraint with % works and it's in the DB
+        with self.assertRaises(CheckViolation), mute_logger('odoo.sql_db'):
+            self.env['res.bank'].create({'name': '10% bank'})
+
+        # ensure the definitions match
+        db_definition = sql.constraint_definition(self.env.cr, 'res_bank', 'test_constraint_dummy')
+        self.assertEqual(definition, db_definition)
+

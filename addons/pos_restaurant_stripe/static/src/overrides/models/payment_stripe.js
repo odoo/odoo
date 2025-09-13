@@ -19,7 +19,7 @@ patch(PaymentStripe.prototype, {
             this.pos.config.set_tip_after_payment &&
             line.payment_method.use_payment_terminal === "stripe" &&
             line.card_type !== "interac" &&
-            !line.card_type.includes("eftpos")
+            (!line.card_type || !line.card_type.includes("eftpos"))
         );
     },
 });

@@ -11,6 +11,19 @@ class AccountMove(models.Model):
     pos_payment_ids = fields.One2many('pos.payment', 'account_move_id')
     pos_refunded_invoice_ids = fields.Many2many('account.move', 'refunded_invoices', 'refund_account_move', 'original_account_move')
 
+    @api.depends('tax_cash_basis_created_move_ids')
+    def _compute_always_tax_exigible(self):
+        super()._compute_always_tax_exigible()
+        # The pos closing move does not create caba entries (anymore); we set the tax values directly on the closing move.
+        # (But there may still be old closing moves that used caba entries from previous versions.)
+        relevant_moves = self.filtered(lambda move: not (move.always_tax_exigible or move.tax_cash_basis_created_move_ids))
+        if not relevant_moves:
+            return
+        sessions = self.env['pos.session'].with_context(active_test=False).search([
+            ('move_id', 'in', relevant_moves.ids),
+        ])
+        sessions.move_id.always_tax_exigible = True
+
     def _stock_account_get_last_step_stock_moves(self):
         stock_moves = super(AccountMove, self)._stock_account_get_last_step_stock_moves()
         for invoice in self.filtered(lambda x: x.move_type == 'out_invoice'):
@@ -71,3 +84,8 @@ class AccountMoveLine(models.Model):
         if sudo_order:
             price_unit = sudo_order._get_pos_anglo_saxon_price_unit(self.product_id, self.move_id.partner_id.id, self.quantity)
         return price_unit
+
+    def _check_edi_line_tax_required(self):
+        if self.product_id.type == 'combo':
+            return False
+        return super()._check_edi_line_tax_required()

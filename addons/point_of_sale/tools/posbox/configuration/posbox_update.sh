@@ -1,34 +1,37 @@
 #!/usr/bin/env bash
 
-sudo mount -o remount,rw /
-
 sudo service led-status stop
-sudo service odoo stop
 
 cd /home/pi/odoo
 localbranch=$(git symbolic-ref -q --short HEAD)
 localremote=$(git config branch.$localbranch.remote)
 
+if [[ "$(git remote get-url "$localremote")" != *odoo/odoo* ]]; then
+    git remote set-url "${localremote}" "https://github.com/odoo/odoo.git"
+fi
+
 echo "addons/point_of_sale/tools/posbox/overwrite_after_init/home/pi/odoo" >> .git/info/sparse-checkout
+echo "addons/iot_base" >> .git/info/sparse-checkout
+echo "addons/iot_drivers" >> .git/info/sparse-checkout
 
 git fetch "${localremote}" "${localbranch}" --depth=1
 git reset "${localremote}"/"${localbranch}" --hard
 
-git clean -dfx
-cp -a /home/pi/odoo/addons/point_of_sale/tools/posbox/overwrite_after_init/home/pi/odoo/* /home/pi/odoo/
-rm -r /home/pi/odoo/addons/point_of_sale/tools/posbox/overwrite_after_init
+sudo git clean -dfx
+if [ -d /home/pi/odoo/addons/point_of_sale/tools/posbox/overwrite_after_init ]; then
+    cp -a /home/pi/odoo/addons/point_of_sale/tools/posbox/overwrite_after_init/home/pi/odoo/* /home/pi/odoo/
+    rm -r /home/pi/odoo/addons/point_of_sale/tools/posbox/overwrite_after_init
+fi
 
-sudo find / -type f -name "*.iotpatch" 2> /dev/null | while read iotpatch; do
-    DIR=$(dirname "${iotpatch}")
-    BASE=$(basename "${iotpatch%.iotpatch}")
-    sudo find "${DIR}" -type f -name "${BASE}" ! -name "*.iotpatch" | while read file; do
-        sudo patch -f "${file}" < "${iotpatch}"
-    done
-done
+# TODO: Remove this code when v16 is deprecated
+odoo_conf="addons/point_of_sale/tools/posbox/configuration/odoo.conf"
+if ! grep -q "server_wide_modules" $odoo_conf; then
+    echo "server_wide_modules=hw_drivers,hw_escpos,hw_posbox_homepage,point_of_sale,web" >> $odoo_conf
+fi
 
-sudo mount -o remount,ro /
-sudo mount -o remount,rw /root_bypass_ramdisks/etc/cups
+if [ -d /home/pi/odoo/addons/iot_drivers ]; then
+  # TODO: remove this when v18.0 is deprecated (hw_drivers/,hw_posbox_homepage/ -> iot_drivers/)
+  sed -i 's|hw_drivers.*hw_posbox_homepage|iot_drivers|g' /home/pi/odoo.conf
+fi
 
 sudo service led-status start
-
-(sleep 5 && sudo service odoo restart) &

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import datetime
@@ -6,12 +5,10 @@ import logging
 import traceback
 from collections import defaultdict
 from uuid import uuid4
-
 from dateutil.relativedelta import relativedelta
 
 from odoo import _, api, exceptions, fields, models
-from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
-from odoo.tools import safe_eval
+from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT, safe_eval
 from odoo.http import request
 
 _logger = logging.getLogger(__name__)
@@ -66,6 +63,7 @@ TIME_TRIGGERS = [
     'on_time_updated',
 ]
 
+
 def get_webhook_request_payload():
     if not request:
         return None
@@ -83,7 +81,8 @@ class BaseAutomation(models.Model):
     name = fields.Char(string="Automation Rule Name", required=True, translate=True)
     description = fields.Html(string="Description")
     model_id = fields.Many2one(
-        "ir.model", string="Model", required=True, ondelete="cascade", help="Model on which the automation rule runs."
+        "ir.model", string="Model", domain=[("field_id", "!=", False)], required=True, ondelete="cascade",
+        help="Model on which the automation rule runs."
     )
     model_name = fields.Char(related="model_id.model", string="Model Name", readonly=True, inverse="_inverse_model_name")
     model_is_mail_thread = fields.Boolean(related="model_id.is_mail_thread")
@@ -182,7 +181,8 @@ class BaseAutomation(models.Model):
         string='Before Update Domain',
         compute='_compute_filter_pre_domain',
         readonly=False, store=True,
-        help="If present, this condition must be satisfied before the update of the record.")
+        help="If present, this condition must be satisfied before the update of the record. "
+             "Not checked on record creation.")
     filter_domain = fields.Char(
         string='Apply on',
         help="If present, this condition must be satisfied before executing the automation rule.",
@@ -221,6 +221,7 @@ class BaseAutomation(models.Model):
                       action_names=', '.join(failing_actions.mapped('name'))
                      )
                 )
+
     @api.depends("trigger", "webhook_uuid")
     def _compute_url(self):
         for automation in self:
@@ -420,27 +421,52 @@ class BaseAutomation(models.Model):
                 ),
             }}
 
+    def _has_trigger_onchange(self):
+        return any(
+            automation.active and automation.trigger == 'on_change' and automation.on_change_field_ids
+            for automation in self
+        )
+
     @api.model_create_multi
     def create(self, vals_list):
         base_automations = super(BaseAutomation, self).create(vals_list)
         self._update_cron()
         self._update_registry()
+        if base_automations._has_trigger_onchange():
+            # Invalidate templates cache to update on_change attributes if needed
+            self.env.registry.clear_cache('templates')
         return base_automations
 
-    def write(self, vals):
+    def write(self, vals: dict):
+        clear_templates = self._has_trigger_onchange()
         res = super(BaseAutomation, self).write(vals)
         if set(vals).intersection(self.CRITICAL_FIELDS):
             self._update_cron()
             self._update_registry()
+            if clear_templates or self._has_trigger_onchange():
+                # Invalidate templates cache to update on_change attributes if needed
+                self.env.registry.clear_cache('templates')
         elif set(vals).intersection(self.RANGE_FIELDS):
             self._update_cron()
         return res
 
     def unlink(self):
+        clear_templates = self._has_trigger_onchange()
         res = super(BaseAutomation, self).unlink()
         self._update_cron()
         self._update_registry()
+        if clear_templates:
+            # Invalidate templates cache to update on_change attributes if needed
+            self.env.registry.clear_cache('templates')
         return res
+
+    def copy(self, default=None):
+        """Copy the actions of the automation while
+        copying the automation itself."""
+        actions = self.action_server_ids.copy_multi()
+        record_copy = super().copy(default)
+        record_copy.action_server_ids = actions
+        return record_copy
 
     def action_rotate_webhook_uuid(self):
         for automation in self:
@@ -571,7 +597,7 @@ class BaseAutomation(models.Model):
     def _get_cron_interval(self, automations=None):
         """ Return the expected time interval used by the cron, in minutes. """
         def get_delay(rec):
-            return rec.trg_date_range * DATE_RANGE_FACTOR[rec.trg_date_range_type]
+            return abs(rec.trg_date_range) * DATE_RANGE_FACTOR[rec.trg_date_range_type]
 
         if automations is None:
             automations = self.with_context(active_test=True).search([('trigger', 'in', TIME_TRIGGERS)])
@@ -644,14 +670,13 @@ class BaseAutomation(models.Model):
             self = self.with_context(__action_done=automation_done)
             records = records.with_context(__action_done=automation_done)
 
-        # modify records
-        if 'date_automation_last' in records._fields:
-            records.date_automation_last = fields.Datetime.now()
-
         # we process the automation on the records for which any watched field
         # has been modified, and only mark the automation as done for those
         records = records.filtered(self._check_trigger_fields)
         automation_done[self] = records_done + records
+
+        if records and 'date_automation_last' in records._fields:
+            records.date_automation_last = fields.Datetime.now()
 
         # prepare the contexts for server actions
         contexts = [
@@ -684,16 +709,12 @@ class BaseAutomation(models.Model):
             # this is a create: all fields are considered modified
             return True
 
-        # Note: old_vals are in the format of read()
+        # note: old_vals are in the record format
         old_vals = self._context['old_values'].get(record.id, {})
 
         def differ(name):
-            field = record._fields[name]
-            return (
-                name in old_vals and
-                field.convert_to_cache(record[name], record, validate=False) !=
-                field.convert_to_cache(old_vals[name], record, validate=False)
-            )
+            return name in old_vals and record[name] != old_vals[name]
+
         return any(differ(field.name) for field in self_sudo.trigger_field_ids)
 
     def _register_hook(self):
@@ -738,8 +759,8 @@ class BaseAutomation(models.Model):
                 pre = {a: a._filter_pre(records) for a in automations}
                 # read old values before the update
                 old_values = {
-                    old_vals.pop('id'): old_vals
-                    for old_vals in (records.read(list(vals)) if vals else [])
+                    record.id: {field_name: record[field_name] for field_name in vals if field_name in record._fields and record._fields[field_name].store}
+                    for record in records
                 }
                 # call original method
                 write.origin(self.with_env(automations.env), vals, **kw)
@@ -758,8 +779,8 @@ class BaseAutomation(models.Model):
             #
             def _compute_field_value(self, field):
                 # determine fields that may trigger an automation
-                stored_fields = [f for f in self.pool.field_computed[field] if f.store]
-                if not any(stored_fields):
+                stored_fnames = [f.name for f in self.pool.field_computed[field] if f.store]
+                if not stored_fnames:
                     return _compute_field_value.origin(self, field)
                 # retrieve the action rules to possibly execute
                 automations = self.env['base.automation']._get_actions(self, WRITE_TRIGGERS)
@@ -771,8 +792,8 @@ class BaseAutomation(models.Model):
                 pre = {a: a._filter_pre(records) for a in automations}
                 # read old values before the update
                 old_values = {
-                    old_vals.pop('id'): old_vals
-                    for old_vals in (records.read([f.name for f in stored_fields]))
+                    record.id: {fname: record[fname] for fname in stored_fnames}
+                    for record in records
                 }
                 # call original method
                 _compute_field_value.origin(self, field)
@@ -890,8 +911,6 @@ class BaseAutomation(models.Model):
                 method = make_onchange(automation_rule.id)
                 for field in automation_rule.on_change_field_ids:
                     Model._onchange_methods[field.name].append(method)
-                if automation_rule.on_change_field_ids:
-                    self.env.registry.clear_cache('templates')
 
             if automation_rule.model_id.is_mail_thread and automation_rule.trigger in MAIL_TRIGGERS:
                 patch(Model, "message_post", make_message_post())

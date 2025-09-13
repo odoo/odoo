@@ -36,8 +36,9 @@ class TestUBLNL(TestUBLCommon):
             'vat': 'NL41452B11',
             'country_id': cls.env.ref('base.nl').id,
             'bank_ids': [(0, 0, {'acc_number': 'NL93999574162167'})],
-            'peppol_eas': '0106',
-            'peppol_endpoint': '1234567',
+            'peppol_eas': '9944',
+            'peppol_endpoint': 'NL41452B11',
+            'company_registry': '123456789',
             'ref': 'ref_partner_2',
         })
 

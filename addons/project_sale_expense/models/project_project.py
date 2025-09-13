@@ -100,3 +100,19 @@ class Project(models.Model):
             if expense_ids:
                 expense_data['costs']['action'] = get_action(expense_ids)
         return expense_data
+
+    def _get_already_included_profitability_invoice_line_ids(self):
+        move_line_ids = super()._get_already_included_profitability_invoice_line_ids()
+        query = self.env['hr.expense']._search([('state', 'in', ['approved', 'done'])])
+        query.add_where('hr_expense.analytic_distribution ? %s', [str(self.analytic_account_id.id)])
+        query.order = None
+        query_string, query_param = query.select('sale_order_id')
+        query_string = f"{query_string} GROUP BY sale_order_id"
+        self._cr.execute(query_string, query_param)
+        expenses_read_group = list(self._cr.dictfetchall())
+        if not expenses_read_group:
+            return move_line_ids
+        for res in expenses_read_group:
+            sale_order = self.env['sale.order'].browse(res['sale_order_id'])
+            move_line_ids.extend(sale_order.invoice_ids.mapped('invoice_line_ids').ids)
+        return move_line_ids

@@ -116,30 +116,34 @@ export class DynamicList extends DataPoint {
     }
 
     async leaveEditMode({ discard } = {}) {
-        if (this.editedRecord) {
+        let editedRecord = this.editedRecord;
+        if (editedRecord) {
             let canProceed = true;
             if (discard) {
-                await this.editedRecord.discard();
-                if (this.editedRecord && this.editedRecord.isNew) {
-                    this._removeRecords([this.editedRecord.id]);
+                await editedRecord.discard();
+                editedRecord = this.editedRecord;
+                if (editedRecord && editedRecord.isNew) {
+                    this._removeRecords([editedRecord.id]);
                 }
             } else {
                 if (!this.model._urgentSave) {
-                    await this.editedRecord.checkValidity();
-                    if (!this.editedRecord) {
+                    await editedRecord.checkValidity();
+                    editedRecord = this.editedRecord;
+                    if (!editedRecord) {
                         return true;
                     }
                 }
-                if (this.editedRecord.isNew && !this.editedRecord.dirty) {
-                    this._removeRecords([this.editedRecord.id]);
+                if (editedRecord.isNew && !editedRecord.dirty) {
+                    this._removeRecords([editedRecord.id]);
                 } else {
-                    canProceed = await this.editedRecord.save();
+                    canProceed = await editedRecord.save();
                 }
             }
 
-            if (canProceed && this.editedRecord) {
+            editedRecord = this.editedRecord;
+            if (canProceed && editedRecord) {
                 this.model._updateConfig(
-                    this.editedRecord.config,
+                    editedRecord.config,
                     { mode: "readonly" },
                     { reload: false }
                 );
@@ -163,9 +167,7 @@ export class DynamicList extends DataPoint {
     }
 
     selectDomain(value) {
-        return this.model.mutex.exec(() => {
-            this.isDomainSelected = value;
-        });
+        return this.model.mutex.exec(() => this._selectDomain(value));
     }
 
     sortBy(fieldName) {
@@ -215,7 +217,9 @@ export class DynamicList extends DataPoint {
             resIds = await this.getResIds(true);
         }
 
-        const duplicated = await this.model.orm.call(this.resModel, "copy_multi", [resIds]);
+        const duplicated = await this.model.orm.call(this.resModel, "copy_multi", [resIds], {
+            context: this.context,
+        });
         if (resIds.length > duplicated.length) {
             this.model.notification.add(_t("Some records could not be duplicated"), {
                 title: _t("Warning"),
@@ -339,13 +343,9 @@ export class DynamicList extends DataPoint {
             let lastSequence = (asc ? -1 : 1) * Infinity;
             for (let index = 0; index < originalList.length; index++) {
                 const sequence = getSequence(originalList[index]);
-                if (
-                    ((index < firstIndex || index >= lastIndex) &&
-                        ((asc && lastSequence >= sequence) ||
-                            (!asc && lastSequence <= sequence))) ||
-                    (index >= firstIndex && index < lastIndex && lastSequence === sequence)
-                ) {
+                if ((asc && lastSequence >= sequence) || (!asc && lastSequence <= sequence)) {
                     reorderAll = true;
+                    break;
                 }
                 lastSequence = sequence;
             }
@@ -408,6 +408,10 @@ export class DynamicList extends DataPoint {
                 dp[handleField] = dpData[handleField];
             }
         }
+    }
+
+    _selectDomain(value) {
+        this.isDomainSelected = value;
     }
 
     async _toggleArchive(isSelected, state) {

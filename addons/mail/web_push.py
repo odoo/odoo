@@ -18,6 +18,18 @@ from .tools import jwt
 
 MAX_PAYLOAD_SIZE = 4096
 
+# size of the overhead of the header for all encryption blocks
+# +-----------+-----------------+---------------------------+------------------------+
+# | salt (16) | record_size (4) | sender_public_key.len (1) | sender_public_key (65) |
+# +-----------+-----------------+---------------------------+------------------------+
+# sender_public_key = 0x04 (1 byte) | X-coord (32 bytes) | Y-coord (32 bytes)
+# using SECP256R1 curve + X9.62 encoding + SEC1 uncompressed formatting
+ENCRYPTION_HEADER_SIZE = 16 + 4 + 1 + (1 + 32 + 32)
+
+# size of the overhead of encryption per encryption block
+# 1 padding delimiter (continue or final block) + 16-bytes in-message authentication tag from AEAD_AES_128_GCM
+ENCRYPTION_BLOCK_OVERHEAD = 1 + 16
+
 _logger = logger.getLogger(__name__)
 
 def _iv(base, counter):
@@ -129,7 +141,11 @@ def push_to_end_point(base_url, device, payload, vapid_private_key, vapid_public
         #  - "k" the base64url-encoded key that signed that token.
         'Authorization': 'vapid t={}, k={}'.format(token, vapid_public_key),
         'Content-Encoding': 'aes128gcm',
-        'TTL': '0',
+        # The TTL is set to '60' as workaround because the push notifications 
+        # are not received on Edge with TTL ='0'. 
+        # Using the TTL '0' , the microsoft endpoint returns a 400 bad request error.
+        # and we are sure that the notification will be received
+        'TTL': '60',
     }
 
     response = session.post(endpoint, headers=headers, data=payload, timeout=5)

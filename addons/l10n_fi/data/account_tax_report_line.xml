@@ -15,16 +15,36 @@
         <field name="line_ids">
             <record id="tax_report_sales_title" model="account.report.line">
                 <field name="name">Tax on domestic sales by tax rates</field>
-                <field name="aggregation_formula">sale_24.balance + sale_14.balance + sale_10.balance</field>
+                <!-- "sale_25_5_and_24" refers to both 24% and 25.5% taxes. Will only be 25.5 on 01/01/2025.-->
+                <field name="aggregation_formula">sale_25_5_and_24.balance + sale_14.balance + sale_10.balance</field>
                 <field name="children_ids">
-                    <record id="tax_report_sales_24" model="account.report.line">
-                        <field name="name">24% tax</field>
-                        <field name="code">sale_24</field>
-                        <field name="expression_ids">
-                            <record id="tax_report_sales_24_tag" model="account.report.expression">
-                                <field name="label">balance</field>
-                                <field name="engine">tax_tags</field>
-                                <field name="formula">fi_301</field>
+                    <record id="tax_report_sales_25_5_and_24" model="account.report.line">
+                        <field name="name">25.5% tax + 24% tax</field>
+                        <field name="code">sale_25_5_and_24</field>
+                        <field name="foldable">True</field>
+                        <field name="aggregation_formula">sale_25_5.balance + sale_24.balance</field>
+                        <field name="children_ids">
+                            <record id="tax_report_sales_25_5" model="account.report.line">
+                                <field name="name">25.5% tax</field>
+                                <field name="code">sale_25_5</field>
+                                <field name="expression_ids">
+                                    <record id="tax_report_sales_25_5_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">fi_320</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="tax_report_sales_24" model="account.report.line">
+                                <field name="name">24% tax</field>
+                                <field name="code">sale_24</field>
+                                <field name="expression_ids">
+                                    <record id="tax_report_sales_24_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">fi_301</field>
+                                    </record>
+                                </field>
                             </record>
                         </field>
                     </record>
@@ -119,7 +139,8 @@
             </record>
             <record id="tax_report_tax_payable" model="account.report.line">
                 <field name="name">Payable tax / Refundable tax (-)</field>
-                <field name="aggregation_formula">sale_24.balance + sale_14.balance + sale_10.balance + goods_eu.balance + service_eu.balance + goods_no_eu.balance + construct.balance - deductible.balance</field>
+                <!-- "sale_25_5_and_24" refers to both 24% and 25.5% taxes. Will only be 25.5 on 01/01/2025.-->
+                <field name="aggregation_formula">sale_25_5_and_24.balance + sale_14.balance + sale_10.balance + goods_eu.balance + service_eu.balance + goods_no_eu.balance + construct.balance - deductible.balance</field>
             </record>
             <record id="tax_report_base_turnover_0_vat" model="account.report.line">
                 <field name="name">0-Turnover subject to zero tax rate</field>

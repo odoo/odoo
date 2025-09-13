@@ -68,9 +68,9 @@ class Survey(http.Controller):
         if answer_token and not answer_sudo:
             return 'token_wrong'
 
-        if not answer_sudo and ensure_token:
+        if not answer_sudo and ensure_token is True:
             return 'token_required'
-        if not answer_sudo and survey_sudo.access_mode == 'token':
+        if not answer_sudo and ensure_token != 'survey_only' and survey_sudo.access_mode == 'token':
             return 'token_required'
 
         if survey_sudo.users_login_required and request.env.user._is_public():
@@ -82,6 +82,9 @@ class Survey(http.Controller):
         if (not survey_sudo.page_ids and survey_sudo.questions_layout == 'page_per_section') or not survey_sudo.question_ids:
             return 'survey_void'
 
+        if answer_sudo and answer_sudo.deadline and answer_sudo.deadline < datetime.now():
+            return 'answer_deadline'
+
         if answer_sudo and check_partner:
             if request.env.user._is_public() and answer_sudo.partner_id and not answer_token:
                 # answers from public user should not have any partner_id; this indicates probably a cookie issue
@@ -89,9 +92,6 @@ class Survey(http.Controller):
             if not request.env.user._is_public() and answer_sudo.partner_id != request.env.user.partner_id:
                 # partner mismatch, probably a cookie issue
                 return 'answer_wrong_user'
-
-        if answer_sudo and answer_sudo.deadline and answer_sudo.deadline < datetime.now():
-            return 'answer_deadline'
 
         return True
 
@@ -110,15 +110,16 @@ class Survey(http.Controller):
             survey_sudo, answer_sudo = self._fetch_from_access_token(survey_token, answer_token)
             try:
                 survey_user = survey_sudo.with_user(request.env.user)
-                survey_user.check_access_rights(self, 'read', raise_exception=True)
-                survey_user.check_access_rule(self, 'read')
+                survey_user.check_access_rights('read', raise_exception=True)
+                survey_user.check_access_rule('read')
             except:
                 pass
             else:
                 has_survey_access = True
             can_answer = bool(answer_sudo)
             if not can_answer:
-                can_answer = survey_sudo.access_mode == 'public'
+                can_answer = survey_sudo.access_mode == 'public' or (
+                    has_survey_access and ensure_token == 'survey_only')
 
         return {
             'survey_sudo': survey_sudo,
@@ -318,6 +319,9 @@ class Survey(http.Controller):
                     next_page_or_question = survey_sudo._get_next_page_or_question(
                         answer_sudo,
                         answer_sudo.last_displayed_page_id.id if answer_sudo.last_displayed_page_id else 0)
+                    # fallback to skipped page so that there is a next_page_or_question otherwise this should be a submit
+                    if not next_page_or_question:
+                        next_page_or_question = answer_sudo._get_next_skipped_page_or_question()
 
                 if next_page_or_question:
                     if answer_sudo.survey_first_submitted:
@@ -632,7 +636,7 @@ class Survey(http.Controller):
     def survey_print(self, survey_token, review=False, answer_token=None, **post):
         '''Display an survey in printable view; if <answer_token> is set, it will
         grab the answers of the user_input_id that has <answer_token>.'''
-        access_data = self._get_access_data(survey_token, answer_token, ensure_token=False, check_partner=False)
+        access_data = self._get_access_data(survey_token, answer_token, ensure_token='survey_only', check_partner=False)
         if access_data['validity_code'] is not True and (
                 access_data['has_survey_access'] or
                 access_data['validity_code'] not in ['token_required', 'survey_closed', 'survey_void', 'answer_deadline']):

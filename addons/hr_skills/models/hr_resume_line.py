@@ -9,7 +9,7 @@ class ResumeLine(models.Model):
     _description = "Resume line of an employee"
     _order = "line_type_id, date_end desc, date_start desc"
 
-    employee_id = fields.Many2one('hr.employee', required=True, ondelete='cascade')
+    employee_id = fields.Many2one('hr.employee', required=True, ondelete='cascade', index=True)
     name = fields.Char(required=True, translate=True)
     date_start = fields.Date(required=True)
     date_end = fields.Date()

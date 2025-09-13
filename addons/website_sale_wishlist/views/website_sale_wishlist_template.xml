@@ -206,7 +206,7 @@
                                         t-att-data-product-id="wish.product_id.id"
                                         t-att-data-product-tracking-info="'product_tracking_info' in combination_info and json.dumps(combination_info['product_tracking_info'])"
                                     >
-                                        <td class='td-img align-middle'>
+                                        <td class='td-img align-middle d-none d-md-table-cell'>
                                             <a t-att-href="wish.product_id.website_url">
                                                 <img t-attf-src="/web/image/product.product/#{wish.product_id.id}/image_128" class="img img-fluid" style="margin:auto;" alt="Product image"/>
                                             </a>
@@ -230,7 +230,8 @@
                                             <input name="product_id" t-att-value="wish.product_id.id" type="hidden"/>
                                             <a t-if="combination_info['prevent_zero_price_sale']" t-att-href="website.contact_us_button_url" class="btn btn-primary btn_cta">Contact Us</a>
                                             <button id="add_to_cart_button" t-else="" type="button" role="button" class="btn btn-secondary btn-block o_wish_add mb4" >
-                                                Add <span class='d-none d-md-inline'>to Cart</span>
+                                                <span class="fa fa-fw fa-shopping-cart"/>
+                                                <span class="d-none d-md-inline">Add</span>
                                             </button>
                                         </td>
                                     </tr>

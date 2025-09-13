@@ -10,6 +10,7 @@ import * as ProductScreenPos from "@point_of_sale/../tests/tours/helpers/Product
 import * as ProductScreenResto from "@pos_restaurant/../tests/tours/helpers/ProductScreenTourMethods";
 import * as Order from "@point_of_sale/../tests/tours/helpers/generic_components/OrderWidgetMethods";
 import * as TicketScreen from "@point_of_sale/../tests/tours/helpers/TicketScreenTourMethods";
+import * as combo from "@point_of_sale/../tests/tours/helpers/ComboPopupMethods";
 import { inLeftSide, negateStep } from "@point_of_sale/../tests/tours/helpers/utils";
 import { registry } from "@web/core/registry";
 
@@ -236,4 +237,29 @@ registry.category("web_tour.tours").add("BillScreenTour", {
         PaymentScreen.clickValidate(),
         BillScreen.isQRCodeShown(),
     ].flat(),
+});
+
+registry.category("web_tour.tours").add("ComboPreparationReceiptTour", {
+    steps: () =>
+        [
+            ProductScreen.confirmOpeningPopup(),
+            FloorScreen.clickTable("5"),
+            ProductScreen.clickHomeCategory(),
+            ProductScreen.clickDisplayedProduct("Office Combo"),
+            combo.select("Combo Product 2"),
+            combo.select("Combo Product 4"),
+            combo.select("Combo Product 6"),
+            combo.confirm(),
+            {
+                trigger: ".actionpad .submit-order.highlight.btn-primary",
+            },
+            ProductScreen.clickOrderButton(),
+            {
+                trigger: ".render-container .mx-5:contains('Combo Product 2')",
+            },
+            {
+                trigger: ".render-container .multiprint-flex:not(.mx-5):contains('Office Combo')",
+            },
+            ProductScreen.orderlinesHaveNoChange(),
+        ].flat(),
 });

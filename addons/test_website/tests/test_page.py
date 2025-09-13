@@ -35,7 +35,7 @@ class WithContext(HttpCase):
         r = self.url_open(home_url)
         self.assertEqual(r.status_code, 200)
         self.assertEqual(r.history[0].status_code, 303)
-        self.assertEqual(r.url, contactus_url_full)
+        self.assertURLEqual(r.url, contactus_url_full)
         self.assertIn(contactus_content, r.content)
 
         # same with 403
@@ -51,9 +51,9 @@ class WithContext(HttpCase):
         website.homepage_url = f"/test_website/200/name-{rec_unpublished.id}"
         with mute_logger('odoo.http'):  # mute 403 warning
             r = self.url_open(website.homepage_url)
-        self.assertEqual(r.status_code, 403, "The website homepage_url should be a 403")
+        self.assertEqual(r.status_code, 404, "The website homepage_url should be a 404")
         r = self.url_open(home_url)
         self.assertEqual(r.status_code, 200)
         self.assertEqual(r.history[0].status_code, 303)
-        self.assertEqual(r.url, contactus_url_full)
+        self.assertURLEqual(r.url, contactus_url_full)
         self.assertIn(contactus_content, r.content)

@@ -1,0 +1,44 @@
+{
+    "CSV": null,
+    "DatosPresentacion": {
+        "NIFPresentador": "A39200019",
+        "TimestampPresentacion": "2024-12-11T08:48:56+02:00"
+    },
+    "Cabecera": {
+        "ObligadoEmision": {
+            "NombreRazon": "ES Company",
+            "NIF": "A39200019"
+        },
+        "Representante": null,
+        "RemisionVoluntaria": {
+            "FechaFinVeriFactu": null,
+            "Incidencia": "N"
+        },
+        "RemisionRequerimiento": null
+    },
+    "TiempoEsperaEnvio": "60",
+    "EstadoEnvio": "Incorrecto",
+    "RespuestaLinea": [{
+        "IDFactura": {
+            "IDEmisorFactura": "A39200019",
+            "NumSerieFactura": "INV/2019/00006",
+            "FechaExpedicionFactura": "11-12-2024"
+        },
+        "Operacion": {
+            "TipoOperacion": "Alta",
+            "Subsanacion": "N",
+            "RechazoPrevio": null,
+            "SinRegistroPrevio": null
+        },
+        "RefExterna": null,
+        "EstadoRegistro": "Incorrecto",
+        "CodigoErrorRegistro": 3000,
+        "DescripcionErrorRegistro": "Registro de facturación duplicado.",
+        "RegistroDuplicado": {
+            "IdPeticionRegistroDuplicado": "20241211085033954011",
+            "EstadoRegistroDuplicado": "AceptadaConErrores",
+            "CodigoErrorRegistro": "2005",
+            "DescripcionErrorRegistro": "El campo ImporteTotal tiene un valor incorrecto para el valor de los campos BaseImponibleOimporteNoSujeto, CuotaRepercutida y CuotaRecargoEquivalencia suministrados."
+        }
+    }]
+}

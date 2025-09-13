@@ -179,6 +179,10 @@ export class WysiwygAdapterComponent extends Wysiwyg {
     async startEdition() {
         this.props.removeWelcomeMessage();
 
+        // Bind the _onPageClick handler to click event: to close the dropdown if clicked outside.
+        this.__onPageClick = this._onPageClick.bind(this);
+        this.$editable[0].addEventListener("click", this.__onPageClick, { capture: true });
+
         this.options.toolbarHandler = $('#web_editor-top-edit');
         // Do not insert a paragraph after each column added by the column commands:
         this.options.insertParagraphAfterColumns = false;
@@ -217,6 +221,8 @@ export class WysiwygAdapterComponent extends Wysiwyg {
                 $(el).empty();
             }
         }
+        // The jquery instance inside the iframe needs to be aware of the wysiwyg.
+        this.websiteService.contentWindow.$('#wrapwrap').data('wysiwyg', this);
         await super.startEdition();
 
         // Overriding the `filterMutationRecords` function so it can be used to
@@ -236,6 +242,10 @@ export class WysiwygAdapterComponent extends Wysiwyg {
                 // Offcanvas attributes to ignore.
                 const offcanvasClasses = ["show"];
                 const offcanvasAttributes = ["aria-modal", "aria-hidden", "role", "style"];
+                // Carousel attributes to ignore.
+                const carouselSlidingClasses = ["carousel-item-start", "carousel-item-end",
+                    "carousel-item-next", "carousel-item-prev", "active"];
+                const carouselIndicatorAttributes = ["aria-current"];
 
                 return filteredRecords.filter(record => {
                     if (record.type === "attributes") {
@@ -265,6 +275,19 @@ export class WysiwygAdapterComponent extends Wysiwyg {
                                 return false;
                             }
                         }
+
+                        // Do not record some carousel attributes changes.
+                        if (record.target.closest(":not(section) > .carousel")) {
+                            if (record.target.matches(".carousel-item, .carousel-indicators > li")
+                                    && record.attributeName === "class") {
+                                if (checkForExcludedClasses(record, carouselSlidingClasses)) {
+                                    return false;
+                                }
+                            } else if (record.target.matches(".carousel-indicators > li")
+                                    && carouselIndicatorAttributes.includes(record.attributeName)) {
+                                return false;
+                            }
+                        }
                     } else if (record.type === "childList") {
                         const addedOrRemovedNode = record.addedNodes[0] || record.removedNodes[0];
                         // Do not record the addition/removal of the offcanvas
@@ -285,8 +308,6 @@ export class WysiwygAdapterComponent extends Wysiwyg {
         if (this.props.beforeEditorActive) {
             await this.props.beforeEditorActive(this.$editable);
         }
-        // The jquery instance inside the iframe needs to be aware of the wysiwyg.
-        this.websiteService.contentWindow.$('#wrapwrap').data('wysiwyg', this);
         // grep: RESTART_WIDGETS_EDIT_MODE
         await new Promise((resolve, reject) => this._websiteRootEvent('widgets_start_request', {
             editableMode: true,
@@ -306,6 +327,12 @@ export class WysiwygAdapterComponent extends Wysiwyg {
         // observer) as the widgets might trigger DOM mutations.
         this._setObserver();
         this.odooEditor.observerActive();
+    }
+    _getBannerCommands() {
+        return [];
+    }
+    _getBannerCategory() {
+        return [];
     }
     /**
      * Stop the widgets and save the content.
@@ -334,6 +361,11 @@ export class WysiwygAdapterComponent extends Wysiwyg {
         if (this.props.editableElements) {
             return this.props.editableElements();
         }
+        for (const coverPartEl of $wrapwrap[0].querySelectorAll(".o_record_cover_component")) {
+            // Exclude cover properties from the o_dirty system, they are
+            // handled by _saveCoverProperties.
+            coverPartEl.dataset.oeReadonly = 1;
+        }
         return $wrapwrap.find('[data-oe-model]')
             .not('.o_not_editable')
             .filter(function () {
@@ -344,7 +376,7 @@ export class WysiwygAdapterComponent extends Wysiwyg {
             .not('[data-oe-readonly]')
             .not('img[data-oe-field="arch"], br[data-oe-field="arch"], input[data-oe-field="arch"]')
             .not('.oe_snippet_editor')
-            .not('hr, br, input, textarea')
+            .not('hr, br, input, textarea, owl-component')
             .not('[data-oe-sanitize-prevent-edition]')
             .add('.o_editable');
     }
@@ -420,6 +452,7 @@ export class WysiwygAdapterComponent extends Wysiwyg {
         const formOptionsMod = await odoo.loader.modules.get('@website/snippets/s_website_form/options')[Symbol.for('default')];
         formOptionsMod.clearAllFormsInfo();
 
+        this.$editable[0].removeEventListener("click", this.__onPageClick, { capture: true });
         return super.destroy(...arguments);
     }
 
@@ -513,7 +546,7 @@ export class WysiwygAdapterComponent extends Wysiwyg {
                 // Mark any savable element dirty if any tracked mutation occurs
                 // inside of it.
                 $savable.not('.o_dirty').each(function () {
-                    if (!this.hasAttribute('data-oe-readonly')) {
+                    if (this.tagName !== 'OWL-COMPONENT' && !this.hasAttribute('data-oe-readonly')) {
                         this.classList.add('o_dirty');
                     }
                 });
@@ -580,7 +613,7 @@ export class WysiwygAdapterComponent extends Wysiwyg {
     _getContentEditableAreas() {
         const $savableZones = $(this.websiteService.pageDocument).find(this.savableSelector);
         const $editableSavableZones = $savableZones
-            .not('input, [data-oe-readonly], ' +
+            .not('input, [data-oe-readonly], owl-component, ' +
                  '[data-oe-type="monetary"], [data-oe-many2one-id], [data-oe-field="arch"]:empty')
             .filter((_, el) => {
                 // The whole record cover is considered editable by the editor,
@@ -762,6 +795,7 @@ export class WysiwygAdapterComponent extends Wysiwyg {
                 priority: 100,
                 description: _t('Insert an alert snippet'),
                 fontawesome: 'fa-info',
+                keywords: ["banner", "info", "success", "warning", "danger"],
                 isDisabled: () => !this.odooEditor.isSelectionInBlockRoot(),
                 callback: () => {
                     snippetCommandCallback('.oe_snippet_body[data-snippet="s_alert"]');
@@ -924,6 +958,7 @@ export class WysiwygAdapterComponent extends Wysiwyg {
      * @returns {Promise}
      */
     async _saveViewBlocks() {
+        this._restoreCarousels();
         await super._saveViewBlocks(...arguments);
         if (this.isDirty()) {
             return this._restoreMegaMenus();
@@ -961,7 +996,7 @@ export class WysiwygAdapterComponent extends Wysiwyg {
         this.__savedCovers[resModel].push(resID);
 
         const imageEl = el.querySelector('.o_record_cover_image');
-        let cssBgImage = imageEl.style.backgroundImage;
+        let cssBgImage = getComputedStyle(imageEl)["backgroundImage"];
         if (imageEl.classList.contains("o_b64_image_to_save")) {
             imageEl.classList.remove("o_b64_image_to_save");
             const groups = cssBgImage.match(/url\("data:(?<mimetype>.*);base64,(?<imageData>.*)"\)/)?.groups;
@@ -973,7 +1008,7 @@ export class WysiwygAdapterComponent extends Wysiwyg {
             }
             const modelName = await this.websiteService.getUserModelName(resModel);
             const recordNameEl = imageEl.closest("body").querySelector(`[data-oe-model="${resModel}"][data-oe-id="${resID}"][data-oe-field="name"]`);
-            const recordName = recordNameEl ? `'${recordNameEl.textContent}'` : resID;
+            const recordName = recordNameEl ? `'${recordNameEl.textContent.replaceAll("/", "")}'` : resID;
             const attachment = await this.rpc(
                 '/web_editor/attachment/add_data',
                 {
@@ -1094,6 +1129,27 @@ export class WysiwygAdapterComponent extends Wysiwyg {
         return this.snippetsMenu.activateSnippet($(megaMenuEl));
     }
     /**
+     * Restores all the carousels so their first slide is the active one.
+     *
+     * @private
+     */
+    _restoreCarousels() {
+        this.$editable[0].querySelectorAll(".carousel").forEach(carouselEl => {
+            // Set the first slide as the active one.
+            carouselEl.querySelectorAll(".carousel-item").forEach((itemEl, i) => {
+                itemEl.classList.remove("next", "prev", "left", "right");
+                itemEl.classList.toggle("active", i === 0);
+            });
+            carouselEl.querySelectorAll(".carousel-indicators li[data-bs-slide-to]").forEach((indicatorEl, i) => {
+                indicatorEl.classList.toggle("active", i === 0);
+                indicatorEl.removeAttribute("aria-current");
+                if (i === 0) {
+                    indicatorEl.setAttribute("aria-current", "true");
+                }
+            });
+        });
+    }
+    /**
      * @override
      */
     _getRecordInfo(editable) {
@@ -1104,6 +1160,16 @@ export class WysiwygAdapterComponent extends Wysiwyg {
             field: $editable.data('oe-field'),
             type: $editable.data('oe-type'),
         };
+    }
+    /**
+     * Hides all opened dropdowns.
+     *
+     * @private
+     */
+    _hideDropdowns() {
+        for (const toggleEl of this.$editable[0].querySelectorAll(".dropdown-toggle.show")) {
+            Dropdown.getOrCreateInstance(toggleEl).hide();
+        }
     }
 
     //--------------------------------------------------------------------------
@@ -1319,5 +1385,18 @@ export class WysiwygAdapterComponent extends Wysiwyg {
             input.setAttribute('value', input.closest('we-input').dataset.selectStyle || '');
         });
         return dummySnippetsEl;
+    }
+    /**
+     * Called when the page is clicked anywhere.
+     * Closes the shown dropdown if the click is outside of it.
+     *
+     * @private
+     * @param {Event} ev
+     */
+    _onPageClick(ev) {
+        if (ev.target.closest(".dropdown-menu.show, .dropdown-toggle.show")) {
+            return;
+        }
+        this._hideDropdowns();
     }
 }

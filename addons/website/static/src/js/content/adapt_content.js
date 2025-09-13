@@ -17,12 +17,16 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
     // Hack: we move the '#o_search_modal' from the '#header' to
-    // '#o_shared_blocks'. Without this change, when the header has a
+    // '#o_search_modal_block'. Without this change, when the header has a
     // 'transform: translate' (when it's fixed), the modal, which is positioned
     // absolutely, takes the dimensions of the header instead of those of the
     // 'body'.
     const searchModalEl = document.querySelector("header#top .modal#o_search_modal");
     if (searchModalEl) {
-        document.querySelector("#o_shared_blocks").appendChild(searchModalEl);
+        const mainEl = document.querySelector("main");
+        const searchDivEl = document.createElement('div');
+        searchDivEl.id = "o_search_modal_block";
+        searchDivEl.appendChild(searchModalEl);
+        mainEl.appendChild(searchDivEl);
     }
 });

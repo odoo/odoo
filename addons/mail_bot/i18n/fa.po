@@ -8,6 +8,7 @@
 # Hamed Mohammadi <hamed@dehongi.com>, 2023
 # Martin Trigaux, 2023
 # Mohammad Tahmasebi <hit.tah75@gmail.com>, 2023
+# Mostafa Barmshory <mostafa.barmshory@gmail.com>, 2024
 # 
 msgid ""
 msgstr ""
@@ -15,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:55+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Mohammad Tahmasebi <hit.tah75@gmail.com>, 2023\n"
+"Last-Translator: Mostafa Barmshory <mostafa.barmshory@gmail.com>, 2024\n"
 "Language-Team: Persian (https://app.transifex.com/odoo/teams/41243/fa/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -31,6 +32,8 @@ msgid ""
 "Aaaaaw that's really cute but, you know, bots don't work that way. You're "
 "too human for me! Let's keep it professional ❤️"
 msgstr ""
+"<div>آآآآاایی، این واقعاً بامزه است، اما می‌دانی، ربات‌ها این‌طوری کار "
+"نمی‌کنند. تو برای من خیلی انسانی هستی! بیا حرفه‌ای بمونیم ❤️</div>"
 
 #. module: mail_bot
 #: model:ir.model.fields.selection,name:mail_bot.selection__res_users__odoobot_state__disabled
@@ -75,7 +78,7 @@ msgstr "سلام،"
 #: code:addons/mail_bot/models/mail_bot.py:0
 #, python-format
 msgid "Hmmm..."
-msgstr ""
+msgstr "هـــم..."
 
 #. module: mail_bot
 #. odoo-python
@@ -83,16 +86,21 @@ msgstr ""
 #, python-format
 msgid ""
 "I am a simple bot, but if that's a dog, he is the cutest 😊 "
-"<br/>Congratulations, you finished this tour. You can now <b>close this chat"
-" window</b>. Enjoy discovering Odoo."
+"<br/>Congratulations, you finished this tour. You can now <b>close this "
+"conversation</b> or start the tour again with typing <span "
+"class=\"o_odoobot_command\">start the tour</span>. Enjoy discovering Odoo!"
 msgstr ""
+"من یک ربات ساده هستم، اما اگر این یک سگ است، او زیباترین است 😊 <br/>تبریک "
+"می‌گویم، شما این تور را به پایان رساندید. حالا می‌توانید <b>این گفتگو را "
+"ببندید</b> یا با تایپ کردن <span class=\"o_odoobot_command\">شروع دوباره "
+"تور</span> دوباره تور را آغاز کنید. از کشف اودوو لذت ببرید!"
 
 #. module: mail_bot
 #. odoo-python
 #: code:addons/mail_bot/models/mail_bot.py:0
 #, python-format
 msgid "I'm afraid I don't understand. Sorry!"
-msgstr ""
+msgstr "متاسفانه متوجه نمی‌شوم. متاسفم!"
 
 #. module: mail_bot
 #. odoo-python
@@ -102,6 +110,8 @@ msgid ""
 "I'm not smart enough to answer your question.<br/>To follow my guide, ask: "
 "<span class=\"o_odoobot_command\">start the tour</span>."
 msgstr ""
+"من به اندازه کافی باهوش نیستم که به سوال شما پاسخ دهم.<br/>برای دنبال کردن "
+"راهنمای من، بپرسید: <span class=\"o_odoobot_command\">شروع تور</span>."
 
 #. module: mail_bot
 #: model:ir.model.fields.selection,name:mail_bot.selection__res_users__odoobot_state__idle
@@ -111,7 +121,7 @@ msgstr "بیکار"
 #. module: mail_bot
 #: model:ir.model,name:mail_bot.model_mail_bot
 msgid "Mail Bot"
-msgstr ""
+msgstr "ربات ایمیل"
 
 #. module: mail_bot
 #. odoo-python
@@ -121,11 +131,13 @@ msgid ""
 "Not exactly. To continue the tour, send an emoji: <b>type</b> <span "
 "class=\"o_odoobot_command\">:)</span> and press enter."
 msgstr ""
+"درست نیست. برای ادامه تور، یک شکلک ارسال کنید: <b>تایپ کنید</b> <span "
+"class=\"o_odoobot_command\">:)</span> و اینتر را بزنید."
 
 #. module: mail_bot
 #: model:ir.model.fields.selection,name:mail_bot.selection__res_users__odoobot_state__not_initialized
 msgid "Not initialized"
-msgstr ""
+msgstr "مقداردهی اولیه نشده است"
 
 #. module: mail_bot
 #. odoo-python
@@ -136,6 +148,10 @@ msgid ""
 "class=\"o_odoobot_command\">/</span> and wait for the propositions. Select "
 "<span class=\"o_odoobot_command\">help</span> and press enter"
 msgstr ""
+"متوجه نیستم که چه کاری انجام می‌دهید. لطفاً <span "
+"class=\"o_odoobot_command\">/</span> را تایپ کرده و منتظر پیشنهادات باشید. "
+"گزینه <span class=\"o_odoobot_command\">help</span> را انتخاب کنید و دکمه "
+"Enter را فشار دهید."
 
 #. module: mail_bot
 #. odoo-python
@@ -145,6 +161,8 @@ msgid ""
 "Odoo's chat helps employees collaborate efficiently. I'm here to help you "
 "discover its features."
 msgstr ""
+"چت اودو به کارکنان کمک می‌کند که به صورت مؤثر با هم همکاری کنند. من اینجا "
+"هستم تا به شما در کشف ویژگی‌های آن کمک کنم."
 
 #. module: mail_bot
 #: model:ir.model.fields,field_description:mail_bot.field_res_users__odoobot_state
@@ -154,27 +172,27 @@ msgstr "وضعیت ربات اودوو"
 #. module: mail_bot
 #: model:ir.model.fields,field_description:mail_bot.field_res_users__odoobot_failed
 msgid "Odoobot Failed"
-msgstr ""
+msgstr "اودوبوت شکست خورد"
 
 #. module: mail_bot
 #: model:ir.model.fields.selection,name:mail_bot.selection__res_users__odoobot_state__onboarding_attachement
 msgid "Onboarding attachment"
-msgstr ""
+msgstr "پیوست شروع به کار"
 
 #. module: mail_bot
 #: model:ir.model.fields.selection,name:mail_bot.selection__res_users__odoobot_state__onboarding_command
 msgid "Onboarding command"
-msgstr ""
+msgstr "فرمان ورود به سیستم"
 
 #. module: mail_bot
 #: model:ir.model.fields.selection,name:mail_bot.selection__res_users__odoobot_state__onboarding_emoji
 msgid "Onboarding emoji"
-msgstr ""
+msgstr "ورود ایموجی"
 
 #. module: mail_bot
 #: model:ir.model.fields.selection,name:mail_bot.selection__res_users__odoobot_state__onboarding_ping
 msgid "Onboarding ping"
-msgstr ""
+msgstr "پینگ شروع به کار"
 
 #. module: mail_bot
 #. odoo-python
@@ -185,6 +203,9 @@ msgid ""
 "human language...<br/>I can show you features if you write: <span "
 "class=\"o_odoobot_command\">start the tour</span>."
 msgstr ""
+"متاسفم، خوابم می‌آید. یا نه! شاید فقط دارم سعی می‌کنم بی‌خبری‌ام از زبان "
+"انسانی را پنهان کنم...<br/>می‌توانم ویژگی‌ها را به شما نشان دهم اگر بنویسید:"
+" <span class=\"o_odoobot_command\">شروع گردش</span>."
 
 #. module: mail_bot
 #. odoo-python
@@ -194,13 +215,16 @@ msgid ""
 "Sorry, I am not listening. To get someone's attention, <b>ping him</b>. "
 "Write <span class=\"o_odoobot_command\">@OdooBot</span> and select me."
 msgstr ""
+"متاسفانه، من گوش نمی‌دهم. برای جلب توجه کسی، <b>به او پیام بفرستید</b>. "
+"بنویسید <span class=\"o_odoobot_command\">@OdooBot</span> و من را انتخاب "
+"کنید."
 
 #. module: mail_bot
 #. odoo-python
 #: code:addons/mail_bot/models/mail_bot.py:0
 #, python-format
 msgid "That's not nice! I'm a bot but I have feelings... 💔"
-msgstr ""
+msgstr "این خوب نیست! من یک ربات هستم ولی احساس دارم... 💔"
 
 #. module: mail_bot
 #. odoo-python
@@ -210,20 +234,22 @@ msgid ""
 "To <b>send an attachment</b>, click on the <i class=\"fa fa-paperclip\" "
 "aria-hidden=\"true\"></i> icon and select a file."
 msgstr ""
+"برای <b>ارسال یک پیوست</b>، بر روی آیکون <i class=\"fa fa-paperclip\" aria-"
+"hidden=\"true\"></i> کلیک کرده و یک فایل را انتخاب کنید."
 
 #. module: mail_bot
 #. odoo-python
 #: code:addons/mail_bot/models/mail_bot.py:0
 #, python-format
 msgid "To start, try to send me an emoji :)"
-msgstr ""
+msgstr "برای شروع، سعی کنید یک ایموجی برای من بفرستید :)"
 
 #. module: mail_bot
 #. odoo-python
 #: code:addons/mail_bot/models/res_users.py:0
 #, python-format
 msgid "Try to send me an emoji"
-msgstr ""
+msgstr "سعی کنید یک شکلک برای من ارسال کنید"
 
 #. module: mail_bot
 #. odoo-python
@@ -275,32 +301,32 @@ msgstr ""
 #: code:addons/mail_bot/models/mail_bot.py:0
 #, python-format
 msgid "fuck"
-msgstr ""
+msgstr "لعنتی"
 
 #. module: mail_bot
 #. odoo-python
 #: code:addons/mail_bot/models/mail_bot.py:0
 #, python-format
 msgid "help"
-msgstr ""
+msgstr "کمک"
 
 #. module: mail_bot
 #. odoo-python
 #: code:addons/mail_bot/models/mail_bot.py:0
 #, python-format
 msgid "i love you"
-msgstr ""
+msgstr "من تو را دوست دارم"
 
 #. module: mail_bot
 #. odoo-python
 #: code:addons/mail_bot/models/mail_bot.py:0
 #, python-format
 msgid "love"
-msgstr ""
+msgstr "عشق"
 
 #. module: mail_bot
 #. odoo-python
 #: code:addons/mail_bot/models/mail_bot.py:0
 #, python-format
 msgid "start the tour"
-msgstr ""
+msgstr "شروع بازدید"

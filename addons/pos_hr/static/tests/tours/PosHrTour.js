@@ -8,6 +8,7 @@ import * as ErrorPopup from "@point_of_sale/../tests/tours/helpers/ErrorPopupTou
 import * as NumberPopup from "@point_of_sale/../tests/tours/helpers/NumberPopupTourMethods";
 import * as SelectionPopup from "@point_of_sale/../tests/tours/helpers/SelectionPopupTourMethods";
 import { registry } from "@web/core/registry";
+import { negate } from "../../../../point_of_sale/static/tests/tours/helpers/utils";
 
 registry.category("web_tour.tours").add("PosHrTour", {
     test: true,
@@ -88,5 +89,43 @@ registry.category("web_tour.tours").add("PosHrTour", {
             Chrome.clickMenuButton(),
             Chrome.clickTicketButton(),
             TicketScreen.nthRowContains(4, "Mitchell Admin", false),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("CashierStayLogged", {
+    test: true,
+    steps: () =>
+        [
+            PosHr.loginScreenIsShown(),
+            PosHr.clickLoginButton(),
+            SelectionPopup.isShown(),
+            SelectionPopup.hasSelectionItem("Pos Employee1"),
+            SelectionPopup.hasSelectionItem("Pos Employee2"),
+            SelectionPopup.hasSelectionItem("Mitchell Admin"),
+            SelectionPopup.clickItem("Mitchell Admin"),
+            PosHr.cashierNameIs("Mitchell Admin"),
+            PosHr.refreshPage(),
+            PosHr.cashierNameIs("Mitchell Admin"),
+            Chrome.clickMenuButton(),
+            PosHr.clickLockButton(),
+            PosHr.refreshPage(),
+            PosHr.loginScreenIsShown(),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("CashierCannotClose", {
+    test: true,
+    steps: () =>
+        [
+            PosHr.loginScreenIsShown(),
+            PosHr.clickLoginButton(),
+            SelectionPopup.isShown(),
+            SelectionPopup.clickItem("Test Employee 3"),
+            PosHr.cashierNameIs("Test Employee 3"),
+            Chrome.clickMenuButton(),
+            {
+                trigger: negate(".close-button"),
+            },
+            PosHr.cashierNameIs("Test Employee 3"),
         ].flat(),
 });

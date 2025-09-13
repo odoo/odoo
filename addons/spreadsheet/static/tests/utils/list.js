@@ -3,8 +3,6 @@
 import { generateListDefinition } from "./data";
 import { createModelWithDataSource, waitForDataSourcesLoaded } from "./model";
 
-/** @typedef {import("@spreadsheet/o_spreadsheet/o_spreadsheet").Model} Model */
-
 /**
  * Insert a list in a spreadsheet model.
  *

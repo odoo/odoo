@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 <template id="report_lot_label_expiry" inherit_id="stock.report_lot_label">
-    <xpath expr="//span[@name='lot_name']" position="after">
+    <xpath expr="//div[@name='lot_name']" position="after">
         <t t-if="o.use_expiration_date">
             <div class="o_label_4x12" t-if="o.use_date">
                 B.b. <t t-out="o.use_date" t-options='{"widget": "date"}'/>

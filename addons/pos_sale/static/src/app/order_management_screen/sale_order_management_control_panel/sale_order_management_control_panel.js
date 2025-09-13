@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import { useAutofocus, useService } from "@web/core/utils/hooks";
+import { useAutofocus, useService, useBus } from "@web/core/utils/hooks";
 import { Component, useState } from "@odoo/owl";
 import { usePos } from "@point_of_sale/app/store/pos_hook";
 
@@ -26,18 +26,25 @@ export class SaleOrderManagementControlPanel extends Component {
         this.pos = usePos();
         this.ui = useState(useService("ui"));
         this.saleOrderFetcher = useService("sale_order_fetcher");
+        this.state = useState({
+            paginationString: "",
+        });
         useAutofocus();
 
         const currentPartner = this.pos.get_order().get_partner();
         if (currentPartner) {
-            this.pos.orderManagement.searchString = currentPartner.name;
+            this.pos.orderManagement.searchString = `"${currentPartner.name}"`;
         }
         this.saleOrderFetcher.setSearchDomain(this._computeDomain());
+        useBus(this.saleOrderFetcher, "update", this.updatePagination);
     }
     onInputKeydown(event) {
         if (event.key === "Enter") {
             this.props.onSearch(this._computeDomain());
         }
+    }
+    updatePagination() {
+        this.state.paginationString = `(${this.saleOrderFetcher.currentPage}/${this.saleOrderFetcher.lastPage})`
     }
     get showPageControls() {
         return this.saleOrderFetcher.lastPage > 1;
@@ -96,10 +103,18 @@ export class SaleOrderManagementControlPanel extends Component {
             return domain;
         }
 
-        const searchConditions = this.pos.orderManagement.searchString.split(/[,&]\s*/);
+        let searchConditions;
+        let isQuoted = false;
+        if (input.startsWith('"') && input.endsWith('"')) {
+            searchConditions = [input.slice(1, -1)];
+            isQuoted = true;
+        } else {
+            searchConditions = input.split(/[,&]\s*/);
+        }
+
         if (searchConditions.length === 1) {
             const cond = searchConditions[0].split(/:\s*/);
-            if (cond.length === 1) {
+            if (cond.length === 1 || isQuoted) {
                 domain = domain.concat(Array(this.searchFields.length - 1).fill("|"));
                 domain = domain.concat(
                     this.searchFields.map((field) => [field, "ilike", `%${cond[0]}%`])

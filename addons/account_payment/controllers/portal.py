@@ -15,6 +15,9 @@ class PortalAccount(portal.PortalAccount, PaymentPortal):
             # Do not compute payment-related stuff if given invoice doesn't have to be paid.
             return values
 
+        epd = values.get('epd_discount_amount_currency', 0.0)
+        discounted_amount = invoice.amount_residual - epd
+
         logged_in = not request.env.user._is_public()
         # We set partner_id to the partner id of the current user if logged in, otherwise we set it
         # to the invoice partner id. We do this to ensure that payment tokens are assigned to the
@@ -27,7 +30,8 @@ class PortalAccount(portal.PortalAccount, PaymentPortal):
             invoice_company.id,
             partner_sudo.id,
             invoice.amount_total,
-            currency_id=invoice.currency_id.id
+            currency_id=invoice.currency_id.id,
+            **kwargs,
         )  # In sudo mode to read the fields of providers and partner (if logged out).
         payment_methods_sudo = request.env['payment.method'].sudo()._get_compatible_payment_methods(
             providers_sudo.ids,
@@ -53,7 +57,7 @@ class PortalAccount(portal.PortalAccount, PaymentPortal):
             ),
         }
         payment_context = {
-            'amount': invoice.amount_residual,
+            'amount': discounted_amount,
             'currency': invoice.currency_id,
             'partner_id': partner_sudo.id,
             'providers_sudo': providers_sudo,

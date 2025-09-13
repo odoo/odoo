@@ -83,6 +83,10 @@ class AccountMove(models.Model):
             elif len(refs) > 1:
                 self.payment_reference = refs[-1]
 
+        # Copy company_id (only changes if the id is of a child company (branch))
+        if self.company_id != self.purchase_id.company_id:
+            self.company_id = self.purchase_id.company_id
+
         self.purchase_id = False
 
     @api.onchange('partner_id', 'company_id')
@@ -369,7 +373,7 @@ class AccountMove(models.Model):
                     # We have an invoice from an EDI document, so we try to match individual invoice lines with
                     # individual purchase order lines from referenced purchase orders.
                     matching_po_lines, matching_inv_lines = self._find_matching_po_and_inv_lines(
-                        po_lines, self.line_ids, timeout)
+                        po_lines, self.invoice_line_ids, timeout)
 
                     if matching_po_lines:
                         # We found a subset of purchase order lines that match a subset of the vendor bill lines.

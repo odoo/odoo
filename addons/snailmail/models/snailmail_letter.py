@@ -4,7 +4,6 @@ import re
 import base64
 import io
 
-from PyPDF2 import PdfFileReader, PdfFileWriter
 from reportlab.platypus import Frame, Paragraph, KeepInFrame
 from reportlab.lib.units import mm
 from reportlab.lib.pagesizes import A4
@@ -14,6 +13,7 @@ from reportlab.pdfgen.canvas import Canvas
 from odoo import fields, models, api, _
 from odoo.addons.iap.tools import iap_tools
 from odoo.exceptions import AccessError, UserError
+from odoo.tools.pdf import PdfFileReader, PdfFileWriter
 from odoo.tools.safe_eval import safe_eval
 
 DEFAULT_ENDPOINT = 'https://iap-snailmail.odoo.com'
@@ -59,7 +59,7 @@ class SnailmailLetter(models.Model):
              "If the letter is correctly sent, the status goes in 'Sent',\n"
              "If not, it will got in state 'Error' and the error message will be displayed in the field 'Error Message'.")
     error_code = fields.Selection([(err_code, err_code) for err_code in ERROR_CODES], string="Error")
-    info_msg = fields.Char('Information')
+    info_msg = fields.Html('Information')
 
     reference = fields.Char(string='Related Record', compute='_compute_reference', readonly=True, store=False)
 
@@ -455,9 +455,18 @@ class SnailmailLetter(models.Model):
         required_keys = ['street', 'city', 'zip', 'country_id']
         return all(record[key] for key in required_keys)
 
+    def _get_cover_address_split(self):
+        address_split = self.partner_id.with_context(show_address=True, lang='en_US').display_name.split('\n')
+        if self.country_id.code == 'DE':
+            # Germany requires specific address formatting for Pingen
+            if self.street2:
+                address_split[1] = f'{self.street} // {self.street2}'
+            address_split[2] = f'{self.zip} {self.city}'
+        return address_split
+
     def _append_cover_page(self, invoice_bin: bytes):
         out_writer = PdfFileWriter()
-        address_split = self.partner_id.with_context(show_address=True, lang='en_US').display_name.split('\n')
+        address_split = self._get_cover_address_split()
         address_split[0] = self.partner_id.name or self.partner_id.parent_id and self.partner_id.parent_id.name or address_split[0]
         address = '<br/>'.join(address_split)
         address_x = 118 * mm

@@ -62,19 +62,11 @@ class MailGuest(models.Model):
     im_status = fields.Char('IM Status', compute='_compute_im_status')
 
     def _compute_im_status(self):
-        self.env.cr.execute("""
-            SELECT
-                guest_id as id,
-                CASE WHEN age(now() AT TIME ZONE 'UTC', last_poll) > interval %s THEN 'offline'
-                     WHEN age(now() AT TIME ZONE 'UTC', last_presence) > interval %s THEN 'away'
-                     ELSE 'online'
-                END as status
-            FROM bus_presence
-            WHERE guest_id IN %s
-        """, ("%s seconds" % DISCONNECTION_TIMER, "%s seconds" % AWAY_TIMER, tuple(self.ids)))
-        res = dict(((status['id'], status['status']) for status in self.env.cr.dictfetchall()))
+        # sudo - bus.presence: guests can access other guest's presences
+        presences = self.env["bus.presence"].sudo().search([("guest_id", "in", self.ids)])
+        im_status_by_guest = {presence.guest_id: presence.status for presence in presences}
         for guest in self:
-            guest.im_status = res.get(guest.id, 'offline')
+            guest.im_status = im_status_by_guest.get(guest, "offline")
 
     def _get_guest_from_token(self, token=""):
         """Returns the guest record for the given token, if applicable."""

@@ -20,14 +20,21 @@
     height: $o-mail-Avatar-size;
 }
 
-.o-mail-Message-body > p {
-    margin-bottom: 0 !important;
+.o-mail-Message-body {
+    & > p {
+        margin-bottom: 0 !important;
+    
+        &:last-of-type:has(~ .o-mail-Message-edited) {
+            display: inline-block;
+        }
+    }
 
-    &:last-of-type:has(~ .o-mail-Message-edited) {
-        display: inline-block;
+    // overflow: auto can break rendering of next element of a frequent broken Outlook 365
+    // warning table. If detected, we prevent the issue by removing flotation.
+    table[align="left"][width="100%"] {
+        float: none;
     }
 }
-
 
 .o-mail-ChatWindow .o-mail-Message.o-selfAuthored {
     flex-direction: row-reverse;

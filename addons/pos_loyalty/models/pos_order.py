@@ -75,6 +75,7 @@ class PosOrder(models.Model):
             'partner_id': get_partner_id(p.get('partner_id', False)),
             'code': p.get('barcode') or self.env['loyalty.card']._generate_code(),
             'points': 0,
+            'expiration_date': p.get('date_to', False),
             'source_pos_order_id': self.id,
         } for p in coupons_to_create.values()]
 
@@ -97,7 +98,8 @@ class PosOrder(models.Model):
         for old_id, new_id in zip(coupons_to_create.keys(), new_coupons):
             coupon_new_id_map[new_id.id] = old_id
 
-        all_coupons = self.env['loyalty.card'].browse(coupon_new_id_map.keys()).exists()
+        # We need a sudo here because this can trigger `_compute_order_count` that require access to `sale.order.line`
+        all_coupons = self.env['loyalty.card'].sudo().browse(coupon_new_id_map.keys()).exists()
         lines_per_reward_code = defaultdict(lambda: self.env['pos.order.line'])
         for line in self.lines:
             if not line.reward_identifier_code:

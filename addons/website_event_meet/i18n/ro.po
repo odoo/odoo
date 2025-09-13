@@ -8,6 +8,9 @@
 # Martin Trigaux, 2024
 # Foldi Robert <foldirobert@nexterp.ro>, 2024
 # Hongu Cosmin <cosmin513@gmail.com>, 2024
+# Corina Calin, 2024
+# Maria Muntean, 2024
+# Lyall Kindmurr, 2024
 # 
 msgid ""
 msgstr ""
@@ -15,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:56+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Hongu Cosmin <cosmin513@gmail.com>, 2024\n"
+"Last-Translator: Lyall Kindmurr, 2024\n"
 "Language-Team: Romanian (https://app.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -29,11 +32,13 @@ msgid ""
 "<i class=\"fa fa-spin fa-circle-o-notch me-3\"/>\n"
 "                        <span>Loading your room...</span>"
 msgstr ""
+"<i class=\"fa fa-spin fa-circle-o-notch me-3\"/>\n"
+"                        <span>Camera ta se încarcă...</span>"
 
 #. module: website_event_meet
 #: model_terms:ir.ui.view,arch_db:website_event_meet.meeting_room_card
 msgid "<span class=\"badge text-bg-danger\">Unpublished</span>"
-msgstr ""
+msgstr "<span class=\"badge text-bg-danger\">Nepublicat</span>"
 
 #. module: website_event_meet
 #: model_terms:ir.ui.view,arch_db:website_event_meet.meeting_room_main
@@ -41,6 +46,8 @@ msgid ""
 "<span>Oops! This room is full!</span><br/>Come back later to have a chat "
 "with us!"
 msgstr ""
+"<span>Oops! Această cameră este plină!</span><br/>Reveniți mai târziu pentru"
+" a discuta cu noi!"
 
 #. module: website_event_meet
 #: model_terms:ir.ui.view,arch_db:website_event_meet.meeting_room_card
@@ -48,6 +55,8 @@ msgid ""
 "<span>This room is not open right now!</span><br/>\n"
 "                        Join us here on the"
 msgstr ""
+"<span>Această cameră nu este deschisă în acest moment!</span><br/>\n"
+"                        Alăturați-vă nouă aici pe"
 
 #. module: website_event_meet
 #: model_terms:ir.ui.view,arch_db:website_event_meet.meeting_room_main
@@ -75,14 +84,14 @@ msgstr "Permiteți crearea camerei"
 #: code:addons/website_event_meet/static/src/js/website_event_meeting_room.js:0
 #, python-format
 msgid "Are you sure you want to close this room?"
-msgstr ""
+msgstr "Sunteți sigur că doriți să închideți această cameră?"
 
 #. module: website_event_meet
 #. odoo-javascript
 #: code:addons/website_event_meet/static/src/js/website_event_meeting_room.js:0
 #, python-format
 msgid "Are you sure you want to duplicate this room?"
-msgstr ""
+msgstr "Sunteți sigur că doriți să duplicați această cameră?"
 
 #. module: website_event_meet
 #: model:ir.model.fields,field_description:website_event_meet.field_event_meeting_room__target_audience
@@ -164,7 +173,7 @@ msgstr "Creat de"
 #. module: website_event_meet
 #: model:ir.model.fields,field_description:website_event_meet.field_event_meeting_room__create_date
 msgid "Created on"
-msgstr "Creat în"
+msgstr "Creat pe"
 
 #. module: website_event_meet
 #. odoo-javascript
@@ -209,12 +218,12 @@ msgstr "Meniuri Cameră Întalnire Eveniment"
 #. module: website_event_meet
 #: model_terms:ir.ui.view,arch_db:website_event_meet.snippet_options
 msgid "Event Page"
-msgstr ""
+msgstr "Pagină eveniment"
 
 #. module: website_event_meet
 #: model:ir.actions.act_window,name:website_event_meet.action_meeting_room_from_event
 msgid "Event Rooms"
-msgstr ""
+msgstr "Săli de evenimente"
 
 #. module: website_event_meet
 #: model:ir.model,name:website_event_meet.model_event_type
@@ -249,7 +258,7 @@ msgstr "Este publicat"
 #. module: website_event_meet
 #: model_terms:ir.ui.view,arch_db:website_event_meet.community_main
 msgid "Join a room"
-msgstr ""
+msgstr "Alăturați-vă unei camere"
 
 #. module: website_event_meet
 #: model_terms:ir.ui.view,arch_db:website_event_meet.meeting_room_card
@@ -343,7 +352,7 @@ msgstr "Nicio cameră deschisă"
 #. module: website_event_meet
 #: model_terms:ir.ui.view,arch_db:website_event_meet.meeting_room_aside
 msgid "Other Rooms"
-msgstr ""
+msgstr "Alte camere"
 
 #. module: website_event_meet
 #: model:ir.model.fields,field_description:website_event_meet.field_event_meeting_room__room_participant_count
@@ -358,7 +367,7 @@ msgstr "Participanți de vârf"
 #. module: website_event_meet
 #: model:event.meeting.room,name:website_event_meet.event_meeting_room_1
 msgid "Reducing the ecological footprint with wood?"
-msgstr ""
+msgstr "Reducerea amprentei ecologice cu ajutorul lemnului?"
 
 #. module: website_event_meet
 #: model_terms:ir.ui.view,arch_db:website_event_meet.event_meeting_room_view_form
@@ -368,7 +377,7 @@ msgstr "Raportare"
 #. module: website_event_meet
 #: model_terms:ir.ui.view,arch_db:website_event_meet.snippet_options
 msgid "Room Creation (Specific)"
-msgstr ""
+msgstr "Crearea camerei (specific)"
 
 #. module: website_event_meet
 #: model:ir.model.fields,field_description:website_event_meet.field_event_meeting_room__room_is_full
@@ -408,6 +417,8 @@ msgstr "Camere"
 msgid ""
 "Rooms allow your event attendees to meet up and chat on different topics."
 msgstr ""
+"Camerele permit participanților la eveniment să se întâlnească și să discute"
+" pe diferite teme."
 
 #. module: website_event_meet
 #: model:event.meeting.room,summary:website_event_meet.event_meeting_room_1
@@ -454,6 +465,8 @@ msgid ""
 "The event %s starts on %s (%s). \n"
 "Join us there to chat about \"%s\"!"
 msgstr ""
+"Evenimentul %s începe pe %s (%s). \n"
+"Alăturați-vă nouă acolo pentru a discuta despre \"%s\"!"
 
 #. module: website_event_meet
 #: model:ir.model.fields,help:website_event_meet.field_event_meeting_room__website_url
@@ -470,7 +483,7 @@ msgstr "Subiect"
 #. module: website_event_meet
 #: model_terms:ir.ui.view,arch_db:website_event_meet.event_meeting_room_view_tree
 msgid "Total Participant Count"
-msgstr ""
+msgstr "Numărul total de participanți"
 
 #. module: website_event_meet
 #: model_terms:ir.ui.view,arch_db:website_event_meet.event_meeting_room_view_search
@@ -482,6 +495,8 @@ msgstr "Nepublicat"
 msgid ""
 "Venez partager vos meubles préférés et l'utilisation que vous en faites."
 msgstr ""
+"Vino și împărtășește-ne piesele tale preferate de mobilier și modul în care "
+"le folosești."
 
 #. module: website_event_meet
 #: model:ir.model.fields,field_description:website_event_meet.field_event_meeting_room__website_published
@@ -491,12 +506,12 @@ msgstr "Vizibil pe site-ul curent"
 #. module: website_event_meet
 #: model:event.meeting.room,name:website_event_meet.event_meeting_room_2
 msgid "Vos meubles préférés ?"
-msgstr ""
+msgstr "Mobilierul tău preferat?"
 
 #. module: website_event_meet
 #: model_terms:ir.ui.view,arch_db:website_event_meet.community_aside
 msgid "Want to create your own discussion room?"
-msgstr ""
+msgstr "Doriți să vă creați propria sală de discuții?"
 
 #. module: website_event_meet
 #: model:ir.model,name:website_event_meet.model_website_event_menu
@@ -511,7 +526,7 @@ msgstr "URL website"
 #. module: website_event_meet
 #: model_terms:ir.ui.view,arch_db:website_event_meet.meeting_room_main
 msgid "a few seconds"
-msgstr ""
+msgstr "câteva secunde"
 
 #. module: website_event_meet
 #: model:event.meeting.room,target_audience:website_event_meet.event_meeting_room_2
@@ -540,12 +555,12 @@ msgstr "de exemplu. Finanţe"
 #: model_terms:ir.ui.view,arch_db:website_event_meet.event_meeting_room_view_form
 #, python-format
 msgid "e.g. Let's talk about Corporate Finance"
-msgstr ""
+msgstr "e.x. Să vorbim despre finanțele corporative"
 
 #. module: website_event_meet
 #: model:event.meeting.room,target_audience:website_event_meet.event_meeting_room_1
 msgid "ecologist(s)"
-msgstr ""
+msgstr "ecologist(ecologiști)"
 
 #. module: website_event_meet
 #: model_terms:ir.ui.view,arch_db:website_event_meet.meeting_room_card
@@ -553,6 +568,8 @@ msgid ""
 "is over.\n"
 "                        <br/>"
 msgstr ""
+"s-a terminat.\n"
+"                        <br/>"
 
 #. module: website_event_meet
 #: model_terms:ir.ui.view,arch_db:website_event_meet.meeting_room_main
@@ -560,6 +577,8 @@ msgid ""
 "is over.\n"
 "                <br/>"
 msgstr ""
+"s-a terminat.\n"
+"                <br/>"
 
 #. module: website_event_meet
 #: model_terms:ir.ui.view,arch_db:website_event_meet.meeting_room_card
@@ -584,4 +603,4 @@ msgstr "pentru a avea o discuție cu noi!"
 #. module: website_event_meet
 #: model:event.meeting.room,target_audience:website_event_meet.event_meeting_room_0
 msgid "wood expert(s)"
-msgstr ""
+msgstr "expert(i) în lemn"

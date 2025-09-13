@@ -4,16 +4,16 @@
 # 
 # Translators:
 # Wil Odoo, 2023
-# Junko Augias, 2024
 # Ryoko Tsuda <ryoko@quartile.co>, 2024
+# Junko Augias, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2025-05-07 20:36+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Ryoko Tsuda <ryoko@quartile.co>, 2024\n"
+"Last-Translator: Junko Augias, 2025\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -63,7 +63,7 @@ msgid ""
 "%(base)s with a %(discount)s %% discount and %(surcharge)s extra fee\n"
 "Example: %(amount)s * %(discount_charge)s + %(price_surcharge)s → %(total_amount)s"
 msgstr ""
-"%(base)s の %(discount)s %% 値引および %(surcharge)s の追加料金\n"
+"%(base)s の %(discount)s %% 割引および %(surcharge)s の追加料金\n"
 "例: %(amount)s * %(discount_charge)s + %(price_surcharge)s → %(total_amount)s"
 
 #. module: product
@@ -71,17 +71,18 @@ msgstr ""
 #: code:addons/product/models/product_pricelist_item.py:0
 #, python-format
 msgid "%(percentage)s %% discount and %(price)s surcharge"
-msgstr "%(percentage)s %% 値引および %(price)s 追加料金"
+msgstr "%(percentage)s %% 割引および %(price)s 追加料金"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 #, python-format
 msgid "%s %% discount"
-msgstr "%s %% 値引"
+msgstr "%s %% 割引"
 
 #. module: product
 #. odoo-python
+#: code:addons/product/models/product_pricelist.py:0
 #: code:addons/product/models/product_tag.py:0
 #: code:addons/product/models/product_template.py:0
 #, python-format
@@ -427,7 +428,7 @@ msgstr "高度な価格表"
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__res_config_settings__product_pricelist_setting__advanced
 msgid "Advanced price rules (discounts, formulas)"
-msgstr "高度な価格ルール (値引、数式)"
+msgstr "高度な価格規則 (値引、数式)"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__all_product_tag_ids
@@ -663,7 +664,7 @@ msgstr "黒"
 #. module: product
 #: model:product.template,name:product.product_product_10_product_template
 msgid "Cabinet with Doors"
-msgstr "ドア付きキャビネット"
+msgstr "扉付きキャビネット"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__can_image_1024_be_zoomed
@@ -823,7 +824,7 @@ msgstr "タグ設定"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_label_layout_form
 msgid "Confirm"
-msgstr "確認"
+msgstr "確定"
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_template__detailed_type__consu
@@ -1104,38 +1105,38 @@ msgstr "破棄"
 #: model:ir.model.fields.selection,name:product.selection__product_pricelist_item__compute_price__percentage
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid "Discount"
-msgstr "値引"
+msgstr "割引"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo__discount
 msgid "Discount (%)"
-msgstr "値引 (%)"
+msgstr "割引 (%)"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist__discount_policy
 msgid "Discount Policy"
-msgstr "値引方針"
+msgstr "割引ポリシー"
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_pricelist__discount_policy__with_discount
 msgid "Discount included in the price"
-msgstr "値引を価格に含めて表示"
+msgstr "割引を価格に含めて表示"
 
 #. module: product
 #: model:res.groups,name:product.group_discount_per_so_line
 msgid "Discount on lines"
-msgstr "明細の値引"
+msgstr "明細の割引"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo__price_discounted
 msgid "Discounted Price"
-msgstr "値引価格"
+msgstr "割引価格"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_res_config_settings__group_discount_per_so_line
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_view
 msgid "Discounts"
-msgstr "値引"
+msgstr "割引"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute__display_name
@@ -2070,7 +2071,7 @@ msgstr "梱包タイプA"
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 #: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "Packaging"
-msgstr "梱包"
+msgstr "パッケージング"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_category__parent_id
@@ -2444,19 +2445,19 @@ msgstr "プロダクト梱包"
 #: model:ir.model.fields,field_description:product.field_product_packaging__name
 #: model_terms:ir.ui.view,arch_db:product.product_packaging_form_view
 msgid "Product Packaging"
-msgstr "プロダクト梱包"
+msgstr "プロダクトパッケージング"
 
 #. module: product
 #: model:ir.actions.report,name:product.report_product_packaging
 msgid "Product Packaging (PDF)"
-msgstr "プロダクト梱包（PDF）"
+msgstr "プロダクトパッケージング（PDF）"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.action_packaging_view
 #: model:ir.model.fields,field_description:product.field_res_config_settings__group_stock_packaging
 #: model_terms:ir.ui.view,arch_db:product.product_packaging_tree_view
 msgid "Product Packagings"
-msgstr "プロダクト梱包"
+msgstr "プロダクトパッケージング"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_category__product_properties_definition
@@ -2682,7 +2683,7 @@ msgstr "既に存在する数量（%s）です。"
 #. module: product
 #: model:ir.model.fields,help:product.field_product_packaging__qty
 msgid "Quantity of products contained in the packaging."
-msgstr "梱包に含まれるプロダクトの数量"
+msgstr "パッケージングに含まれるプロダクトの数量"
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_attribute__display_type__radio
@@ -2849,7 +2850,7 @@ msgid ""
 "To have prices that end in 9.99, set rounding 10, surcharge -0.01"
 msgstr ""
 "この値の倍数となる価格を設定します。\n"
-"丸めは値引後で追加料金の前に適用します。\n"
+"丸めは割引後で追加料金の前に適用します。\n"
 "最終価格を9.99にするには、丸めを10に追加料金を-0.01とします。"
 
 #. module: product
@@ -2860,7 +2861,7 @@ msgstr "次のアクションの日付が今日より前のすべてのレコー
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_pricelist__discount_policy__without_discount
 msgid "Show public price & discount to the customer"
-msgstr "顧客に定価と値引を表示"
+msgstr "顧客に定価と割引を表示"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__categ_id
@@ -2890,7 +2891,7 @@ msgstr "このルールが1つのプロダクトテンプレートにのみ適�
 msgid ""
 "Specify the fixed amount to add or subtract (if negative) to the amount "
 "calculated with the discount."
-msgstr "値引で計算された金額に加算または（マイナスの場合）減算する固定金額を指定します。"
+msgstr "割引で計算された金額に加算または（マイナスの場合）減算する固定金額を指定します。"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__price_max_margin
@@ -3564,7 +3565,7 @@ msgstr "白"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__write_date
 msgid "Write Date"
-msgstr "日付を書く"
+msgstr "更新日時"
 
 #. module: product
 #. odoo-python
@@ -3594,7 +3595,7 @@ msgstr ""
 #: model:ir.model.fields,help:product.field_product_pricelist_item__percent_price
 #: model:ir.model.fields,help:product.field_product_pricelist_item__price_discount
 msgid "You can apply a mark-up by setting a negative discount."
-msgstr "負の値引値を設定することで、値上げを適用することができます。"
+msgstr "マイナスの割引(負の値)を設定することで、上乗せ(マークアップ)を適用できます。"
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_pricelist_action2
@@ -3693,6 +3694,7 @@ msgstr "'会計'の10進精度を会社の主要通貨の丸め係数より大�
 
 #. module: product
 #. odoo-python
+#: code:addons/product/models/product_category.py:0
 #: code:addons/product/models/product_category.py:0
 #, python-format
 msgid "You cannot delete the %s product category."

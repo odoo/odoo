@@ -34,7 +34,9 @@
         <!-- New report layout for din5008 format -->
         <template id="external_layout_din5008">
             <div>
-                <div t-attf-class="header din_page o_company_#{company.id}_layout #{'din_page_pdf' if report_type == 'pdf' else ''}">
+                <t t-set="is_din_paperformat"
+                    t-value="company.paperformat_id in [env.ref('l10n_din5008.paperformat_euro_din_a', raise_if_not_found=False), env.ref('l10n_din5008.paperformat_euro_din', raise_if_not_found=False)]" />
+                <div t-attf-class="header din_page o_company_#{company.id}_layout #{'din_page_pdf' if report_type == 'pdf' and is_din_paperformat else ''}">
                     <table class="company_header table-borderless" t-att-style="'height: %dmm;' % (din_header_spacing or 27)">
                         <tr>
                             <td><div class="h3 mt0" t-field="company.report_header"/></td>
@@ -43,8 +45,10 @@
                     </table>
                 </div>
 
-                <div t-attf-class="din_page invoice_note article o_company_#{company.id}_layout {{'o_report_layout_background' if company.layout_background in ['Geometric', 'Custom']  else  ''}} #{'din_page_pdf' if report_type == 'pdf' else ''}"
-                     t-attf-style="background-image: url({{ 'data:image/png;base64,%s' % company.layout_background_image.decode('utf-8') if company.layout_background_image and company.layout_background == 'Custom' else '/base/static/img/bg_background_template.jpg' if company.layout_background == 'Geometric' else ''}});"
+                <t t-set="layout_background_url"
+                    t-value="'data:image/png;base64,%s' % company.layout_background_image.decode('utf-8') if company.layout_background_image and company.layout_background == 'Custom' else '/base/static/img/bg_background_template.jpg' if company.layout_background == 'Geometric' else ''" />
+                <div t-attf-class="din_page invoice_note article o_company_#{company.id}_layout {{'o_report_layout_background' if company.layout_background in ['Geometric', 'Custom']  else  ''}} #{'din_page_pdf' if report_type == 'pdf' and is_din_paperformat else ''}"
+                     t-attf-style="{{ 'background-image: url(%s);' % layout_background_url if layout_background_url else '' }}"
                      t-att-data-oe-model="o and o._name"
                      t-att-data-oe-id="o and o.id">
                     <table class="din_company_info table-borderless" t-if="not skip_headers">
@@ -70,7 +74,7 @@
                                         <span>|</span> <span t-field="company.country_id.name"/>
                                     </t>
                                     <hr class="company_invoice_line" />
-                                    <t t-if="o and 'l10n_din5008_addresses' in o" t-set="address">
+                                    <t t-if="not address and o and 'l10n_din5008_addresses' in o" t-set="address">
                                         <address class="mb-0" t-field="o.partner_id.commercial_partner_id" t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True}'/>
                                         <div t-if="o.partner_id.commercial_partner_id.vat" id="partner_vat_address_same_as_shipping">
                                             <t t-if="o.company_id.account_fiscal_country_id.vat_label" t-out="o.company_id.account_fiscal_country_id.vat_label" id="inv_tax_id_label"/>
@@ -105,6 +109,10 @@
                                         <div class="shipping_address">
                                             <strong><t t-esc="doc_address[0]"/></strong>
                                             <div t-esc="doc_address[1]" t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True}'/>
+                                            <div t-if="len(doc_address) > 2 and isinstance(doc_address[2], dict) and doc_address[2].get('show_tax_id')" id="partner_vat_address_same_as_shipping">
+                                                <t t-if="o.company_id.account_fiscal_country_id.vat_label" t-out="o.company_id.account_fiscal_country_id.vat_label" id="inv_tax_id_label"/>
+                                                <t t-else="">Tax ID</t>: <span t-field="doc_address[1].vat"/>
+                                            </div>
                                         </div>
                                     </td>
                                 </t>
@@ -122,7 +130,7 @@
                     <t t-out="0"/>
                 </div>
 
-                <div t-attf-class="din_page footer o_company_#{company.id}_layout #{'din_page_pdf' if report_type == 'pdf' else ''}">
+                <div t-attf-class="din_page footer o_company_#{company.id}_layout #{'din_page_pdf' if report_type == 'pdf' and is_din_paperformat else ''}">
                     <div class="text-end page_number">
                         <div class="text-muted">
                             Page: <span class="page"/> of <span class="topage"/>
@@ -131,17 +139,17 @@
                     <div class="company_details">
                         <table class="table-borderless">
                             <tr>
-                                <td>
-                                    <ul class="list-inline text-nowrap">
+                                <td colspan="3">
+                                    <ul class="list-inline">
                                         <li t-if="company.company_details"><span t-field="company.company_details"/></li>
                                     </ul>
                                 </td>
-                                <td>
+                                <td colspan="4">
                                     <ul class="list-inline">
                                         <li t-if="company.report_footer"><span t-field="company.report_footer"/></li>
                                     </ul>
                                 </td>
-                                <td>
+                                <td colspan="2">
                                     <ul class="list-inline">
                                         <li t-if="company.vat"><t t-out="company.account_fiscal_country_id.vat_label or 'Tax ID'"/>:
                                             <span t-if="forced_vat" t-out="forced_vat"/>
@@ -150,11 +158,11 @@
                                         <li>HRB Nr: <span t-field="company.company_registry"/></li>
                                     </ul>
                                 </td>
-                                <td t-if="company.partner_id.bank_ids">
+                                <td colspan="3" t-if="company.partner_id.bank_ids">
                                     <ul class="list-inline">
                                         <t t-foreach="company.partner_id.bank_ids[:2]" t-as="bank">
                                             <li><span t-field="bank.bank_id.name"/></li>
-                                            <li>IBAN: <span t-field="bank.acc_number"/></li>
+                                            <li class="text-nowrap">IBAN: <span t-field="bank.acc_number"/></li>
                                             <li>BIC: <span t-field="bank.bank_id.bic"/></li>
                                         </t>
                                     </ul>

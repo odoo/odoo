@@ -10,14 +10,15 @@
 # Simon S, 2023
 # Lasse L, 2023
 # Jakob Krabbe <jakob.krabbe@vertel.se>, 2024
+# Claes-Johan Dahlin, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2025-02-10 10:34+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Jakob Krabbe <jakob.krabbe@vertel.se>, 2024\n"
+"Last-Translator: Claes-Johan Dahlin, 2024\n"
 "Language-Team: Swedish (https://app.transifex.com/odoo/teams/41243/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -42,8 +43,8 @@ msgid ""
 "expiration_date\"/>"
 msgstr ""
 "<span title=\"Varning\" class=\"fa fa-exclamation-triangle text-danger "
-"ms-2\" invisible=\"product_qty &lt;= 0 eller inte product_expiry_alert or "
-"not expiration_date\"/>"
+"ms-2\" invisible=\"product_qty <= 0 or not product_expiry_alert or not "
+"expiration_date\"/>"
 
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.view_product_form_expiry
@@ -379,18 +380,6 @@ msgid ""
 msgstr ""
 "Detta är det datum då varorna med detta serienummer börjar försämras, utan "
 "att ännu vara farliga."
-
-#. module: product_expiry
-#: model_terms:ir.ui.view,arch_db:product_expiry.view_stock_move_line_detailed_operation_tree_expiry
-#: model_terms:ir.ui.view,arch_db:product_expiry.view_stock_move_line_operation_tree_expiry
-msgid "This lot is expired"
-msgstr "Detta parti är utgått"
-
-#. module: product_expiry
-#: model_terms:ir.ui.view,arch_db:product_expiry.view_stock_move_line_detailed_operation_tree_expiry
-#: model_terms:ir.ui.view,arch_db:product_expiry.view_stock_move_line_operation_tree_expiry
-msgid "This lot is expired."
-msgstr "Detta parti är utgått."
 
 #. module: product_expiry
 #: model:ir.model,name:product_expiry.model_stock_picking

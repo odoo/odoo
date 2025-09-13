@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import models
+from collections import defaultdict
+
+from odoo import _, Command, fields, models
 
 
 class StockMove(models.Model):
@@ -20,7 +22,9 @@ class StockMove(models.Model):
 
     def _should_force_price_unit(self):
         self.ensure_one()
-        return self.picking_type_id.code == 'mrp_operation' or super()._should_force_price_unit()
+        return ((self.picking_type_id.code == 'mrp_operation' and self.production_id) or
+                super()._should_force_price_unit()
+        )
 
     def _ignore_automatic_valuation(self):
         return bool(self.raw_material_production_id)
@@ -42,3 +46,11 @@ class StockMove(models.Model):
     def _is_production_consumed(self):
         self.ensure_one()
         return self.location_dest_id.usage == 'production' and self.location_id._should_be_valued()
+
+    def _get_all_related_sm(self, product):
+        moves = super()._get_all_related_sm(product)
+        return moves | self.filtered(
+            lambda m:
+            m.bom_line_id.bom_id.type == 'phantom' and
+            m.bom_line_id.bom_id == moves.bom_line_id.bom_id
+        )

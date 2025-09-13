@@ -4,15 +4,15 @@
 # 
 # Translators:
 # Wil Odoo, 2023
-# Malaz Abuidris <msea@odoo.com>, 2023
+# Malaz Abuidris <msea@odoo.com>, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-05 12:32+0000\n"
+"POT-Creation-Date: 2025-05-09 20:37+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2023\n"
+"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2025\n"
 "Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -487,7 +487,7 @@ msgstr "فائدة دفع السند عند الاستحقاق "
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/global_filters/plugins/global_filters_ui_plugin.js:0
-#: code:addons/spreadsheet/static/src/helpers/model.js:0
+#: code:addons/spreadsheet/static/src/global_filters/plugins/global_filters_ui_plugin.js:0
 #, python-format
 msgid "Active Filters"
 msgstr "عوامل التصفية النشطة "
@@ -1919,6 +1919,13 @@ msgstr "يقوم بتحويل سلسلة محددة إلى أحرف كبيرة. 
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
+msgid "Converts a string to a numeric value."
+msgstr "يقوم بتحويل سلسلة إلى قيمة عددية. "
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
 msgid "Converts a time string into its serial number representation."
 msgstr "يقوم بتحويل سلسلة وقت إلى ما يمثله بالرقم التسلسلي. "
 
@@ -2003,7 +2010,7 @@ msgstr "ظل التمام لزاوية بالتقدير الدائري. "
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/pivot/pivot_model.js:0
+#: code:addons/spreadsheet/static/src/pivot/pivot_data_source.js:0
 #, python-format
 msgid "Count"
 msgstr "التعداد "
@@ -2725,6 +2732,7 @@ msgstr "تحرير"
 
 #. module: spreadsheet
 #. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "Edit link"
@@ -2865,6 +2873,7 @@ msgstr "فبراير"
 
 #. module: spreadsheet
 #. odoo-javascript
+#: code:addons/spreadsheet/static/src/pivot/pivot_data_source.js:0
 #: code:addons/spreadsheet/static/src/pivot/pivot_model.js:0
 #, python-format
 msgid "Field %s does not exist"
@@ -2911,7 +2920,6 @@ msgstr "ملء اللون "
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/helpers/model.js:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Filter"
@@ -3259,6 +3267,17 @@ msgstr "تتوقع الدالة [[FUNCTION_NAME]] أن يكون لـ criteria_ra
 msgid "Function [[FUNCTION_NAME]] expects number values for %s, but got a %s."
 msgstr ""
 "تتوقع الدالة [[FUNCTION_NAME]] قيماً رقمية لـ %s، ولكنها حصلت على %s. "
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
+msgid ""
+"Function [[FUNCTION_NAME]] expects the parameter '%s' to be a single value "
+"or a single cell reference, not a range."
+msgstr ""
+"تتوقع الدالة [[FUNCTION_NAME]] من معيارها %s أن يكون قيمة فردية أو مرجعاً "
+"أحادي الخلية، وليس نطاقاً. "
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -4946,6 +4965,7 @@ msgstr "لم يتم العثور على قيم فريدة "
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #: code:addons/spreadsheet/static/src/pivot/pivot_model.js:0
 #: code:addons/spreadsheet/static/src/pivot/pivot_time_adapters.js:0
+#: code:addons/spreadsheet/static/src/pivot/pivot_time_adapters.js:0
 #, python-format
 msgid "None"
 msgstr "لا شيء"
@@ -5743,6 +5763,15 @@ msgstr "يمين"
 #, python-format
 msgid "Rounds a number according to standard rules."
 msgstr "يقوم بتقريب الرقم وفقاً للقواعد القياسية. "
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
+msgid ""
+"Rounds a number down to the nearest integer that is less than or equal to "
+"it."
+msgstr "يقوم بتقريب الرقم إلى أقرب عدد صحيح أصغر أقل منه أو يساويه. "
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -6799,6 +6828,27 @@ msgstr "المجموعة التي سيتم تحويلها. "
 #, python-format
 msgid "The base (%s) must be between 2 and 36 inclusive."
 msgstr "يجب أن تكون القاعدة (%s) بين 2 و 36 شاملة. "
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
+msgid "The base (%s) must be strictly positive."
+msgstr "يجب أن يكون الأساس (%s) قيمة موجبة فقط. "
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
+msgid "The base must be different from 1."
+msgstr "يجب أن يكون الأساس مختلفاً عن 1. "
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
+msgid "The base of the logarithm."
+msgstr "أساس اللوغاريتم. "
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -7993,6 +8043,13 @@ msgstr "لوغاريتم رقم، قاعدة e (رقم euler). "
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
+msgid "The logarithm of a number, for a given base."
+msgstr "لوغاريتم أي عدد، لأساس معين. "
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
 msgid "The low end of the random range."
 msgstr "الطرف المنخفض من النطاق العشوائي. "
 
@@ -8528,6 +8585,13 @@ msgstr "الرقم لرفعه إلى الأس. "
 #, python-format
 msgid "The number to return."
 msgstr "الرقم لإرجاعه. "
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
+msgid "The number to round down to the nearest integer."
+msgstr "العدد لتقريبه لأقرب عدد صحيح. "
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -9781,6 +9845,7 @@ msgstr "يجب أن تكون القيمة (%s) إيجابية أو غير موج
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The value (%s) must be strictly positive."
 msgstr "يجب أن تكون القيمة (%s) موجبة فقط. "
@@ -9875,6 +9940,13 @@ msgstr "القيمة التي يجب حساب الظل العكسي من أجل�
 #, python-format
 msgid "The value for which to calculate the logarithm, base e."
 msgstr "القيمة التي يجب حساب اللوغاريتم، قاعدة e من أجلها. "
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
+msgid "The value for which to calculate the logarithm."
+msgstr "القيمة التي يجب حساب اللوغاريتم من أجلها. "
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -10631,7 +10703,7 @@ msgstr "الأعلى "
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/pivot/plugins/pivot_ui_plugin.js:0
+#: code:addons/spreadsheet/static/src/pivot/pivot_data_source.js:0
 #, python-format
 msgid "Total"
 msgstr "الإجمالي"
@@ -10839,7 +10911,6 @@ msgstr "استخدم الصف "
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/helpers/model.js:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
@@ -11716,6 +11787,13 @@ msgstr "يجب أن يكون لـ searchMode قيمة في [-1، 0، 1]. "
 #, python-format
 msgid "start_date (%s) should be on or before end_date (%s)."
 msgstr "يجب أن يكون start_date (%s) في أو قبل end_date (%s). "
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
+msgid "the string to be converted"
+msgstr "السلسلة التي يجب تحويلها "
 
 #. module: spreadsheet
 #. odoo-javascript

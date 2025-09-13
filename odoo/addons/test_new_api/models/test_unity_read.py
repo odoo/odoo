@@ -25,7 +25,7 @@ class Lesson(models.Model):
 
     name = fields.Char('Name')
     course_id = fields.Many2one('test_new_api.course')
-    attendee_ids = fields.Many2many('test_new_api.person', 'lesson_ids')
+    attendee_ids = fields.Many2many('test_new_api.person', 'lesson_ids', context={'active_test': False})
     teacher_id = fields.Many2one('test_new_api.person')
     date = fields.Date()
 
@@ -47,6 +47,7 @@ class Person(models.Model):
     name = fields.Char('Name')
     lesson_ids = fields.Many2many('test_new_api.lesson', 'course_id')
     employer_id = fields.Many2one('test_new_api.employer')
+    active = fields.Boolean(default=True)
 
     def _compute_display_name(self):
         """
@@ -64,6 +65,7 @@ class Employer(models.Model):
 
     name = fields.Char('Name')
     employee_ids = fields.One2many('test_new_api.person', 'employer_id')
+    all_employee_ids = fields.One2many('test_new_api.person', 'employer_id', context={'active_test': False})
 
 
 class PersonAccount(models.Model):

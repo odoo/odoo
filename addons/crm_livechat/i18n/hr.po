@@ -1,27 +1,29 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* crm_livechat
-#
+# 
 # Translators:
-# Đurđica Žarković <durdica.zarkovic@storm.hr>, 2022
-# Bole <bole@dajmi5.com>, 2022
-# Stjepan Lovasić <stjepan.lovasic@gmail.com>, 2022
-#
+# Đurđica Žarković <durdica.zarkovic@storm.hr>, 2024
+# Bole <bole@dajmi5.com>, 2024
+# Stjepan Lovasić <stjepan.lovasic@gmail.com>, 2024
+# Luka Carević <luka@uvid.hr>, 2025
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~15.3\n"
+"Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-04-19 13:57+0000\n"
-"PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Stjepan Lovasić <stjepan.lovasic@gmail.com>, 2022\n"
+"POT-Creation-Date: 2024-08-13 10:27+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Luka Carević <luka@uvid.hr>, 2025\n"
 "Language-Team: Croatian (https://app.transifex.com/odoo/teams/41243/hr/)\n"
-"Language: hr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: hr\n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
 
 #. module: crm_livechat
+#. odoo-python
 #: code:addons/crm_livechat/models/chatbot_script_step.py:0
 #, python-format
 msgid "%s's New Lead"
@@ -43,21 +45,23 @@ msgid "Create Lead"
 msgstr ""
 
 #. module: crm_livechat
-#. openerp-web
-#: code:addons/crm_livechat/models/mail_channel.py:0
-#: code:addons/crm_livechat/static/src/models/messaging_initializer.js:0
+#. odoo-javascript
+#. odoo-python
+#: code:addons/crm_livechat/models/discuss_channel.py:0
+#: code:addons/crm_livechat/static/src/core/channel_commands.js:0
 #, python-format
 msgid "Create a new lead (/lead lead title)"
 msgstr "Kreiraj novu priliku ( naslov prilike)"
 
 #. module: crm_livechat
-#: code:addons/crm_livechat/models/mail_channel.py:0
+#. odoo-python
+#: code:addons/crm_livechat/models/discuss_channel.py:0
 #, python-format
 msgid "Created a new lead: %s"
 msgstr ""
 
 #. module: crm_livechat
-#: model:ir.model,name:crm_livechat.model_mail_channel
+#: model:ir.model,name:crm_livechat.model_discuss_channel
 msgid "Discussion Channel"
 msgstr "Kanal rasprave"
 
@@ -94,7 +98,7 @@ msgstr "Prodajni tim"
 #. module: crm_livechat
 #: model:ir.model.fields,field_description:crm_livechat.field_chatbot_script_step__step_type
 msgid "Step Type"
-msgstr ""
+msgstr "Vrsta koraka"
 
 #. module: crm_livechat
 #: model:chatbot.script.step,message:crm_livechat.chatbot_script_welcome_step_just_looking
@@ -103,10 +107,13 @@ msgstr ""
 
 #. module: crm_livechat
 #: model:ir.model.fields,help:crm_livechat.field_chatbot_script_step__crm_team_id
-msgid "Used in combination with 'create_lead' step type in order to automatically assign the created lead/opportunity to the defined team"
+msgid ""
+"Used in combination with 'create_lead' step type in order to automatically "
+"assign the created lead/opportunity to the defined team"
 msgstr ""
 
 #. module: crm_livechat
 #: model:chatbot.script.step,message:crm_livechat.chatbot_script_welcome_step_pricing_email
-msgid "Would you mind leaving your email address so that we can reach you back?"
+msgid ""
+"Would you mind leaving your email address so that we can reach you back?"
 msgstr ""

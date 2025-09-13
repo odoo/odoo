@@ -70,6 +70,18 @@ class StockQuant(TransactionCase):
         quants = self.env['stock.quant']._gather(product_id, location_id, lot_id=lot_id, package_id=package_id, owner_id=owner_id, strict=strict)
         return quants.filtered(lambda q: not (q.quantity == 0 and q.reserved_quantity == 0))
 
+    def test_copy_quant(self):
+        """
+        You should not be allowed to duplicate quants.
+        """
+        quant = self.env['stock.quant'].create([{
+            'location_id': self.stock_location.id,
+            'product_id': self.product.id,
+            'inventory_quantity': 10,
+        }])
+        with self.assertRaises(UserError):
+            quant.copy()
+
     def test_get_available_quantity_1(self):
         """ Quantity availability with only one quant in a location.
         """
@@ -1136,6 +1148,68 @@ class StockQuant(TransactionCase):
         move._action_confirm()
         move._action_assign()
         self.assertFalse(move.quantity)
+
+    def test_lot_of_product_different_from_quant(self):
+        """
+        Test that a lot cannot be used in a quant if the product is different.
+        """
+        product_lot_2 = self.env['product.product'].create({
+            'name': 'Product',
+            'type': 'product',
+            'tracking': 'lot',
+        })
+        lot_a = self.env['stock.lot'].create({
+            'name': 'A',
+            'product_id': product_lot_2.id,
+            'product_qty': 5,
+        })
+        with self.assertRaises(ValidationError):
+            self.env['stock.quant'].create({
+                'product_id': self.product_lot.id,
+                'location_id': self.stock_location.id,
+                'quantity': 20.0,
+                'lot_id': lot_a.id,
+            })
+
+    def test_set_on_hand_quantity_tracked_product(self):
+        """
+        Checks that you can update the on hand quantity of a tracked product
+        on a quant without a set lot.
+        """
+        quant_without_lot = self.env['stock.quant'].create({
+            'product_id': self.product_lot.id,
+            'location_id': self.stock_location.id,
+            'lot_id': False,
+        })
+        quant_without_lot.with_context({'inventory_mode': True}).inventory_quantity_auto_apply = 10.0
+        self.assertRecordValues(quant_without_lot, [{
+            'product_id': self.product_lot.id,
+            'quantity': 10.0,
+            'lot_id': False,
+        }])
+
+    def test_onchange_location_quantity(self):
+        """
+        Ensure that the quantity is correctly updated when changing the product or location,
+        based on existing quants in that location.
+        """
+        product = self.env['product.product'].create({
+            'name': 'ELCT',
+            'type': 'product',
+        })
+        quant = self.env['stock.quant'].create({
+            'location_id': self.stock_location.id,
+            'product_id': product.id,
+            'inventory_quantity': 10,
+        })
+        quant.action_apply_inventory()
+
+        form = Form(self.env['stock.quant'].with_context({'inventory_mode': True}))
+        form.product_id = product
+        form.location_id = self.stock_location
+        self.assertEqual(form.quantity, 10.0)
+        form.location_id = self.stock_subloc2
+        self.assertEqual(form.quantity, 0.0)
 
 
 class StockQuantRemovalStrategy(TransactionCase):

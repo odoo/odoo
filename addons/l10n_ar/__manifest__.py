@@ -2,9 +2,9 @@
 {
     'name': 'Argentina - Accounting',
     'website': 'https://www.odoo.com/documentation/17.0/applications/finance/fiscal_localizations/argentina.html',
-    'icon': '/account/static/description/l10n.png',
     'countries': ['ar'],
-    'version': '3.5',
+    'icon': '/base/static/img/country_flags/ar.png',
+    'version': "3.7",
     'description': """
 Functional
 ----------
@@ -30,10 +30,10 @@ Demo data for testing:
 * Partners example for the different responsibility types:
 
   * ADHOC (IVA Responsable Inscripto)
-  * Consejo Municipal Rosario (IVA Sujeto Exento)
+  * Servicios Globales (IVA Sujeto Exento)
   * Gritti (Monotributo)
-  * Cerro Castor. IVA Liberado in Zona Franca
-  * Expresso (Cliente del Exterior)
+  * Montana Sur. IVA Liberado in Zona Franca
+  * Barcelona food (Cliente del Exterior)
   * Odoo (Proveedor del Exterior)
 
 Highlights:

@@ -179,7 +179,8 @@ class HrExpense(models.Model):
         comodel_name='account.account',
         string="Account",
         compute='_compute_account_id', precompute=True, store=True, readonly=False,
-        domain="[('account_type', 'not in', ('asset_receivable', 'liability_payable', 'asset_cash', 'liability_credit_card')), ('company_id', '=', company_id)]",
+        check_company=True,
+        domain="[('account_type', 'not in', ('asset_receivable', 'liability_payable', 'asset_cash', 'liability_credit_card'))]",
         help="An expense account is expected",
     )
     tax_ids = fields.Many2many(
@@ -521,6 +522,10 @@ class HrExpense(models.Model):
         if any(attachment.res_id or attachment.res_model != 'hr.expense' for attachment in attachments):
             raise UserError(_("Invalid attachments!"))
 
+        employee = self.env.user.employee_id
+        if not employee or employee.company_id != self.env.company:
+            raise ValidationError(_("The current user has no related employee, or the related employee does not belong to this company."))
+
         product = self.env['product.product'].search([('can_be_expensed', '=', True)])
         if product:
             product = product.filtered(lambda p: p.default_code == "EXP_GEN")[:1] or product[0]
@@ -560,6 +565,13 @@ class HrExpense(models.Model):
                 raise UserError(_('You cannot delete a posted or approved expense.'))
 
     def write(self, vals):
+        if (
+                'state' in vals
+                and vals['state'] not in ('draft', 'submitted')
+                and not self.user_has_groups('hr_expense.group_hr_expense_manager')
+                and any(state == 'draft' for state in self.mapped('state'))
+        ):
+            raise UserError(_("You don't have the rights to bypass the validation process of this expense."))
         expense_to_previous_sheet = {}
         if 'sheet_id' in vals:
             self.env['hr.expense.sheet'].browse(vals['sheet_id']).check_access_rule('write')
@@ -616,7 +628,7 @@ class HrExpense(models.Model):
     @api.model
     def _get_empty_list_mail_alias(self):
         use_mailgateway = self.env['ir.config_parameter'].sudo().get_param('hr_expense.use_mailgateway')
-        expense_alias = self.env.ref('hr_expense.mail_alias_expense') if use_mailgateway else False
+        expense_alias = self.env.ref('hr_expense.mail_alias_expense', raise_if_not_found=False) if use_mailgateway else False
         if expense_alias and expense_alias.alias_domain and expense_alias.alias_name:
             # encode, but force %20 encoding for space instead of a + (URL / mailto difference)
             params = werkzeug.urls.url_encode({'subject': _("Lunch with customer $12.32")}).replace('+', '%20')
@@ -706,8 +718,7 @@ class HrExpense(models.Model):
                 ('state', '=', 'draft'),
                 ('sheet_id', '=', False),
                 ('employee_id', '=', self.env.user.employee_id.id),
-                ('is_editable', '=', True),
-            ])
+            ]).filtered(lambda expense: expense.is_editable)
 
         if not expenses:
             raise UserError(_('You have no expense to report'))
@@ -793,9 +804,10 @@ class HrExpense(models.Model):
         if not payment_method_line:
             raise UserError(_("You need to add a manual payment method on the journal (%s)", journal.name))
         move_lines = []
-        tax_data = self.env['account.tax']._compute_taxes([
-            self._convert_to_tax_base_line_dict(price_unit=self.total_amount_currency, currency=self.currency_id)
-        ])
+        tax_data = self.env['account.tax']._compute_taxes(
+            [self._convert_to_tax_base_line_dict(price_unit=self.total_amount_currency, currency=self.currency_id)],
+            include_caba_tags=(self.payment_mode == 'company_account')
+        )
         rate = abs(self.total_amount_currency / self.total_amount) if self.total_amount else 1.0
         base_line_data, to_update = tax_data['base_lines_to_update'][0]  # Add base line
         amount_currency = to_update['price_subtotal']
@@ -810,6 +822,7 @@ class HrExpense(models.Model):
             'tax_tag_ids': to_update['tax_tag_ids'],
             'amount_currency': amount_currency,
             'currency_id': self.currency_id.id,
+            'quantity': self.quantity,
         }
         move_lines.append(base_move_line)
         total_tax_line_balance = 0.0

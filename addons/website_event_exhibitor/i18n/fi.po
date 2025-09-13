@@ -23,15 +23,15 @@
 # Sanna Edelman <direct@generare.com>, 2023
 # Kari Lindgren <kari.lindgren@emsystems.fi>, 2023
 # Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2023
-# Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2024
+# Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:56+0000\n"
+"POT-Creation-Date: 2025-02-10 10:35+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2024\n"
+"Last-Translator: Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2025\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -547,6 +547,15 @@ msgid "Image URL"
 msgstr "Kuvan URL"
 
 #. module: website_event_exhibitor
+#: model:ir.model.fields,help:website_event_exhibitor.field_event_sponsor__event_date_tz
+msgid ""
+"Indicates the timezone in which the event dates/times will be displayed on "
+"the website."
+msgstr ""
+"Ilmoittaa aikavyöhykkeen, jossa tapahtuman päivämäärät/ajat näytetään "
+"verkkosivustolla."
+
+#. module: website_event_exhibitor
 #: model_terms:event.sponsor,website_description:website_event_exhibitor.event_7_sponsor_1
 #: model_terms:event.sponsor,website_description:website_event_exhibitor.event_7_sponsor_3
 #: model_terms:event.sponsor,website_description:website_event_exhibitor.event_sponsor_0
@@ -857,11 +866,6 @@ msgid "Ratings"
 msgstr "Arviointi"
 
 #. module: website_event_exhibitor
-#: model_terms:ir.ui.view,arch_db:website_event_exhibitor.exhibitor_card
-msgid "Register"
-msgstr "Ilmoittaudu"
-
-#. module: website_event_exhibitor
 #: model_terms:event.sponsor,website_description:website_event_exhibitor.event_7_sponsor_1
 #: model_terms:event.sponsor,website_description:website_event_exhibitor.event_7_sponsor_3
 #: model_terms:event.sponsor,website_description:website_event_exhibitor.event_sponsor_0
@@ -1031,17 +1035,6 @@ msgstr ""
 #: model_terms:event.sponsor,website_description:website_event_exhibitor.event_sponsor_3
 msgid "Talent Management"
 msgstr "Lahjakkuuden hallinta"
-
-#. module: website_event_exhibitor
-#. odoo-python
-#: code:addons/website_event_exhibitor/controllers/website_event_main.py:0
-#, python-format
-msgid ""
-"The event %s starts on %s (%s). \n"
-"Join us there to meet %s!"
-msgstr ""
-"Tapahtuma %s alkaa %s (%s).\n"
-"Tule sinäkin sinne tapaamaan %s!"
 
 #. module: website_event_exhibitor
 #: model:ir.model.fields,help:website_event_exhibitor.field_event_sponsor__website_url

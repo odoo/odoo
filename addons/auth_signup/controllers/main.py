@@ -41,7 +41,17 @@ class AuthSignupHome(Home):
 
         if 'error' not in qcontext and request.httprequest.method == 'POST':
             try:
+                if not request.env['ir.http']._verify_request_recaptcha_token('signup'):
+                    raise UserError(_("Suspicious activity detected by Google reCaptcha."))
+
                 self.do_signup(qcontext)
+
+                # Set user to public if they were not signed in by do_signup
+                # (mfa enabled)
+                if request.session.uid is None:
+                    public_user = request.env.ref('base.public_user')
+                    request.update_env(user=public_user)
+
                 # Send an account creation confirmation email
                 User = request.env['res.users']
                 user_sudo = User.sudo().search(
@@ -79,6 +89,8 @@ class AuthSignupHome(Home):
 
         if 'error' not in qcontext and request.httprequest.method == 'POST':
             try:
+                if not request.env['ir.http']._verify_request_recaptcha_token('password_reset'):
+                    raise UserError(_("Suspicious activity detected by Google reCaptcha."))
                 if qcontext.get('token'):
                     self.do_signup(qcontext)
                     return self.web_login(*args, **kw)

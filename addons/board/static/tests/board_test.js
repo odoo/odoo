@@ -810,4 +810,70 @@ QUnit.module("Board", (hooks) => {
             300
         );
     });
+
+    QUnit.test("pivot view with property in pivot_column_groupby", async function (assert) {
+        serverData.views["partner,false,pivot"] = `<pivot/>`;
+        Object.assign(serverData.models.partner.fields, {
+            properties: {
+                string: "Properties",
+                type: "properties",
+                definition_record: "parent_id",
+                definition_record_field: "properties_definition",
+                name: "properties",
+            },
+            parent_id: {
+                string: "Parent",
+                type: "many2one",
+                relation: "partner",
+                name: "parent_id",
+            },
+            properties_definition: {
+                string: "Properties",
+                type: "properties_definition",
+            },
+        });
+        await makeView({
+            serverData,
+            type: "form",
+            resModel: "board",
+            arch: `
+                <form js_class="board">
+                    <board style="2-1">
+                        <column>
+                            <action context="{'pivot_column_groupby':['properties.my_char']}"/>
+                        </column>
+                    </board>
+                </form>`,
+            mockRPC(route, { kwargs, method }) {
+                if (route === "/web/action/load") {
+                    return {
+                        res_model: "partner",
+                        views: [[false, "pivot"]],
+                    };
+                } else if (method === "get_property_definition") {
+                    return {};
+                } else if (
+                    method === "read_group" &&
+                    kwargs.groupby?.includes("properties.my_char")
+                ) {
+                    return [
+                        {
+                            "properties.my_char": false,
+                            __domain: [["properties.my_char", "=", false]],
+                            __count: 2,
+                        },
+                        {
+                            "properties.my_char": "aaa",
+                            __domain: [["properties.my_char", "=", "aaa"]],
+                            __count: 1,
+                        },
+                    ];
+                }
+            },
+        });
+        assert.deepEqual(
+            [...target.querySelectorAll(".o_pivot_cell_value div")].map((el) => el.innerText),
+            ["2", "1", "3"]
+        );
+    });
 });

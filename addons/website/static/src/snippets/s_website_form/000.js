@@ -43,6 +43,18 @@ import wUtils from '@website/js/utils';
             }
             return this._super(...arguments);
         },
+        // Todo: remove in master
+        /**
+         * @private
+         */
+        _getDataForFields() {
+            if (!this.dataForValues) {
+                return [];
+            }
+            return Object.keys(this.dataForValues)
+                .map(name => this.$target[0].querySelector(`[name="${CSS.escape(name)}"]`))
+                .filter(dataForValuesFieldEl => dataForValuesFieldEl && dataForValuesFieldEl.name !== "email_to");
+        }
     });
 
     publicWidget.registry.s_website_form = publicWidget.Widget.extend({
@@ -247,8 +259,18 @@ import wUtils from '@website/js/utils';
             // All 'hidden if' fields start with d-none
             this.el.querySelectorAll('.s_website_form_field_hidden_if:not(.d-none)').forEach(el => el.classList.add('d-none'));
 
+            // Prevent "data-for" values removal on destroy, they are still used
+            // in edit mode to keep the form linked to its predefined server
+            // values (e.g., the default `job_id` value on the application form
+            // for a given job).
+            const dataForValues = wUtils.getParsedDataFor(this.$target[0].id, document) || {};
+            const initialValuesToReset = new Map(
+                [...this.initialValues.entries()].filter(
+                    ([input]) => !dataForValues[input.name] || input.name === "email_to"
+                )
+            );
             // Reset the initial default values.
-            for (const [fieldEl, initialValue] of this.initialValues.entries()) {
+            for (const [fieldEl, initialValue] of initialValuesToReset.entries()) {
                 if (initialValue) {
                     fieldEl.setAttribute('value', initialValue);
                 } else {
@@ -762,10 +784,13 @@ import wUtils from '@website/js/utils';
         _updateFieldVisibility(fieldEl, haveToBeVisible) {
             const fieldContainerEl = fieldEl.closest('.s_website_form_field');
             fieldContainerEl.classList.toggle('d-none', !haveToBeVisible);
-            for (const inputEl of fieldContainerEl.querySelectorAll('.s_website_form_input')) {
-                // Hidden inputs should also be disabled so that their data are
-                // not sent on form submit.
-                inputEl.disabled = !haveToBeVisible;
+            // Do not disable inputs that are required for the model.
+            if (!fieldContainerEl.matches(".s_website_form_model_required")) {
+                for (const inputEl of fieldContainerEl.querySelectorAll(".s_website_form_input")) {
+                    // Hidden inputs should also be disabled so that their data are
+                    // not sent on form submit.
+                    inputEl.disabled = !haveToBeVisible;
+                }
             }
         },
         /**

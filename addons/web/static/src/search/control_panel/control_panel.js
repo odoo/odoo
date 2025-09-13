@@ -49,9 +49,12 @@ export class ControlPanel extends Component {
                 return;
             }
             const scrollingEl = this.getScrollingElement();
+            this.scrollingElementResizeObserver.observe(scrollingEl);
             scrollingEl.addEventListener("scroll", this.onScrollThrottledBound);
             this.root.el.style.top = "0px";
+            this.scrollingElementHeight = scrollingEl.scrollHeight;
             return () => {
+                this.scrollingElementResizeObserver.unobserve(scrollingEl);
                 scrollingEl.removeEventListener("scroll", this.onScrollThrottledBound);
             };
         });
@@ -92,6 +95,20 @@ export class ControlPanel extends Component {
                 button.classList.add("dropdown-item", "btn", "btn-link");
             }
         });
+    }
+
+    scrollingElementResizeObserver = new ResizeObserver((entries) => {
+        for (const entry of entries) {
+            if (this.scrollingElementHeight !== entry.target.scrollingElementHeight) {
+                this.oldScrollTop +=
+                    entry.target.scrollingElementHeight - this.scrollingElementHeight;
+                this.scrollingElementHeight = entry.target.scrollingElementHeight;
+            }
+        }
+    });
+
+    getBreadcrumbTooltip({ name }) {
+        return _t("Back to “%s”", name);
     }
 
     getScrollingElement() {
@@ -146,11 +163,11 @@ export class ControlPanel extends Component {
         if (scrollTop > this.initialScrollTop) {
             // Beneath initial position => sticky display
             this.root.el.classList.add(STICKY_CLASS);
-            if (delta < 0) {
-                // Going up
+            if (delta <= 0) {
+                // Going up | not moving
                 this.lastScrollTop = Math.min(0, this.lastScrollTop - delta);
             } else {
-                // Going down | not moving
+                // Going down
                 this.lastScrollTop = Math.max(
                     -this.root.el.offsetHeight,
                     -this.root.el.offsetTop - delta

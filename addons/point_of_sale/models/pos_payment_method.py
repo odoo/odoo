@@ -96,4 +96,7 @@ class PosPaymentMethod(models.Model):
 
     def copy(self, default=None):
         default = dict(default or {}, config_ids=[(5, 0, 0)])
+        if self.journal_id and self.journal_id.type == 'cash':
+            if ('journal_id' in default and default['journal_id'] == self.journal_id.id) or ('journal_id' not in default):
+                default.update({'journal_id': False})
         return super().copy(default)

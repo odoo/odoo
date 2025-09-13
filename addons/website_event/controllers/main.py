@@ -5,7 +5,7 @@ import re
 import werkzeug
 
 from ast import literal_eval
-from werkzeug.datastructures import OrderedMultiDict
+from collections import Counter
 from werkzeug.exceptions import NotFound
 
 from odoo import fields, http, _
@@ -28,7 +28,7 @@ class WebsiteEventController(http.Controller):
 
     def _get_events_search_options(self, **post):
         return {
-            'displayDescription': False,
+            'displayDescription': True,
             'displayDetail': False,
             'displayExtraDetail': False,
             'displayExtraLink': False,
@@ -59,7 +59,7 @@ class WebsiteEventController(http.Controller):
         order = 'date_begin'
         if searches.get('date', 'upcoming') == 'old':
             order = 'date_begin desc'
-        order = 'is_published desc, ' + order
+        order = 'is_published desc, ' + order + ', id desc'
         search = searches.get('search')
         event_count, details, fuzzy_search_term = website._search_with_fuzzy("events", search,
             limit=page * step, order=order, options=options)
@@ -132,7 +132,7 @@ class WebsiteEventController(http.Controller):
 
         if searches['date'] == 'old':
             # the only way to display this content is to set date=old so it must be canonical
-            values['canonical_params'] = OrderedMultiDict([('date', 'old')])
+            values['canonical_params'] = {'date': 'old'}
 
         return request.render("website_event.index", values)
 
@@ -279,7 +279,7 @@ class WebsiteEventController(http.Controller):
         # goal is to use the answer to the first question of every 'type' (aka name / phone / email / company name)
         already_handled_fields_data = {}
         for key, value in form_details.items():
-            if not value:
+            if not value or '-' not in key:
                 continue
 
             key_values = key.split('-')
@@ -289,6 +289,9 @@ class WebsiteEventController(http.Controller):
                 if field_name not in registration_fields:
                     continue
                 registrations.setdefault(registration_index, dict())[field_name] = int(value) or False
+                continue
+
+            if len(key_values) != 3:
                 continue
 
             registration_index, question_type, question_id = key_values
@@ -361,10 +364,12 @@ class WebsiteEventController(http.Controller):
             that we have enough seats for all selected tickets.
             If we don't, the user is instead redirected to page to register with a
             formatted error message. """
+        if not request.env['ir.http']._verify_request_recaptcha_token('website_event_registration'):
+            raise UserError(_('Suspicious activity detected by Google reCaptcha.'))
         registrations_data = self._process_attendees_form(event, post)
-        event_ticket_ids = {registration['event_ticket_id'] for registration in registrations_data}
-        event_tickets = request.env['event.event.ticket'].browse(event_ticket_ids)
-        if any(event_ticket.seats_limited and event_ticket.seats_available < len(registrations_data) for event_ticket in event_tickets):
+        registration_tickets = Counter(registration['event_ticket_id'] for registration in registrations_data)
+        event_tickets = request.env['event.event.ticket'].browse(list(registration_tickets.keys()))
+        if any(event_ticket.seats_limited and event_ticket.seats_available < registration_tickets.get(event_ticket.id) for event_ticket in event_tickets):
             return request.redirect('/event/%s/register?registration_error_code=insufficient_seats' % event.id)
         attendees_sudo = self._create_attendees_from_registration_post(event, registrations_data)
 

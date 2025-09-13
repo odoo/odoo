@@ -23,3 +23,15 @@ registry
             ReceiptScreen.isShown(),
         ].flat(),
     });
+
+registry
+    .category("web_tour.tours")
+    .add('test_pos_sale_loyalty_ignored_in_pos', {
+        test: true,
+        steps: () => [
+            ProductScreen.confirmOpeningPopup(),
+            ProductScreen.clickQuotationButton(),
+            ProductScreen.selectFirstOrder(),
+            ProductScreen.totalAmountIs(90),
+        ].flat(),
+    });

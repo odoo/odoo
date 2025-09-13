@@ -87,10 +87,6 @@ class Registry(Mapping):
                 return cls.registries[db_name]
             except KeyError:
                 return cls.new(db_name)
-            finally:
-                # set db tracker - cleaned up at the WSGI dispatching phase in
-                # odoo.http.root
-                threading.current_thread().dbname = db_name
 
     @classmethod
     @locked
@@ -99,6 +95,7 @@ class Registry(Mapping):
         t0 = time.time()
         registry = object.__new__(cls)
         registry.init(db_name)
+        registry.new = registry.init = registry.registries = None
 
         # Initializing a registry will call general code which will in
         # turn call Registry() to obtain the registry being initialized.
@@ -127,7 +124,6 @@ class Registry(Mapping):
         registry._init = False
         registry.ready = True
         registry.registry_invalidated = bool(update_module)
-        registry.new = registry.init = registry.registries = None
 
         _logger.info("Registry loaded in %.3fs", time.time() - t0)
         return registry
@@ -946,7 +942,7 @@ class Registry(Mapping):
         """
         if self.test_cr is not None:
             # in test mode we use a proxy object that uses 'self.test_cr' underneath
-            return TestCursor(self.test_cr, self.test_lock)
+            return TestCursor(self.test_cr, self.test_lock, current_test=odoo.modules.module.current_test)
         return self._db.cursor()
 
 

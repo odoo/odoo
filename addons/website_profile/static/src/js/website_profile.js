@@ -6,7 +6,7 @@ import { loadWysiwygFromTextarea } from "@web_editor/js/frontend/loadWysiwygFrom
 publicWidget.registry.websiteProfile = publicWidget.Widget.extend({
     selector: '.o_wprofile_email_validation_container',
     read_events: {
-        'click .send_validation_email': '_onSendValidationEmailClick',
+        'click .send_validation_email': 'async _onSendValidationEmailClick',
         'click .validated_email_close': '_onCloseValidatedEmailClick',
     },
 
@@ -25,11 +25,12 @@ publicWidget.registry.websiteProfile = publicWidget.Widget.extend({
     _onSendValidationEmailClick: function (ev) {
         ev.preventDefault();
         var $element = $(ev.currentTarget);
-        this.rpc('/profile/send_validation_email', {
+        return this.rpc('/profile/send_validation_email', {
             'redirect_url': $element.data('redirect_url'),
         }).then(function (data) {
             if (data) {
                 window.location = $element.data('redirect_url');
+                return new Promise(() => {});
             }
         });
     },
@@ -52,6 +53,11 @@ publicWidget.registry.websiteProfileEditor = publicWidget.Widget.extend({
         'click .o_forum_profile_bio_cancel_edit': '_onProfileBioCancelEditClick',
     },
 
+    init() {
+        this._super(...arguments);
+        this.orm = this.bindService("orm");
+    },
+
     /**
      * @override
      */
@@ -62,13 +68,16 @@ publicWidget.registry.websiteProfileEditor = publicWidget.Widget.extend({
         }
 
         const $textarea = this.$("textarea.o_wysiwyg_loader");
+        const resId = parseInt(this.$("input[name=user_id]").val());
+        const recordContent = await this.orm.call("res.users", "get_website_description", [resId]) || '';
 
         const options = {
             recordInfo: {
                 context: this._getContext(),
                 res_model: "res.users",
-                res_id: parseInt(this.$("input[name=user_id]").val()),
+                res_id: resId,
             },
+            value: recordContent,
             resizable: true,
             userGeneratedContent: true,
         };

@@ -52,13 +52,15 @@ class EventMailScheduler(models.Model):
                     continue
                 # Do not send SMS if the communication was scheduled before the event but the event is over
                 if scheduler.scheduled_date <= now and (scheduler.interval_type != 'before_event' or scheduler.event_id.date_end > now):
-                    scheduler.event_id.registration_ids.filtered(lambda registration: registration.state != 'cancel')._message_sms_schedule_mass(
+                    scheduler.event_id.registration_ids.filtered(
+                        lambda registration: registration.state not in ('cancel', 'draft')
+                    )._message_sms_schedule_mass(
                         template=scheduler.template_ref,
                         mass_keep_log=True
                     )
                     scheduler.update({
                         'mail_done': True,
-                        'mail_count_done': len(scheduler.event_id.registration_ids.filtered(lambda r: r.state != 'cancel'))
+                        'mail_count_done': scheduler.event_id.seats_taken,
                     })
 
         return super(EventMailScheduler, self).execute()

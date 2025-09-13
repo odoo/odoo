@@ -1,7 +1,6 @@
 # -*- coding:utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import re
 from stdnum.it import codicefiscale, iva
 
 from odoo import api, fields, models, _
@@ -42,9 +41,12 @@ class ResPartner(models.Model):
         """ Generates all partner values needed by l10n_it_edi XML export.
 
             VAT number:
-            If there is a VAT number and the partner is not in EU, then the exported value is 'OO99999999999'
+            If there is a VAT number and the partner is not in EU, then we use the VAT number as is,
+                as an alphanumeric value identifying the counterparty, up to a maximum of
+                28 alphanumeric characters, on which the SdI does not perform validity checks.
             If there is a VAT number and the partner is in EU, then remove the country prefix
-            If there is no VAT and the partner is not in Italy, then the exported value is '0000000'
+            If there is no VAT and the partner is not in EU, then the exported value is 'OO99999999999'
+            If there is no VAT and the partner is in EU, then the exported value is '0000000'
             If there is no VAT and the partner is in Italy, the VAT is not set and Codice Fiscale will be relevant in the XML.
             If there is no VAT and no Codice Fiscale, the invoice is not even exported, so this case is not handled.
 
@@ -74,8 +76,7 @@ class ResPartner(models.Model):
         # VAT number and country code
         normalized_vat = self.vat
         normalized_country = self.country_code
-        has_vat = self.vat and not self.vat in ['/', 'NA']
-        if has_vat:
+        if has_vat := self.vat not in [False, '/', 'NA']:
             normalized_vat = self.vat.replace(' ', '')
             if in_eu:
                 # If there is no country-code prefix, it's domestic to Italy
@@ -90,17 +91,15 @@ class ResPartner(models.Model):
             # If customer is from San Marino
             elif is_sm:
                 normalized_vat = normalized_vat if normalized_vat[:2].isdecimal() else normalized_vat[2:]
-            # The Tax Agency arbitrarily decided that non-EU VAT are not interesting,
-            # so this default code is used instead
-            # Detect the country code from the partner country instead
-            else:
-                normalized_vat = 'OO99999999999'
 
         # If it has a codice fiscale (and no country), it's an Italian partner
         if not normalized_country and self.l10n_it_codice_fiscale:
             normalized_country = 'IT'
         elif not has_vat and self.country_id and self.country_id.code != 'IT':
-            normalized_vat = '0000000'
+            if in_eu:
+                normalized_vat = '0000000'
+            else:
+                normalized_vat = 'OO99999999999'
 
         if normalized_country == 'IT':
             pa_index = (self.l10n_it_pa_index or '0000000').upper()
@@ -135,15 +134,22 @@ class ResPartner(models.Model):
         if l10n_it_codice_fiscale is None:
             self.ensure_one()
             l10n_it_codice_fiscale = self.l10n_it_codice_fiscale
-        if l10n_it_codice_fiscale and re.match(r'^IT[0-9]{11}$', l10n_it_codice_fiscale):
-            return l10n_it_codice_fiscale[2:13]
-        return l10n_it_codice_fiscale
+        if l10n_it_codice_fiscale:
+            if codicefiscale._code_re.match(l10n_it_codice_fiscale):
+                # Personal codice
+                return codicefiscale.compact(l10n_it_codice_fiscale)
+            # Company codice
+            return iva.compact(l10n_it_codice_fiscale)
 
     @api.onchange('vat', 'country_id')
     def _l10n_it_onchange_vat(self):
-        if not self.l10n_it_codice_fiscale and self.vat and (self.country_id.code == "IT" or self.vat.startswith("IT")):
+        if self.vat and (
+            self.country_code == "IT"
+            if self.country_code
+            else self.vat.startswith("IT")
+        ):
             self.l10n_it_codice_fiscale = self._l10n_it_edi_normalized_codice_fiscale(self.vat)
-        elif self.country_id.code not in [False, "IT"]:
+        else:
             self.l10n_it_codice_fiscale = False
 
     @api.constrains('l10n_it_codice_fiscale')

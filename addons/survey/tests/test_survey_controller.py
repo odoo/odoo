@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import Command
+from odoo import Command, fields
 from odoo.addons.survey.tests import common
 from odoo.tests.common import HttpCase
 
@@ -103,3 +103,69 @@ class TestSurveyController(common.TestSurveyCommon, HttpCase):
                 self.assertEqual(response.json()['result'][0], expected_correct_answers)
 
                 user_input.invalidate_recordset() # TDE note: necessary as lots of sudo in controllers messing with cache
+
+    def test_print_survey_access_mode_token(self):
+        """Check that a survey with access_mode=token with questions defined can always be printed."""
+        # Case: No questions, no answers -> general print informs the user "your survey is empty"
+        survey = self.env['survey.survey'].with_user(self.survey_manager).create({
+            'title': 'Test Survey without answers',
+            'access_mode': 'token',
+            'users_login_required': False,
+            'users_can_go_back': False,
+        })
+        self.authenticate(self.survey_manager.login, self.survey_manager.login)
+        response = self.url_open(f'/survey/print/{survey.access_token}')
+        self.assertEqual(response.status_code, 200,
+            "Print request to shall succeed for a survey without questions nor answers")
+        self.assertIn("survey is empty", str(response.content),
+            "Survey print without questions nor answers should inform user that the survey is empty")
+
+        # Case: a question, no answers -> general print shows the question
+        question = self.env['survey.question'].with_user(self.survey_manager).create({
+            'title': 'Test Question',
+            'survey_id': survey.id,
+            'sequence': 1,
+            'is_page': False,
+            'question_type': 'char_box',
+        })
+        response = self.url_open(f'/survey/print/{survey.access_token}')
+        self.assertEqual(response.status_code, 200,
+            "Print request to shall succeed for a survey with questions but no answers")
+        self.assertIn(question.title, str(response.content),
+            "Should be possible to print a survey with a question and without answers")
+
+        # Case: a question, an answers -> general print shows the question
+        user_input = self._add_answer(survey, self.survey_manager.partner_id, state='done')
+        self._add_answer_line(question, user_input, "Test Answer")
+        response = self.url_open(f'/survey/print/{survey.access_token}')
+        self.assertEqual(response.status_code, 200,
+            "Print request without answer token, should be possible for a survey with questions and answers")
+        self.assertIn(question.title, str(response.content),
+            "Survey question should be visible in general print, even when answers exist and no answer_token is provided")
+        self.assertNotIn("Test Answer", str(response.content),
+            "Survey answer should not be in general print, when no answer_token is provided")
+
+        # Case: a question, an answers -> print with answer_token shows both
+        response = self.url_open(f'/survey/print/{survey.access_token}?answer_token={user_input.access_token}')
+        self.assertEqual(response.status_code, 200,
+            "Should be possible to print a sruvey with questions and answers")
+        self.assertIn(question.title, str(response.content),
+            "Question should appear when printing survey with using an answer_token")
+        self.assertIn("Test Answer", str(response.content),
+            "Answer should appear when printing survey with using an answer_token")
+
+    def test_live_session_without_question(self):
+        """Test that the live session ('Thank You' page) does not crash when no question is present."""
+        survey = self.env['survey.survey'].with_user(self.survey_manager).create({
+            'title': 'Live Session Survey',
+            'access_mode': 'token',
+            'users_login_required': False,
+            'session_question_start_time': fields.datetime(2023, 7, 7, 12, 0, 0),
+        })
+
+        self.authenticate(self.survey_manager.login, self.survey_manager.login)
+
+        # Call the url without any question
+        session_manage_url = f'/survey/session/manage/{survey.access_token}'
+        response = self.url_open(session_manage_url)
+        self.assertEqual(response.status_code, 200, "Should be able to open live session manage page")

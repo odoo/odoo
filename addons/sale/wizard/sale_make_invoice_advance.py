@@ -4,7 +4,7 @@
 from odoo import _, api, fields, models, SUPERUSER_ID
 from odoo.exceptions import UserError
 from odoo.fields import Command
-from odoo.tools import format_date, frozendict
+from odoo.tools import format_date, formatLang, frozendict
 
 
 class SaleAdvancePaymentInv(models.TransientModel):
@@ -133,7 +133,8 @@ class SaleAdvancePaymentInv(models.TransientModel):
     @api.depends('sale_order_ids')
     def _compute_display_draft_invoice_warning(self):
         for wizard in self:
-            wizard.display_draft_invoice_warning = wizard.sale_order_ids.invoice_ids.filtered(lambda invoice: invoice.state == 'draft')
+            invoice_states = wizard.sale_order_ids._origin.sudo().invoice_ids.mapped('state')
+            wizard.display_draft_invoice_warning = 'draft' in invoice_states
 
     @api.depends('sale_order_ids')
     def _compute_invoice_amounts(self):
@@ -354,11 +355,9 @@ class SaleAdvancePaymentInv(models.TransientModel):
                 ])
 
         downpayment_line_map = {}
+        analytic_map = {}
         for tax_id, analytic_distribution, price_subtotal in down_payment_values:
-            grouping_key = frozendict({
-                'tax_id': tuple(sorted(tax_id.ids)),
-                'analytic_distribution': analytic_distribution,
-            })
+            grouping_key = frozendict({'tax_id': tuple(sorted(tax_id.ids))})
             downpayment_line_map.setdefault(grouping_key, {
                 **base_downpayment_lines_values,
                 **grouping_key,
@@ -366,12 +365,28 @@ class SaleAdvancePaymentInv(models.TransientModel):
                 'price_unit': 0.0,
             })
             downpayment_line_map[grouping_key]['price_unit'] += price_subtotal
-        for key in downpayment_line_map:
-            downpayment_line_map[key]['price_unit'] = \
-                order.currency_id.round(downpayment_line_map[key]['price_unit'] * percentage)
+            if analytic_distribution:
+                analytic_map.setdefault(grouping_key, [])
+                analytic_map[grouping_key].append((price_subtotal, analytic_distribution))
 
+        lines_values = []
+        for key, line_vals in downpayment_line_map.items():
+            # don't add line if price is 0 and prevent division by zero
+            if order.currency_id.is_zero(line_vals['price_unit']):
+                continue
+            # weight analytic account distribution
+            if analytic_map.get(key):
+                line_analytic_distribution = {}
+                for price_subtotal, account_distribution in analytic_map[key]:
+                    for account, distribution in account_distribution.items():
+                        line_analytic_distribution.setdefault(account, 0.0)
+                        line_analytic_distribution[account] += price_subtotal / line_vals['price_unit'] * distribution
+                line_vals['analytic_distribution'] = line_analytic_distribution
+            # round price unit
+            line_vals['price_unit'] = order.currency_id.round(line_vals['price_unit'] * percentage)
+            lines_values.append(line_vals)
 
-        return list(downpayment_line_map.values())
+        return lines_values
 
     def _prepare_base_downpayment_line_values(self, order):
         self.ensure_one()
@@ -406,7 +421,7 @@ class SaleAdvancePaymentInv(models.TransientModel):
         self.ensure_one()
         context = {'lang': order.partner_id.lang}
         if self.advance_payment_method == 'percentage':
-            name = _("Down payment of %s%%", self.amount)
+            name = _("Down payment of %s%%", formatLang(self.env(context=context), self.amount))
         else:
             name = _('Down Payment')
         del context

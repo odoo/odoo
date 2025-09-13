@@ -10,7 +10,7 @@ from unittest.mock import patch
 
 from odoo import Command
 
-from odoo.exceptions import AccessError, UserError
+from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.osv import expression
 from odoo.tests.common import Form, TransactionCase, users
 from odoo.tools import mute_logger, get_lang
@@ -1695,11 +1695,29 @@ class PropertiesCase(TestPropertiesMixin):
                 'value': 'red',
             }],
         })
+        email.invalidate_recordset()
 
         values = email.read(['attributes'])
         self.assertEqual(values[0]['attributes'][0]['value'], 'red')
         values = email.message.read(['attributes'])
         self.assertEqual(values[0]['attributes'][0]['value'], 'red')
+
+    def test_properties_server_action_path_traversal(self):
+        action = self.env['ir.actions.server'].create({
+            'name': 'TestAction',
+            'model_id': self.env['ir.model'].search([
+                ('model', '=', 'test_new_api.emailmessage'),
+            ]).id,
+            'model_name': 'test_new_api.emailmessage',
+            'state': 'object_write',
+        })
+        with self.assertRaises(ValidationError):
+            action.update_path = 'attributes.discussion_color_code'
+            # call _stringify_path directly because it's only called for
+            # server action linked to a base_automation
+            self.assertEqual(action._stringify_path(),
+                'Properties > discussion_color_code'
+            )
 
 
 class PropertiesSearchCase(TestPropertiesMixin):
@@ -2068,6 +2086,30 @@ class PropertiesSearchCase(TestPropertiesMixin):
     def test_properties_field_search(self):
         with self.assertRaises(ValueError):
             self.env['test_new_api.message'].search([('attributes', '=', '"Test"')])
+
+    @mute_logger('odoo.fields')
+    def test_properties_field_search_read_false(self):
+        Model = self.env['test_new_api.message']
+
+        discussion = self.env['test_new_api.discussion'].create({
+            'name': 'Test Discussion',
+            'participants': [Command.link(self.user.id)],
+        })
+
+        message = self.env['test_new_api.message'].create({
+            'name': 'Test Message',
+            'discussion': discussion.id,
+            'author': self.user.id,
+        })
+
+        discussion.attributes_definition = [{
+            'name': 'discussion_test',
+            'string': 'Discussion Test',
+            'type': 'char',
+        }]
+
+        message_values = Model.search_read([('id', '=', message.id)])
+        self.assertEqual(message_values[0]['attributes'][0]['value'], False, 'Value should be set as False')
 
 
 class PropertiesGroupByCase(TestPropertiesMixin):

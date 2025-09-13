@@ -129,6 +129,12 @@
             t-model="timeValue[unitIndex]"
             t-on-change="() => this.selectTime(timeValue_index)"
         >
+            <option
+                t-if="unitIndex === 1 and !!(timeValue[unitIndex] % props.rounding)"
+                class="text-center"
+                value=""
+                selected="true"
+            />
             <t t-foreach="unitList" t-as="unit" t-key="unit[0]">
                 <option
                     class="text-center"

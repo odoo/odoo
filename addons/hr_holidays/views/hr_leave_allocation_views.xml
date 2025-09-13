@@ -123,10 +123,10 @@
                             <div name="duration_display">
                                 <field name="number_of_days_display" nolabel="1" style="width: 5rem;"
                                     invisible="type_request_unit == 'hour'"
-                                    readonly="0"/>
+                                    readonly="is_officer != True and state not in ('draft','confirm')"/>
                                 <field name="number_of_hours_display" nolabel="1" style="width: 5rem;"
                                     invisible="type_request_unit != 'hour'"
-                                    readonly="0"/>
+                                    readonly="is_officer != True and state not in ('draft','confirm')"/>
                                 <span class="ml8" invisible="type_request_unit == 'hour'">Days</span>
                                 <span class="ml8" invisible="type_request_unit != 'hour'">Hours</span>
                             </div>
@@ -162,7 +162,7 @@
             </field>
             <div id="title" position="replace">
                 <div class="oe_title">
-                    <h2><field name="name" placeholder="e.g. Time Off type (From validity start to validity end / no limit)" required="1"/></h2>
+                    <h2><field name="private_name" placeholder="e.g. Time Off type (From validity start to validity end / no limit)" required="1"/></h2>
                 </div>
             </div>
             <field name="employee_id" position="before">
@@ -389,7 +389,7 @@
                         <div class="oe_kanban_global_click container">
                             <div class="row g-0">
                                 <div class="col-3">
-                                    <img t-att-src="kanban_image('hr.employee', 'avatar_128', record.employee_id.raw_value)"
+                                    <img t-att-src="kanban_image('hr.employee.public', 'avatar_128', record.employee_id.raw_value)"
                                         t-att-title="record.employee_id.value"
                                         t-att-alt="record.employee_id.value"
                                         class="o_image_64_cover float-start mr4"/>

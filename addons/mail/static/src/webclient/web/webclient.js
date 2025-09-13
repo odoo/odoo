@@ -5,6 +5,7 @@ import { useService } from "@web/core/utils/hooks";
 import { patch } from "@web/core/utils/patch";
 import { WebClient } from "@web/webclient/webclient";
 import { onWillDestroy } from "@odoo/owl";
+import { _t } from "@web/core/l10n/translation";
 
 const USER_DEVICES_MODEL = "mail.partner.device";
 
@@ -16,6 +17,7 @@ patch(WebClient.prototype, {
         super.setup();
         this.rpc = useService("rpc");
         this.orm = useService("orm");
+        this.notification = useService("notification");
         if (this._canSendNativeNotification) {
             this._subscribePush();
         }
@@ -62,10 +64,31 @@ patch(WebClient.prototype, {
         // This may occur if the subscription was refreshed by the browser,
         // but it may also happen if the subscription has been revoked or lost.
         if (!subscription) {
-            subscription = await pushManager.subscribe({
-                userVisibleOnly: true,
-                applicationServerKey: await this._getApplicationServerKey(),
-            });
+            try {
+                subscription = await pushManager.subscribe({
+                    userVisibleOnly: true,
+                    applicationServerKey: await this._getApplicationServerKey(),
+                });
+            } catch (error) {
+                console.warn(error);
+                this.notification.add(error.message, {
+                    title: _t("Failed to enable push notifications"),
+                    type: "danger",
+                    sticky: true,
+                });
+                if (await navigator.brave?.isBrave()) {
+                    this.notification.add(
+                        _t(
+                            "Brave: enable 'Google Services for Push Messaging' to enable push notifications"
+                        ),
+                        {
+                            type: "warning",
+                            sticky: true,
+                        }
+                    );
+                }
+                return;
+            }
             browser.localStorage.setItem(`${USER_DEVICES_MODEL}_endpoint`, subscription.endpoint);
         }
         const kwargs = subscription.toJSON();

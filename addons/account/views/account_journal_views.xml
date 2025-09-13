@@ -147,8 +147,9 @@
                                            string="Create Invoices upon Emails" invisible="type not in ('sale', 'purchase')">
                                        <field name="alias_id"/>
                                     </group>
+                                    <field name="display_alias_fields" invisible="1"/>
                                     <group name="group_alias_no_domain" string="Create Invoices upon Emails"
-                                           invisible="type not in ('sale', 'purchase') or alias_domain_id">
+                                           invisible="type not in ('sale', 'purchase') or display_alias_fields">
                                         <div class="content-group" colspan="2">
                                             <a type='action' name='%(action_open_settings)d' class="btn btn-link" role="button">
                                                 <i class="oi oi-fw o_button_icon oi-arrow-right"/> Choose or Configure Email Servers
@@ -156,7 +157,7 @@
                                         </div>
                                     </group>
                                     <group class="oe_edit_only" name="group_alias_edit" string="Create Invoices upon Emails"
-                                           invisible="type not in ('sale', 'purchase') or not alias_domain_id">
+                                           invisible="type not in ('sale', 'purchase') or not display_alias_fields">
                                         <label string="Email Alias" for="alias_name"/>
                                         <div class="oe_inline" name="edit_alias" style="display: inline;" dir="ltr" >
                                             <field name="alias_name" class="oe_inline"/>@

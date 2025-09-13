@@ -91,13 +91,13 @@
                                     <button class="accordion-button collapsed"
                                         type="button"
                                         data-bs-toggle="collapse"
-                                        t-attf-aria-controls="o_wevent_offcanvas_cat_#{category.name}"
-                                        t-att-data-bs-target="'.o_wevent_offcanvas_cat_%s' % category.name"
+                                        t-attf-aria-controls="o_wevent_offcanvas_cat_#{category.id}"
+                                        t-att-data-bs-target="'.o_wevent_offcanvas_cat_%s' % category.id"
                                         aria-expanded="false">
                                         <t t-out="category.name"/>
                                     </button>
                                 </h2>
-                                <div t-attf-id="o_wevent_offcanvas_cat_#{category.name}" t-attf-class="o_wevent_offcanvas_cat_#{category.name} accordion-collapse collapse">
+                                <div t-attf-id="o_wevent_offcanvas_cat_#{category.id}" t-attf-class="o_wevent_offcanvas_cat_#{category.id} accordion-collapse collapse">
                                     <div class="accordion-body pt-0">
                                         <ul class="list-group list-group-flush">
                                             <t t-if="category.is_published and category.tag_ids and any(tag.color for tag in category.tag_ids)" t-foreach="category.tag_ids" t-as="tag">
@@ -195,7 +195,11 @@
     <xpath expr="//div[hasclass('o_wevent_index_topbar_filters')]/div" position="before">
         <div class="dropdown d-none d-lg-block">
             <a href="#" role="button" class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown" title="Filter by Country">
-                <t t-if="current_country" t-out="current_country.name"/>
+                <t t-if="searches['country'] == 'online'">
+                    <t t-set="online_event_text">Online Events</t>
+                    <t t-out="online_event_text"/>
+                </t>
+                <t t-elif="current_country" t-esc="current_country.name"/>
                 <t t-else="">All countries</t>
             </a>
             <div class="dropdown-menu">
@@ -327,7 +331,7 @@
                     
                     <!-- Body -->
                     <main t-attf-class="card-body position-relative d-flex flex-column justify-content-between gap-2 #{opt_events_list_columns and 'col-12 py-3' or 'col-8 col-lg-9 px-4'} #{not opt_events_list_cards and opt_events_list_columns and 'bg-transparent px-0'} #{not opt_events_list_cards and not opt_events_list_columns and 'bg-transparent py-0'}">
-                        <div>
+                        <div id="event_details">
                             <div class="d-flex flex-wrap gap-1 small">
                                 <t t-foreach="event.tag_ids.filtered(lambda tag: tag.category_id.website_id == website or not tag.category_id.website_id)" t-as="tag">
                                     <span t-if="tag.color"
@@ -341,8 +345,10 @@
                                 <span t-field="event.name" itemprop="name"/>
                             </h5>
                             <!-- Start Date & Time -->
-                            <small class="o_not_editable opacity-75" itemprop="description" t-out="event.subtitle">
+                            <!-- TODO remove t-out one in master -->
+                            <small t-if="False" class="o_not_editable opacity-75" itemprop="description" t-out="event.subtitle">
                             </small>
+                            <small class="opacity-75" itemprop="description" t-field="event.subtitle"/>
                         </div>
                         <!-- Location -->
                         <small class="o_not_editable fw-bold" itemprop="location" t-out="event.address_id" t-options="{'widget': 'contact', 'fields': ['city'], 'no_marker': 'true'}"/>
@@ -381,8 +387,8 @@
 <template id="opt_events_list_cards" inherit_id="website_event.events_list" active="True" name="'Cards' Design"/>
 
 <template id="opt_events_list_categories" inherit_id="website_event.events_list" active="False" name="Show Templates">
-    <xpath expr="//main/*" position="before">
-        <span t-if="event.event_type_id" t-attf-href="/event?type=#{event.event_type_id.id}" t-attf-class="badge text-bg-secondary o_wevent_badge #{opt_events_list_columns and 'o_wevent_badge_event' or 'position-absolute bottom-0 end-0'} #{not opt_events_list_columns and opt_events_list_cards and 'me-3 mb-3'}" t-field="event.event_type_id"/>
+    <xpath expr="//main/div[@id='event_details']" position="after">
+        <span t-if="event.event_type_id" t-attf-href="/event?type=#{event.event_type_id.id}" t-attf-class="badge text-bg-secondary o_wevent_badge #{opt_events_list_columns and 'o_wevent_badge_event' or 'position-absolute bottom-0 end-0 end-sm-0 start-sm-0'} #{not opt_events_list_columns and opt_events_list_cards and 'me-sm-3 mb-sm-3'}" t-field="event.event_type_id"/>
     </xpath>
 </template>
 
@@ -427,14 +433,14 @@
         <h6 class="o_wevent_sidebar_title">Photos</h6>
         <a href="/event">
             <figure class="o_wevent_sidebar_block o_wevent_sidebar_figure figure">
-                <img class="figure-img img-fluid rounded" src="/website_event/static/src/img/event_past_0.jpg" alt=""/>
-                <figcaption class="figure-caption">A past event</figcaption>
+                <img class="figure-img img-fluid rounded oe_unremovable" src="/website_event/static/src/img/event_past_0.jpg" alt=""/>
+                <figcaption class="figure-caption oe_unremovable">A past event</figcaption>
             </figure>
         </a>
         <a href="/event">
             <figure class="o_wevent_sidebar_block o_wevent_sidebar_figure figure">
-                <img class="figure-img img-fluid rounded" src="/website_event/static/src/img/event_training_0.jpg" alt=""/>
-                <figcaption class="figure-caption">Our Trainings</figcaption>
+                <img class="figure-img img-fluid rounded oe_unremovable" src="/website_event/static/src/img/event_training_0.jpg" alt=""/>
+                <figcaption class="figure-caption oe_unremovable">Our Trainings</figcaption>
             </figure>
         </a>
     </xpath>

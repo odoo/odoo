@@ -245,11 +245,16 @@ export class Link extends Component {
      * @private
      */
     _correctLink(url) {
-        if (url.indexOf('tel:') === 0) {
-            url = url.replace(/^tel:([0-9]+)$/, 'tel://$1');
-        } else if (url && !url.startsWith('mailto:') && url.indexOf('://') === -1
-                    && url[0] !== '/' && url[0] !== '#' && url.slice(0, 2) !== '${') {
-            url = 'http://' + url;
+        if (
+            url &&
+            !url.startsWith("tel:") &&
+            !url.startsWith("mailto:") &&
+            !url.includes("://") &&
+            !url.startsWith("/") &&
+            !url.startsWith("#") &&
+            !url.startsWith("${")
+        ) {
+            url = "http://" + url;
         }
         return url;
     }
@@ -259,6 +264,10 @@ export class Link extends Component {
             // Text begins with a known protocol, accept it as valid URL.
             return text;
         } else {
+            const match = text.match(PHONE_REGEX);
+            if (match) {
+                return ("tel:" + match[0]).replace(/\s+/g, "");
+            }
             return deduceURLfromText(text, this.linkEl) || '';
         }
     }
@@ -306,9 +315,12 @@ export class Link extends Component {
         var doStripDomain = this._doStripDomain();
         if (this.state.url.indexOf(location.origin) === 0 && doStripDomain) {
             this.state.url = this.state.url.slice(location.origin.length);
+        } else if (url.indexOf(location.origin) === 0 && !doStripDomain) {
+            this.state.url = url;
         }
         var allWhitespace = /\s+/gi;
         var allStartAndEndSpace = /^\s+|\s+$/gi;
+        const isImage = this.props.link && this.props.link.querySelector('img');
         return {
             content: content,
             url: this._correctLink(this.state.url),
@@ -321,6 +333,7 @@ export class Link extends Component {
             oldAttributes: this.state.oldAttributes,
             isNewWindow: isNewWindow,
             doStripDomain: doStripDomain,
+            isImage,
         };
     }
     /**
@@ -471,7 +484,7 @@ export class Link extends Component {
      */
     _updateLinkContent($link, linkInfos, { force = false } = {}) {
         if (force || (this.props.needLabel && (linkInfos.content !== this.state.originalText || linkInfos.url !== this.state.url))) {
-            if (linkInfos.content === this.state.originalText) {
+            if (linkInfos.content === this.state.originalText || linkInfos.isImage) {
                 $link.html(this.state.originalHTML.replaceAll('\u200B', '').replaceAll('\uFEFF', ''));
             } else if (linkInfos.content && linkInfos.content.length) {
                 let contentWrapperEl = $link[0];
@@ -698,6 +711,16 @@ export function getOrCreateLink({ containerNode, startNode } = {}) {
         }
     } else if (!link && isContained) {
         link = document.createElement('a');
+        // We force links added in paragraphs to be translated "as a whole".
+        // This should allow them to be considered part of the whole text content
+        // and not as separate terms, and will prevent breaking the translation
+        // of a text when only a part of it is transformed into a link.
+        const commonAncestor = range.commonAncestorContainer;
+        const commonAncestorEl = commonAncestor.nodeType !== Node.ELEMENT_NODE ?
+            commonAncestor.parentElement : commonAncestor;
+        if (commonAncestorEl.closest("p")) {
+            link.className = "o_translate_inline";
+        }
         if (range.collapsed) {
             range.insertNode(link);
             needLabel = true;

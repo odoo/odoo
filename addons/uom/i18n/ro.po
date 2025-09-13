@@ -3,12 +3,13 @@
 # 	* uom
 # 
 # Translators:
-# Lyall Kindmurr, 2024
 # Fekete Mihai <mihai.fekete@forestandbiomass.ro>, 2024
-# Dorin Hongu <dhongu@gmail.com>, 2024
 # Martin Trigaux, 2024
 # Cozmin Candea <office@terrabit.ro>, 2024
 # Foldi Robert <foldirobert@nexterp.ro>, 2024
+# Lyall Kindmurr, 2024
+# Dorin Hongu <dhongu@gmail.com>, 2025
+# Larisa_nexterp, 2025
 # 
 msgid ""
 msgstr ""
@@ -16,7 +17,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:56+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Foldi Robert <foldirobert@nexterp.ro>, 2024\n"
+"Last-Translator: Larisa_nexterp, 2025\n"
 "Language-Team: Romanian (https://app.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -105,7 +106,7 @@ msgstr "Creat de"
 #: model:ir.model.fields,field_description:uom.field_uom_category__create_date
 #: model:ir.model.fields,field_description:uom.field_uom_uom__create_date
 msgid "Created on"
-msgstr "Creat în"
+msgstr "Creat pe"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_day
@@ -238,6 +239,13 @@ msgid ""
 "\n"
 "Therefore, changing core units of measure in a running database is not recommended."
 msgstr ""
+"Unele câmpuri critice au fost modificate în  %s.\n"
+"Rețineți că datele existente NU vor fi actualizate de această modificare.\n"
+"\n"
+"Având în vedere că unitățile de măsură influențează întregul sistem, acest lucru poate cauza probleme critice.\n"
+"De exemplu, modificarea rotunjirii ar putea afecta balanța stocurilor.\n"
+"\n"
+"Prin urmare, nu se recomandă modificarea unităților de măsură fundamentale într-o bază de date aflată în exploatare."
 
 #. module: uom
 #: model:uom.category,name:uom.uom_categ_surface
@@ -317,7 +325,7 @@ msgstr ""
 #. module: uom
 #: model:uom.category,name:uom.product_uom_categ_unit
 msgid "Unit"
-msgstr "buc"
+msgstr "Unitate"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__name
@@ -332,7 +340,7 @@ msgstr "Categorie Unitate de măsură"
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_unit
 msgid "Units"
-msgstr "Buc"
+msgstr "Unități"
 
 #. module: uom
 #: model:ir.actions.act_window,name:uom.product_uom_form_action
@@ -390,7 +398,7 @@ msgstr ""
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_category__uom_ids
 msgid "Uom"
-msgstr ""
+msgstr "UM"
 
 #. module: uom
 #: model:uom.category,name:uom.product_uom_categ_vol

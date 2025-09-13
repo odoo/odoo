@@ -6,7 +6,6 @@ from odoo.tools import mute_logger
 from odoo.addons.http_routing.models.ir_http import slug
 
 from unittest.mock import patch
-from urllib.parse import urlparse
 
 
 @tagged('-at_install', 'post_install')
@@ -57,6 +56,28 @@ class TestRedirect(HttpCase):
         self.assertTrue(country_ad.name in r.text, "Ensure the controller returned the expected value (2)")
         self.assertTrue(redirect_url in r.text, "Ensure the url_for has replaced the href URL in the DOM")
 
+    def test_redirect_308_by_method_url_rewrite(self):
+        self.env['website.rewrite'].create({
+            'name': 'Test Website Redirect',
+            'redirect_type': '308',
+            'url_from': url_from,
+            'url_to': f'{url_from}_new',
+        } for url_from in ('/get', '/post', '/get_post'))
+
+        self.env.ref('test_website.test_view').arch = '''
+            <t>
+                <a href="/get"></a><a href="/post"></a><a href="/get_post"></a>
+            </t>
+        '''
+
+        # [Public User] Open the /test_view url and ensure urls are rewritten
+        r = self.url_open('/test_view')
+        self.assertEqual(r.status_code, 200)
+        self.assertEqual(
+            r.content.strip(),
+            b'<a href="/get_new"></a><a href="/post_new"></a><a href="/get_post_new"></a>'
+        )
+
     @mute_logger('odoo.http')  # mute 403 warning
     def test_02_redirect_308_RequestUID(self):
         self.env['website.rewrite'].create({
@@ -81,27 +102,27 @@ class TestRedirect(HttpCase):
             # published
             resp = self.url_open(f"/test_website/200/name-{rec_published.id}", allow_redirects=False)
             self.assertEqual(resp.status_code, 308)
-            self.assertEqual(urlparse(resp.headers.get('Location', '')).path, f"/test_website/308/name-{rec_published.id}")
+            self.assertURLEqual(resp.headers.get('Location'), f"/test_website/308/name-{rec_published.id}")
 
             resp = self.url_open(f"/test_website/308/name-{rec_published.id}", allow_redirects=False)
             self.assertEqual(resp.status_code, 200)
 
             resp = self.url_open(f"/test_website/200/xx-{rec_published.id}", allow_redirects=False)
             self.assertEqual(resp.status_code, 308)
-            self.assertEqual(resp.headers.get('Location'), f"{self.base_url()}/test_website/308/xx-{rec_published.id}")
+            self.assertURLEqual(resp.headers.get('Location'), f"/test_website/308/xx-{rec_published.id}")
 
             resp = self.url_open(f"/test_website/308/xx-{rec_published.id}", allow_redirects=False)
             self.assertEqual(resp.status_code, 301)
-            self.assertEqual(urlparse(resp.headers.get('Location'), '').path, f"/test_website/308/name-{rec_published.id}")
+            self.assertURLEqual(resp.headers.get('Location'), f"/test_website/308/name-{rec_published.id}")
 
             resp = self.url_open(f"/test_website/200/xx-{rec_published.id}", allow_redirects=True)
             self.assertEqual(resp.status_code, 200)
-            self.assertEqual(resp.url, f"{self.base_url()}/test_website/308/name-{rec_published.id}")
+            self.assertURLEqual(resp.url, f"/test_website/308/name-{rec_published.id}")
 
             # unexisting
             resp = self.url_open("/test_website/200/name-100", allow_redirects=False)
             self.assertEqual(resp.status_code, 308)
-            self.assertEqual(resp.headers.get('Location'), f"{self.base_url()}/test_website/308/name-100")
+            self.assertURLEqual(resp.headers.get('Location'), "/test_website/308/name-100")
 
             resp = self.url_open("/test_website/308/name-100", allow_redirects=False)
             self.assertEqual(resp.status_code, 404)
@@ -109,7 +130,7 @@ class TestRedirect(HttpCase):
 
             resp = self.url_open("/test_website/200/xx-100", allow_redirects=False)
             self.assertEqual(resp.status_code, 308)
-            self.assertEqual(resp.headers.get('Location'), f"{self.base_url()}/test_website/308/xx-100")
+            self.assertURLEqual(resp.headers.get('Location'), "/test_website/308/xx-100")
 
             resp = self.url_open("/test_website/308/xx-100", allow_redirects=False)
             self.assertEqual(resp.status_code, 404)
@@ -118,19 +139,19 @@ class TestRedirect(HttpCase):
             # unpublish
             resp = self.url_open(f"/test_website/200/name-{rec_unpublished.id}", allow_redirects=False)
             self.assertEqual(resp.status_code, 308)
-            self.assertEqual(resp.headers.get('Location'), f"{self.base_url()}/test_website/308/name-{rec_unpublished.id}")
+            self.assertURLEqual(resp.headers.get('Location'), f"/test_website/308/name-{rec_unpublished.id}")
 
             resp = self.url_open(f"/test_website/308/name-{rec_unpublished.id}", allow_redirects=False)
-            self.assertEqual(resp.status_code, 403)
-            self.assertEqual(resp.text, "CUSTOM 403")
+            self.assertEqual(resp.status_code, 404)
+            self.assertEqual(resp.text, "CUSTOM 404")
 
             resp = self.url_open(f"/test_website/200/xx-{rec_unpublished.id}", allow_redirects=False)
             self.assertEqual(resp.status_code, 308)
-            self.assertEqual(resp.headers.get('Location'), f"{self.base_url()}/test_website/308/xx-{rec_unpublished.id}")
+            self.assertURLEqual(resp.headers.get('Location'), f"/test_website/308/xx-{rec_unpublished.id}")
 
             resp = self.url_open(f"/test_website/308/xx-{rec_unpublished.id}", allow_redirects=False)
-            self.assertEqual(resp.status_code, 403)
-            self.assertEqual(resp.text, "CUSTOM 403")
+            self.assertEqual(resp.status_code, 404)
+            self.assertEqual(resp.text, "CUSTOM 404")
 
             # with seo_name as slug
             rec_published.seo_name = "seo_name"
@@ -138,22 +159,22 @@ class TestRedirect(HttpCase):
 
             resp = self.url_open(f"/test_website/200/seo-name-{rec_published.id}", allow_redirects=False)
             self.assertEqual(resp.status_code, 308)
-            self.assertEqual(resp.headers.get('Location'), f"{self.base_url()}/test_website/308/seo-name-{rec_published.id}")
+            self.assertURLEqual(resp.headers.get('Location'), f"/test_website/308/seo-name-{rec_published.id}")
 
             resp = self.url_open(f"/test_website/308/seo-name-{rec_published.id}", allow_redirects=False)
             self.assertEqual(resp.status_code, 200)
 
             resp = self.url_open(f"/test_website/200/xx-{rec_unpublished.id}", allow_redirects=False)
             self.assertEqual(resp.status_code, 308)
-            self.assertEqual(resp.headers.get('Location'), f"{self.base_url()}/test_website/308/xx-{rec_unpublished.id}")
+            self.assertURLEqual(resp.headers.get('Location'), f"/test_website/308/xx-{rec_unpublished.id}")
 
             resp = self.url_open(f"/test_website/308/xx-{rec_unpublished.id}", allow_redirects=False)
-            self.assertEqual(resp.status_code, 403)
-            self.assertEqual(resp.text, "CUSTOM 403")
+            self.assertEqual(resp.status_code, 404)
+            self.assertEqual(resp.text, "CUSTOM 404")
 
             resp = self.url_open("/test_website/200/xx-100", allow_redirects=False)
             self.assertEqual(resp.status_code, 308)
-            self.assertEqual(resp.headers.get('Location'), f"{self.base_url()}/test_website/308/xx-100")
+            self.assertURLEqual(resp.headers.get('Location'), "/test_website/308/xx-100")
 
             resp = self.url_open("/test_website/308/xx-100", allow_redirects=False)
             self.assertEqual(resp.status_code, 404)
@@ -184,10 +205,10 @@ class TestRedirect(HttpCase):
         r = self.url_open(url_rec1)
         self.assertEqual(r.status_code, 200)
 
-        # 2. Accessing unpublished record: expecting 403 by default
+        # 2. Accessing unpublished record: expecting 404 for public users
         rec1.is_published = False
         r = self.url_open(url_rec1)
-        self.assertEqual(r.status_code, 403)
+        self.assertEqual(r.status_code, 404)
 
         # 3. Accessing unpublished record with redirect to a 404: expecting 404
         redirect = self.env['website.rewrite'].create({
@@ -226,11 +247,11 @@ class TestRedirect(HttpCase):
         })
         r = self.url_open(url_rec1, allow_redirects=False)
         self.assertEqual(r.status_code, 301)
-        self.assertTrue(r.headers.get('Location', '').endswith(redirect.url_to))
+        self.assertURLEqual(r.headers.get('Location'), redirect.url_to)
 
         r = self.url_open(url_rec1, allow_redirects=True)
         self.assertEqual(r.status_code, 200)
-        self.assertTrue(r.url.endswith(redirect.url_to))
+        self.assertURLEqual(r.url, redirect.url_to)
 
     def test_redirect_308_multiple_url_endpoint(self):
         self.env['website.rewrite'].create({
@@ -247,8 +268,53 @@ class TestRedirect(HttpCase):
 
         resp = self.url_open("/test_countries_308", allow_redirects=False)
         self.assertEqual(resp.status_code, 308)
-        self.assertEqual(resp.headers.get('Location'), self.base_url() + "/test_countries_308_redirected")
+        self.assertURLEqual(resp.headers.get('Location'), "/test_countries_308_redirected")
 
         resp = self.url_open(url_rec1)
         self.assertEqual(resp.status_code, 200)
         self.assertTrue(resp.url.endswith(url_rec1))
+
+    def test_redirect_with_qs(self):
+        self.env['website.rewrite'].create({
+            'name': 'Test 301 Redirect with qs',
+            'redirect_type': '301',
+            'url_from': '/foo?bar=1',
+            'url_to': '/new-page-01',
+        })
+        self.env['website.rewrite'].create({
+            'name': 'Test 301 Redirect with qs',
+            'redirect_type': '301',
+            'url_from': '/foo?bar=2',
+            'url_to': '/new-page-10?qux=2',
+        })
+        self.env['website.rewrite'].create({
+            'name': 'Test 301 Redirect without qs',
+            'redirect_type': '301',
+            'url_from': '/foo',
+            'url_to': '/new-page-11',
+        })
+
+        # should match qs first
+        resp = self.url_open("/foo?bar=1", allow_redirects=False)
+        self.assertEqual(resp.status_code, 301)
+        self.assertURLEqual(resp.headers.get('Location'), "/new-page-01?bar=1")
+
+        # should match qs first
+        resp = self.url_open("/foo?bar=2", allow_redirects=False)
+        self.assertEqual(resp.status_code, 301)
+        self.assertURLEqual(resp.headers.get('Location'), "/new-page-10?qux=2&bar=2")
+
+        # should match no qs
+        resp = self.url_open("/foo?bar=3", allow_redirects=False)
+        self.assertEqual(resp.status_code, 301)
+        self.assertURLEqual(resp.headers.get('Location'), "/new-page-11?bar=3")
+
+        resp = self.url_open("/foo", allow_redirects=False)
+        self.assertEqual(resp.status_code, 301)
+        self.assertURLEqual(resp.headers.get('Location'), "/new-page-11")
+
+        # we dont support wrong get order
+        # purpose is to support simple case like content.asp?id=xx
+        resp = self.url_open("/foo?oups=1&bar=2", allow_redirects=False)
+        self.assertEqual(resp.status_code, 301)
+        self.assertURLEqual(resp.headers.get('Location'), "/new-page-11?oups=1&bar=2")

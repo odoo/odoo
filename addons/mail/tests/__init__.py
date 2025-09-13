@@ -4,7 +4,9 @@ from . import test_ir_mail_server
 from . import test_link_preview
 from . import test_mail_activity
 from . import test_mail_composer
+from . import test_mail_mail
 from . import test_mail_mail_stable_selection
+from . import test_mail_message
 from . import test_mail_render
 from . import test_mail_template
 from . import test_mail_tools

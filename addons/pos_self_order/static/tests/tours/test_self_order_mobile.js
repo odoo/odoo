@@ -23,6 +23,10 @@ registry.category("web_tour.tours").add("self_mobile_each_table_takeaway_in", {
         Utils.clickBtn("Pay"),
         Utils.clickBtn("Ok"),
         Utils.checkIsNoBtn("Order Now"),
+        Utils.clickBtn("My Order"),
+        ...CartPage.cancelOrder(),
+        Utils.checkBtn("Order Now"),
+        Utils.checkBtn("My Orders"),
     ],
 });
 
@@ -232,5 +236,20 @@ registry.category("web_tour.tours").add("self_order_mobile_each_cancel", {
         Utils.clickBtn("My Order"),
         CartPage.checkProduct("Fanta", "2.53", "1"),
         Utils.checkBtn("Pay"),
+    ],
+});
+
+registry.category("web_tour.tours").add("SelfOrderOrderNumberTour", {
+    test: true,
+    steps: () => [
+        Utils.checkIsNoBtn("My Order"),
+        Utils.clickBtn("Order Now"),
+        ProductPage.clickProduct("Coca-Cola"),
+        Utils.clickBtn("Order"),
+        CartPage.checkProduct("Coca-Cola", "2.53", "1"),
+        Utils.clickBtn("Pay"),
+        Utils.clickBtn("Confirm"),
+        Utils.clickBtn("Ok"),
+        Utils.checkIsNoBtn("Ok"),
     ],
 });

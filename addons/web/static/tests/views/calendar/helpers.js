@@ -509,6 +509,37 @@ export async function resizeEventToTime(target, eventId, dateTime) {
     await nextTick();
 }
 
+export async function resizeEventToDate(target, eventId, date) {
+    const event = findEvent(target, eventId);
+    const slot = findAllDaySlot(target, date);
+
+    await scrollTo(event);
+    await triggerEventForCalendar(event, "mouseenter");
+
+    // Find event resizer
+    const resizer = event.querySelector(".fc-end-resizer");
+    resizer.style.display = "block";
+    resizer.style.width = "100%";
+    resizer.style.height = "1em";
+    resizer.style.bottom = "0";
+    const resizerRect = resizer.getBoundingClientRect();
+    const resizerPos = {
+        x: resizerRect.x + resizerRect.width,
+        y: resizerRect.y + resizerRect.height / 2,
+    };
+    await triggerEventForCalendar(resizer, "mousedown", resizerPos);
+    // Find slot position
+    await scrollTo(slot, false);
+    const slotRect = slot.getBoundingClientRect();
+    const toPos = {
+        x: slotRect.x + slotRect.width / 2,
+        y: slotRect.y + slotRect.height / 2,
+    };
+    await triggerEventForCalendar(slot, "mousemove", toPos);
+    await triggerEventForCalendar(slot, "mouseup", toPos);
+    await nextTick();
+}
+
 export async function changeScale(target, scale) {
     await click(target, `.o_view_scale_selector .scale_button_selection`);
     await click(target, `.o_view_scale_selector .o_scale_button_${scale}`);

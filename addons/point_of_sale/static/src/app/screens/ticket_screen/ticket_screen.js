@@ -3,7 +3,7 @@
 import { Order } from "@point_of_sale/app/store/models";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
-import { deserializeDateTime, formatDateTime } from "@web/core/l10n/dates";
+import { deserializeDateTime, formatDateTime, parseDateTime } from "@web/core/l10n/dates";
 import { parseFloat } from "@web/views/fields/parsers";
 import { _t } from "@web/core/l10n/translation";
 
@@ -253,6 +253,10 @@ export class TicketScreen extends Component {
             }
         }
     }
+    async addAdditionalRefundInfo(order, destinationOrder) {
+        // used by L10N, e.g: add a refund reason using a specific L10N field
+        return Promise.resolve();
+    }
     async onDoRefund() {
         const order = this.getSelectedOrder();
 
@@ -352,6 +356,7 @@ export class TicketScreen extends Component {
         if (this.pos.get_order().cid !== destinationOrder.cid) {
             this.pos.set_order(destinationOrder);
         }
+        await this.addAdditionalRefundInfo(order, destinationOrder);
 
         this.closeTicketScreen();
     }
@@ -691,6 +696,20 @@ export class TicketScreen extends Component {
                 repr: (order) => formatDateTime(order.date_order),
                 displayName: _t("Date"),
                 modelField: "date_order",
+                formatSearch: (searchTerm) => {
+                    const includesTime = searchTerm.includes(':');
+                    let parsedDateTime;
+                    try {
+                        parsedDateTime = parseDateTime(searchTerm);
+                    } catch {
+                        return searchTerm;
+                    }
+                    if (includesTime) {
+                        return parsedDateTime.toUTC().toFormat("yyyy-MM-dd HH:mm:ss");
+                    } else {
+                        return parsedDateTime.toFormat("yyyy-MM-dd");
+                    }
+                }
             },
             PARTNER: {
                 repr: (order) => order.get_partner_name(),
@@ -752,13 +771,16 @@ export class TicketScreen extends Component {
     }
     //#region SEARCH SYNCED ORDERS
     _computeSyncedOrdersDomain() {
-        const { fieldName, searchTerm } = this._state.ui.searchDetails;
+        let { fieldName, searchTerm } = this._state.ui.searchDetails;
         if (!searchTerm) {
             return [];
         }
-        const modelField = this._getSearchFields()[fieldName].modelField;
-        if (modelField) {
-            return [[modelField, "ilike", `%${searchTerm}%`]];
+        const searchField = this._getSearchFields()[fieldName];
+        if (searchField) {
+            if (searchField.formatSearch) {
+                searchTerm = searchField.formatSearch(searchTerm);
+            }
+            return [[searchField.modelField, "ilike", `%${searchTerm}%`]];
         } else {
             return [];
         }
@@ -774,7 +796,7 @@ export class TicketScreen extends Component {
         const offset =
             (this._state.syncedOrders.currentPage - 1) * this._state.syncedOrders.nPerPage;
         const config_id = this.pos.config.id;
-        const { ordersInfo, totalCount } = await this.orm.call(
+        let { ordersInfo, totalCount } = await this.orm.call(
             "pos.order",
             "search_paid_order_ids",
             [],
@@ -791,6 +813,10 @@ export class TicketScreen extends Component {
         const idsToLoad = idsNotInCache.concat(idsNotUpToDate).map((info) => info[0]);
         if (idsToLoad.length > 0) {
             const fetchedOrders = await this.orm.call("pos.order", "export_for_ui", [idsToLoad]);
+            // Remove not loaded Order IDs
+            const fetchedOrderIds = new Set(fetchedOrders.map(order => order.id));
+            const notLoadedIds = idsNotInCache.filter((orderInfo) => !fetchedOrderIds.has(orderInfo[0]));
+            ordersInfo = ordersInfo.filter((orderInfo) => !notLoadedIds.includes(orderInfo[0]));
             // Check for missing products and partners and load them in the PoS
             await this.pos._loadMissingProducts(fetchedOrders);
             await this.pos._loadMissingPartners(fetchedOrders);

@@ -6,6 +6,7 @@ import { Wysiwyg } from "@web_editor/js/wysiwyg/wysiwyg";
 import {
     triggerEvent,
     insertText,
+    deleteBackward,
 } from "@web_editor/js/editor/odoo-editor/test/utils";
 
 function onMount() {;
@@ -75,7 +76,7 @@ QUnit.module(
                 editable.innerHTML,
                 `<p>Test</p><div class="o_editor_banner o_not_editable lh-1 d-flex align-items-center alert alert-info pb-0 pt-3" role="status" data-oe-protected="true" contenteditable="false">
                         <i class="fs-4 fa fa-info-circle mb-3" aria-label="Banner Info"></i>
-                        <div class="w-100 ms-3" data-oe-protected="false" contenteditable="true">
+                        <div class="w-100 px-3" data-oe-protected="false" contenteditable="true">
                             <p placeholder=\"Type &quot;/&quot; for commands\" class=\"oe-hint oe-command-temporary-hint\"><br></p>
                         </div>
                     </div><p><br></p>`,
@@ -94,7 +95,7 @@ QUnit.module(
                 editable.innerHTML,
                 `<p>Test</p><div class="o_editor_banner o_not_editable lh-1 d-flex align-items-center alert alert-info pb-0 pt-3" role="status" data-oe-protected="true" contenteditable="false">
                         <i class="fs-4 fa fa-info-circle mb-3" aria-label="Banner Info"></i>
-                        <div class="w-100 ms-3" data-oe-protected="false" contenteditable="true">
+                        <div class="w-100 px-3" data-oe-protected="false" contenteditable="true">
                             <p placeholder=\"Type &quot;/&quot; for commands\" class=\"oe-hint oe-command-temporary-hint\"><br></p>
                         </div>
                     </div><p><br></p>`,
@@ -122,8 +123,10 @@ QUnit.module(
                 editable.innerHTML,
                 `<p>Test</p><div class="o_editor_banner o_not_editable lh-1 d-flex align-items-center alert alert-info pb-0 pt-3" role="status" data-oe-protected="true" contenteditable="false">
                         <i class="fs-4 fa fa-info-circle mb-3" aria-label="Banner Info"></i>
-                        <div class="w-100 ms-3" data-oe-protected="false" contenteditable="true">
-                            <p placeholder=\"Type &quot;/&quot; for commands\" class=\"oe-hint oe-command-temporary-hint\"><br></p></div></div><p><br></p>`,
+                        <div class="w-100 px-3" data-oe-protected="false" contenteditable="true">
+                            <p placeholder=\"Type &quot;/&quot; for commands\" class=\"oe-hint oe-command-temporary-hint\"><br></p>
+                        </div>
+                    </div><p><br></p>`,
             );
         });
         QUnit.test("First element of o_editable is not editable", async function (assert) {
@@ -133,23 +136,19 @@ QUnit.module(
             insertText(editor, '/banner');
             triggerEvent(editor.editable, "keydown", { key: "Enter" });
             await nextTick();
-            const p = editable.querySelectorAll('p')[1];
+            const p = editable.querySelectorAll('p')[2];
             setSelection(p, 0);
             insertText(editor, 'Test1');
             triggerEvent(editor.editable, "input", { inputType: "insertParagraph" });
             insertText(editor, 'Test2');
             triggerEvent(editor.editable, "keydown", { key: "a", ctrlKey: true });
             await nextTick();
-            triggerEvent(editor.editable, "input", { inputType: "deleteContentBackward" });
+            await deleteBackward(editor);
+            await nextTick();
             assert.strictEqual(
                 editable.innerHTML,
-                `<div class="o_editor_banner o_not_editable lh-1 d-flex align-items-center alert alert-info pb-0 pt-3" role="status" data-oe-protected="true" contenteditable="false">
-                        <i class="fs-4 fa fa-info-circle mb-3" aria-label="Banner Info"></i>
-                        <div class="w-100 ms-3" data-oe-protected="false" contenteditable="true">
-                            <p><br></p>
-                        </div>
-                    </div><p placeholder=\"Type &quot;/&quot; for commands\" class=\"oe-hint oe-command-temporary-hint\"><br></p>`,
-                "should not remove banner when ctrl+a and backspace are performed",
+                `<p placeholder=\"Type &quot;/&quot; for commands\" class=\"oe-hint oe-command-temporary-hint\"><br></p>`,
+                "should remove banner when ctrl+a and backspace are performed",
             );
         });
     }

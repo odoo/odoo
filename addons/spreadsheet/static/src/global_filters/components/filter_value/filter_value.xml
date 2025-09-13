@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <templates>
-    <t t-name="spreadsheet_edition.FilterValue"
-       >
-        <div class="o-filter-value d-flex align-items-start w-100">
+    <t t-name="spreadsheet_edition.FilterValue">
+        <div class="o-filter-value d-flex align-items-start w-100" t-att-title="props.showTitle and filter.label">
             <div t-if="filter.type === 'text'" class="w-100">
                 <TextFilterValue
                     value="filterValue"
@@ -21,7 +20,7 @@
             <div t-if="filter.type === 'date'" class="w-100">
                 <select t-if="filter.rangeType === 'relative'"
                     t-on-change="(e) => this.onDateInput(filter.id, e.target.value || undefined)"
-                    class="date_filter_values o_input me-3"
+                    class="date_filter_values o_input me-3 text-truncate"
                     required="true">
                     <option value="">Select period...</option>
                     <t t-foreach="relativeDateRangesTypes"
@@ -41,10 +40,11 @@
                 <DateFilterValue t-else=""
                     period="filterValue?.period"
                     yearOffset="filterValue?.yearOffset"
+                    disabledPeriods="filter.disabledPeriods"
                     onTimeRangeChanged="(value) => this.onDateInput(filter.id, value)"/>
             </div>
             <i t-if="getters.isGlobalFilterActive(filter.id)"
-                class="fa fa-times btn btn-link text-muted o_side_panel_filter_icon ms-1"
+                class="fa fa-times btn btn-link text-muted o_side_panel_filter_icon ms-1 mt-1"
                 title="Clear"
                 t-on-click="() => this.clear(filter.id)"/>
         </div>

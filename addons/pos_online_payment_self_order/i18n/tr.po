@@ -7,6 +7,7 @@
 # Umur Akın <umura@projetgrup.com>, 2023
 # Murat Kaplan <muratk@projetgrup.com>, 2023
 # Martin Trigaux, 2023
+# Deniz Guvener_Odoo <degu@odoo.com>, 2025
 # 
 msgid ""
 msgstr ""
@@ -14,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:55+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Martin Trigaux, 2023\n"
+"Last-Translator: Deniz Guvener_Odoo <degu@odoo.com>, 2025\n"
 "Language-Team: Turkish (https://app.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -55,12 +56,12 @@ msgstr "Öde"
 #: code:addons/pos_online_payment_self_order/static/src/components/order_widget/order_widget.js:0
 #, python-format
 msgid "Pay at cashier"
-msgstr ""
+msgstr "Kasada ödeyin"
 
 #. module: pos_online_payment_self_order
 #: model_terms:ir.ui.view,arch_db:pos_online_payment_self_order.res_config_settings_view_form_menu
 msgid "Pay at cashier if empty"
-msgstr ""
+msgstr "Boşsa kasadan ödeme yapın"
 
 #. module: pos_online_payment_self_order
 #: model_terms:ir.ui.view,arch_db:pos_online_payment_self_order.res_config_settings_view_form_menu
@@ -72,7 +73,7 @@ msgstr "Ödeme Yöntemleri"
 #: code:addons/pos_online_payment_self_order/static/src/pages/payment_page/payment_page.xml:0
 #, python-format
 msgid "Payment in progress"
-msgstr ""
+msgstr "Ödeme işleniyor"
 
 #. module: pos_online_payment_self_order
 #: model:ir.model,name:pos_online_payment_self_order.model_pos_config
@@ -89,20 +90,20 @@ msgstr "Satış Noktası Siparişi"
 #: code:addons/pos_online_payment_self_order/static/src/pages/payment_page/payment_page.xml:0
 #, python-format
 msgid "Scan the QR code to pay"
-msgstr ""
+msgstr "Ödeme yapmak için QR kodunu okutun"
 
 #. module: pos_online_payment_self_order
 #: model:ir.model.fields,field_description:pos_online_payment_self_order.field_pos_config__self_order_online_payment_method_id
 #: model:ir.model.fields,field_description:pos_online_payment_self_order.field_res_config_settings__pos_self_order_online_payment_method_id
 msgid "Self Online Payment"
-msgstr ""
+msgstr "Kendi Kendine Çevrim İçi Ödeme"
 
 #. module: pos_online_payment_self_order
 #. odoo-javascript
 #: code:addons/pos_online_payment_self_order/static/src/pages/payment_page/payment_page.js:0
 #, python-format
 msgid "The current order cannot be paid (maybe it is already paid)."
-msgstr ""
+msgstr "Mevcut sipariş ödenemez (muhtemelen zaten ödenmiştir)."
 
 #. module: pos_online_payment_self_order
 #: model:ir.model.fields,help:pos_online_payment_self_order.field_pos_config__self_order_online_payment_method_id
@@ -110,6 +111,8 @@ msgstr ""
 msgid ""
 "The online payment method to use when a customer pays a self-order online."
 msgstr ""
+"Bir müşteri kendi siparişini çevrim içi olarak ödediğinde kullanılacak "
+"çevrim içi ödeme yöntemi."
 
 #. module: pos_online_payment_self_order
 #. odoo-python
@@ -120,8 +123,11 @@ msgid ""
 "least one published payment provider supporting the currency of that POS "
 "config."
 msgstr ""
+"Bir POS yapılandırmasında kendi kendine sipariş için kullanılan çevrimiçi "
+"ödeme yöntemi, söz konusu POS yapılandırmasının para birimini destekleyen en"
+" az bir yayınlanmış ödeme sağlayıcısına sahip olmalıdır."
 
 #. module: pos_online_payment_self_order
 #: model:ir.model.fields,field_description:pos_online_payment_self_order.field_pos_order__use_self_order_online_payment
 msgid "Use Self Order Online Payment"
-msgstr ""
+msgstr "Self Order çevrim içi ödeme kullan"

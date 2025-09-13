@@ -6,6 +6,7 @@ import re
 from operator import itemgetter
 
 from odoo import api, Command, fields, models, modules, _
+from odoo.addons.bus.websocket import WebsocketConnectionHandler
 
 
 class ImLivechatChannel(models.Model):
@@ -248,10 +249,8 @@ class ImLivechatChannel(models.Model):
             LEFT OUTER JOIN mail_message m ON c.id = m.res_id AND m.model = 'discuss.channel'
             LEFT OUTER JOIN operator_rtc_session rtc ON rtc.partner_id = c.livechat_operator_id
             WHERE c.channel_type = 'livechat' AND c.create_date > ((now() at time zone 'UTC') - interval '24 hours')
-            AND (
-                c.livechat_active IS TRUE
-                OR m.create_date > ((now() at time zone 'UTC') - interval '30 minutes')
-            )
+            AND c.livechat_active IS TRUE
+            AND m.create_date > ((now() at time zone 'UTC') - interval '30 minutes')
             AND c.livechat_operator_id in %s
             GROUP BY c.livechat_operator_id, rtc.nbr
             ORDER BY COUNT(DISTINCT c.id) < 2 OR rtc.nbr IS NULL DESC, COUNT(DISTINCT c.id) ASC, rtc.nbr IS NULL DESC""",
@@ -317,6 +316,7 @@ class ImLivechatChannel(models.Model):
         info['server_url'] = self.get_base_url()
         if info['available']:
             info['options'] = self._get_channel_infos()
+            info["options"]["websocket_worker_version"] = WebsocketConnectionHandler._VERSION
             info['options']['current_partner_id'] = (
                 self.env.user.partner_id.id if not self.env.user._is_public() else None
             )

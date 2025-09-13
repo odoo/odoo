@@ -28,7 +28,7 @@ class AccountChartTemplate(models.AbstractModel):
                     'mail.message': self._get_demo_data_mail_message(company),
                 }
             else:
-                _logger.error('Error while loading Indian-Accounting demo data in the company "%s".State is not set in the company.', company.name)
+                _logger.warning('Error while loading Indian-Accounting demo data in the company "%s".State is not set in the company.', company.name)
         else:
             demo_data = super()._get_demo_data(company)
         return demo_data

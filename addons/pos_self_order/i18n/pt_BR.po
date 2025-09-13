@@ -5,15 +5,15 @@
 # Translators:
 # a75f12d3d37ea5bf159c4b3e85eb30e7_0fa6927, 2023
 # Wil Odoo, 2024
-# Maitê Dietze, 2024
+# Maitê Dietze, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-29 10:45+0000\n"
+"POT-Creation-Date: 2025-05-30 18:36+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Maitê Dietze, 2024\n"
+"Last-Translator: Maitê Dietze, 2025\n"
 "Language-Team: Portuguese (Brazil) (https://app.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -194,6 +194,7 @@ msgstr "Voltar"
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/order_widget/order_widget.js:0
+#: code:addons/pos_self_order/static/src/app/pages/cart_page/cart_page.xml:0
 #, python-format
 msgid "Cancel"
 msgstr "Cancelar"
@@ -209,6 +210,7 @@ msgstr "Cancelar pedido"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/order_widget/order_widget.js:0
 #: code:addons/pos_self_order/static/src/app/components/order_widget/order_widget.js:0
+#: code:addons/pos_self_order/static/src/app/pages/cart_page/cart_page.js:0
 #: code:addons/pos_self_order/static/src/app/pages/product_list_page/product_list_page.js:0
 #, python-format
 msgid "Cancel order"
@@ -762,7 +764,6 @@ msgstr "Abrir em uma nova aba"
 #: code:addons/pos_self_order/static/src/app/components/order_widget/order_widget.js:0
 #: code:addons/pos_self_order/static/src/app/components/order_widget/order_widget.js:0
 #: code:addons/pos_self_order/static/src/app/components/order_widget/order_widget.js:0
-#: code:addons/pos_self_order/static/src/app/components/order_widget/order_widget.js:0
 #, python-format
 msgid "Order"
 msgstr "Pedido"
@@ -850,6 +851,13 @@ msgstr "Retirar no balcão"
 #: model:ir.model.fields.selection,name:pos_self_order.selection__pos_config__self_ordering_service_mode__counter
 msgid "Pickup zone"
 msgstr "Zona de retirada"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/self_order_service.js:0
+#, python-format
+msgid "Please wait until the price is loaded"
+msgstr "Aguarde até que o preço seja carregado"
 
 #. module: pos_self_order
 #. odoo-python
@@ -1304,6 +1312,13 @@ msgid "Yes"
 msgstr "Sim"
 
 #. module: pos_self_order
+#. odoo-python
+#: code:addons/pos_self_order/controllers/orders.py:0
+#, python-format
+msgid "You are not authorized to remove this order"
+msgstr "You are not authorized to remove this order"
+
+#. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/cart_page/cart_page.js:0
 #, python-format
@@ -1331,6 +1346,13 @@ msgstr "Seu pedido"
 #, python-format
 msgid "Your Selection"
 msgstr "Sua seleção"
+
+#. module: pos_self_order
+#. odoo-python
+#: code:addons/pos_self_order/controllers/orders.py:0
+#, python-format
+msgid "Your order does not exist or has been removed"
+msgstr "Your order does not exist or has been removed"
 
 #. module: pos_self_order
 #. odoo-javascript

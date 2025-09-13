@@ -1,11 +1,11 @@
 /* Fix header height */
-div .header.o_company_1_layout > div[class$="_header"] {
+div .header > div[class$="_header"] {
     overflow: hidden !important;
     max-height: 150px;
 }
 
 /*Modifications for the Standard and Boxed document layouts */
-.article.o_report_layout_standard.o_company_1_layout, .article.o_report_layout_boxed.o_company_1_layout {
+.article.o_report_layout_standard, .article.o_report_layout_boxed {
     > .pt-5 {
         padding-top: 0 !important;
     }
@@ -29,6 +29,12 @@ div .address.row {
         > span:not(:first-child) {
             display: none;
         }
+
+        > address {
+            // Moving anything under the address (eg Tax ID) further down to
+            // avoid breaking Pingen validation.
+            margin-bottom: 12mm !important;
+        }
     }
 }
 
@@ -49,6 +55,11 @@ div .row.fallback_header {
         // Hide VAT number line
         > span:not(:first-child) {
             display: none;
+        }
+
+        div[itemscope="itemscope"] > div:first-child {
+            // Same as above move anything under the address further down
+            margin-bottom: 12mm;
         }
     }
 }

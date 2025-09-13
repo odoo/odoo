@@ -135,7 +135,7 @@ class PaymentPortal(portal.CustomerPortal):
             'partner_is_different': partner_is_different,
         }
         payment_form_values = {
-            'show_tokenize_input_mapping': PaymentPortal._compute_show_tokenize_input_mapping(
+            'show_tokenize_input_mapping': self._compute_show_tokenize_input_mapping(
                 providers_sudo, **kwargs
             ),
         }
@@ -353,7 +353,7 @@ class PaymentPortal(portal.CustomerPortal):
             **(custom_create_values or {}),
         })  # In sudo mode to allow writing on callback fields
 
-        if flow == 'token':
+        if flow == 'token' and not request.env.context.get('delay_payment_request'):
             tx_sudo._send_payment_request()  # Payments by token process transactions immediately
         else:
             tx_sudo._log_sent_message()

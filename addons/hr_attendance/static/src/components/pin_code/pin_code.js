@@ -35,7 +35,7 @@ export class KioskPinCode extends Component {
             ev.preventDefault();
             ev.stopPropagation();
 
-            if (allowedKeys[key]) {
+            if (allowedKeys[key] !== null) {
                 await this.onClickPadButton(allowedKeys[key]);
             }
             else {

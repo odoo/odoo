@@ -28,7 +28,7 @@
 
             <div id="informations" class="row mt-4 mb32">
                 <div t-if="o.user_id" class="col-3 bm-2">
-                    <strong>Purchase Representative:</strong>
+                    <strong>Buyer:</strong>
                     <p t-field="o.user_id" class="m-0"/>
                 </div>
                 <div t-if="o.partner_ref" class="col-3 bm-2">
@@ -49,10 +49,11 @@
                 <thead style="display: table-row-group">
                     <tr>
                         <th name="th_description"><strong>Description</strong></th>
-                        <th name="th_taxes"><strong>Taxes</strong></th>
                         <th name="th_date_req" class="text-center"><strong>Date Req.</strong></th>
                         <th name="th_quantity" class="text-end"><strong>Qty</strong></th>
                         <th name="th_price_unit" class="text-end"><strong>Unit Price</strong></th>
+                        <th name="th_discount" class="text-end"><strong>Disc.</strong></th>
+                        <th name="th_taxes" class="text-end"><strong>Taxes</strong></th>
                         <th name="th_subtotal" class="text-end">
                             <strong>Amount</strong>
                         </th>
@@ -68,10 +69,6 @@
                                 <td id="product">
                                     <span t-field="line.name"/>
                                 </td>
-                                <t t-set="taxes" t-value="', '.join([(tax.invoice_label or tax.name) for tax in line.taxes_id])"/>
-                                <td name="td_taxes" t-attf-class="text-end {{ 'text-nowrap' if len(taxes) &lt; 10 else '' }}">
-                                    <span t-out="taxes">Tax 15%</span>
-                                </td>
                                 <td class="text-center">
                                     <span t-field="line.date_planned"/>
                                 </td>
@@ -84,6 +81,13 @@
                                 </td>
                                 <td class="text-end">
                                     <span t-field="line.price_unit"/>
+                                </td>
+                                <td class="text-end">
+                                    <span class="text-align-bottom"><span t-field="line.discount"/>%</span>
+                                </td>
+                                <t t-set="taxes" t-value="', '.join([(tax.invoice_label or tax.name) for tax in line.taxes_id])"/>
+                                <td name="td_taxes" t-attf-class="text-end {{ 'text-nowrap' if len(taxes) &lt; 10 else '' }}">
+                                    <span t-out="taxes">Tax 15%</span>
                                 </td>
                                 <td class="text-end">
                                     <span t-field="line.price_subtotal"

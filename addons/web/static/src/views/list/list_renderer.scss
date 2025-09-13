@@ -305,6 +305,12 @@
                 white-space: nowrap;
                 .o_field_widget:not(.o_row_handle):not(.o_field_handle):not(.o_field_badge) {
                     display: inline;
+                    &.o_field_percent_pie{
+                        @include o-text-overflow(inline-flex);
+                        span.o_pie_text{
+                            @include o-text-overflow(none);
+                        }
+                    }
                     span:not(.o_m2o_avatar) {
                         @include o-text-overflow(inline);
                     }

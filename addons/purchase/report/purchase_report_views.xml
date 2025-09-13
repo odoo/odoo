@@ -6,7 +6,7 @@
             <field name="arch" type="xml">
                 <pivot string="Purchase Analysis" display_quantity="1" sample="1">
                     <field name="category_id" type="row"/>
-                    <field name="order_id" type="measure"/>
+                    <field name="order_id" type="row"/>
                     <field name="untaxed_total" type="measure"/>
                     <field name="price_total" type="measure"/>
                 </pivot>
@@ -68,7 +68,7 @@
                 <group expand="1" string="Group By">
                     <filter string="Vendor" name="group_partner_id" context="{'group_by':'partner_id'}"/>
                     <filter string="Vendor Country" name="country_id" context="{'group_by':'country_id'}"/>
-                    <filter string="Purchase Representative" name="user_id" context="{'group_by':'user_id'}"/>
+                    <filter string="Buyer" name="user_id" context="{'group_by':'user_id'}"/>
                     <filter string="Product" name="group_product_id" context="{'group_by':'product_id'}"/>
                     <filter string="Product Category" name="group_category_id" context="{'group_by':'category_id'}"/>
                     <filter string="Status" name="status" context="{'group_by':'state'}"/>

@@ -1,9 +1,10 @@
 /** @odoo-module **/
 
-import { click, getFixture, patchDate } from "@web/../tests/helpers/utils";
+import { click, getFixture, patchDate, makeDeferred, nextTick} from "@web/../tests/helpers/utils";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 import { registry } from "@web/core/registry";
 import { userService } from "@web/core/user_service";
+import { createWebClient, doAction } from "@web/../tests/webclient/helpers";
 
 const serviceRegistry = registry.category("services");
 
@@ -160,5 +161,69 @@ QUnit.module('Google Calendar', {
         ], 'should do a search_read before and after the call to sync_data');
 
         assert.containsN(target, '.fc-event-container', 7, "should now display 7 events on the month");
+    });
+
+    QUnit.test("component is destroyed while sync google calendar", async function (assert) {
+        assert.expect(4);
+        const def = makeDeferred();
+        serverData.actions = {
+            1: {
+                id: 1,
+                name: "Partners",
+                res_model: "calendar.event",
+                type: "ir.actions.act_window",
+                views: [
+                    [false, "list"],
+                    [false, "calendar"],
+                ],
+            },
+        };
+
+        serverData.views = {
+            "calendar.event,false,calendar": `
+                <calendar class="o_calendar_test" js_class="attendee_calendar" date_start="start" date_stop="stop">
+                    <field name="name"/>
+                    <field name="partner_ids" write_model="filter_partner" write_field="partner_id"/>
+                </calendar>`,
+            "calendar.event,false,list": `<tree sample="1" />`,
+            "calendar.event,false,search": `<search />`,
+        };
+
+        const webClient = await createWebClient({
+            serverData,
+            async mockRPC(route, args) {
+                if (route === '/google_calendar/sync_data') {
+                    assert.step(route);
+                    return def;
+                } else if (route === '/web/dataset/call_kw/calendar.event/search_read') {
+                    assert.step(route);
+                } else if (route === '/web/dataset/call_kw/res.partner/get_attendee_detail') {
+                    return Promise.resolve([]);
+                } else if (route === '/web/dataset/call_kw/res.users/has_group') {
+                    return Promise.resolve(true);
+                } else if (route === '/calendar/check_credentials') {
+                    return Promise.resolve({
+                        google_calendar: true,
+                    });
+                }
+            },
+        });
+
+        await doAction(webClient, 1);
+
+        click(target.querySelector(".o_cp_switch_buttons .o_calendar"));
+        await nextTick();
+
+        click(target.querySelector(".o_cp_switch_buttons .o_calendar"));
+        await nextTick();
+
+        def.resolve();
+        await nextTick();
+
+        assert.verifySteps([
+            "/google_calendar/sync_data",
+            "/google_calendar/sync_data",
+            "/web/dataset/call_kw/calendar.event/search_read"
+        ], "Correct RPC calls were made");
     });
 });

@@ -1,7 +1,14 @@
 /** @odoo-module */
 
 import { parseHTML, setCursorEnd } from '../../src/utils/utils.js';
-import { BasicEditor, testEditor, unformat, insertText, deleteBackward } from '../utils.js';
+import {
+    BasicEditor,
+    testEditor,
+    unformat,
+    insertText,
+    deleteBackward,
+    nextTick,
+} from '../utils.js';
 
 const span = text => {
     const span = document.createElement('span');
@@ -19,8 +26,8 @@ describe('insert HTML', () => {
                     await editor.execCommand('insert', parseHTML(editor.document, '<i class="fa fa-pastafarianism"></i>'));
                 },
                 contentAfterEdit:
-                    '<p><i class="fa fa-pastafarianism" contenteditable="false">\u200b</i>[]<br></p>',
-                contentAfter: '<p><i class="fa fa-pastafarianism"></i>[]<br></p>',
+                    '<p><i class="fa fa-pastafarianism" contenteditable="false">\u200b</i>[]</p>',
+                contentAfter: '<p><i class="fa fa-pastafarianism"></i>[]</p>',
             });
         });
         it('should insert html after an empty paragraph', async () => {
@@ -72,7 +79,9 @@ describe('insert HTML', () => {
                 stepFunction: async editor => {
                     await editor.execCommand('insert', parseHTML(editor.document, '<div><p>content</p></div>'));
                 },
-                contentAfter: '<div><p>content</p></div><p>[]<br></p>',
+                // Inserts zws to avoid a Chromium bug preventing selection of
+                // contenteditable false element as first child.
+                contentAfter: '<p><br></p><div><p>content</p></div><p>[]<br></p>',
             });
         });
         it('should not split a pre to insert another pre but just insert the text', async () => {
@@ -113,6 +122,38 @@ describe('insert HTML', () => {
                 contentAfter: '<p>content</p><div>abc</div><p>def[]</p>',
             });
         });
+        it('should not remove the trailing <br> when pasting content ending with a <br>', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<p>[]<br></p>',
+                stepFunction: async editor => {
+                    await editor.execCommand('insert', parseHTML(editor.document, '<p>abc<br></p>'));
+                },
+                contentAfter: '<p>abc<br>[]<br></p>',
+            });
+            await testEditor(BasicEditor, {
+                contentBefore: '<p>ab[]cd</p>',
+                stepFunction: async editor => {
+                    await editor.execCommand('insert', parseHTML(editor.document, '<p>efg<br></p>'));
+                },
+                contentAfter: '<p>abefg<br>[]cd</p>',
+            });
+            await testEditor(BasicEditor, {
+                contentBefore: '<p>[]<br></p>',
+                stepFunction: async editor => {
+                    await editor.execCommand('insert', parseHTML(editor.document, '<p><br><br><br></p>'));
+                },
+                contentAfter: '<p><br><br><br>[]<br></p>',
+            });
+        });
+        it('should paste an "empty" block', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<p>abcd[]</p>',
+                stepFunction: async editor => {
+                    await editor.execCommand('insert', parseHTML(editor.document, '<p>efgh</p><p></p>'));
+                },
+                contentAfter: '<p>abcdefgh</p><p><br>[]</p>',
+            });
+        });
     });
     describe('not collapsed selection', () => {
         it('should delete selection and insert html in its place', async () => {
@@ -121,8 +162,8 @@ describe('insert HTML', () => {
                 stepFunction: async editor => {
                     await editor.execCommand('insert', parseHTML(editor.document, '<i class="fa fa-pastafarianism"></i>'));
                 },
-                contentAfterEdit: '<p><i class="fa fa-pastafarianism" contenteditable="false">\u200b</i>[]<br></p>',
-                contentAfter: '<p><i class="fa fa-pastafarianism"></i>[]<br></p>',
+                contentAfterEdit: '<p><i class="fa fa-pastafarianism" contenteditable="false">\u200b</i>[]</p>',
+                contentAfter: '<p><i class="fa fa-pastafarianism"></i>[]</p>',
             });
         });
         it('should delete selection and insert html in its place (2)', async () => {
@@ -134,6 +175,15 @@ describe('insert HTML', () => {
                 contentAfterEdit:
                     '<p>a<i class="fa fa-pastafarianism" contenteditable="false">\u200b</i>[]c<br></p>',
                 contentAfter: '<p>a<i class="fa fa-pastafarianism"></i>[]c<br></p>',
+            });
+        });
+        it('should delete selection and insert html in its place (3)', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<ul><li><h1>[abc</h1></li><li><h1>def</h1></li><li>ghi]</li></ul>',
+                stepFunction: async editor => {
+                    await editor.execCommand('insert', parseHTML(editor.document, '<p>rst</p><p>uvw</p><p>xyz</p>'));
+                },
+                contentAfter: '<ul><li>rst</li><li>uvw</li><li>xyz[]</li></ul>',
             });
         });
         it('should remove a fully selected table then insert a span before it', async () => {
@@ -162,7 +212,7 @@ describe('insert HTML', () => {
                 stepFunction: editor => editor.execCommand('insert', span('TEST')),
                 contentAfter: unformat(
                     `<table><tbody>
-                        <tr><td>cd</td><td><span class="a">TEST</span>[]<br></td><td>gh</td></tr>
+                        <tr><td>cd</td><td><span class="a">TEST</span>[]</td><td>gh</td></tr>
                         <tr><td>ij</td><td><br></td><td>mn</td></tr>
                         <tr><td>op</td><td>qr</td><td>st</td></tr>
                     </tbody></table>`,
@@ -233,8 +283,13 @@ describe('insert HTML', () => {
                         <tr><td>gh</td><td>ij</td></tr>
                     </tbody></table>`,
                 ),
-                stepFunction: editor => editor.execCommand('insert', span('TEST')),
-                contentAfter: `<p><span class="a">TEST</span>[]<br></p>`,
+                stepFunction: async editor => {
+                    // Table selection happens on selectionchange event which is
+                    // fired in the next tick.
+                    await nextTick();
+                    editor.execCommand('insert', span('TEST'));
+                },
+                contentAfter: `<p><span class="a">TEST</span>[]</p>`,
             });
         });
         it('should remove a selection including several tables', async () => {
@@ -282,7 +337,25 @@ describe('insert HTML', () => {
                     <p>67]</p>`,
                 ),
                 stepFunction: editor => editor.execCommand('insert', span('TEST')),
-                contentAfter: `<p><span class="a">TEST</span>[]<br></p>`,
+                contentAfter: `<p><span class="a">TEST</span>[]</p>`,
+            });
+        });
+        it("Should properly insert two blocks content with selection in inline", async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: unformat(`
+                                    <p>
+                                        <span class="display-4"></span>
+                                        <span class="h4-fs">[a]</span>
+                                    </p>`),
+                stepFunction: (editor) =>
+                    editor.execCommand("insert", parseHTML(editor.document, `<p></p><p></p>`)),
+                contentAfter: unformat(`<p>
+                                <span class="display-4"></span>
+                              </p>
+                              <p><br>[]</p>
+                              <p>
+                                <span class="h4-fs">\u200b</span>
+                              </p>`),
             });
         });
     });
@@ -303,6 +376,29 @@ describe('insert text', () => {
                 },
                 contentAfter: '<h1><font style="background-color: red;">g[]</font><br></h1><p>def</p>',
             });
+        });
+    });
+});
+describe('insert horizontal rule', () => {
+    it('should insert a horizontal rule within a p tag', async () => {
+        await testEditor(BasicEditor, {
+            contentBefore: '<p>[]<br></p>',
+            stepFunction: editor => editor.execCommand('insertHorizontalRule'),
+            contentAfter: '<hr><p>[]<br></p>',
+        });
+    });
+    it('should insert a horizontal rule within a h1 tag', async () => {
+        await testEditor(BasicEditor, {
+            contentBefore: '<h1>[]<br></h1>',
+            stepFunction: editor => editor.execCommand('insertHorizontalRule'),
+            contentAfter: '<hr><h1>[]<br></h1>',
+        });
+    });
+    it('should insert a horizontal rule within a block node', async () => {
+        await testEditor(BasicEditor, {
+            contentBefore: '<div>[]<br></div>',
+            stepFunction: editor => editor.execCommand('insertHorizontalRule'),
+            contentAfter: '<hr><div>[]<br></div>',
         });
     });
 });

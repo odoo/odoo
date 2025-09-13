@@ -1,7 +1,7 @@
 /** @odoo-module */
 
 import { isSelectionFormat } from '../../src/utils/utils.js';
-import { BasicEditor, testEditor, setTestSelection, Direction, unformat, insertText } from '../utils.js';
+import { BasicEditor, testEditor, setTestSelection, Direction, unformat, insertText, triggerEvent } from '../utils.js';
 
 const bold = async editor => {
     await editor.execCommand('bold');
@@ -16,6 +16,8 @@ const strikeThrough = async editor => {
     await editor.execCommand('strikeThrough');
 };
 const setFontSize = size => editor => editor.execCommand('setFontSize', size);
+
+const setFontSizeClassName = className => editor => editor.execCommand('setFontSizeClassName', className);
 
 const switchDirection = editor => editor.execCommand('switchDirection');
 
@@ -54,6 +56,55 @@ describe('Format', () => {
                 contentBefore: '<p>ab[cde]fg</p>',
                 stepFunction: bold,
                 contentAfter: `<p>ab${strong(`[cde]`)}fg</p>`,
+            });
+        });
+        it('should make a few characters bold inside table', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: unformat(`
+                    <table class="table table-bordered o_table o_selected_table">
+                        <tbody>
+                            <tr>
+                                <td class="o_selected_td"><p>[abc</p></td>
+                                <td class="o_selected_td"><p>def</p></td>
+                                <td class="o_selected_td"><p>]<br></p></td>
+                            </tr>
+                            <tr>
+                                <td><p><br></p></td>
+                                <td><p><br></p></td>
+                                <td><p><br></p></td>
+                            </tr>
+                            <tr>
+                                <td><p><br></p></td>
+                                <td><p><br></p></td>
+                                <td><p><br></p></td>
+                            </tr>
+                        </tbody>
+                    </table>`
+                ),
+                stepFunction: async editor => {
+                    await triggerEvent(editor.editable, 'keydown', { key: 'b', ctrlKey: true });
+                },
+                contentAfterEdit: unformat(`
+                    <table class="table table-bordered o_table o_selected_table">
+                        <tbody>
+                            <tr>
+                                <td class="o_selected_td"><p>${strong(`[abc`)}</p></td>
+                                <td class="o_selected_td"><p>${strong(`def`)}</p></td>
+                                <td class="o_selected_td"><p>${strong(`]<br>`)}</p></td>
+                            </tr>
+                            <tr>
+                                <td><p><br></p></td>
+                                <td><p><br></p></td>
+                                <td><p><br></p></td>
+                            </tr>
+                            <tr>
+                                <td><p><br></p></td>
+                                <td><p><br></p></td>
+                                <td><p><br></p></td>
+                            </tr>
+                        </tbody>
+                    </table>`
+                ),
             });
         });
         it('should make a few characters not bold', async () => {
@@ -186,6 +237,14 @@ describe('Format', () => {
                 contentAfter: `<p>${strong('[a')}</p><p contenteditable="false">b</p><p>${strong('c]')}</p>`,
             });
         });
+        it("should remove bold format when having newline character nodes in selection", async () => {
+            await testEditor(BasicEditor, {
+                contentBefore:
+                    "<p><strong>[abc</strong></p>\n<p><strong>def</strong></p>\n<p><strong>ghi]</strong></p>",
+                stepFunction: bold,
+                contentAfter: "<p>[abc</p>\n<p>def</p>\n<p>ghi]</p>",
+            });
+        });
 
         describe('inside container or inline with class already bold', () => {
             it('should force the font-weight to normal with an inline with class', async () => {
@@ -247,6 +306,55 @@ describe('Format', () => {
                 contentBefore: `<p>ab[cde]fg</p>`,
                 stepFunction: italic,
                 contentAfter: `<p>ab${em(`[cde]`)}fg</p>`,
+            });
+        });
+        it('should make a few characters italic inside table', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: unformat(`
+                    <table class="table table-bordered o_table o_selected_table">
+                        <tbody>
+                            <tr>
+                                <td class="o_selected_td"><p>[abc</p></td>
+                                <td><p><br></p></td>
+                                <td><p><br></p></td>
+                            </tr>
+                            <tr>
+                                <td class="o_selected_td"><p>def</p></td>
+                                <td><p><br></p></td>
+                                <td><p><br></p></td>
+                            </tr>
+                            <tr>
+                                <td class="o_selected_td"><p>]<br></p></td>
+                                <td><p><br></p></td>
+                                <td><p><br></p></td>
+                            </tr>
+                        </tbody>
+                    </table>`
+                ),
+                stepFunction: async editor => {
+                    await triggerEvent(editor.editable, 'keydown', { key: 'i', ctrlKey: true });
+                },
+                contentAfterEdit: unformat(`
+                    <table class="table table-bordered o_table o_selected_table">
+                        <tbody>
+                            <tr>
+                                <td class="o_selected_td"><p>${em(`[abc`)}</p></td>
+                                <td><p><br></p></td>
+                                <td><p><br></p></td>
+                            </tr>
+                            <tr>
+                                <td class="o_selected_td"><p>${em(`def`)}</p></td>
+                                <td><p><br></p></td>
+                                <td><p><br></p></td>
+                            </tr>
+                            <tr>
+                                <td class="o_selected_td"><p>${em(`]<br>`)}</p></td>
+                                <td><p><br></p></td>
+                                <td><p><br></p></td>
+                            </tr>
+                        </tbody>
+                    </table>`
+                ),
             });
         });
         it('should make a few characters not italic', async () => {
@@ -344,6 +452,55 @@ describe('Format', () => {
                 contentAfter: `<p>ab${u(`[cde]`)}fg</p>`,
             });
         });
+        it('should make a few characters underline inside table', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: unformat(`
+                    <table class="table table-bordered o_table o_selected_table">
+                        <tbody>
+                            <tr>
+                                <td class="o_selected_td"><p>[abc</p></td>
+                                <td><p><br></p></td>
+                                <td><p><br></p></td>
+                            </tr>
+                            <tr>
+                                <td class="o_selected_td"><p>def</p></td>
+                                <td><p><br></p></td>
+                                <td><p><br></p></td>
+                            </tr>
+                            <tr>
+                                <td class="o_selected_td"><p>]<br></p></td>
+                                <td><p><br></p></td>
+                                <td><p><br></p></td>
+                            </tr>
+                        </tbody>
+                    </table>`
+                ),
+                stepFunction: async editor => {
+                    await triggerEvent(editor.editable, 'keydown', { key: 'u', ctrlKey: true });
+                },
+                contentAfterEdit: unformat(`
+                    <table class="table table-bordered o_table o_selected_table">
+                        <tbody>
+                            <tr>
+                                <td class="o_selected_td"><p>${u(`[abc`)}</p></td>
+                                <td><p><br></p></td>
+                                <td><p><br></p></td>
+                            </tr>
+                            <tr>
+                                <td class="o_selected_td"><p>${u(`def`)}</p></td>
+                                <td><p><br></p></td>
+                                <td><p><br></p></td>
+                            </tr>
+                            <tr>
+                                <td class="o_selected_td"><p>${u(`]<br>`)}</p></td>
+                                <td><p><br></p></td>
+                                <td><p><br></p></td>
+                            </tr>
+                        </tbody>
+                    </table>`
+                ),
+            });
+        });
         it('should make a few characters not underline', async () => {
             await testEditor(BasicEditor, {
                 contentBefore: `<p>${u(`ab[cde]fg`)}</p>`,
@@ -437,6 +594,55 @@ describe('Format', () => {
                 contentBefore: `<p>ab[cde]fg</p>`,
                 stepFunction: strikeThrough,
                 contentAfter: `<p>ab${s(`[cde]`)}fg</p>`,
+            });
+        });
+        it('should make a few characters strikeThrough inside table', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: unformat(`
+                    <table class="table table-bordered o_table o_selected_table">
+                        <tbody>
+                            <tr>
+                                <td class="o_selected_td"><p>[abc</p></td>
+                                <td class="o_selected_td"><p>def</p></td>
+                                <td class="o_selected_td"><p>]<br></p></td>
+                            </tr>
+                            <tr>
+                                <td><p><br></p></td>
+                                <td><p><br></p></td>
+                                <td><p><br></p></td>
+                            </tr>
+                            <tr>
+                                <td><p><br></p></td>
+                                <td><p><br></p></td>
+                                <td><p><br></p></td>
+                            </tr>
+                        </tbody>
+                    </table>`
+                ),
+                stepFunction: async editor => {
+                    await triggerEvent(editor.editable, 'keydown', { key: '5', ctrlKey: true });
+                },
+                contentAfterEdit: unformat(`
+                    <table class="table table-bordered o_table o_selected_table">
+                        <tbody>
+                            <tr>
+                                <td class="o_selected_td"><p>${s(`[abc`)}</p></td>
+                                <td class="o_selected_td"><p>${s(`def`)}</p></td>
+                                <td class="o_selected_td"><p>${s(`]<br>`)}</p></td>
+                            </tr>
+                            <tr>
+                                <td><p><br></p></td>
+                                <td><p><br></p></td>
+                                <td><p><br></p></td>
+                            </tr>
+                            <tr>
+                                <td><p><br></p></td>
+                                <td><p><br></p></td>
+                                <td><p><br></p></td>
+                            </tr>
+                        </tbody>
+                    </table>`
+                ),
             });
         });
         it('should make a few characters not strikeThrough', async () => {
@@ -651,7 +857,7 @@ describe('Format', () => {
                     await editor.execCommand('underline');
                     await editor.execCommand('insert', 'C');
                 },
-                contentAfterEdit: `<p>ab${u(s(`cd`))}${s(`A${u(`B`, 'first')}C[]\u200B`, 'first')}${u(s(`ef`))}</p>`,
+                contentAfterEdit: `<p>ab${u(s(`cd`))}${s(`A${u("B")}C[]`)}${u(s(`ef`))}</p>`,
             });
         });
         it('should remove only underline decoration on a span', async () => {
@@ -896,6 +1102,42 @@ describe('Format', () => {
                 contentAfter: `<h1><span t="unbreakable">some <span style="font-size: 18px;">[text]</span></span></h1>`,
             });
         });
+        it('should apply font size on top of `u` and `s` tags', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: `<p>a<u>[b]</u>c</p>`,
+                stepFunction: setFontSize('18px'),
+                contentAfter: `<p>a<span style="font-size: 18px;"><u>[b]</u></span>c</p>`,
+            });
+        });
+        it('should apply font size on topmost `u` or `s` tags if multiple applied', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: `<p>a<s><u>[b]</u></s>c</p>`,
+                stepFunction: setFontSize('18px'),
+                contentAfter: `<p>a<span style="font-size: 18px;"><s><u>[b]</u></s></span>c</p>`,
+            });
+        });
+        it("should apply font size on top of `font` tag", async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: `<p><font class="text-gradient" style="background-image: linear-gradient(135deg, rgb(214, 255, 127) 0%, rgb(0, 179, 204) 100%);">[abcdefg]</font></p>`,
+                stepFunction: setFontSize("80px"),
+                contentAfter: `<p><span style="font-size: 80px;"><font class="text-gradient" style="background-image: linear-gradient(135deg, rgb(214, 255, 127) 0%, rgb(0, 179, 204) 100%);">[abcdefg]</font></span></p>`,
+            });
+            await testEditor(BasicEditor, {
+                contentBefore: `<p><font class="bg-o-color-1 text-black">[abcdefg]</font></p>`,
+                stepFunction: setFontSize("72px"),
+                contentAfter: `<p><span style="font-size: 72px;"><font class="bg-o-color-1 text-black">[abcdefg]</font></span></p>`,
+            });
+        });
+    });
+
+    describe('setFontSizeClassName', () => {
+        it('should be able to change font-size class', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: `<p>a<span class="h1-fs">[bcd]</span>e</p>`,
+                stepFunction: setFontSizeClassName("h2-fs"),
+                contentAfter: `<p>a<span class="h2-fs">[bcd]</span>e</p>`,
+            });
+        });
     });
 
     it('should add style to a span parent of an inline', async () => {
@@ -928,6 +1170,14 @@ describe('Format', () => {
                 contentBefore: `<p>a[b</p><p>${strong(`c`)}</p><p>d]e</p>`,
                 stepFunction: (editor) => {
                     window.chai.expect(isSelectionFormat(editor.editable, 'bold')).to.be.equal(false);
+                },
+            });
+        });
+        it('return true for isSelectionFormat selecting text nodes including invisible elements', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: `[<p>${strong("a")}\ufeff<p>${strong("b")}</p></p>]`,
+                stepFunction: async (editor) => {
+                    window.chai.expect(isSelectionFormat(editor.editable, 'bold')).to.be.equal(true);
                 },
             });
         });
@@ -989,6 +1239,35 @@ describe('Format', () => {
                 stepFunction: editor => editor.execCommand('removeFormat'),
                 contentAfter: `<div><h1>[abc</h1><h1>abc</h1><h1>abc]</h1></div>`
 
+            });
+        });
+        it("should remove font size classes and gradient color styles", async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: `<p><span class="display-1-fs"><font class="text-gradient" style="background-image: linear-gradient(135deg, rgb(214, 255, 127) 0%, rgb(0, 179, 204) 100%);">[abcdefg]</font></span></p>`,
+                stepFunction: (editor) => editor.execCommand("removeFormat"),
+                contentAfter: `<p>[abcdefg]</p>`,
+            });
+            await testEditor(BasicEditor, {
+                contentBefore: `<p><span class="display-2-fs"><font style="background-image: linear-gradient(135deg, rgb(214, 255, 127) 0%, rgb(0, 179, 204) 100%);">[abcdefg]</font></span></p>`,
+                stepFunction: (editor) => editor.execCommand("removeFormat"),
+                contentAfter: `<p>[abcdefg]</p>`,
+            });
+        });
+        it('should remove font-size classes when clearing the format' , async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: `<p>123<span class="h1-fs">[abc]</span>456</p>`,
+                stepFunction: editor => editor.execCommand('removeFormat'),
+                contentAfter: `<p>123[abc]456</p>`
+            });
+            await testEditor(BasicEditor, {
+                contentBefore: `<p>[a<span class="h1-fs">bc</span>d<span class="h2-fs">ef</span>g]</p>`,
+                stepFunction: editor => editor.execCommand('removeFormat'),
+                contentAfter: `<p>[abcdefg]</p>`
+            });
+            await testEditor(BasicEditor, {
+                contentBefore: `<p>[a<span class="h1-fs">bc</span>d</p><p>e<span class="o_small-fs">fg</span>h]</p>`,
+                stepFunction: editor => editor.execCommand('removeFormat'),
+                contentAfter: `<p>[abcd</p><p>efgh]</p>`
             });
         });
     });

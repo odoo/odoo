@@ -7,7 +7,8 @@
             <field name="arch" type="xml">
                 <form string="Email message" duplicate="0">
                     <header>
-                        <button name="send" string="Send Now" type="object" invisible="state != 'outgoing'" class="oe_highlight"/>
+                        <field name="message_type" invisible="1"/>
+                        <button name="send" string="Send Now" type="object" class="oe_highlight" invisible="state != 'outgoing' or message_type == 'user_notification'"/>
                         <button name="mark_outgoing" string="Retry" type="object" invisible="state not in ('exception', 'cancel')"/>
                         <button name="cancel" string="Cancel" type="object" invisible="state != 'outgoing'"/>
                         <field name="state" widget="statusbar" statusbar_visible="outgoing,sent,received,exception,cancel"/>
@@ -45,9 +46,8 @@
                         </group>
                         <notebook>
                             <page string="Body" name="body">
-                            <field name="body_html" widget="html"
-                                   options="{'sandboxedPreview': true}"
-                                   readonly="state not in ['outgoing', 'exception']"/>
+                                <field name="body_content"/>
+                                <field name="body_html" invisible="1"/><!--to be removed-->
                             </page>
                             <page string="Advanced" name="advanced" groups="base.group_no_one">
                                 <group>
@@ -105,7 +105,7 @@
                     <field name="message_type" column_invisible="True"/>
                     <field name="state" widget="badge" decoration-muted="state in ('sent', 'cancel')"
                         decoration-info="state=='outgoing'" decoration-danger="state=='exception'"/>
-                    <button name="send" string="Send Now" type="object" icon="fa-paper-plane" invisible="state != 'outgoing'"/>
+                    <button name="send" string="Send Now" type="object" icon="fa-paper-plane" invisible="state != 'outgoing' or message_type == 'user_notification'"/>
                     <button name="mark_outgoing" string="Retry" type="object" icon="fa-repeat" invisible="state not in ('exception', 'cancel')"/>
                     <button name="cancel" string="Cancel Email" type="object" icon="fa-times-circle" invisible="state != 'outgoing'"/>
                 </tree>

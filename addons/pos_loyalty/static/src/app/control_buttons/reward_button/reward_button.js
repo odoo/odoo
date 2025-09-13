@@ -85,7 +85,10 @@ export class RewardButton extends Component {
             (reward.reward_type == "product" && reward.program_id.applies_on !== "both") ||
             (reward.program_id.applies_on == "both" && potentialQty)
         ) {
-            this.pos.addProductToCurrentOrder(args["product"] || reward.reward_product_ids[0]);
+            this.pos.addProductToCurrentOrder(
+                args["product"] || reward.reward_product_ids[0],
+                { quantity: potentialQty || 1 }
+            );
             return true;
         } else {
             const result = order._applyReward(reward, coupon_id, args);

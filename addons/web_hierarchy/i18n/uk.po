@@ -5,6 +5,7 @@
 # Translators:
 # Martin Trigaux, 2023
 # Wil Odoo, 2024
+# Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2024
 # 
 msgid ""
 msgstr ""
@@ -12,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-01-05 12:32+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2024\n"
 "Language-Team: Ukrainian (https://app.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -36,6 +37,7 @@ msgstr "База"
 #, python-format
 msgid "Cannot change the parent because it will cause a cyclic."
 msgstr ""
+"Неможливо змінити батьківський елемент, оскільки це призведе до циклічності."
 
 #. module: web_hierarchy
 #. odoo-javascript
@@ -58,14 +60,14 @@ msgstr "Ієрархія"
 #: code:addons/web_hierarchy/models/ir_ui_view.py:0
 #, python-format
 msgid "Hierarchy child can only be field or template, got %s"
-msgstr ""
+msgstr "Дочірня ієрархія може бути лише полем або шаблоном %s"
 
 #. module: web_hierarchy
 #. odoo-python
 #: code:addons/web_hierarchy/models/ir_ui_view.py:0
 #, python-format
 msgid "Hierarchy view can contain only one templates tag"
-msgstr ""
+msgstr "Перегляд ієрархії може містити лише один тег шаблону"
 
 #. module: web_hierarchy
 #. odoo-javascript
@@ -75,6 +77,8 @@ msgid ""
 "Impossible to update the parent node of the dragged node because no parent "
 "has been found."
 msgstr ""
+"Неможливо оновити батьківський вузол перетягнутого вузла, оскільки "
+"батьківського вузла не знайдено."
 
 #. module: web_hierarchy
 #. odoo-python
@@ -82,6 +86,7 @@ msgstr ""
 #, python-format
 msgid "Invalid attributes (%s) in hierarchy view. Attributes must be in (%s)"
 msgstr ""
+"Недійсні атрибути (%s) у перегляді ієрархії. Атрибути повинні бути (%s)"
 
 #. module: web_hierarchy
 #. odoo-javascript
@@ -95,7 +100,7 @@ msgstr "Новий"
 #: code:addons/web_hierarchy/static/src/hierarchy_model.js:0
 #, python-format
 msgid "The parent record cannot be the record dragged."
-msgstr ""
+msgstr "Батьківський запис не можна перетягувати."
 
 #. module: web_hierarchy
 #. odoo-javascript

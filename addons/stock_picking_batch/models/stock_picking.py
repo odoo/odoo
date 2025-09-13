@@ -117,8 +117,14 @@ class StockPicking(models.Model):
     def button_validate(self):
         res = super().button_validate()
         to_assign_ids = set()
+        # Having non-done pickings after the `super()` call means it stopped early,
+        # so we shouldn’t remove the pickings from batches yet.
+        if not any(picking.state == 'done' for picking in self):
+            return res
         if self and self.env.context.get('pickings_to_detach'):
-            self.env['stock.picking'].browse(self.env.context['pickings_to_detach']).batch_id = False
+            pickings_to_detach = self.env['stock.picking'].browse(self.env.context['pickings_to_detach'])
+            pickings_to_detach.batch_id = False
+            pickings_to_detach.move_ids.filtered(lambda m: not m.quantity).picked = False
             to_assign_ids.update(self.env.context['pickings_to_detach'])
 
         for picking in self:
@@ -138,9 +144,10 @@ class StockPicking(models.Model):
         return res
 
     def _create_backorder(self):
+        pickings_to_detach = self.env['stock.picking'].browse(self.env.context.get('pickings_to_detach'))
         for picking in self:
             # Avoid inconsistencies in states of the same batch when validating a single picking in a batch.
-            if picking.batch_id and picking.state != 'done' and any(p not in self for p in picking.batch_id.picking_ids):
+            if picking.batch_id and picking.state != 'done' and any(p not in self for p in picking.batch_id.picking_ids - pickings_to_detach):
                 picking.batch_id = None
         return super()._create_backorder()
 
@@ -244,13 +251,18 @@ class StockPicking(models.Model):
             return super(StockPicking, self.batch_id.picking_ids if self.batch_id else self)._package_move_lines(batch_pack)
         return super()._package_move_lines(batch_pack)
 
+    def _add_to_wave_post_picking_split_hook(self):
+        # Hook meant to be overriden
+        pass
+
     def assign_batch_user(self, user_id):
-        if not user_id:
-            return
         pickings = self.filtered(lambda p: p.user_id.id != user_id)
         pickings.write({'user_id': user_id})
         for pick in pickings:
-            log_message = _('Assigned to %s Responsible', pick.batch_id._get_html_link())
+            if user_id:
+                log_message = _('Assigned to %s Responsible', pick.batch_id._get_html_link())
+            else:
+                log_message = _('Unassigned responsible from %s', pick.batch_id._get_html_link())
             pick.message_post(body=log_message)
 
     def action_view_batch(self):

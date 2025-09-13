@@ -1,23 +1,50 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _
+from odoo import _, exceptions
 from odoo.addons.iap.tools import iap_tools
 
 
-class SmsApi:
-    DEFAULT_ENDPOINT = 'https://sms.api.odoo.com'
+class SmsApiBase:
+    PROVIDER_TO_SMS_FAILURE_TYPE = {
+        'server_error': 'sms_server',
+        'sms_number_missing': 'sms_number_missing',
+        'wrong_number_format': 'sms_number_format',
+    }
 
     def __init__(self, env):
         self.env = env
+        self.company = env.company
+
+    def _get_sms_api_error_messages(self):
+        """Return a mapping of `_send_sms_batch` errors to an error message."""
+        return {}
+
+    def _send_sms_batch(self, messages, delivery_reports_url=False):
+        raise NotImplementedError()
+
+    def _set_company(self, company):
+        self.company = company
+
+
+class SmsApi(SmsApiBase):  # TODO RIGR in master: rename SmsApi to SmsApiIAP, and  SmsApiBase to SmsApi
+    DEFAULT_ENDPOINT = 'https://sms.api.odoo.com'
+    PROVIDER_TO_SMS_FAILURE_TYPE = SmsApiBase.PROVIDER_TO_SMS_FAILURE_TYPE | {
+        'insufficient_credit': 'sms_credit',
+        'country_not_supported': 'sms_country_not_supported',
+        'unregistered': 'sms_acc',
+    }
 
     def _contact_iap(self, local_endpoint, params, timeout=15):
+        if not self.env.registry.ready:  # Don't reach IAP servers during module installation
+            raise exceptions.AccessError("Unavailable during module installation.")
+
         account = self.env['iap.account'].get('sms')
         params['account_token'] = account.account_token
         endpoint = self.env['ir.config_parameter'].sudo().get_param('sms.endpoint', self.DEFAULT_ENDPOINT)
         return iap_tools.iap_jsonrpc(endpoint + local_endpoint, params=params, timeout=timeout)
 
-    def _send_sms_batch(self, messages, delivery_reports_url=False):
+    def _send_sms_batch(self, messages, delivery_reports_url=False):  # TODO RIGR: switch to kwargs in master
         """ Send SMS using IAP in batch mode
 
         :param list messages: list of SMS (grouped by content) to send:
@@ -31,7 +58,7 @@ class SmsApi:
                   ]
               }, ...
           ]```
-        :param str delivery_reports_url: url to route receiving delivery reports
+        :param str delivery_reports_url: url to route receiving delivery reports. Deprecated  # TODO RIGR: remove in master
         :return: response from the endpoint called, which is a list of results
           formatted as ```[
               {
@@ -56,7 +83,7 @@ class SmsApi:
         We prefer a dict instead of a message-per-error-state based method so that we only call
         config parameters getters once and avoid extra RPC calls."""
         buy_credits_url = self.env['iap.account'].sudo().get_credits_url(service_name='sms')
-        buy_credits = f'<a href="{buy_credits_url}" target="_blank">%s</a>' % _('Buy credits.')
+        buy_credits = '<a href="{}" target="_blank">{}</a>'.format(buy_credits_url, _("Buy credits."))
 
         sms_endpoint = self.env['ir.config_parameter'].sudo().get_param('sms.endpoint', self.DEFAULT_ENDPOINT)
         sms_account_token = self.env['iap.account'].sudo().get('sms').account_token
@@ -64,7 +91,8 @@ class SmsApi:
             _('Register now.')
         )
 
-        return {
+        error_dict = super()._get_sms_api_error_messages()
+        error_dict.update({
             'unregistered': _("You don't have an eligible IAP account."),
             'insufficient_credit': ' '.join([_("You don't have enough credits on your IAP account."), buy_credits]),
             'wrong_number_format': _("The number you're trying to reach is not correctly formatted."),
@@ -72,4 +100,5 @@ class SmsApi:
             'country_not_supported': _("The destination country is not supported."),
             'incompatible_content': _("The content of the message violates rules applied by our providers."),
             'registration_needed': ' '.join([_("Country-specific registration required."), register_now]),
-        }
+        })
+        return error_dict

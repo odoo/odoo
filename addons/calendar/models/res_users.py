@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import datetime
@@ -37,15 +36,14 @@ class Users(models.Model):
         #   |           |
         #   |           | <--- `stop_dt_utc` = `stop_dt` if user lives in an area of West longitude (positive shift compared to UTC, America for example)
         #   |           |
-        now_utc = datetime.datetime.utcnow()
-        start_dt_utc = start_dt = now_utc.replace(tzinfo=UTC)
-        stop_dt_utc = datetime.datetime.combine(now_utc.date(), datetime.time.max).replace(tzinfo=UTC)
+        start_dt_utc = start_dt = datetime.datetime.now(UTC)
+        stop_dt_utc = UTC.localize(datetime.datetime.combine(start_dt.date(), datetime.time.max))
 
         tz = self.env.user.tz
         if tz:
             user_tz = timezone(tz)
             start_dt = start_dt_utc.astimezone(user_tz)
-            stop_dt = datetime.datetime.combine(start_dt.date(), datetime.time.max).replace(tzinfo=user_tz)
+            stop_dt = user_tz.localize(datetime.datetime.combine(start_dt.date(), datetime.time.max))
             stop_dt_utc = stop_dt.astimezone(UTC)
 
         start_date = start_dt.date()

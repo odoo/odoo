@@ -14,7 +14,6 @@ class AccountChartTemplate(models.AbstractModel):
     @api.model
     def _get_demo_data(self, company=False):
         if company.account_fiscal_country_id.code == "UY":
-            super()._get_demo_data_products(company)
             return {
                 'res.partner': self._l10n_uy_get_demo_data_res_partner(company),
                 'account.move': self._l10n_uy_get_demo_data_move(company),
@@ -470,24 +469,24 @@ class AccountChartTemplate(models.AbstractModel):
     def _l10n_uy_get_demo_data_res_partner(self, company=False):
         return {
             'demo_partner_4': {
-                'name': 'IEB Internacional',
+                'name': 'Global Solutions Corp',
                 'l10n_latam_identification_type_id': 'l10n_uy.it_rut',
                 'vat': '218435730016',
-                'street': 'Bach 0',
-                'city': 'Aeroparque',
-                'state_id': 'base.state_uy_02',
+                'street': 'Avenida Central 5678',
+                'city': 'Punta del Este',
+                'state_id': 'base.state_uy_01',
                 'country_id': 'base.uy',
-                'email': 'rut@example.com',
+                'email': 'info@globalsolutions.com',
             },
             'demo_partner_5': {
-                'name': 'MELI URUGUAY S.R.L.',
+                'name': 'Tech Innovations S.A.',
                 'l10n_latam_identification_type_id': 'l10n_uy.it_rut',
-                'vat': '216748870015',
-                'street': 'Paraguay 2141',
-                'city': 'Zona Franca Aguada Park',
-                'state_id': 'base.state_uy_10',
+                'vat': '219999830019',
+                'street': 'Avenida de la Libertad 1234',
+                'city': 'Montevideo',
+                'state_id': 'base.state_uy_01',
                 'country_id': 'base.uy',
-                'email': 'meli@example.com',
+                'email': 'contact@techinnovations.com',
             },
             'demo_partner_6': {
                 'name': 'CORREO URUGUAYO',

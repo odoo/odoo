@@ -18,21 +18,21 @@
 # Lasse L, 2023
 # Robin Calvin, 2023
 # Kristoffer Grundström <lovaren@gmail.com>, 2023
-# Mikael Åkerberg <mikael.akerberg@mariaakerberg.com>, 2023
 # 03992e16f8df6e39b9d1cc0ff635887e, 2023
 # Martin Trigaux, 2023
 # Chrille Hedberg <hedberg.chrille@gmail.com>, 2023
 # Anders Wallenquist <anders.wallenquist@vertel.se>, 2024
 # Larissa Manderfeld, 2024
 # Jakob Krabbe <jakob.krabbe@vertel.se>, 2024
+# Mikael Åkerberg <mikael.akerberg@mariaakerberg.com>, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-05 12:31+0000\n"
+"POT-Creation-Date: 2025-02-10 10:34+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Jakob Krabbe <jakob.krabbe@vertel.se>, 2024\n"
+"Last-Translator: Mikael Åkerberg <mikael.akerberg@mariaakerberg.com>, 2024\n"
 "Language-Team: Swedish (https://app.transifex.com/odoo/teams/41243/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -2328,7 +2328,7 @@ msgstr "Skapa ett evenemang"
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.event_stage_action
 msgid "Create an Event Stage"
-msgstr "Skapa ett händelsescenario"
+msgstr "Skapa en evenemangsetapp"
 
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.event_tag_category_action_tree
@@ -2462,6 +2462,11 @@ msgstr "Visningsnamn"
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Display Sponsors and Exhibitors on your event pages"
 msgstr "Visa sponsorer och utställare på dina evenemangssidor"
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_event_event__date_tz
+msgid "Display Timezone"
+msgstr ""
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__sequence
@@ -2740,7 +2745,7 @@ msgid ""
 "Event stages are used to track the progress of an Event from its origin "
 "until its conclusion."
 msgstr ""
-"Händelsesteg används för att följa utvecklingen av en händelse från dess "
+"Händelseetapp används för att följa utvecklingen av en händelse från dess "
 "början till dess slut."
 
 #. module: event
@@ -2769,8 +2774,6 @@ msgid "Event: Reminder"
 msgstr "Event: påminnelse"
 
 #. module: event
-#. odoo-javascript
-#: code:addons/event/static/src/client_action/event_barcode.js:0
 #: model:ir.actions.act_window,name:event.action_event_view
 #: model:ir.ui.menu,name:event.event_main_menu
 #: model:ir.ui.menu,name:event.menu_event_event
@@ -2779,7 +2782,6 @@ msgstr "Event: påminnelse"
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 #: model_terms:ir.ui.view,arch_db:event.view_event_search
 #: model_terms:ir.ui.view,arch_db:event.view_event_tree
-#, python-format
 msgid "Events"
 msgstr "Evenemang"
 
@@ -2800,8 +2802,8 @@ msgid ""
 "Events will automatically be moved into this stage when they are finished. "
 "The event moved into this stage will automatically be set as green."
 msgstr ""
-"Händelser flyttas automatiskt till detta skede när de är klara. Det "
-"evenemang som flyttas till detta skede kommer automatiskt att sättas som "
+"Händelser flyttas automatiskt till denna etapp när de är klara. Det "
+"evenemang som flyttas till denna etapp kommer automatiskt att sättas som "
 "grönt."
 
 #. module: event
@@ -3136,6 +3138,13 @@ msgstr "Viktig biljettinformation"
 #, python-format
 msgid "In Progress"
 msgstr "Pågående"
+
+#. module: event
+#: model:ir.model.fields,help:event.field_event_event__date_tz
+msgid ""
+"Indicates the timezone in which the event dates/times will be displayed on "
+"the website."
+msgstr ""
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
@@ -3552,7 +3561,7 @@ msgstr "Inget planerat ännu!"
 msgid "Now that your event is ready, click here to move it to another stage."
 msgstr ""
 "Nu när ditt evenemang är färdigt, klicka här för att flytta det till nästa "
-"steg."
+"etapp."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__message_needaction_counter
@@ -4538,7 +4547,6 @@ msgid "Tickets can be printed or scanned directly from your phone."
 msgstr "Biljetter kan skrivas ut eller skannas direkt från din telefon."
 
 #. module: event
-#: model:ir.model.fields,field_description:event.field_event_event__date_tz
 #: model:ir.model.fields,field_description:event.field_event_type__default_timezone
 msgid "Timezone"
 msgstr "Tidszon"
@@ -4794,6 +4802,14 @@ msgid "What's new?"
 msgstr "Vad är nytt?"
 
 #. module: event
+#: model:ir.model.fields,help:event.field_event_event__date_begin
+#: model:ir.model.fields,help:event.field_event_registration__event_begin_date
+msgid ""
+"When the event is scheduled to take place (expressed in your local timezone "
+"on the form view)."
+msgstr ""
+
+#. module: event
 #: model:ir.model.fields,help:event.field_event_event__is_ongoing
 msgid "Whether event has begun"
 msgstr "Om evenemanget har börjat"
@@ -4820,7 +4836,7 @@ msgid ""
 " and purpose of the stage."
 msgstr ""
 "Du kan också lägga till en beskrivning för att hjälpa dina kollegor att "
-"förstå meningen och syftet med scenen."
+"förstå meningen och syftet med etappen."
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_stage_view_form

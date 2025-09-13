@@ -90,15 +90,15 @@
                         <div id="PDFViewerNav" class="pt-2 pb-2 bg-light text-white" role="navigation" t-if="slide.slide_category == 'document'">
                             <div class="container-fluid oe_slides_panel_footer">
                                 <div class="row align-items-center">
-                                    <div class="col-3 d-flex align-items-center">
+                                    <div class="col-5 col-sm-3 d-flex align-items-center">
                                         <div class="input-group input-group-sm flex-nowrap" style="max-width: 100px">
                                             <input type="number" class="form-control text-center" id="page_number" style="min-width: 60px"/>
                                             <span class="input-group-text" id="page_count"/>
                                         </div>
-                                        <span id="zoomout" class="d-none d-sm-inline ms-2 me-2" title="Zoom out" aria-label="Zoom out" role="button">
+                                        <span id="zoomout" class="d-inline ms-2 me-2" title="Zoom out" aria-label="Zoom out" role="button">
                                             <i class="fa fa-search-minus" />
                                         </span>
-                                        <span id="zoomin" class="d-none d-sm-inline" title="Zoom in" aria-label="Zoom in" role="button">
+                                        <span id="zoomin" class="d-inline" title="Zoom in" aria-label="Zoom in" role="button">
                                             <i class="fa fa-search-plus" />
                                         </span>
                                     </div>
@@ -112,7 +112,7 @@
                                             <i class="fa fa-download" />
                                         </a>
                                     </div>
-                                    <div class="col-3 text-end flex-grow-0">
+                                    <div class="col-2 col-sm-3 text-end flex-grow-0">
                                         <span id="fullscreen" class="ms-1 ms-sm-2"
                                            title="View fullscreen" aria-label="Fullscreen" role="button">
                                             <i class="fa fa-arrows-alt"/>

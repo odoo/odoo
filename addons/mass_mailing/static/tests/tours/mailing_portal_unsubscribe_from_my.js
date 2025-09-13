@@ -21,6 +21,9 @@ registry.category("web_tour.tours").add('mailing_portal_unsubscribe_from_my', {
         }, {
             content: "List4 is not proposed (not member but not private)",
             trigger: "ul#o_mailing_subscription_form_lists_additional:not(:has(li.list-group-item:contains('List4')))",
+        },{
+            content: "List5 is not proposed (not member and not public)",
+            trigger: "body:not(:has(li.list-group-item:contains('List5')))",
         }, {
             content: "Feedback area is not displayed (nothing done, no feedback required)",
             trigger: "div#o_mailing_portal_subscription:not(textarea)",

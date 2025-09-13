@@ -41,7 +41,11 @@ export class SpreadsheetShareButton extends Component {
         const url = await this.props.onSpreadsheetShared(data, model.exportXLSX());
         this.state.url = url;
         setTimeout(async () => {
-            await browser.navigator.clipboard.writeText(url);
+            try {
+                await browser.navigator.clipboard.writeText(url);
+            } catch(error) {
+                browser.console.warn(error);
+            }
         })
     }
 

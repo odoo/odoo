@@ -20,15 +20,16 @@
 # Martin Trigaux, 2023
 # Wil Odoo, 2024
 # Collex100, 2024
-# nadia martynova, 2024
+# Nadia Martynova, 2024
+# Ilya Rozhkov, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2025-05-07 20:36+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: nadia martynova, 2024\n"
+"Last-Translator: Ilya Rozhkov, 2025\n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -97,6 +98,7 @@ msgstr "%s %% скидка"
 
 #. module: product
 #. odoo-python
+#: code:addons/product/models/product_pricelist.py:0
 #: code:addons/product/models/product_tag.py:0
 #: code:addons/product/models/product_template.py:0
 #, python-format
@@ -437,7 +439,7 @@ msgstr "Добавить количество"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__additional_product_tag_ids
 msgid "Additional Product Tags"
-msgstr "Дополнительные теги для продуктов"
+msgstr "Дополнительные теги товаров"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_res_config_settings__group_sale_pricelist
@@ -2530,7 +2532,7 @@ msgstr "Метки товара"
 #: model:ir.actions.act_window,name:product.product_tag_action
 #: model_terms:ir.ui.view,arch_db:product.product_tag_tree_view
 msgid "Product Tags"
-msgstr "Метки товара"
+msgstr "Теги товара"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__product_tmpl_id
@@ -2562,7 +2564,7 @@ msgstr "Значение атрибута шаблона продукта"
 #: model:ir.model.fields,field_description:product.field_product_product__product_tag_ids
 #: model:ir.model.fields,field_description:product.field_product_template__product_tag_ids
 msgid "Product Template Tags"
-msgstr "Теги шаблона продукта"
+msgstr "Теги шаблона товара"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_tag__product_template_ids
@@ -2709,7 +2711,7 @@ msgstr "Описание покупки"
 #: model:ir.model.fields,field_description:product.field_product_product__uom_po_id
 #: model:ir.model.fields,field_description:product.field_product_template__uom_po_id
 msgid "Purchase UoM"
-msgstr "Приобрести UoM"
+msgstr "Приобрести ЕИ"
 
 #. module: product
 #. odoo-javascript
@@ -3318,7 +3320,7 @@ msgstr "Тип Дела для исключения в записи."
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_pricelist_page
 msgid "UOM"
-msgstr "Ед. изм"
+msgstr "ЕИ"
 
 #. module: product
 #. odoo-python
@@ -3362,7 +3364,7 @@ msgstr "Цена за единицу:"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_packagingbarcode
 msgid "Units"
-msgstr "Единицы"
+msgstr "ед."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_res_config_settings__group_uom
@@ -3687,7 +3689,7 @@ msgid ""
 "This may cause inconsistencies in computations.\n"
 "Please increase the rounding of those units of measure, or the digits of this Decimal Accuracy."
 msgstr ""
-"Вы устанавливаете десятичную точность менее точную, чем UOM:\n"
+"Вы устанавливаете десятичную точность менее точную, чем ЕИ:\n"
 "%s\n"
 "Это может привести к несоответствиям в вычислениях.\n"
 "Пожалуйста, увеличьте округление этих единиц измерения или разряды этой десятичной точности."
@@ -3815,6 +3817,7 @@ msgstr ""
 
 #. module: product
 #. odoo-python
+#: code:addons/product/models/product_category.py:0
 #: code:addons/product/models/product_category.py:0
 #, python-format
 msgid "You cannot delete the %s product category."

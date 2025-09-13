@@ -125,18 +125,21 @@ class StockPicking(models.Model):
                 continue
             if rec.pos_order_id.shipping_date and not rec.pos_order_id.to_invoice:
                 cost_per_account = defaultdict(lambda: 0.0)
-                for line in rec.pos_order_id.lines:
+                for line in rec.move_line_ids:
                     if line.product_id.type != 'product' or line.product_id.valuation != 'real_time':
                         continue
                     out = line.product_id.categ_id.property_stock_account_output_categ_id
                     exp = line.product_id._get_product_accounts()['expense']
-                    cost_per_account[(out, exp)] += line.total_cost
+                    line_cost = line.move_id._get_price_unit() * line.quantity_product_uom
+                    if line_cost != 0:
+                        cost_per_account[out, exp] += line_cost
                 move_vals = []
                 for (out_acc, exp_acc), cost in cost_per_account.items():
                     move_vals.append({
                         'journal_id': rec.pos_order_id.sale_journal.id,
                         'date': rec.pos_order_id.date_order,
                         'ref': 'pos_order_'+str(rec.pos_order_id.id),
+                        'partner_id': rec.pos_order_id.partner_id.id,
                         'line_ids': [
                             (0, 0, {
                                 'name': rec.pos_order_id.name,
@@ -169,6 +172,8 @@ class StockPickingType(models.Model):
     @api.constrains('active')
     def _check_active(self):
         for picking_type in self:
+            if picking_type.active:
+                continue
             pos_config = self.env['pos.config'].sudo().search([('picking_type_id', '=', picking_type.id)], limit=1)
             if pos_config:
                 raise ValidationError(_("You cannot archive '%s' as it is used by a POS configuration '%s'.", picking_type.name, pos_config.name))
@@ -238,6 +243,35 @@ class StockMove(models.Model):
         # Moves with product_id not in related_order_lines. This can happend e.g. when product_id has a phantom-type bom.
         moves_to_assign = self.filtered(lambda m: m.product_id.id not in lines_data or m.product_id.tracking == 'none'
                                                   or (not m.picking_type_id.use_existing_lots and not m.picking_type_id.use_create_lots))
+
+        # Check for any conversion issues in the moves before setting quantities
+        uoms_with_issues = set()
+        for move in moves_to_assign.filtered(lambda m: m.product_uom_qty and m.product_uom != m.product_id.uom_id):
+            converted_qty = move.product_uom._compute_quantity(
+                move.product_uom_qty,
+                move.product_id.uom_id,
+                rounding_method='HALF-UP'
+            )
+            if not converted_qty:
+                uoms_with_issues.add(
+                    (move.product_uom.name, move.product_id.uom_id.name)
+                )
+
+        if uoms_with_issues:
+            error_message_lines = [
+                _("Conversion Error: The following unit of measure conversions result in a zero quantity due to rounding:")
+            ]
+            for uom_from, uom_to in uoms_with_issues:
+                error_message_lines.append(_(' - From "%s" to "%s"', uom_from, uom_to))
+
+            error_message_lines.append(
+                _("\nThis issue occurs because the quantity becomes zero after rounding during the conversion. "
+                "To fix this, adjust the conversion factors or rounding method to ensure that even the smallest quantity in the original unit "
+                "does not round down to zero in the target unit.")
+            )
+
+            raise UserError('\n'.join(error_message_lines))
+
         for move in moves_to_assign:
             move.quantity = move.product_uom_qty
         moves_remaining = self - moves_to_assign
@@ -268,6 +302,7 @@ class StockMove(models.Model):
                                 else:
                                     ml_vals.update({
                                         'lot_name': existing_lot.name,
+                                        'lot_id': existing_lot.id,
                                     })
                         else:
                             ml_vals.update({'lot_name': lot.lot_name})

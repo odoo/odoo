@@ -129,7 +129,7 @@
                                 </group>
                             </group>
                             <group>
-                                <group name="group_tasks_managment" string="Tasks Management" col="1" class="row mt16 o_settings_container" groups="project.group_project_task_dependencies,project.group_project_milestone,project.group_project_recurring_tasks">
+                                <group name="group_tasks_managment" string="Tasks Management" col="1" class="row mt16 o_settings_container" groups="project.group_project_task_dependencies,project.group_project_milestone">
                                     <div>
                                         <setting class="col-lg-12" id="task_dependencies_setting" help="Determine the order in which to perform tasks" groups="project.group_project_task_dependencies">
                                             <field name="allow_task_dependencies"/>
@@ -262,8 +262,11 @@
             <field name="inherit_id" ref="project.view_project"/>
             <field name="mode">primary</field>
             <field name="arch" type="xml">
+                <xpath expr="//tree" position="attributes">
+                    <attribute name="default_order">sequence, name, id</attribute>
+                </xpath>
                 <field name="sequence" position="attributes">
-                    <attribute name="invisible">0</attribute>
+                    <attribute name="column_invisible">0</attribute>
                     <attribute name="widget">handle</attribute>
                 </field>
             </field>

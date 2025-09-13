@@ -220,9 +220,14 @@ class AccountJournal(models.Model):
     )
     accounting_date = fields.Date(compute='_compute_accounting_date')
 
+    display_alias_fields = fields.Boolean(compute='_compute_display_alias_fields')
+
     _sql_constraints = [
         ('code_company_uniq', 'unique (company_id, code)', 'Journal codes must be unique per company.'),
     ]
+
+    def _compute_display_alias_fields(self):
+        self.display_alias_fields = self.env['mail.alias.domain'].search_count([], limit=1)
 
     @api.depends('type', 'company_id')
     def _compute_code(self):
@@ -692,7 +697,7 @@ class AccountJournal(models.Model):
             ), False
         )
         if company != self.env.ref('base.main_company'):
-            company_identifier = company.name if self.env['mail.alias']._is_encodable(company.name) else company.id
+            company_identifier = self.env['mail.alias']._sanitize_alias_name(company.name) if self.env['mail.alias']._is_encodable(company.name) else company.id
             if f'-{company_identifier}' not in alias_name:
                 alias_name = f"{alias_name}-{company_identifier}"
         return self.env['mail.alias']._sanitize_alias_name(alias_name)

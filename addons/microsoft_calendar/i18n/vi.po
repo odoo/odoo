@@ -3,16 +3,16 @@
 # 	* microsoft_calendar
 # 
 # Translators:
-# Wil Odoo, 2023
-# Thi Huong Nguyen, 2024
+# Thi Huong Nguyen, 2025
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-05 12:31+0000\n"
+"POT-Creation-Date: 2025-05-30 18:36+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Thi Huong Nguyen, 2024\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -83,8 +83,8 @@ msgid ""
 "secret on the Microsoft Azure portal or try to stop and restart your "
 "calendar synchronisation."
 msgstr ""
-"Đã xảy ra lỗi khi tạo mã token. Mã xác thực của bạn có thể không hợp lệ hoặc"
-" đã quá hạn [%s]. Bạn nên kiểm tra mã Client ID và secret trong cổng "
+"Đã xảy ra lỗi khi tạo mã token. Mã uỷ quyền của bạn có thể không hợp lệ hoặc"
+" đã quá hạn [%s]. Bạn nên kiểm tra ID và mã bí mật của máy khách trong cổng "
 "Microsoft Azure hoặc thử dừng và khởi động lại đồng bộ hóa lịch. "
 
 #. module: microsoft_calendar
@@ -105,12 +105,12 @@ msgstr "Hủy"
 #. module: microsoft_calendar
 #: model_terms:ir.ui.view,arch_db:microsoft_calendar.res_config_settings_view_form
 msgid "Client ID"
-msgstr "Client ID"
+msgstr "ID máy khách"
 
 #. module: microsoft_calendar
 #: model_terms:ir.ui.view,arch_db:microsoft_calendar.res_config_settings_view_form
 msgid "Client Secret"
-msgstr "Mật khẩu khách"
+msgstr "Mã bí mật của máy khách"
 
 #. module: microsoft_calendar
 #: model:ir.model,name:microsoft_calendar.model_res_config_settings
@@ -186,8 +186,8 @@ msgid ""
 "Due to an Outlook Calendar limitation, recurrence updates must be done "
 "directly in Outlook Calendar."
 msgstr ""
-"Do giới hạn của Outlook Lịch, các cập nhật định kỳ phải được thực hiện trực "
-"tiếp trong Outlook Lịch."
+"Do giới hạn của Outlook Lịch, các cập nhật chu kỳ lặp phải được thực hiện "
+"trực tiếp trong Outlook Lịch."
 
 #. module: microsoft_calendar
 #. odoo-python
@@ -198,7 +198,7 @@ msgid ""
 "If this recurrence is not shown in Outlook Calendar, you must delete it in Odoo Calendar and recreate it in Outlook Calendar."
 msgstr ""
 "Do giới hạn của Outlook Lịch, các cập nhật định kỳ phải được thực hiện trực tiếp trong Outlook Lịch.\n"
-"Nếu thời gian định kỳ này không được hiển thị trong Outlook Lịch, bạn phải xóa nó trong Odoo Lịch và tạo lại trong Outlook Lịch."
+"Nếu chu kỳ lặp này không được hiển thị trong Outlook Lịch, bạn phải xóa nó trong Odoo Lịch và tạo lại trong Outlook Lịch."
 
 #. module: microsoft_calendar
 #. odoo-python
@@ -210,6 +210,11 @@ msgid ""
 msgstr ""
 "Do giới hạn của Outlook Lịch, các sự kiện định kỳ phải được tạo trực tiếp "
 "trong Outlook Lịch."
+
+#. module: microsoft_calendar
+#: model:ir.model,name:microsoft_calendar.model_calendar_alarm_manager
+msgid "Event Alarm Manager"
+msgstr "Quản lý cảnh báo sự kiện"
 
 #. module: microsoft_calendar
 #: model:ir.model,name:microsoft_calendar.model_calendar_recurrence
@@ -334,7 +339,7 @@ msgstr "Microsoft Calendar Id"
 #. module: microsoft_calendar
 #: model:ir.model.fields,field_description:microsoft_calendar.field_calendar_recurrence__microsoft_id
 msgid "Microsoft Calendar Recurrence Id"
-msgstr "Microsoft Calendar Recurrence Id"
+msgstr "ID chu kỳ lặp Microsoft Lịch"
 
 #. module: microsoft_calendar
 #: model:ir.model.fields,field_description:microsoft_calendar.field_res_config_settings__cal_microsoft_client_id
@@ -355,7 +360,7 @@ msgstr "Microsoft Next Sync Token"
 #. module: microsoft_calendar
 #: model:ir.model.fields,field_description:microsoft_calendar.field_calendar_event__microsoft_recurrence_master_id
 msgid "Microsoft Recurrence Master Id"
-msgstr "Microsoft Recurrence Master Id"
+msgstr "Master ID của chu kỳ lặp Microsoft"
 
 #. module: microsoft_calendar
 #: model:ir.model.fields,field_description:microsoft_calendar.field_res_config_settings__cal_microsoft_sync_paused
@@ -422,9 +427,9 @@ msgid ""
 "the day of the previous event, and cannot be moved to or after the day of "
 "the following event."
 msgstr ""
-"Giới hạn của Outlook: trong trường hợp định kỳ, không thể di chuyển một sự "
-"kiện đến hoặc trước ngày diễn ra sự kiện trước đó và không thể di chuyển đến"
-" hoặc sau ngày diễn ra sự kiện tiếp theo."
+"Giới hạn của Outlook: trong chu kỳ lặp, không thể di chuyển một sự kiện đến "
+"hoặc trước ngày diễn ra sự kiện trước đó và không thể di chuyển đến hoặc sau"
+" ngày diễn ra sự kiện tiếp theo."
 
 #. module: microsoft_calendar
 #: model:ir.actions.server,name:microsoft_calendar.ir_cron_sync_all_cals_ir_actions_server

@@ -7,11 +7,9 @@ import dbus
 import io
 import logging
 import netifaces as ni
-import os
 from PIL import Image, ImageOps
 import re
 import subprocess
-from uuid import getnode as get_mac
 
 from odoo import http
 from odoo.addons.hw_drivers.connection_manager import connection_manager
@@ -48,6 +46,7 @@ def cups_notification_handler(message, uri, device_identifier, state, reason, ac
             IPP_PRINTER_STOPPED: 'stopped'
         }
         iot_devices[device_identifier].update_status(state_value[state], message, reason)
+
 
 # Create a Cups subscription if it doesn't exist yet
 try:
@@ -94,18 +93,23 @@ class PrinterDriver(Driver):
         if device.get('supported', False):
             return True
         protocol = ['dnssd', 'lpd', 'socket']
-        if any(x in device['url'] for x in protocol) and device['device-make-and-model'] != 'Unknown' or 'direct' in device['device-class']:
+        if (
+                any(x in device['url'] for x in protocol)
+                and device['device-make-and-model'] != 'Unknown'
+                or 'direct' in device['device-class']
+        ):
             model = cls.get_device_model(device)
-            ppdFile = ''
+            ppd_file = ''
             for ppd in PPDs:
                 if model and model in PPDs[ppd]['ppd-product']:
-                    ppdFile = ppd
+                    ppd_file = ppd
                     break
             with cups_lock:
-                if ppdFile:
-                    conn.addPrinter(name=device['identifier'], ppdname=ppdFile, device=device['url'])
+                if ppd_file:
+                    conn.addPrinter(name=device['identifier'], ppdname=ppd_file, device=device['url'])
                 else:
                     conn.addPrinter(name=device['identifier'], device=device['url'])
+
                 conn.setPrinterInfo(device['identifier'], device['device-make-and-model'])
                 conn.enablePrinter(device['identifier'])
                 conn.acceptJobs(device['identifier'])
@@ -129,7 +133,11 @@ class PrinterDriver(Driver):
 
     @classmethod
     def get_status(cls):
-        status = 'connected' if any(iot_devices[d].device_type == "printer" and iot_devices[d].device_connection == 'direct' for d in iot_devices) else 'disconnected'
+        status = 'connected' if any(
+            iot_devices[d].device_type == "printer"
+            and iot_devices[d].device_connection == 'direct'
+            for d in iot_devices
+        ) else 'disconnected'
         return {'status': status, 'messages': ''}
 
     def disconnect(self):
@@ -161,15 +169,31 @@ class PrinterDriver(Driver):
         }
         event_manager.device_changed(self)
 
-    def print_raw(self, data):
-        process = subprocess.Popen(["lp", "-d", self.device_identifier], stdin=subprocess.PIPE)
+    def print_raw(self, data, landscape=False, duplex=True):
+        """
+        Print raw data to the printer
+        :param data: The data to print
+        :param landscape: Print in landscape mode (Default: False)
+        :param duplex: Print in duplex mode (recto-verso) (Default: True)
+        """
+        options = []
+        if landscape:
+            options.extend(['-o', 'orientation-requested=4'])
+        if not duplex:
+            options.extend(['-o', 'sides=one-sided'])
+        cmd = ["lp", "-d", self.device_identifier, *options]
+
+        _logger.debug("Printing using command: %s", cmd)
+        process = subprocess.Popen(cmd, stdin=subprocess.PIPE)
         process.communicate(data)
         if process.returncode != 0:
-            # The stderr isn't meaningful so we don't log it ('No such file or directory')
+            # The stderr isn't meaningful, so we don't log it ('No such file or directory')
             _logger.error('Printing failed: printer with the identifier "%s" could not be found',
                           self.device_identifier)
 
     def print_receipt(self, data):
+        _logger.debug("print_receipt called for printer %s", self.device_name)
+
         receipt = b64decode(data['receipt'])
         im = Image.open(io.BytesIO(receipt))
 
@@ -360,11 +384,14 @@ class PrinterDriver(Driver):
 
     def open_cashbox(self, data):
         """Sends a signal to the current printer to open the connected cashbox."""
+        _logger.debug("open_cashbox called for printer %s", self.device_name)
+
         commands = RECEIPT_PRINTER_COMMANDS[self.receipt_protocol]
         for drawer in commands['drawers']:
             self.print_raw(drawer)
 
     def _action_default(self, data):
+        _logger.debug("_action_default called for printer %s", self.device_name)
         self.print_raw(b64decode(data['document']))
 
 
@@ -377,5 +404,6 @@ class PrinterController(http.Controller):
             iot_devices[printer].action(data)
             return True
         return False
+
 
 proxy_drivers['printer'] = PrinterDriver

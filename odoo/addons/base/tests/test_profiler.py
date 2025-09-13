@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import sys
 import time
+
+from unittest.mock import patch
 
 from odoo.exceptions import AccessError
 from odoo.tests.common import BaseCase, TransactionCase, tagged, new_test_user
@@ -415,46 +418,6 @@ class TestProfiling(TransactionCase):
         self.assertEqual(entries.pop(0)['exec_context'], ((stack_level, {'letter': 'a'}), (stack_level, {'letter': 'c'})))
         self.assertEqual(entries.pop(0)['exec_context'], ((stack_level, {'letter': 'a'}),))
 
-    def test_sync_recorder(self):
-        def a():
-            b()
-            c()
-
-        def b():
-            pass
-
-        def c():
-            d()
-            d()
-
-        def d():
-            pass
-
-        with Profiler(description='test', collectors=['traces_sync'], db=None) as p:
-            a()
-
-        stacks = [r['stack'] for r in p.collectors[0].entries]
-
-        # map stack frames to their function name, and check
-        stacks_methods = [[frame[2] for frame in stack] for stack in stacks]
-        self.assertEqual(stacks_methods[:-2], [
-            ['a'],
-            ['a', 'b'],
-            ['a'],
-            ['a', 'c'],
-            ['a', 'c', 'd'],
-            ['a', 'c'],
-            ['a', 'c', 'd'],
-            ['a', 'c'],
-            ['a'],
-            [],
-        ])
-
-        # map stack frames to their line number, and check
-        stacks_lines = [[frame[1] for frame in stack] for stack in stacks]
-        self.assertEqual(stacks_lines[1][0] + 1, stacks_lines[3][0],
-                         "Call of b() in a() should be one line before call of c()")
-
     def test_qweb_recorder(self):
         template = self.env['ir.ui.view'].create({
             'name': 'test',
@@ -567,6 +530,18 @@ class TestProfiling(TransactionCase):
         self.assertEqual(first_query['stack'][-1][2], 'execute')
         self.assertEqual(first_query['stack'][-1][0].split('/')[-1], 'sql_db.py')
 
+    def test_profiler_return(self):
+        # Enter test mode to avoid the profiler to commit the result
+        self.registry.enter_test_mode(self.cr)
+        self.addCleanup(self.registry.leave_test_mode)
+        # Trick: patch db_connect() to make it return the registry with the current test cursor
+        # See `ProfilingHttpCase`
+        self.startClassPatcher(patch('odoo.sql_db.db_connect', return_value=self.registry))
+        with self.profile(collectors=["sql"]) as p:
+            self.env.cr.execute("SELECT 1")
+        p.json()  # check we can call it
+        self.assertEqual(p.collectors[0].entries[0]['query'], 'SELECT 1')
+
 
 def deep_call(func, depth):
     """ Call the given function at the given call depth. """
@@ -641,3 +616,50 @@ class TestPerformance(BaseCase):
             time.sleep(1)
         entry_count = len(res.collectors[0].entries)
         self.assertLess(entry_count, 5)  # ~3
+
+
+@tagged('-standard', 'profiling')
+class TestSyncRecorder(BaseCase):
+    # this test was made non standard because it can break for strange reason because of additionnal _remove or signal_handler frame
+    def test_sync_recorder(self):
+        if sys.gettrace() is not None:
+            self.skipTest(f'Cannot start SyncCollector, settrace already set: {sys.gettrace()}')
+
+        def a():
+            b()
+            c()
+
+        def b():
+            pass
+
+        def c():
+            d()
+            d()
+
+        def d():
+            pass
+
+        with Profiler(description='test', collectors=['traces_sync'], db=None) as p:
+            a()
+
+        stacks = [r['stack'] for r in p.collectors[0].entries]
+
+        # map stack frames to their function name, and check
+        stacks_methods = [[frame[2] for frame in stack] for stack in stacks]
+        self.assertEqual(stacks_methods[:-2], [
+            ['a'],
+            ['a', 'b'],
+            ['a'],
+            ['a', 'c'],
+            ['a', 'c', 'd'],
+            ['a', 'c'],
+            ['a', 'c', 'd'],
+            ['a', 'c'],
+            ['a'],
+            [],
+        ])
+
+        # map stack frames to their line number, and check
+        stacks_lines = [[frame[1] for frame in stack] for stack in stacks]
+        self.assertEqual(stacks_lines[1][0] + 1, stacks_lines[3][0],
+                         "Call of b() in a() should be one line before call of c()")

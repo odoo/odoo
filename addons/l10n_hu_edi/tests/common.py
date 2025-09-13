@@ -4,7 +4,6 @@ from odoo import Command
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 
 import datetime
-from unittest import mock
 
 
 class L10nHuEdiTestCommon(AccountTestInvoicingCommon):
@@ -105,6 +104,7 @@ class L10nHuEdiTestCommon(AccountTestInvoicingCommon):
             'tax_exigibility': 'on_invoice',
             'price_include': True,
             'include_base_amount': True,
+            'l10n_hu_tax_type': 'VAT',
             'invoice_repartition_line_ids': [
                 Command.create({'repartition_type': 'base'}),
                 Command.create({
@@ -124,17 +124,35 @@ class L10nHuEdiTestCommon(AccountTestInvoicingCommon):
     @classmethod
     def write_edi_credentials(cls):
         # Set up test EDI user
-        with mock.patch.object(type(cls.env['res.company']), '_l10n_hu_edi_test_credentials', autospec=True):
-            return cls.company_data['company'].write({
-                'l10n_hu_edi_server_mode': 'test',
-                'l10n_hu_edi_username': 'this',
-                'l10n_hu_edi_password': 'that',
-                'l10n_hu_edi_signature_key': 'some_key',
-                'l10n_hu_edi_replacement_key': 'abcdefghijklmnop',
-            })
+        return cls.company_data['company'].write({
+            'l10n_hu_edi_server_mode': 'test',
+            'l10n_hu_edi_username': 'this',
+            'l10n_hu_edi_password': 'that',
+            'l10n_hu_edi_signature_key': 'some_key',
+            'l10n_hu_edi_replacement_key': 'abcdefghijklmnop',
+        })
 
-    def create_invoice_simple(self):
+    def create_invoice_simple(self, amount=None):
         """ Create a really basic invoice - just one line. """
+        return self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'journal_id': self.company_data['default_journal_sale'].id,
+            'currency_id': self.env.ref('base.HUF').id,
+            'partner_id': self.partner_company.id,
+            'invoice_date': self.today,
+            'delivery_date': self.today,
+            'invoice_line_ids': [
+                Command.create({
+                    'product_id': self.product_a.id,
+                    'price_unit': amount or 10000.0,
+                    'quantity': 1,
+                    'tax_ids': [Command.set(self.tax_vat.ids)],
+                })
+            ]
+        })
+
+    def create_invoice_simple_discount(self):
+        """ Create a really basic invoice with a discount - just one line. """
         return self.env['account.move'].create({
             'move_type': 'out_invoice',
             'journal_id': self.company_data['default_journal_sale'].id,
@@ -147,13 +165,43 @@ class L10nHuEdiTestCommon(AccountTestInvoicingCommon):
                     'product_id': self.product_a.id,
                     'price_unit': 10000.0,
                     'quantity': 1,
+                    'discount': 20,
                     'tax_ids': [Command.set(self.tax_vat.ids)],
                 })
             ]
         })
 
+    def create_invoice_tax_price_include(self):
+        """ Create an invoice with :
+            * one line using a tax with price included
+            * one line using a tax with price included and a discount
+        """
+        return self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'journal_id': self.company_data['default_journal_sale'].id,
+            'currency_id': self.env.ref('base.HUF').id,
+            'partner_id': self.partner_company.id,
+            'invoice_date': self.today,
+            'delivery_date': self.today,
+            'invoice_line_ids': [
+                Command.create({
+                    'product_id': self.product_a.id,
+                    'price_unit': 1000.00,
+                    'quantity': 1,
+                    'tax_ids': [Command.set(self.tax_price_include.ids)],
+                }),
+                Command.create({
+                    'product_id': self.product_a.id,
+                    'price_unit': 1000.00,
+                    'quantity': 1,
+                    'discount': 20,
+                    'tax_ids': [Command.set(self.tax_price_include.ids)],
+                }),
+            ]
+        })
+
     def create_advance_invoice(self):
-        """ Create a sale order, an advance invoice and a final invoice. """
+        """ Create a sale order and an advance invoice. """
         self.product_a.invoice_policy = 'order'
         pricelist_huf = self.env['product.pricelist'].create({
             'name': 'HUF pricelist',
@@ -174,28 +222,34 @@ class L10nHuEdiTestCommon(AccountTestInvoicingCommon):
         })
         sale_order.action_confirm()
 
-        context = {
+        downpayment = self.env['sale.advance.payment.inv'].with_context({
             'active_model': 'sale.order',
             'active_ids': [sale_order.id],
             'active_id': sale_order.id,
             'default_journal_id': self.company_data['default_journal_sale'].id,
-        }
-
-        downpayment_1 = self.env['sale.advance.payment.inv'].with_context(context).create({
+        }).create({
             'advance_payment_method': 'fixed',
             'fixed_amount': 6350.0,
             'deposit_account_id': self.company_data['default_account_revenue'].id,
         })
-        downpayment_1.create_invoices()
-        advance_invoice = sale_order.invoice_ids
+        downpayment.create_invoices()
+        return sale_order, sale_order.invoice_ids
 
-        downpayment_2 = self.env['sale.advance.payment.inv'].with_context(context).create({
+    def create_final_invoice(self, sale_order):
+        """ Create a final invoice for a sale order """
+        advance_invoice = sale_order.invoice_ids
+        final_payment = self.env['sale.advance.payment.inv'].with_context({
+            'active_model': 'sale.order',
+            'active_ids': [sale_order.id],
+            'active_id': sale_order.id,
+            'default_journal_id': self.company_data['default_journal_sale'].id,
+        }).create({
             'advance_payment_method': 'delivered',
         })
-        downpayment_2.create_invoices()
+        final_payment.create_invoices()
         final_invoice = sale_order.invoice_ids - advance_invoice
 
-        return advance_invoice, final_invoice
+        return final_invoice
 
     def create_invoice_complex_huf(self):
         """ Create a complex invoice in HUF, with cash rounding. """
@@ -214,7 +268,7 @@ class L10nHuEdiTestCommon(AccountTestInvoicingCommon):
                     'price_unit': 10.00,
                     'quantity': 3,
                     'discount': 20,
-                    'tax_ids': [Command.set((self.tax_vat | self.tax_price_include).ids)],
+                    'tax_ids': [Command.set(self.tax_vat.ids)],
                 }),
                 Command.create({
                     'product_id': self.product_b.id,
@@ -253,7 +307,7 @@ class L10nHuEdiTestCommon(AccountTestInvoicingCommon):
                     'price_unit': 10.00,
                     'quantity': 3,
                     'discount': 20,
-                    'tax_ids': [Command.set((self.tax_vat | self.tax_price_include).ids)],
+                    'tax_ids': [Command.set(self.tax_vat.ids)],
                 }),
                 Command.create({
                     'product_id': self.product_b.id,
@@ -276,18 +330,47 @@ class L10nHuEdiTestCommon(AccountTestInvoicingCommon):
             ]
         })
 
-    def create_reversal(self, invoice, is_modify=False):
+    def create_reversal(self, invoice, is_modify=False, amount=None):
         """ Create a credit note that reverses an invoice. """
         wizard_vals = {'journal_id': invoice.journal_id.id}
         wizard_reverse = self.env['account.move.reversal'].with_context(active_ids=invoice.ids, active_model='account.move').create(wizard_vals)
         wizard_reverse.reverse_moves(is_modify=is_modify)
-        return wizard_reverse.new_move_ids
+        reversal_moves = wizard_reverse.new_move_ids
+        if amount:
+            reversal_moves.invoice_line_ids.write({
+                'price_unit': amount
+            })
+        return reversal_moves
+
+    def create_debit_note(self, invoice, amount=None):
+        """ Create Debit Note """
+        wizard_vals = {
+            'journal_id': invoice.journal_id.id,
+            'copy_lines': True,
+        }
+        move_debit_note_wiz = self.env['account.debit.note'].with_context(active_model="account.move", active_ids=invoice.ids).create(wizard_vals)
+        move_debit_note_wiz.create_debit()
+        debit_note = self.env['account.move'].search([('debit_origin_id', '=', invoice.id)])
+        if amount:
+            debit_note.invoice_line_ids.write({
+                'price_unit': amount
+            })
+        return debit_note
+
+    def register_payment(self, invoice, amount):
+        payment_register = self.env['account.payment.register'].with_context(active_model='account.move', active_ids=invoice.ids).create({
+            'payment_date': self.today,
+            'journal_id': self.company_data['default_journal_bank'].id,
+            'amount': amount,
+        })
+        payment_register.action_create_payments()
 
     def create_cancel_wizard(self):
         """ Create an invoice, send it, and create a cancellation wizard for it. """
         invoice = self.create_invoice_simple()
         invoice.action_post()
         send_and_print = self.create_send_and_print(invoice, l10n_hu_edi_enable_nav_30=True)
+        self.assertRecordValues(send_and_print, [{'l10n_hu_edi_actionable_errors': {}}])
         send_and_print.action_send_and_print()
         cancel_wizard = self.env['l10n_hu_edi.cancellation'].with_context({"default_invoice_id": invoice.id}).create({
             'code': 'ERRATIC_DATA',

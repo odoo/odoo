@@ -12,5 +12,6 @@ Make the lock date irreversible:
 * Any new All Users Lock Date must be posterior (or equal) to the previous one.
     """,
     'depends': ['account'],
+    'uninstall_hook': 'uninstall_hook',
     'license': 'LGPL-3',
 }

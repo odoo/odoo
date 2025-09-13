@@ -532,6 +532,7 @@ class HolidaysRequest(models.Model):
                 date_to.date())
 
             for leave in self:
+                department_ids = leave.employee_id.department_id.ids
                 domain = [
                     ('start_date', '<=', leave.date_to.date()),
                     ('end_date', '>=', leave.date_from.date()),
@@ -539,6 +540,14 @@ class HolidaysRequest(models.Model):
                         ('resource_calendar_id', '=', False),
                         ('resource_calendar_id', '=', leave.resource_calendar_id.id),
                 ]
+                if department_ids:
+                    domain += [
+                        '|',
+                        ('department_ids', '=', False),
+                        ('department_ids', 'parent_of', department_ids),
+                    ]
+                else:
+                    domain += [('department_ids', '=', False)]
 
                 if leave.holiday_status_id.company_id:
                     domain += [('company_id', '=', leave.holiday_status_id.company_id.id)]
@@ -787,6 +796,9 @@ Attempting to double-book your time off won't magically make your vacation 2x be
             if leave_type.allows_negative:
                 max_excess = leave_type.max_allowed_negative
                 for employee in employees:
+                    if not leave_data[employee]:
+                        raise ValidationError(_("You do not have any allocation for this time off type.\n"
+                                                "Please request an allocation before submitting your time off request."))
                     if leave_data[employee] and leave_data[employee][0][1]['virtual_remaining_leaves'] < -max_excess:
                         raise ValidationError(_("There is no valid allocation to cover that request."))
                 continue
@@ -797,6 +809,9 @@ Attempting to double-book your time off won't magically make your vacation 2x be
             for employee in employees:
                 previous_emp_data = previous_leave_data[employee] and previous_leave_data[employee][0][1]['virtual_excess_data']
                 emp_data = leave_data[employee] and leave_data[employee][0][1]['virtual_excess_data']
+                if not leave_data[employee]:
+                    raise ValidationError(_("You do not have any allocation for this time off type.\n"
+                                            "Please request an allocation before submitting your time off request."))
                 if not previous_emp_data and not emp_data:
                     continue
                 if previous_emp_data != emp_data and len(emp_data) >= len(previous_emp_data):
@@ -955,7 +970,7 @@ Attempting to double-book your time off won't magically make your vacation 2x be
                 # eg : holidays_user can create a leave request with validation_type = 'manager' for someone else
                 # but they can only write on it if they are leave_manager_id
                 holiday_sudo = holiday.sudo()
-                holiday_sudo.add_follower(employee_id)
+                holiday_sudo.add_follower(holiday.employee_id.id)
                 if holiday.validation_type == 'manager':
                     holiday_sudo.message_subscribe(partner_ids=holiday.employee_id.leave_manager_id.partner_id.ids)
                 if holiday.validation_type == 'no_validation':
@@ -973,7 +988,8 @@ Attempting to double-book your time off won't magically make your vacation 2x be
 
         is_officer = self.env.user.has_group('hr_holidays.group_hr_holidays_user') or self.env.is_superuser()
         if not is_officer and values.keys() - {'attachment_ids', 'supported_attachment_ids', 'message_main_attachment_id'}:
-            if any(hol.date_from.date() < fields.Date.today() and hol.employee_id.leave_manager_id != self.env.user for hol in self):
+            if any(hol.date_from.date() < fields.Date.today() and hol.employee_id.leave_manager_id != self.env.user
+                   and hol.state not in ('confirm', 'draft') for hol in self):
                 raise UserError(_('You must have manager rights to modify/validate a time off that already begun'))
 
         # Unlink existing resource.calendar.leaves for validated time off
@@ -996,7 +1012,7 @@ Attempting to double-book your time off won't magically make your vacation 2x be
             if 'date_to' in values:
                 values['request_date_to'] = values['date_to']
         result = super(HolidaysRequest, self).write(values)
-        if any(field in values for field in ['request_date_from', 'date_from', 'request_date_from', 'date_to', 'holiday_status_id', 'employee_id']):
+        if any(field in values for field in ['request_date_from', 'date_from', 'request_date_from', 'date_to', 'holiday_status_id', 'employee_id', 'state']):
             self._check_validity()
         if not self.env.context.get('leave_fast_create'):
             for holiday in self:
@@ -1159,8 +1175,13 @@ Attempting to double-book your time off won't magically make your vacation 2x be
             'date_to': self.date_to,
             'request_date_from': self.request_date_from,
             'request_date_to': self.request_date_to,
+            'request_hour_from': self.request_hour_from,
+            'request_hour_to': self.request_hour_to,
+            'request_unit_hours': self.request_unit_hours,
+            'request_unit_half': self.request_unit_half,
             'notes': self.notes,
             'number_of_days': work_days_data[employee.id]['days'],
+            'number_of_hours': work_days_data[employee.id]['hours'],
             'parent_id': self.id,
             'employee_id': employee.id,
             'employee_ids': employee,
@@ -1320,6 +1341,8 @@ Attempting to double-book your time off won't magically make your vacation 2x be
         ).create(split_leaves_vals)
 
         split_leaves.filtered(lambda l: l.state in 'validate')._validate_leave_request()
+
+        return split_leaves
 
     def action_validate(self):
         current_employee = self.env.user.employee_id
@@ -1539,7 +1562,7 @@ Attempting to double-book your time off won't magically make your vacation 2x be
     def _get_responsible_for_approval(self):
         self.ensure_one()
 
-        responsible = self.env.user
+        responsible = self.env['res.users']
 
         if self.holiday_type != 'employee':
             return responsible
@@ -1556,6 +1579,9 @@ Attempting to double-book your time off won't magically make your vacation 2x be
         return responsible
 
     def activity_update(self):
+        if self.env.context.get('mail_activity_automation_skip'):
+            return False
+
         to_clean, to_do, to_do_confirm_activity = self.env['hr.leave'], self.env['hr.leave'], self.env['hr.leave']
         activity_vals = []
         today = fields.Date.today()
@@ -1564,7 +1590,7 @@ Attempting to double-book your time off won't magically make your vacation 2x be
         approval_activity = self.env.ref('hr_holidays.mail_act_leave_second_approval')
         for holiday in self:
             if holiday.state == 'draft':
-                to_clean |= holiday
+                to_clean += holiday
             elif holiday.state in ['confirm', 'validate1']:
                 if holiday.holiday_status_id.leave_validation_type != 'no_validation':
                     if holiday.state == 'confirm':
@@ -1580,12 +1606,12 @@ Attempting to double-book your time off won't magically make your vacation 2x be
                             'Second approval request for %(leave_type)s',
                             leave_type=holiday.holiday_status_id.name,
                         )
-                        to_do_confirm_activity |= holiday
-                    user_ids = holiday.sudo()._get_responsible_for_approval().ids or self.env.user.ids
+                        to_do_confirm_activity += holiday
+                    user_ids = holiday.sudo()._get_responsible_for_approval().ids
                     for user_id in user_ids:
                         date_deadline = (
                             (holiday.date_from -
-                             relativedelta(**{activity_type.delay_unit: activity_type.delay_count or 0})).date()
+                             relativedelta(**{activity_type.delay_unit or 'days': activity_type.delay_count or 0})).date()
                             if holiday.date_from else today)
                         if date_deadline < today:
                             date_deadline = today
@@ -1599,9 +1625,9 @@ Attempting to double-book your time off won't magically make your vacation 2x be
                             'res_model_id': model_id,
                         })
             elif holiday.state == 'validate':
-                to_do |= holiday
+                to_do += holiday
             elif holiday.state == 'refuse':
-                to_clean |= holiday
+                to_clean += holiday
         if to_clean:
             to_clean.activity_unlink(['hr_holidays.mail_act_leave_approval', 'hr_holidays.mail_act_leave_second_approval'])
         if to_do_confirm_activity:

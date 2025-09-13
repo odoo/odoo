@@ -1,0 +1,472 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo auto_sequence="1">
+    <!-- IR -->
+    <record id="tax_report_ir" model="account.report">
+        <field name="name">Payable VAT (IR)</field>
+        <field name="root_report_id" ref="account.generic_tax_report"/>
+        <field name="country_id" ref="base.si"/>
+        <field name="column_ids">
+            <record id="tax_report_ir_balance" model="account.report.column">
+                <field name="name">Balance</field>
+                <field name="expression_label">balance</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="tax_report_ir_7" model="account.report.line">
+                <field name="name">7. SLO Value excluding VAT</field>
+                <field name="code">ir_7</field>
+                <field name="expression_ids">
+                    <record id="tax_report_ir_7_tag" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">ir_7</field>
+                    </record>
+                </field>
+            </record>
+            <record id="tax_report_ir_8" model="account.report.line">
+                <field name="name">8. Self-taxation of supplies Article 76a</field>
+                <field name="code">ir_8</field>
+                <field name="expression_ids">
+                    <record id="tax_report_ir_8_tag" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">ir_8</field>
+                    </record>
+                </field>
+            </record>
+            <record id="tax_report_ir_exempt_turnover_eu" model="account.report.line">
+                <field name="name">EXEMPTED TURNOVER - EU</field>
+                <field name="expression_ids">
+                    <record id="tax_report_ir_exempt_turnover_eu_formula" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">
+                            ir_9.balance +
+                            ir_10a.balance +
+                            ir_10b.balance +
+                            ir_10c.balance +
+                            ir_10d.balance +
+                            ir_11.balance +
+                            ir_12.balance +
+                            ir_13.balance
+                        </field>
+                    </record>
+                </field>
+                <field name="children_ids">
+                    <record id="tax_report_ir_9" model="account.report.line">
+                        <field name="name">9. No right to deduct VAT</field>
+                        <field name="code">ir_9</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_ir_9_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">ir_9</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_ir_10a" model="account.report.line">
+                        <field name="name">10a. Supplies of goods</field>
+                        <field name="code">ir_10a</field>
+                        <field name="sequence">3200</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_ir_10a_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">ir_10a</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_ir_10b" model="account.report.line">
+                        <field name="name">10b. Custom posts 42 and 43</field>
+                        <field name="code">ir_10b</field>
+                        <field name="sequence">3300</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_ir_10b_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">ir_10b</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_ir_10c" model="account.report.line">
+                        <field name="name">10c. Deliveries of bl. after storage on recall</field>
+                        <field name="code">ir_10c</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_ir_10c_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">ir_10c</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_ir_10d" model="account.report.line">
+                        <field name="name">10d. Passed st.</field>
+                        <field name="code">ir_10d</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_ir_10d_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">ir_10d</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_ir_11" model="account.report.line">
+                        <field name="name">11. Three-way delivery</field>
+                        <field name="code">ir_11</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_ir_11_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">ir_11</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_ir_12" model="account.report.line">
+                        <field name="name">12. Distance selling</field>
+                        <field name="code">ir_12</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_ir_12_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">ir_12</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_ir_13" model="account.report.line">
+                        <field name="name">13. Assembly</field>
+                        <field name="code">ir_13</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_ir_13_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">ir_13</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="tax_report_ir_taxed_turnover" model="account.report.line">
+                <field name="name">TAXED TURNOVER</field>
+                <field name="expression_ids">
+                    <record id="tax_report_ir_taxed_turnover_formula" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">
+                            ir_14.balance +
+                            ir_15a.balance +
+                            ir_15b.balance +
+                            ir_16.balance +
+                            ir_17.balance +
+                            ir_18a.balance +
+                            ir_19a.balance +
+                            ir_18b.balance +
+                            ir_19b.balance +
+                            ir_20.balance +
+                            ir_21a.balance +
+                            ir_21b.balance +
+                            ir_22.balance +
+                            ir_22a.balance +
+                            ir_22b.balance
+                        </field>
+                    </record>
+                </field>
+                <field name="children_ids">
+                    <record id="tax_report_ir_transport_slovenia" model="account.report.line">
+                        <field name="name">Transport in Slovenia</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_ir_transport_slovenia_formula" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">
+                                    ir_14.balance +
+                                    ir_15a.balance +
+                                    ir_15b.balance
+                                </field>
+                            </record>
+                        </field>
+                         <field name="children_ids">
+                            <record id="tax_report_ir_14" model="account.report.line">
+                                <field name="name">14. VAT 22%</field>
+                                <field name="code">ir_14</field>
+                                <field name="expression_ids">
+                                    <record id="tax_report_ir_14_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">ir_14</field>
+                                    </record>
+                                </field>
+                            </record>
+                             <record id="tax_report_ir_15a" model="account.report.line">
+                                <field name="name">15a. VAT 9,5%</field>
+                                <field name="code">ir_15a</field>
+                                <field name="expression_ids">
+                                    <record id="tax_report_ir_15a_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">ir_15a</field>
+                                    </record>
+                                </field>
+                            </record>
+                             <record id="tax_report_ir_15b" model="account.report.line">
+                                <field name="name">15b. VAT 5%</field>
+                                <field name="code">ir_15b</field>
+                                <field name="expression_ids">
+                                    <record id="tax_report_ir_15b_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">ir_15b</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_ir_self_taxation_eu" model="account.report.line">
+                        <field name="name">Self-taxation - EU</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_ir_self_taxation_eu_formula" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">
+                                    ir_16.balance +
+                                    ir_17.balance +
+                                    ir_18a.balance +
+                                    ir_18b.balance +
+                                    ir_19a.balance +
+                                    ir_19b.balance
+                                </field>
+                            </record>
+                        </field>
+                         <field name="children_ids">
+                            <record id="tax_report_ir_16" model="account.report.line">
+                                <field name="name">16. VAT BL 22%</field>
+                                <field name="code">ir_16</field>
+                                <field name="expression_ids">
+                                    <record id="tax_report_ir_16_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">ir_16</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="tax_report_ir_17" model="account.report.line">
+                                <field name="name">17. VAT ST 22%</field>
+                                <field name="code">ir_17</field>
+                                <field name="expression_ids">
+                                    <record id="tax_report_ir_17_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">ir_17</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="tax_report_ir_18a" model="account.report.line">
+                                <field name="name">18a. VAT BL 9.5%</field>
+                                <field name="code">ir_18a</field>
+                                <field name="expression_ids">
+                                    <record id="tax_report_ir_18a_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">ir_18a</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="tax_report_ir_19a" model="account.report.line">
+                                <field name="name">19a. VAT ST 9.5%</field>
+                                <field name="code">ir_19a</field>
+                                <field name="expression_ids">
+                                    <record id="tax_report_ir_19a_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">ir_19a</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="tax_report_ir_18b" model="account.report.line">
+                                <field name="name">18b. VAT BL 5%</field>
+                                <field name="code">ir_18b</field>
+                                <field name="expression_ids">
+                                    <record id="tax_report_ir_18b_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">ir_18b</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="tax_report_ir_19b" model="account.report.line">
+                                <field name="name">19b. VAT ST 5%</field>
+                                <field name="code">ir_19b</field>
+                                <field name="expression_ids">
+                                    <record id="tax_report_ir_19b_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">ir_19b</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_ir_self_taxation_slo_under_article_761" model="account.report.line">
+                        <field name="name">Self-taxation - SLO under Article 76a</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_ir_self_taxation_slo_under_article_761_formula" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">ir_20.balance + ir_21a.balance + ir_21b.balance</field>
+                            </record>
+                        </field>
+                         <field name="children_ids">
+                             <record id="tax_report_ir_20" model="account.report.line">
+                                <field name="name">20. VAT 22%</field>
+                                <field name="code">ir_20</field>
+                                <field name="sequence">4310</field>
+                                <field name="expression_ids">
+                                    <record id="tax_report_ir_20_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">ir_20</field>
+                                    </record>
+                                </field>
+                             </record>
+                             <record id="tax_report_ir_21a" model="account.report.line">
+                                <field name="name">21a. VAT 9,5%</field>
+                                <field name="code">ir_21a</field>
+                                <field name="expression_ids">
+                                    <record id="tax_report_ir_21a_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">ir_21a</field>
+                                    </record>
+                                </field>
+                            </record>
+                             <record id="tax_report_ir_21b" model="account.report.line">
+                                <field name="name">21b. VAT 5%</field>
+                                <field name="code">ir_21b</field>
+                                <field name="expression_ids">
+                                    <record id="tax_report_ir_21b_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">ir_21b</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_ir_self_taxation_3rd_world_imports" model="account.report.line">
+                        <field name="name">Self-taxation - 3rd world imports</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_ir_self_taxation_3rd_world_imports_formula" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">ir_22.balance + ir_22a.balance + ir_22b.balance</field>
+                            </record>
+                        </field>
+                         <field name="children_ids">
+                             <record id="tax_report_ir_22" model="account.report.line">
+                                <field name="name">22. VAT 22%</field>
+                                <field name="code">ir_22</field>
+                                <field name="sequence">4410</field>
+                                <field name="expression_ids">
+                                    <record id="tax_report_ir_22_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">ir_22</field>
+                                    </record>
+                                </field>
+                             </record>
+                             <record id="tax_report_ir_22a" model="account.report.line">
+                                <field name="name">22a. VAT 9,5%</field>
+                                <field name="code">ir_22a</field>
+                                <field name="sequence">4420</field>
+                                <field name="expression_ids">
+                                    <record id="tax_report_ir_22a_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">ir_22a</field>
+                                    </record>
+                                </field>
+                            </record>
+                             <record id="tax_report_ir_22b" model="account.report.line">
+                                <field name="name">22b. VAT 5%</field>
+                                <field name="code">ir_22b</field>
+                                <field name="sequence">4430</field>
+                                <field name="expression_ids">
+                                    <record id="tax_report_ir_22b_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">ir_22b</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="tax_report_ir_3rd_world_deliveries_with_right_withdrawal" model="account.report.line">
+                <field name="name">3rd world deliveries with right of withdrawal VAT</field>
+                <field name="expression_ids">
+                    <record id="tax_report_ir_23_tag" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">ir_23</field>
+                    </record>
+                </field>
+            </record>
+            <record id="tax_report_ir_reverse_charge_base" model="account.report.line">
+                <field name="name">REVERSE CHARGE - BASE</field>
+                <field name="expression_ids">
+                    <record id="tax_report_ir_reverse_charge_base_base" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">ir_25a.balance + ir_25b.balance + ir_25c.balance + ir_25d.balance</field>
+                    </record>
+                </field>
+                <field name="children_ids">
+                    <record id="tax_report_ir_25a" model="account.report.line">
+                        <field name="name">25a. Acquisition of EU goods</field>
+                        <field name="code">ir_25a</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_ir_25a_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">ir_25a</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_ir_25b" model="account.report.line">
+                        <field name="name">25b. EU services received</field>
+                        <field name="code">ir_25b</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_ir_25b_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">ir_25b</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_ir_25c" model="account.report.line">
+                        <field name="name">25c. Acquisition SLO Article 76a</field>
+                        <field name="code">ir_25c</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_ir_25c_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">ir_25c</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_ir_25d" model="account.report.line">
+                        <field name="name">25d. Purchases other for self-taxation</field>
+                        <field name="code">ir_25d</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_ir_25d_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">ir_25d</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
+</odoo>

@@ -19,7 +19,7 @@ patch(Order.prototype, {
                     this.get_total_tax()
                 );
                 const qr_code_svg = new XMLSerializer().serializeToString(
-                    codeWriter.write(qr_values, 150, 150)
+                    codeWriter.write(qr_values, 200, 200)
                 );
                 result.qr_code = "data:image/svg+xml;base64," + window.btoa(qr_code_svg);
             }

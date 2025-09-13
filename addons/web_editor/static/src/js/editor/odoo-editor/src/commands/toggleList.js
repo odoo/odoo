@@ -1,14 +1,12 @@
 /** @odoo-module **/
 import {
     childNodeIndex,
-    getListMode,
     isBlock,
     preserveCursor,
-    setTagName,
-    toggleClass,
     insertListAfter,
     getAdjacents,
     closestElement,
+    toggleList,
 } from '../utils/utils.js';
 
 Text.prototype.oToggleList = function (offset, mode) {
@@ -67,32 +65,8 @@ HTMLParagraphElement.prototype.oToggleList = function (offset, mode = 'UL') {
 };
 
 HTMLLIElement.prototype.oToggleList = function (offset, mode) {
-    const pnode = this.closest('ul, ol');
-    if (!pnode) return;
     const restoreCursor = preserveCursor(this.ownerDocument);
-    const listMode = getListMode(pnode) + mode;
-    if (['OLCL', 'ULCL'].includes(listMode)) {
-        pnode.classList.add('o_checklist');
-        for (let li = pnode.firstElementChild; li !== null; li = li.nextElementSibling) {
-            if (li.style.listStyle != 'none') {
-                li.style.listStyle = null;
-                if (!li.style.all) li.removeAttribute('style');
-            }
-        }
-        setTagName(pnode, 'UL');
-    } else if (['CLOL', 'CLUL'].includes(listMode)) {
-        toggleClass(pnode, 'o_checklist');
-        setTagName(pnode, mode);
-    } else if (['OLUL', 'ULOL'].includes(listMode)) {
-        setTagName(pnode, mode);
-    } else {
-        // toggle => remove list
-        let node = this;
-        while (node) {
-            node = node.oShiftTab(offset);
-        }
-    }
-
+    toggleList(this, mode, offset);
     restoreCursor();
     return false;
 };

@@ -19,14 +19,15 @@
 # Matjaz Mozetic <m.mozetic@matmoz.si>, 2023
 # Grega Vavtar <grega@hbs.si>, 2024
 # Katja Deržič, 2024
+# Aleš Pipan, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2025-05-07 20:36+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Katja Deržič, 2024\n"
+"Last-Translator: Aleš Pipan, 2025\n"
 "Language-Team: Slovenian (https://app.transifex.com/odoo/teams/41243/sl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -90,6 +91,7 @@ msgstr "%s %% popust"
 
 #. module: product
 #. odoo-python
+#: code:addons/product/models/product_pricelist.py:0
 #: code:addons/product/models/product_tag.py:0
 #: code:addons/product/models/product_template.py:0
 #, python-format
@@ -1176,7 +1178,7 @@ msgstr "Dokumenti"
 #: model:ir.model.fields,field_description:product.field_product_product__product_document_count
 #: model:ir.model.fields,field_description:product.field_product_template__product_document_count
 msgid "Documents Count"
-msgstr ""
+msgstr "Število dokumentov"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_document_search
@@ -1308,12 +1310,12 @@ msgstr "Priljubljene"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_document__datas
 msgid "File Content (base64)"
-msgstr ""
+msgstr "Vsebina datoteke (base64)"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_document__raw
 msgid "File Content (raw)"
-msgstr ""
+msgstr "Vsebina datoteke (raw)"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_document__file_size
@@ -1562,22 +1564,22 @@ msgstr "Slika 512"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_document__image_height
 msgid "Image Height"
-msgstr ""
+msgstr "Višina slike"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_document__image_src
 msgid "Image Src"
-msgstr ""
+msgstr "Izvor slike"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_document__image_width
 msgid "Image Width"
-msgstr ""
+msgstr "Širina slike"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_document_kanban
 msgid "Image is a link"
-msgstr ""
+msgstr "Slika je povezava"
 
 #. module: product
 #. odoo-python
@@ -1678,7 +1680,7 @@ msgstr "Je javni dokument"
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__res_config_settings__product_weight_in_lbs__0
 msgid "Kilograms"
-msgstr ""
+msgstr "Kilogrami"
 
 #. module: product
 #: model:product.template,name:product.product_product_6_product_template
@@ -1995,7 +1997,7 @@ msgstr "Število cenovnih pravil"
 #. module: product
 #: model:product.template,name:product.product_delivery_01_product_template
 msgid "Office Chair"
-msgstr ""
+msgstr "Pisarniški stol"
 
 #. module: product
 #: model:product.template,name:product.product_product_12_product_template
@@ -2033,7 +2035,7 @@ msgstr ""
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_document__original_id
 msgid "Original (unoptimized, unresized) attachment"
-msgstr ""
+msgstr "Izvirna (neoptimizirana, nespremenjena velikost) priloga"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__base_pricelist_id
@@ -2122,7 +2124,7 @@ msgstr ""
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__res_config_settings__product_weight_in_lbs__1
 msgid "Pounds"
-msgstr ""
+msgstr "Funti"
 
 #. module: product
 #: model_terms:product.template,website_description:product.product_product_4_product_template
@@ -2788,7 +2790,7 @@ msgstr "Prodajna cena"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__lst_price
 msgid "Sales Price"
-msgstr ""
+msgstr "Prodaja Cena"
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_attribute__display_type__select
@@ -2940,7 +2942,7 @@ msgstr "Cenik dobavitelja"
 #. module: product
 #: model:ir.model.constraint,message:product.constraint_product_tag_name_uniq
 msgid "Tag name already exists!"
-msgstr ""
+msgstr "Ime oznake že obstaja!"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
@@ -3076,6 +3078,8 @@ msgid ""
 "The sale price is managed from the product template. Click on the 'Configure"
 " Variants' button to set the extra attribute prices."
 msgstr ""
+"Akcijska cena se upravlja iz predloge izdelka. Kliknite gumb »Konfiguriraj "
+"različice«, da nastavite cene dodatnih atributov."
 
 #. module: product
 #. odoo-python
@@ -3472,7 +3476,7 @@ msgstr ""
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_document__voice_ids
 msgid "Voice"
-msgstr ""
+msgstr "Glas"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__volume
@@ -3669,6 +3673,7 @@ msgstr ""
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_category.py:0
+#: code:addons/product/models/product_category.py:0
 #, python-format
 msgid "You cannot delete the %s product category."
 msgstr " Ne morete izbrisati%s kategorije izdelkov"
@@ -3822,7 +3827,7 @@ msgstr "na"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 msgid "per"
-msgstr ""
+msgstr "na"
 
 #. module: product
 #. odoo-python

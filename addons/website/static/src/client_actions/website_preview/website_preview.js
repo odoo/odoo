@@ -5,6 +5,7 @@ import { browser } from '@web/core/browser/browser';
 import { registry } from '@web/core/registry';
 import { ResizablePanel } from '@web/core/resizable_panel/resizable_panel';
 import { useService, useBus } from '@web/core/utils/hooks';
+import { session } from "@web/session";
 import { ResourceEditor } from '../../components/resource_editor/resource_editor';
 import { WebsiteEditorComponent } from '../../components/editor/editor';
 import { WebsiteTranslator } from '../../components/translator/translator';
@@ -26,6 +27,7 @@ import {
     useState,
     useExternalListener,
 } from "@odoo/owl";
+import { isBrowserMicrosoftEdge } from "@web/core/browser/feature_detection";
 
 class BlockPreview extends Component {}
 BlockPreview.template = 'website.BlockPreview';
@@ -68,7 +70,9 @@ export class WebsitePreview extends Component {
             this.backendWebsiteId = unslugHtmlDataObject(backendWebsiteRepr).id;
 
             const encodedPath = encodeURIComponent(this.path);
-            if (this.websiteDomain && !wUtils.isHTTPSorNakedDomainRedirection(this.websiteDomain, window.location.origin)) {
+            if (!session.website_bypass_domain_redirect // Used by the Odoo support (bugs to be expected)
+                    && this.websiteDomain
+                    && !wUtils.isHTTPSorNakedDomainRedirection(this.websiteDomain, window.location.origin)) {
                 // The website domain might be the naked one while the naked one
                 // is actually redirecting to `www` (or the other way around).
                 // In such a case, we need to consider those 2 from the same
@@ -266,6 +270,10 @@ export class WebsitePreview extends Component {
     get aceEditorWidth() {
         const storedWidth = browser.localStorage.getItem("ace_editor_width");
         return storedWidth ? parseInt(storedWidth) : 720;
+    }
+
+    get isMicrosoftEdge() {
+        return isBrowserMicrosoftEdge();
     }
 
     reloadIframe(url) {

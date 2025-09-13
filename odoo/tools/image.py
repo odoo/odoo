@@ -93,7 +93,7 @@ class ImageProcess():
 
             w, h = self.image.size
             if verify_resolution and w * h > IMAGE_MAX_RESOLUTION:
-                raise UserError(_("Image size excessive, uploaded images must be smaller than %s million pixels.", str(IMAGE_MAX_RESOLUTION / 1e6)))
+                raise UserError(_("Too large image (above %sMpx), reduce the image size.", str(IMAGE_MAX_RESOLUTION / 1e6)))
 
     def image_quality(self, quality=0, output_format=''):
         """Return the image resulting of all the image processing
@@ -231,6 +231,9 @@ class ImageProcess():
                 new_w, new_h = w, (new_h * w) // new_w
             if new_h > h:
                 new_w, new_h = (new_w * h) // new_h, h
+
+            # Dimensions should be at least 1.
+            new_w, new_h = max(new_w, 1), max(new_h, 1)
 
             # Correctly place the center of the crop.
             x_offset = int((w - new_w) * center_x)

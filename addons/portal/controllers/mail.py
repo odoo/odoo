@@ -201,15 +201,13 @@ class PortalChatter(http.Controller):
 
     @http.route('/mail/chatter_fetch', type='json', auth='public', website=True)
     def portal_message_fetch(self, res_model, res_id, domain=False, limit=10, offset=0, **kw):
-        if not domain:
-            domain = []
         # Only search into website_message_ids, so apply the same domain to perform only one search
         # extract domain from the 'website_message_ids' field
         model = request.env[res_model]
         field = model._fields['website_message_ids']
         field_domain = field.get_domain_list(model)
         domain = expression.AND([
-            domain,
+            self._setup_portal_message_fetch_extra_domain(kw),
             field_domain,
             [('res_id', '=', res_id), '|', ('body', '!=', ''), ('attachment_ids', '!=', False)]
         ])
@@ -229,6 +227,9 @@ class PortalChatter(http.Controller):
             'message_count': Message.search_count(domain)
         }
 
+    def _setup_portal_message_fetch_extra_domain(self, data):
+        return []
+
     @http.route(['/mail/update_is_internal'], type='json', auth="user", website=True)
     def portal_message_update_is_internal(self, message_id, is_internal):
         message = request.env['mail.message'].browse(int(message_id))
@@ -237,6 +238,13 @@ class PortalChatter(http.Controller):
 
 
 class MailController(mail.MailController):
+
+    @classmethod
+    def _redirect_to_generic_fallback(cls, model, res_id, access_token=None, **kwargs):
+        # Generic fallback for a share user is the customer portal
+        if request.session.uid and request.env.user.share:
+            return request.redirect('/my')
+        return super()._redirect_to_generic_fallback(model, res_id, access_token=access_token, **kwargs)
 
     @classmethod
     def _redirect_to_record(cls, model, res_id, access_token=None, **kwargs):
@@ -274,7 +282,7 @@ class MailController(mail.MailController):
                             url = urls.url_parse(url)
                             url_params = url.decode_query()
                             url_params.update([("pid", pid), ("hash", hash)])
-                            url = url.replace(query=urls.url_encode(url_params)).to_url()
+                            url = url.replace(query=urls.url_encode(url_params, sort=True)).to_url()
                         return request.redirect(url)
         return super(MailController, cls)._redirect_to_record(model, res_id, access_token=access_token, **kwargs)
 

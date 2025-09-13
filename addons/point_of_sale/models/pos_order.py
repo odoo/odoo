@@ -15,7 +15,7 @@ import re
 
 from odoo import api, fields, models, tools, _
 from odoo.tools import float_is_zero, float_round, float_repr, float_compare
-from odoo.exceptions import ValidationError, UserError
+from odoo.exceptions import ValidationError, UserError, AccessError
 from odoo.osv.expression import AND
 
 _logger = logging.getLogger(__name__)
@@ -155,8 +155,7 @@ class PosOrder(models.Model):
         self = self.with_company(pos_order.company_id)
         self._process_payment_lines(order, pos_order, pos_session, draft)
 
-        if pos_session._is_capture_system_activated():
-            pos_session._remove_capture_content(order)
+        pos_session._remove_capture_content(order)
 
         return pos_order._process_saved_order(draft)
 
@@ -168,8 +167,10 @@ class PosOrder(models.Model):
         line_by_uuid = {line.uuid: line for line in  self.lines.filtered_domain([("uuid", "in", [line['uuid'] for line in lines])])}
 
         for line in lines:
-            if line.get('combo_parent_id'):
-                line_by_uuid[line['uuid']].combo_parent_id = line_by_uuid[uuid_by_cid[line['combo_parent_id']]]
+            if not line.get('combo_parent_id'):
+                continue
+            idx = line['combo_parent_id'] if isinstance(line['combo_parent_id'], str) else uuid_by_cid[line['combo_parent_id']]
+            line_by_uuid[line['uuid']].combo_parent_id = line_by_uuid[idx].id
 
     def _process_saved_order(self, draft):
         self.ensure_one()
@@ -676,7 +677,7 @@ class PosOrder(models.Model):
             'invoice_date': invoice_date.astimezone(timezone).date(),
             'fiscal_position_id': self.fiscal_position_id.id,
             'invoice_line_ids': self._prepare_invoice_lines(),
-            'invoice_payment_term_id': self.partner_id.property_payment_term_id.id or False,
+            'invoice_payment_term_id': False,
             'invoice_cash_rounding_id': self.config_id.rounding_method.id
             if self.config_id.cash_rounding and (not self.config_id.only_round_cash_method or any(p.payment_method_id.is_cash_count for p in self.payment_ids))
             else False
@@ -746,7 +747,13 @@ class PosOrder(models.Model):
         # Cash rounding.
         cash_rounding = self.config_id.rounding_method
         if self.config_id.cash_rounding and cash_rounding and (not self.config_id.only_round_cash_method or any(p.payment_method_id.is_cash_count for p in self.payment_ids)):
-            amount_currency = cash_rounding.compute_difference(self.currency_id, total_amount_currency)
+            if self.config_id.only_round_cash_method and any(not p.payment_method_id.is_cash_count for p in self.payment_ids):
+                # If only_round_cash_method is True, and there are non-cash payments, cash rounding must be computed
+                # based on the total amount of the order, and total payment amount.
+                total_payment_amount = self.currency_id.round(sum(p.amount for p in self.payment_ids))
+                amount_currency = sign * self.currency_id.round(self.currency_id.round(total_amount_currency) + total_payment_amount)
+            else:
+                amount_currency = cash_rounding.compute_difference(self.currency_id, total_amount_currency)
             if not self.currency_id.is_zero(amount_currency):
                 balance = company_currency.round(amount_currency * rate)
 
@@ -912,7 +919,6 @@ class PosOrder(models.Model):
             'res_model': 'account.move',
             'context': "{'move_type':'out_invoice'}",
             'type': 'ir.actions.act_window',
-            'nodestroy': True,
             'target': 'current',
             'res_id': moves and moves.ids[0] or False,
         }
@@ -927,7 +933,13 @@ class PosOrder(models.Model):
         if receivable_account.reconcile:
             invoice_receivables = self.account_move.line_ids.filtered(lambda line: line.account_id == receivable_account and not line.reconciled)
             if invoice_receivables:
-                payment_receivables = payment_moves.mapped('line_ids').filtered(lambda line: line.account_id == receivable_account and line.partner_id)
+                credit_line_ids = payment_moves._context.get('credit_line_ids', None)
+                payment_receivables = payment_moves.mapped('line_ids').filtered(
+                    lambda line: (
+                        (credit_line_ids and line.id in credit_line_ids) or
+                        (not credit_line_ids and line.account_id == receivable_account and line.partner_id)
+                    )
+                )
                 (invoice_receivables | payment_receivables).sudo().with_company(self.company_id).reconcile()
         return payment_moves
 
@@ -958,7 +970,7 @@ class PosOrder(models.Model):
                 existing_draft_order = self.env['pos.order'].search(['&', ('id', '=', order['data']['server_id']), ('state', '=', 'draft')], limit=1)
 
                 # if there is no draft order, skip processing this order
-                if not existing_draft_order:
+                if not existing_draft_order and draft:
                     continue
 
             if not existing_draft_order:
@@ -971,6 +983,9 @@ class PosOrder(models.Model):
                     existing_orders = self.env['pos.order'].search([('pos_reference', '=', order_name)])
                     if all(not self._is_the_same_order(order['data'], existing_order) for existing_order in existing_orders):
                         order_ids.append(self._process_order(order, draft, False))
+                    else:
+                        _logger.info("PoS order %s already exists and is the same as the one sent by the PoS", order_name)
+                        self.env['pos.session']._remove_capture_content(order['data'])
             except Exception as e:
                 _logger.exception("An error occurred when processing the PoS order %s", order_name)
                 pos_session = self.env['pos.session'].browse(order['data']['pos_session_id'])
@@ -1185,7 +1200,7 @@ class PosOrder(models.Model):
             'lines': [[0, 0, line] for line in order.lines.export_for_ui()],
             'statement_ids': [[0, 0, payment] for payment in order.payment_ids.export_for_ui()],
             'name': order.pos_reference,
-            'uid': re.search('([0-9-]){14}', order.pos_reference).group(0),
+            'uid': re.search('([0-9-]){14,}', order.pos_reference).group(0),
             'amount_paid': order.amount_paid,
             'amount_total': order.amount_total,
             'amount_tax': order.amount_tax,
@@ -1207,6 +1222,7 @@ class PosOrder(models.Model):
             'access_token': order.access_token,
             'ticket_code': order.ticket_code,
             'last_order_preparation_change': order.last_order_preparation_change,
+            'tracking_number': order.tracking_number,
         }
 
     @api.model
@@ -1225,7 +1241,14 @@ class PosOrder(models.Model):
             `export_as_JSON` of models.Order. This is useful for back-and-forth communication
             between the pos frontend and backend.
         """
-        return self.mapped(self._export_for_ui) if self else []
+        results = []
+        for order in self:
+            try:
+                results.append(self._export_for_ui(order))
+            except AccessError:
+                # Skip the order in case of AccessError
+                continue
+        return results
 
     def _send_order(self):
         # This function is made to be overriden by pos_self_order_preparation_display
@@ -1494,9 +1517,9 @@ class PosOrderLine(models.Model):
             pickings_to_confirm = order.picking_ids
             if pickings_to_confirm:
                 # Trigger the Scheduler for Pickings
-                pickings_to_confirm.action_confirm()
                 tracked_lines = order.lines.filtered(lambda l: l.product_id.tracking != 'none')
                 lines_by_tracked_product = groupby(sorted(tracked_lines, key=lambda l: l.product_id.id), key=lambda l: l.product_id.id)
+                pickings_to_confirm.action_confirm()
                 for product_id, lines in lines_by_tracked_product:
                     lines = self.env['pos.order.line'].concat(*lines)
                     moves = pickings_to_confirm.move_ids.filtered(lambda m: m.product_id.id == product_id)
@@ -1516,11 +1539,14 @@ class PosOrderLine(models.Model):
         """
         for line in self.filtered(lambda l: not l.is_total_cost_computed):
             product = line.product_id
+            cost_currency = product.sudo().cost_currency_id
             if line._is_product_storable_fifo_avco() and stock_moves:
                 product_cost = product._compute_average_price(0, line.qty, line._get_stock_moves_to_consider(stock_moves, product))
+                if (cost_currency.is_zero(product_cost) and line.order_id.shipping_date and line.refunded_orderline_id):
+                    product_cost = line.refunded_orderline_id.total_cost / line.refunded_orderline_id.qty
             else:
                 product_cost = product.standard_price
-            line.total_cost = line.qty * product.cost_currency_id._convert(
+            line.total_cost = line.qty * cost_currency._convert(
                 from_amount=product_cost,
                 to_currency=line.currency_id,
                 company=line.company_id or self.env.company,
@@ -1585,6 +1611,11 @@ class PosOrderLine(models.Model):
                 }
             )
         return base_line_vals_list
+
+    def _get_discount_amount(self):
+        self.ensure_one()
+        original_price = self.tax_ids.compute_all(self.price_unit, self.currency_id, self.qty, product=self.product_id, partner=self.order_id.partner_id)['total_included']
+        return original_price - self.price_subtotal_incl
 
 
 class PosOrderLineLot(models.Model):

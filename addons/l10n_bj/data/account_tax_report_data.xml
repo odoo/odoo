@@ -97,6 +97,11 @@
                         <field name="expression_ids">
                             <record id="account_tax_report_line_bj_deductible_reported_balance" model="account.report.expression">
                                 <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">BJ_REPORTED._applied_carryover_balance</field>
+                            </record>
+                            <record id="account_tax_report_line_bj_deductible_reported_balance_carryover" model="account.report.expression">
+                                <field name="label">_applied_carryover_balance</field>
                                 <field name="engine">external</field>
                                 <field name="formula">most_recent</field>
                                 <field name="date_scope">previous_tax_period</field>
@@ -133,7 +138,7 @@
                                 <field name="label">balance</field>
                                 <field name="engine">external</field>
                                 <field name="formula">sum</field>
-                                <field name="subformula">editable;rounding=2</field>
+                                <field name="subformula">editable</field>
                             </record>
                         </field>
                     </record>
@@ -145,7 +150,7 @@
                                 <field name="label">balance</field>
                                 <field name="engine">external</field>
                                 <field name="formula">sum</field>
-                                <field name="subformula">editable;rounding=2</field>
+                                <field name="subformula">editable</field>
                             </record>
                         </field>
                     </record>
@@ -197,7 +202,7 @@
                                 <field name="label">balance</field>
                                 <field name="engine">aggregation</field>
                                 <field name="formula">BJ_GROSS.balance - BJ_VAT_DEDUCTIBLE.balance</field>
-                                <field name="subformula">if_above(EUR(0))</field>
+                                <field name="subformula">if_above(XOF(0))</field>
                             </record>
                         </field>
                     </record>
@@ -209,8 +214,14 @@
                                 <field name="label">balance</field>
                                 <field name="engine">aggregation</field>
                                 <field name="formula">BJ_VAT_DEDUCTIBLE.balance - BJ_GROSS.balance</field>
-                                <field name="subformula">if_above(EUR(0))</field>
-                        <field name="carryover_target">BJ_REPORTED.balance</field>
+                                <field name="subformula">if_above(XOF(0))</field>
+                                <field name="carryover_target" eval="False"/>
+                            </record>
+                            <record id="account_tax_report_line_bj_credit_to_report_carryover" model="account.report.expression">
+                                <field name="label">_carryover_balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">BJ_TO_REPORT.balance</field>
+                                <field name="carryover_target">BJ_REPORTED._applied_carryover_balance</field>
                             </record>
                         </field>
                     </record>

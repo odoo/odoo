@@ -154,7 +154,7 @@
             <ram:CompleteNumber>+1 (650) 555-0111</ram:CompleteNumber>
           </ram:TelephoneUniversalCommunication>
           <ram:EmailURIUniversalCommunication>
-            <ram:URIID schemeID="SMTP">partner1@yourcompany.com</ram:URIID>
+            <ram:URIID>partner1@yourcompany.com</ram:URIID>
           </ram:EmailURIUniversalCommunication>
         </ram:DefinedTradeContact>
         <ram:PostalTradeAddress>
@@ -222,6 +222,14 @@
         <ram:DueDateTypeCode>5</ram:DueDateTypeCode>
         <ram:RateApplicablePercent>5.0</ram:RateApplicablePercent>
       </ram:ApplicableTradeTax>
+      <ram:BillingSpecifiedPeriod>
+        <ram:StartDateTime>
+          <udt:DateTimeString format="102">20170101</udt:DateTimeString>
+        </ram:StartDateTime>
+        <ram:EndDateTime>
+          <udt:DateTimeString format="102">20170228</udt:DateTimeString>
+        </ram:EndDateTime>
+      </ram:BillingSpecifiedPeriod>
       <ram:SpecifiedTradePaymentTerms>
         <ram:Description>30% Advance End of Following Month</ram:Description>
         <ram:DueDateDateTime>

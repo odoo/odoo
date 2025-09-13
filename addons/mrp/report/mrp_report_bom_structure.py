@@ -101,7 +101,7 @@ class ReportBomStructure(models.AbstractModel):
         if searchVariant:
             product = self.env['product.product'].browse(int(searchVariant))
         else:
-            product = bom.product_id or bom.product_tmpl_id.product_variant_id
+            product = bom.product_id or bom.product_tmpl_id.product_variant_id or bom.product_tmpl_id.with_context(active_test=False).product_variant_ids[:1]
 
         if bom:
             bom_uom_name = bom.product_uom_id.name
@@ -418,7 +418,7 @@ class ReportBomStructure(models.AbstractModel):
             if byproduct._skip_byproduct_line(product):
                 continue
             line_quantity = (bom_quantity / (bom.product_qty or 1.0)) * byproduct.product_qty
-            cost_share = byproduct.cost_share / 100
+            cost_share = byproduct.cost_share / 100 if byproduct.product_qty > 0 else 0
             byproduct_cost_portion += cost_share
             price = byproduct.product_id.uom_id._compute_price(byproduct.product_id.with_company(company).standard_price, byproduct.product_uom_id) * line_quantity
             byproducts.append({
@@ -485,7 +485,7 @@ class ReportBomStructure(models.AbstractModel):
         if product_id:
             product = self.env['product.product'].browse(int(product_id))
         else:
-            product = bom.product_id or bom.product_tmpl_id.product_variant_id or bom.product_tmpl_id.with_context(active_test=False).product_variant_id
+            product = bom.product_id or bom.product_tmpl_id.product_variant_id or bom.product_tmpl_id.with_context(active_test=False).product_variant_ids[:1]
 
         if self.env.context.get('warehouse'):
             warehouse = self.env['stock.warehouse'].browse(self.env.context.get('warehouse'))

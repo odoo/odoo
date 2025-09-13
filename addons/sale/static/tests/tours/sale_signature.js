@@ -46,3 +46,26 @@ registry.category("web_tour.tours").add('sale_signature', {
         run: function() {},
     }
 ]});
+
+registry.category("web_tour.tours").add("sale_signature_without_name", {
+    steps: () => [
+        {
+            content: "Sign & Pay",
+            trigger: ".o_portal_sale_sidebar .btn-primary",
+            alt_trigger: "iframe .o_portal_sale_sidebar .btn-primary",
+            run: "click",
+        },
+        {
+            content: "click submit",
+            trigger: ".o_portal_sign_submit:enabled",
+            alt_trigger: "iframe .o_portal_sign_submit:enabled",
+            run: "click",
+        },
+        {
+            content: "check error because no name",
+            trigger: '.o_portal_sign_error_msg:contains("Signature is missing.")',
+            alt_trigger: 'iframe .o_portal_sign_error_msg:contains("Signature is missing.")',
+            run: () => {},
+        },
+    ],
+});

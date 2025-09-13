@@ -5,6 +5,7 @@
 # Translators:
 # Wil Odoo, 2023
 # Marianna Ciofani, 2023
+# Sergio Zanchetta <primes2h@gmail.com>, 2025
 # 
 msgid ""
 msgstr ""
@@ -12,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:55+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Marianna Ciofani, 2023\n"
+"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2025\n"
 "Language-Team: Italian (https://app.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -119,7 +120,8 @@ msgstr "Annullata"
 msgid ""
 "Choose an event and it will automatically create a registration for this "
 "event."
-msgstr "Scegliere un evento e l'iscrizione verrà creata automaticamente."
+msgstr ""
+"Scegliere un evento, la relativa iscrizione verrà creata in modo automatico."
 
 #. module: event_sale
 #: model:ir.model.fields,help:event_sale.field_sale_order_line__event_ticket_id
@@ -127,8 +129,8 @@ msgid ""
 "Choose an event ticket and it will automatically create a registration for "
 "this event ticket."
 msgstr ""
-"Scegliere un biglietto e verrà creata automaticamente una iscrizione per "
-"l'evento."
+"Scegliere un biglietto per l'evento, la relativa registrazione verrà creata "
+"in modo automatico."
 
 #. module: event_sale
 #: model_terms:ir.actions.act_window,help:event_sale.event_sale_report_action
@@ -201,12 +203,12 @@ msgstr "Nome visualizzato"
 #. module: event_sale
 #: model:ir.model,name:event_sale.model_registration_editor
 msgid "Edit Attendee Details on Sales Confirmation"
-msgstr "Modificare dettagli del partecipante sulla conferma di vendita"
+msgstr "Modifica dettagli partecipante alla conferma di vendita"
 
 #. module: event_sale
 #: model:ir.model,name:event_sale.model_registration_editor_line
 msgid "Edit Attendee Line on Sales Confirmation"
-msgstr "Modificare riga del partecipante sulla conferma di vendita"
+msgstr "Modifica riga partecipante alla conferma di vendita"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__editor_id
@@ -238,7 +240,7 @@ msgstr "Configuratore eventi"
 #: model:ir.model.fields,field_description:event_sale.field_event_sale_report__event_date_end
 #: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_search
 msgid "Event End Date"
-msgstr "Data di fine evento"
+msgstr "Data fine evento"
 
 #. module: event_sale
 #: model:ir.model,name:event_sale.model_event_registration
@@ -259,7 +261,7 @@ msgstr "Registrazione evento-VIP"
 #. module: event_sale
 #: model:ir.actions.act_window,name:event_sale.action_sale_order_event_registration
 msgid "Event Registrations"
-msgstr "Iscrizioni evento"
+msgstr "Registrazioni evento"
 
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_search
@@ -369,7 +371,7 @@ msgstr "Ultimo aggiornamento il"
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_registration__utm_medium_id
 msgid "Medium"
-msgstr "Medio"
+msgstr "Mezzo"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__name
@@ -384,7 +386,7 @@ msgstr "Non ci sono ancora ricavi per l'evento!"
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_search
 msgid "Non-free tickets"
-msgstr "BIglietti non gratuiti"
+msgstr "Biglietti non gratuiti"
 
 #. module: event_sale
 #: model:ir.model.fields.selection,name:event_sale.selection__event_registration__sale_status__to_pay
@@ -406,7 +408,7 @@ msgstr "Data ordine"
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__registration_id
 msgid "Original Registration"
-msgstr "Iscrizione originale"
+msgstr "Registrazione originale"
 
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_search
@@ -459,7 +461,7 @@ msgstr "Prezzo ridotto"
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__price_reduce_taxinc
 msgid "Price Reduce Tax inc"
-msgstr "Prezzo ridotto tasse incluse"
+msgstr "Prezzo ridotto imposte inc."
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__price_incl
@@ -528,7 +530,7 @@ msgstr "Registrazioni"
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor__event_registration_ids
 msgid "Registrations to Edit"
-msgstr "Iscrizioni da esaminare"
+msgstr "Registrazioni da modificare"
 
 #. module: event_sale
 #: model:ir.actions.act_window,name:event_sale.event_sale_report_action
@@ -539,7 +541,7 @@ msgstr "Iscrizioni da esaminare"
 #: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_pivot
 #: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_tree
 msgid "Revenues"
-msgstr "Entrate"
+msgstr "Ricavi"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_sale_report__sale_order_id
@@ -619,7 +621,7 @@ msgstr "Venduto"
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_registration__utm_source_id
 msgid "Source"
-msgstr "Fonte"
+msgstr "Origine"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_registration__state
@@ -677,12 +679,12 @@ msgstr "Ricavi non tassati"
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_search
 msgid "Upcoming events from today"
-msgstr "Eventi del giorno"
+msgstr "Prossimi eventi da oggi"
 
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_search
 msgid "Upcoming/Running"
-msgstr "In arrivo/In corso"
+msgstr "Prossimi/In corso"
 
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.view_event_registration_editor_form

@@ -7,14 +7,16 @@
 # 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2023
 # Jeffery CHEN <jeffery9@gmail.com>, 2023
 # 湘子 南 <1360857908@qq.com>, 2024
+# Chloe Wang, 2024
+# 何彬 <vnsoft.he@gmail.com>, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-05 12:32+0000\n"
+"POT-Creation-Date: 2025-05-09 20:37+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: 湘子 南 <1360857908@qq.com>, 2024\n"
+"Last-Translator: 何彬 <vnsoft.he@gmail.com>, 2025\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -464,7 +466,7 @@ msgstr "到期应付的证券利息。"
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/global_filters/plugins/global_filters_ui_plugin.js:0
-#: code:addons/spreadsheet/static/src/helpers/model.js:0
+#: code:addons/spreadsheet/static/src/global_filters/plugins/global_filters_ui_plugin.js:0
 #, python-format
 msgid "Active Filters"
 msgstr "启用的筛选"
@@ -1868,6 +1870,13 @@ msgstr "将指定字符串转换为大写。"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
+msgid "Converts a string to a numeric value."
+msgstr "将字符串转换为数值。"
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
 msgid "Converts a time string into its serial number representation."
 msgstr "将时间字符串转换为其序列号表示形式。"
 
@@ -1952,7 +1961,7 @@ msgstr "以弧度表示的角的余切。"
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/pivot/pivot_model.js:0
+#: code:addons/spreadsheet/static/src/pivot/pivot_data_source.js:0
 #, python-format
 msgid "Count"
 msgstr "计数"
@@ -2672,6 +2681,7 @@ msgstr "编辑"
 
 #. module: spreadsheet
 #. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "Edit link"
@@ -2812,6 +2822,7 @@ msgstr "二月"
 
 #. module: spreadsheet
 #. odoo-javascript
+#: code:addons/spreadsheet/static/src/pivot/pivot_data_source.js:0
 #: code:addons/spreadsheet/static/src/pivot/pivot_model.js:0
 #, python-format
 msgid "Field %s does not exist"
@@ -2858,7 +2869,6 @@ msgstr "填充颜色"
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/helpers/model.js:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Filter"
@@ -3191,6 +3201,15 @@ msgstr "函数 [[FUNCTION_NAME]] 希望 criteria_range 具有相同的维度"
 #, python-format
 msgid "Function [[FUNCTION_NAME]] expects number values for %s, but got a %s."
 msgstr "函数 [[FUNCTION_NAME]] 期望值为 %s，但得到的是 %s。"
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
+msgid ""
+"Function [[FUNCTION_NAME]] expects the parameter '%s' to be a single value "
+"or a single cell reference, not a range."
+msgstr "函数 [[FUNCTION_NAME]] 要求参数'%s'是单个值或单个单元格引用，而不是一个范围。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -4851,6 +4870,7 @@ msgstr "未找到唯一值"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #: code:addons/spreadsheet/static/src/pivot/pivot_model.js:0
 #: code:addons/spreadsheet/static/src/pivot/pivot_time_adapters.js:0
+#: code:addons/spreadsheet/static/src/pivot/pivot_time_adapters.js:0
 #, python-format
 msgid "None"
 msgstr "无"
@@ -5639,6 +5659,15 @@ msgstr "右"
 #, python-format
 msgid "Rounds a number according to standard rules."
 msgstr "根据标准规则四舍五入数字。"
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
+msgid ""
+"Rounds a number down to the nearest integer that is less than or equal to "
+"it."
+msgstr "将数字向下舍入，取整至小于或等于该数字的最接近整数。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -6671,6 +6700,27 @@ msgstr "将被转换的数组。"
 #, python-format
 msgid "The base (%s) must be between 2 and 36 inclusive."
 msgstr "基数（%s）必须在2和36之间，包括在内。"
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
+msgid "The base (%s) must be strictly positive."
+msgstr "基准值 (%s) 必须是一个正数。"
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
+msgid "The base must be different from 1."
+msgstr "基准值不能为1"
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
+msgid "The base of the logarithm."
+msgstr "对数的底数。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -7820,6 +7870,13 @@ msgstr "数字的对数，以e为底（欧拉数）。"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
+msgid "The logarithm of a number, for a given base."
+msgstr "在给定底数下，一个数的对数值。"
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
 msgid "The low end of the random range."
 msgstr "随机范围的下限。"
 
@@ -8345,6 +8402,13 @@ msgstr "要提高到指数幂的数字。"
 #, python-format
 msgid "The number to return."
 msgstr "返回的数字."
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
+msgid "The number to round down to the nearest integer."
+msgstr "要向下舍入到最接近的整数的数字。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -9565,6 +9629,7 @@ msgstr "该值（%s）必须是正值或空值。"
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The value (%s) must be strictly positive."
 msgstr "该值（%s）必须是严格意义上的正值。"
@@ -9648,6 +9713,13 @@ msgstr "计算反正切值的数值。"
 #, python-format
 msgid "The value for which to calculate the logarithm, base e."
 msgstr "计算对数的数值（以 e 为底数）。"
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
+msgid "The value for which to calculate the logarithm."
+msgstr "用于计算对数的值。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -10391,7 +10463,7 @@ msgstr "顶部"
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/pivot/plugins/pivot_ui_plugin.js:0
+#: code:addons/spreadsheet/static/src/pivot/pivot_data_source.js:0
 #, python-format
 msgid "Total"
 msgstr "总计"
@@ -10599,7 +10671,6 @@ msgstr "使用行"
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/helpers/model.js:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
@@ -11460,6 +11531,13 @@ msgstr "matchMode 应该是 [-1，1，-2，2] 中的一个值。"
 #, python-format
 msgid "start_date (%s) should be on or before end_date (%s)."
 msgstr "start_date （%s） 应在 end_date （%s）之前。"
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
+msgid "the string to be converted"
+msgstr "要转换的字符串"
 
 #. module: spreadsheet
 #. odoo-javascript

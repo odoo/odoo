@@ -19,7 +19,7 @@
                    title="Close"
                    role="img"
                    aria-label="Close"
-                   t-on-click="props.close"
+                   t-on-click="() => props.close()"
                 />
                 <t t-if="props.showSearchInput">
                     <div class="o_model_field_selector_popover_search mt-2">

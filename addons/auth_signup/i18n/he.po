@@ -3,24 +3,25 @@
 # 	* auth_signup
 # 
 # Translators:
-# Netta Waizer, 2023
 # Yihya Hugirat <hugirat@gmail.com>, 2023
 # Amit Spilman <amit@laylinetech.com>, 2023
 # Martin Trigaux, 2023
 # david danilov, 2023
 # ZVI BLONDER <ZVIBLONDER@gmail.com>, 2023
-# Ha Ketem <haketem@gmail.com>, 2023
 # NoaFarkash, 2023
 # Lilach Gilliam <lilach.gilliam@gmail.com>, 2023
 # Orel Nahmany, 2024
+# Ha Ketem <haketem@gmail.com>, 2024
+# Netta Waizer, 2025
+# or balmas, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2024-08-13 10:27+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Orel Nahmany, 2024\n"
+"Last-Translator: or balmas, 2025\n"
 "Language-Team: Hebrew (https://app.transifex.com/odoo/teams/41243/he/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -62,7 +63,7 @@ msgstr ""
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.reset_password_email
 msgid "<span style=\"font-size: 10px;\">Your Account</span><br/>"
-msgstr ""
+msgstr "<span style=\"font-size: 10px;\">החשבון שלך</span><br/>"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.alert_login_new_device
@@ -399,7 +400,7 @@ msgstr "חזרה לדף כניסה"
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.alert_login_new_device
 msgid "Browser"
-msgstr ""
+msgstr "דפדפן"
 
 #. module: auth_signup
 #. odoo-python
@@ -416,7 +417,7 @@ msgstr "שנה סיסמה"
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.alert_login_new_device
 msgid "City, Region, Country"
-msgstr ""
+msgstr "עיר,מחוז,מדינה"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.res_users_view_form
@@ -451,6 +452,7 @@ msgid ""
 "Could not contact the mail server, please check your outgoing email server "
 "configuration"
 msgstr ""
+"לא ניתן ליצור קשר עם שרת הדוא\"ל, אנא בדוק את הגדרות שרת הדוא\"ל היוצא שלך."
 
 #. module: auth_signup
 #. odoo-python
@@ -516,13 +518,14 @@ msgid ""
 "If you don't recognize it, you should change your password immediately via "
 "this link:<br/>"
 msgstr ""
+"אם אינך מזהה זאת, עליך לשנות את הסיסמה שלך מיד באמצעות הקישור הבא:<br/>"
 
 #. module: auth_signup
 #. odoo-python
 #: code:addons/auth_signup/models/res_users.py:0
 #, python-format
 msgid "In %(country)s"
-msgstr ""
+msgstr "ב- %(country)s"
 
 #. module: auth_signup
 #. odoo-python
@@ -543,10 +546,11 @@ msgid "Marc Demo"
 msgstr ""
 
 #. module: auth_signup
+#. odoo-python
 #: code:addons/auth_signup/models/res_users.py:0
 #, python-format
 msgid "Multiple accounts found for this login"
-msgstr ""
+msgstr "לשם משתמש זה קיימים מספר חשבונות"
 
 #. module: auth_signup
 #. odoo-python
@@ -572,14 +576,14 @@ msgstr "מעולם לא התחבר"
 #: code:addons/auth_signup/models/res_users.py:0
 #, python-format
 msgid "New Connection to your Account"
-msgstr ""
+msgstr "חיבור חדש לחשבון שלך"
 
 #. module: auth_signup
 #. odoo-python
 #: code:addons/auth_signup/models/res_users.py:0
 #, python-format
 msgid "No account found for this login"
-msgstr ""
+msgstr "לא נמצא חשבון לשם משתמש זה"
 
 #. module: auth_signup
 #. odoo-python
@@ -607,7 +611,7 @@ msgstr "בהזמנה"
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.alert_login_new_device
 msgid "Otherwise, you can safely ignore this email."
-msgstr ""
+msgstr "אחרת, תוכל להתעלם מדוא\"ל זה."
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.fields
@@ -631,7 +635,7 @@ msgstr "איפוס סיסמא"
 #: code:addons/auth_signup/controllers/main.py:0
 #, python-format
 msgid "Password reset instructions sent to your email"
-msgstr ""
+msgstr "הוראות לאיפוס סיסמא נשלחו למייל שלך"
 
 #. module: auth_signup
 #. odoo-python
@@ -649,7 +653,7 @@ msgstr "מופעל ע\"י"
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.login_successful
 msgid "Registration successful."
-msgstr ""
+msgstr "הרשמה הסתיימה בהצלחה"
 
 #. module: auth_signup
 #: model:mail.template,subject:auth_signup.mail_template_data_unregistered_users
@@ -678,32 +682,32 @@ msgstr "שלח הזמנה בדוא\"ל"
 #: model:mail.template,description:auth_signup.mail_template_data_unregistered_users
 msgid ""
 "Sent automatically to admin if new user haven't responded to the invitation"
-msgstr ""
+msgstr "שליחה אוטומטית למנהל/ת מערכת אם המשתמש/ת לא ענה להזמנה"
 
 #. module: auth_signup
 #: model:mail.template,description:auth_signup.set_password_email
 msgid "Sent to new user after you invited them"
-msgstr ""
+msgstr "יישלח למשתמש חדש אחרי שליחת ההזמנה"
 
 #. module: auth_signup
 #: model:mail.template,description:auth_signup.mail_template_user_signup_account_created
 msgid "Sent to portal user who registered themselves"
-msgstr ""
+msgstr "נשלח למשתמש פורטל שנרשם לבד"
 
 #. module: auth_signup
 #: model:mail.template,name:auth_signup.set_password_email
 msgid "Settings: New Portal Signup"
-msgstr ""
+msgstr "הגדרות: הרשמה חדשה לפורטל"
 
 #. module: auth_signup
 #: model:mail.template,name:auth_signup.mail_template_user_signup_account_created
 msgid "Settings: New User Invite"
-msgstr ""
+msgstr "הגדרות: הזמנת משתמש חדש"
 
 #. module: auth_signup
 #: model:mail.template,name:auth_signup.mail_template_data_unregistered_users
 msgid "Settings: Unregistered User Reminder"
-msgstr ""
+msgstr "הגדרות: תזכורת לגבי משתמשים לא רשומים"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.signup
@@ -780,12 +784,20 @@ msgstr "הרשמה: לא ניתן שם משתמש"
 #: code:addons/auth_signup/models/res_users.py:0
 #, python-format
 msgid "Signup: no name or partner given for new user"
-msgstr ""
+msgstr "הרשמה: לא צויין שם או שותף למשתמש החדש"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_users__state
 msgid "Status"
 msgstr "סטטוס"
+
+#. module: auth_signup
+#. odoo-python
+#: code:addons/auth_signup/controllers/main.py:0
+#: code:addons/auth_signup/controllers/main.py:0
+#, python-format
+msgid "Suspicious activity detected by Google reCaptcha."
+msgstr "פעילות חשודה זוהתה על ידי Google reCaptcha."
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_config_settings__auth_signup_template_user_id
@@ -806,7 +818,7 @@ msgstr "הטופס הזה לא מולא כראוי."
 msgid ""
 "There was an error when trying to deliver your Email, please check your "
 "configuration"
-msgstr ""
+msgstr "הייתה שגיאה בעת ניסיון לשלוח את הדוא\"ל שלך, אנא בדוק את ההגדרות שלך."
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.res_config_settings_view_form

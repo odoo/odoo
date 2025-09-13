@@ -740,6 +740,11 @@
                                 <field name="expression_ids">
                                     <record id="account_tax_report_line_ga_report_credit_tax" model="account.report.expression">
                                         <field name="label">tax</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">GA_REPORT_CREDIT._applied_carryover_tax</field>
+                                    </record>
+                                    <record id="account_tax_report_line_ga_report_credit_tax_carryover" model="account.report.expression">
+                                        <field name="label">_applied_carryover_tax</field>
                                         <field name="engine">external</field>
                                         <field name="formula">most_recent</field>
                                         <field name="date_scope">previous_tax_period</field>
@@ -841,7 +846,7 @@
                                         <field name="label">tax</field>
                                         <field name="engine">aggregation</field>
                                         <field name="formula">GA_TOTAL_GROSS.tax - GA_DEDUCTIBLE.tax</field>
-                                        <field name="subformula">if_above(EUR(0))</field>
+                                        <field name="subformula">if_above(XAF(0))</field>
                                     </record>
                                 </field>
                             </record>
@@ -854,8 +859,14 @@
                                         <field name="label">tax</field>
                                         <field name="engine">aggregation</field>
                                         <field name="formula">GA_DEDUCTIBLE.tax - GA_TOTAL_GROSS.tax</field>
-                                        <field name="subformula">if_above(EUR(0))</field>
-                                        <field name="carryover_target">GA_REPORT_CREDIT.tax</field>
+                                        <field name="subformula">if_above(XAF(0))</field>
+                                        <field name="carryover_target" eval="False"/>
+                                    </record>
+                                    <record id="account_tax_report_line_ga_credit_to_report_carryover" model="account.report.expression">
+                                        <field name="label">_carryover_tax</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">GA_CREDIT_TO_REPORT.tax</field>
+                                        <field name="carryover_target">GA_REPORT_CREDIT._applied_carryover_tax</field>
                                     </record>
                                 </field>
                             </record>

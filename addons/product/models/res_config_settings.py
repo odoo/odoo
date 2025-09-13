@@ -65,8 +65,9 @@ class ResConfigSettings(models.TransientModel):
 
     def set_values(self):
         had_group_pl = self.default_get(['group_product_pricelist'])['group_product_pricelist']
+        had_discount_group = self.default_get(['group_discount_per_so_line'])['group_discount_per_so_line']
         super().set_values()
-        if not self.group_discount_per_so_line:
+        if had_discount_group and not self.group_discount_per_so_line:
             pl = self.env['product.pricelist'].search([('discount_policy', '=', 'without_discount')])
             pl.write({'discount_policy': 'with_discount'})
 

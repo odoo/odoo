@@ -6,8 +6,9 @@ from unittest.mock import patch
 
 from odoo import SUPERUSER_ID
 from odoo.addons.base.models.res_users import is_selection_groups, get_selection_groups, name_selection_groups
-from odoo.exceptions import UserError
-from odoo.tests.common import Form, TransactionCase, new_test_user, tagged
+from odoo.exceptions import UserError, ValidationError
+from odoo.service import security
+from odoo.tests.common import Form, TransactionCase, new_test_user, tagged, HttpCase, users
 from odoo.tools import mute_logger
 
 
@@ -192,6 +193,20 @@ class TestUsers(TransactionCase):
         self.assertTrue(portal_partner_2.exists(), 'Should have kept the partner')
         self.assertEqual(asked_deletion_2.state, 'fail', 'Should have marked the deletion as failed')
 
+    def test_user_home_action_restriction(self):
+        test_user = new_test_user(self.env, 'hello world')
+
+        # Find an action that contains restricted context ('active_id')
+        restricted_action = self.env['ir.actions.act_window'].search([('context', 'ilike', 'active_id')], limit=1)
+        with self.assertRaises(ValidationError):
+            test_user.action_id = restricted_action.id
+
+        # Find an action without restricted context
+        allowed_action = self.env['ir.actions.act_window'].search(['!', ('context', 'ilike', 'active_id')], limit=1)
+
+        test_user.action_id = allowed_action.id
+        self.assertEqual(test_user.action_id.id, allowed_action.id)
+
     def test_context_get_lang(self):
         self.env['res.lang'].with_context(active_test=False).search([
             ('code', 'in', ['fr_FR', 'es_ES', 'de_DE', 'en_US'])
@@ -347,6 +362,14 @@ class TestUsers2(TransactionCase):
 
         user_form[group_field_name] = group_public.id
         self.assertTrue(user_form.share, 'The groups_id onchange should have been triggered')
+
+    def test_update_user_groups_view(self):
+        """Test that the user groups view can still be built if all user type groups are share"""
+        self.env['res.groups'].search([
+            ("category_id", "=", self.env.ref("base.module_category_user_type").id)
+        ]).write({'share': True})
+
+        self.env['res.groups']._update_user_groups_view()
 
 
 @tagged('post_install', '-at_install', 'res_groups')
@@ -534,3 +557,39 @@ class TestUsersTweaks(TransactionCase):
         self.assertFalse(user.active)
         with self.assertRaises(UserError):
             user.write({'active': True})
+
+
+@tagged('post_install', '-at_install')
+class TestUsersIdentitycheck(HttpCase):
+
+    @users('admin')
+    def test_revoke_all_devices(self):
+        """
+        Test to check the revoke all devices by changing the current password as a new password
+        """
+        # Change the password to 8 characters for security reasons
+        self.env.user.password = "admin@odoo"
+        # Create a session
+        session = self.authenticate('admin', 'admin@odoo')
+        # Test the session is valid
+        self.assertTrue(security.check_session(session, self.env))
+        # Valid session -> not redirected from /web to /web/login
+        self.assertTrue(self.url_open('/web').url.endswith('/web'))
+
+        # The user clicks the button logout from all devices from his profile
+        action = self.env.user.action_revoke_all_devices()
+        # The form of the wizard opens with a new record
+        form = Form(self.env[action['res_model']].create({}), action['view_id'])
+        # The user fills his password
+        form.password = 'admin@odoo'
+        # The user clicks the button "Log out from all devices", which triggers a save then a call to the button method
+        user_identity_check = form.save()
+        user_identity_check.revoke_all_devices()
+
+        # Test the session is no longer valid
+        self.assertFalse(security.check_session(session, self.env))
+        # Invalid session -> redirected from /web to /web/login
+        self.assertTrue(self.url_open('/web').url.endswith('/web/login'))
+
+        # In addition, the wizard must have been deleted
+        self.assertFalse(user_identity_check.exists())

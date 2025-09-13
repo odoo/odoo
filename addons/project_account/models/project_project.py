@@ -37,20 +37,17 @@ class Project(models.Model):
                 self.env['account.move.line'].sudo()._query_analytic_accounts(),
             )
         )
-        # account_move_line__move_id is the alias of the joined table account_move in the query
-        # we can use it, because of the "move_id.move_type" clause in the domain of the query, which generates the join
-        # this is faster than a search_read followed by a browse on the move_id to retrieve the move_type of each account.move.line
-        query_string, query_param = query.select('price_subtotal', 'parent_state', 'account_move_line.currency_id', 'account_move_line.analytic_distribution', 'account_move_line__move_id.move_type', 'move_id')
+        query_string, query_param = query.select('balance', 'parent_state', 'account_move_line.company_currency_id', 'account_move_line.analytic_distribution', 'move_id', 'account_move_line.date')
         self._cr.execute(query_string, query_param)
         bills_move_line_read = self._cr.dictfetchall()
         if bills_move_line_read:
             # Get conversion rate from currencies to currency of the current company
-            currency_ids = OrderedSet(bml['currency_id'] for bml in bills_move_line_read)
+            currency_ids = OrderedSet(bml['company_currency_id'] for bml in bills_move_line_read)
             amount_invoiced = amount_to_invoice = 0.0
             move_ids = set()
             for moves_read in bills_move_line_read:
-                price_subtotal = self.env['res.currency'].browse(moves_read['currency_id']).with_prefetch(currency_ids)._convert(
-                    from_amount=moves_read['price_subtotal'], to_currency=self.currency_id,
+                line_balance = self.env['res.currency'].browse(moves_read['company_currency_id']).with_prefetch(currency_ids)._convert(
+                    from_amount=moves_read['balance'], to_currency=self.currency_id, date=moves_read['date']
                 )
                 # an analytic account can appear several time in an analytic distribution with different repartition percentage
                 analytic_contribution = sum(
@@ -59,15 +56,9 @@ class Project(models.Model):
                 ) / 100.
                 move_ids.add(moves_read['move_id'])
                 if moves_read['parent_state'] == 'draft':
-                    if moves_read['move_type'] == 'in_invoice':
-                        amount_to_invoice -= price_subtotal * analytic_contribution
-                    else:  # moves_read['move_type'] == 'in_refund'
-                        amount_to_invoice += price_subtotal * analytic_contribution
+                    amount_to_invoice -= line_balance * analytic_contribution
                 else:  # moves_read['parent_state'] == 'posted'
-                    if moves_read['move_type'] == 'in_invoice':
-                        amount_invoiced -= price_subtotal * analytic_contribution
-                    else:  # moves_read['move_type'] == 'in_refund'
-                        amount_invoiced += price_subtotal * analytic_contribution
+                    amount_invoiced -= line_balance * analytic_contribution
             # don't display the section if the final values are both 0 (bill -> vendor credit)
             if amount_invoiced != 0 or amount_to_invoice != 0:
                 costs = profitability_items['costs']
@@ -95,20 +86,20 @@ class Project(models.Model):
         return {
             **super()._get_profitability_labels(),
             'other_purchase_costs': _lt('Vendor Bills'),
-            'other_revenues': _lt('Other Revenues'),
-            'other_costs': _lt('Other Costs'),
+            'other_revenues_aal': _lt('Other Revenues'),
+            'other_costs_aal': _lt('Other Costs'),
         }
 
     def _get_profitability_sequence_per_invoice_type(self):
         return {
             **super()._get_profitability_sequence_per_invoice_type(),
             'other_purchase_costs': 11,
-            'other_revenues': 14,
-            'other_costs': 15,
+            'other_revenues_aal': 14,
+            'other_costs_aal': 15,
         }
 
     def action_profitability_items(self, section_name, domain=None, res_id=False):
-        if section_name in ['other_revenues', 'other_costs']:
+        if section_name in ['other_revenues_aal', 'other_costs_aal']:
             action = self.env["ir.actions.actions"]._for_xml_id("analytic.account_analytic_line_action_entries")
             action['domain'] = domain
             action['context'] = {
@@ -139,7 +130,7 @@ class Project(models.Model):
     def _get_domain_aal_with_no_move_line(self):
         """ this method is used in order to overwrite the domain in sale_timesheet module. Since the field 'project_id' is added to the "analytic line" model
         in the hr_timesheet module, we can't add the condition ('project_id', '=', False) here. """
-        return [('account_id', '=', self.analytic_account_id.id), ('move_line_id', '=', False), ('category', '!=', 'manufacturing_order')]
+        return [('auto_account_id', '=', self.analytic_account_id.id), ('move_line_id', '=', False), ('category', '!=', 'manufacturing_order')]
 
     def _get_items_from_aal(self, with_action=True):
         domain = self._get_domain_aal_with_no_move_line()
@@ -173,12 +164,12 @@ class Project(models.Model):
         # we dont know what part of the numbers has already been billed or not, so we have no choice but to put everything under the billed/invoiced columns.
         # The to bill/to invoice ones will simply remain 0
         profitability_sequence_per_invoice_type = self._get_profitability_sequence_per_invoice_type()
-        revenues = {'id': 'other_revenues', 'sequence': profitability_sequence_per_invoice_type['other_revenues'], 'invoiced': total_revenues, 'to_invoice': 0.0}
-        costs = {'id': 'other_costs', 'sequence': profitability_sequence_per_invoice_type['other_costs'], 'billed': total_costs, 'to_bill': 0.0}
+        revenues = {'id': 'other_revenues_aal', 'sequence': profitability_sequence_per_invoice_type['other_revenues_aal'], 'invoiced': total_revenues, 'to_invoice': 0.0}
+        costs = {'id': 'other_costs_aal', 'sequence': profitability_sequence_per_invoice_type['other_costs_aal'], 'billed': total_costs, 'to_bill': 0.0}
 
         if with_action and self.user_has_groups('account.group_account_readonly'):
-            costs['action'] = self._get_action_for_profitability_section(cost_ids, 'other_costs')
-            revenues['action'] = self._get_action_for_profitability_section(revenue_ids, 'other_revenues')
+            costs['action'] = self._get_action_for_profitability_section(cost_ids, 'other_costs_aal')
+            revenues['action'] = self._get_action_for_profitability_section(revenue_ids, 'other_revenues_aal')
 
         return {
             'revenues': {'data': [revenues], 'total': {'invoiced': total_revenues, 'to_invoice': 0.0}},

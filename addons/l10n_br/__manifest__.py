@@ -25,11 +25,6 @@ This module consists of:
 - Document Types as NFC-e, NFS-e, etc.
 - Identification Documents as CNPJ and CPF
 
-The field tax_discount has also been added in the account.tax.template and
-account.tax objects to allow the proper computation of some Brazilian VATs
-such as ICMS. The chart of account creation wizard has been extended to
-propagate those new data properly.
-
 In addition to this module, the Brazilian Localizations is also
 extended and complemented with several additional modules.
 
@@ -48,6 +43,10 @@ information to retrieve the correct taxes.
 Avatax for SOs in Brazil (l10n_br_avatax_sale)
 ----------------------------------------------
 Same as the l10n_br_avatax module with the extension to the sales order module.
+
+Electronic invoicing through Avatax (l10n_br_edi)
+-------------------------------------------------
+Create electronic sales invoices with Avatax.
 """,
     'author': 'Akretion, Odoo Brasil',
     'depends': [

@@ -35,7 +35,7 @@ class AccountCashRounding(models.Model):
         domain="[('deprecated', '=', False)]",
     )
     rounding_method = fields.Selection(string='Rounding Method', required=True,
-        selection=[('UP', 'UP'), ('DOWN', 'DOWN'), ('HALF-UP', 'HALF-UP')],
+        selection=[('UP', 'Up'), ('DOWN', 'Down'), ('HALF-UP', 'Nearest')],
         default='HALF-UP', help='The tie-breaking rule used for float rounding operations')
     company_id = fields.Many2one('res.company', related='profit_account_id.company_id')
 

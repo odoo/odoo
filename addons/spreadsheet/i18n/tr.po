@@ -21,16 +21,18 @@
 # Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2023
 # Murat Kaplan <muratk@projetgrup.com>, 2023
 # Umur Akın <umura@projetgrup.com>, 2023
-# sinem cil, 2024
+# Sinem Cil, 2024
 # Cengiz Cokay Global Nonwoven, 2024
+# Hakan Türkün, 2025
+# Deniz Guvener_Odoo <degu@odoo.com>, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-05 12:32+0000\n"
+"POT-Creation-Date: 2025-05-09 20:37+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Cengiz Cokay Global Nonwoven, 2024\n"
+"Last-Translator: Deniz Guvener_Odoo <degu@odoo.com>, 2025\n"
 "Language-Team: Turkish (https://app.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -472,7 +474,7 @@ msgstr ""
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/global_filters/plugins/global_filters_ui_plugin.js:0
-#: code:addons/spreadsheet/static/src/helpers/model.js:0
+#: code:addons/spreadsheet/static/src/global_filters/plugins/global_filters_ui_plugin.js:0
 #, python-format
 msgid "Active Filters"
 msgstr ""
@@ -810,6 +812,8 @@ msgid ""
 "An expression or reference to a cell holding an expression that represents "
 "some logical value."
 msgstr ""
+"Bazı mantıksal değerleri temsil eden bir ifadeyi içeren hücreye yapılan atıf"
+" veya ifade."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1359,7 +1363,7 @@ msgstr ""
 msgid ""
 "Calculates the sum of the difference of the squares of the values in two "
 "array."
-msgstr ""
+msgstr "İki dizideki değerlerin karelerinin farklarının toplamını hesaplar."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1376,7 +1380,7 @@ msgstr ""
 #, python-format
 msgid ""
 "Calculates the sum of the sum of the squares of the values in two array."
-msgstr ""
+msgstr "İki dizideki değerlerin karelerinin toplamının toplamını hesaplar."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1513,7 +1517,7 @@ msgstr "Onay Kutusu"
 #: code:addons/spreadsheet/static/src/global_filters/components/filter_text_value/filter_text_value.xml:0
 #, python-format
 msgid "Choose a value..."
-msgstr ""
+msgstr "Bir değer seçin..."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1877,6 +1881,13 @@ msgstr "Belirtilen bir dizeyi büyük harfe dönüştürür."
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
+msgid "Converts a string to a numeric value."
+msgstr ""
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
 msgid "Converts a time string into its serial number representation."
 msgstr "Bir zaman dizesini seri numarası gösterimine dönüştürür."
 
@@ -1961,7 +1972,7 @@ msgstr "Radyanlarda sağlanan bir açının kotanjanı."
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/pivot/pivot_model.js:0
+#: code:addons/spreadsheet/static/src/pivot/pivot_data_source.js:0
 #, python-format
 msgid "Count"
 msgstr "Sayı"
@@ -2683,6 +2694,7 @@ msgstr "Düzenle"
 
 #. module: spreadsheet
 #. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "Edit link"
@@ -2825,6 +2837,7 @@ msgstr "Şubat"
 
 #. module: spreadsheet
 #. odoo-javascript
+#: code:addons/spreadsheet/static/src/pivot/pivot_data_source.js:0
 #: code:addons/spreadsheet/static/src/pivot/pivot_model.js:0
 #, python-format
 msgid "Field %s does not exist"
@@ -2871,7 +2884,6 @@ msgstr "Dolgu Rengi"
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/helpers/model.js:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Filter"
@@ -3221,6 +3233,15 @@ msgstr ""
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Function [[FUNCTION_NAME]] expects number values for %s, but got a %s."
+msgstr ""
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
+msgid ""
+"Function [[FUNCTION_NAME]] expects the parameter '%s' to be a single value "
+"or a single cell reference, not a range."
 msgstr ""
 
 #. module: spreadsheet
@@ -4557,7 +4578,7 @@ msgstr "Orta nokta Maksimum'dan daha küçük olmalıdır"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Min"
-msgstr ""
+msgstr "Min"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -4891,6 +4912,7 @@ msgstr ""
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #: code:addons/spreadsheet/static/src/pivot/pivot_model.js:0
+#: code:addons/spreadsheet/static/src/pivot/pivot_time_adapters.js:0
 #: code:addons/spreadsheet/static/src/pivot/pivot_time_adapters.js:0
 #, python-format
 msgid "None"
@@ -5686,6 +5708,15 @@ msgstr "Bir sayıyı standart kurallara göre yuvarlar."
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
+msgid ""
+"Rounds a number down to the nearest integer that is less than or equal to "
+"it."
+msgstr ""
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
 msgid "Rounds a number up to the nearest odd integer."
 msgstr "Bir sayıyı en yakın tek tam sayıya yuvarlar."
 
@@ -5787,6 +5818,8 @@ msgid ""
 "Search a range for a match and return the corresponding item from a second "
 "range."
 msgstr ""
+"Bir aralıkta eşleşen öğeyi arayın ve ikinci bir aralıktan karşılık gelen "
+"öğeyi döndürün."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -6106,12 +6139,12 @@ msgstr ""
 #. module: spreadsheet
 #: model:ir.model.fields,field_description:spreadsheet.field_spreadsheet_mixin__spreadsheet_data
 msgid "Spreadsheet Data"
-msgstr ""
+msgstr "Hesap Tablosu Verisi"
 
 #. module: spreadsheet
 #: model:ir.model.fields,field_description:spreadsheet.field_spreadsheet_mixin__spreadsheet_binary_data
 msgid "Spreadsheet file"
-msgstr ""
+msgstr "E-tablo Dosyası"
 
 #. module: spreadsheet
 #: model:ir.model,name:spreadsheet.model_spreadsheet_mixin
@@ -6718,6 +6751,27 @@ msgstr "Taban (%s) 2 ile 36 arasında olmalıdır."
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
+msgid "The base (%s) must be strictly positive."
+msgstr ""
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
+msgid "The base must be different from 1."
+msgstr ""
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
+msgid "The base of the logarithm."
+msgstr ""
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
 msgid "The base to convert the value from."
 msgstr ""
 
@@ -6907,6 +6961,9 @@ msgid ""
 "The current window is too small to display this sheet properly. Consider "
 "resizing your browser window or adjusting frozen rows and columns."
 msgstr ""
+"Geçerli pencere bu sayfayı düzgün görüntülemek için çok küçük. Tarayıcı "
+"pencerenizi yeniden boyutlandırmayı veya dondurulmuş satır ve sütunları "
+"ayarlamayı düşünün."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -7436,7 +7493,7 @@ msgstr ""
 msgid ""
 "The first range whose entries will be multiplied with corresponding entries "
 "in the other ranges."
-msgstr ""
+msgstr "Diğer aralıklardaki karşılık gelen girdilerle çarpılacak ilk aralık."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -7772,6 +7829,10 @@ msgid ""
 "however, if occurrence_number is specified, only the indicated instance of "
 "search_for is replaced."
 msgstr ""
+"replace_with ile değiştirilecek text_to_search içindeki search_for örneği. "
+"Varsayılan olarak, tüm search_for örnekleri değiştirilir; ancak, "
+"occurrence_number belirtilirse, yalnızca belirtilen search_for örneği "
+"değiştirilir."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -7862,6 +7923,13 @@ msgstr "Yaşam (%s) kesinlikle pozitif olmalıdır."
 #, python-format
 msgid "The logarithm of a number, base e (euler's number)."
 msgstr "Bir sayının logaritması, taban e (euler sayısı)."
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
+msgid "The logarithm of a number, for a given base."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -8393,6 +8461,13 @@ msgstr ""
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The number to return."
+msgstr ""
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
+msgid "The number to round down to the nearest integer."
 msgstr ""
 
 #. module: spreadsheet
@@ -9610,6 +9685,7 @@ msgstr "Değer (%s) pozitif veya boş olmalıdır."
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The value (%s) must be strictly positive."
 msgstr "Değer (%s) kesinlikle pozitif olmalıdır."
@@ -9692,6 +9768,13 @@ msgstr ""
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The value for which to calculate the logarithm, base e."
+msgstr ""
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
+msgid "The value for which to calculate the logarithm."
 msgstr ""
 
 #. module: spreadsheet
@@ -10441,7 +10524,7 @@ msgstr "Üst"
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/pivot/plugins/pivot_ui_plugin.js:0
+#: code:addons/spreadsheet/static/src/pivot/pivot_data_source.js:0
 #, python-format
 msgid "Total"
 msgstr "Toplam"
@@ -10649,7 +10732,6 @@ msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/helpers/model.js:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
@@ -11509,6 +11591,13 @@ msgstr ""
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "start_date (%s) should be on or before end_date (%s)."
+msgstr ""
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
+msgid "the string to be converted"
 msgstr ""
 
 #. module: spreadsheet

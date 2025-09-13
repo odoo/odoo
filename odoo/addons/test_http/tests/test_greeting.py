@@ -9,8 +9,12 @@ from .test_common import TestHttpBase
 
 @tagged('post_install', '-at_install')
 class TestHttpGreeting(TestHttpBase):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.jackoneill = new_test_user(cls.env, 'jackoneill', context={'lang': 'en_US'})
+
     def test_greeting0_matrix(self):
-        new_test_user(self.env, 'jackoneill', context={'lang': 'en_US'})
         test_matrix = [
             # path, database, login, expected_code, expected_re_pattern
             ('/test_http/greeting', False, None, 200, r"Tek'ma'te"),
@@ -55,7 +59,6 @@ class TestHttpGreeting(TestHttpBase):
         self.assertEqual(res.text, "Tek'ma'te")
 
     def test_greeting2_headers_db(self):
-        new_test_user(self.env, 'jackoneill', context={'lang': 'en_US'})
         self.authenticate('jackoneill', 'jackoneill')
         res = self.db_url_open('/test_http/greeting')
         self.assertEqual(res.status_code, 200)

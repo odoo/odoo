@@ -220,16 +220,19 @@ class MailMail(models.Model):
            message is sent - this is not transactional and should
            not be called during another transaction!
 
-           :param list ids: optional list of emails ids to send. If passed
-                            no search is performed, and these ids are used
-                            instead.
-           :param dict context: if a 'filters' key is present in context,
-                                this value will be used as an additional
-                                filter to further restrict the outgoing
-                                messages to send (by default all 'outgoing'
-                                messages are sent).
+        A maximum of 10K MailMail (configurable using 'mail.mail.queue.batch.size'
+        optional ICP) are fetched in order to keep time under control.
+
+        :param list ids: optional list of emails ids to send. If given only
+                         scheduled and outgoing emails within this ids list
+                         are sent;
+        :param dict context: if a 'filters' key is present in context,
+                             this value will be used as an additional
+                             filter to further restrict the outgoing
+                             messages to send (by default all 'outgoing'
+                             'scheduled' messages are sent).
         """
-        filters = [
+        domain = [
             '&',
                 ('state', '=', 'outgoing'),
                 '|',
@@ -237,20 +240,18 @@ class MailMail(models.Model):
                    ('scheduled_date', '<=', datetime.datetime.utcnow()),
         ]
         if 'filters' in self._context:
-            filters.extend(self._context['filters'])
-        # TODO: make limit configurable
-        filtered_ids = self.search(filters, limit=10000).ids
-        if not ids:
-            ids = filtered_ids
-        else:
-            ids = list(set(filtered_ids) & set(ids))
-        ids.sort()
+            domain.extend(self._context['filters'])
+        batch_size = int(self.env['ir.config_parameter'].sudo().get_param('mail.mail.queue.batch.size', 10000))
+        send_ids = self.search(domain, limit=batch_size).ids
+        if ids:
+            send_ids = list(set(send_ids) & set(ids))
+        send_ids.sort()
 
         res = None
         try:
             # auto-commit except in testing mode
             auto_commit = not getattr(threading.current_thread(), 'testing', False)
-            res = self.browse(ids).send(auto_commit=auto_commit)
+            res = self.browse(send_ids).send(auto_commit=auto_commit)
         except Exception:
             _logger.exception("Failed processing mail queue")
 
@@ -403,10 +404,13 @@ class MailMail(models.Model):
         # used in post-processing to know failures, like missing recipients
         email_list = []
         if self.email_to:
-            email_to = tools.email_split_and_format(self.email_to)
+            email_to_normalized = tools.email_normalize_all(self.email_to)
+            email_to = tools.email_split_and_format_normalize(self.email_to)
             email_list.append({
                 'email_cc': [],
                 'email_to': email_to,
+                # list of normalized emails to help extract_rfc2822
+                'email_to_normalized': email_to_normalized,
                 # keep raw initial value for incoming pre processing of outgoing emails
                 'email_to_raw': self.email_to or '',
                 'partner_id': False,
@@ -415,28 +419,29 @@ class MailMail(models.Model):
         # with partner-specific sending)
         if self.email_cc:
             if email_list:
-                email_list[0]['email_cc'] = tools.email_split(self.email_cc)
+                email_list[0]['email_cc'] = tools.email_split_and_format_normalize(self.email_cc)
+                email_list[0]['email_to_normalized'] += tools.email_normalize_all(self.email_cc)
             else:
                 email_list.append({
-                    'email_cc':  tools.email_split(self.email_cc),
+                    'email_cc':  tools.email_split_and_format_normalize(self.email_cc),
                     'email_to': [],
+                    'email_to_normalized': tools.email_normalize_all(self.email_cc),
                     'email_to_raw': False,
                     'partner_id': False,
                 })
         # specific behavior to customize the send email for notified partners
         for partner in self.recipient_ids:
             # check partner email content
-            emails_normalized = tools.email_normalize_all(partner.email)
-            if emails_normalized:
-                email_to = [
-                    tools.formataddr((partner.name or "", email or "False"))
-                    for email in emails_normalized
-                ]
-            else:
-                email_to = [tools.formataddr((partner.name or "", partner.email or "False"))]
+            email_to_normalized = tools.email_normalize_all(partner.email)
+            email_to = [
+                tools.formataddr((partner.name or "", email or "False"))
+                for email in email_to_normalized or [partner.email]
+            ]
             email_list.append({
                 'email_cc': [],
                 'email_to': email_to,
+                # list of normalized emails to help extract_rfc2822
+                'email_to_normalized': email_to_normalized,
                 # keep raw initial value for incoming pre processing of outgoing emails
                 'email_to_raw': partner.email or '',
                 'partner_id': partner,
@@ -472,6 +477,7 @@ class MailMail(models.Model):
                 'email_cc': email_values['email_cc'],
                 'email_from': self.email_from,
                 'email_to': email_values['email_to'],
+                'email_to_normalized': email_values['email_to_normalized'],
                 'email_to_raw': email_values['email_to_raw'],
                 'headers': headers,
                 'message_id': self.message_id,
@@ -499,14 +505,17 @@ class MailMail(models.Model):
         Return iterators over
             mail_server_id, email_from, Records<mail.mail>.ids
         """
-        mail_values = self.read(['id', 'email_from', 'mail_server_id', 'record_alias_domain_id'])
+        mail_values = self.with_context(prefetch_fields=False).read(['id', 'email_from', 'mail_server_id', 'record_alias_domain_id'])
 
         # First group the <mail.mail> per mail_server_id, per alias_domain (if no server) and per email_from
         group_per_email_from = defaultdict(list)
         for values in mail_values:
+            # protect against ill-formatted email_from when formataddr was used on an already formatted email
+            emails_from = tools.email_split_and_format_normalize(values['email_from'])
+            email_from = emails_from[0] if emails_from else values['email_from']
             mail_server_id = values['mail_server_id'][0] if values['mail_server_id'] else False
             alias_domain_id = values['record_alias_domain_id'][0] if values['record_alias_domain_id'] else False
-            key = (mail_server_id, alias_domain_id, values['email_from'])
+            key = (mail_server_id, alias_domain_id, email_from)
             group_per_email_from[key].append(values['id'])
 
         # Then find the mail server for each email_from and group the <mail.mail>
@@ -529,9 +538,7 @@ class MailMail(models.Model):
 
             group_per_smtp_from[(mail_server_id, alias_domain_id, smtp_from)].extend(mail_ids)
 
-        sys_params = self.env['ir.config_parameter'].sudo()
-        batch_size = int(sys_params.get_param('mail.session.batch.size', 1000))
-
+        batch_size = int(self.env['ir.config_parameter'].sudo().get_param('mail.session.batch.size')) or 1000
         for (mail_server_id, alias_domain_id, smtp_from), record_ids in group_per_smtp_from.items():
             for batch_ids in tools.split_every(batch_size, record_ids):
                 yield mail_server_id, alias_domain_id, smtp_from, batch_ids
@@ -576,7 +583,12 @@ class MailMail(models.Model):
                     len(batch_ids), mail_server_id)
             finally:
                 if smtp_session:
-                    smtp_session.quit()
+                    try:
+                        smtp_session.quit()
+                    except smtplib.SMTPServerDisconnected:
+                        _logger.info(
+                            "Ignoring SMTPServerDisconnected while trying to quit non open session"
+                        )
 
     def _send(self, auto_commit=False, raise_exception=False, smtp_session=None, alias_domain_id=False):
         IrMailServer = self.env['ir.mail_server']
@@ -625,7 +637,7 @@ class MailMail(models.Model):
                     notifs.flush_recordset(['notification_status', 'failure_type', 'failure_reason'])
 
                 # protect against ill-formatted email_from when formataddr was used on an already formatted email
-                emails_from = tools.email_split_and_format(mail.email_from)
+                emails_from = tools.email_split_and_format_normalize(mail.email_from)
                 email_from = emails_from[0] if emails_from else mail.email_from
 
                 # build an RFC2822 email.message.Message object and send it without queuing
@@ -636,15 +648,19 @@ class MailMail(models.Model):
 
                 # send each sub-email
                 for email in email_list:
+                    # give indication to 'send_mail' about emails already considered
+                    # as being valid
+                    email_to_normalized = email.pop('email_to_normalized', [])
                     # if given, contextualize sending using alias domains
                     if alias_domain_id:
                         alias_domain = self.env['mail.alias.domain'].sudo().browse(alias_domain_id)
                         SendIrMailServer = IrMailServer.with_context(
                             domain_notifications_email=alias_domain.default_from_email,
                             domain_bounce_address=email['headers'].get('Return-Path') or alias_domain.bounce_email,
+                            send_validated_to=email_to_normalized,
                         )
                     else:
-                        SendIrMailServer = IrMailServer
+                        SendIrMailServer = IrMailServer.with_context(send_validated_to=email_to_normalized)
                     msg = SendIrMailServer.build_email(
                         email_from=email_from,
                         email_to=email['email_to'],
@@ -685,7 +701,18 @@ class MailMail(models.Model):
                             raise
                 if res:  # mail has been sent at least once, no major exception occurred
                     mail.write({'state': 'sent', 'message_id': res, 'failure_reason': False})
-                    _logger.info('Mail with ID %r and Message-Id %r successfully sent', mail.id, mail.message_id)
+                    _logger.info(
+                        "Mail (mail.mail) with ID %r and Message-Id %r from %r to (redacted) %s successfully sent",
+                        mail.id,
+                        mail.message_id,
+                        tools.email_normalize(msg['from']),  # FROM should not change, so last msg good enough
+                        ', '.join(
+                            repr(tools.mail.email_anonymize(tools.email_normalize(m['email_to'])))
+                            for m in email_list
+                        ),
+                    )
+                    _logger.info("Total emails tried by SMTP: %s", len(email_list))
+
                     # /!\ can't use mail.state here, as mail.refresh() will cause an error
                     # see revid:odo@openerp.com-20120622152536-42b2s28lvdv3odyr in 6.1
                 mail._postprocess_sent_message(success_pids=success_pids, failure_type=failure_type)
@@ -746,4 +773,5 @@ class MailMail(models.Model):
 
             if auto_commit is True:
                 self._cr.commit()
+            mail.invalidate_recordset(['body_html'])
         return True

@@ -122,7 +122,8 @@ class AccountBankStatement(models.Model):
     @api.depends('line_ids.internal_index', 'line_ids.state')
     def _compute_date_index(self):
         for stmt in self:
-            sorted_lines = stmt.line_ids.sorted('internal_index')
+            # When we create lines manually from the form view, they don't have any `internal_index` set yet.
+            sorted_lines = stmt.line_ids.filtered("internal_index").sorted('internal_index')
             stmt.first_line_index = sorted_lines[:1].internal_index
             stmt.date = sorted_lines.filtered(lambda l: l.state == 'posted')[-1:].date
 
@@ -302,15 +303,17 @@ class AccountBankStatement(models.Model):
             lines = self.env['account.bank.statement.line'].browse(active_ids).sorted()
             if len(lines.journal_id) > 1:
                 raise UserError(_("A statement should only contain lines from the same journal."))
-            # Check that the selected lines are contiguous
+            # Check that the selected lines are contiguous (there might be canceled lines between the indexes and these should be ignored from the check)
             indexes = lines.mapped('internal_index')
-            count_lines_between = self.env['account.bank.statement.line'].search_count([
+            lines_between = self.env['account.bank.statement.line'].search([
                 ('internal_index', '>=', min(indexes)),
                 ('internal_index', '<=', max(indexes)),
                 ('journal_id', '=', lines.journal_id.id),
             ])
-            if len(lines) != count_lines_between:
+            canceled_lines = lines_between.filtered(lambda l: l.state == 'cancel')
+            if len(lines) != len(lines_between - canceled_lines):
                 raise UserError(_("Unable to create a statement due to missing transactions. You may want to reorder the transactions before proceeding."))
+            lines |= canceled_lines
 
         if lines:
             defaults['line_ids'] = [Command.set(lines.ids)]

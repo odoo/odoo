@@ -5,16 +5,16 @@
 # Translators:
 # Jakub Smolka, 2023
 # Ivana Bartonkova, 2023
-# Wil Odoo, 2023
 # karolína schusterová <karolina.schusterova@vdp.sk>, 2023
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2025-02-10 10:34+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: karolína schusterová <karolina.schusterova@vdp.sk>, 2023\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Czech (https://app.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -57,6 +57,11 @@ msgstr "Vytvořeno dne"
 #: model:ir.model.fields,field_description:bus.field_bus_presence__display_name
 msgid "Display Name"
 msgstr "Zobrazovací název"
+
+#. module: bus
+#: model:ir.model,name:bus.model_ir_http
+msgid "HTTP Routing"
+msgstr "HTTP Routing"
 
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_bus__id
@@ -115,9 +120,19 @@ msgstr "Online"
 #. odoo-javascript
 #: code:addons/bus/static/src/services/assets_watchdog_service.js:0
 #: code:addons/bus/static/src/services/assets_watchdog_service.js:0
+#: code:addons/bus/static/src/services/bus_service.js:0
 #, python-format
 msgid "Refresh"
 msgstr "Obnovit"
+
+#. module: bus
+#. odoo-javascript
+#: code:addons/bus/static/src/services/bus_service.js:0
+#, python-format
+msgid ""
+"Save your work and refresh to get the latest updates and avoid potential "
+"issues."
+msgstr ""
 
 #. module: bus
 #. odoo-javascript
@@ -125,6 +140,13 @@ msgstr "Obnovit"
 #, python-format
 msgid "The page appears to be out of date."
 msgstr "Stránka se zdá být zastaralá."
+
+#. module: bus
+#. odoo-javascript
+#: code:addons/bus/static/src/services/bus_service.js:0
+#, python-format
+msgid "The page is out of date"
+msgstr ""
 
 #. module: bus
 #: model:ir.model,name:bus.model_res_users

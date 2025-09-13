@@ -1958,7 +1958,7 @@ const MediapickerUserValueWidget = UserValueWidget.extend({
             noDocuments: true,
             isForBgVideo: true,
             vimeoPreviewIds: ['528686125', '430330731', '509869821', '397142251', '763851966', '486931161',
-                '499761556', '392935303', '728584384', '865314310', '511727912', '466830211'],
+                '499761556', '1092009120', '728584384', '865314310', '511727912', '466830211'],
             'res_model': $editable.data('oe-model'),
             'res_id': $editable.data('oe-id'),
             save,
@@ -4570,6 +4570,7 @@ registry.sizing = SnippetOptionWidget.extend({
         const self = this;
         const def = this._super.apply(this, arguments);
         let isMobile = weUtils.isMobileView(this.$target[0]);
+        const isRtl = this.options.direction === "rtl";
 
         this.$handles = this.$overlay.find('.o_handle');
 
@@ -4609,6 +4610,14 @@ registry.sizing = SnippetOptionWidget.extend({
             } else if ($handle.hasClass('se')) {
                 compass = 'se';
                 XY = 'YX';
+            }
+
+            if (isRtl) {
+                if (compass.includes("e")) {
+                    compass = compass.replace("e", "w");
+                } else if (compass.includes("w")) {
+                    compass = compass.replace("w", "e");
+                }
             }
 
             // Don't call the normal resize methods if we are in a grid and
@@ -4662,7 +4671,7 @@ registry.sizing = SnippetOptionWidget.extend({
                 resize[0].forEach((val, key) => {
                     if (self.$target.hasClass(val)) {
                         current = key;
-                    } else if (resize[1][key] === cssPropertyValue) {
+                    } else if (parseInt(resize[1][key]) === cssPropertyValue) {
                         current = key;
                     }
                 });
@@ -4693,7 +4702,12 @@ registry.sizing = SnippetOptionWidget.extend({
                 for (const dir of directions) {
                     // dd is the number of pixels by which the mouse moved,
                     // compared to the initial position of the handle.
-                    const dd = ev['page' + dir.XY] - dir.xy + dir.resize[1][dir.begin];
+                    let ddRaw = ev["page" + dir.XY] - dir.xy;
+                    // In RTL mode, reverse only horizontal movement (X axis).
+                    if (dir.XY === "X" && isRtl) {
+                        ddRaw = -ddRaw;
+                    }
+                    const dd = ddRaw + dir.resize[1][dir.begin];
                     const next = dir.current + (dir.current + 1 === dir.resize[1].length ? 0 : 1);
                     const prev = dir.current ? (dir.current - 1) : 0;
 
@@ -5977,6 +5991,11 @@ registry.ReplaceMedia = SnippetOptionWidget.extend({
         this._deactivateLinkTool = this._deactivateLinkTool.bind(this);
     },
 
+    destroy: function () {
+        this._clearListeners();
+        return this._super(...arguments);
+    },
+
     /**
      * @override
      */
@@ -5991,8 +6010,7 @@ registry.ReplaceMedia = SnippetOptionWidget.extend({
      * @override
      */
     onBlur() {
-        this.options.wysiwyg.odooEditor.removeEventListener('activate_image_link_tool', this._activateLinkTool);
-        this.options.wysiwyg.odooEditor.removeEventListener('deactivate_image_link_tool', this._deactivateLinkTool);
+        this._clearListeners();
     },
 
     //--------------------------------------------------------------------------
@@ -6005,6 +6023,13 @@ registry.ReplaceMedia = SnippetOptionWidget.extend({
      * @see this.selectClass for parameters
      */
     async replaceMedia() {
+        const sel = this.ownerDocument.getSelection();
+        // Ensure the element is selected before opening the media dialog.
+        if (!sel.rangeCount) {
+            const range = this.ownerDocument.createRange();
+            range.selectNodeContents(this.$target[0]);
+            sel.addRange(range);
+        }
         // open mediaDialog and replace the media.
         await this.options.wysiwyg.openMediaDialog({ node:this.$target[0] });
     },
@@ -6015,7 +6040,7 @@ registry.ReplaceMedia = SnippetOptionWidget.extend({
      * @see this.selectClass for parameters
      */
     setLink(previewMode, widgetValue, params) {
-        const parentEl = this.$target[0].parentNode;
+        const parentEl = this._searchSupportedParentLinkEl();
         if (parentEl.tagName !== 'A') {
             const wrapperEl = document.createElement('a');
             this.$target[0].after(wrapperEl);
@@ -6040,7 +6065,7 @@ registry.ReplaceMedia = SnippetOptionWidget.extend({
      * @see this.selectClass for parameters
      */
     setNewWindow(previewMode, widgetValue, params) {
-        const linkEl = this.$target[0].parentElement;
+        const linkEl = this._searchSupportedParentLinkEl();
         if (widgetValue) {
             linkEl.setAttribute('target', '_blank');
         } else {
@@ -6053,7 +6078,7 @@ registry.ReplaceMedia = SnippetOptionWidget.extend({
      * @see this.selectClass for parameters
      */
     setUrl(previewMode, widgetValue, params) {
-        const linkEl = this.$target[0].parentElement;
+        const linkEl = this._searchSupportedParentLinkEl();
         let url = widgetValue;
         if (!url) {
             // As long as there is no URL, the image is not considered a link.
@@ -6091,7 +6116,8 @@ registry.ReplaceMedia = SnippetOptionWidget.extend({
      * @private
      */
     _activateLinkTool() {
-        if (this.$target[0].parentElement.tagName === 'A') {
+        const parentEl = this._searchSupportedParentLinkEl();
+        if (parentEl.tagName === 'A') {
             this._requestUserValueWidgets('media_url_opt')[0].focus();
         } else {
             this._requestUserValueWidgets('media_link_opt')[0].enable();
@@ -6100,8 +6126,15 @@ registry.ReplaceMedia = SnippetOptionWidget.extend({
     /**
      * @private
      */
+    _clearListeners() {
+        this.options.wysiwyg.odooEditor.removeEventListener('activate_image_link_tool', this._activateLinkTool);
+        this.options.wysiwyg.odooEditor.removeEventListener('deactivate_image_link_tool', this._deactivateLinkTool);
+    },
+    /**
+     * @private
+     */
     _deactivateLinkTool() {
-        const parentEl = this.$target[0].parentNode;
+        const parentEl = this._searchSupportedParentLinkEl();
         if (parentEl.tagName === 'A') {
             this._requestUserValueWidgets('media_link_opt')[0].enable();
         }
@@ -6110,7 +6143,7 @@ registry.ReplaceMedia = SnippetOptionWidget.extend({
      * @override
      */
     _computeWidgetState(methodName, params) {
-        const parentEl = this.$target[0].parentElement;
+        const parentEl = this._searchSupportedParentLinkEl();
         const linkEl = parentEl.tagName === 'A' ? parentEl : null;
         switch (methodName) {
             case 'setLink': {
@@ -6133,11 +6166,20 @@ registry.ReplaceMedia = SnippetOptionWidget.extend({
     async _computeWidgetVisibility(widgetName, params) {
         if (widgetName === 'media_link_opt') {
             if (this.$target[0].matches('img')) {
-                return isImageSupportedForStyle(this.$target[0]);
+                return isImageSupportedForStyle(this.$target[0])
+                    && !this._searchSupportedParentLinkEl().matches("a[data-oe-xpath]");
             }
             return !this.$target[0].classList.contains('media_iframe_video');
         }
         return this._super(...arguments);
+    },
+    /**
+     * @private
+     * @returns {Element} The "closest" element that can be supported as a <a>.
+     */
+    _searchSupportedParentLinkEl() {
+        const parentEl = this.$target[0].parentElement;
+        return parentEl.matches("figure") ? parentEl.parentElement : parentEl;
     },
 });
 
@@ -6319,12 +6361,9 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
             $select.append(`<we-button data-select-format="${Math.round(value)} ${targetFormat}" class="o_we_badge_at_end">${label} <span class="badge rounded-pill text-bg-dark">${targetFormat.split('/')[1]}</span></we-button>`);
         });
 
-        if (!['image/jpeg', 'image/webp'].includes(this._getImageMimetype(img))) {
-            const optQuality = uiFragment.querySelector('we-range[data-set-quality]');
-            if (optQuality) {
-                optQuality.remove();
-            }
-        }
+        // TODO: remove in saas-18.4 since XML is static and will be up to date
+        const optQuality = uiFragment.querySelector('we-range[data-set-quality]');
+        optQuality.setAttribute('data-name', 'quality_range_opt');
     },
     /**
      * Returns a list of valid formats for a given image or an empty list if
@@ -6581,6 +6620,18 @@ registry.ImageTools = ImageHandlerOption.extend({
         const document = this.$el[0].ownerDocument;
         const imageCropWrapperElement = document.createElement('div');
         document.body.append(imageCropWrapperElement);
+
+        // Attach the event listener before attaching the component
+        const cropperPromise = new Promise(resolve => {
+            this.$target.one("image_cropper_destroyed", async () => {
+                if (isGif(this._getImageMimetype(img))) {
+                    img.dataset[img.dataset.shape ? "originalMimetype" : "mimetype"] = "image/png";
+                }
+                await this._reapplyCurrentShape();
+                resolve();
+            });
+        });
+
         const imageCropWrapper = await attachComponent(this, imageCropWrapperElement, ImageCrop, {
             rpc: this.rpc,
             activeOnStart: true,
@@ -6588,15 +6639,8 @@ registry.ImageTools = ImageHandlerOption.extend({
             mimetype: this._getImageMimetype(img),
         });
 
-        await new Promise(resolve => {
-            this.$target.one('image_cropper_destroyed', async () => {
-                if (isGif(this._getImageMimetype(img))) {
-                    img.dataset[img.dataset.shape ? 'originalMimetype' : 'mimetype'] = 'image/png';
-                }
-                await this._reapplyCurrentShape();
-                resolve();
-            });
-        });
+        await cropperPromise;
+
         imageCropWrapperElement.remove();
         imageCropWrapper.destroy();
         this.trigger_up('enable_loading_effect');
@@ -6919,6 +6963,18 @@ registry.ImageTools = ImageHandlerOption.extend({
         if (hoverEffectsOptionsEl && animationEffectWidget) {
             animationEffectWidget.getParent().$el[0].append(hoverEffectsOptionsEl);
         }
+        // Disable quality option if partially not supported
+        const unsupportedQuality = this._unsupportedQualityOption();
+        const inputQuality = this.el.querySelector('we-range[data-set-quality] input');
+        if (inputQuality) {
+            if (!unsupportedQuality) {
+                inputQuality.disabled = false;
+                inputQuality.removeAttribute('title');
+            } else if (unsupportedQuality !== true) {
+                inputQuality.disabled = true;
+                inputQuality.setAttribute('title', unsupportedQuality);
+            }
+        }
     },
 
     //--------------------------------------------------------------------------
@@ -6936,6 +6992,33 @@ registry.ImageTools = ImageHandlerOption.extend({
 ￼    */
     _isCropped() {
         return this.$target.hasClass('o_we_image_cropped');
+    },
+    /**
+     * Determines if the quality of the image can be adjusted.
+     *
+     * @returns {boolean|string}
+     * - `false`: supported
+     * - `true`: not supported
+     * - `string`: reason why partially not supported
+     */
+    _unsupportedQualityOption() {
+        const img = this._getImg();
+        const mimetype = this._getImageMimetype(img);
+        if (!['image/jpeg', 'image/webp'].includes(mimetype)) {
+            return true;
+        }
+        // disable WebP quality change if unsupported
+        if ('image/webp' === mimetype) {
+            if (this.canvasSupportWebp === undefined) {
+                const canvas = document.createElement('canvas');
+                canvas.width = canvas.height = 1;
+                this.canvasSupportWebp = canvas.toDataURL('image/webp').slice(0, 16) === 'data:image/webp;';
+            }
+            if (this.canvasSupportWebp === false) {
+                return _t('WebP compression not supported on this browser');
+            }
+        }
+        return false;
     },
     /**
      * @override
@@ -7184,6 +7267,9 @@ registry.ImageTools = ImageHandlerOption.extend({
             }
             const colors = img.dataset.shapeColors.split(';');
             return colors[parseInt(params.colorId)];
+        }
+        if (widgetName == 'quality_range_opt' && this._unsupportedQualityOption() === true) {
+            return false;
         }
         if (params.optionsPossibleValues.resetTransform) {
             return this._isTransformed();
@@ -7690,6 +7776,9 @@ registry.ImageTools = ImageHandlerOption.extend({
         this.trigger_up('snippet_edition_request', {exec: async () => {
             await this._autoOptimizeImage();
             this.trigger_up('cover_update');
+            if (ev._complete) {
+                ev._complete();
+            }
         }});
     },
     /**
@@ -7831,6 +7920,11 @@ registry.BackgroundToggler = SnippetOptionWidget.extend({
      */
     toggleBgImage(previewMode, widgetValue, params) {
         if (!widgetValue) {
+            // When background image with position "Repeat pattern" is removed,
+            // remove background size to avoid repeating gradient
+            const targetEl = this.$target[0];
+            targetEl.style.removeProperty("background-size");
+            targetEl.classList.remove("o_bg_img_opt_repeat");
             this.$target.find('> .o_we_bg_filter').remove();
             // TODO: use setWidgetValue instead of calling background directly when possible
             const [bgImageWidget] = this._requestUserValueWidgets('bg_image_opt');
@@ -8075,17 +8169,19 @@ registry.BackgroundImage = SnippetOptionWidget.extend({
         const parts = backgroundImageCssToParts(this.$target.css('background-image'));
         if (backgroundURL) {
             parts.url = `url('${backgroundURL}')`;
-            this.$target.addClass('oe_img_bg o_bg_img_center');
+            this.$target.addClass('oe_img_bg o_bg_img_center o_bg_img_origin_border_box');
         } else {
             delete parts.url;
             this.$target[0].classList.remove(
                 "oe_img_bg",
                 "o_bg_img_center",
+                "o_bg_img_origin_border_box",
                 "o_modified_image_to_save",
             );
         }
         const combined = backgroundImagePartsToCss(parts);
         this.$target.css('background-image', combined);
+        this.options.wysiwyg.odooEditor.editable.focus();
     },
 });
 
@@ -8609,7 +8705,9 @@ registry.BackgroundPosition = SnippetOptionWidget.extend({
     backgroundType: function (previewMode, widgetValue, params) {
         this.$target.toggleClass('o_bg_img_opt_repeat', widgetValue === 'repeat-pattern');
         this.$target.css('background-position', '');
-        this.$target.css('background-size', widgetValue !== 'repeat-pattern' ? '' : '100px');
+        // Set image size to "100px" for repeating, and "cover" for gradient.
+        // Ensures gradient doesn’t repeat while image does.
+        this.$target[0].style.backgroundSize = widgetValue !== "repeat-pattern" ? "" : "100px, cover";
     },
     /**
      * Saves current background position and enables overlay.
@@ -8654,10 +8752,21 @@ registry.BackgroundPosition = SnippetOptionWidget.extend({
      * @override
      */
     selectStyle: function (previewMode, widgetValue, params) {
-        if (params.cssProperty === 'background-size'
-                && !this.$target.hasClass('o_bg_img_opt_repeat')) {
-            // Disable the option when the image is in cover mode, otherwise
-            // the background-size: auto style may be forced.
+        if (params.cssProperty === "background-size") {
+            const targetEl = this.$target[0];
+            if (!targetEl.classList.contains("o_bg_img_opt_repeat")) {
+                // Disable the option when the image is in cover mode, otherwise
+                // the background-size: auto style may be forced.
+                return;
+            }
+            const sizeLayers = getComputedStyle(targetEl)
+                .getPropertyValue("background-size")
+                .split(",")
+                .map((bgSize) => bgSize.trim());
+            // Update only the image layer's background-size (first layer)
+            // while keeping other layers (e.g., gradient) unchanged.
+            sizeLayers[0] = widgetValue;
+            targetEl.style.setProperty("background-size", sizeLayers.join(", "));
             return;
         }
         this._super(...arguments);
@@ -8677,8 +8786,17 @@ registry.BackgroundPosition = SnippetOptionWidget.extend({
      * @override
      */
     _computeWidgetState: function (methodName, params) {
-        if (methodName === 'backgroundType') {
-            return this.$target.css('background-repeat') === 'repeat' ? 'repeat-pattern' : 'cover';
+        const computedStyle = getComputedStyle(this.$target[0]);
+        if (methodName === "backgroundType") {
+            return computedStyle.backgroundRepeat.includes("no-repeat")
+                ? "cover"
+                : "repeat-pattern";
+        }
+        if (methodName === "selectStyle" && params.cssProperty === "background-size") {
+            const bgSize = computedStyle.getPropertyValue("background-size").trim();
+            // Handle multi-layer background (image + gradient)
+            // return first layer's size
+            return bgSize.split(",")[0].trim();
         }
         return this._super(...arguments);
     },
@@ -9202,6 +9320,17 @@ registry.SnippetSave = SnippetOptionWidget.extend({
                                 : _t("Custom Button");
                             const targetCopyEl = this.$target[0].cloneNode(true);
                             targetCopyEl.classList.add('s_custom_snippet');
+                            // when cloning the snippets which has o_snippet_invisible, o_snippet_mobile_invisible or
+                            // o_snippet_desktop_invisible class will be hidden because of d-none class added on it,
+                            // so we needs to remove `d-none` explicity in such case from the target.
+                            const isTargetHidden = [
+                                "o_snippet_invisible",
+                                "o_snippet_mobile_invisible",
+                                "o_snippet_desktop_invisible"
+                            ].some(className => this.$target[0].classList.contains(className));
+                            if (isTargetHidden) {
+                                targetCopyEl.classList.remove("d-none");
+                            }
                             delete targetCopyEl.dataset.name;
                             if (isButton) {
                                 targetCopyEl.classList.remove("mb-2");
@@ -9614,16 +9743,17 @@ registry.CarouselHandler = registry.GalleryHandler.extend({
             : this.$target[0].querySelector(".carousel");
         carouselEl.classList.remove("slide");
         $(carouselEl).carousel(position);
-        for (const indicatorEl of this.$target[0].querySelectorAll(".carousel-indicators li")) {
-            indicatorEl.classList.remove("active");
-        }
-        this.$target[0].querySelector(`.carousel-indicators li[data-bs-slide-to="${position}"]`)
-                    .classList.add("active");
+        const indicatorEls = this.$target[0].querySelectorAll(".carousel-indicators li");
+        indicatorEls.forEach((indicatorEl, i) => {
+            indicatorEl.classList.toggle("active", i === position);
+        });
         this.trigger_up("activate_snippet", {
             $snippet: $(this.$target[0].querySelector(".carousel-item.active img")),
             ifInactiveOptions: true,
         });
         carouselEl.classList.add("slide");
+        // Prevent the carousel from automatically sliding afterwards.
+        $(carouselEl).carousel("pause");
     },
 });
 

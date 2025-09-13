@@ -3,7 +3,6 @@
 # 	* partner_autocomplete
 # 
 # Translators:
-# Rivo Zängov <eraser@eraser.ee>, 2023
 # JanaAvalah, 2023
 # Patrick-Jordan Kiudorv, 2023
 # Triine Aavik <triine@avalah.ee>, 2023
@@ -14,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2025-05-07 20:36+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Anna, 2023\n"
 "Language-Team: Estonian (https://app.transifex.com/odoo/teams/41243/et/)\n"
@@ -41,13 +40,6 @@ msgstr "Osta punkte juurde"
 #: model:ir.model,name:partner_autocomplete.model_res_company
 msgid "Companies"
 msgstr "Ettevõtted"
-
-#. module: partner_autocomplete
-#. odoo-python
-#: code:addons/partner_autocomplete/models/res_company.py:0
-#, python-format
-msgid "Company auto-completed by Odoo Partner Autocomplete Service"
-msgstr "Ettevõte andmed on automaatselt täidetud Odoo teenuse poolt. "
 
 #. module: partner_autocomplete
 #: model:ir.model.fields,field_description:partner_autocomplete.field_res_company__partner_gid
@@ -159,19 +151,11 @@ msgid "Partner Autocomplete: Sync with remote DB"
 msgstr ""
 
 #. module: partner_autocomplete
-#. odoo-python
-#: code:addons/partner_autocomplete/models/res_partner.py:0
-#, python-format
-msgid "Partner created by Odoo Partner Autocomplete Service"
-msgstr "Parter on loodud Odoo teenuste abiga"
-
-#. module: partner_autocomplete
 #. odoo-javascript
 #: code:addons/partner_autocomplete/static/src/xml/partner_autocomplete.xml:0
-#: code:addons/partner_autocomplete/static/src/xml/partner_autocomplete.xml:0
 #, python-format
-msgid "Placeholder"
-msgstr "Kohatäitja"
+msgid "Search Worldwide 🌎"
+msgstr ""
 
 #. module: partner_autocomplete
 #. odoo-javascript
@@ -194,3 +178,10 @@ msgstr "Määra oma konto märgis"
 #, python-format
 msgid "Test mode"
 msgstr "Testrežiim "
+
+#. module: partner_autocomplete
+#. odoo-python
+#: code:addons/partner_autocomplete/models/res_partner.py:0
+#, python-format
+msgid "Unable to enrich company (no credit was consumed)."
+msgstr ""

@@ -1,5 +1,6 @@
 /* @odoo-module */
 
+import { Domain } from "@web/core/domain";
 import { ActivityMenu } from "@mail/core/web/activity_menu";
 import { patch } from "@web/core/utils/patch";
 
@@ -33,9 +34,16 @@ patch(ActivityMenu.prototype, {
             // Necessary because activity_ids of mail.activity.mixin has auto_join
             // So, duplicates are faking the count and "Load more" doesn't show up
             context["force_search_count"] = 1;
-            this.action.doAction("crm.crm_lead_action_my_activities", {
-                additionalContext: context,
-                clearBreadcrumbs: true,
+            this.action.loadAction("crm.crm_lead_action_my_activities").then((action) => {
+                // to show lost leads in the activity
+                action.domain = Domain.and([
+                    action.domain || [],
+                    [["active", "in", [true, false]]],
+                ]).toList();
+                this.action.doAction(action, {
+                    additionalContext: context,
+                    clearBreadcrumbs: true,
+                });
             });
         } else {
             return super.openActivityGroup(group, filter);

@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo import models, fields, api, _
-from odoo.tools import SQL
+from odoo.tools import SQL, unique
 from odoo.tools.float_utils import float_round, float_compare
+from odoo.tools.misc import flatten
 from odoo.exceptions import UserError, ValidationError
 
 class AnalyticMixin(models.AbstractModel):
@@ -21,6 +22,11 @@ class AnalyticMixin(models.AbstractModel):
     analytic_precision = fields.Integer(
         store=False,
         default=lambda self: self.env['decimal.precision'].precision_get("Percentage Analytic"),
+    )
+    distribution_analytic_account_ids = fields.Many2many(
+        comodel_name='account.analytic.account',
+        compute='_compute_distribution_analytic_account_ids',
+        search='_search_analytic_distribution',
     )
 
     def init(self):
@@ -47,6 +53,14 @@ class AnalyticMixin(models.AbstractModel):
 
     def _compute_analytic_distribution(self):
         pass
+
+    @api.depends('analytic_distribution')
+    def _compute_distribution_analytic_account_ids(self):
+        all_ids = {int(_id) for rec in self for key in (rec.analytic_distribution or {}) for _id in key.split(',')}
+        existing_accounts_ids = set(self.env['account.analytic.account'].browse(all_ids).exists().ids)
+        for rec in self:
+            ids = list(unique(int(_id) for key in (rec.analytic_distribution or {}) for _id in key.split(',') if int(_id) in existing_accounts_ids))
+            rec.distribution_analytic_account_ids = self.env['account.analytic.account'].browse(ids)
 
     def _search_analytic_distribution(self, operator, value):
         if operator == 'in' and isinstance(value, (tuple, list)):
@@ -86,6 +100,17 @@ class AnalyticMixin(models.AbstractModel):
     def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
         domain = self._apply_analytic_distribution_domain(domain)
         return super().read_group(domain, fields, groupby, offset, limit, orderby, lazy)
+
+    def mapped(self, func):
+        # Get the related analytic accounts as a recordset instead of the distribution
+        if func == 'analytic_distribution' and self.env.context.get('distribution_ids'):
+            return self.env['account.analytic.account'].browse(flatten(record._get_analytic_account_ids() for record in self))
+        return super().mapped(func)
+
+    def filtered_domain(self, domain):
+        # Filter based on the accounts used (i.e. allowing a name_search) instead of the distribution
+        # A domain on a binary field doesn't make sense anymore outside of set or not; and it is still doable.
+        return super(AnalyticMixin, self.with_context(distribution_ids=True)).filtered_domain(domain)
 
     def write(self, vals):
         """ Format the analytic_distribution float value, so equality on analytic_distribution can be done """
@@ -134,4 +159,4 @@ class AnalyticMixin(models.AbstractModel):
     def _get_analytic_account_ids(self) -> list[int]:
         """ Get the analytic account ids from the analytic_distribution dict """
         self.ensure_one()
-        return [int(account_id) for ids in self.analytic_distribution for account_id in ids.split(',')]
+        return [int(account_id) for ids in (self.analytic_distribution or {}) for account_id in ids.split(',')]

@@ -7,14 +7,18 @@
 # Foldi Robert <foldirobert@nexterp.ro>, 2024
 # Martin Trigaux, 2024
 # Dorin Hongu <dhongu@gmail.com>, 2024
+# Maria Muntean, 2024
+# Wil Odoo, 2024
+# Lyall Kindmurr, 2024
+# Larisa_nexterp, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:56+0000\n"
+"POT-Creation-Date: 2024-08-13 10:28+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Dorin Hongu <dhongu@gmail.com>, 2024\n"
+"Last-Translator: Larisa_nexterp, 2025\n"
 "Language-Team: Romanian (https://app.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -44,52 +48,52 @@ msgstr ""
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.express_inline_form
 msgid "<small><b>City</b></small>"
-msgstr ""
+msgstr "<small><b>Oraș</b></small>"
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.express_inline_form
 msgid "<small><b>Country</b></small>"
-msgstr ""
+msgstr "<small><b>Țară</b></small>"
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.express_inline_form
 msgid "<small><b>Name</b></small>"
-msgstr ""
+msgstr "<small><b>Nume</b></small>"
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.express_inline_form
 msgid "<small><b>Street and Number</b></small>"
-msgstr ""
+msgstr "<small><b>Stradă și număr</b></small>"
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.express_inline_form
 msgid "<small><b>Zip Code</b></small>"
-msgstr ""
+msgstr "<small><b>Cod poștal</b></small>"
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.express_inline_form
 msgid "<small>Email</small>"
-msgstr ""
+msgstr "<small>Email</small>"
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.payment_details
 msgid "<small>Payment Details (test data)</small>"
-msgstr ""
+msgstr "<small>Detalii plată (date de test)</small>"
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.payment_details
 msgid "<small>Payment Status</small>"
-msgstr ""
+msgstr "<small>Status plată</small>"
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.express_inline_form
 msgid "<small>Street 2</small>"
-msgstr ""
+msgstr "<small>Stradă 2</small>"
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.payment_transaction_form
 msgid "Authorize"
-msgstr ""
+msgstr "Autorizează"
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.payment_transaction_form
@@ -145,19 +149,26 @@ msgstr "Demo"
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.express_checkout_form
 msgid "Demo Express Checkout"
-msgstr ""
+msgstr "Demo Express Checkout"
 
 #. module: payment_demo
 #. odoo-python
 #: code:addons/payment_demo/models/payment_provider.py:0
 #, python-format
 msgid "Demo providers should never be enabled."
-msgstr ""
+msgstr "Furnizorii demo nu ar trebui niciodată activați."
 
 #. module: payment_demo
 #: model:ir.model.fields.selection,name:payment_demo.selection__payment_token__demo_simulated_state__error
 msgid "Error"
 msgstr "Eroare"
+
+#. module: payment_demo
+#. odoo-javascript
+#: code:addons/payment_demo/static/src/js/express_checkout_form.js:0
+#, python-format
+msgid "No delivery method is available."
+msgstr "Nicio metodă de livrare disponibilă."
 
 #. module: payment_demo
 #. odoo-python
@@ -174,7 +185,7 @@ msgstr "Plată"
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.express_checkout_form
 msgid "Pay with Demo"
-msgstr ""
+msgstr "Plătește cu Demo"
 
 #. module: payment_demo
 #: model:ir.model,name:payment_demo.model_payment_provider
@@ -196,12 +207,12 @@ msgstr "Tranzacție plată"
 #: code:addons/payment_demo/static/src/js/payment_demo_mixin.js:0
 #, python-format
 msgid "Payment processing failed"
-msgstr ""
+msgstr "Procesarea plății a eșuat"
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.token_inline_form
 msgid "Payments made with this payment method will be <b>successful</b>."
-msgstr ""
+msgstr "Plățile efectuate cu această metodă de plată vor fi <b>reușite</b>."
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.token_inline_form
@@ -214,6 +225,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:payment_demo.token_inline_form
 msgid "Payments made with this payment method will remain <b>pending</b>."
 msgstr ""
+"Plățile efectuate cu această metodă de plată vor rămâne <b>în așteptare</b>."
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.token_inline_form
@@ -221,6 +233,8 @@ msgid ""
 "Payments made with this payment method will simulate a processing "
 "<b>error</b>."
 msgstr ""
+"Plățile efectuate cu această metodă de plată vor simula o <b>eroare</b> de "
+"procesare."
 
 #. module: payment_demo
 #: model:ir.model.fields.selection,name:payment_demo.selection__payment_token__demo_simulated_state__pending
@@ -230,12 +244,12 @@ msgstr "În așteptare"
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.payment_transaction_form
 msgid "Set to Error"
-msgstr ""
+msgstr "Setează ca Eroare"
 
 #. module: payment_demo
 #: model:ir.model.fields,field_description:payment_demo.field_payment_token__demo_simulated_state
 msgid "Simulated State"
-msgstr ""
+msgstr "Stare Simulată"
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.express_checkout_form
@@ -245,12 +259,12 @@ msgstr "Mod testare"
 #. module: payment_demo
 #: model:ir.model.fields,help:payment_demo.field_payment_token__demo_simulated_state
 msgid "The state in which transactions created from this token should be set."
-msgstr ""
+msgstr "Starea în care tranzacțiile create din acest token trebuie setate."
 
 #. module: payment_demo
 #: model:ir.model.fields,help:payment_demo.field_payment_provider__code
 msgid "The technical code of this payment provider."
-msgstr ""
+msgstr "Cod tehnic al acestui procesator de plată"
 
 #. module: payment_demo
 #. odoo-python
@@ -265,13 +279,20 @@ msgid "Unpublished"
 msgstr "Nepublicat"
 
 #. module: payment_demo
+#. odoo-javascript
+#: code:addons/payment_demo/static/src/js/express_checkout_form.js:0
+#, python-format
+msgid "Validation Error"
+msgstr "Eroare de validare"
+
+#. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.payment_details
 msgid "XXXX XXXX XXXX XXXX"
-msgstr ""
+msgstr "XXXX XXXX XXXX XXXX"
 
 #. module: payment_demo
 #. odoo-python
 #: code:addons/payment_demo/models/payment_transaction.py:0
 #, python-format
 msgid "You selected the following demo payment status: %s"
-msgstr ""
+msgstr "Ați selectat următorul status demo pentru plată: %s"

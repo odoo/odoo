@@ -1,0 +1,271 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* pos_razorpay
+# 
+# Translators:
+# Wil Odoo, 2024
+# Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-08-13 10:27+0000\n"
+"PO-Revision-Date: 2024-08-17 22:00+0000\n"
+"Last-Translator: Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2024\n"
+"Language-Team: Ukrainian (https://app.transifex.com/odoo/teams/41243/uk/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: uk\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
+
+#. module: pos_razorpay
+#: model:ir.model.fields.selection,name:pos_razorpay.selection__pos_payment_method__razorpay_allowed_payment_modes__all
+msgid "All"
+msgstr "Всі"
+
+#. module: pos_razorpay
+#: model:ir.model.fields.selection,name:pos_razorpay.selection__pos_payment_method__razorpay_allowed_payment_modes__bharatqr
+msgid "BHARATQR"
+msgstr "BHARATQR"
+
+#. module: pos_razorpay
+#. odoo-python
+#: code:addons/pos_razorpay/models/razorpay_pos_request.py:0
+#, python-format
+msgid "Cannot decode Razorpay POS response"
+msgstr "Неможливо декодувати відповідь Razorpay POS"
+
+#. module: pos_razorpay
+#. odoo-javascript
+#: code:addons/pos_razorpay/static/src/app/payment_razorpay.js:0
+#, python-format
+msgid "Cannot process transactions with negative amount."
+msgstr "Неможливо обробити транзакції з від’ємною сумою."
+
+#. module: pos_razorpay
+#: model:ir.model.fields.selection,name:pos_razorpay.selection__pos_payment_method__razorpay_allowed_payment_modes__card
+msgid "Card"
+msgstr "Картка"
+
+#. module: pos_razorpay
+#: model:ir.model.fields,help:pos_razorpay.field_pos_payment_method__razorpay_allowed_payment_modes
+msgid ""
+"Choose allow payment mode: \n"
+" All/Card/UPI or QR"
+msgstr ""
+"Виберіть дозволений режим оплати: \n"
+" Усі/карта/UPI або QR"
+
+#. module: pos_razorpay
+#. odoo-javascript
+#: code:addons/pos_razorpay/static/src/app/payment_razorpay.js:0
+#, python-format
+msgid ""
+"Could not connect to the Odoo server, please check your internet connection "
+"and try again."
+msgstr ""
+"Не вдалося підключитися до сервера Odoo, перевірте підключення до Інтернету "
+"та повторіть спробу."
+
+#. module: pos_razorpay
+#: model:ir.model.fields,help:pos_razorpay.field_pos_payment_method__razorpay_tid
+msgid ""
+"Device Serial No \n"
+" ex: 7000012300"
+msgstr ""
+"Серійний номер пристрою \n"
+"напр.: 7000012300"
+
+#. module: pos_razorpay
+#. odoo-javascript
+#: code:addons/pos_razorpay/static/src/app/payment_razorpay.js:0
+#, python-format
+msgid ""
+"Payment has been queued. You may choose to wait for the payment to initiate "
+"on terminal or proceed to cancel this transaction"
+msgstr ""
+"Оплата поставлена ​​в чергу. Ви можете дочекатися ініціації платежу в "
+"терміналі або скасувати цю транзакцію"
+
+#. module: pos_razorpay
+#: model:ir.model,name:pos_razorpay.model_pos_order
+msgid "Point of Sale Orders"
+msgstr "Замовлення точки продажу"
+
+#. module: pos_razorpay
+#: model:ir.model,name:pos_razorpay.model_pos_payment_method
+msgid "Point of Sale Payment Methods"
+msgstr "Способи оплати точки продажу"
+
+#. module: pos_razorpay
+#: model:ir.model,name:pos_razorpay.model_pos_payment
+msgid "Point of Sale Payments"
+msgstr "Платежі точки продажу"
+
+#. module: pos_razorpay
+#: model:ir.model.fields,field_description:pos_razorpay.field_pos_payment_method__razorpay_api_key
+msgid "Razorpay API Key"
+msgstr "Razorpay API ключ"
+
+#. module: pos_razorpay
+#: model:ir.model.fields,field_description:pos_razorpay.field_pos_payment__razorpay_authcode
+msgid "Razorpay APPR Code"
+msgstr "Razorpay APPR код"
+
+#. module: pos_razorpay
+#: model:ir.model.fields,field_description:pos_razorpay.field_pos_payment_method__razorpay_allowed_payment_modes
+msgid "Razorpay Allowed Payment Modes"
+msgstr "Дозволений спосіб оплати Razorpay"
+
+#. module: pos_razorpay
+#: model:ir.model.fields,field_description:pos_razorpay.field_pos_payment__razorpay_card_owner_name
+msgid "Razorpay Card Owner Name"
+msgstr "Імʼя власника карти Razorpay "
+
+#. module: pos_razorpay
+#: model:ir.model.fields,field_description:pos_razorpay.field_pos_payment__razorpay_card_scheme
+msgid "Razorpay Card Scheme"
+msgstr "Схема карти Razorpay"
+
+#. module: pos_razorpay
+#: model:ir.model.fields,field_description:pos_razorpay.field_pos_payment_method__razorpay_tid
+msgid "Razorpay Device Serial No"
+msgstr "Серійний номер пристрою Razorpay"
+
+#. module: pos_razorpay
+#. odoo-javascript
+#: code:addons/pos_razorpay/static/src/app/payment_razorpay.js:0
+#, python-format
+msgid "Razorpay Error"
+msgstr "Помилка Razorpay"
+
+#. module: pos_razorpay
+#: model:ir.model.fields,field_description:pos_razorpay.field_pos_payment__razorpay_issuer_card_no
+msgid "Razorpay Issue Card No Last 4 digits"
+msgstr "Останні 4 цифри номеру виданої карти Razorpay"
+
+#. module: pos_razorpay
+#: model:ir.model.fields,field_description:pos_razorpay.field_pos_payment__razorpay_issuer_bank
+msgid "Razorpay Issuer Bank"
+msgstr "Банк видачі Razorpay"
+
+#. module: pos_razorpay
+#: model:ir.model.fields,field_description:pos_razorpay.field_pos_payment__razorpay_reference_no
+msgid "Razorpay Merchant Reference No."
+msgstr "Номер референсу мерчанту Razorpay"
+
+#. module: pos_razorpay
+#. odoo-python
+#: code:addons/pos_razorpay/models/pos_payment_method.py:0
+#, python-format
+msgid ""
+"Razorpay POS payment cancel request expected errorCode not found in the "
+"response"
+msgstr ""
+"Очікуваний код помилки у запиті на скасування платежу Razorpay POS не "
+"знайдено у відповіді"
+
+#. module: pos_razorpay
+#. odoo-python
+#: code:addons/pos_razorpay/models/pos_payment_method.py:0
+#, python-format
+msgid ""
+"Razorpay POS payment request expected errorCode not found in the response"
+msgstr ""
+"Очікуваний код помилки запиту на платіж Razorpay POS не знайдено у відповіді"
+
+#. module: pos_razorpay
+#. odoo-python
+#: code:addons/pos_razorpay/models/pos_payment_method.py:0
+#, python-format
+msgid ""
+"Razorpay POS payment status request expected errorCode not found in the "
+"response"
+msgstr ""
+"Очікуваний код помилки запиту статусу платежу Razorpay POS не знайдено у "
+"відповіді"
+
+#. module: pos_razorpay
+#. odoo-python
+#: code:addons/pos_razorpay/models/pos_payment_method.py:0
+#, python-format
+msgid "Razorpay POS transaction canceled successfully"
+msgstr "Транзакцію Razorpay POS успішно скасовано"
+
+#. module: pos_razorpay
+#. odoo-python
+#: code:addons/pos_razorpay/models/pos_payment_method.py:0
+#, python-format
+msgid "Razorpay POS transaction failed"
+msgstr "Помилка транзакції Razorpay POS"
+
+#. module: pos_razorpay
+#: model:ir.model.fields,field_description:pos_razorpay.field_pos_payment__razorpay_payment_method
+msgid "Razorpay Payment Method"
+msgstr "Спосіб оплати Razorpay"
+
+#. module: pos_razorpay
+#: model:ir.model.fields,field_description:pos_razorpay.field_pos_payment__razorpay_reverse_ref_no
+msgid "Razorpay Reverse Reference No."
+msgstr "Номер зворотнього референсу Razorpay"
+
+#. module: pos_razorpay
+#: model:ir.model.fields,field_description:pos_razorpay.field_pos_payment_method__razorpay_test_mode
+msgid "Razorpay Test Mode"
+msgstr "Тестовий режим Razorpay"
+
+#. module: pos_razorpay
+#: model:ir.model.fields,field_description:pos_razorpay.field_pos_payment_method__razorpay_username
+msgid "Razorpay Username"
+msgstr "Імʼя користувача Razorpay"
+
+#. module: pos_razorpay
+#. odoo-javascript
+#: code:addons/pos_razorpay/static/src/app/payment_razorpay.js:0
+#, python-format
+msgid "Reference number mismatched"
+msgstr "Номер референсу не збігається"
+
+#. module: pos_razorpay
+#. odoo-python
+#: code:addons/pos_razorpay/models/pos_payment_method.py:0
+#, python-format
+msgid "This Payment Terminal is only valid for INR Currency"
+msgstr "Цей платіжний термінал валідний лише для валюти INR"
+
+#. module: pos_razorpay
+#. odoo-javascript
+#: code:addons/pos_razorpay/static/src/app/payment_razorpay.js:0
+#, python-format
+msgid "Transaction failed due to inactivity"
+msgstr "Транзакція не виконана через бездіяльність"
+
+#. module: pos_razorpay
+#: model:ir.model.fields,help:pos_razorpay.field_pos_payment_method__razorpay_test_mode
+msgid "Turn it on when in Test Mode"
+msgstr "Включити в тестовому режимі"
+
+#. module: pos_razorpay
+#: model:ir.model.fields.selection,name:pos_razorpay.selection__pos_payment_method__razorpay_allowed_payment_modes__upi
+msgid "UPI"
+msgstr "UPI"
+
+#. module: pos_razorpay
+#: model:ir.model.fields,help:pos_razorpay.field_pos_payment_method__razorpay_api_key
+msgid ""
+"Used when connecting to Razorpay: "
+"https://razorpay.com/docs/payments/dashboard/account-settings/api-keys/"
+msgstr ""
+"Використовується при зїєднанні в Razorpay: "
+"https://razorpay.com/docs/payments/dashboard/account-settings/api-keys/"
+
+#. module: pos_razorpay
+#: model:ir.model.fields,help:pos_razorpay.field_pos_payment_method__razorpay_username
+msgid ""
+"Username(Device Login) \n"
+" ex: 1234500121"
+msgstr ""
+"Імʼя користувача(Login пристрою) \n"
+"напр.: 1234500121"

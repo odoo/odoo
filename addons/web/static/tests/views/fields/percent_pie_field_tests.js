@@ -155,4 +155,52 @@ QUnit.module("Fields", (hooks) => {
             "pie should have a background computed for its value of 33.3333%"
         );
     });
+
+    QUnit.test(
+        "hide the string when the PercentPieField widget is used in the view",
+        async function (assert) {
+            await makeView({
+                serverData,
+                type: "form",
+                resModel: "partner",
+                arch: `
+                    <form>
+                        <sheet>
+                            <group>
+                                <field name="int_field" widget="percentpie"/>
+                            </group>
+                        </sheet>
+                    </form>`,
+                resId: 2,
+            });
+            assert.containsOnce(target, ".o_field_percent_pie.o_field_widget .o_pie");
+            assert.isNotVisible(
+                target.querySelector(".o_field_percent_pie.o_field_widget .o_pie_info .o_pie_text")
+            );
+        }
+    );
+
+    QUnit.test(
+        "show the string when the PercentPieField widget is used in a button with the class oe_stat_button",
+        async function (assert) {
+            await makeView({
+                serverData,
+                type: "form",
+                resModel: "partner",
+                arch: `
+                    <form>
+                        <div name="button_box" class="oe_button_box">
+                            <button type="object" class="oe_stat_button">
+                                <field name="int_field" widget="percentpie"/>
+                            </button>
+                        </div>
+                    </form>`,
+                resId: 2,
+            });
+            assert.containsOnce(target, ".o_field_percent_pie.o_field_widget .o_pie");
+            assert.isVisible(
+                target.querySelector(".o_field_percent_pie.o_field_widget .o_pie_info .o_pie_text")
+            );
+        }
+    );
 });

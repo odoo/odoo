@@ -4,7 +4,8 @@
 import logging
 
 from odoo import api, Command, models, fields
-from odoo.tools import html2plaintext, plaintext2html
+from odoo.addons.sms.tools.sms_tools import sms_content_to_rendered_html
+from odoo.tools import html2plaintext
 
 _logger = logging.getLogger(__name__)
 
@@ -41,88 +42,14 @@ class MailThread(models.AbstractModel):
     def _search_message_has_sms_error(self, operator, operand):
         return ['&', ('message_ids.has_sms_error', operator, operand), ('message_ids.author_id', '=', self.env.user.partner_id.id)]
 
-    def _sms_get_recipients_info(self, force_field=False, partner_fallback=True):
-        """" Get SMS recipient information on current record set. This method
-        checks for numbers and sanitation in order to centralize computation.
-
-        Example of use cases
-
-          * click on a field -> number is actually forced from field, find customer
-            linked to record, force its number to field or fallback on customer fields;
-          * contact -> find numbers from all possible phone fields on record, find
-            customer, force its number to found field number or fallback on customer fields;
-
-        :param force_field: either give a specific field to find phone number, either
-            generic heuristic is used to find one based on ``_phone_get_number_fields``;
-        :param partner_fallback: if no value found in the record, check its customer
-            values based on ``_mail_get_partners``;
-
-        :return dict: record.id: {
-            'partner': a res.partner recordset that is the customer (void or singleton)
-                linked to the recipient. See ``_mail_get_partners``;
-            'sanitized': sanitized number to use (coming from record's field or partner's
-                phone fields). Set to False is number impossible to parse and format;
-            'number': original number before sanitation;
-            'partner_store': whether the number comes from the customer phone fields. If
-                False it means number comes from the record itself, even if linked to a
-                customer;
-            'field_store': field in which the number has been found (generally mobile or
-                phone, see ``_phone_get_number_fields``);
-        } for each record in self
-        """
-        result = dict.fromkeys(self.ids, False)
-        tocheck_fields = [force_field] if force_field else self._phone_get_number_fields()
-        for record in self:
-            all_numbers = [record[fname] for fname in tocheck_fields if fname in record]
-            all_partners = record._mail_get_partners()[record.id]
-
-            valid_number, fname = False, False
-            for fname in [f for f in tocheck_fields if f in record]:
-                valid_number = record._phone_format(fname=fname)
-                if valid_number:
-                    break
-
-            if valid_number:
-                result[record.id] = {
-                    'partner': all_partners[0] if all_partners else self.env['res.partner'],
-                    'sanitized': valid_number,
-                    'number': record[fname],
-                    'partner_store': False,
-                    'field_store': fname,
-                }
-            elif all_partners and partner_fallback:
-                partner = self.env['res.partner']
-                for partner in all_partners:
-                    for fname in self.env['res.partner']._phone_get_number_fields():
-                        valid_number = partner._phone_format(fname=fname)
-                        if valid_number:
-                            break
-
-                if not valid_number:
-                    fname = 'mobile' if partner.mobile else ('phone' if partner.phone else 'mobile')
-
-                result[record.id] = {
-                    'partner': partner,
-                    'sanitized': valid_number if valid_number else False,
-                    'number': partner[fname],
-                    'partner_store': True,
-                    'field_store': fname,
-                }
-            else:
-                # did not find any sanitized number -> take first set value as fallback;
-                # if none, just assign False to the first available number field
-                value, fname = next(
-                    ((value, fname) for value, fname in zip(all_numbers, tocheck_fields) if value),
-                    (False, tocheck_fields[0] if tocheck_fields else False)
-                )
-                result[record.id] = {
-                    'partner': self.env['res.partner'],
-                    'sanitized': False,
-                    'number': value,
-                    'partner_store': False,
-                    'field_store': fname
-                }
-        return result
+    @api.returns('mail.message', lambda value: value.id)
+    def message_post(self, *args, body='', message_type='notification', **kwargs):
+        # When posting an 'SMS' `message_type`, make sure that the body is used as-is in the sms,
+        # and reformat the message body for the notification (mainly making URLs clickable).
+        if message_type == 'sms':
+            kwargs['sms_content'] = body
+            body = sms_content_to_rendered_html(body)
+        return super().message_post(*args, body=body, message_type=message_type, **kwargs)
 
     def _message_sms_schedule_mass(self, body='', template=False, **composer_values):
         """ Shortcut method to schedule a mass sms sending on a recordset.
@@ -201,7 +128,7 @@ class MailThread(models.AbstractModel):
             subtype_id = self.env['ir.model.data']._xmlid_to_res_id('mail.mt_note')
 
         return self.message_post(
-            body=plaintext2html(html2plaintext(body)), partner_ids=partner_ids or [],  # TDE FIXME: temp fix otherwise crash mail_thread.py
+            body=body, partner_ids=partner_ids or [],  # TDE FIXME: temp fix otherwise crash mail_thread.py
             message_type='sms', subtype_id=subtype_id,
             sms_numbers=sms_numbers, sms_pid_to_number=sms_pid_to_number,
             **kwargs
@@ -215,7 +142,7 @@ class MailThread(models.AbstractModel):
         return recipients_data
 
     def _notify_thread_by_sms(self, message, recipients_data, msg_vals=False,
-                              sms_numbers=None, sms_pid_to_number=None,
+                              sms_content=None, sms_numbers=None, sms_pid_to_number=None,
                               resend_existing=False, put_in_queue=False, **kwargs):
         """ Notification method: by SMS.
 
@@ -235,10 +162,14 @@ class MailThread(models.AbstractModel):
           directly. It lessens query count in some optimized use cases by avoiding
           access message content in db;
 
+        :param sms_content: plaintext version of body, mainly to avoid
+          conversion glitches by splitting html and plain text content formatting
+          (e.g.: links, styling.).
+          If not given, `msg_vals`'s `body` is used and converted from html to plaintext;
         :param sms_numbers: additional numbers to notify in addition to partners
           and classic recipients;
         :param pid_to_number: force a number to notify for a given partner ID
-              instead of taking its mobile / phone number;
+          instead of taking its mobile / phone number;
         :param resend_existing: check for existing notifications to update based on
           mailed recipient, otherwise create new notifications;
         :param put_in_queue: use cron to send queued SMS instead of sending them
@@ -250,9 +181,9 @@ class MailThread(models.AbstractModel):
         sms_all = self.env['sms.sms'].sudo()
 
         # pre-compute SMS data
-        body = msg_vals['body'] if msg_vals and 'body' in msg_vals else message.body
+        body = sms_content or html2plaintext(msg_vals['body'] if msg_vals and 'body' in msg_vals else message.body)
         sms_base_vals = {
-            'body': html2plaintext(body),
+            'body': body,
             'mail_message_id': message.id,
             'state': 'outgoing',
         }
@@ -337,7 +268,9 @@ class MailThread(models.AbstractModel):
         return True
 
     def _get_notify_valid_parameters(self):
-        return super()._get_notify_valid_parameters() | {'put_in_queue', 'sms_numbers', 'sms_pid_to_number'}
+        return super()._get_notify_valid_parameters() | {
+            'put_in_queue', 'sms_numbers', 'sms_pid_to_number', 'sms_content',
+        }
 
     @api.model
     def notify_cancel_by_type(self, notification_type):

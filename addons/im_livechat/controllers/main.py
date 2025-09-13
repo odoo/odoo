@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from markupsafe import Markup
+from markupsafe import Markup, escape
 import re
 from werkzeug.exceptions import NotFound
 from urllib.parse import urlsplit
@@ -10,6 +10,7 @@ from odoo.exceptions import UserError
 from odoo.http import request
 from odoo.tools import replace_exceptions
 from odoo.addons.base.models.assetsbundle import AssetsBundle
+from odoo.addons.base.models.ir_qweb_fields import nl2br
 from odoo.addons.mail.models.discuss.mail_guest import add_guest_to_context
 
 
@@ -83,7 +84,9 @@ class LivechatController(http.Controller):
         # find the first matching rule for the given country and url
         matching_rule = request.env['im_livechat.channel.rule'].sudo().match_rule(channel_id, url, country_id)
         if matching_rule and (not matching_rule.chatbot_script_id or matching_rule.chatbot_script_id.script_step_ids):
-            frontend_lang = request.httprequest.cookies.get('frontend_lang', request.env.user.lang or 'en_US')
+            frontend_lang = tools.get_lang(
+                request.env, lang_code=request.httprequest.cookies.get("frontend_lang")
+            ).code
             matching_rule = matching_rule.with_context(lang=frontend_lang)
             rule = {
                 'action': matching_rule.action,
@@ -198,7 +201,6 @@ class LivechatController(http.Controller):
         return channel_info
 
     def _post_feedback_message(self, channel, rating, reason):
-        reason = Markup("<br>" + re.sub(r'\r\n|\r|\n', "<br>", reason) if reason else "")
         body = Markup('''
             <div class="o_mail_notification o_hide_author">
                 %(rating)s: <img class="o_livechat_emoji_rating" src="%(rating_url)s" alt="rating"/>%(reason)s
@@ -206,7 +208,7 @@ class LivechatController(http.Controller):
         ''') % {
             'rating': _('Rating'),
             'rating_url': rating.rating_image_url,
-            'reason': reason,
+            'reason': Markup(nl2br(escape("\n" + reason))) if reason else "",
         }
         channel.message_post(body=body, message_type='notification', subtype_xmlid='mail.mt_comment')
 

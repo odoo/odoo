@@ -4,6 +4,7 @@ import {
     getCell,
     getCellContent,
     getCellFormula,
+    getCellFormattedValue,
     getCellValue,
     getEvaluatedCell,
     getBorders,
@@ -321,6 +322,52 @@ QUnit.module("spreadsheet > pivot plugin", {}, () => {
             assert.verifySteps(["read_group", "read_group", "read_group", "read_group"]);
         }
     );
+
+    QUnit.test("Context is purged from PivotView related keys", async function (assert) {
+        const spreadsheetData = {
+            sheets: [
+                {
+                    id: "sheet1",
+                    cells: {
+                        A1: { content: `=ODOO.PIVOT(1, "probability")` },
+                    },
+                },
+            ],
+            pivots: {
+                1: {
+                    id: 1,
+                    colGroupBys: ["foo"],
+                    rowGroupBys: ["bar"],
+                    domain: [],
+                    measures: [{ field: "probability", operator: "avg" }],
+                    model: "partner",
+                    context: {
+                        pivot_measures: ["__count"],
+                        // inverse row and col group bys
+                        pivot_row_groupby: ["test"],
+                        pivot_column_groupby: ["check"],
+                        dummyKey: "true",
+                    },
+                },
+            },
+        };
+        const model = await createModelWithDataSource({
+            spreadsheetData,
+            mockRPC: function (route, { model, method, kwargs }) {
+                if (model === "partner" && method === "read_group") {
+                    assert.step(`pop`);
+                    assert.notOk(
+                        ["pivot_measures", "pivot_row_groupby", "pivot_column_groupby"].some(
+                            (val) => val in (kwargs.context || {})
+                        ),
+                        "The context should not contain pivot related keys"
+                    );
+                }
+            },
+        });
+        await waitForDataSourcesLoaded(model);
+        assert.verifySteps(["pop", "pop", "pop", "pop"]);
+    });
 
     QUnit.test("fetch metadata only once per model", async function (assert) {
         const spreadsheetData = {
@@ -1099,4 +1146,73 @@ QUnit.module("spreadsheet > pivot plugin", {}, () => {
             assert.strictEqual(getCellContent(model, "A2"), "");
         }
     );
+
+
+    QUnit.test("date are between two years are correctly grouped by weeks", async (assert) => {
+        const serverData = getBasicServerData();
+        serverData.models.partner.records= [
+            { active: true, id: 5, foo: 11, bar: true, product_id: 37, date: "2024-01-03" },
+            { active: true, id: 6, foo: 12, bar: true, product_id: 41, date: "2024-12-30" },
+            { active: true, id: 7, foo: 13, bar: true, product_id: 37, date: "2024-12-31" },
+            { active: true, id: 8, foo: 14, bar: true, product_id: 37, date: "2025-01-01" }
+        ];
+        const { model } = await createSpreadsheetWithPivot({
+            serverData,
+            arch: /*xml*/ `
+                <pivot string="Partners">
+                    <field name="date:year" type="col"/>
+                    <field name="date:week" type="col"/>
+                    <field name="foo" type="measure"/>
+                </pivot>`,
+        });
+
+        assert.equal(getCellFormattedValue(model,"B1"),"2024");
+        assert.equal(getCellFormattedValue(model,"B2"),"W1 2024");
+        assert.equal(getCellFormattedValue(model,"B4"),"11");
+        
+        assert.equal(getCellFormattedValue(model,"C2"),"W1 2025");
+        assert.equal(getCellFormattedValue(model,"C4"),"25");
+
+        assert.equal(getCellFormattedValue(model,"D1"),"2025");
+        assert.equal(getCellFormattedValue(model,"D2"),"W1 2025");
+        assert.equal(getCellFormattedValue(model,"D4"),"14");
+    });
+
+
+    QUnit.test("date are between two years are correctly grouped by weeks and days", async (assert) => {
+        const serverData = getBasicServerData();
+        serverData.models.partner.records= [
+            { active: true, id: 5, foo: 11, bar: true, product_id: 37, date: "2024-01-03" },
+            { active: true, id: 6, foo: 12, bar: true, product_id: 41, date: "2024-12-30" },
+            { active: true, id: 7, foo: 13, bar: true, product_id: 37, date: "2024-12-31" },
+            { active: true, id: 8, foo: 14, bar: true, product_id: 37, date: "2025-01-01" }
+        ];
+        const { model } = await createSpreadsheetWithPivot({
+            serverData,
+            arch: /*xml*/ `
+                <pivot string="Partners">
+                    <field name="date:year" type="col"/>
+                    <field name="date:week" type="col"/>
+                    <field name="date:day" type="col"/>
+                    <field name="foo" type="measure"/>
+                </pivot>`,
+        });
+
+        assert.equal(getCellFormattedValue(model,"B1"),"2024");
+        assert.equal(getCellFormattedValue(model,"B2"),"W1 2024");
+        assert.equal(getCellFormattedValue(model,"B3"),"1/3/2024");
+        assert.equal(getCellFormattedValue(model,"B5"),"11");
+        
+        assert.equal(getCellFormattedValue(model,"C2"),"W1 2025");
+        assert.equal(getCellFormattedValue(model,"C3"),"12/30/2024");
+        assert.equal(getCellFormattedValue(model,"C5"),"12");
+
+        assert.equal(getCellFormattedValue(model,"D3"),"12/31/2024");
+        assert.equal(getCellFormattedValue(model,"D5"),"13");
+
+        assert.equal(getCellFormattedValue(model,"E1"),"2025");
+        assert.equal(getCellFormattedValue(model,"E2"),"W1 2025");
+        assert.equal(getCellFormattedValue(model,"E3"),"1/1/2025");
+        assert.equal(getCellFormattedValue(model,"E5"),"14");
+    });
 });

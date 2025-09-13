@@ -81,6 +81,12 @@ class Pricelist(models.Model):
 
         return res
 
+    def copy_data(self, default=None):
+        default = default or {}
+        if not default.get('name'):
+            default['name'] = _('%s (copy)', self.name)
+        return super().copy_data(default=default)
+
     def _get_products_price(self, products, *args, **kwargs):
         """Compute the pricelist prices for the specified products, quantity & uom.
 
@@ -338,6 +344,8 @@ class Pricelist(models.Model):
             remaining_partners = self.env['res.partner'].browse(remaining_partner_ids)
             partners_by_country = remaining_partners.grouped('country_id')
             for country, partners in partners_by_country.items():
+                if not country and (country_code := self.env.context.get('country_code')):
+                    country = self.env['res.country'].search([('code', '=', country_code)], limit=1)
                 pl = Pricelist.search(pl_domain + [('country_group_ids.country_ids', '=', country.id if country else False)], limit=1)
                 pl = pl or pl_fallback
                 result.update(dict.fromkeys(partners._ids, pl))

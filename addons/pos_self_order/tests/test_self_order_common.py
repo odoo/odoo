@@ -10,12 +10,14 @@ from odoo.addons.pos_self_order.tests.self_order_common_test import SelfOrderCom
 class TestSelfOrderCommon(SelfOrderCommonTest):
     def test_self_order_common(self):
         self.pos_config.write({
+            'self_ordering_default_user_id': self.pos_admin.id,
             'self_ordering_takeaway': True,
             'self_ordering_mode': 'kiosk',
             'self_ordering_pay_after': 'each',
             'self_ordering_service_mode': 'table',
         })
 
+        self.pos_admin.groups_id += self.env.ref('account.group_account_invoice')
         self_route = self.pos_config._get_self_order_route()
 
         # Verify behavior when self Order is closed

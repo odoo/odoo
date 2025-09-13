@@ -30,20 +30,35 @@ class ResetGoogleAccount(models.TransientModel):
         events = self.env['calendar.event'].search([
             ('user_id', '=', self.user_id.id),
             ('google_id', '!=', False)])
+        recurrences = self.env['calendar.recurrence'].search([
+            ('base_event_id', 'in', events.ids),
+            ('google_id', '!=', False)])
+
         if self.delete_policy in ('delete_google', 'delete_both'):
             with google_calendar_token(self.user_id) as token:
                 for event in events:
                     google.delete(event.google_id, token=token)
 
-        if self.delete_policy in ('delete_odoo', 'delete_both'):
+        # Delete events according to the selected policy. If the deletion is only in
+        # Google, we won't keep track of the 'google_id' field for events and recurrences.
+        if self.delete_policy in ('delete_odoo', 'delete_both', 'delete_google'):
             events.google_id = False
-            events.unlink()
+            recurrences.google_id = False
+            if self.delete_policy != 'delete_google':
+                events.unlink()
 
+        # Define which events must be synchronized in the next synchronization:
+        # in 'all' sync policy we activate the sync for all events and in the 'new'
+        # sync policy we set it as False for skipping existing events synchronization.
+        next_sync_update = {}
         if self.sync_policy == 'all':
-            events.write({
-                'google_id': False,
-                'need_sync': True,
-            })
+            next_sync_update['need_sync'] = True
+        elif self.sync_policy == 'new':
+            next_sync_update['need_sync'] = False
+
+        # Write the next sync update attribute on the existing events.
+        if self.delete_policy not in ('delete_odoo', 'delete_both'):
+            events.write(next_sync_update)
 
         self.user_id.google_calendar_account_id._set_auth_tokens(False, False, 0)
         self.user_id.write({

@@ -5,6 +5,7 @@ from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from lxml import html
 from urllib.parse import urlparse
+import re
 import requests
 
 from odoo import api, models, fields, tools
@@ -27,7 +28,7 @@ class LinkPreview(models.Model):
     create_date = fields.Datetime(index=True)
 
     @api.model
-    def _create_from_message_and_notify(self, message):
+    def _create_from_message_and_notify(self, message, request_url=None):
         if tools.is_html_empty(message.body):
             return self
         urls = set(html.fromstring(message.body).xpath('//a[not(@data-oe-model)]/@href'))
@@ -38,7 +39,20 @@ class LinkPreview(models.Model):
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; rv:91.0) Gecko/20100101 Firefox/91.0'
         })
         link_preview_values = []
-        for url in list(urls):
+        link_previews_by_url = {
+            preview.source_url: preview for preview in message.sudo().link_preview_ids
+        }
+        ignore_pattern = (
+            re.compile(f"{re.escape(request_url)}(chat|web)(/|$|#|\\?)") if request_url else None
+        )
+        for url in urls:
+            if ignore_pattern and ignore_pattern.match(url):
+                continue
+            if url in link_previews_by_url:
+                preview = link_previews_by_url.pop(url)
+                if not preview.is_hidden:
+                    link_previews += preview
+                continue
             if preview := link_preview.get_link_preview_from_url(url, requests_session):
                 preview['message_id'] = message.id
                 link_preview_values.append(preview)

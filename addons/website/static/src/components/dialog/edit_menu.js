@@ -197,8 +197,9 @@ export class EditMenuDialog extends Component {
                     },
                     'children': [],
                 };
-                this.map.set(newMenu.fields['id'], newMenu);
                 this.state.rootMenu.children.push(newMenu);
+                // this.state.rootMenu.children.at(-1) to forces a rerender
+                this.map.set(newMenu.fields["id"], this.state.rootMenu.children.at(-1));
             },
         });
     }
@@ -218,6 +219,12 @@ export class EditMenuDialog extends Component {
 
     deleteMenu(id) {
         const menuToDelete = this.map.get(id);
+
+        // Delete children first
+        for (const child of menuToDelete.children) {
+            this.deleteMenu(child.fields.id);
+        }
+
         const parentId = menuToDelete.fields['parent_id'] || this.state.rootMenu.fields['id'];
         const parent = this.map.get(parentId);
         parent.children = parent.children.filter(menu => menu.fields['id'] !== id);

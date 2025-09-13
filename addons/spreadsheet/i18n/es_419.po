@@ -4,16 +4,16 @@
 # 
 # Translators:
 # Wil Odoo, 2023
-# Fernanda Alvarez, 2024
-# Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2024
+# Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2025
+# Fernanda Alvarez, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-05 12:32+0000\n"
+"POT-Creation-Date: 2025-05-09 20:37+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2024\n"
+"Last-Translator: Fernanda Alvarez, 2025\n"
 "Language-Team: Spanish (Latin America) (https://app.transifex.com/odoo/teams/41243/es_419/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -500,7 +500,7 @@ msgstr "Intereses acumulados de valores que se pagan al vencimiento."
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/global_filters/plugins/global_filters_ui_plugin.js:0
-#: code:addons/spreadsheet/static/src/helpers/model.js:0
+#: code:addons/spreadsheet/static/src/global_filters/plugins/global_filters_ui_plugin.js:0
 #, python-format
 msgid "Active Filters"
 msgstr "Filtros activos"
@@ -1605,7 +1605,7 @@ msgstr "Casilla de verificación"
 #: code:addons/spreadsheet/static/src/global_filters/components/filter_text_value/filter_text_value.xml:0
 #, python-format
 msgid "Choose a value..."
-msgstr "Escoger un valor..."
+msgstr "Elija un valor..."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1979,6 +1979,13 @@ msgstr "Convierte una cadena específica a mayúsculas."
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
+msgid "Converts a string to a numeric value."
+msgstr "Convierte una cadena a un valor numérico."
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
 msgid "Converts a time string into its serial number representation."
 msgstr ""
 "Convierte una cadena de tiempo en su representación de número de serie."
@@ -2064,7 +2071,7 @@ msgstr "Cotangente de un ángulo en radianes."
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/pivot/pivot_model.js:0
+#: code:addons/spreadsheet/static/src/pivot/pivot_data_source.js:0
 #, python-format
 msgid "Count"
 msgstr "Número"
@@ -2793,6 +2800,7 @@ msgstr "Editar"
 
 #. module: spreadsheet
 #. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "Edit link"
@@ -2938,6 +2946,7 @@ msgstr "Febrero"
 
 #. module: spreadsheet
 #. odoo-javascript
+#: code:addons/spreadsheet/static/src/pivot/pivot_data_source.js:0
 #: code:addons/spreadsheet/static/src/pivot/pivot_model.js:0
 #, python-format
 msgid "Field %s does not exist"
@@ -2984,7 +2993,6 @@ msgstr "Color de relleno"
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/helpers/model.js:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Filter"
@@ -3344,6 +3352,17 @@ msgid "Function [[FUNCTION_NAME]] expects number values for %s, but got a %s."
 msgstr ""
 "La función [[FUNCTION_NAME]] espera valores numéricos para%s pero recibió "
 "%s."
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
+msgid ""
+"Function [[FUNCTION_NAME]] expects the parameter '%s' to be a single value "
+"or a single cell reference, not a range."
+msgstr ""
+"La función [[FUNCTION_NAME]] espera que el parámetro \"%s\" sea un solo "
+"valor o una única celda de referencia, no un rango."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -5052,6 +5071,7 @@ msgstr "No se encontraron valores únicos"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #: code:addons/spreadsheet/static/src/pivot/pivot_model.js:0
 #: code:addons/spreadsheet/static/src/pivot/pivot_time_adapters.js:0
+#: code:addons/spreadsheet/static/src/pivot/pivot_time_adapters.js:0
 #, python-format
 msgid "None"
 msgstr "Ninguno"
@@ -5864,6 +5884,17 @@ msgstr "Derecha"
 #, python-format
 msgid "Rounds a number according to standard rules."
 msgstr "Redondea un número según las reglas estándar."
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
+msgid ""
+"Rounds a number down to the nearest integer that is less than or equal to "
+"it."
+msgstr ""
+"Redondea un número hacia el número entero menor más pequeño que sea menor "
+"que o igual al original."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -6925,6 +6956,27 @@ msgstr "El conjunto que se transformará."
 #, python-format
 msgid "The base (%s) must be between 2 and 36 inclusive."
 msgstr "La base (%s) debe estar entre 2 y 36 inclusivo."
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
+msgid "The base (%s) must be strictly positive."
+msgstr "La base (%s) debe ser estrictamente positiva."
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
+msgid "The base must be different from 1."
+msgstr "La base debe ser diferente de 1."
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
+msgid "The base of the logarithm."
+msgstr "La base del logaritmo."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -8145,6 +8197,13 @@ msgstr "El logaritmo de un número, base e (número de euler)."
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
+msgid "The logarithm of a number, for a given base."
+msgstr "El logaritmo de un número para una base específica."
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
 msgid "The low end of the random range."
 msgstr "El extremo inferior del rango aleatorio."
 
@@ -8700,6 +8759,13 @@ msgstr "El número a elevar a la potencia exponente."
 #, python-format
 msgid "The number to return."
 msgstr "El número a devolver."
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
+msgid "The number to round down to the nearest integer."
+msgstr "El número redondeado hacia abajo al número menor más cercano."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -9826,7 +9892,7 @@ msgstr ""
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The text whose non-printable characters are to be removed."
-msgstr "El texto del que se borrarán los caracteres no imprimibles."
+msgstr "El texto del que se eliminarán los caracteres no imprimibles."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -9970,6 +10036,7 @@ msgstr "El valor (%s) debe ser positivo o cero."
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The value (%s) must be strictly positive."
 msgstr "El valor (%s) debe ser estrictamente positivo."
@@ -10065,6 +10132,13 @@ msgstr "El valor para el cual calcular la tangente inversa."
 #, python-format
 msgid "The value for which to calculate the logarithm, base e."
 msgstr "El valor para el cual calcular el logaritmo, base e."
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
+msgid "The value for which to calculate the logarithm."
+msgstr "El valor para el que se calculará el logaritmo"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -10838,7 +10912,7 @@ msgstr "Arriba"
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/pivot/plugins/pivot_ui_plugin.js:0
+#: code:addons/spreadsheet/static/src/pivot/pivot_data_source.js:0
 #, python-format
 msgid "Total"
 msgstr "Total"
@@ -11046,7 +11120,6 @@ msgstr "Usar fila"
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/helpers/model.js:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
@@ -11935,6 +12008,13 @@ msgstr "searchMode debe ser un valor en [-1, 1, -2, 2]."
 #, python-format
 msgid "start_date (%s) should be on or before end_date (%s)."
 msgstr "start_date (%s) debe ser en o antes de end_date (%s)."
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
+msgid "the string to be converted"
+msgstr "la cadena a convertir"
 
 #. module: spreadsheet
 #. odoo-javascript

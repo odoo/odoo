@@ -6,6 +6,7 @@ from dateutil.relativedelta import relativedelta
 
 from odoo.tests.common import TransactionCase, new_test_user, Form
 from odoo import fields, Command
+from freezegun import freeze_time
 
 
 class TestEventNotifications(TransactionCase):
@@ -157,3 +158,29 @@ class TestEventNotifications(TransactionCase):
             event_form.stop_date = datetime.today() + relativedelta(days=1)
             event_form.start_date = datetime.today() + relativedelta(days=1)
         self.assertFalse(initial_start == event.start)
+
+    @freeze_time("2019-10-24 09:00:00", tick=True)
+    def test_multi_attendee_mt_note_default(self):
+        mt_note = self.env.ref("mail.mt_note")
+        mt_note.default = True
+        user_exta = new_test_user(self.env, "extra", email="extra@il.com")
+        partner_extra = user_exta.partner_id
+        event = self.env["calendar.event"].create({
+            "name": "Team meeting",
+            "attendee_ids": [
+                (0, 0, {"partner_id": self.partner.id}),
+                (0, 0, {"partner_id": partner_extra.id})
+            ],
+            "start": datetime(2019, 10, 25, 8, 0),
+            "stop": datetime(2019, 10, 25, 10, 0),
+        })
+        messages = self.env["mail.message"].search([
+            ("model", "=", event._name),
+            ("res_id", "=", event.id),
+            ("message_type", "=", "user_notification")
+        ])
+        self.assertEqual(len(messages), 2)
+        mesage_user = messages.filtered(lambda x: self.partner in x.partner_ids)
+        self.assertNotIn(partner_extra, mesage_user.notified_partner_ids)
+        mesage_user_extra = messages.filtered(lambda x: partner_extra in x.partner_ids)
+        self.assertNotIn(self.partner, mesage_user_extra.notified_partner_ids)

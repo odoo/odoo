@@ -274,7 +274,7 @@ QUnit.module("Search", (hooks) => {
     });
 
     QUnit.test("autocomplete menu clickout interactions", async function (assert) {
-        assert.expect(9);
+        assert.expect(10);
 
         await makeWithSearch({
             serverData,
@@ -295,6 +295,10 @@ QUnit.module("Search", (hooks) => {
 
         const input = target.querySelector(".o_searchview input");
 
+        // Create an input outside of the search panel to simulate another input outside of the search panel
+        const outsideInput = document.createElement('input');
+        getFixture().appendChild(outsideInput);
+
         assert.containsNone(target, ".o_searchview_autocomplete");
 
         await editSearch(target, "Hello there");
@@ -312,10 +316,12 @@ QUnit.module("Search", (hooks) => {
         assert.strictEqual(input.value, "General Kenobi", "input value should be updated");
         assert.containsOnce(target, ".o_searchview_autocomplete");
 
-        await click(document.body);
+        outsideInput.focus();
+        await click(outsideInput);
 
         assert.strictEqual(input.value, "", "input value should be empty");
         assert.containsNone(target, ".o_searchview_autocomplete");
+        assert.strictEqual(document.activeElement, outsideInput);
     });
 
     QUnit.test("select an autocomplete field", async function (assert) {
@@ -1718,4 +1724,40 @@ QUnit.module("Search", (hooks) => {
         assert.deepEqual(getFacetTexts(target), ["Bar is in ( First record )"]);
         assert.verifySteps([`/web/domain/validate`]);
     });
+
+    QUnit.test(
+        "single name_search call and no flicker when holding ArrowRight",
+        async function (assert) {
+            assert.expect(8);
+
+            await makeWithSearch({
+                serverData,
+                resModel: "partner",
+                Component: SearchBar,
+                searchMenuTypes: [],
+                searchViewId: false,
+                mockRPC(route, { method, kwargs }) {
+                    if (method === "name_search") {
+                        assert.step(method);
+                    }
+                },
+            });
+
+            await editSearch(target, "a");
+            await triggerEvent(document.activeElement, null, "keydown", { key: "ArrowDown" });
+            await triggerEvent(document.activeElement, null, "keydown", { key: "ArrowLeft" });
+            await nextTick();
+
+            const input = target.querySelector("input.o_searchview_input");
+            for (let i = 0; i < 3; i++) {
+                input.dispatchEvent(
+                    new KeyboardEvent("keydown", { key: "ArrowRight", repeat: i > 0 })
+                );
+                assert.containsNone(target, ".o_menu_item.o_indent");
+                assert.strictEqual(document.activeElement, input);
+            }
+
+            assert.verifySteps(["name_search"]);
+        }
+    );
 });

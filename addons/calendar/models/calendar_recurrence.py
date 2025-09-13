@@ -3,6 +3,7 @@
 
 from datetime import datetime, time
 import pytz
+import re
 
 from dateutil import rrule
 from dateutil.relativedelta import relativedelta
@@ -394,6 +395,15 @@ class RecurrenceRule(models.Model):
         # LUL TODO clean this mess
         data = {}
         day_list = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun']
+
+        # Skip X-named RRULE extensions
+        # TODO Remove patch when dateutils contains the fix
+        # HACK https://github.com/dateutil/dateutil/pull/1374
+        # Optional parameters starts with X- and they can be placed anywhere in the RRULE string.
+        # RRULE:FREQ=MONTHLY;INTERVAL=3;X-RELATIVE=1
+        # RRULE;X-EVOLUTION-ENDDATE=20200120:FREQ=WEEKLY;COUNT=3;BYDAY=MO
+        # X-EVOLUTION-ENDDATE=20200120:FREQ=WEEKLY;COUNT=3;BYDAY=MO
+        rule_str = re.sub(r';?X-[-\w]+=[^;:]*', '', rule_str).replace(":;", ":").lstrip(":;")
 
         if 'Z' in rule_str and date_start and not date_start.tzinfo:
             date_start = pytz.utc.localize(date_start)

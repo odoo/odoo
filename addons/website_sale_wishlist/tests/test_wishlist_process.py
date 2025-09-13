@@ -60,7 +60,7 @@ class TestUi(odoo.tests.HttpCase):
 
         self.env.ref('base.user_admin').name = 'Mitchell Admin'
 
-        self.start_tour("/", 'shop_wishlist')
+        self.start_tour("/", 'shop_wishlist', timeout=120)
 
     def test_02_wishlist_admin_tour(self):
         attribute = self.env['product.attribute'].create({

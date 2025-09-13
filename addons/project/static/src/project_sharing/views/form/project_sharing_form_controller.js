@@ -35,8 +35,8 @@ export class ProjectSharingFormController extends FormController {
     }
 
     onGlobalPaste(ev) {
-        ev.preventDefault();
         if (ev.target.closest('.o_field_widget[name="description"]')) {
+            ev.preventDefault();
             const items = ev.clipboardData.items;
             for (let i = 0; i < items.length; i++) {
                 if (items[i].type.indexOf('image') !== -1 && !this.model.root.resId) {
@@ -52,8 +52,8 @@ export class ProjectSharingFormController extends FormController {
     }
 
     onGlobalDrop(ev) {
-        ev.preventDefault();
         if (ev.target.closest('.o_field_widget[name="description"]')) {
+            ev.preventDefault();
             if(ev.dataTransfer.files.length > 0 && !this.model.root.resId){
                 this.notification.add(
                     _t("Save the task to be able to drag images in description"),

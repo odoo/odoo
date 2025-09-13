@@ -1,12 +1,13 @@
 /* @odoo-module */
 
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
+import { waitUntilSubscribe } from "@bus/../tests/helpers/websocket_event_deferred";
 
 import { RATING } from "@im_livechat/embed/common/livechat_service";
 import { loadDefaultConfig, start } from "@im_livechat/../tests/embed/helper/test_utils";
 
 import { triggerHotkey } from "@web/../tests/helpers/utils";
-import { click, contains, insertText } from "@web/../tests/utils";
+import { assertSteps, click, contains, insertText, step } from "@web/../tests/utils";
 
 QUnit.module("feedback panel");
 
@@ -49,6 +50,9 @@ QUnit.test("Feedback with rating and comment", async (assert) => {
     await loadDefaultConfig();
     start({
         mockRPC(route, args) {
+            if (route === "/mail/init_messaging") {
+                step(route);
+            }
             if (route === "/im_livechat/visitor_leave_session") {
                 assert.step(route);
             }
@@ -63,7 +67,9 @@ QUnit.test("Feedback with rating and comment", async (assert) => {
     await contains(".o-mail-ChatWindow");
     await insertText(".o-mail-Composer-input", "Hello World!");
     triggerHotkey("Enter");
+    await waitUntilSubscribe("mail.guest_null");
     await contains(".o-mail-Message-content", { text: "Hello World!" });
+    await assertSteps(["/mail/init_messaging"]);
     await click("[title='Close Chat Window']");
     assert.verifySteps(["/im_livechat/visitor_leave_session"]);
     await click(`img[data-alt="${RATING.GOOD}"]`);

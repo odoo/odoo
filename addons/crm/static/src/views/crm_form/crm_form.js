@@ -6,7 +6,7 @@ import { formView } from "@web/views/form/form_view";
 
 class CrmFormRecord extends formView.Model.Record {
      /**
-     * Main method used when saving the record hitting the "Save" button.
+     * override of record _save mechanism intended to affect the main form record
      * We check if the stage_id field was altered and if we need to display a rainbowman
      * message.
      *
@@ -23,6 +23,9 @@ class CrmFormRecord extends formView.Model.Record {
      * @override
      */
     async _save() {
+        if (this.resModel !== "crm.lead") {
+            return super._save(...arguments);
+        }
         let changeStage = false;
         const needsSynchronizationEmail =
             this._changes.partner_email_update === undefined

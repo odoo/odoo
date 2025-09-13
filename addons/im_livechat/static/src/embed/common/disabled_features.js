@@ -1,19 +1,11 @@
 /* @odoo-module */
 
-import { messageActionsRegistry } from "@mail/core/common/message_actions";
 import { threadActionsRegistry } from "@mail/core/common/thread_actions";
 import { Thread } from "@mail/core/common/thread_model";
 import { ThreadService } from "@mail/core/common/thread_service";
 
 import { patch } from "@web/core/utils/patch";
 import { SESSION_STATE } from "./livechat_service";
-
-const downloadFilesAction = messageActionsRegistry.get("download_files");
-patch(downloadFilesAction, {
-    condition(component) {
-        return component.message.originThread.type !== "livechat" && super.condition(component);
-    },
-});
 
 patch(Thread.prototype, {
     get hasMemberList() {

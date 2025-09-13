@@ -11,4 +11,11 @@ patch(Order.prototype, {
             l10n_es_pos_tbai_qrsrc: this.l10n_es_pos_tbai_qrsrc,
         };
     },
+    export_as_JSON() {
+        const json = super.export_as_JSON(...arguments);
+        if (this.pos.config.is_spanish) {
+            json["l10n_es_tbai_refund_reason"] = this.l10n_es_tbai_refund_reason
+        }
+        return json;
+    },
 });

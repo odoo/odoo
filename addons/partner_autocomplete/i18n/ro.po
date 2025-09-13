@@ -7,16 +7,17 @@
 # Hongu Cosmin <cosmin513@gmail.com>, 2024
 # Dorin Hongu <dhongu@gmail.com>, 2024
 # Martin Trigaux, 2024
-# Foldi Robert <foldirobert@nexterp.ro>, 2024
 # Cozmin Candea <office@terrabit.ro>, 2024
+# Lyall Kindmurr, 2024
+# Larisa_nexterp, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2025-05-07 20:36+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Cozmin Candea <office@terrabit.ro>, 2024\n"
+"Last-Translator: Larisa_nexterp, 2025\n"
 "Language-Team: Romanian (https://app.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -43,13 +44,6 @@ msgid "Companies"
 msgstr "Companii"
 
 #. module: partner_autocomplete
-#. odoo-python
-#: code:addons/partner_autocomplete/models/res_company.py:0
-#, python-format
-msgid "Company auto-completed by Odoo Partner Autocomplete Service"
-msgstr "Companie auto-completată de serviciul Odoo Partner Autocomplete"
-
-#. module: partner_autocomplete
 #: model:ir.model.fields,field_description:partner_autocomplete.field_res_company__partner_gid
 #: model:ir.model.fields,field_description:partner_autocomplete.field_res_partner__partner_gid
 #: model:ir.model.fields,field_description:partner_autocomplete.field_res_users__partner_gid
@@ -74,7 +68,7 @@ msgstr "Creat de"
 #. module: partner_autocomplete
 #: model:ir.model.fields,field_description:partner_autocomplete.field_res_partner_autocomplete_sync__create_date
 msgid "Created on"
-msgstr "Creat în"
+msgstr "Creat pe"
 
 #. module: partner_autocomplete
 #: model:ir.model.fields,field_description:partner_autocomplete.field_res_partner_autocomplete_sync__display_name
@@ -156,21 +150,14 @@ msgstr "Sincronizare auto-completare partener"
 #: model:ir.actions.server,name:partner_autocomplete.ir_cron_partner_autocomplete_ir_actions_server
 msgid "Partner Autocomplete: Sync with remote DB"
 msgstr ""
-
-#. module: partner_autocomplete
-#. odoo-python
-#: code:addons/partner_autocomplete/models/res_partner.py:0
-#, python-format
-msgid "Partner created by Odoo Partner Autocomplete Service"
-msgstr "Partener creat de serviciul de auto-completare a partenerilor Odoo"
+"Completare automată partener: Sincronizare cu baza de date la distanță"
 
 #. module: partner_autocomplete
 #. odoo-javascript
 #: code:addons/partner_autocomplete/static/src/xml/partner_autocomplete.xml:0
-#: code:addons/partner_autocomplete/static/src/xml/partner_autocomplete.xml:0
 #, python-format
-msgid "Placeholder"
-msgstr "Substitut"
+msgid "Search Worldwide 🌎"
+msgstr "Căutați la nivel mondial 🌎"
 
 #. module: partner_autocomplete
 #. odoo-javascript
@@ -193,3 +180,10 @@ msgstr "Setați token-ul contului"
 #, python-format
 msgid "Test mode"
 msgstr "Mod test"
+
+#. module: partner_autocomplete
+#. odoo-python
+#: code:addons/partner_autocomplete/models/res_partner.py:0
+#, python-format
+msgid "Unable to enrich company (no credit was consumed)."
+msgstr "Nu se poate îmbogăți compania (nu s-a consumat niciun credit)."

@@ -6,14 +6,16 @@
 # Cozmin Candea <office@terrabit.ro>, 2024
 # Martin Trigaux, 2024
 # Dorin Hongu <dhongu@gmail.com>, 2024
+# Alin Miclea, 2024
+# Larisa_nexterp, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2025-02-10 10:34+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Dorin Hongu <dhongu@gmail.com>, 2024\n"
+"Last-Translator: Larisa_nexterp, 2025\n"
 "Language-Team: Romanian (https://app.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -34,8 +36,22 @@ msgstr ""
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 #, python-format
+msgid "17291716060 (NIN) or 1729171602 (VKN)"
+msgstr "17291716060 (NIN) sau 1729171602 (VKN)"
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
+#, python-format
 msgid "1792060346001 or 1792060346"
 msgstr "1792060346001 or 1792060346"
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
+#, python-format
+msgid "3101012009"
+msgstr "3101012009"
 
 #. module: base_vat
 #. odoo-python
@@ -122,6 +138,16 @@ msgstr ""
 "Codurile de TVA europene sunt verificate automat în baza de date VIES."
 
 #. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
+#, python-format
+msgid ""
+"Example: '219999830019' (format: 12 digits, all numbers, valid check digit)"
+msgstr ""
+"Exemplu: '219999830019' (format: 12 cifre, doar numere, cifră de control "
+"validă)"
+
+#. module: base_vat
 #: model:ir.model,name:base_vat.model_account_fiscal_position
 msgid "Fiscal Position"
 msgstr "Poziție fiscală"
@@ -169,13 +195,6 @@ msgid "Perform Vies Validation"
 msgstr "Efectuare validare Vies"
 
 #. module: base_vat
-#. odoo-python
-#: code:addons/base_vat/models/res_partner.py:0
-#, python-format
-msgid "TR1234567890 (VERGINO) or TR17291716060 (TCKIMLIKNO)"
-msgstr "TR1234567890 (VERGINO) or TR17291716060 (TCKIMLIKNO)"
-
-#. module: base_vat
 #: model_terms:ir.ui.view,arch_db:base_vat.view_partner_base_vat_form
 msgid "Tax ID"
 msgstr "CIF"
@@ -214,11 +233,23 @@ msgstr "Numărul de TVA %s nu a putut fi interpretat de serverul VIES."
 #: code:addons/base_vat/models/account_fiscal_position.py:0
 #, python-format
 msgid ""
-"The country detected for this foreign VAT number does not match the one set "
-"on this fiscal position."
+"The country detected for this foreign VAT number does not match any of the "
+"countries composing the country group set on this fiscal position."
 msgstr ""
-"Țara detectată pentru acest număr de TVA străin nu se potrivește cu cea "
-"setată pe această poziție fiscală."
+"Țara detectată pentru acest număr de TVA străin nu se potrivește cu niciuna "
+"dintre țările care compun grupul de țări stabilit pe această poziție "
+"fiscală."
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/account_fiscal_position.py:0
+#, python-format
+msgid ""
+"The country of the foreign VAT number could not be detected. Please assign a"
+" country to the fiscal position or set a country group"
+msgstr ""
+"Țara numărului de TVA străin nu a putut fi detectată.Vă rugăm să atribuiți o"
+" țară poziției fiscale sau să stabiliți un grup de țări"
 
 #. module: base_vat
 #. odoo-python
@@ -254,6 +285,15 @@ msgstr "Verificare cod de TVA utilizând serviciul european VIES "
 #: model:ir.model.fields,field_description:base_vat.field_res_users__vies_vat_to_check
 msgid "Vies Vat To Check"
 msgstr "Vies Vat To Check"
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
+#, python-format
+msgid "XXXXXXXXX [9 digits] and it should respect the Luhn algorithm checksum"
+msgstr ""
+"XXXXXXXXX [9 cifre] și trebuie să respecte suma de control a algoritmului "
+"Luhn"
 
 #. module: base_vat
 #. odoo-python

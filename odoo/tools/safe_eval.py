@@ -62,7 +62,7 @@ _UNSAFE_ATTRIBUTES = [
     # Tracebacks
     'tb_frame',
     # Generators
-    'gi_code', 'gi_frame', 'g_yieldfrom'
+    'gi_code', 'gi_frame', 'gi_yieldfrom',
     # Coroutines
     'cr_await', 'cr_code', 'cr_frame',
     # Coroutine generators
@@ -100,6 +100,10 @@ _CONST_OPCODES = set(to_opcodes([
     'COPY', 'SWAP',
     # Added in 3.11 https://docs.python.org/3/whatsnew/3.11.html#new-opcodes
     'RESUME',
+    # 3.12 https://docs.python.org/3/whatsnew/3.12.html#cpython-bytecode-changes
+    'RETURN_CONST',
+    # 3.13
+    'TO_BOOL',
 ])) - _BLACKLIST
 
 # operations which are both binary and inplace, same order as in doc'
@@ -124,7 +128,6 @@ _EXPR_OPCODES = _CONST_OPCODES.union(to_opcodes([
     'GEN_START',  # added in 3.10 but already removed from 3.11.
     # Added in 3.11, replacing all BINARY_* and INPLACE_*
     'BINARY_OP',
-    'RETURN_CONST',
     'BINARY_SLICE',
 ])) - _BLACKLIST
 
@@ -169,11 +172,17 @@ _SAFE_OPCODES = _EXPR_OPCODES.union(to_opcodes([
     'PUSH_EXC_INFO',
     'NOP',
     'FORMAT_VALUE', 'BUILD_STRING',
-    # 3.12 https://docs.python.org/3/whatsnew/3.12.html#new-opcodes
+    # 3.12 https://docs.python.org/3/whatsnew/3.12.html#cpython-bytecode-changes
     'END_FOR',
     'LOAD_FAST_AND_CLEAR', 'LOAD_FAST_CHECK',
     'POP_JUMP_IF_NOT_NONE', 'POP_JUMP_IF_NONE',
     'CALL_INTRINSIC_1',
+    'STORE_SLICE',
+    # 3.13
+    'CALL_KW', 'LOAD_FAST_LOAD_FAST',
+    'STORE_FAST_STORE_FAST', 'STORE_FAST_LOAD_FAST',
+    'CONVERT_VALUE', 'FORMAT_SIMPLE', 'FORMAT_WITH_SPEC',
+    'SET_FUNCTION_ATTRIBUTE',
 ])) - _BLACKLIST
 
 
@@ -380,7 +389,7 @@ def safe_eval(expr, globals_dict=None, locals_dict=None, mode="eval", nocopy=Fal
     if globals_dict is None:
         globals_dict = {}
 
-    globals_dict['__builtins__'] = _BUILTINS
+    globals_dict['__builtins__'] = dict(_BUILTINS)
     if locals_builtins:
         if locals_dict is None:
             locals_dict = {}
@@ -467,11 +476,14 @@ for mod in mods:
     __import__('dateutil.%s' % mod)
 datetime = wrap_module(__import__('datetime'), ['date', 'datetime', 'time', 'timedelta', 'timezone', 'tzinfo', 'MAXYEAR', 'MINYEAR'])
 dateutil = wrap_module(dateutil, {
-    mod: getattr(dateutil, mod).__all__
-    for mod in mods
+    "tz": ["UTC", "tzutc"],
+    "parser": ["isoparse", "parse"],
+    "relativedelta": ["relativedelta", "MO", "TU", "WE", "TH", "FR", "SA", "SU"],
+    "rrule": ["rrule", "rruleset", "rrulestr", "YEARLY", "MONTHLY", "WEEKLY", "DAILY", "HOURLY", "MINUTELY", "SECONDLY", "MO", "TU", "WE", "TH", "FR", "SA", "SU"],
 })
 json = wrap_module(__import__('json'), ['loads', 'dumps'])
 time = wrap_module(__import__('time'), ['time', 'strptime', 'strftime', 'sleep'])
 pytz = wrap_module(__import__('pytz'), [
     'utc', 'UTC', 'timezone',
 ])
+dateutil.tz.gettz = pytz.timezone

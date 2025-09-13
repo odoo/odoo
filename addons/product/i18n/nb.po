@@ -12,16 +12,16 @@
 # Lars Petter Lilleng, 2024
 # Jorunn D. Newth, 2024
 # Martin Trigaux, 2024
-# Marius Stedjan <marius@stedjan.com>, 2024
-# Rune Restad, 2024
+# Rune Restad, 2025
+# Marius Stedjan <marius@stedjan.com>, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2025-05-07 20:36+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Rune Restad, 2024\n"
+"Last-Translator: Marius Stedjan <marius@stedjan.com>, 2025\n"
 "Language-Team: Norwegian Bokmål (https://app.transifex.com/odoo/teams/41243/nb/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -87,6 +87,7 @@ msgstr "%s %% rabatt"
 
 #. module: product
 #. odoo-python
+#: code:addons/product/models/product_pricelist.py:0
 #: code:addons/product/models/product_tag.py:0
 #: code:addons/product/models/product_template.py:0
 #, python-format
@@ -119,7 +120,7 @@ msgstr "'Forpakning - %s' % (object.name)"
 #: code:addons/product/models/product_template.py:0
 #, python-format
 msgid "(e.g: product description, ebook, legal notice, ...)."
-msgstr ""
+msgstr "(f.eks.: produktbeskrivelse, e-bok, juridisk informasjon, …)."
 
 #. module: product
 #. odoo-python
@@ -213,6 +214,12 @@ msgid ""
 "                                        Extra Price\n"
 "                                    </span>"
 msgstr ""
+"<span class=\"o_stat_text\" invisible=\"pricelist_item_count == 1\">\n"
+"                                      Ekstra priser\n"
+"                                     </span>\n"
+"                                      <span class=\"o_stat_text\" invisible=\"pricelist_item_count != 1\">\n"
+"                                          Ekstra pris  \n"
+"                                       </span>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_category_form_view
@@ -227,7 +234,7 @@ msgstr "<span class=\"o_stat_text\">Relaterte Produkter</span>"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_document_kanban
 msgid "<span class=\"text-bg-danger\">Archived</span>"
-msgstr ""
+msgstr "<span class=\"text-bg-danger\">Arkivert</span>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_document_kanban
@@ -701,12 +708,12 @@ msgstr "Underkategorier"
 #. module: product
 #: model:ir.actions.act_window,name:product.action_open_label_layout
 msgid "Choose Labels Layout"
-msgstr ""
+msgstr "Velg etikett layout"
 
 #. module: product
 #: model:ir.model,name:product.model_product_label_layout
 msgid "Choose the sheet layout to print the labels"
-msgstr ""
+msgstr "Velg arkoppsett for å skrive ut etikettene."
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
@@ -804,7 +811,7 @@ msgstr "Konfigurer"
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 #: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "Configure tags"
-msgstr ""
+msgstr "Konfigurer tagger"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_label_layout_form
@@ -957,12 +964,12 @@ msgstr "Opprettelse"
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__res_config_settings__product_volume_volume_in_cubic_feet__1
 msgid "Cubic Feet"
-msgstr ""
+msgstr "Kubikkfot"
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__res_config_settings__product_volume_volume_in_cubic_feet__0
 msgid "Cubic Meters"
-msgstr ""
+msgstr "Kubikkmeter"
 
 #. module: product
 #: model:ir.model,name:product.model_res_currency
@@ -988,7 +995,7 @@ msgstr "Kundereferanse"
 #. module: product
 #: model:product.template,name:product.product_product_4_product_template
 msgid "Customizable Desk"
-msgstr ""
+msgstr "Tilpassbart skrivebord"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_document__db_datas
@@ -1005,7 +1012,7 @@ msgstr "Desimalpresisjon"
 #: code:addons/product/models/res_company.py:0
 #, python-format
 msgid "Default %s pricelist"
-msgstr ""
+msgstr "Standard %s prisliste"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_value__default_extra_price
@@ -1038,12 +1045,12 @@ msgstr ""
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.res_config_settings_view_form
 msgid "Define your volume unit of measure"
-msgstr ""
+msgstr "Definer måleenhet for volum"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.res_config_settings_view_form
 msgid "Define your weight unit of measure"
-msgstr ""
+msgstr "Definer måleenhet for vekt"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_document_kanban
@@ -1195,7 +1202,7 @@ msgstr "Last ned"
 #: code:addons/product/models/product_template.py:0
 #, python-format
 msgid "Download examples"
-msgstr ""
+msgstr "Last ned eksempler"
 
 #. module: product
 #: model:product.template,name:product.product_product_27_product_template
@@ -1280,7 +1287,7 @@ msgstr "Eksplisitt regelnavn for denne prislistelinjen."
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_label_layout__extra_html
 msgid "Extra Content"
-msgstr ""
+msgstr "Tilleggsinnhold"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
@@ -1301,7 +1308,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:product.field_product_template__priority
 #: model:ir.model.fields.selection,name:product.selection__product_template__priority__1
 msgid "Favorite"
-msgstr ""
+msgstr "Favoritt"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_search_view
@@ -1987,7 +1994,7 @@ msgstr "Antall feil"
 #: model:ir.model.fields,help:product.field_product_product__message_needaction_counter
 #: model:ir.model.fields,help:product.field_product_template__message_needaction_counter
 msgid "Number of messages requiring action"
-msgstr ""
+msgstr "Antall beskjeder som trenger oppfølging"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist__message_has_error_counter
@@ -2005,7 +2012,7 @@ msgstr "Antall prisregler"
 #. module: product
 #: model:product.template,name:product.product_delivery_01_product_template
 msgid "Office Chair"
-msgstr ""
+msgstr "Kontorstol"
 
 #. module: product
 #: model:product.template,name:product.product_product_12_product_template
@@ -2043,7 +2050,7 @@ msgstr ""
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_document__original_id
 msgid "Original (unoptimized, unresized) attachment"
-msgstr ""
+msgstr "Opprinnelig (ikke optimalisert, ikke endret størrelse på) vedlegg"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__base_pricelist_id
@@ -2281,7 +2288,7 @@ msgstr "Skriv ut"
 #: model_terms:ir.ui.view,arch_db:product.product_template_tree_view
 #: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "Print Labels"
-msgstr ""
+msgstr "Print etiketter"
 
 #. module: product
 #: model:ir.model,name:product.model_product_template
@@ -2362,7 +2369,7 @@ msgstr "Produktkategori"
 #. module: product
 #: model:ir.model,name:product.model_product_document
 msgid "Product Document"
-msgstr ""
+msgstr "Produkt dokument"
 
 #. module: product
 #: model:ir.actions.report,name:product.report_product_template_label_dymo
@@ -2392,7 +2399,7 @@ msgstr ""
 #. module: product
 #: model:ir.model,name:product.model_report_product_report_producttemplatelabel_dymo
 msgid "Product Label Report"
-msgstr ""
+msgstr "Produkt etikettrapport"
 
 #. module: product
 #: model:ir.model,name:product.model_report_product_report_producttemplatelabel2x7
@@ -2493,7 +2500,7 @@ msgstr "Attributtverdi for Produktmal"
 #: model:ir.model.fields,field_description:product.field_product_product__product_tag_ids
 #: model:ir.model.fields,field_description:product.field_product_template__product_tag_ids
 msgid "Product Template Tags"
-msgstr ""
+msgstr "Produktmal tag"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_tag__product_template_ids
@@ -2562,6 +2569,7 @@ msgstr "Produktvarianter"
 #, python-format
 msgid "Product model not defined, Please contact your administrator."
 msgstr ""
+"Produktmodellen er ikke definert. Vennligst kontakt administratoren din."
 
 #. module: product
 #. odoo-python
@@ -2612,7 +2620,7 @@ msgstr "Produktprissøk"
 #: code:addons/product/models/product_product.py:0
 #, python-format
 msgid "Products: %(category)s"
-msgstr ""
+msgstr "Produkter: %(category)s"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_res_config_settings__module_loyalty
@@ -2640,7 +2648,7 @@ msgstr "Beskrivelse på innkjøp"
 #: model:ir.model.fields,field_description:product.field_product_product__uom_po_id
 #: model:ir.model.fields,field_description:product.field_product_template__uom_po_id
 msgid "Purchase UoM"
-msgstr ""
+msgstr "Innkjøps enhet"
 
 #. module: product
 #. odoo-javascript
@@ -2950,7 +2958,7 @@ msgstr "Leverandørprisliste"
 #. module: product
 #: model:ir.model.constraint,message:product.constraint_product_tag_name_uniq
 msgid "Tag name already exists!"
-msgstr ""
+msgstr "Tag finnes fra før"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
@@ -3246,7 +3254,7 @@ msgstr "Enhet"
 #: model:ir.model.fields,field_description:product.field_product_product__uom_name
 #: model:ir.model.fields,field_description:product.field_product_template__uom_name
 msgid "Unit of Measure Name"
-msgstr ""
+msgstr "Enhetsnavn"
 
 #. module: product
 #. odoo-javascript
@@ -3278,12 +3286,12 @@ msgstr "Last opp"
 #: code:addons/product/models/product_template.py:0
 #, python-format
 msgid "Upload files to your product"
-msgstr ""
+msgstr "Last opp filer til produktet"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Upsell & Cross-Sell"
-msgstr ""
+msgstr "Mersalg og kryssalg"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_document__url
@@ -3298,6 +3306,7 @@ msgid ""
 "Use this feature to store any files you would like to share with your "
 "customers"
 msgstr ""
+"Bruk denne funksjonen til å lagre filer du ønsker å dele med kundene dine."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_value__is_used_on_products
@@ -3486,7 +3495,7 @@ msgstr ""
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_document__voice_ids
 msgid "Voice"
-msgstr ""
+msgstr "Stemme"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__volume
@@ -3596,6 +3605,8 @@ msgid ""
 "You can either upload a file from your computer or copy/paste an internet "
 "link to your file."
 msgstr ""
+"Du kan enten laste opp en fil fra datamaskinen din eller kopiere/klebe inn "
+"en nettlenke til filen din."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_attribute_value__image
@@ -3628,6 +3639,8 @@ msgid ""
 "You cannot change the Variants Creation Mode of the attribute %(attribute)s because it is used on the following products:\n"
 "%(products)s"
 msgstr ""
+"Du kan ikke endre opprettelsesmetoden for varianter på attributten %(attribute)s, fordi den er i bruk på følgende produkter:\n"
+"%(products)s "
 
 #. module: product
 #. odoo-python
@@ -3682,6 +3695,7 @@ msgstr ""
 
 #. module: product
 #. odoo-python
+#: code:addons/product/models/product_category.py:0
 #: code:addons/product/models/product_category.py:0
 #, python-format
 msgid "You cannot delete the %s product category."
@@ -3767,6 +3781,8 @@ msgid ""
 "You must define a product for everything you sell or purchase,\n"
 "                whether it's a storable product, a consumable or a service."
 msgstr ""
+"Du må definere et produkt for alt du selger eller kjøper, \n"
+"                  enten det er et lagringsprodukt, et forbruksprodukt eller en tjeneste."
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_variant_action

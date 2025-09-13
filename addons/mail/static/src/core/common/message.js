@@ -285,7 +285,12 @@ export class Message extends Component {
      * @returns {boolean}
      */
     get canToggleStar() {
-        return Boolean(!this.message.is_transient && this.message.res_id && this.store.user);
+        return Boolean(
+            !this.message.is_transient &&
+                this.message.res_id &&
+                this.store.user &&
+                this.message.persistent
+        );
     }
 
     get showUnfollow() {
@@ -305,6 +310,10 @@ export class Message extends Component {
 
     get isAlignedRight() {
         return Boolean(this.env.inChatWindow && this.props.message.isSelfAuthored);
+    }
+
+    get isPersistentMessageFromAnotherThread() {
+        return !this.isOriginThread && !this.message.is_transient;
     }
 
     get isOriginThread() {
@@ -392,37 +401,7 @@ export class Message extends Component {
      * @param {MouseEvent} ev
      */
     async onClick(ev) {
-        const model = ev.target.dataset.oeModel;
-        const id = Number(ev.target.dataset.oeId);
-        if (ev.target.closest(".o_channel_redirect")) {
-            ev.preventDefault();
-            const thread = this.store.Thread.insert({ model, id });
-            this.threadService.open(thread);
-            return;
-        }
-        if (ev.target.closest(".o_mail_redirect")) {
-            ev.preventDefault();
-            const partnerId = Number(ev.target.dataset.oeId);
-            if (this.user.partnerId !== partnerId) {
-                this.threadService.openChat({ partnerId });
-            }
-            return;
-        }
-        if (ev.target.tagName === "A") {
-            if (model && id) {
-                ev.preventDefault();
-                await this.env.services.action.doAction({
-                    type: "ir.actions.act_window",
-                    res_model: model,
-                    views: [[false, "form"]],
-                    res_id: id,
-                });
-                if (!this.env.isSmall) {
-                    this.threadService.open(this.props.thread, true, {
-                        autofocus: false
-                    });
-                }
-            }
+        if (this.store.handleClickOnLink(ev, this.props.thread)) {
             return;
         }
         if (
@@ -454,8 +433,18 @@ export class Message extends Component {
     prepareMessageBody(element) {}
 
     enterEditMode() {
+        const body = document.createElement("span");
+        body.innerHTML = this.props.message.body;
+        const mentionedChannelElements = body.querySelectorAll(".o_channel_redirect");
+        const mentionedChannels = Array.from(mentionedChannelElements).map((el) =>
+            this.store.Thread.insert({
+                id: el.dataset.oeId,
+                model: el.dataset.oeModel,
+            })
+        );
         const messageContent = convertBrToLineBreak(this.props.message.body);
         this.props.message.composer = {
+            mentionedChannels,
             mentionedPartners: this.props.message.recipients,
             textInputContent: messageContent,
             selection: {

@@ -60,6 +60,18 @@ class TestAccountPaymentTerms(AccountTestInvoicingCommon):
                 }),
             ],
         })
+        cls.pay_term_days_end_of_month_days_next_month_0 = cls.env['account.payment.term'].create({
+            'name': "special case days next month 0",
+            'line_ids': [
+                Command.create({
+                    'value': 'percent',
+                    'value_amount': 100,
+                    'delay_type': 'days_end_of_month_on_the',
+                    'days_next_month': 0,
+                    'nb_days': 30,
+                }),
+            ],
+        })
 
     def test_payment_term_days_end_of_month_on_the(self):
         """
@@ -147,3 +159,11 @@ class TestAccountPaymentTerms(AccountTestInvoicingCommon):
 
         expected_date_case_2 = self.invoice.line_ids.filtered(lambda l: l.account_id == self.company_data['default_account_receivable']).mapped('date_maturity')
         self.assertEqual(expected_date_case_2, [fields.Date.from_string('2024-07-31')])
+
+    def test_payment_term_days_end_of_month_days_next_month_0(self):
+        with Form(self.invoice) as case_1:
+            case_1.invoice_payment_term_id = self.pay_term_days_end_of_month_days_next_month_0
+            case_1.invoice_date = '2024-04-22'
+
+        expected_date_case_1 = self.invoice.line_ids.filtered(lambda l: l.account_id == self.company_data['default_account_receivable']).mapped('date_maturity')
+        self.assertEqual(expected_date_case_1, [fields.Date.from_string('2024-05-31')])

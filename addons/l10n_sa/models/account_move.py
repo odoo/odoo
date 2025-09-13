@@ -2,16 +2,19 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import base64
 
-from odoo import api, fields, models, _
-from odoo.exceptions import UserError
-from odoo.tools import float_repr
+from odoo import api, fields, models
+from odoo.tools import float_repr, format_datetime
 
 
 class AccountMove(models.Model):
     _inherit = 'account.move'
 
     l10n_sa_qr_code_str = fields.Char(string='Zatka QR Code', compute='_compute_qr_code_str')
-    l10n_sa_confirmation_datetime = fields.Datetime(string='Confirmation Date', readonly=True, copy=False)
+    l10n_sa_confirmation_datetime = fields.Datetime(string='Confirmation Date',
+                                                    readonly=True,
+                                                    copy=False,
+                                                    help="""Date when the invoice is confirmed and posted.
+                                                    In other words, it is the date on which the invoice is generated as final document (after securing all internal approvals).""")
 
     @api.depends('country_code', 'move_type')
     def _compute_show_delivery_date(self):
@@ -39,8 +42,9 @@ class AccountMove(models.Model):
                 company_vat_enc = get_qr_encoding(2, record.company_id.vat)
                 time_sa = fields.Datetime.context_timestamp(self.with_context(tz='Asia/Riyadh'), record.l10n_sa_confirmation_datetime)
                 timestamp_enc = get_qr_encoding(3, time_sa.isoformat())
-                invoice_total_enc = get_qr_encoding(4, float_repr(abs(record.amount_total_signed), 2))
-                total_vat_enc = get_qr_encoding(5, float_repr(abs(record.amount_tax_signed), 2))
+                totals = record._get_l10n_sa_totals()
+                invoice_total_enc = get_qr_encoding(4, float_repr(abs(totals['total_amount']), 2))
+                total_vat_enc = get_qr_encoding(5, float_repr(abs(totals['total_tax']), 2))
 
                 str_to_encode = seller_name_enc + company_vat_enc + timestamp_enc + invoice_total_enc + total_vat_enc
                 qr_code_str = base64.b64encode(str_to_encode).decode()
@@ -50,8 +54,30 @@ class AccountMove(models.Model):
         res = super()._post(soft)
         for move in self:
             if move.country_code == 'SA' and move.is_sale_document():
-                vals = {'l10n_sa_confirmation_datetime': fields.Datetime.now()}
+                if not move.l10n_sa_confirmation_datetime:
+                    vals = {'l10n_sa_confirmation_datetime': fields.Datetime.now()}
+                else:
+                    vals = {}
                 if not move.delivery_date:
                     vals['delivery_date'] = move.invoice_date
-                move.write(vals)
+                if vals:
+                    move.write(vals)
         return res
+
+    def get_l10n_sa_confirmation_datetime_sa_tz(self):
+        self.ensure_one()
+        return format_datetime(self.env, self.l10n_sa_confirmation_datetime, tz='Asia/Riyadh', dt_format='Y-MM-dd\nHH:mm:ss')
+
+    def _l10n_sa_reset_confirmation_datetime(self):
+        self.filtered(lambda m: m.country_code == 'SA').l10n_sa_confirmation_datetime = False
+
+    def button_draft(self):
+        self._l10n_sa_reset_confirmation_datetime()
+        super().button_draft()
+
+    def _get_l10n_sa_totals(self):
+        self.ensure_one()
+        return {
+            'total_amount': self.amount_total_signed,
+            'total_tax': self.amount_tax_signed,
+        }

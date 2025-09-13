@@ -449,6 +449,47 @@ class TestProjectBilling(TestCommonSaleTimesheet):
             with project_form.sale_line_employee_ids.new() as mapping_form:
                 mapping_form.employee_id = self.employee_manager
                 mapping_form.sale_line_id = self.so.order_line[:1]
-            self.assertEqual(project_form.partner_id, self.so.partner_id, 'The partner should be the one defined the SO linked to the SOL defined in the mapping.')
+            self.assertFalse(project_form.partner_id, 'The partner should be the one defined the SO linked to the SOL defined in the mapping.')
             project = project_form.save()
+            self.assertEqual(project_form.partner_id, self.so.partner_id, 'The partner should be the one defined the SO linked to the SOL defined in the mapping.')
             self.assertEqual(project.pricing_type, 'employee_rate', 'Since there is a mapping in this project, the pricing type should be employee rate.')
+
+    def test_take_into_account_invoicing_app_legacy(self):
+        """ Test the timesheets linked to a invoice determined as a invoiced imported form app legacy
+            are still considered as billed even if the state of those invoices is cancelled.
+
+            Since the account_accountant module is not in the dependencies of sale_timesheet module,
+            this test will manually set the state and payment_status to be in the same condition
+            than the feature "Invoicing Switch Threshold".
+        """
+        timesheet1 = self.env['account.analytic.line'].create({
+            'name': '/',
+            'project_id': self.project_task_rate.id,
+            'unit_amount': 1,
+            'so_line': self.so1_line_deliver_no_task.id,
+            'is_so_line_edited': True,
+            'employee_id': self.employee_user.id,
+        })
+
+        self.assertEqual(self.so1_line_deliver_no_task.qty_delivered, timesheet1.unit_amount)
+        invoice1 = self.sale_order_1._create_invoices()[0]
+        invoice1.action_post()
+
+        self.assertEqual(self.so1_line_deliver_no_task.qty_invoiced, 1)
+        self.assertEqual(timesheet1.timesheet_invoice_id, invoice1)
+
+        timesheet2 = self.env['account.analytic.line'].create({
+            'project_id': self.project_task_rate.id,
+            'unit_amount': 2,
+            'so_line': self.so1_line_deliver_no_task.id,
+            'is_so_line_edited': True,
+            'employee_id': self.employee_user.id,
+        })
+        self.assertEqual(self.so1_line_deliver_no_task.qty_delivered, timesheet1.unit_amount + timesheet2.unit_amount)
+        invoice1.write({'state': 'cancel', 'payment_state': 'invoicing_legacy'})
+        self.assertEqual(self.so1_line_deliver_no_task.qty_invoiced, timesheet1.unit_amount)
+        invoice2 = self.sale_order_1._create_invoices()[0]
+        invoice2.action_post()
+        self.assertEqual(self.so1_line_deliver_no_task.qty_invoiced, timesheet1.unit_amount + timesheet2.unit_amount)
+        self.assertEqual(timesheet1.timesheet_invoice_id, invoice1)
+        self.assertEqual(timesheet2.timesheet_invoice_id, invoice2)

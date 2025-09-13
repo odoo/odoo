@@ -1,23 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* sale_stock
-# 
+#
 # Translators:
 # Wil Odoo, 2024
-# Thi Huong Nguyen, 2024
-# 
+# Thi Huong Nguyen, 2025
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-15 10:37+0000\n"
+"POT-Creation-Date: 2025-08-15 00:51+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Thi Huong Nguyen, 2024\n"
+"Last-Translator: Thi Huong Nguyen, 2025\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
+"Language: vi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: vi\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: sale_stock
@@ -63,22 +63,26 @@ msgstr "<span class=\"o_stat_text\">Bán hàng</span>"
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
 msgid ""
 "<span class=\"small badge text-bg-success orders_label_text_align\">\n"
-"                                        <i class=\"fa fa-fw fa-truck\"/> Shipped\n"
+"                                        <i class=\"fa fa-fw fa-truck\"/> "
+"Shipped\n"
 "                                    </span>"
 msgstr ""
 "<span class=\"small badge text-bg-success orders_label_text_align\">\n"
-"                                        <i class=\"fa fa-fw fa-truck\"/> Đã vận chuyển\n"
+"                                        <i class=\"fa fa-fw fa-truck\"/> Đã "
+"vận chuyển\n"
 "                                    </span>"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_cancel_view_form_inherit
 msgid ""
 "<span invisible=\"not display_delivery_alert\">\n"
-"                    Some deliveries are already done. Returns can be created from the Delivery Orders.\n"
+"                    Some deliveries are already done. Returns can be created "
+"from the Delivery Orders.\n"
 "                </span>"
 msgstr ""
 "<span invisible=\"not display_delivery_alert\">\n"
-"                    Một số hoạt động giao hàng đã hoàn tất. Có thể tạo Phiếu trả hàng từ Phiếu xuất kho.\n"
+"                    Một số hoạt động giao hàng đã hoàn tất. Có thể tạo Phiếu "
+"trả hàng từ Lệnh giao hàng.\n"
 "                </span>"
 
 #. module: sale_stock
@@ -95,17 +99,23 @@ msgstr "<strong>Incoterm:</strong>"
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_order_line__qty_delivered_method
 msgid ""
-"According to product configuration, the delivered quantity can be automatically computed by mechanism:\n"
+"According to product configuration, the delivered quantity can be "
+"automatically computed by mechanism:\n"
 "  - Manual: the quantity is set manually on the line\n"
-"  - Analytic From expenses: the quantity is the quantity sum from posted expenses\n"
-"  - Timesheet: the quantity is the sum of hours recorded on tasks linked to this sale line\n"
+"  - Analytic From expenses: the quantity is the quantity sum from posted "
+"expenses\n"
+"  - Timesheet: the quantity is the sum of hours recorded on tasks linked to "
+"this sale line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
-"Theo cấu hình sản phẩm, số lượng đã giao có thể được tính tự động theo cơ chế:\n"
+"Theo cấu hình sản phẩm, số lượng đã giao có thể được tính tự động theo cơ "
+"chế:\n"
 "  - Thủ công: số lượng được nhập thủ công trên dòng\n"
-"  - Phân tích từ chi phí: số lượng dựa trên tổng các khoản chi phí đã ghi nhận\n"
-"  - Bảng chấm công: số lượng là tổng số giờ được ghi nhận của nhiệm vụ liên kết với dòng bán hàng\n"
-"  - Dịch chuyển tồn kho: số lượng đến từ các phiếu lấy hàng đã xác nhận\n"
+"  - Phân tích từ chi phí: số lượng dựa trên tổng các khoản chi phí đã ghi "
+"nhận\n"
+"  - Bảng chấm công: số lượng là tổng số giờ được ghi nhận của nhiệm vụ liên "
+"kết với dòng bán hàng\n"
+"  - Điều chuyển tồn kho: số lượng đến từ các phiếu xuất kho đã xác nhận\n"
 
 #. module: sale_stock
 #. odoo-javascript
@@ -158,7 +168,7 @@ msgstr "Công ty"
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_order__effective_date
 msgid "Completion date of the first delivery order."
-msgstr "Ngày hoàn thành phiếu xuất kho đầu tiên."
+msgstr "Ngày hoàn thành lệnh giao hàng đầu tiên."
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_res_config_settings
@@ -193,7 +203,7 @@ msgstr "Cảnh báo giao hàng"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__delivery_count
 msgid "Delivery Orders"
-msgstr "Phiếu xuất kho"
+msgstr "Lệnh giao hàng"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__delivery_status
@@ -208,10 +218,10 @@ msgid ""
 "shipping, the shipping policy of the order will be taken into account to "
 "either use the minimum or maximum lead time of the order lines."
 msgstr ""
-"Ngày giao hàng mà bạn có thể hẹn với khách hàng, được tính toán từ thời gian"
-" giao hàng tối thiểu của chi tiết đơn hàng trong trường hợp sản phẩm Dịch "
+"Ngày giao hàng mà bạn có thể hẹn với khách hàng, được tính toán từ thời gian "
+"hoàn thành tối thiểu của chi tiết đơn hàng trong trường hợp sản phẩm Dịch "
 "vụ. Trong trường hợp vận chuyển, chính sách vận chuyển của đơn hàng sẽ được "
-"tính đến để sử dụng thời gian giao hàng tối thiểu hoặc tối đa của chi tiết "
+"tính đến để sử dụng thời gian hoàn thành tối thiểu hoặc tối đa của chi tiết "
 "đơn hàng. "
 
 #. module: sale_stock
@@ -225,7 +235,7 @@ msgstr "Hiển thị tiện ích SL"
 #, python-format
 msgid ""
 "Do not forget to change the partner on the following delivery orders: %s"
-msgstr "Đừng quên đổi đối tác cho phiếu xuất kho sau: %s"
+msgstr "Đừng quên đổi đối tác cho lệnh giao hàng sau: %s"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__effective_date
@@ -235,7 +245,7 @@ msgstr "Ngày hiệu lực"
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_picking
 msgid "Exception(s) occurred on the picking:"
-msgstr "(Các) ngoại lệ đã xảy ra trong phiếu lấy hàng: "
+msgstr "(Các) ngoại lệ đã xảy ra trong phiếu xuất kho: "
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_so
@@ -299,14 +309,14 @@ msgid ""
 "based on the greatest product lead time. Otherwise, it will be based on the "
 "shortest."
 msgstr ""
-"Nếu bạn giao tất cả sản phẩm cùng lúc, phiếu xuất kho sẽ được lên lịch dựa "
-"vào thời gian giao sản phẩm dài nhất. Nếu không, phiếu xuất kho sẽ được dựa "
+"Nếu bạn giao tất cả sản phẩm cùng lúc, lệnh giao hàng sẽ được lên lịch dựa "
+"vào thời gian giao sản phẩm dài nhất. Nếu không, lệnh giao hàng sẽ được dựa "
 "trên thời gian ngắn nhất. "
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_so
 msgid "Impacted Transfer(s):"
-msgstr "(Các) điều chuyển bị ảnh hưởng"
+msgstr "(Các) lệnh chuyển hàng bị ảnh hưởng"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__incoterm
@@ -316,7 +326,7 @@ msgstr "Incoterm"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__incoterm_location
 msgid "Incoterm Location"
-msgstr "Vị trí Incoterm"
+msgstr "Địa điểm Incoterm"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.report_delivery_document_inherit_sale_stock
@@ -370,12 +380,12 @@ msgstr "Hạng mục bút toán"
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
 msgid "Last Delivery Orders"
-msgstr "Phiếu xuất kho cuối cùng"
+msgstr "Lệnh giao hàng cuối cùng"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__customer_lead
 msgid "Lead Time"
-msgstr "Thời gian giao hàng"
+msgstr "Thời gian hoàn thành"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_lot
@@ -404,8 +414,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
 msgid ""
 "Margin of error for dates promised to customers. Products will be scheduled "
-"for procurement and delivery that many days earlier than the actual promised"
-" date, to cope with unexpected delays in the supply chain."
+"for procurement and delivery that many days earlier than the actual promised "
+"date, to cope with unexpected delays in the supply chain."
 msgstr ""
 "Biên độ sai lệch số ngày đã hẹn với khách hàng. Sản phẩm sẽ được lên kế "
 "hoạch thu mua và giao sớm hơn từng đó ngày so với ngày thực tế đã hẹn, để "
@@ -477,6 +487,11 @@ msgid "Product"
 msgstr "Sản phẩm"
 
 #. module: sale_stock
+#: model:ir.model,name:sale_stock.model_stock_move_line
+msgid "Product Moves (Stock Move Line)"
+msgstr "Điều chuyển sản phẩm (Dòng điều chuyển tồn kho)"
+
+#. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__qty_available_today
 msgid "Qty Available Today"
 msgstr "SL hiện có hôm nay"
@@ -527,7 +542,7 @@ msgstr "Trả hàng"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__route_id
 msgid "Route"
-msgstr "Quy trình"
+msgstr "Tuyến cung ứng"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_stock_move__sale_line_id
@@ -593,17 +608,17 @@ msgstr "Lập lịch giao hàng sớm hơn để tránh trễ hẹn"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__scheduled_date
 msgid "Scheduled Date"
-msgstr "Ngày theo kế hoạch"
+msgstr "Ngày đã lên lịch"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_res_config_settings__security_lead
 msgid "Security Lead Time"
-msgstr "Thời gian sản xuất an toàn"
+msgstr "Thời gian dự phòng"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_res_config_settings__use_security_lead
 msgid "Security Lead Time for Sales"
-msgstr "Thời gian giao hàng an toàn cho bán hàng"
+msgstr "Thời dự phòng cho bán hàng"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_stock_route__sale_selectable
@@ -626,15 +641,20 @@ msgid "Shipping Policy"
 msgstr "Chính sách vận chuyển"
 
 #. module: sale_stock
+#: model:ir.model.fields.selection,name:sale_stock.selection__sale_order__delivery_status__started
+msgid "Started"
+msgstr "Đã bắt đầu"
+
+#. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_move
 msgid "Stock Move"
-msgstr "Dịch chuyển tồn kho"
+msgstr "Điều chuyển tồn kho"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__move_ids
 #: model:ir.model.fields.selection,name:sale_stock.selection__sale_order_line__qty_delivered_method__stock_move
 msgid "Stock Moves"
-msgstr "Dịch chuyển tồn kho"
+msgstr "Điều chuyển tồn kho"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_forecasted_product_product
@@ -650,6 +670,11 @@ msgstr "Quy tắc tồn kho"
 #: model:ir.model,name:sale_stock.model_stock_rules_report
 msgid "Stock Rules report"
 msgstr "Báo cáo quy tắc tồn kho"
+
+#. module: sale_stock
+#: model:ir.model,name:sale_stock.model_stock_valuation_layer
+msgid "Stock Valuation Layer"
+msgstr ""
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_report_stock_report_stock_rule
@@ -669,11 +694,14 @@ msgstr "Hoạt động giao hàng"
 #, python-format
 msgid ""
 "The delivery address has been changed on the Sales Order<br/>\n"
-"                        From <strong>\"%s\"</strong> To <strong>\"%s\"</strong>,\n"
-"                        You should probably update the partner on this document."
+"                        From <strong>\"%s\"</strong> To <strong>\"%s\"</"
+"strong>,\n"
+"                        You should probably update the partner on this "
+"document."
 msgstr ""
 "Địa chỉ giao hàng trên Đơn bán hàng đã được thay đổi<br/>\n"
-"                        Từ <strong>\"%s\"</strong> thành <strong>\"%s\"</strong>,\n"
+"                        Từ <strong>\"%s\"</strong> thành <strong>\"%s\"</"
+"strong>,\n"
 "                        Có thể bạn nên cập nhật đối tác trong chứng từ này."
 
 #. module: sale_stock
@@ -681,11 +709,11 @@ msgstr ""
 #: code:addons/sale_stock/static/src/product_catalog/sale_order_line/sale_order_line.js:0
 #, python-format
 msgid ""
-"The ordered quantity cannot be decreased below the amount already delivered."
-" Instead, create a return in your inventory."
+"The ordered quantity cannot be decreased below the amount already delivered. "
+"Instead, create a return in your inventory."
 msgstr ""
-"Không thể giảm số lượng đã đặt xuống dưới số lượng đã giao. Thay vào đó, hãy"
-" tạo một phiếu trả hàng trong tồn kho của bạn."
+"Không thể giảm số lượng đã đặt xuống dưới số lượng đã giao. Thay vào đó, hãy "
+"tạo một phiếu trả hàng trong tồn kho của bạn."
 
 #. module: sale_stock
 #. odoo-python
@@ -695,8 +723,8 @@ msgid ""
 "The ordered quantity of a sale order line cannot be decreased below the "
 "amount already delivered. Instead, create a return in your inventory."
 msgstr ""
-"Không thể giảm số lượng đã đặt của một dòng đơn bán hàng xuống dưới số lượng"
-" đã giao. Thay vào đó, hãy tạo một phiếu trả hàng trong phần tồn kho."
+"Không thể giảm số lượng đã đặt của một dòng đơn bán hàng xuống dưới số lượng "
+"đã giao. Thay vào đó, hãy tạo một phiếu trả hàng trong phần tồn kho."
 
 #. module: sale_stock
 #. odoo-javascript
@@ -708,12 +736,12 @@ msgstr "Sản phẩm này được bổ sung theo yêu cầu. "
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_picking
 msgid "Transfer"
-msgstr "Điều chuyển"
+msgstr "Lệnh chuyển hàng"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__picking_ids
 msgid "Transfers"
-msgstr "Điều chuyển"
+msgstr "Lệnh chuyển hàng"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_res_users

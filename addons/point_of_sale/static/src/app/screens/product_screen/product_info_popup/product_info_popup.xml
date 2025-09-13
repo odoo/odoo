@@ -15,10 +15,10 @@
                             <span class="fs-3"><t t-if="props.product.default_code" t-esc="props.product.default_code"/> <t t-if="props.product.default_code and props.product.barcode"> - </t> <t t-if="props.product.barcode" t-esc="props.product.barcode"/></span>
                         </div>
                         <div class="d-flex flex-column justify-content-center text-start text-sm-end w-100 w-sm-25">
-                            <span t-esc="env.utils.formatCurrency(productInfo.all_prices.price_with_tax)" class="global-info-title fs-2 fw-bolder" />
+                            <span t-esc="env.utils.formatCurrency(productInfo.all_prices.price_with_tax)" class="product-info-price-with-tax global-info-title fs-2 fw-bolder" />
                             <span class="fs-3">
                                 <t t-foreach="productInfo.all_prices.tax_details" t-as="tax" t-key="tax.name">
-                                    <div><t t-esc="tax.name"/>: <t t-esc="env.utils.formatCurrency(tax.amount)"/></div>
+                                    <div class="tax-name-amount"><t t-esc="tax.name"/>: <t t-esc="env.utils.formatCurrency(tax.amount)"/></div>
                                 </t>
                             </span>
                         </div>
@@ -77,7 +77,7 @@
                     <div class="section-supplier mt-3 mb-4 pb-4 border-bottom text-start" t-if="productInfo.suppliers.length > 0">
                         <h3 class="section-title">Replenishment</h3>
                         <div class="section-supplier-body">
-                            <t t-foreach="productInfo.suppliers" t-as="supplier" t-key="supplier.name">
+                            <t t-foreach="productInfo.suppliers" t-as="supplier" t-key="supplier.id">
                                 <div class="d-flex flex-column flex-md-row gap-2">
                                     <div>
                                         <span t-esc="supplier.name" class="table-name"/>:
@@ -104,7 +104,7 @@
                                         </div>
                                         <div class="d-flex flex-wrap gap-1">
                                             <t t-foreach="variant.values" t-as="attribute_value" t-key="attribute_value.name">
-                                                <span class="searchable btn btn-secondary" t-on-click="() => this.searchProduct(attribute_value.search)">
+                                                <span class="searchable btn btn-secondary" t-on-click="() => this.searchProduct(attribute_value.search + ';product_tmpl_id:' + props.product.product_tmpl_id)">
                                                     <t t-esc="attribute_value.name"/>
                                                 </span>
                                                 <t t-if="attribute_value_index lt variant.values.length - 1"> </t>

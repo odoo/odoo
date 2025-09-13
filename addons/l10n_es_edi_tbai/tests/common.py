@@ -15,7 +15,7 @@ class TestEsEdiTbaiCommon(AccountEdiTestCommon):
     def setUpClass(cls, chart_template_ref='es_full', edi_format_ref='l10n_es_edi_tbai.edi_es_tbai'):
         super().setUpClass(chart_template_ref=chart_template_ref, edi_format_ref=edi_format_ref)
 
-        cls.frozen_today = datetime(year=2022, month=1, day=1, hour=0, minute=0, second=0, tzinfo=timezone('utc'))
+        cls.frozen_today = datetime(year=2025, month=1, day=1, hour=0, minute=0, second=0, tzinfo=timezone('utc'))
 
         # Allow to see the full result of AssertionError.
         cls.maxDiff = None
@@ -57,20 +57,20 @@ class TestEsEdiTbaiCommon(AccountEdiTestCommon):
             cert_name = 'araba_1234.p12'
             cert_password = '1234'
         elif agency == 'bizkaia':
-            cert_name = 'bizkaia_111111.p12'
-            cert_password = '111111'
+            cert_name = 'Bizkaia-IZDesa2025.p12'
+            cert_password = 'IZDesa2025'
         elif agency == 'gipuzkoa':
-            cert_name = 'gipuzkoa_IZDesa2021.p12'
-            cert_password = 'IZDesa2021'
+            cert_name = 'gipuzkoa_Iz3np32024.p12'
+            cert_password = 'Iz3np32024'
         else:
             raise ValueError("Unknown tax agency: " + agency)
 
-        cls.certificate = cls.env['l10n_es_edi.certificate'].create({
+        cls.certificate = cls.env['l10n_es_edi.certificate'].sudo().create({
             'content': base64.encodebytes(
                 misc.file_open("l10n_es_edi_tbai/demo/certificates/" + cert_name, 'rb').read()),
             'password': cert_password,
         })
-        cls.company_data['company'].write({
+        cls.company_data['company'].sudo().write({
             'l10n_es_tbai_tax_agency': agency,
             'l10n_es_edi_certificate_id': cls.certificate.id,
         })
@@ -89,8 +89,8 @@ class TestEsEdiTbaiCommon(AccountEdiTestCommon):
         return cls.env['account.move'].with_context(edi_test_mode=True).create({
             'move_type': 'out_invoice',
             'partner_id': cls.partner_a.id,
-            'invoice_date': '2022-01-01',
-            'date': '2022-01-01',
+            'invoice_date': '2025-01-01',
+            'date': '2025-01-01',
             **kwargs,
             'invoice_line_ids': [(0, 0, {
                 'product_id': cls.product_a.id,
@@ -127,7 +127,7 @@ class TestEsEdiTbaiCommon(AccountEdiTestCommon):
     <CabeceraFactura>
       <SerieFactura>INVTEST</SerieFactura>
       <NumFactura>01</NumFactura>
-      <FechaExpedicionFactura>01-01-2022</FechaExpedicionFactura>
+      <FechaExpedicionFactura>01-01-2025</FechaExpedicionFactura>
       <HoraExpedicionFactura>___ignore___</HoraExpedicionFactura>
       <FacturaSimplificada>N</FacturaSimplificada>
     </CabeceraFactura>
@@ -161,7 +161,6 @@ class TestEsEdiTbaiCommon(AccountEdiTestCommon):
                     <BaseImponible>4000.00</BaseImponible>
                     <TipoImpositivo>21.00</TipoImpositivo>
                     <CuotaImpuesto>840.00</CuotaImpuesto>
-                    <OperacionEnRecargoDeEquivalenciaORegimenSimplificado>N</OperacionEnRecargoDeEquivalenciaORegimenSimplificado>
                   </DetalleIVA>
                 </DesgloseIVA>
               </DetalleNoExenta>
@@ -197,7 +196,7 @@ class TestEsEdiTbaiCommon(AccountEdiTestCommon):
     <CabeceraFactura>
       <SerieFactura>INVTEST</SerieFactura>
       <NumFactura>01</NumFactura>
-      <FechaExpedicionFactura>01-01-2022</FechaExpedicionFactura>
+      <FechaExpedicionFactura>01-01-2025</FechaExpedicionFactura>
     </CabeceraFactura>
   </IDFactura>
   <HuellaTBAI>
@@ -220,7 +219,7 @@ class TestEsEdiTbaiCommon(AccountEdiTestCommon):
         <Capitulo>2</Capitulo>
         <Operacion>A00</Operacion>
         <Version>1.0</Version>
-        <Ejercicio>2022</Ejercicio>
+        <Ejercicio>2025</Ejercicio>
         <ObligadoTributario>
             <NIF>09760433S</NIF>
             <ApellidosNombreRazonSocial>EUS Company</ApellidosNombreRazonSocial>
@@ -236,13 +235,14 @@ class TestEsEdiTbaiCommon(AccountEdiTestCommon):
                     <ApellidosNombreRazonSocial>&amp;@àÁ$£€èêÈÊöÔÇç¡⅛™³</ApellidosNombreRazonSocial>
                 </EmisorFacturaRecibida>
                 <CabeceraFactura>
-                    <SerieFactura>INVTEST</SerieFactura>
-                    <NumFactura>01</NumFactura>
-                    <FechaExpedicionFactura>01-01-2022</FechaExpedicionFactura>
-                    <FechaRecepcion>01-01-2022</FechaRecepcion>
+                    <SerieFactura>TEST</SerieFactura>
+                    <NumFactura>INV/5234</NumFactura>
+                    <FechaExpedicionFactura>01-01-2025</FechaExpedicionFactura>
+                    <FechaRecepcion>01-01-2025</FechaRecepcion>
                     <TipoFactura>F1</TipoFactura>
                 </CabeceraFactura>
                 <DatosFactura>
+                    <DescripcionOperacion>INV/5234</DescripcionOperacion>
                     <Claves>
                         <IDClave>
                             <ClaveRegimenIvaOpTrascendencia>01</ClaveRegimenIvaOpTrascendencia>
@@ -264,6 +264,57 @@ class TestEsEdiTbaiCommon(AccountEdiTestCommon):
     </FacturasRecibidas>
 </lrpjframp:LROEPJ240FacturasRecibidasAltaModifPeticion>"""
 
+    L10N_ES_TBAI_SAMPLE_XML_POST_IN_ND = """
+<lrpjframp:LROEPJ240FacturasRecibidasAltaModifPeticion xmlns:lrpjframp="https://www.batuz.eus/fitxategiak/batuz/LROE/esquemas/LROE_PJ_240_2_FacturasRecibidas_AltaModifPeticion_V1_0_1.xsd">
+    <Cabecera>
+        <Modelo>240</Modelo>
+        <Capitulo>2</Capitulo>
+        <Operacion>A00</Operacion>
+        <Version>1.0</Version>
+        <Ejercicio>2025</Ejercicio>
+        <ObligadoTributario>
+            <NIF>09760433S</NIF>
+            <ApellidosNombreRazonSocial>EUS Company</ApellidosNombreRazonSocial>
+        </ObligadoTributario>
+    </Cabecera>
+    <FacturasRecibidas>
+        <FacturaRecibida>
+                <EmisorFacturaRecibida>
+                    <IDOtro>
+                        <IDType>02</IDType>
+                        <ID>BE0477472701</ID>
+                    </IDOtro>
+                    <ApellidosNombreRazonSocial>&amp;@àÁ$£€èêÈÊöÔÇç¡⅛™³</ApellidosNombreRazonSocial>
+                </EmisorFacturaRecibida>
+                <CabeceraFactura>
+                    <SerieFactura>TEST</SerieFactura>
+                    <NumFactura>INV/5234</NumFactura>
+                    <FechaExpedicionFactura>01-01-2025</FechaExpedicionFactura>
+                    <FechaRecepcion>01-01-2025</FechaRecepcion>
+                    <TipoFactura>F1</TipoFactura>
+                </CabeceraFactura>
+                <DatosFactura>
+                    <DescripcionOperacion>INV/5234</DescripcionOperacion>
+                    <Claves>
+                        <IDClave>
+                            <ClaveRegimenIvaOpTrascendencia>01</ClaveRegimenIvaOpTrascendencia>
+                        </IDClave>
+                    </Claves>
+                    <ImporteTotalFactura>1100.00</ImporteTotalFactura>
+                </DatosFactura>
+                <IVA>
+                    <DetalleIVA>
+                        <CompraBienesCorrientesGastosBienesInversion>C</CompraBienesCorrientesGastosBienesInversion>
+                        <InversionSujetoPasivo>N</InversionSujetoPasivo>
+                        <BaseImponible>1000.00</BaseImponible>
+                        <TipoImpositivo>10.0</TipoImpositivo>
+                        <CuotaIVASoportada>100.00</CuotaIVASoportada>
+                        <CuotaIVADeducible>0.00</CuotaIVADeducible>
+                    </DetalleIVA>
+                </IVA>
+        </FacturaRecibida>
+    </FacturasRecibidas>
+</lrpjframp:LROEPJ240FacturasRecibidasAltaModifPeticion>"""
 
     L10N_ES_TBAI_SAMPLE_XML_POST_IN_IC = """
 <lrpjframp:LROEPJ240FacturasRecibidasAltaModifPeticion xmlns:lrpjframp="https://www.batuz.eus/fitxategiak/batuz/LROE/esquemas/LROE_PJ_240_2_FacturasRecibidas_AltaModifPeticion_V1_0_1.xsd">
@@ -272,7 +323,7 @@ class TestEsEdiTbaiCommon(AccountEdiTestCommon):
         <Capitulo>2</Capitulo>
         <Operacion>A00</Operacion>
         <Version>1.0</Version>
-        <Ejercicio>2022</Ejercicio>
+        <Ejercicio>2025</Ejercicio>
         <ObligadoTributario>
             <NIF>09760433S</NIF>
             <ApellidosNombreRazonSocial>EUS Company</ApellidosNombreRazonSocial>
@@ -285,13 +336,14 @@ class TestEsEdiTbaiCommon(AccountEdiTestCommon):
                     <ApellidosNombreRazonSocial>partner_b</ApellidosNombreRazonSocial>
                 </EmisorFacturaRecibida>
                 <CabeceraFactura>
-                    <SerieFactura>INVTEST</SerieFactura>
-                    <NumFactura>01</NumFactura>
-                    <FechaExpedicionFactura>01-01-2022</FechaExpedicionFactura>
-                    <FechaRecepcion>01-01-2022</FechaRecepcion>
+                    <SerieFactura>TEST</SerieFactura>
+                    <NumFactura>INV/5234</NumFactura>
+                    <FechaExpedicionFactura>01-01-2025</FechaExpedicionFactura>
+                    <FechaRecepcion>01-01-2025</FechaRecepcion>
                     <TipoFactura>F1</TipoFactura>
                 </CabeceraFactura>
                 <DatosFactura>
+                    <DescripcionOperacion>INV/5234</DescripcionOperacion>
                     <Claves>
                         <IDClave>
                             <ClaveRegimenIvaOpTrascendencia>09</ClaveRegimenIvaOpTrascendencia>
@@ -320,3 +372,100 @@ class TestEsEdiTbaiCommon(AccountEdiTestCommon):
         </FacturasRecibidas>
     </lrpjframp:LROEPJ240FacturasRecibidasAltaModifPeticion>
     """
+
+    L10N_ES_TBAI_CREDIT_NOTE_XML_POST = """<?xml version='1.0'?>
+<T:TicketBai xmlns:etsi="http://uri.etsi.org/01903/v1.3.2#" xmlns:T="urn:ticketbai:emision" xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
+  <Cabecera>
+    <IDVersionTBAI>1.2</IDVersionTBAI>
+  </Cabecera>
+  <Sujetos>
+    <Emisor>
+      <NIF>___ignore___</NIF>
+      <ApellidosNombreRazonSocial>EUS Company</ApellidosNombreRazonSocial>
+    </Emisor>
+    <Destinatarios>
+      <IDDestinatario>
+        <IDOtro>
+          <IDType>02</IDType>
+          <ID>BE0477472701</ID>
+        </IDOtro>
+        <ApellidosNombreRazonSocial>&amp;@&#224;&#193;$&#163;&#8364;&#232;&#234;&#200;&#202;&#246;&#212;&#199;&#231;&#161;&#8539;&#8482;&#179;</ApellidosNombreRazonSocial>
+        <CodigoPostal>___ignore___</CodigoPostal>
+        <Direccion>___ignore___</Direccion>
+      </IDDestinatario>
+    </Destinatarios>
+    <VariosDestinatarios>N</VariosDestinatarios>
+    <EmitidaPorTercerosODestinatario>N</EmitidaPorTercerosODestinatario>
+  </Sujetos>
+  <Factura>
+    <CabeceraFactura>
+      <SerieFactura>___ignore___</SerieFactura>
+      <NumFactura>00001</NumFactura>
+      <FechaExpedicionFactura>01-01-2025</FechaExpedicionFactura>
+      <HoraExpedicionFactura>___ignore___</HoraExpedicionFactura>
+      <FacturaSimplificada>N</FacturaSimplificada>
+      <FacturaEmitidaSustitucionSimplificada>N</FacturaEmitidaSustitucionSimplificada>
+      <FacturaRectificativa>
+        <Codigo>R1</Codigo>
+        <Tipo>I</Tipo>
+      </FacturaRectificativa>
+      <FacturasRectificadasSustituidas>
+        <IDFacturaRectificadaSustituida>
+          <SerieFactura>INVTEST</SerieFactura>
+          <NumFactura>01</NumFactura>
+          <FechaExpedicionFactura>___ignore___</FechaExpedicionFactura>
+        </IDFacturaRectificadaSustituida>
+      </FacturasRectificadasSustituidas>
+    </CabeceraFactura>
+    <DatosFactura>
+      <DescripcionFactura>manual</DescripcionFactura>
+      <DetallesFactura>
+        <IDDetalleFactura>
+          <DescripcionDetalle>producta</DescripcionDetalle>
+          <Cantidad>5.00000000</Cantidad>
+          <ImporteUnitario>-1000.00000000</ImporteUnitario>
+          <Descuento>-1000.00000000</Descuento>
+          <ImporteTotal>-4840.00000000</ImporteTotal>
+        </IDDetalleFactura>
+      </DetallesFactura>
+      <ImporteTotalFactura>-4840.00</ImporteTotalFactura>
+      <Claves>
+        <IDClave>
+          <ClaveRegimenIvaOpTrascendencia>01</ClaveRegimenIvaOpTrascendencia>
+        </IDClave>
+      </Claves>
+    </DatosFactura>
+    <TipoDesglose>
+      <DesgloseTipoOperacion>
+        <Entrega>
+          <Sujeta>
+            <NoExenta>
+              <DetalleNoExenta>
+                <TipoNoExenta>S1</TipoNoExenta>
+                <DesgloseIVA>
+                  <DetalleIVA>
+                    <BaseImponible>-4000.00</BaseImponible>
+                    <TipoImpositivo>21.00</TipoImpositivo>
+                    <CuotaImpuesto>-840.00</CuotaImpuesto>
+                  </DetalleIVA>
+                </DesgloseIVA>
+              </DetalleNoExenta>
+            </NoExenta>
+          </Sujeta>
+        </Entrega>
+      </DesgloseTipoOperacion>
+    </TipoDesglose>
+  </Factura>
+  <HuellaTBAI>
+    <Software>
+      <LicenciaTBAI>___ignore___</LicenciaTBAI>
+      <EntidadDesarrolladora>
+        <NIF>___ignore___</NIF>
+      </EntidadDesarrolladora>
+      <Nombre>___ignore___</Nombre>
+      <Version>___ignore___</Version>
+    </Software>
+    <NumSerieDispositivo>___ignore___</NumSerieDispositivo>
+  </HuellaTBAI>
+</T:TicketBai>
+"""

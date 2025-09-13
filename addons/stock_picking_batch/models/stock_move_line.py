@@ -5,7 +5,7 @@ from collections import defaultdict
 
 from odoo import _, fields, models
 from odoo import Command
-from odoo.tools.float_utils import float_compare
+from odoo.tools.float_utils import float_is_zero
 
 
 class StockMoveLine(models.Model):
@@ -45,6 +45,7 @@ class StockMoveLine(models.Model):
         for line in self:
             line_by_picking[line.picking_id] |= line
         picking_to_wave_vals_list = []
+        split_pickings_ids = set()
         for picking, lines in line_by_picking.items():
             # Move the entire picking if all the line are taken
             line_by_move = defaultdict(lambda: self.env['stock.move.line'])
@@ -55,13 +56,14 @@ class StockMoveLine(models.Model):
                 qty = line.product_uom_id._compute_quantity(line.quantity, line.product_id.uom_id, rounding_method='HALF-UP')
                 qty_by_move[line.move_id] += qty
 
+            # If all moves are to be transferred to the wave, link the picking to the wave
             if lines == picking.move_line_ids and lines.move_id == picking.move_ids:
-                move_complete = True
+                add_all_moves = True
                 for move, qty in qty_by_move.items():
-                    if float_compare(move.product_qty, qty, precision_rounding=move.product_uom.rounding) != 0:
-                        move_complete = False
+                    if float_is_zero(qty, precision_rounding=move.product_uom.rounding):
+                        add_all_moves = False
                         break
-                if move_complete:
+                if add_all_moves:
                     wave.picking_ids = [Command.link(picking.id)]
                     continue
 
@@ -71,6 +73,7 @@ class StockMoveLine(models.Model):
                 'move_line_ids': [],
                 'batch_id': wave.id,
             })[0]
+            split_pickings_ids.add(picking.id)
             for move, move_lines in line_by_move.items():
                 picking_to_wave_vals['move_line_ids'] += [Command.link(line.id) for line in lines]
                 # if all the line of a stock move are taken we change the picking on the stock move
@@ -86,5 +89,6 @@ class StockMoveLine(models.Model):
             picking_to_wave_vals_list.append(picking_to_wave_vals)
 
         if picking_to_wave_vals_list:
-            self.env['stock.picking'].create(picking_to_wave_vals_list)
+            split_pickings = self.env['stock.picking'].browse(split_pickings_ids) | self.env['stock.picking'].create(picking_to_wave_vals_list)
+            split_pickings._add_to_wave_post_picking_split_hook()
         wave.action_confirm()

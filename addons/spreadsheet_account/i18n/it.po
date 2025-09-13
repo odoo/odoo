@@ -4,7 +4,8 @@
 # 
 # Translators:
 # Wil Odoo, 2023
-# Marianna Ciofani, 2024
+# Marianna Ciofani, 2025
+# Sergio Zanchetta <primes2h@gmail.com>, 2025
 # 
 msgid ""
 msgstr ""
@@ -12,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-02-08 07:29+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Marianna Ciofani, 2024\n"
+"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2025\n"
 "Language-Team: Italian (https://app.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -35,8 +36,8 @@ msgid ""
 "'%s' is not a valid period. Supported formats are \"21/12/2022\", "
 "\"Q1/2022\", \"12/2022\", and \"2022\"."
 msgstr ""
-"'%s' non è un periodo valido. I formati supportati sono \"21/12/2022\", "
-"\"Q1/2022\", \"12/2022\", and \"2022\"."
+"\"%s\" non è un periodo valido. I formati supportati sono \"21/12/2022\", "
+"\"Q1/2022\", \"12/2022\" e \"2022\"."
 
 #. module: spreadsheet_account
 #: model:ir.model,name:spreadsheet_account.model_account_account
@@ -81,8 +82,8 @@ msgstr "Movimenti contabili per il prefisso del conto %s"
 #. odoo-javascript
 #: code:addons/spreadsheet_account/static/src/accounting_functions.js:0
 #, python-format
-msgid "Returns the account ids of a given group."
-msgstr "Restituisce gli id degli conti di un dato gruppo."
+msgid "Returns the account codes of a given group."
+msgstr "Restituisce i codici dei conti di un dato gruppo."
 
 #. module: spreadsheet_account
 #. odoo-javascript
@@ -115,14 +116,7 @@ msgstr "Mostra record"
 #: code:addons/spreadsheet_account/static/src/accounting_functions.js:0
 #, python-format
 msgid "Set to TRUE to include unposted entries."
-msgstr "Imposta come VERO per includere voci non registrate."
-
-#. module: spreadsheet_account
-#. odoo-javascript
-#: code:addons/spreadsheet_account/static/src/accounting_functions.js:0
-#, python-format
-msgid "The account type (income, expense, asset_current,...)."
-msgstr "Tipo di conto (entrate, spese, asset_current...)."
+msgstr "Imposta come TRUE per includere voci non registrate."
 
 #. module: spreadsheet_account
 #. odoo-javascript
@@ -177,6 +171,13 @@ msgstr "Data dalla quale estrarre l'inizio dell'anno fiscale."
 #, python-format
 msgid "The prefix of the accounts."
 msgstr "Il prefisso dei conti."
+
+#. module: spreadsheet_account
+#. odoo-javascript
+#: code:addons/spreadsheet_account/static/src/accounting_functions.js:0
+#, python-format
+msgid "The technical account type (possible values are: %s)."
+msgstr "Il tipo di conto tecnico (i valori possibili sono: %s)."
 
 #. module: spreadsheet_account
 #. odoo-javascript

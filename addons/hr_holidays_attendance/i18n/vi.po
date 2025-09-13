@@ -4,15 +4,15 @@
 # 
 # Translators:
 # Wil Odoo, 2023
-# Thi Huong Nguyen, 2024
+# Thi Huong Nguyen, 2025
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.0\n"
+"Project-Id-Version: Odoo Server 17.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2025-02-04 10:08+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Thi Huong Nguyen, 2024\n"
+"Last-Translator: Thi Huong Nguyen, 2025\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -35,7 +35,7 @@ msgstr "Mức độ phương pháp tích lũy"
 #. module: hr_holidays_attendance
 #: model:ir.model,name:hr_holidays_attendance.model_hr_attendance
 msgid "Attendance"
-msgstr "Chuyên cần"
+msgstr "Chấm công"
 
 #. module: hr_holidays_attendance
 #: model:ir.model.fields.selection,name:hr_holidays_attendance.selection__hr_leave_accrual_level__frequency_hourly_source__attendance
@@ -93,7 +93,6 @@ msgstr "Giờ làm thêm"
 #. module: hr_holidays_attendance
 #: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.hr_attendance_holidays_hr_leave_allocation_view_form_inherit
 #: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.hr_leave_view_form
-#: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.hr_leave_view_form_overtime
 msgid "Extra Hours Available"
 msgstr "Có giờ làm thêm"
 
@@ -123,7 +122,7 @@ msgid ""
 "records."
 msgstr ""
 "Nếu nguồn được đặt thành Lịch, số giờ làm việc sẽ được tính từ lịch của nhân"
-" viên và thời gian nghỉ phép (nếu kế hoạch dựa trên thời gian làm việc). Nếu"
+" viên và thời gian ngày nghỉ (nếu kế hoạch dựa trên thời gian làm việc). Nếu"
 " không, số giờ làm việc sẽ dựa trên dữ liệu Chấm công."
 
 #. module: hr_holidays_attendance
@@ -138,8 +137,19 @@ msgid ""
 "Once a time off of this type is approved, extra hours in attendances will be"
 " deducted."
 msgstr ""
-"Khi nghỉ phép của loại này được duyệt, giờ làm thêm trong điểm danh sẽ được "
+"Khi ngày nghỉ của loại này được duyệt, giờ làm thêm trong chấm công sẽ được "
 "trừ đi."
+
+#. module: hr_holidays_attendance
+#. odoo-python
+#: code:addons/hr_holidays_attendance/models/hr_leave_allocation.py:0
+#, python-format
+msgid ""
+"Only an Officer or Administrator is allowed to edit the allocation duration "
+"in this status."
+msgstr ""
+"Chỉ có Người phụ trách hoặc Quản trị viên mới được phép chỉnh sửa thời hạn "
+"phân bổ trong trạng thái này."
 
 #. module: hr_holidays_attendance
 #: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave__overtime_deductible
@@ -180,7 +190,6 @@ msgstr "Nhân viên không có đủ số giờ làm thêm để kéo dài ngh�
 #. module: hr_holidays_attendance
 #. odoo-python
 #: code:addons/hr_holidays_attendance/models/hr_leave.py:0
-#: code:addons/hr_holidays_attendance/models/hr_leave.py:0
 #, python-format
 msgid "The employee does not have enough extra hours to request this leave."
 msgstr "Nhân viên không có đủ số giờ làm thêm để yêu cầu nghỉ phép này."
@@ -196,17 +205,17 @@ msgstr "Nhân viên không có đủ số giờ làm thêm để yêu cầu ngh�
 #. module: hr_holidays_attendance
 #: model:ir.model,name:hr_holidays_attendance.model_hr_leave
 msgid "Time Off"
-msgstr "Nghỉ phép"
+msgstr "Ngày nghỉ"
 
 #. module: hr_holidays_attendance
 #: model:ir.model,name:hr_holidays_attendance.model_hr_leave_allocation
 msgid "Time Off Allocation"
-msgstr "Phân bổ nghỉ phép"
+msgstr "Phân bổ thời gian ngày nghỉ"
 
 #. module: hr_holidays_attendance
 #: model:ir.model,name:hr_holidays_attendance.model_hr_leave_type
 msgid "Time Off Type"
-msgstr "Loại Nghỉ phép"
+msgstr "Loại Ngày nghỉ"
 
 #. module: hr_holidays_attendance
 #: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave__employee_overtime
@@ -221,7 +230,6 @@ msgstr "Người dùng"
 
 #. module: hr_holidays_attendance
 #. odoo-python
-#: code:addons/hr_holidays_attendance/models/hr_leave.py:0
 #: code:addons/hr_holidays_attendance/models/hr_leave.py:0
 #, python-format
 msgid "You do not have enough extra hours to request this leave"

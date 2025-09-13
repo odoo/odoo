@@ -5,6 +5,7 @@ import { CardLayout } from "@hr_attendance/components/card_layout/card_layout";
 import { KioskManualSelection } from "@hr_attendance/components/manual_selection/manual_selection";
 import { makeEnv, startServices } from "@web/env";
 import { templates } from "@web/core/assets";
+import { isIosApp } from "@web/core/browser/feature_detection";
 import { _t } from "@web/core/l10n/translation";
 import { MainComponentsContainer } from "@web/core/main_components_container";
 import { useService, useBus } from "@web/core/utils/hooks";
@@ -14,7 +15,15 @@ import {KioskPinCode} from "@hr_attendance/components/pin_code/pin_code";
 import {KioskBarcodeScanner} from "@hr_attendance/components/kiosk_barcode/kiosk_barcode";
 
 class kioskAttendanceApp extends Component{
-    static props = [];
+    static props = {
+        token: {type : String},
+        companyId: {type : Number},
+        companyName: {type : String},
+        employees: {type : Array},
+        departments: {type : Array},
+        kioskMode: {type : String},
+        barcodeSource: {type : String}
+    };
     static components = {
         KioskBarcodeScanner,
         CardLayout,
@@ -28,6 +37,7 @@ class kioskAttendanceApp extends Component{
         this.rpc = useService("rpc");
         this.barcode = useService("barcode");
         this.notification = useService("notification");
+        this.ui = useService("ui");
         this.companyImageUrl = url("/web/binary/company_logo", {
             company: this.props.companyId,
         });
@@ -79,8 +89,35 @@ class kioskAttendanceApp extends Component{
         this.notification.add(text, { type: "danger" });
     }
 
-    async onManualSelection(employeeId, enteredPin){
-        const result = await this.rpc('manual_selection',
+    async makeRpcWithGeolocation(route, params) {
+        if (!isIosApp()) { // iOS app lacks permissions to call `getCurrentPosition`
+            return new Promise((resolve) => {
+                navigator.geolocation.getCurrentPosition(
+                    async ({ coords: { latitude, longitude } }) => {
+                        const result = await this.rpc(route, {
+                            ...params,
+                            latitude,
+                            longitude,
+                        });
+                        resolve(result);
+                    },
+                    async (err) => {
+                        const result = await this.rpc(route, {
+                            ...params
+                        });
+                        resolve(result);
+                    },
+                    { enableHighAccuracy: true }
+                );
+            });
+        }
+        else {
+            return this.rpc(route, {...params})
+        }
+    }
+
+    async onManualSelection(employeeId, enteredPin) {
+        const result = await this.makeRpcWithGeolocation('manual_selection',
             {
                 'token': this.props.token,
                 'employee_id': employeeId,
@@ -101,18 +138,29 @@ class kioskAttendanceApp extends Component{
             return;
         }
         this.lockScanner = true;
-        const result = await this.rpc('attendance_barcode_scanned',
-            {
-                'barcode': barcode,
-                'token': this.props.token
-            })
-        if (result && result.employee_name) {
-            this.employeeData = result
-            this.switchDisplay('greet')
-        }else{
-            this.displayNotification(_t("No employee corresponding to Badge ID '%(barcode)s.'", { barcode }))
+        this.ui.block();
+
+        let result;
+        try {
+            result = await this.rpc("attendance_barcode_scanned", {
+                barcode: barcode,
+                token: this.props.token,
+            });
+
+            if (result && result.employee_name) {
+                this.employeeData = result;
+                this.switchDisplay("greet");
+            } else {
+                this.displayNotification(
+                    _t("No employee corresponding to Badge ID '%(barcode)s.'", { barcode })
+                );
+            }
+        } catch (error) {
+            this.displayNotification(error.data.message);
+        } finally {
+            this.lockScanner = false;
+            this.ui.unblock();
         }
-        this.lockScanner = false
     }
 }
 

@@ -11,7 +11,7 @@ from psycopg2.errors import LockNotAvailable
 from odoo import fields, models, api, _
 from odoo.http import request
 from odoo.exceptions import UserError, ValidationError
-from odoo.tools import formatLang, float_round, float_repr, cleanup_xml_node, groupby
+from odoo.tools import formatLang, float_compare, float_is_zero, float_round, float_repr, cleanup_xml_node, groupby
 from odoo.tools.misc import split_every
 from odoo.addons.base_iban.models.res_partner_bank import normalize_iban
 from odoo.addons.l10n_hu_edi.models.l10n_hu_edi_connection import format_bool, L10nHuEdiConnection, L10nHuEdiConnectionError
@@ -265,8 +265,8 @@ class AccountMove(models.Model):
     def _l10n_hu_get_currency_rate(self):
         """ Get the invoice currency / HUF rate.
 
-        If the company currency is HUF, we estimate this based on the invoice lines,
-        using a MMSE estimator.
+        If the company currency is HUF, we estimate this based on the invoice lines
+        (or if this is not an invoice, based on the AMLs), using a MMSE estimator.
 
         If the company currency is not HUF (e.g. Hungarian companies that do their accounting in euro),
         we get the rate from the currency rates.
@@ -274,7 +274,7 @@ class AccountMove(models.Model):
         if self.currency_id.name == 'HUF':
             return 1
         if self.company_id.currency_id.name == 'HUF':
-            squared_amount_currency = sum(line.amount_currency ** 2 for line in self.invoice_line_ids)
+            squared_amount_currency = sum(line.amount_currency ** 2 for line in (self.invoice_line_ids or self.line_ids))
             squared_balance = sum(line.balance ** 2 for line in self.invoice_line_ids)
             return math.sqrt(squared_balance / squared_amount_currency)
         return self.env['res.currency']._get_conversion_rate(
@@ -315,8 +315,11 @@ class AccountMove(models.Model):
     # === EDI: Flow === #
 
     def _l10n_hu_edi_check_invoices(self):
-        errors = []
         hu_vat_regex = re.compile(r'\d{8}-[1-5]-\d{2}')
+        hu_bank_account_regex = re.compile(r'\d{8}-\d{8}-\d{8}|\d{8}-\d{8}|[A-Z]{2}\d{2}[0-9A-Za-z]{11,30}')
+
+        # This contains all the advance invoices that correspond to final invoices in `self`.
+        advance_invoices = self.filtered(lambda m: not m._is_downpayment()).invoice_line_ids._get_downpayment_lines().mapped('move_id')
 
         checks = {
             'company_vat_missing': {
@@ -340,9 +343,14 @@ class AccountMove(models.Model):
                 'action_text': _('View Company/ies'),
             },
             'company_not_huf': {
-                'records': self.company_id.filtered(lambda c: c.currency_id.name != 'HUF'),
-                'message': _('Please use HUF as company currency!'),
+                'records': self.company_id.filtered(lambda c: c.currency_id.name not in ['HUF', 'EUR']),
+                'message': _('Please use HUF or EUR as your company currency.'),
                 'action_text': _('View Company/ies'),
+            },
+            'partner_bank_account_invalid': {
+                'records': self.partner_bank_id.filtered(lambda p: not hu_bank_account_regex.fullmatch(p.acc_number)),
+                'message': _('Please set a valid recipient bank account number!'),
+                'action_text': _('View partner(s)'),
             },
             'partner_vat_missing': {
                 'records': self.partner_id.commercial_partner_id.filtered(
@@ -389,6 +397,17 @@ class AccountMove(models.Model):
                 ]),
                 'message': _('The following invoices appear to be earlier in the chain, but have not yet been sent. Please send them first.'),
                 'action_text': _('View invoice(s)'),
+            },
+            'invoice_advance_not_paid': {
+                'records': advance_invoices.filtered(
+                    lambda m: (
+                        m.payment_state not in ['in_payment', 'paid', 'partial']
+                        or m.l10n_hu_edi_state in [False, 'rejected', 'cancelled']
+                            and m not in self  # It's okay to send an advance and a final invoice together, as we sort by id before sending.
+                    )
+                ),
+                'message': _('All advance invoices must be paid and sent to NAV before the final invoice is issued.'),
+                'action_text': _('View advance invoice(s)'),
             },
             'invoice_line_not_one_vat_tax': {
                 'records': self.filtered(
@@ -474,6 +493,18 @@ class AccountMove(models.Model):
             for batch in split_every(100, batch_company):
                 self.env['account.move'].union(*batch)._l10n_hu_edi_upload_single_batch(connection)
 
+    def _l10n_hu_edi_get_operation_type(self):
+        base_invoice = self._l10n_hu_get_chain_base()
+        modification_invoices = self._l10n_hu_get_chain_invoices() - base_invoice
+
+        all_invoices_residual_zero = all(invoice.amount_residual == 0 for invoice in modification_invoices)
+
+        if self == base_invoice:
+            return 'CREATE'
+        if base_invoice.amount_residual == 0 and all_invoices_residual_zero:
+            return 'STORNO'
+        return 'MODIFY'
+
     def _l10n_hu_edi_upload_single_batch(self, connection):
         try:
             token_result = connection.do_token_exchange(self.company_id.sudo()._l10n_hu_edi_get_credentials_dict())
@@ -494,7 +525,7 @@ class AccountMove(models.Model):
         invoice_operations = [
             {
                 'index': invoice.l10n_hu_edi_batch_upload_index,
-                'operation': 'CREATE' if invoice._l10n_hu_get_chain_base() == invoice else 'MODIFY',
+                'operation': invoice._l10n_hu_edi_get_operation_type(),
                 'invoice_data': base64.b64decode(invoice.l10n_hu_edi_attachment),
             }
             for invoice in self
@@ -805,6 +836,9 @@ class AccountMove(models.Model):
         supplier = self.company_id.partner_id
         customer = self.partner_id.commercial_partner_id
 
+        supplier_bank = self.partner_bank_id if self.partner_bank_id and self.move_type == "out_invoice" else supplier.bank_ids[:1]
+        customer_bank = self.partner_bank_id if self.partner_bank_id and self.move_type == "out_refund" else customer.bank_ids[:1]
+
         currency_huf = self.env.ref('base.HUF')
         currency_rate = self._l10n_hu_get_currency_rate()
 
@@ -818,12 +852,12 @@ class AccountMove(models.Model):
             'base_invoice': base_invoice if base_invoice != self else None,
             'supplier': supplier,
             'supplier_vat_data': get_vat_data(supplier, self.fiscal_position_id.foreign_vat),
-            'supplierBankAccountNumber': format_bank_account_number(self.partner_bank_id or supplier.bank_ids[:1]),
+            'supplierBankAccountNumber': format_bank_account_number(supplier_bank),
             'individualExemption': self.company_id.l10n_hu_tax_regime == 'ie',
             'customer': customer,
             'customerVatStatus': (not customer.is_company and 'PRIVATE_PERSON') or (customer.country_code == 'HU' and 'DOMESTIC') or 'OTHER',
             'customer_vat_data': get_vat_data(customer) if customer.is_company else None,
-            'customerBankAccountNumber': format_bank_account_number(customer.bank_ids[:1]),
+            'customerBankAccountNumber': format_bank_account_number(customer_bank),
             'smallBusinessIndicator': self.company_id.l10n_hu_tax_regime == 'sb',
             'exchangeRate': currency_rate,
             'cashAccountingIndicator': self.company_id.l10n_hu_tax_regime == 'ca',
@@ -859,24 +893,33 @@ class AccountMove(models.Model):
             }
 
             if 'is_downpayment' in line and line.is_downpayment:
-                advance_invoices = line._get_downpayment_lines().mapped('move_id').filtered(lambda m: m.state == 'posted') - self
+                # Advance and final invoices.
+                line_values['advanceIndicator'] = True
 
-                # Advance invoices case 1: this is an advance invoice
-                if not advance_invoices:
-                    line_values['advanceIndicator'] = True
+                if not self._is_downpayment():
+                    # This is a final invoice that deducts one or more advance invoices.
+                    # In this case, we add a reference to the *last-paid* advance invoice (NAV only allows us to report one) if one exists,
+                    # otherwise we don't add anything.
 
-                # Advance invoices case 2: this is a final invoice that deducts an advance invoice
-                else:
-                    line_values.update({
-                        'advanceIndicator': True,
-                        'advanceOriginalInvoice': advance_invoices[0].name,
-                        'advancePaymentDate': advance_invoices[0].invoice_date,
-                        'advanceExchangeRate': advance_invoices[0]._l10n_hu_get_currency_rate(),
-                    })
+                    advance_invoices = line._get_downpayment_lines().mapped('move_id').filtered(lambda m: m.state == 'posted')
+                    reconciled_moves = advance_invoices._get_reconciled_amls().move_id
+                    last_reconciled_payment = reconciled_moves.filtered(lambda m: m.payment_id or m.statement_line_id).sorted('date', reverse=True)[:1]
+
+                    if last_reconciled_payment:
+                        line_values.update({
+                            'advanceOriginalInvoice': advance_invoices.filtered(lambda m: last_reconciled_payment in m._get_reconciled_amls().move_id)[0].name,
+                            'advancePaymentDate': last_reconciled_payment.date,
+                            'advanceExchangeRate': last_reconciled_payment._l10n_hu_get_currency_rate(),
+                        })
 
             if line.display_type == 'product':
                 vat_tax = line.tax_ids.filtered(lambda t: t.l10n_hu_tax_type)
-                price_unit_signed = sign * line.price_unit
+
+                if line.quantity == 0.0 or line.discount == 100.0:
+                    price_unit_signed = 0.0
+                else:
+                    price_unit_signed = sign * line.price_subtotal / (1 - line.discount / 100) / line.quantity
+
                 price_net_signed = self.currency_id.round(price_unit_signed * line.quantity * (1 - line.discount / 100.0))
                 discount_value_signed = self.currency_id.round(price_unit_signed * line.quantity - price_net_signed)
                 price_total_signed = sign * line.price_total
@@ -900,9 +943,16 @@ class AccountMove(models.Model):
                 })
 
             elif line.display_type == 'rounding':
-                atk_tax = self.env['account.tax'].search([('l10n_hu_tax_type', '=', 'ATK'), ('company_id', '=', self.company_id.id)], limit=1)
+                atk_tax = self.env['account.tax'].search(
+                    [
+                        ('type_tax_use', '=', 'sale'),
+                        ('l10n_hu_tax_type', '=', 'ATK'),
+                        ('company_id', '=', self.company_id.id),
+                    ],
+                    limit=1,
+                )
                 if not atk_tax:
-                    raise UserError(_('Please create an ATK (outside the scope of the VAT Act) type of tax!'))
+                    raise UserError(_('Please create a sales tax with type ATK (outside the scope of the VAT Act).'))
 
                 amount_huf = line.balance if self.company_id.currency_id == currency_huf else currency_huf.round(line.amount_currency * currency_rate)
                 line_values.update({

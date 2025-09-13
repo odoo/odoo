@@ -99,12 +99,8 @@ class ResConfigSettings(models.TransientModel):
 
     @api.depends('is_account_peppol_eligible', 'account_peppol_edi_user')
     def _compute_account_peppol_edi_mode(self):
-        edi_mode = self.env['ir.config_parameter'].sudo().get_param('account_peppol.edi.mode')
         for config in self:
-            if config.account_peppol_edi_user:
-                config.account_peppol_edi_mode = config.account_peppol_edi_user.edi_mode
-            else:
-                config.account_peppol_edi_mode = edi_mode or 'prod'
+            config.account_peppol_edi_mode = config.company_id._get_peppol_edi_mode()
 
     def _inverse_account_peppol_edi_mode(self):
         for config in self:
@@ -155,6 +151,11 @@ class ResConfigSettings(models.TransientModel):
         company = self.company_id
         edi_proxy_client = self.env['account_edi_proxy_client.user']
         edi_identification = edi_proxy_client._get_proxy_identification(company, 'peppol')
+
+        recovered_edi_users = self.env['account_edi_proxy_client.user']._try_recover_peppol_proxy_users(company, peppol_identifier=edi_identification)
+        if recovered_edi_users:
+            return
+
         company.partner_id._check_peppol_eas()
 
         if (
@@ -163,8 +164,7 @@ class ResConfigSettings(models.TransientModel):
         ):
             error_msg = _(
                 "A participant with these details has already been registered on the network. "
-                "If you have previously registered to an alternative Peppol service, please deregister from that service, "
-                "or request a migration key before trying again. "
+                "If you have previously registered to a Peppol service, please deregister."
             )
 
             if isinstance(participant_info, str):
@@ -300,15 +300,7 @@ class ResConfigSettings(models.TransientModel):
         The migration key is then displayed in Peppol settings.
         Currently, reopening after migrating away is not supported.
         """
-        self.ensure_one()
-
-        if self.account_peppol_proxy_state != 'active':
-            raise UserError(_(
-                "Can't migrate registration with this status: %s", self.account_peppol_proxy_state
-            ))
-
-        response = self._call_peppol_proxy(endpoint='/api/peppol/1/migrate_peppol_registration')
-        self.account_peppol_migration_key = response['migration_key']
+        raise UserError(_("This feature is deprecated. Contact odoo support if you need a migration key."))
 
     @handle_demo
     def button_deregister_peppol_participant(self):

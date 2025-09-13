@@ -11,7 +11,7 @@ class ProductReplenish(models.TransientModel):
     def _compute_date_planned(self):
         super()._compute_date_planned()
         for rec in self:
-            if self.route_id.name == "Manufacture":
+            if 'manufacture' in rec.route_id.rule_ids.mapped('action'):
                 rec.date_planned = rec._get_date_planned(rec.route_id, product_tmpl_id=rec.product_tmpl_id)
 
     def _get_record_to_notify(self, date):
@@ -29,7 +29,7 @@ class ProductReplenish(models.TransientModel):
 
     def _get_date_planned(self, route_id, **kwargs):
         date = super()._get_date_planned(route_id, **kwargs)
-        if route_id.name != 'Manufacture':
+        if 'manufacture' not in route_id.rule_ids.mapped('action'):
             return date
         delay = 0
         product_tmpl_id = kwargs.get('product_tmpl_id') or self.product_tmpl_id

@@ -1,25 +1,27 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* project
-# 
+# * project
+#
 # Translators:
-# Wil Odoo, 2024
-# Junko Augias, 2024
 # Ryoko Tsuda <ryoko@quartile.co>, 2024
-# 
+# Wil Odoo, 2024
+# Junko Augias, 2025
+# "Junko Augias (juau)" <juau@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-29 10:44+0000\n"
-"PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Ryoko Tsuda <ryoko@quartile.co>, 2024\n"
-"Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
+"POT-Creation-Date: 2025-05-09 20:36+0000\n"
+"PO-Revision-Date: 2025-09-05 01:40+0000\n"
+"Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
+"Language-Team: Japanese <https://translate.odoo.com/projects/odoo-17/project/"
+"ja/>\n"
+"Language: ja\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ja\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: project
 #. odoo-python
@@ -52,7 +54,7 @@ msgstr " - 期日までのタスク"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__collaborator_count
 msgid "# Collaborators"
-msgstr "# 協力者"
+msgstr "共同作業者数"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__rating_count
@@ -282,47 +284,63 @@ msgid ""
 "            "
 msgstr ""
 "<div>\n"
-"    <t t-set=\"access_token\" t-value=\"object._rating_get_access_token()\"></t>\n"
+"    <t t-set=\"access_token\" t-value=\"object._rating_get_access_token()\""
+"></t>\n"
 "    <t t-set=\"partner\" t-value=\"object._rating_get_partner()\"></t>\n"
-"    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"width:100%; margin:0px auto;\">\n"
+"    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" "
+"style=\"width:100%; margin:0px auto;\">\n"
 "    <tbody>\n"
 "        <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
 "            <t t-if=\"partner.name\">\n"
-"                こんにちは、 <t t-out=\"partner.name or ''\">Brandon Freeman</t>様、<br><br>\n"
+"                <t t-out=\"partner.name or ''\">Brandon Freeman</t>様<br><br>"
+"\n"
 "            </t>\n"
 "            <t t-else=\"\">\n"
 "                こんにちは。<br><br>\n"
 "            </t>\n"
-"            以下に関連した当社のサービスの評価にご協力下さい: <strong t-out=\"object.name or ''\">計画および予算</strong> タスク\n"
+"            <strong t-out=\"object.name or ''\">プランニングと予算</strong> "
+"タスクに関連する弊社サービスについて、ご評価をお願い申し上げます。\n"
 "            <t t-if=\"object._rating_get_operator().name\">\n"
-"                担当 <strong t-out=\"object._rating_get_operator().name or ''\">Mitchell Admin</strong>。<br>\n"
+"                担当者： <strong t-out="
+"\"object._rating_get_operator().name or ''\">Mitchell Admin</strong>。<br>\n"
 "            </t>\n"
 "            <t t-else=\"\">\n"
 "                .<br>\n"
 "            </t>\n"
 "        </td></tr>\n"
 "        <tr><td style=\"text-align: center;\">\n"
-"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" summary=\"o_mail_notification\" style=\"width:100%; margin: 32px 0px 32px 0px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width="
+"\"590\" summary=\"o_mail_notification\" style="
+"\"width:100%; margin: 32px 0px 32px 0px;\">\n"
 "                <tr><td style=\"font-size: 13px;\">\n"
-"                    <strong>当社のサービスに関するご感想をお聞かせ下さい。</strong><br>\n"
-"                    <span style=\"font-size: 12px; opacity: 0.5; color: #454748;\">(以下から1つを選択して下さい)</span>\n"
+"                    "
+"<strong>サービスに関するご感想をお聞かせ下さい。</strong><br>\n"
+"                    <span style=\"font-size: 12px; opacity: 0.5; color: "
+"#454748;\">(以下より1つをクリックして下さい)</span>\n"
 "                </td></tr>\n"
 "                <tr><td style=\"font-size: 13px;\">\n"
-"                    <table style=\"width:100%;text-align:center;margin-top:2rem;\">\n"
+"                    <table style="
+"\"width:100%;text-align:center;margin-top:2rem;\">\n"
 "                        <tr>\n"
 "                            <td>\n"
-"                                <a t-attf-href=\"/rate/{{ access_token }}/5\">\n"
-"                                    <img alt=\"Satisfied\" src=\"/rating/static/src/img/rating_5.png\" title=\"Satisfied\">\n"
+"                                <a t-attf-href=\"/rate/{{ access_token }}/5\""
+">\n"
+"                                    <img alt=\"Satisfied\" src="
+"\"/rating/static/src/img/rating_5.png\" title=\"Satisfied\">\n"
 "                                </a>\n"
 "                            </td>\n"
 "                            <td>\n"
-"                                <a t-attf-href=\"/rate/{{ access_token }}/3\">\n"
-"                                    <img alt=\"Okay\" src=\"/rating/static/src/img/rating_3.png\" title=\"Okay\">\n"
+"                                <a t-attf-href=\"/rate/{{ access_token }}/3\""
+">\n"
+"                                    <img alt=\"Okay\" src="
+"\"/rating/static/src/img/rating_3.png\" title=\"Okay\">\n"
 "                                </a>\n"
 "                            </td>\n"
 "                            <td>\n"
-"                                <a t-attf-href=\"/rate/{{ access_token }}/1\">\n"
-"                                    <img alt=\"Dissatisfied\" src=\"/rating/static/src/img/rating_1.png\" title=\"Dissatisfied\">\n"
+"                                <a t-attf-href=\"/rate/{{ access_token }}/1\""
+">\n"
+"                                    <img alt=\"Dissatisfied\" src="
+"\"/rating/static/src/img/rating_1.png\" title=\"Dissatisfied\">\n"
 "                                </a>\n"
 "                            </td>\n"
 "                        </tr>\n"
@@ -331,25 +349,42 @@ msgstr ""
 "            </table>\n"
 "        </td></tr>\n"
 "        <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
-"            フィードバックを頂きありがとうございました。引き続き改善に努めて参ります。\n"
+"            "
+"ご協力頂きありがとうございます。皆さまのご意見は、サービス向上のために活用さ"
+"せていただきます。\n"
 "            <t t-if=\"object.project_id.rating_status == 'stage'\">\n"
-"                <br><span style=\"margin: 0; font-size: 12px; opacity: 0.5; color: #454748;\">お客様のチケットがステージ <b t-out=\"object.stage_id.name or ''\">進行中</b>に移動したため、このお客様アンケートが送信されました。</span>\n"
+"                <br><span style="
+"\"margin: 0; font-size: 12px; opacity: 0.5; color: #454748;\""
+">このアンケートはタスクがステージ <b t-out=\"object.stage_id.name or ''\""
+">進行中</b>ステージに移動されたことにより、送信されています。</span>\n"
 "            </t>\n"
 "            <t t-if=\"object.project_id.rating_status == 'periodic'\">\n"
-"                <br><span style=\"margin: 0; font-size: 12px; opacity: 0.5; color: #454748;\">このお客様満足度アンケートは<b t-out=\"object.project_id.rating_status_period or ''\">毎週</b>、タスクが <b t-out=\"object.stage_id.name or ''\">進行中</b>ステージ</span>にある限り送信されます。\n"
+"                <br><span style="
+"\"margin: 0; font-size: 12px; opacity: 0.5; color: #454748;\""
+">このアンケートは<b t-out=\"object.project_id.rating_status_period or ''\""
+">毎週</b>の頻度で、タスクが <b t-out=\"object.stage_id.name or ''\""
+">進行中</b>ステージ</span>にある間、送信されます。\n"
 "            </t>\n"
 "        </td></tr>\n"
 "        <tr><td><br>宜しくお願い致します。</td></tr>\n"
 "        <tr><td>\n"
-"           <t t-out=\"object.project_id.company_id.name or ''\">YourCompany</t>\n"
+"           <t t-out=\"object.project_id.company_id.name or ''\""
+">YourCompany</t>\n"
 "        </td></tr>\n"
 "        <tr><td style=\"opacity: 0.5;\">\n"
-"            <t t-out=\"object.project_id.company_id.phone or ''\">1 650-123-4567</t>\n"
+"            <t t-out=\"object.project_id.company_id.phone or ''\">1 "
+"650-123-4567</t>\n"
 "            <t t-if=\"object.project_id.company_id.email\">\n"
-"                | <a t-attf-href=\"mailto:{{ object.project_id.company_id.email }}\" style=\"text-decoration:none; color: #454748;\" t-out=\"object.project_id.company_id.email or ''\">info@yourcompany.com</a>\n"
+"                | <a t-attf-href="
+"\"mailto:{{ object.project_id.company_id.email }}\" style=\"text-"
+"decoration:none; color: #454748;\" t-out=\""
+"object.project_id.company_id.email or ''\">info@yourcompany.com</a>\n"
 "            </t>\n"
 "            <t t-if=\"object.project_id.company_id.website\">\n"
-"                | <a t-attf-href=\"{{ object.project_id.company_id.website }}\" style=\"text-decoration:none; color: #454748;\" t-out=\"object.project_id.company_id.website or ''\">http://www.example.com</a>\n"
+"                | <a t-attf-href="
+"\"{{ object.project_id.company_id.website }}\" style=\"text-decoration:none; "
+"color: #454748;\" t-out=\"object.project_id.company_id.website or ''\""
+">http://www.example.com</a>\n"
 "            </t>\n"
 "        </td></tr>\n"
 "    </tbody>\n"
@@ -518,7 +553,7 @@ msgid ""
 "                                </span>"
 msgstr ""
 "<span class=\"o_stat_text\">\n"
-"協力者\n"
+"共同作業者\n"
 "</span>"
 
 #. module: project
@@ -643,7 +678,7 @@ msgstr "Eメール受信対象"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__access_instruction_message
 msgid "Access Instruction Message"
-msgstr "アクセス指示メッセージ"
+msgstr "アクセス手順メッセージ"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_share_wizard__access_mode
@@ -847,6 +882,7 @@ msgid "Allocated Time"
 msgstr "割当時間"
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.portal_my_task
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task_allocated_hours_template
 msgid "Allocated Time:"
 msgstr "割当時間:"
@@ -866,7 +902,7 @@ msgstr "分析勘定"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_res_config_settings__analytic_plan_id
 msgid "Analytic Plan"
-msgstr "分析計画"
+msgstr "分析プラン"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__analytic_account_id
@@ -912,12 +948,9 @@ msgid ""
 msgstr "プロジェクトの進捗状況や従業員のパフォーマンスを分析します。"
 
 #. module: project
-#. odoo-javascript
-#: code:addons/project/static/src/components/project_task_state_selection/project_task_state_selection.js:0
 #: model:ir.model.fields.selection,name:project.selection__project_task__state__03_approved
 #: model:ir.model.fields.selection,name:project.selection__project_task_burndown_chart_report__state__03_approved
 #: model:ir.model.fields.selection,name:project.selection__report_project_task_user__state__03_approved
-#, python-format
 msgid "Approved"
 msgstr "承認済"
 
@@ -1004,8 +1037,6 @@ msgid "Assigned to"
 msgstr "担当者"
 
 #. module: project
-#. odoo-python
-#: code:addons/project/controllers/portal.py:0
 #: model:ir.model.fields,field_description:project.field_project_task__user_ids
 #: model:ir.model.fields,field_description:project.field_project_task_burndown_chart_report__user_ids
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__user_ids
@@ -1013,7 +1044,6 @@ msgstr "担当者"
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_tree
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_base
-#, python-format
 msgid "Assignees"
 msgstr "割り当て先"
 
@@ -1163,7 +1193,7 @@ msgstr "不許可"
 #: model:ir.model.fields,field_description:project.field_project_task__depend_on_ids
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "Blocked By"
-msgstr "ブロック者"
+msgstr "ブロック元"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_base
@@ -1205,10 +1235,8 @@ msgid "Can Be Marked As Done"
 msgstr "完了済と記録できます"
 
 #. module: project
-#. odoo-javascript
 #. odoo-python
 #: code:addons/project/models/project_task.py:0
-#: code:addons/project/static/src/components/project_task_state_selection/project_task_state_selection.js:0
 #: model:ir.model.fields.selection,name:project.selection__project_task__state__1_canceled
 #: model:ir.model.fields.selection,name:project.selection__project_task_burndown_chart_report__state__1_canceled
 #: model:ir.model.fields.selection,name:project.selection__report_project_task_user__state__1_canceled
@@ -1221,15 +1249,12 @@ msgid "Canceled"
 msgstr "取消済"
 
 #. module: project
-#. odoo-javascript
-#: code:addons/project/static/src/components/project_task_state_selection/project_task_state_selection.js:0
 #: model:ir.model.fields.selection,name:project.selection__project_task__state__02_changes_requested
 #: model:ir.model.fields.selection,name:project.selection__project_task_burndown_chart_report__state__02_changes_requested
 #: model:ir.model.fields.selection,name:project.selection__report_project_task_user__state__02_changes_requested
 #: model:mail.message.subtype,description:project.mt_task_changes_requested
 #: model:mail.message.subtype,name:project.mt_project_task_changes_requested
 #: model:mail.message.subtype,name:project.mt_task_changes_requested
-#, python-format
 msgid "Changes Requested"
 msgstr "変更要求済"
 
@@ -1304,7 +1329,7 @@ msgstr "協力者"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__collaborator_ids
 msgid "Collaborators"
-msgstr "協力者"
+msgstr "共同作業者"
 
 #. module: project
 #: model:ir.model,name:project.model_project_collaborator
@@ -1381,7 +1406,7 @@ msgstr "ステージの設定"
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_type_delete_confirmation_wizard
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_type_unarchive_wizard
 msgid "Confirm"
-msgstr "確認"
+msgstr "確定"
 
 #. module: project
 #. odoo-python
@@ -1938,7 +1963,6 @@ msgstr "アクセス権がありません。ユーザのダイジェストメー
 #. odoo-javascript
 #. odoo-python
 #: code:addons/project/models/project_task.py:0
-#: code:addons/project/static/src/components/project_task_state_selection/project_task_state_selection.js:0
 #: code:addons/project/static/src/views/project_task_kanban/project_task_kanban_examples.js:0
 #: code:addons/project/static/src/views/project_task_kanban/project_task_kanban_examples.js:0
 #: code:addons/project/static/src/views/project_task_kanban/project_task_kanban_examples.js:0
@@ -2015,6 +2039,11 @@ msgstr "このタスクからの受信メールのCCにあり、現在既存顧�
 #: model:ir.model.fields,field_description:project.field_project_update__email_cc
 msgid "Email cc"
 msgstr "メールCC"
+
+#. module: project
+#: model:ir.model.fields,help:project.field_project_project__alias_domain
+msgid "Email domain e.g. 'example.com' in 'odoo@example.com'"
+msgstr "Eメールドメイン例 'example.com' in 'odoo@example.com'"
 
 #. module: project
 #: model_terms:digest.tip,tip_description:project.digest_tip_project_1
@@ -2397,7 +2426,6 @@ msgstr "アクティブ項目がFalseにセットされると、プロジェク�
 
 #. module: project
 #. odoo-javascript
-#: code:addons/project/static/src/components/project_task_state_selection/project_task_state_selection.js:0
 #: code:addons/project/static/src/components/project_task_state_selection/project_task_state_selection.xml:0
 #: code:addons/project/static/src/views/project_task_kanban/project_task_kanban_examples.js:0
 #: code:addons/project/static/src/views/project_task_kanban/project_task_kanban_examples.js:0
@@ -2472,7 +2500,7 @@ msgstr "無効な値: %s"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_access_view_tree
 msgid "Invite Collaborators"
-msgstr "協力者を招待する"
+msgstr "共同作業者を招待する"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_view_form
@@ -3095,7 +3123,7 @@ msgstr "活動タイプが見つかりません。作成しましょう！"
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.project_collaborator_action
 msgid "No collaborators found"
-msgstr "協力者が見つかりませんでした"
+msgstr "共同作業者が見つかりませんでした"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.rating_rating_action_project_report
@@ -3249,6 +3277,13 @@ msgstr "予定通り"
 #: model:ir.model.fields.selection,name:project.selection__project_project__rating_status_period__monthly
 msgid "Once a Month"
 msgstr "毎月1回"
+
+#. module: project
+#. odoo-python
+#: code:addons/project/controllers/portal.py:0
+#, python-format
+msgid "Only jpeg, png, bmp and tiff images are allowed as attachments."
+msgstr " 添付できるのはjpeg, png, bmp および tiff画像のみです。"
 
 #. module: project
 #. odoo-javascript
@@ -3463,9 +3498,9 @@ msgid ""
 "- followers: only followers of the related document or members of following channels\n"
 msgstr ""
 "メールゲートウェイを使用したメッセージドキュメント投稿のポリシー\n"
-"- everyone: 誰にでも投稿可能\n"
-"- partners: 許可されたパートナーのみ\n"
-"- followers: 関連ドキュメントのフォロワーか、フォローしているチャンネルのメンバーのみ\n"
+"- 全員: 誰でも投稿可能\n"
+"- 取引先: 認証済みの取引先のみ\n"
+"- フォロワー: 関連ドキュメントのフォロワーか、フォローしているチャネルのメンバーのみ\n"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__access_url
@@ -3604,7 +3639,7 @@ msgstr "プロジェクト"
 #: model:ir.actions.act_window,name:project.project_collaborator_action
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_access_view_tree
 msgid "Project Collaborators"
-msgstr "プロジェクト協力者"
+msgstr "プロジェクト共同作業者"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_account_analytic_account__project_count
@@ -3821,7 +3856,7 @@ msgstr "出版"
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__rating_status_period__quarterly
 msgid "Quarterly"
-msgstr "四半期毎に"
+msgstr "四半期毎"
 
 #. module: project
 #: model_terms:digest.tip,tip_description:project.digest_tip_project_0
@@ -3925,7 +3960,7 @@ msgstr "到達日"
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_share_wizard__access_mode__read
 msgid "Readonly"
-msgstr "読出のみ"
+msgstr "読み取り専用"
 
 #. module: project
 #: model:mail.template,subject:project.mail_template_data_project_task
@@ -4072,6 +4107,20 @@ msgstr "SMS配信エラー"
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Sad face"
 msgstr "サッドフェイス"
+
+#. module: project
+#. odoo-javascript
+#: code:addons/project/static/src/project_sharing/views/form/project_sharing_form_controller.js:0
+#, python-format
+msgid "Save the task to be able to drag images in description"
+msgstr "タスクを保存して、説明で画像をドラッグできるようにします。"
+
+#. module: project
+#. odoo-javascript
+#: code:addons/project/static/src/project_sharing/views/form/project_sharing_form_controller.js:0
+#, python-format
+msgid "Save the task to be able to paste images in description"
+msgstr "タスクを保存して、説明文に画像を貼り付けられるようにします。"
 
 #. module: project
 #. odoo-javascript
@@ -4677,6 +4726,7 @@ msgstr "タスク：評価依頼"
 #. odoo-python
 #: code:addons/project/models/project_project.py:0
 #: code:addons/project/models/project_project.py:0
+#: code:addons/project/models/project_project.py:0
 #: model:ir.actions.act_window,name:project.act_project_project_2_project_task_all
 #: model:ir.actions.act_window,name:project.action_view_task
 #: model:ir.actions.act_window,name:project.action_view_task_from_milestone
@@ -4763,6 +4813,14 @@ msgstr "現ユーザの個人ページ"
 #: model:ir.model.fields,help:project.field_project_task__personal_stage_type_id
 msgid "The current user's personal task stage."
 msgstr "現ユーザの個人タスクステージ"
+
+#. module: project
+#. odoo-python
+#: code:addons/project/controllers/portal.py:0
+#, python-format
+msgid ""
+"The document does not exist or you do not have the rights to access it."
+msgstr "ドキュメントが存在しないか、ドキュメントにアクセスする権限がありません。"
 
 #. module: project
 #. odoo-python
@@ -5110,7 +5168,7 @@ msgstr "プロジェクトに関連する分析アカウントを関連文書に
 msgid ""
 "Track the profitability of your project with analytic accounting. Select the"
 " analytic plan for new projects:"
-msgstr "分析会計でプロジェクトの収益性を追跡します。新規プロジェクトの分析計画を選択します："
+msgstr "分析会計でプロジェクトの収益性を追跡します。新規プロジェクトの分析プランを選択します："
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
@@ -5846,8 +5904,11 @@ msgstr "タスクを作成します:"
 
 #. module: project
 #: model:mail.template,subject:project.rating_project_request_email_template
-msgid "{{ object.project_id.company_id.name }}: Satisfaction Survey"
-msgstr "{{ object.project_id.company_id.name }}: 満足度アンケート"
+msgid ""
+"{{ object.project_id.company_id.name or user.env.company.name }}: "
+"Satisfaction Survey"
+msgstr ""
+"{{ object.project_id.company_id.name or user.env.company.name }}: 満足度調査"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban

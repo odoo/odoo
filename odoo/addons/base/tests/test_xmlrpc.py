@@ -142,16 +142,21 @@ class TestAPIKeys(common.HttpCase):
 
     def setUp(self):
         super().setUp()
+
+        def get_json_data():
+            raise ValueError("There is no json here")
         # needs a fake request in order to call methods protected with check_identity
         fake_req = DotDict({
             # various things go and access request items
             'httprequest': DotDict({
                 'environ': {'REMOTE_ADDR': 'localhost'},
                 'cookies': {},
+                'args': {},
             }),
             # bypass check_identity flow
             'session': {'identity-check-last': time.time()},
             'geoip': {},
+            'get_json_data': get_json_data,
         })
         _request_stack.push(fake_req)
         self.addCleanup(_request_stack.pop)

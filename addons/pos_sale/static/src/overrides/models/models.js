@@ -72,7 +72,7 @@ patch(Orderline.prototype, {
      * @param {'sale.order.line'} saleOrderLine
      */
     setQuantityFromSOL(saleOrderLine) {
-        if (this.product.type === "service") {
+        if (this.product.type === "service" && !['sent', 'draft'].includes(this.sale_order_origin_id.state)) {
             this.set_quantity(saleOrderLine.qty_to_invoice);
         } else {
             this.set_quantity(

@@ -12,6 +12,7 @@ from odoo.addons.website.tools import MockRequest
 
 class TestProjectPortalAccess(TestProjectSharingCommon, HttpCase):
     def test_post_chatter_as_portal_user(self):
+        self.project_no_collabo.privacy_visibility = 'portal'
         self.env['project.share.wizard'].create({
             'res_model': 'project.project',
             'res_id': self.project_no_collabo.id,

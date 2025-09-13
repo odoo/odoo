@@ -36,6 +36,8 @@ class AccountMove(models.Model):
         compute='_compute_edi_show_cancel_button')
     edi_show_abandon_cancel_button = fields.Boolean(
         compute='_compute_edi_show_abandon_cancel_button')
+    edi_show_force_cancel_button = fields.Boolean(
+        compute='_compute_edi_show_force_cancel_button')
 
     @api.depends('edi_document_ids.state')
     def _compute_edi_state(self):
@@ -51,6 +53,11 @@ class AccountMove(models.Model):
                 move.edi_state = 'to_cancel'
             else:
                 move.edi_state = False
+
+    @api.depends('edi_document_ids.state')
+    def _compute_edi_show_force_cancel_button(self):
+        for move in self:
+            move.edi_show_force_cancel_button = move._can_force_cancel()
 
     @api.depends('edi_document_ids.error')
     def _compute_edi_error_count(self):
@@ -91,20 +98,24 @@ class AccountMove(models.Model):
             format_web_services = to_process.edi_format_id.filtered(lambda f: f._needs_web_services())
             move.edi_web_services_to_process = ', '.join(f.name for f in format_web_services)
 
+    def _check_edi_documents_for_reset_to_draft(self):
+        self.ensure_one()
+        for doc in self.edi_document_ids:
+            move_applicability = doc.edi_format_id._get_move_applicability(self)
+            if doc.edi_format_id._needs_web_services() \
+                and doc.state in ('sent', 'to_cancel') \
+                and move_applicability \
+                and move_applicability.get('cancel'):
+                return False
+        return True
+
     @api.depends('edi_document_ids.state')
     def _compute_show_reset_to_draft_button(self):
         # OVERRIDE
         super()._compute_show_reset_to_draft_button()
-
         for move in self:
-            for doc in move.edi_document_ids:
-                move_applicability = doc.edi_format_id._get_move_applicability(move)
-                if doc.edi_format_id._needs_web_services() \
-                    and doc.state in ('sent', 'to_cancel') \
-                    and move_applicability \
-                    and move_applicability.get('cancel'):
-                    move.show_reset_to_draft_button = False
-                    break
+            if not move._check_edi_documents_for_reset_to_draft():
+                move.show_reset_to_draft_button = False
 
     @api.depends('edi_document_ids.state')
     def _compute_edi_show_cancel_button(self):
@@ -268,6 +279,14 @@ class AccountMove(models.Model):
             self.env.ref('account_edi.ir_cron_edi_network')._trigger()
         return posted
 
+    def button_force_cancel(self):
+        """ Cancel the invoice without waiting for the cancellation request to succeed.
+        """
+        for move in self:
+            to_cancel_edi_documents = move.edi_document_ids.filtered(lambda doc: doc.state == 'to_cancel')
+            move.message_post(body=_("This invoice was canceled while the EDIs %s still had a pending cancellation request.", ", ".join(to_cancel_edi_documents.mapped('edi_format_id.name'))))
+        self.button_cancel()
+
     def button_cancel(self):
         # OVERRIDE
         # Set the electronic document to be canceled and cancel immediately for synchronous formats.
@@ -280,10 +299,14 @@ class AccountMove(models.Model):
 
         return res
 
+    def _edi_allow_button_draft(self):
+        self.ensure_one()
+        return not self.edi_show_cancel_button
+
     def button_draft(self):
         # OVERRIDE
         for move in self:
-            if move.edi_show_cancel_button:
+            if not move._edi_allow_button_draft():
                 raise UserError(_(
                     "You can't edit the following journal entry %s because an electronic document has already been "
                     "sent. Please use the 'Request EDI Cancellation' button instead.",
@@ -330,7 +353,7 @@ class AccountMove(models.Model):
             if is_move_marked:
                 move.message_post(body=_("A request for cancellation of the EDI has been called off."))
 
-        documents.write({'state': 'sent'})
+        documents.write({'state': 'sent', 'error': False, 'blocking_level': False})
 
     def _get_edi_document(self, edi_format):
         return self.edi_document_ids.filtered(lambda d: d.edi_format_id == edi_format)
@@ -349,6 +372,7 @@ class AccountMove(models.Model):
     ####################################################
 
     def button_process_edi_web_services(self):
+        self.ensure_one()
         self.action_process_edi_web_services(with_commit=False)
 
     def action_process_edi_web_services(self, with_commit=True):

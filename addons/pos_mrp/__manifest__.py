@@ -12,6 +12,14 @@
 This is a link module between Point of Sale and Mrp.
 """,
     'depends': ['point_of_sale', 'mrp'],
+    'data': [
+        'security/ir.model.access.csv',
+    ],
+    'assets': {
+        'web.assets_tests': [
+            'pos_mrp/static/tests/tours/**/*',
+        ],
+    },
     'installable': True,
     'auto_install': True,
     'license': 'LGPL-3',

@@ -57,7 +57,9 @@ messageActionsRegistry
     })
     .add("mark-as-unread", {
         condition: (component) =>
-            component.props.thread.model === "discuss.channel" && component.store.user,
+            component.props.thread?.model === "discuss.channel" &&
+            component.store.user &&
+            component.props.message.persistent,
         icon: "fa-eye-slash",
         title: _t("Mark as Unread"),
         onClick: (component) => component.onClickMarkAsUnread(),
@@ -78,7 +80,8 @@ messageActionsRegistry
         sequence: 90,
     })
     .add("download_files", {
-        condition: (component) => component.message.attachments.length > 1,
+        condition: (component) =>
+            component.message.attachments.length > 1 && component.store.self?.user?.isInternalUser,
         icon: "fa-download",
         title: _t("Download Files"),
         onClick: (component) =>

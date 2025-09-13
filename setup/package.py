@@ -413,7 +413,7 @@ class DockerWine(Docker):
         cmds = [
             rf'wine {container_python} -m pip install --upgrade pip',
             rf'cat /data/src/requirements*.txt  | while read PACKAGE; do wine {container_python} -m pip install "${{PACKAGE%%#*}}" ; done',
-            rf'wine "c:\nsis-3.10\makensis.exe" {nsis_args} "c:\odoobuild\server\setup\win32\setup.nsi"',
+            rf'wine "c:\nsis-3.11\makensis.exe" {nsis_args} "c:\odoobuild\server\setup\win32\setup.nsi"',
             rf'wine {container_python} -m pip list'
         ]
         self.run(' && '.join(cmds), self.args.build_dir, 'odoo-win-build-%s' % TSTAMP)

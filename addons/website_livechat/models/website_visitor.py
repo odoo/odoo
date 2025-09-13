@@ -123,8 +123,7 @@ class WebsiteVisitor(models.Model):
         visitor_id, upsert = super()._upsert_visitor(access_token, force_track_values=force_track_values)
         if upsert == 'inserted':
             visitor_sudo = self.sudo().browse(visitor_id)
-            discuss_channel_uuid = json.loads(request.httprequest.cookies.get('im_livechat_session', '{}')).get('uuid')
-            if discuss_channel_uuid:
+            if discuss_channel_uuid := request.httprequest.cookies.get("im_livechat_uuid"):
                 discuss_channel = request.env["discuss.channel"].sudo().search([("uuid", "=", discuss_channel_uuid)])
                 discuss_channel.write({
                     'livechat_visitor_id': visitor_sudo.id,

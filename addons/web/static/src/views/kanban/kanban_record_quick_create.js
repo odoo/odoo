@@ -222,7 +222,7 @@ export class KanbanRecordQuickCreate extends Component {
             isLoaded: false,
         });
         this.viewService = useService("view");
-        onWillStart(() => {
+        onMounted(() => {
             this.getQuickCreateProps(this.props).then(() => {
                 this.state.isLoaded = true;
             });

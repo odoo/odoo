@@ -81,3 +81,18 @@ class TestPaymentTransaction(MercadoPagoCommon, PaymentHttpCommon):
         ):
             tx._process_notification_data(self.redirect_notification_data)
         self.assertEqual(tx.state, 'error')
+
+    def test_cop_currency_rounding(self):
+        """Ensure COP payments get sent as integer amounts to Mercado Pago."""
+        self.currency = self.env['res.currency'].with_context(active_test=False).search(
+            [('name', '=', 'COP')],
+            limit=1,
+        )
+        self.amount = 999.99
+        tx = self._create_transaction(flow='redirect')
+        request_payload = tx._mercado_pago_prepare_preference_request_payload()
+        self.assertEqual(
+            request_payload['items'][0]['unit_price'],
+            999,
+            "COP payment amounts should be rounded down in the payload sent to Mercado Pago",
+        )

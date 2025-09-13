@@ -20,3 +20,7 @@ Jordi Masvidal jordi.masvidal@forgeflow.com https://github.com/JordiMForgeFlow
 Hector Villarreal hector.villarreal@forgeflow.com https://github.com/HviorForgeFlow
 Bernat Puig bernat.puig@forgeflow.com https://github.com/BernatPForgeFlow
 Joan Sisquella joan.sisquella@forgeflow.com https://github.com/JoanSForgeFlow
+Laura Cazorla laura.cazorla@forgeflow.com https://github.com/LauraCForgeFlow
+Arnau Cruz arnau.cruz@forgeflow.com https://github.com/ArnauCForgeFlow
+Ricard Calvo ricard.calvo@forgeflow.com https://github.com/RicardCForgeFlow
+Marina Alapont marina.alapont@forgeflow.com https://github.com/MarinaAForgeFlow

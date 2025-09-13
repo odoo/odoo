@@ -116,7 +116,7 @@ const dragAndDropHookParams = {
         ctx.current.container = ctx.scrollingElement;
         ctx.current.helperOffset = { x: 0, y: 0 };
     },
-    onDragStart: ({ ctx, addStyle, addCleanup }) => {
+    onDragStart: ({ ctx, addStyle, addCleanup, addClass }) => {
         // Use the helper as the tracking element to properly update scroll values.
         ctx.current.element = ctx.getHelper({ ...ctx.current, ...ctx.pointer });
         ctx.current.helper = ctx.current.element;
@@ -132,7 +132,7 @@ const dragAndDropHookParams = {
         // the cursor.
         const frameElement = ctx.current.helper.ownerDocument.defaultView.frameElement;
         if (frameElement) {
-            addStyle(frameElement, { pointerEvents: "auto" });
+            addClass(frameElement, "pe-auto");
         }
 
         addCleanup(() => ctx.current.helper.remove());

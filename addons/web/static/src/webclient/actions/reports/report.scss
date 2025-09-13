@@ -218,6 +218,15 @@ blockquote {
     -webkit-box-flex: 1 !important;
 }
 
+.report-wrapping-flexbox {
+    // overriding the `display` prop of `.row`
+    display: block !important;
+}
+
+.report-wrapping-flexbox > .col-auto {
+    float: left;
+}
+
 // Report footer need to support bootstrap columns (2, 3 and 4 columns)
 // Even if the width is smaller than the media querry limit from bootstrap.
 // This need come from the footer being editable via the Odoo editor.
@@ -266,5 +275,47 @@ li.oe-nested {
 .o_portal_address {
     span[itemprop="telephone"] {
         white-space: nowrap;
+        display: inline-block;
     }
+}
+
+// Override html_editor display styles as it uses 'calc' which doesn't work with wkhtmltopdf
+.display-1-fs {
+    font-size: 6rem;
+}
+
+.display-2-fs {
+    font-size: 5.5rem;
+}
+
+.display-3-fs {
+    font-size: 4.5rem;
+}
+
+.display-4-fs {
+    font-size: 3.5rem;
+}
+
+.h1-fs {
+    font-size: 2.5rem;
+}
+
+.h2-fs {
+    font-size: 2rem;
+}
+
+.h3-fs {
+    font-size: 1.75rem;
+}
+
+.h4-fs {
+    font-size: 1.5rem;
+}
+
+.h5-fs {
+    font-size: 1.25rem;
+}
+
+.h6-fs {
+    font-size: 1rem;
 }

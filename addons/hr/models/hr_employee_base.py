@@ -42,7 +42,7 @@ class HrEmployeeBase(models.AbstractModel):
     resource_id = fields.Many2one('resource.resource')
     resource_calendar_id = fields.Many2one('resource.calendar', check_company=True)
     parent_id = fields.Many2one('hr.employee', 'Manager', compute="_compute_parent_id", store=True, readonly=False,
-        check_company=True)
+        domain="['|', ('company_id', '=', False), ('company_id', 'in', allowed_company_ids)]")
     coach_id = fields.Many2one(
         'hr.employee', 'Coach', compute='_compute_coach', store=True, readonly=False,
         check_company=True,
@@ -290,3 +290,13 @@ class HrEmployeeBase(models.AbstractModel):
                     # The employees should be working now according to their work schedule
                     working_now += res_employee_ids.ids
         return working_now
+
+    def _get_calendar_periods(self, start, stop):
+        # This method can be overridden in other modules where it's possible
+        # to have different resource calendars for an employee depending on the
+        # date.
+        calendar_periods_by_employee = {}
+        for employee in self:
+            calendar = employee.resource_calendar_id or employee.company_id.resource_calendar_id
+            calendar_periods_by_employee[employee] = [(start, stop, calendar)]
+        return calendar_periods_by_employee

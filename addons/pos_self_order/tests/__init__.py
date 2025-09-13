@@ -8,3 +8,5 @@ from . import test_self_order_kiosk
 from . import test_self_order_attribute
 from . import test_self_order_combo
 from . import test_self_order_common
+from . import test_self_order_sequence
+from . import test_self_order_pos

@@ -4,15 +4,15 @@
 # 
 # Translators:
 # Wil Odoo, 2023
-# Abe Manyo, 2023
+# Abe Manyo, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-05 12:32+0000\n"
+"POT-Creation-Date: 2025-05-09 20:37+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Abe Manyo, 2023\n"
+"Last-Translator: Abe Manyo, 2025\n"
 "Language-Team: Indonesian (https://app.transifex.com/odoo/teams/41243/id/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -495,7 +495,7 @@ msgstr "Bunga terakumulasi dari sekuritas yang dibayar pada saat jatuh tempo."
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/global_filters/plugins/global_filters_ui_plugin.js:0
-#: code:addons/spreadsheet/static/src/helpers/model.js:0
+#: code:addons/spreadsheet/static/src/global_filters/plugins/global_filters_ui_plugin.js:0
 #, python-format
 msgid "Active Filters"
 msgstr "Filter Aktif"
@@ -1957,6 +1957,13 @@ msgstr "Mengonversikan string yang ditentukan menjadi huruf besar."
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
+msgid "Converts a string to a numeric value."
+msgstr "Konversikan string menjadi value numerik."
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
 msgid "Converts a time string into its serial number representation."
 msgstr "Mengonversikan time string menjadi representatif nomor serinya."
 
@@ -2041,7 +2048,7 @@ msgstr "Cotangen sudut dalam bentuk radian."
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/pivot/pivot_model.js:0
+#: code:addons/spreadsheet/static/src/pivot/pivot_data_source.js:0
 #, python-format
 msgid "Count"
 msgstr "Hitung"
@@ -2693,7 +2700,7 @@ msgstr "Desain"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Detect automatically"
-msgstr "Deteksi otomati"
+msgstr "Deteksi otomatis"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -2763,6 +2770,7 @@ msgstr "Edit"
 
 #. module: spreadsheet
 #. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "Edit link"
@@ -2905,6 +2913,7 @@ msgstr "Februari"
 
 #. module: spreadsheet
 #. odoo-javascript
+#: code:addons/spreadsheet/static/src/pivot/pivot_data_source.js:0
 #: code:addons/spreadsheet/static/src/pivot/pivot_model.js:0
 #, python-format
 msgid "Field %s does not exist"
@@ -2951,7 +2960,6 @@ msgstr "Isi Warna"
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/helpers/model.js:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Filter"
@@ -3307,6 +3315,17 @@ msgid "Function [[FUNCTION_NAME]] expects number values for %s, but got a %s."
 msgstr ""
 "Fungsi [[FUNCTION_NAME]] mengharapkan nilai nomor untuk %s, tapi mendapatkan"
 " %s."
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
+msgid ""
+"Function [[FUNCTION_NAME]] expects the parameter '%s' to be a single value "
+"or a single cell reference, not a range."
+msgstr ""
+"Fungsi [[FUNCTION_NAME]] mengharapkan parameter '%s' untuk menjadi value "
+"tunggal atau referensi satu sel, bukan range."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -5001,6 +5020,7 @@ msgstr "Tidak ada value unik yang ditemukan"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #: code:addons/spreadsheet/static/src/pivot/pivot_model.js:0
 #: code:addons/spreadsheet/static/src/pivot/pivot_time_adapters.js:0
+#: code:addons/spreadsheet/static/src/pivot/pivot_time_adapters.js:0
 #, python-format
 msgid "None"
 msgstr "Tidak Ada"
@@ -5814,6 +5834,17 @@ msgstr "Kanan"
 #, python-format
 msgid "Rounds a number according to standard rules."
 msgstr "Bulatkan bilangan sesuai dengan peraturan standar."
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
+msgid ""
+"Rounds a number down to the nearest integer that is less than or equal to "
+"it."
+msgstr ""
+"Membulatkan angka ke bawah ke integer terdekat yang lebih kecil dari atau "
+"sama dengannya."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -6875,6 +6906,27 @@ msgstr "Array yang akan diubah."
 #, python-format
 msgid "The base (%s) must be between 2 and 36 inclusive."
 msgstr "Base (%s) harus di antara 2 dan 36 inklusif."
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
+msgid "The base (%s) must be strictly positive."
+msgstr "Base (%s) harus selalu positif."
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
+msgid "The base must be different from 1."
+msgstr "Base harus berbeda dari 1."
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
+msgid "The base of the logarithm."
+msgstr "Base dari logaritma."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -8097,6 +8149,13 @@ msgstr "Logaritma bilangan, basis e (bilangan euler)."
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
+msgid "The logarithm of a number, for a given base."
+msgstr "Logaritma angka, untuk base yang diberikan."
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
 msgid "The low end of the random range."
 msgstr "Bagian bawah range acak."
 
@@ -8650,6 +8709,13 @@ msgstr "Bilangan yang akan dinaikkan menjadi pangkat eksponen."
 #, python-format
 msgid "The number to return."
 msgstr "Angka untuk dikembalikkan."
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
+msgid "The number to round down to the nearest integer."
+msgstr "Angka untuk dibulatkan ke bawah ke integer terdekat."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -9920,6 +9986,7 @@ msgstr "value (%s) harus positif atau null."
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The value (%s) must be strictly positive."
 msgstr "value (%s) harus selalu positif."
@@ -10013,6 +10080,13 @@ msgstr "Value yang digunakan untuk menghitung invers tangen."
 #, python-format
 msgid "The value for which to calculate the logarithm, base e."
 msgstr "Value yang digunakan untuk menghitung logaritma, basis e."
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
+msgid "The value for which to calculate the logarithm."
+msgstr "Value yang digunakan untuk menghitung logaritma."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -10784,7 +10858,7 @@ msgstr "Atas"
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/pivot/plugins/pivot_ui_plugin.js:0
+#: code:addons/spreadsheet/static/src/pivot/pivot_data_source.js:0
 #, python-format
 msgid "Total"
 msgstr "Total"
@@ -10992,7 +11066,6 @@ msgstr "Gunakan bari"
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/helpers/model.js:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
@@ -11884,6 +11957,13 @@ msgstr "searchMode harusnya memiliki value [-1, 1, -2, 2]."
 #, python-format
 msgid "start_date (%s) should be on or before end_date (%s)."
 msgstr "start_date (%s) harusnya pada atau sebelum end_date (%s)."
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
+msgid "the string to be converted"
+msgstr "string harus dikonversi"
 
 #. module: spreadsheet
 #. odoo-javascript

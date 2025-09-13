@@ -2,7 +2,7 @@
 
 const popup = ".popup.combo-configurator-popup";
 const productTrigger = (productName) =>
-    `label.combo-line:has(article.product .product-name:contains("${productName}"))`;
+    `label.combo-line article.product:has( .product-name:contains("${productName}"))`;
 const isNot = (trigger) => `body:not(:has(${trigger}))`;
 const isComboSelectedTrigger = (productName) => `input:checked ~ ${productTrigger(productName)}`;
 const confirmationButtonTrigger = `${popup} footer button.confirm`;

@@ -1,6 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from unittest.mock import patch, DEFAULT
 from odoo import Command
+from odoo.exceptions import UserError
 from odoo.tests import Form
 from odoo.tests.common import TransactionCase
 
@@ -214,3 +216,69 @@ class TestCarrierPropagation(TransactionCase):
 
         sale_order2.action_confirm()
         self.assertEqual(sale_order2.picking_ids.location_id, route2.rule_ids.location_src_id)
+
+    def test_carrier_picking_batch_validation(self):
+        """
+        Create 2 delivery orders with carriers. Make them respectively
+        valid and invalid on the carrier side. Validate the pickings in batch
+        Since the pickings are processed unbatched on the carrier side the
+        "UserError" of the invalid picking can not be raised and should be
+        replaced by a warning activity.
+        """
+        self.warehouse.delivery_steps = "ship_only"
+        alien = self.env['res.users'].create({
+            'login': 'Mars Man',
+            'name': 'Spleton',
+            'email': 'alien@mars.com',
+        })
+        super_product_2 = self.ProductProduct.create({
+            'name': 'Super Product 2',
+            'invoice_policy': 'delivery',
+        })
+        sale_orders = self.env['sale.order'].create([
+            {
+                'partner_id': self.partner_propagation.id,
+                'order_line': [
+                    Command.create({
+                        'product_id': self.super_product.id
+                    }),
+                ]
+            },
+            {
+                'partner_id': self.partner_propagation.id,
+                'order_line': [
+                    Command.create({
+                        'product_id': super_product_2.id
+                    }),
+                ]
+            },
+        ])
+        for so in sale_orders:
+            delivery_wizard = Form(self.env['choose.delivery.carrier'].with_context({
+                'default_order_id': so.id,
+                'default_carrier_id': self.normal_delivery.id,
+            }))
+            choose_delivery_carrier = delivery_wizard.save()
+            choose_delivery_carrier.button_confirm()
+
+        def fail_send_to_shipper(pick):
+            # side effect to throw an error for a given picking but resolve the normal call for the other
+            def _throw_error_on_chosen_picking(self):
+                if self == pick:
+                    raise UserError("Something went wrong, parcel not returned from Sendcloud: {'weight': ['The weight must be less than 10.001 kg']}")
+                else:
+                    return DEFAULT
+            return _throw_error_on_chosen_picking
+
+        sale_orders.action_confirm()
+        for i in range(0, len(sale_orders)):
+            # check that a delivery was created for the associated carrier
+            self.assertEqual(sale_orders[i].picking_ids.carrier_id.id, sale_orders[i].carrier_id.id)
+        pickings = sale_orders.picking_ids
+        pickings.action_assign()
+        picking_class = 'odoo.addons.stock_delivery.models.stock_picking.StockPicking'
+        with patch(picking_class + '.send_to_shipper', new=fail_send_to_shipper(pickings[1])):
+            pickings.with_user(alien).button_validate()
+        # both pickings should be validated but and activity should have been created for the invalid picking
+        self.assertEqual(pickings.mapped('state'), ['done', 'done'])
+        self.assertTrue(self.env['mail.activity'].search([('res_model', '=', 'stock.picking'), ('res_id', '=', pickings[1].id), ('user_id', '=', alien.id)], limit=1))

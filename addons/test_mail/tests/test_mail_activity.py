@@ -420,14 +420,31 @@ class TestActivityMixin(TestActivityCommon):
         archived_users.action_archive()
         active_users = test_users - archived_users
 
-        activities = self.env['mail.activity'].search([('user_id', 'in', archived_users.ids)])
-        self.assertFalse(activities, "Activities of archived users should be deleted.")
+        # archive user with company disabled
+        user_admin = self.user_admin
+        user_employee_c2 = self.user_employee_c2
+        self.assertIn(self.company_2, user_admin.company_ids)
+        self.test_record.env['ir.rule'].create({
+            'model_id': self.env.ref('test_mail.model_mail_test_activity').id,
+            'domain_force': "[('company_id', 'in', company_ids)]"
+        })
+        self.test_record.activity_schedule(user_id=user_employee_c2.id)
+        user_employee_c2.with_user(user_admin).with_context(
+            allowed_company_ids=(user_admin.company_ids - self.company_2).ids
+        ).action_archive()
+        archived_users += user_employee_c2
+
+        self.assertFalse(any(archived_users.mapped('active')), "Users should be archived.")
 
         # activities of active users shouldn't be touched, each has exactly 1 activity present
         activities = self.env['mail.activity'].search([('user_id', 'in', active_users.ids)])
         self.assertEqual(len(activities), 3, "We should have only 3 activities in total linked to our active users")
         self.assertEqual(activities.mapped('user_id'), active_users,
                          "We should have 3 different users linked to the activities of the active users")
+
+        # ensure the user's activities are removed
+        activities = self.env['mail.activity'].search([('user_id', 'in', archived_users.ids)])
+        self.assertFalse(activities, "Activities of archived users should be deleted.")
 
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_activity_mixin_reschedule_user(self):
@@ -577,6 +594,22 @@ class TestActivityMixin(TestActivityCommon):
             self.assertEqual(activity_1.state, 'today')
             self.assertEqual(activity_2.state, 'overdue')
             self.assertEqual(activity_3.state, 'today')
+
+    @users('employee')
+    def test_mail_activity_mixin_search_activity_user_id_false(self):
+        """Test the search method on the "activity_user_id" when searching for non-set user"""
+        MailTestActivity = self.env['mail.test.activity']
+        test_records = self.test_record | self.test_record_2
+        self.assertFalse(test_records.activity_ids)
+        self.assertEqual(MailTestActivity.search([('activity_user_id', '=', False)]), test_records)
+
+        self.env['mail.activity'].create({
+            'summary': 'Test',
+            'activity_type_id': self.env.ref('test_mail.mail_act_test_todo').id,
+            'res_model_id': self.env.ref('test_mail.model_mail_test_activity').id,
+            'res_id': self.test_record.id,
+        })
+        self.assertEqual(MailTestActivity.search([('activity_user_id', '!=', True)]), self.test_record_2)
 
     @mute_logger('odoo.addons.mail.models.mail_mail', 'odoo.tests')
     def test_mail_activity_mixin_search_state_basic(self):
@@ -730,6 +763,7 @@ class TestActivityMixin(TestActivityCommon):
 
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_my_activity_flow_employee(self):
+        self.env.ref('test_mail.mail_act_test_todo').keep_done = True
         Activity = self.env['mail.activity']
         date_today = date.today()
         Activity.create({
@@ -748,7 +782,7 @@ class TestActivityMixin(TestActivityCommon):
         })
 
         test_record_1 = self.env['mail.test.activity'].with_context(self._test_context).create({'name': 'Test 1'})
-        Activity.create({
+        test_record_1_late_activity = Activity.create({
             'activity_type_id': self.env.ref('test_mail.mail_act_test_todo').id,
             'date_deadline': date_today,
             'res_model_id': self.env.ref('test_mail.model_mail_test_activity').id,
@@ -758,6 +792,19 @@ class TestActivityMixin(TestActivityCommon):
         with self.with_user('employee'):
             record = self.env['mail.test.activity'].search([('my_activity_date_deadline', '=', date_today)])
             self.assertEqual(test_record_1, record)
+            test_record_1_late_activity._action_done()
+            record = self.env['mail.test.activity'].with_context(active_test=False).search([
+                ('my_activity_date_deadline', '=', date_today)
+            ])
+            self.assertFalse(record, "Should not find record if the only late activity is done")
+
+    @users('employee')
+    def test_record_unlink(self):
+        test_record = self.test_record.with_user(self.env.user)
+        act1 = test_record.activity_schedule(summary='Active')
+        act2 = test_record.activity_schedule(summary='Archived', active=False)
+        test_record.unlink()
+        self.assertFalse((act1 + act2).exists(), 'Removing records should remove activities, even archived')
 
 
 @tests.tagged('mail_activity')

@@ -202,6 +202,10 @@ class Project(models.Model):
                 warning_msg, self.env.ref('hr_timesheet.timesheet_action_project').id,
                 _('See timesheet entries'), {'active_ids': projects_with_timesheets.ids})
 
+    @api.model
+    def get_create_edit_project_ids(self):
+        return []
+
     def _convert_project_uom_to_timesheet_encode_uom(self, time):
         uom_from = self.company_id.project_time_mode_id
         uom_to = self.env.company.timesheet_encode_uom_id

@@ -3,6 +3,7 @@
 import { KanbanController } from "@web/views/kanban/kanban_controller";
 import { onWillStart } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
+import { useDebounced } from "@web/core/utils/timing";
 import { _t } from "@web/core/l10n/translation";
 
 export class ProductCatalogKanbanController extends KanbanController {
@@ -14,6 +15,7 @@ export class ProductCatalogKanbanController extends KanbanController {
         this.orm = useService("orm");
         this.orderId = this.props.context.order_id;
         this.orderResModel = this.props.context.product_catalog_order_model;
+        this.backToQuotationDebounced = useDebounced(this.backToQuotation, 500)
 
         onWillStart(async () => this._defineButtonContent());
     }

@@ -1,24 +1,28 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* stock_account
-# 
+# * stock_account
+#
 # Translators:
 # Wil Odoo, 2023
 # Larissa Manderfeld, 2024
-# 
+#
+# "Larissa Manderfeld (lman)" <lman@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-05 12:31+0000\n"
-"PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Larissa Manderfeld, 2024\n"
-"Language-Team: Spanish (https://app.transifex.com/odoo/teams/41243/es/)\n"
+"POT-Creation-Date: 2024-08-13 10:27+0000\n"
+"PO-Revision-Date: 2025-08-26 01:40+0000\n"
+"Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
+"Language-Team: Spanish <https://translate.odoo.com/projects/odoo-17/"
+"stock_account/es/>\n"
+"Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: es\n"
-"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
+"Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n != 0 && n % 1000000 == 0)"
+" ? 1 : 2);\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: stock_account
 #. odoo-python
@@ -62,7 +66,7 @@ msgid ""
 "                            <small class=\"mx-2 fst-italic\">Use a negative added value to record a decrease in the product value</small>"
 msgstr ""
 ")\n"
-"                            <small class=\"mx-2 fst-italic\">Utilice un valor agregado negativo para registrar una reducción en el valor del producto</small>"
+"                            <small class=\"mx-2 fst-italic\">Utilice un valor añadido negativo para registrar una reducción en el valor del producto</small>"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_account_report_invoice_document
@@ -129,25 +133,25 @@ msgstr "Información contable"
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_tree
 msgid "Add Manual Valuation"
-msgstr "Agregar valoración manual"
+msgstr "Añadir valoración manual"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.res_config_settings_view_form
 msgid ""
 "Add additional cost (transport, customs, ...) in the value of the product."
 msgstr ""
-"Agregue un coste adicional (transporte, aduanas, ...) en el valor del "
+"Añada un coste adicional (transporte, aduanas, ...) en el valor del "
 "producto."
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_revaluation_form_view
 msgid "Added Value"
-msgstr "Valor agregado"
+msgstr "Valor añadido"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__added_value
 msgid "Added value"
-msgstr "Valor agregado"
+msgstr "Valor añadido"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_res_config_settings__module_stock_landed_costs
@@ -156,7 +160,7 @@ msgid ""
 "Affect landed costs on reception operations and split them among products to"
 " update their cost price."
 msgstr ""
-"Afecte los costos en destino en las operaciones de recepción y divídalos "
+"Afecte los costes en destino en las operaciones de recepción y divídalos "
 "entre productos para actualizar su precio de coste."
 
 #. module: stock_account
@@ -378,7 +382,7 @@ msgstr "Mostrar los números de lote y de serie en las facturas"
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__display_name
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__display_name
 msgid "Display Name"
-msgstr "Nombre mostrado"
+msgstr "Nombre para mostrar"
 
 #. module: stock_account
 #: model:res.groups,name:stock_account.group_lot_on_invoice
@@ -822,7 +826,7 @@ msgstr ""
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
 #, python-format
 msgid "The added value doesn't have any impact on the stock valuation"
-msgstr "El valor agregado no tiene ningún impacto en la valoración del stock"
+msgstr "El valor añadido no tiene ningún impacto en la valoración del stock"
 
 #. module: stock_account
 #. odoo-python
@@ -1112,22 +1116,22 @@ msgstr ""
 #: code:addons/stock_account/models/product.py:0
 #, python-format
 msgid ""
-"You don't have any stock input account defined on your product category. You"
-" must define one before processing this operation."
+"You don't have any output valuation account defined on your product "
+"category. You must define one before processing this operation."
 msgstr ""
-"No tiene ninguna cuenta de entrada de stock definida en su categoría de "
-"producto. Debe definir una antes de procesar esta operación."
+"No tiene ninguna cuenta de valoración de entrada definida en su categoría de"
+" producto. Debe definir una antes de procesar esta operación."
 
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/models/product.py:0
 #, python-format
 msgid ""
-"You don't have any output valuation account defined on your product "
-"category. You must define one before processing this operation."
+"You don't have any stock input account defined on your product category. You"
+" must define one before processing this operation."
 msgstr ""
-"No tiene ninguna cuenta de valoración de entrada definida en su categoría de"
-" producto. Debe definir una antes de procesar esta operación."
+"No tiene ninguna cuenta de entrada de stock definida en su categoría de "
+"producto. Debe definir una antes de procesar esta operación."
 
 #. module: stock_account
 #. odoo-python

@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from odoo import api, fields, models, _
 from odoo import osv
+from odoo.tools.sql import SQL
 from odoo.exceptions import UserError
 
 
@@ -29,13 +30,22 @@ class AccountAccountTag(models.Model):
                 name = _("%s (%s)", tag.name, tag.country_id.code)
             tag.display_name = name
 
+    @api.model_create_multi
+    def create(self, vals_list):
+        tags = super().create(vals_list)
+        if tax_tags := tags.filtered(lambda tag: tag.applicability == 'taxes'):
+            self._translate_tax_tags(tag_ids=tax_tags.ids)
+        return tags
+
     @api.model
     def _get_tax_tags(self, tag_name, country_id):
         """ Returns all the tax tags corresponding to the tag name given in parameter
         in the specified country.
         """
         domain = self._get_tax_tags_domain(tag_name, country_id)
-        return self.env['account.account.tag'].with_context(active_test=False).search(domain)
+        original_lang = self._context.get('lang', 'en_US')
+        rslt_tags = self.env['account.account.tag'].with_context(active_test=False, lang='en_US').search(domain)
+        return rslt_tags.with_context(lang=original_lang)  # Restore original language, in case the name of the tags needs to be shown/modified
 
     @api.model
     def _get_tax_tags_domain(self, tag_name, country_id, sign=None):
@@ -76,3 +86,23 @@ class AccountAccountTag(models.Model):
             master_tag = self.env.ref(f"account.{master_xmlid}", raise_if_not_found=False)
             if master_tag and master_tag in self:
                 raise UserError(_("You cannot delete this account tag (%s), it is used on the chart of account definition.", master_tag.name))
+
+    def _translate_tax_tags(self, langs=None, tag_ids=None):
+        """Translate tax tags having the same name as report lines."""
+        langs = langs or (code for code, _name in self.env['res.lang'].get_installed() if code != 'en_US')
+        for lang in langs:
+            self.env.cr.execute(SQL(
+                """
+                UPDATE account_account_tag tag
+                   SET name = tag.name || jsonb_build_object(%(lang)s, substring(tag.name->>'en_US' FOR 1) || (report_line.name->>%(lang)s))
+                  FROM account_report_line report_line
+                  JOIN account_report report ON report.id = report_line.report_id
+                 WHERE tag.applicability = 'taxes'
+                   AND tag.country_id = report.country_id
+                   AND tag.name->>'en_US' = substring(tag.name->>'en_US' FOR 1) || (report_line.name->>'en_US')
+                   AND tag.name->>%(lang)s != substring(tag.name->>'en_US' FOR 1) || (report_line.name->>%(lang)s)
+                   %(and_tag_ids)s
+                """,
+                lang=lang,
+                and_tag_ids=SQL('AND tag.id IN %s', tuple(tag_ids)) if tag_ids else SQL(''),
+            ))

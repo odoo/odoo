@@ -304,7 +304,8 @@ class Http(models.AbstractModel):
         ):
             _, ext = os.path.splitext(req_page)
             response = request.render(page.view_id.id, {
-                'main_object': page,
+                # See REVIEW_CAN_PUBLISH_UNSUDO
+                'main_object': page.with_context(can_publish_unsudo_main_object=True),
             }, mimetype=_guess_mimetype(ext))
             return response
         return False
@@ -312,13 +313,14 @@ class Http(models.AbstractModel):
     @classmethod
     def _serve_redirect(cls):
         req_page = request.httprequest.path
+        req_page_with_qs = request.httprequest.environ['REQUEST_URI']
         domain = [
             ('redirect_type', 'in', ('301', '302')),
             # trailing / could have been removed by server_page
-            '|', ('url_from', '=', req_page.rstrip('/')), ('url_from', '=', req_page + '/')
+            ('url_from', 'in', [req_page_with_qs, req_page.rstrip('/'), req_page + '/'])
         ]
         domain += request.website.website_domain()
-        return request.env['website.rewrite'].sudo().search(domain, limit=1)
+        return request.env['website.rewrite'].sudo().search(domain, order='url_from DESC', limit=1)
 
     @classmethod
     def _serve_fallback(cls):

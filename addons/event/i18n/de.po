@@ -4,15 +4,15 @@
 # 
 # Translators:
 # Wil Odoo, 2023
-# Larissa Manderfeld, 2024
+# Larissa Manderfeld, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-05 12:31+0000\n"
+"POT-Creation-Date: 2025-02-10 10:34+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Larissa Manderfeld, 2024\n"
+"Last-Translator: Larissa Manderfeld, 2025\n"
 "Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -686,7 +686,7 @@ msgstr ""
 "                        <span style=\"color: #454748;\">\n"
 "                        -- <br>\n"
 "                        <t t-if=\"event_organizer\">\n"
-"                            <t t-out=\"event_organizer.name or ''\">YourCompany</t>\n"
+"                            <t t-out=\"event_organizer.name or ''\">IhrUnternehmen</t>\n"
 "                        </t>\n"
 "                        <t t-else=\"\">\n"
 "                            Das Team von <t t-out=\"object.event_id.name or ''\">OpenWood Collection Online Reveal</t> \n"
@@ -770,7 +770,7 @@ msgstr ""
 "                            <span style=\"font-weight:300;margin:10px 0px\">Fragen zu dieser Veranstaltung?</span>\n"
 "                            <div>Bitte kontaktieren Sie den Veranstalter:</div>\n"
 "                            <ul>\n"
-"                                <li t-out=\"event_organizer.name or ''\">YourCompany</li>\n"
+"                                <li t-out=\"event_organizer.name or ''\">IhrUnternehmen</li>\n"
 "                                <t t-if=\"event_organizer.email\">\n"
 "                                    <li>E-Mail: <a t-attf-href=\"mailto:{{ event_organizer.email }}\" style=\"text-decoration:none;color:#875A7B;\" t-out=\"event_organizer.email or ''\"></a></li>\n"
 "                                </t>\n"
@@ -820,7 +820,7 @@ msgstr ""
 "<tr><td align=\"center\" style=\"min-width: 590px;\">\n"
 "    <table t-if=\"object.company_id\" width=\"590\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"min-width: 590px; background-color: #F1F1F1; color: #454748; padding: 8px; border-collapse:separate;\">\n"
 "      <tr><td style=\"text-align: center; font-size: 14px;\">\n"
-"        Gesendet von <a target=\"_blank\" t-attf-href=\"{{ object.company_id.website }}\" style=\"color: #875A7B;\" t-out=\"object.company_id.name or ''\">YourCompany</a>\n"
+"        Gesendet von <a target=\"_blank\" t-attf-href=\"{{ object.company_id.website }}\" style=\"color: #875A7B;\" t-out=\"object.company_id.name or ''\">IhrUnternehmen</a>\n"
 "        <t t-if=\"'website_url' in object.event_id and object.event_id.website_url\">\n"
 "            <br>\n"
 "            Entdecken Sie <a href=\"/event\" style=\"color:#875A7B;\">alle unsere Veranstaltungen</a>.\n"
@@ -1112,7 +1112,7 @@ msgstr ""
 "                        <span style=\"color: #454748;\">\n"
 "                        -- <br>\n"
 "                        <t t-if=\"event_organizer\">\n"
-"                            <t t-out=\"event_organizer.name or ''\">YourCompany</t>\n"
+"                            <t t-out=\"event_organizer.name or ''\">IhrUnternehmen</t>\n"
 "                        </t>\n"
 "                        <t t-else=\"\">\n"
 "                            Das Team von <t t-out=\"object.event_id.name or ''\">OpenWood Collection Online Reveal</t> \n"
@@ -1197,9 +1197,9 @@ msgstr ""
 "                            <span style=\"font-weight:300;margin:10px 0px\">Fragen zu dieser Veranstaltung?</span>\n"
 "                            <div>Bitte kontaktieren Sie den Veranstalter:</div>\n"
 "                            <ul>\n"
-"                                <li><t t-out=\"event_organizer.name or ''\">YourCompany</t></li>\n"
+"                                <li><t t-out=\"event_organizer.name or ''\">IhrUnternehmen</t></li>\n"
 "                                <t t-if=\"event_organizer.email\">\n"
-"                                    <li>E-Mail: <a t-attf-href=\"mailto:{{ event_organizer.email }}\" style=\"text-decoration:none;color:#875A7B;\" t-out=\"event_organizer.email\">info@yourcompany.com</a></li>\n"
+"                                    <li>E-Mail: <a t-attf-href=\"mailto:{{ event_organizer.email }}\" style=\"text-decoration:none;color:#875A7B;\" t-out=\"event_organizer.email\">info@ihrunternehmen.com</a></li>\n"
 "                                </t>\n"
 "                                <t t-if=\"event_organizer.phone\">\n"
 "                                    <li>Telefon: <t t-out=\"event_organizer.phone\">+1 650-123-4567</t></li>\n"
@@ -1256,7 +1256,7 @@ msgstr ""
 "    <t t-if=\"object.company_id\">\n"
 "        <table width=\"590\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"min-width: 590px; background-color: #F1F1F1; color: #454748; padding: 8px; border-collapse:separate;\">\n"
 "        <tr><td style=\"text-align: center; font-size: 14px;\">\n"
-"            Gesendet von <a target=\"_blank\" t-attf-href=\"{{ object.company_id.website }}\" style=\"color: #875A7B;\" t-out=\"object.company_id.name or ''\">YourCompany</a>\n"
+"            Gesendet von <a target=\"_blank\" t-attf-href=\"{{ object.company_id.website }}\" style=\"color: #875A7B;\" t-out=\"object.company_id.name or ''\">IhrUnternehmen</a>\n"
 "            <t t-if=\"is_online\">\n"
 "                <br>\n"
 "                Entdecken Sie <a href=\"/event\" style=\"color:#875A7B;\">alle unsere Veranstaltungen</a>.\n"
@@ -1587,7 +1587,7 @@ msgstr ""
 "                        <span style=\"color: #454748;\">\n"
 "                        -- <br>\n"
 "                        <t t-if=\"event_organizer\">\n"
-"                            <t t-out=\"event_organizer.name\">YourCompany</t>\n"
+"                            <t t-out=\"event_organizer.name\">IhrUnternehmen</t>\n"
 "                        </t>\n"
 "                        <t t-else=\"\">\n"
 "                            Das Team von <t t-out=\"object.event_id.name or ''\">OpenWood Collection Online Reveal</t> \n"
@@ -1672,9 +1672,9 @@ msgstr ""
 "                            <span style=\"font-weight:300;margin:10px 0px\">Fragen zu dieser Veranstaltung?</span>\n"
 "                            <div>Bitte kontaktieren Sie den Veranstalter:</div>\n"
 "                            <ul>\n"
-"                                <li><t t-out=\"event_organizer.name or ''\">YourCompany</t></li>\n"
+"                                <li><t t-out=\"event_organizer.name or ''\">IhrUnternehmen</t></li>\n"
 "                                <t t-if=\"event_organizer.email\">\n"
-"                                    <li>E-Mail: <a t-attf-href=\"mailto:{{ event_organizer.email }}\" style=\"text-decoration:none;color:#875A7B;\" t-out=\"event_organizer.email or ''\">info@yourcompany.com</a></li>\n"
+"                                    <li>E-Mail: <a t-attf-href=\"mailto:{{ event_organizer.email }}\" style=\"text-decoration:none;color:#875A7B;\" t-out=\"event_organizer.email or ''\">info@ihrunternehmen.com</a></li>\n"
 "                                </t>\n"
 "                                <t t-if=\"event_organizer.phone\">\n"
 "                                    <li>Telefon: <t t-out=\"event_organizer.phone\">+1 650-123-4567</t></li>\n"
@@ -1731,7 +1731,7 @@ msgstr ""
 "    <t t-if=\"object.company_id\">\n"
 "        <table width=\"590\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"min-width: 590px; background-color: #F1F1F1; color: #454748; padding: 8px; border-collapse:separate;\">\n"
 "        <tr><td style=\"text-align: center; font-size: 14px;\">\n"
-"            Gesendet von <a target=\"_blank\" t-attf-href=\"{{ object.company_id.website }}\" style=\"color: #875A7B;\" t-out=\"object.company_id.name or ''\">YourCompany</a>\n"
+"            Gesendet von <a target=\"_blank\" t-attf-href=\"{{ object.company_id.website }}\" style=\"color: #875A7B;\" t-out=\"object.company_id.name or ''\">IhrUnternehmen</a>\n"
 "            <t t-if=\"is_online\">\n"
 "                <br>\n"
 "                Entdecken Sie <a href=\"/event\" style=\"color:#875A7B;\">alle unsere Veranstaltungen</a>.\n"
@@ -2455,6 +2455,11 @@ msgid "Display Sponsors and Exhibitors on your event pages"
 msgstr "Zeigen Sie Sponsoren und Aussteller auf Ihrer Veranstaltungsseite an"
 
 #. module: event
+#: model:ir.model.fields,field_description:event.field_event_event__date_tz
+msgid "Display Timezone"
+msgstr "Zeitzone anzeigen"
+
+#. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__sequence
 msgid "Display order"
 msgstr "Anzeigereihenfolge"
@@ -2764,8 +2769,6 @@ msgid "Event: Reminder"
 msgstr "Veranstaltung: Erinnerung"
 
 #. module: event
-#. odoo-javascript
-#: code:addons/event/static/src/client_action/event_barcode.js:0
 #: model:ir.actions.act_window,name:event.action_event_view
 #: model:ir.ui.menu,name:event.event_main_menu
 #: model:ir.ui.menu,name:event.menu_event_event
@@ -2774,7 +2777,6 @@ msgstr "Veranstaltung: Erinnerung"
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 #: model_terms:ir.ui.view,arch_db:event.view_event_search
 #: model_terms:ir.ui.view,arch_db:event.view_event_tree
-#, python-format
 msgid "Events"
 msgstr "Veranstaltungen"
 
@@ -3135,6 +3137,15 @@ msgstr "Wichtige Ticketinformationen"
 #, python-format
 msgid "In Progress"
 msgstr "Laufend"
+
+#. module: event
+#: model:ir.model.fields,help:event.field_event_event__date_tz
+msgid ""
+"Indicates the timezone in which the event dates/times will be displayed on "
+"the website."
+msgstr ""
+"Gibt die Zeitzone an, in der die Daten/Zeiten der Veranstaltung auf der "
+"Website angezeigt werden."
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
@@ -4558,7 +4569,6 @@ msgstr ""
 "Die Tickets können ausgedruckt oder direkt von Ihrem Handy gescannt werden."
 
 #. module: event
-#: model:ir.model.fields,field_description:event.field_event_event__date_tz
 #: model:ir.model.fields,field_description:event.field_event_type__default_timezone
 msgid "Timezone"
 msgstr "Zeitzone"
@@ -4816,6 +4826,16 @@ msgid "What's new?"
 msgstr "Was gibts Neues?"
 
 #. module: event
+#: model:ir.model.fields,help:event.field_event_event__date_begin
+#: model:ir.model.fields,help:event.field_event_registration__event_begin_date
+msgid ""
+"When the event is scheduled to take place (expressed in your local timezone "
+"on the form view)."
+msgstr ""
+"Wann die Veranstaltung stattfinden soll (in Ihrer lokalen Zeitzone in der "
+"Formularansicht)."
+
+#. module: event
 #: model:ir.model.fields,help:event.field_event_event__is_ongoing
 msgid "Whether event has begun"
 msgstr "Ob Veranstaltung begonnen hat"
@@ -4913,7 +4933,7 @@ msgstr "events@odoo.com"
 #. module: event
 #: model_terms:event.event,description:event.event_7
 msgid "events@penwood.example.com"
-msgstr "events@penwood.example.com"
+msgstr "events@penwood.beispiel.com"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -4921,12 +4941,12 @@ msgstr "events@penwood.example.com"
 #: model_terms:event.event,description:event.event_3
 #: model_terms:event.event,description:event.event_5
 msgid "events@yourcompany.com"
-msgstr "events@yourcompany.com"
+msgstr "events@ihrunternehmen.com"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_report_full_page_ticket_layout
 msgid "https://www.example.com"
-msgstr "https://www.example.com"
+msgstr "https://www.beispiel.com"
 
 #. module: event
 #. odoo-python

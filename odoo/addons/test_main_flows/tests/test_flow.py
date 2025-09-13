@@ -15,6 +15,11 @@ class BaseTestUi(odoo.tests.HttpCase):
         self.env.ref('stock.route_warehouse0_mto').active = True
 
         # Define minimal accounting data to run without CoA
+        a_suspense = self.env['account.account'].create({
+            'code': 'X2220',
+            'name': 'Suspense - Test',
+            'account_type': 'asset_current'
+        })
         a_expense = self.env['account.account'].create({
             'code': 'X2120',
             'name': 'Expenses - (test)',
@@ -60,8 +65,12 @@ class BaseTestUi(odoo.tests.HttpCase):
             'name': 'Bank - Test',
             'code': 'TBNK',
             'type': 'bank',
+            'suspense_account_id': a_suspense.id,
             'default_account_id': bnk.id,
         })
+        self.bank_journal.outbound_payment_method_line_ids.payment_account_id = a_expense
+        self.bank_journal.inbound_payment_method_line_ids.payment_account_id = a_sale
+
         self.sales_journal = self.env['account.journal'].create({
             'name': 'Customer Invoices - Test',
             'code': 'TINV',
@@ -69,17 +78,20 @@ class BaseTestUi(odoo.tests.HttpCase):
             'default_account_id': a_sale.id,
             'refund_sequence': True,
         })
+        self.general_journal = self.env['account.journal'].create({
+            'name': 'General - Test',
+            'code': 'GNRL',
+            'type': 'general',
+            'default_account_id': bnk.id,
+        })
 
         self.start_tour("/web", 'main_flow_tour', login="admin", timeout=180)
 
-@odoo.tests.tagged('post_install', '-at_install')
+
+@odoo.tests.tagged('post_install', '-at_install', 'is_tour')
 class TestUi(BaseTestUi):
 
     def test_01_main_flow_tour(self):
-        # TODO: Adapt to work without demo data
-        if not odoo.tests.loaded_demo_data(self.env):
-            _logger.warning("This test relies on demo data. To be rewritten independently of demo data for accurate and reliable results.")
-            return
         self.main_flow_tour()
 
     def test_company_switch_access_error(self):
@@ -114,15 +126,11 @@ class TestUi(BaseTestUi):
             self.start_tour(f"/web#action={act_window.id}&cids={current_companies}", "test_company_switch_access_error", login="admin")
 
 
-@odoo.tests.tagged('post_install', '-at_install')
+@odoo.tests.tagged('post_install', '-at_install', 'is_tour')
 class TestUiMobile(BaseTestUi):
 
     browser_size = '375x667'
     touch_enabled = True
 
     def test_01_main_flow_tour_mobile(self):
-        # TODO: Adapt to work without demo data
-        if not odoo.tests.loaded_demo_data(self.env):
-            _logger.warning("This test relies on demo data. To be rewritten independently of demo data for accurate and reliable results.")
-            return
         self.main_flow_tour()

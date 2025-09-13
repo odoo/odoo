@@ -161,7 +161,7 @@ export class WebsiteTranslator extends WebsiteEditorComponent {
         const self = this;
         var attrs = ['placeholder', 'title', 'alt', 'value'];
         const $editable = this.getEditableArea();
-        const translationRegex = /<span [^>]*data-oe-translation-initial-sha="([^"]+)"[^>]*>(.*)<\/span>/;
+        const translationRegex = /<span [^>]*data-oe-translation-initial-sha="([^"]+)"[^>]*>([\s\S]*?)<\/span>/;
         let $edited = $();
         attrs.forEach((attr) => {
             const attrEdit = $editable.filter('[' + attr + '*="data-oe-translation-initial-sha="]').filter(':empty, input, select, textarea, img');
@@ -256,7 +256,8 @@ export class WebsiteTranslator extends WebsiteEditorComponent {
         // Apply data-oe-readonly on nested data.
         $(this.websiteService.pageDocument).find(savableSelector)
             .filter(':has(' + savableSelector + ')')
-            .attr('data-oe-readonly', true);
+            .attr('data-oe-readonly', true)
+            .removeAttr('contenteditable');
 
         const styleEl = document.createElement('style');
         styleEl.id = "translate-stylesheet";
@@ -281,7 +282,11 @@ export class WebsiteTranslator extends WebsiteEditorComponent {
         };
         for (const translationEl of $editable) {
             if (translationEl.closest('.o_not_editable')) {
-                translationEl.addEventListener('click', showNotification);
+                translationEl.addEventListener('click', (ev) => {
+                    ev.stopPropagation();
+                    ev.preventDefault();
+                    showNotification(ev);
+                });
             }
             if (translationEl.closest('.s_table_of_content_navbar_wrap')) {
                 // Make sure the same translation ids are used.

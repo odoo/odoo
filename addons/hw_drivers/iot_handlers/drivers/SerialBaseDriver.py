@@ -9,7 +9,6 @@ from threading import Lock
 import time
 import traceback
 
-from odoo import _
 from odoo.addons.hw_drivers.event_manager import event_manager
 from odoo.addons.hw_drivers.driver import Driver
 
@@ -57,6 +56,7 @@ class SerialDriver(Driver):
     STATUS_CONNECTED = 'connected'
     STATUS_ERROR = 'error'
     STATUS_CONNECTING = 'connecting'
+    STATUS_DISCONNECTED = 'disconnected'
 
     def __init__(self, identifier, device):
         """ Attributes initialization method for `SerialDriver`.
@@ -102,15 +102,17 @@ class SerialDriver(Driver):
         :type data: string
         """
 
-        try:
-            with self._device_lock:
+        with self._device_lock:
+            try:
                 self._actions[data['action']](data)
                 time.sleep(self._protocol.commandDelay)
-        except Exception:
-            msg = _('An error occurred while performing action %s on %s', data, self.device_name)
-            _logger.exception(msg)
-            self._status = {'status': self.STATUS_ERROR, 'message_title': msg, 'message_body': traceback.format_exc()}
-            self._push_status()
+            except Exception:
+                msg = _(f'An error occurred while performing action "{data}" on "{self.device_name}"')
+                _logger.exception(msg)
+                self._status = {'status': self.STATUS_ERROR, 'message_title': msg, 'message_body': traceback.format_exc()}
+                self._push_status()
+            self._status = {'status': self.STATUS_CONNECTED, 'message_title': '', 'message_body': ''}
+            self.data['status'] = self._status
 
     def action(self, data):
         """Establish a connection with the device if needed and have it perform a specific action.
@@ -137,8 +139,10 @@ class SerialDriver(Driver):
                 while not self._stopped.is_set():
                     self._take_measure()
                     time.sleep(self._protocol.newMeasureDelay)
+                self._status['status'] = self.STATUS_DISCONNECTED
+                self._push_status()
         except Exception:
-            msg = _('Error while reading %s', self.device_name)
+            msg = 'Error while reading %s' % self.device_name
             _logger.exception(msg)
             self._status = {'status': self.STATUS_ERROR, 'message_title': msg, 'message_body': traceback.format_exc()}
             self._push_status()

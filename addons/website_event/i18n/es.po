@@ -1,29 +1,34 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* website_event
-# 
+# * website_event
+#
 # Translators:
 # Wil Odoo, 2024
-# Larissa Manderfeld, 2024
-# 
+# Larissa Manderfeld, 2025
+#
+# "Larissa Manderfeld (lman)" <lman@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-29 10:44+0000\n"
-"PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Larissa Manderfeld, 2024\n"
-"Language-Team: Spanish (https://app.transifex.com/odoo/teams/41243/es/)\n"
+"POT-Creation-Date: 2025-05-22 18:36+0000\n"
+"PO-Revision-Date: 2025-08-26 01:40+0000\n"
+"Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
+"Language-Team: Spanish <https://translate.odoo.com/projects/odoo-17/"
+"website_event/es/>\n"
+"Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: es\n"
-"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
+"Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n != 0 && n % 1000000 == 0)"
+" ? 1 : 2);\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_website_visitor__event_registration_count
+#, fuzzy
 msgid "# Registrations"
-msgstr "# Inscripciones"
+msgstr "N.° de inscripciones"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.events_list
@@ -54,7 +59,7 @@ msgstr ""
 #: code:addons/website_event/static/src/js/tours/event_tour.js:0
 #, python-format
 msgid "<b>Drag and Drop</b> this snippet below the event title."
-msgstr "<b>Arrastre y suelte</b> este snippet debajo del título del evento."
+msgstr "<b>Arrastre y suelte</b> este fragmento debajo del título del evento."
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_complete
@@ -88,7 +93,7 @@ msgstr "<i class=\"fa fa-ban me-2\"/>No publicado"
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_description_full
 msgid "<i class=\"fa fa-calendar me-2\"/>Add to Calendar"
-msgstr "<i class=\"fa fa-calendar me-2\"/>Agregar al calendario"
+msgstr "<i class=\"fa fa-calendar me-2\"/>Añadir al calendario"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_description_full
@@ -117,12 +122,12 @@ msgstr ""
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_complete
 msgid "<i class=\"fa fa-fw fa-calendar\"/> Add to Google Calendar"
-msgstr "<i class=\"fa fa-fw fa-calendar\"/> Agregar a Google Calendar"
+msgstr "<i class=\"fa fa-fw fa-calendar\"/> Añadir a Google Calendar"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_complete
 msgid "<i class=\"fa fa-fw fa-calendar\"/> Add to iCal/Outlook"
-msgstr "<i class=\"fa fa-fw fa-calendar\"/> Agregar a Calendario/Outlook"
+msgstr "<i class=\"fa fa-fw fa-calendar\"/> Añadir a Calendario/Outlook"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_configure_tickets_button
@@ -331,8 +336,9 @@ msgstr "Respuestas"
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_question__once_per_order
+#, fuzzy
 msgid "Ask once per order"
-msgstr "Preguntar una vez por orden"
+msgstr "Preguntar una vez por pedido"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.s_speaker_bio
@@ -401,18 +407,8 @@ msgstr "Cancelar"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.snippet_options
-msgid "Cards"
-msgstr "Tarjetas"
-
-#. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.snippet_options
 msgid "Card design"
 msgstr "Diseño de la tarjeta"
-
-#. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.snippet_options
-msgid "Template badge"
-msgstr "Plantilla de pase"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.display_timer_alert_widget
@@ -536,12 +532,12 @@ msgstr "Descripción"
 #: model:ir.model.fields,field_description:website_event.field_event_registration_answer__display_name
 #: model:ir.model.fields,field_description:website_event.field_website_event_menu__display_name
 msgid "Display Name"
-msgstr "Nombre mostrado"
+msgstr "Nombre para mostrar"
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_type__website_menu
 msgid "Display a dedicated menu on Website"
-msgstr "Mostrar un menú dedicado en el sitio web"
+msgstr "Mostrar un menú dedicado a el sitio web"
 
 #. module: website_event
 #: model:ir.model.fields,help:website_event.field_event_event__community_menu
@@ -578,6 +574,13 @@ msgstr "Correo electrónico"
 #: model_terms:ir.ui.view,arch_db:website_event.event_description_full
 msgid "End -"
 msgstr "Fin -"
+
+#. module: website_event
+#. odoo-javascript
+#: code:addons/website_event/static/src/js/website_event.js:0
+#, python-format
+msgid "Error"
+msgstr "Error"
 
 #. module: website_event
 #: model:ir.model,name:website_event.model_event_event
@@ -752,11 +755,6 @@ msgid ""
 msgstr ""
 "Descubra lo que la gente ve y dice sobre este evento, y únase a la "
 "conversación."
-
-#. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.snippet_options
-msgid "Fold Tickets Details"
-msgstr "Plegar detalles de entradas"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.index_sidebar_follow_us
@@ -1195,6 +1193,7 @@ msgstr "¡Inscripción confirmada!"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.modal_ticket_registration
+#: model_terms:ir.ui.view,arch_db:website_event.registration_template
 msgid "Registration failed! These tickets are not available anymore."
 msgstr "¡Inscripción fallida! Estas entradas ya no están disponibles."
 
@@ -1254,16 +1253,6 @@ msgid "SEO optimized"
 msgstr "Optimizado para SEO"
 
 #. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.event_description_full
-msgid "Share"
-msgstr "Compartir"
-
-#. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.event_description_full
-msgid "SHARE"
-msgstr "COMPARTIR"
-
-#. module: website_event
 #: model:event.question.answer,name:website_event.event_7_question_0_answer_1
 msgid "Sales"
 msgstr "Ventas"
@@ -1315,6 +1304,11 @@ msgstr "Nombre SEO"
 #: model:ir.model.fields,field_description:website_event.field_event_question_answer__sequence
 msgid "Sequence"
 msgstr "Secuencia"
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.event_description_full
+msgid "Share"
+msgstr "Compartir"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_tag_category_view_form
@@ -1387,9 +1381,16 @@ msgid "Suggested answer"
 msgstr "Respuesta sugerida"
 
 #. module: website_event
+#. odoo-python
+#: code:addons/website_event/controllers/main.py:0
+#, python-format
+msgid "Suspicious activity detected by Google reCaptcha."
+msgstr "Actividad sospechosa detectada por Google reCaptcha."
+
+#. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.snippet_options
-msgid "Templates"
-msgstr "Plantillas"
+msgid "Template badge"
+msgstr "Plantilla de credencial"
 
 #. module: website_event
 #: model:ir.model.fields.selection,name:website_event.selection__event_question__question_type__text_box
@@ -1497,6 +1498,13 @@ msgstr "Tipo"
 
 #. module: website_event
 #. odoo-python
+#: code:addons/website_event/models/website_visitor.py:0
+#, python-format
+msgid "Unsupported 'Not In' operation on visitors registrations"
+msgstr "Operación no compatible “No enn en los registros de los visitantes"
+
+#. module: website_event
+#. odoo-python
 #: code:addons/website_event/models/event_event.py:0
 #: model:website.snippet.filter,name:website_event.website_snippet_filter_event_list
 #: model_terms:ir.ui.view,arch_db:website_event.event_time
@@ -1597,7 +1605,7 @@ msgstr "Menús del sitio web"
 #. module: website_event
 #: model:ir.model,name:website_event.model_website_snippet_filter
 msgid "Website Snippet Filter"
-msgstr "Filtro de snippets del sitio web"
+msgstr "Filtro de fragmentos del sitio web"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_event_view_form

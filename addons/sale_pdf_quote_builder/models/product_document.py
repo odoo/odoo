@@ -20,8 +20,8 @@ class ProductDocument(models.Model):
              "Confirmed order: the document will be sent to and accessible by customers.\n"
              "e.g. this option can be useful to share User Manual or digital content bought"
              " on ecommerce. \n"
-             "Inside quote: The document will be included in the pdf of the quotation between the "
-             "header pages and the quote table. ",
+             "Inside quote: The document will be included in the pdf of the quotation \n"
+             "and sale order between the header pages and the quote table. ",
     )
 
     @api.constrains('attached_on', 'datas', 'type')

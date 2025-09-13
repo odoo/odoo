@@ -1,6 +1,6 @@
 /** @odoo-module **/
-/* global AdyenCheckout */
 
+import { loadJS, loadCSS } from '@web/core/assets';
 import { _t } from '@web/core/l10n/translation';
 import { pyToJsLocale } from '@web/core/l10n/utils';
 import paymentForm from '@payment/js/payment_form';
@@ -51,13 +51,28 @@ paymentForm.include({
         const inlineFormValues = JSON.parse(radio.dataset['adyenInlineFormValues']);
         const formattedAmount = inlineFormValues['formatted_amount'];
 
+        this.el.parentElement.querySelector(
+            'script[src="https://checkoutshopper-live.adyen.com/checkoutshopper/sdk/5.39.0/adyen.js"]'
+        )?.remove();
+        this.el.parentElement.querySelector(
+            'link[href="https://checkoutshopper-live.adyen.com/checkoutshopper/sdk/5.39.0/adyen.css"]'
+        )?.remove();
+        await loadJS('https://checkoutshopper-live.adyen.com/checkoutshopper/sdk/6.9.0/adyen.js')
+        await loadCSS('https://checkoutshopper-live.adyen.com/checkoutshopper/sdk/6.9.0/adyen.css')
+        const { AdyenCheckout, createComponent } = window.AdyenWeb;
+
         // Create the checkout object if not already done for another payment method.
         if (!this.adyenCheckout) {
-            await this.rpc('/payment/adyen/payment_methods', { // Await the RPC to let it create AdyenCheckout before using it.
-                'provider_id': providerId,
-                'partner_id': parseInt(this.paymentContext['partnerId']),
-                'formatted_amount': formattedAmount,
-            }).then(async response => {
+            try {
+                // Await the RPC to let it create AdyenCheckout before using it.
+                const response = await this.rpc(
+                    '/payment/adyen/payment_methods',
+                    {
+                        'provider_id': providerId,
+                        'partner_id': parseInt(this.paymentContext['partnerId']),
+                        'formatted_amount': formattedAmount,
+                    },
+                );
                 // Create the Adyen Checkout SDK.
                 const providerState = this._getProviderState(radio);
                 const configuration = {
@@ -65,31 +80,36 @@ paymentForm.include({
                     clientKey: inlineFormValues['client_key'],
                     amount: formattedAmount,
                     locale: pyToJsLocale(this._getContext().lang || 'en-US'),
+                    countryCode: response['country_code'],
                     environment: providerState === 'enabled' ? 'live' : 'test',
                     onAdditionalDetails: this._adyenOnSubmitAdditionalDetails.bind(this),
+                    onPaymentCompleted: this._adyenOnPaymentResolved.bind(this),
+                    onPaymentFailed: this._adyenOnPaymentResolved.bind(this),
                     onError: this._adyenOnError.bind(this),
                     onSubmit: this._adyenOnSubmit.bind(this),
                 };
                 this.adyenCheckout = await AdyenCheckout(configuration);
-            }).catch((error) => {
+            } catch (error) {
                 if (error instanceof RPCError) {
                     this._displayErrorDialog(
                         _t("Cannot display the payment form"), error.data.message
                     );
                     this._enableButton();
-                } else {
+                    return;
+                }
+                else {
                     return Promise.reject(error);
                 }
-            });
+            }
         }
 
         // Instantiate and mount the component.
         const componentConfiguration = {
-            showBrandsUnderCardNumber: false,
             showPayButton: false,
-            billingAddressRequired: false, // The billing address is included in the request.
         };
         if (paymentMethodCode === 'card') {
+            componentConfiguration['hasHolderName'] = true;
+            componentConfiguration['holderNameRequired'] = true;
             // Forbid Bancontact cards in the card component.
             componentConfiguration['brands'] = ['mc', 'visa', 'amex', 'discover'];
         }
@@ -113,8 +133,10 @@ paymentForm.include({
         }
         const inlineForm = this._getInlineForm(radio);
         const adyenContainer = inlineForm.querySelector('[name="o_adyen_component_container"]');
-        this.adyenComponents[paymentOptionId] = this.adyenCheckout.create(
-            inlineFormValues['adyen_pm_code'], componentConfiguration
+        this.adyenComponents[paymentOptionId] = createComponent(
+            inlineFormValues['adyen_pm_code'],
+            this.adyenCheckout,
+            componentConfiguration
         ).mount(adyenContainer);
     },
 
@@ -135,19 +157,24 @@ paymentForm.include({
      * @param {string} flow - The online payment flow of the transaction.
      * @return {void}
      */
-    _initiatePaymentFlow(providerCode, paymentOptionId, paymentMethodCode, flow) {
+    async _initiatePaymentFlow(providerCode, paymentOptionId, paymentMethodCode, flow) {
         if (providerCode !== 'adyen' || flow === 'token') {
-            this._super(...arguments); // Tokens are handled by the generic flow
+            await this._super(...arguments); // Tokens are handled by the generic flow
             return;
         }
+
+        if (!this.adyenComponents[paymentOptionId]) {  // Component creation failed.
+            this._enableButton();
+            return;
+        }
+
+        this.adyenComponents[paymentOptionId].submit();
 
         // The `onError` event handler is not used to validate inputs anymore since v5.0.0.
         if (!this.adyenComponents[paymentOptionId].isValid) {
             this._displayErrorDialog(_t("Incorrect payment details"));
             this._enableButton();
-            return;
         }
-        this.adyenComponents[paymentOptionId].submit();
     },
 
     /**
@@ -156,9 +183,10 @@ paymentForm.include({
      * @private
      * @param {object} state - The state of the component.
      * @param {object} component - The component.
+     * @param {object} actions - The possible action handlers to call.
      * @return {void}
      */
-    _adyenOnSubmit(state, component) {
+    _adyenOnSubmit(state, component, actions) {
         // Create the transaction and retrieve the processing values.
         this.rpc(
             this.paymentContext['transactionRoute'],
@@ -177,20 +205,19 @@ paymentForm.include({
                 'browser_info': state.data.browserInfo,
             });
         }).then(paymentResponse => {
-            if (paymentResponse.action) { // An additional action is required from the shopper.
+            if (!paymentResponse.resultCode) {
+                actions.reject();
+                return;
+            }
+            if (paymentResponse.action && paymentResponse.action.type !== 'redirect') {
                 this._hideInputs(); // Only the inputs of the inline form should be used.
-                this.call('ui', 'unblock'); // The page is blocked at this point, unblock it.
-                component.handleAction(paymentResponse.action);
-            } else { // The payment reached a final state; redirect to the status page.
-                window.location = '/payment/status';
+                this.call('ui', 'unblock'); // The page is blocked at this point; unblock it.
             }
-        }).catch((error) => {
-            if (error instanceof RPCError) {
-                this._displayErrorDialog(_t("Payment processing failed"), error.data.message);
-                this._enableButton();
-            } else {
-                return Promise.reject(error);
-            }
+            actions.resolve(paymentResponse);
+        }).catch(error => {
+            const error_message = error instanceof RPCError ? error.data.message : error.message;
+            this._displayErrorDialog(_t("Payment processing failed"), error_message);
+            this._enableButton();
         });
     },
 
@@ -200,34 +227,41 @@ paymentForm.include({
      * @private
      * @param {object} state - The state of the component.
      * @param {object} component - The component.
+     * @param {object} actions - The possible action handlers to call.
      * @return {void}
      */
-    _adyenOnSubmitAdditionalDetails(state, component) {
+    _adyenOnSubmitAdditionalDetails(state, component, actions) {
         this.rpc('/payment/adyen/payments/details', {
             'provider_id': this.paymentContext['providerId'],
             'reference': component.reference,
             'payment_details': state.data,
         }).then(paymentDetails => {
-            if (paymentDetails.action) { // Additional action required from the shopper.
-                component.handleAction(paymentDetails.action);
-            } else { // The payment reached a final state; redirect to the status page.
-                window.location = '/payment/status';
+            if (!paymentDetails.resultCode) {
+                actions.reject();
+                return;
             }
-        }).catch((error) => {
-            if (error instanceof RPCError) {
-                this._displayErrorDialog(_t("Payment processing failed"), error.data.message);
-                this._enableButton();
-            } else {
-                return Promise.reject(error);
-            }
+            actions.resolve(paymentDetails);
+        }).catch(error => {
+            const error_message = error instanceof RPCError ? error.data.message : error.message;
+            this._displayErrorDialog(_t("Payment processing failed"), error_message);
+            this._enableButton();
         });
     },
 
     /**
+    * Called when the payment is completed or failed.
+    *
+    * @private
+    * @param {object} result
+    * @param {object} component
+    * @return {void}
+    */
+    _adyenOnPaymentResolved(result, component) {
+        window.location = '/payment/status';
+    },
+
+    /**
      * Handle the error event of the component.
-     *
-     * See https://docs.adyen.com/online-payments/build-your-integration/?platform=Web
-     * &integration=Components&version=5.49.1#handle-the-redirect.
      *
      * @private
      * @param {object} error - The error in the component.

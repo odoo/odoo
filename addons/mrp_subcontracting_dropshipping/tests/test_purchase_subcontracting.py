@@ -466,3 +466,34 @@ class TestSubcontractingDropshippingFlows(TestMrpSubcontractingCommon):
         self.assertEqual(component_lines[0]['route_name'], 'Buy', 'Outside of the subcontracted context, it should try to resupply stock.')
         self.assertEqual(component_lines[1]['product_id'], compo_rr.id)
         self.assertEqual(component_lines[1]['route_name'], 'Buy')
+
+    def test_partner_id_no_overwrite(self):
+        subcontract_location = self.env.company.subcontracting_location_id
+        p1, p2 = self.env['res.partner'].create([
+            {'name': 'partner 1', 'property_stock_subcontractor': subcontract_location.id},
+            {'name': 'partner 2', 'property_stock_subcontractor': subcontract_location.id},
+        ])
+        route_resupply = self.env['stock.route'].create({
+            'name': 'Resupply Subcontractor',
+            'rule_ids': [(0, False, {
+                'name': 'Stock -> Subcontractor',
+                'location_src_id': self.env.ref('stock.stock_location_stock').id,
+                'location_dest_id': subcontract_location.id,
+                'company_id': self.env.company.id,
+                'action': 'pull',
+                'auto': 'manual',
+                'picking_type_id': self.env.ref('stock.picking_type_out').id,
+                'partner_address_id': p1.id,
+            })],
+        })
+        self.env['stock.warehouse.orderpoint'].create({
+            'name': 'Resupply Subcontractor',
+            'location_id': subcontract_location.id,
+            'route_id': route_resupply.id,
+            'product_id': self.comp1.id,
+            'product_min_qty': 2,
+            'product_max_qty': 2,
+        })
+        self.env['procurement.group'].run_scheduler()
+        delivery = self.env["stock.move"].search([("product_id", "=", self.comp1.id)]).picking_id
+        self.assertEqual(delivery.partner_id, p1)

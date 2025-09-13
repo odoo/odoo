@@ -5,6 +5,7 @@
 # Translators:
 # Martin Trigaux, 2023
 # Dejan Sraka <dejan.sraka@picolabs.si>, 2023
+# Aleš Pipan, 2025
 # 
 msgid ""
 msgstr ""
@@ -12,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:55+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Dejan Sraka <dejan.sraka@picolabs.si>, 2023\n"
+"Last-Translator: Aleš Pipan, 2025\n"
 "Language-Team: Slovenian (https://app.transifex.com/odoo/teams/41243/sl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -25,7 +26,7 @@ msgstr ""
 #: code:addons/base_iban/static/src/components/iban_widget/iban_widget.xml:0
 #, python-format
 msgid "Account isn't a valid IBAN"
-msgstr ""
+msgstr "Račun nima veljavne IBAN številke."
 
 #. module: base_iban
 #: model:ir.model,name:base_iban.model_res_partner_bank
@@ -44,7 +45,7 @@ msgstr "Ne morem izračunati BBAN ker številka računa ni IBAN."
 #: code:addons/base_iban/models/res_partner_bank.py:0
 #, python-format
 msgid "IBAN"
-msgstr ""
+msgstr "IBAN"
 
 #. module: base_iban
 #. odoo-python
@@ -54,6 +55,8 @@ msgid ""
 "The IBAN does not seem to be correct. You should have entered something like this %s\n"
 "Where B = National bank code, S = Branch code, C = Account No, k = Check digit"
 msgstr ""
+"Zdi se, da IBAN ni pravilen. Vnesti bi morali nekaj takega %s\n"
+"Where B = National bank code, S = Branch code, C = Account No, k = Check digit"
 
 #. module: base_iban
 #. odoo-python
@@ -67,11 +70,11 @@ msgstr "IBAN ni pravilen, pričeti se mora z oznako države"
 #: code:addons/base_iban/models/res_partner_bank.py:0
 #, python-format
 msgid "There is no IBAN code."
-msgstr ""
+msgstr "Kode IBAN ni."
 
 #. module: base_iban
 #. odoo-python
 #: code:addons/base_iban/models/res_partner_bank.py:0
 #, python-format
 msgid "This IBAN does not pass the validation check, please verify it."
-msgstr ""
+msgstr "Ta IBAN ne prestane preverjanja veljavnosti, prosimo, preverite ga."

@@ -182,3 +182,7 @@ class TestProject(TestCommonSaleTimesheet):
     def test_open_product_form_with_default_service_policy(self):
         form = Form(self.env['product.product'].with_context(default_detailed_type='service', default_service_policy='delivered_timesheet'))
         self.assertEqual('delivered_timesheet', form.service_policy)
+
+    def test_duplicate_project_allocated_hours(self):
+        self.project_global.allocated_hours = 10
+        self.assertEqual(self.project_global.copy().allocated_hours, 10)

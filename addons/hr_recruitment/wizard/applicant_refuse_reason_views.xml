@@ -7,14 +7,16 @@
                 <form string="Refuse Reason">
                     <group col="1">
                         <field name="refuse_reason_id" widget="selection_badge" options="{'horizontal': true, 'no_create': True, 'no_open': True}"/>
-                        <label for="send_mail" invisible="not refuse_reason_id" colspan="1"/>
-                        <span colspan="1" class="text-nowrap" invisible="not refuse_reason_id">
-                            <field name="send_mail"/>
-                            to
-                            <field name="applicant_emails"/>
-                        </span>
-                        <field name="template_id" invisible="not send_mail" required="send_mail"/>
-                        <field name="applicant_ids" invisible="1"/>
+                        <group invisible="not refuse_reason_id">
+                            <label for="send_mail"/>
+                            <div class="d-flex">
+                                <field name="send_mail"/>
+                                <span class="mx-2">to</span>
+                                <field name="applicant_emails"/>
+                            </div>
+                            <field name="template_id" invisible="not send_mail" required="send_mail"/>
+                            <field name="applicant_ids" invisible="1"/>
+                        </group>
                     </group>
                     <div class="alert alert-danger" role="alert" invisible="not applicant_without_email">
                         <field name="applicant_without_email" class="mr4"/>

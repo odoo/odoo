@@ -4,16 +4,16 @@
 # 
 # Translators:
 # Wil Odoo, 2023
-# Junko Augias, 2024
 # Ryoko Tsuda <ryoko@quartile.co>, 2024
+# Junko Augias, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-05 12:32+0000\n"
+"POT-Creation-Date: 2025-05-09 20:37+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Ryoko Tsuda <ryoko@quartile.co>, 2024\n"
+"Last-Translator: Junko Augias, 2025\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -467,7 +467,7 @@ msgstr "満期時に支払う担保の未払い利息。"
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/global_filters/plugins/global_filters_ui_plugin.js:0
-#: code:addons/spreadsheet/static/src/helpers/model.js:0
+#: code:addons/spreadsheet/static/src/global_filters/plugins/global_filters_ui_plugin.js:0
 #, python-format
 msgid "Active Filters"
 msgstr "有効なフィルタ"
@@ -1284,7 +1284,7 @@ msgstr "下"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "COUNT"
-msgstr "数"
+msgstr "カウント"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1816,7 +1816,7 @@ msgstr "設定"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "Confirm"
-msgstr "確認"
+msgstr "確定"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1866,6 +1866,13 @@ msgstr "指定された文字列を小文字に変換します。"
 #, python-format
 msgid "Converts a specified string to uppercase."
 msgstr "指定された文字列を大文字に変換します。"
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
+msgid "Converts a string to a numeric value."
+msgstr "文字列を数値に変換します。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1955,10 +1962,10 @@ msgstr "ラジアンで提供される角度の余接。"
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#: code:addons/spreadsheet/static/src/pivot/pivot_model.js:0
+#: code:addons/spreadsheet/static/src/pivot/pivot_data_source.js:0
 #, python-format
 msgid "Count"
-msgstr "件数"
+msgstr "カウント"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -2675,6 +2682,7 @@ msgstr "編集"
 
 #. module: spreadsheet
 #. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "Edit link"
@@ -2815,6 +2823,7 @@ msgstr "2月"
 
 #. module: spreadsheet
 #. odoo-javascript
+#: code:addons/spreadsheet/static/src/pivot/pivot_data_source.js:0
 #: code:addons/spreadsheet/static/src/pivot/pivot_model.js:0
 #, python-format
 msgid "Field %s does not exist"
@@ -2861,7 +2870,6 @@ msgstr "塗りつぶし"
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/helpers/model.js:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Filter"
@@ -3200,6 +3208,15 @@ msgstr "機能 [[FUNCTION_NAME]] は値数 %sを想定していますが、  %s�
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
+msgid ""
+"Function [[FUNCTION_NAME]] expects the parameter '%s' to be a single value "
+"or a single cell reference, not a range."
+msgstr "機能 [[FUNCTION_NAME]] はパラメータ '%s 'を範囲ではなく、単一の値または単一のセル参照であると期待します。"
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Function [[FUNCTION_NAME]] parameter 2 value (%s) is out of range."
@@ -3429,7 +3446,7 @@ msgstr "水平アライン"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Horizontal lookup"
-msgstr "水平検索"
+msgstr "Horizontal lookup"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3974,14 +3991,14 @@ msgstr "ラジアンの値の逆正接、。"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Is between"
-msgstr "間に存在します"
+msgstr "が次の間である"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Is empty"
-msgstr "空"
+msgstr "空である"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -4033,7 +4050,7 @@ msgstr "は下の数値を下回る"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Is less than or equal to"
-msgstr "は下の数値を下回る、またはそれに等しい"
+msgstr "次以下:"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -4362,7 +4379,7 @@ msgstr "値を検索します。"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Lookup"
-msgstr "検索"
+msgstr "Lookup"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -4863,6 +4880,7 @@ msgstr "一意の値なし"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #: code:addons/spreadsheet/static/src/pivot/pivot_model.js:0
 #: code:addons/spreadsheet/static/src/pivot/pivot_time_adapters.js:0
+#: code:addons/spreadsheet/static/src/pivot/pivot_time_adapters.js:0
 #, python-format
 msgid "None"
 msgstr "なし"
@@ -5033,7 +5051,7 @@ msgstr "分割できるのは、単一の列からの選択のみです。"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Operator"
-msgstr "担当者"
+msgstr "演算子"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -5631,7 +5649,7 @@ msgstr "戻り値は、論理式に応じた値。"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "Reverse icons"
-msgstr "リバースアイコン"
+msgstr "アイコンを反転"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -5651,6 +5669,15 @@ msgstr "右"
 #, python-format
 msgid "Rounds a number according to standard rules."
 msgstr "標準ルールに従って番号を丸めます。"
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
+msgid ""
+"Rounds a number down to the nearest integer that is less than or equal to "
+"it."
+msgstr "数値を、その数値以下の最も近い整数に丸めます。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -6027,7 +6054,7 @@ msgstr "降順に並べ替え (Z ⟶ A)"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Sort range"
-msgstr "範囲を並べ替え"
+msgstr "範囲をソート"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -6683,6 +6710,27 @@ msgstr "変換される配列"
 #, python-format
 msgid "The base (%s) must be between 2 and 36 inclusive."
 msgstr "基数(%s)は2以上36以下にして下さい。"
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
+msgid "The base (%s) must be strictly positive."
+msgstr "基数 (%s) は必ず正の値にして下さい。"
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
+msgid "The base must be different from 1."
+msgstr "基数は1以外にして下さい。"
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
+msgid "The base of the logarithm."
+msgstr "対数の基数。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -7833,6 +7881,13 @@ msgstr "数値の対数、底e（オイラー数）。"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
+msgid "The logarithm of a number, for a given base."
+msgstr "指定された基数に対する数の対数。"
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
 msgid "The low end of the random range."
 msgstr "ランダム範囲の下限"
 
@@ -8358,6 +8413,13 @@ msgstr "指数に乗じる数値"
 #, python-format
 msgid "The number to return."
 msgstr "返す番号"
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
+msgid "The number to round down to the nearest integer."
+msgstr "最も近い整数に切り捨てる数。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -9579,6 +9641,7 @@ msgstr "値 (%s) は正の値またはNULLである必要があります。"
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The value (%s) must be strictly positive."
 msgstr "値 (%s)は必ず正の値にして下さい。"
@@ -9662,6 +9725,13 @@ msgstr "逆タンジェントを計算する値"
 #, python-format
 msgid "The value for which to calculate the logarithm, base e."
 msgstr "対数を計算する値、基数e"
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
+msgid "The value for which to calculate the logarithm."
+msgstr "対数を計算する値。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -10406,7 +10476,7 @@ msgstr "トップ"
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/pivot/plugins/pivot_ui_plugin.js:0
+#: code:addons/spreadsheet/static/src/pivot/pivot_data_source.js:0
 #, python-format
 msgid "Total"
 msgstr "合計"
@@ -10614,7 +10684,6 @@ msgstr "行を使用"
 
 #. module: spreadsheet
 #. odoo-javascript
-#: code:addons/spreadsheet/static/src/helpers/model.js:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
@@ -10882,7 +10951,7 @@ msgstr "縦軸の位置"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Vertical lookup."
-msgstr "垂直検索。"
+msgstr "Vertical lookup."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -11222,7 +11291,7 @@ msgstr "年は、特定の日付で指定されました。"
 #: code:addons/spreadsheet/static/src/helpers/constants.js:0
 #, python-format
 msgid "Year to Date"
-msgstr "年から日"
+msgstr "年初からの累計"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -11475,6 +11544,13 @@ msgstr "searchModeの値は [-1, 1, -2, 2]の中である必要があります"
 #, python-format
 msgid "start_date (%s) should be on or before end_date (%s)."
 msgstr "start_date (%s)は(%s)当日かその前である必要があります"
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
+msgid "the string to be converted"
+msgstr "変換対象の文字列"
 
 #. module: spreadsheet
 #. odoo-javascript

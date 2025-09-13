@@ -12,9 +12,8 @@
         --Ribbon-height-default: calc(var(--Ribbon-font-size, var(--Ribbon-font-size-default)) * 2.5);
         --Ribbon-shadow-distance: .25rem;
         --Ribbon-shadow-blur: .5rem;
-        --Ribbon-z-index: 1;
 
-        z-index: var( --Ribbon-z-index);
+        z-index: var(--Ribbon-z-index);
         position: absolute;
         width: 141.421%; //Square root of 2 to get the diagonal of the parent
         height: var(--Ribbon-height, var(--Ribbon-height-default));
@@ -66,4 +65,8 @@
             margin-right: 100px;
         }
     }
+}
+
+.o_form_sheet .ribbon {
+   --Ribbon-z-index: 1;
 }

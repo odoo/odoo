@@ -9,6 +9,7 @@ import { userService } from "@web/core/user_service";
 import { makeTestEnv } from "@web/../tests/helpers/mock_env";
 import { makeFakeLocalizationService } from "@web/../tests/helpers/mock_services";
 import { click, getFixture, mount } from "@web/../tests/helpers/utils";
+import {markup} from "@odoo/owl";
 
 const serviceRegistry = registry.category("services");
 const userMenuRegistry = registry.category("user_menuitems");
@@ -84,19 +85,30 @@ QUnit.test("can be rendered", async (assert) => {
             },
         };
     });
+    userMenuRegistry.add("html_item", function () {
+            return {
+                type: "item",
+                id: "html",
+                description: markup(`<div>HTML<i class="fa fa-check px-2"></i></div>`),
+                callback: () => {
+                    assert.step("callback html_item");
+                },
+                sequence: 20,
+            };
+    });
     await mount(BurgerUserMenu, target, { env });
-    assert.containsN(target, ".o_user_menu_mobile .dropdown-item", 4);
+    assert.containsN(target, ".o_user_menu_mobile .dropdown-item", 5);
     assert.containsOnce(target, ".o_user_menu_mobile .dropdown-item input.form-check-input");
     assert.containsOnce(target, "div.dropdown-divider");
     const children = [...(target.querySelector(".o_user_menu_mobile").children || [])];
     assert.deepEqual(
         children.map((el) => el.tagName),
-        ["A", "A", "DIV", "DIV", "A"]
+        ["A", "A", "DIV", "DIV", "A", "A"]
     );
     const items = [...target.querySelectorAll(".dropdown-item")] || [];
     assert.deepEqual(
         items.map((el) => el.textContent),
-        ["Ring", "Bad", "Frodo", "Eye"]
+        ["Ring", "Bad", "Frodo", "HTML", "Eye"]
     );
     for (const item of items) {
         click(item);
@@ -105,6 +117,7 @@ QUnit.test("can be rendered", async (assert) => {
         "callback ring_item",
         "callback bad_item",
         "callback frodo_item",
+        "callback html_item",
         "callback eye_item",
     ]);
 });

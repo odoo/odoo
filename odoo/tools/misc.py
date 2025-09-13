@@ -31,7 +31,7 @@ from collections import OrderedDict
 from collections.abc import Iterable, Mapping, MutableMapping, MutableSet
 from contextlib import ContextDecorator, contextmanager
 from difflib import HtmlDiff
-from functools import wraps
+from functools import reduce, wraps
 from itertools import islice, groupby as itergroupby
 from operator import itemgetter
 
@@ -1148,6 +1148,9 @@ class OrderedSet(MutableSet):
     def __repr__(self):
         return f'{type(self).__name__}({list(self)!r})'
 
+    def intersection(self, *others):
+        return reduce(OrderedSet.__and__, others, self)
+
 
 class LastOrderedSet(OrderedSet):
     """ A set collection that remembers the elements last insertion order. """
@@ -1752,7 +1755,7 @@ def get_diff(data_from, data_to, custom_style=False, dark_color_scheme=False):
         For the table to fit the modal width, some custom style is needed.
         """
         to_append = {
-            'diff_header': 'bg-600 text-center align-top px-2',
+            'diff_header': 'bg-600 text-light text-center align-top px-2',
             'diff_next': 'd-none',
         }
         for old, new in to_append.items():

@@ -315,6 +315,12 @@ class SetDefaultDialog extends Component {
                 return option[0] === value;
             })[1];
         }
+        if (
+            (typeof displayed === "string" || displayed instanceof String) &&
+            displayed.length > 60
+        ) {
+            displayed = displayed.slice(0, 57) + "...";
+        }
         return [value, displayed];
     }
 
@@ -394,6 +400,7 @@ export function manageAttachments({ component, env }) {
                 context: {
                     default_res_model: component.props.resModel,
                     default_res_id: resId,
+                    skip_res_field_check: true,
                 },
             });
         },

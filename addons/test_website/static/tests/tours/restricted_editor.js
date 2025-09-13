@@ -107,6 +107,10 @@ wTourUtils.registerWebsitePreviewTour('test_restricted_editor_test_admin', {
         trigger: '.modal-footer .btn-primary',
     },
     {
+        content: "Check that html fields are not content editable when translating",
+        trigger: "iframe [data-oe-expression='record.website_description']:not([contenteditable='true'])",
+    },
+    {
         content: "Translate name",
         trigger: "iframe [data-oe-expression='record.name']",
         run: "text Nouvelle valeur",
@@ -115,6 +119,18 @@ wTourUtils.registerWebsitePreviewTour('test_restricted_editor_test_admin', {
         content: "Translate some banner text",
         trigger: "iframe [data-oe-expression='record.website_description'] strong.o_default_snippet_text",
         run: "text Facilement.",
+    },
+    ...wTourUtils.clickOnSave(),
+]);
+
+wTourUtils.registerWebsitePreviewTour('test_restricted_editor_tester', {
+    test: true,
+    url: '/test_model/1',
+}, () => [
+    ...wTourUtils.clickOnEditAndWaitEditMode(),
+    {
+        content: "Footer should not be be editable for restricted user",
+        trigger: "iframe :has(.o_editable) footer:not(.o_editable):not(:has(.o_editable))",
     },
     ...wTourUtils.clickOnSave(),
 ]);

@@ -5,6 +5,7 @@ from contextlib import contextmanager
 from unittest.mock import patch
 
 from odoo import Command
+from odoo.addons.base.models.ir_mail_server import extract_rfc2822_addresses
 from odoo.addons.base.models.res_partner import Partner
 from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
 from odoo.exceptions import AccessError, RedirectWarning, UserError, ValidationError
@@ -115,15 +116,33 @@ class TestPartner(TransactionCaseWithUserDemo):
                     'Name_create should take first found email'
                 )
 
-        # check name updates
-        for source, exp_email_formatted in [
-            ('Vlad the Impaler', '"Vlad the Impaler" <vlad.the.impaler@example.com>'),
-            ('Balázs', '"Balázs" <vlad.the.impaler@example.com>'),
-            ('Balázs <email.in.name@example.com>', '"Balázs <email.in.name@example.com>" <vlad.the.impaler@example.com>'),
+        # check name updates and extract_rfc2822_addresses
+        for source, exp_email_formatted, exp_addr in [
+            (
+                'Vlad the Impaler',
+                '"Vlad the Impaler" <vlad.the.impaler@example.com>',
+                ['vlad.the.impaler@example.com']
+            ), (
+                'Balázs', '"Balázs" <vlad.the.impaler@example.com>',
+                ['vlad.the.impaler@example.com']
+            ),
+            # check with '@' in name
+            (
+                'Bike@Home', '"Bike@Home" <vlad.the.impaler@example.com>',
+                ['Bike@Home', 'vlad.the.impaler@example.com']
+            ), (
+                'Bike @ Home@Home', '"Bike @ Home@Home" <vlad.the.impaler@example.com>',
+                ['Home@Home', 'vlad.the.impaler@example.com']
+            ), (
+                'Balázs <email.in.name@example.com>',
+                '"Balázs <email.in.name@example.com>" <vlad.the.impaler@example.com>',
+                ['email.in.name@example.com', 'vlad.the.impaler@example.com']
+            ),
         ]:
             with self.subTest(source=source):
                 new_partner.write({'name': source})
                 self.assertEqual(new_partner.email_formatted, exp_email_formatted)
+                self.assertEqual(extract_rfc2822_addresses(new_partner.email_formatted), exp_addr)
 
         # check email updates
         new_partner.write({'name': 'Balázs'})
@@ -291,6 +310,32 @@ class TestPartner(TransactionCaseWithUserDemo):
         self.assertEqual(
             partner_merge_wizard.dst_partner_id.display_name, expected_partner_name,
             "'Destination Contact' name should contain db ID in brackets"
+        )
+
+    def test_partner_merge_null_company_property(self):
+        """ Check that partner with null company ir.property can be merged """
+        partners = self.env['res.partner'].create([
+            {'name': 'no barcode partner'},
+            {'name': 'partner1', 'barcode': 'partner1'},
+            {'name': 'partner2', 'barcode': 'partner2'},
+        ])
+        with self.assertLogs(level='ERROR'):
+            partner_merge_wizard = self.env['base.partner.merge.automatic.wizard']._merge(
+                partners.ids,
+                partners[0],
+            )
+            self.assertFalse(partners[0].barcode)
+
+        partners = self.env['res.partner'].create([
+            {'name': 'partner1', 'barcode': 'partner1'},
+            {'name': 'partner2', 'barcode': 'partner2'},
+        ])
+        self.env['ir.property'].search([
+            ('res_id', 'in', ["res.partner,{}".format(p.id) for p in partners])
+        ]).company_id = None
+        partner_merge_wizard = self.env['base.partner.merge.automatic.wizard']._merge(
+            partners.ids,
+            partners[0],
         )
 
     def test_read_group(self):
@@ -678,6 +723,41 @@ class TestPartnerAddressCompany(TransactionCase):
         sunhelm.write({'vat': sunhelmvat2})
         self.assertEqual(p1.vat, p1vat, 'Setting is_company should stop auto-sync of commercial fields')
         self.assertEqual(p0.vat, sunhelmvat2, 'Commercial fields must be automatically synced')
+
+    def test_company_dependent_commercial_sync(self):
+        ResPartner = self.env['res.partner']
+
+        company_1, company_2 = self.env['res.company'].create([
+            {'name': 'company_1'},
+            {'name': 'company_2'},
+        ])
+
+        test_partner_company = ResPartner.create({
+            'name': 'This company',
+            'barcode': 'Main Company',
+            'is_company': True,
+        })
+        test_partner_company.with_company(company_1).barcode = 'Company 1'
+        test_partner_company.with_company(company_2).barcode = 'Company 2'
+
+        commercial_fields = ResPartner._commercial_fields()
+        with patch.object(
+            ResPartner.__class__,
+            '_commercial_fields',
+            lambda self: commercial_fields + ['barcode'],
+        ), patch.object(ResPartner.__class__, '_validate_fields'):  # skip _check_barcode_unicity
+            child_address = ResPartner.create({
+                'name': 'Contact',
+                'parent_id': test_partner_company.id,
+            })
+            self.assertEqual(child_address.barcode, 'Main Company')
+            self.assertEqual(child_address.with_company(company_1).barcode, 'Company 1')
+            self.assertEqual(child_address.with_company(company_2).barcode, 'Company 2')
+
+            child_address.parent_id = False
+
+            # Reassigning a parent (or a new one) shouldn't fail
+            child_address.parent_id = test_partner_company.id
 
     def test_company_change_propagation(self):
         """ Check propagation of company_id across children """

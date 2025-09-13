@@ -108,7 +108,7 @@ class EventTicket(models.Model):
         compute_sudo=True)
     price_incl = fields.Float(
         string='Price include', compute='_compute_price_incl',
-        digits='Product Price', readonly=False)
+        digits='Product Price', readonly=False, compute_sudo=True)
 
     def _compute_price_reduce_taxinc(self):
         for event in self:

@@ -58,14 +58,19 @@
 
     <t t-name="lunch.LunchLocation">
         <div class="lunch_location pb-1">
-            <Many2XAutocomplete
-                value="props.location"
-                resModel="'lunch.location'"
-                getDomain="getDomain"
-                fieldString="props.location"
-                activeActions="{}"
-                update.bind="props.onUpdateLunchLocation"
-            />
+            <t t-if="props.location">
+                <Many2XAutocomplete
+                    value="props.location"
+                    resModel="'lunch.location'"
+                    fieldString="props.location"
+                    getDomain="getDomain"
+                    activeActions="{}"
+                    update.bind="props.onUpdateLunchLocation"
+                />
+            </t>
+            <t t-else="">
+                <p>No lunch location available.</p>
+            </t>
         </div>
     </t>
 

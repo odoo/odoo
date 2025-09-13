@@ -23,7 +23,7 @@
 
   function isElement(node) {
     var OwnElement = getWindow(node).Element;
-    return node instanceof OwnElement || node instanceof Element;
+    return node instanceof OwnElement || node.nodeType === Node.ELEMENT_NODE;
   }
 
   function isHTMLElement(node) {

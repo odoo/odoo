@@ -211,6 +211,8 @@ class MailActivityMixin(models.AbstractModel):
 
     @api.model
     def _search_activity_user_id(self, operator, operand):
+        if isinstance(operand, bool) and ((operator == '=' and not operand) or (operator == '!=' and operand)):
+            return [('activity_ids', '=', False)]
         return [('activity_ids', 'any', [('active', 'in', [True, False]), ('user_id', operator, operand)])]
 
     @api.model
@@ -233,6 +235,7 @@ class MailActivityMixin(models.AbstractModel):
 
     def _search_my_activity_date_deadline(self, operator, operand):
         activity_ids = self.env['mail.activity']._search([
+            ('active', '=', True),  # never overdue if "done"
             ('date_deadline', operator, operand),
             ('res_model', '=', self._name),
             ('user_id', '=', self.env.user.id)
@@ -251,7 +254,7 @@ class MailActivityMixin(models.AbstractModel):
         """ Override unlink to delete records activities through (res_model, res_id). """
         record_ids = self.ids
         result = super(MailActivityMixin, self).unlink()
-        self.env['mail.activity'].sudo().search(
+        self.env['mail.activity'].with_context(active_test=False).sudo().search(
             [('res_model', '=', self._name), ('res_id', 'in', record_ids)]
         ).unlink()
         return result
@@ -287,7 +290,7 @@ class MailActivityMixin(models.AbstractModel):
             today_utc=pytz.utc.localize(datetime.utcnow()),
             tz=tz,
         )
-        alias = query.join(self._table, "id", sql_join, "res_id", "last_activity_state")
+        alias = query.left_join(self._table, "id", sql_join, "res_id", "last_activity_state")
 
         return SQL.identifier(alias, 'activity_state'), ['activity_state']
 
@@ -326,12 +329,12 @@ class MailActivityMixin(models.AbstractModel):
         :param additional_domain: if set, filter on that domain;
         """
         if self.env.context.get('mail_activity_automation_skip'):
-            return False
+            return self.env['mail.activity']
 
         Data = self.env['ir.model.data'].sudo()
         activity_types_ids = [type_id for type_id in (Data._xmlid_to_res_id(xmlid, raise_if_not_found=False) for xmlid in act_type_xmlids) if type_id]
         if not any(activity_types_ids):
-            return False
+            return self.env['mail.activity']
 
         domain = [
             '&', '&', '&',
@@ -370,13 +373,19 @@ class MailActivityMixin(models.AbstractModel):
             _logger.warning("Scheduled deadline should be a date (got %s)", date_deadline)
         if act_type_xmlid:
             activity_type_id = self.env['ir.model.data']._xmlid_to_res_id(act_type_xmlid, raise_if_not_found=False)
-            if activity_type_id:
-                activity_type = self.env['mail.activity.type'].browse(activity_type_id)
-            else:
-                activity_type = self._default_activity_type()
         else:
             activity_type_id = act_values.get('activity_type_id', False)
-            activity_type = self.env['mail.activity.type'].browse(activity_type_id) if activity_type_id else self.env['mail.activity.type']
+        activity_type = self.env['mail.activity.type'].browse(activity_type_id)
+        invalid_model = activity_type.res_model and activity_type.res_model != self._name
+        if not activity_type or invalid_model:
+            if invalid_model:
+                _logger.warning(
+                    'Invalid activity type model %s used on %s (tried with xml id %s)',
+                    activity_type.res_model, self._name, act_type_xmlid or '',
+                )
+            # TODO master: reset invalid model to default type, keep it for stable as not harmful
+            if not activity_type:
+                activity_type = self._default_activity_type()
 
         model_id = self.env['ir.model']._get(self._name).id
         create_vals_list = []

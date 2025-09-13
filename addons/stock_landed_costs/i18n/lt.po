@@ -16,7 +16,8 @@
 # UAB "Draugiški sprendimai" <transifex@draugiskisprendimai.lt>, 2023
 # Linas Versada <linaskrisiukenas@gmail.com>, 2023
 # Martin Trigaux, 2023
-# Ramunė ViaLaurea <ramune.vialaurea@gmail.com>, 2023
+# Gailius Kazlauskas <gailius@vialaurea.lt>, 2024
+# Ramunė ViaLaurea <ramune.vialaurea@gmail.com>, 2025
 # 
 msgid ""
 msgstr ""
@@ -24,7 +25,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-01-29 10:44+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Ramunė ViaLaurea <ramune.vialaurea@gmail.com>, 2023\n"
+"Last-Translator: Ramunė ViaLaurea <ramune.vialaurea@gmail.com>, 2025\n"
 "Language-Team: Lithuanian (https://app.transifex.com/odoo/teams/41243/lt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -50,7 +51,7 @@ msgstr "<i class=\"fa fa-clock-o\" title=\"Date\" role=\"img\" aria-label=\"Date
 #. module: stock_landed_costs
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
 msgid "<span class=\"o_stat_text\">Valuation</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Vertė</span>"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,help:stock_landed_costs.field_account_move_line__product_type
@@ -246,13 +247,13 @@ msgstr "Žurnalas pagal nutylėjimą"
 #: model:ir.model.fields,field_description:stock_landed_costs.field_product_product__split_method_landed_cost
 #: model:ir.model.fields,field_description:stock_landed_costs.field_product_template__split_method_landed_cost
 msgid "Default Split Method"
-msgstr ""
+msgstr "Skaidymo metodas pagal nutylėjimą"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,help:stock_landed_costs.field_product_product__split_method_landed_cost
 #: model:ir.model.fields,help:stock_landed_costs.field_product_template__split_method_landed_cost
 msgid "Default Split Method when used for Landed Cost"
-msgstr ""
+msgstr "Skaidymo metodas pagal nutylėjimą, kai naudojami Galutiniai kaštai"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines__name
@@ -283,7 +284,7 @@ msgstr "Juodraštis"
 #: model:ir.model.fields.selection,name:stock_landed_costs.selection__product_template__split_method_landed_cost__equal
 #: model:ir.model.fields.selection,name:stock_landed_costs.selection__stock_landed_cost_lines__split_method__equal
 msgid "Equal"
-msgstr "Lygus"
+msgstr "Lygiomis dalimis"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,help:stock_landed_costs.field_stock_landed_cost_lines__split_method
@@ -294,6 +295,11 @@ msgid ""
 "By Weight: Cost will be divided depending on its weight.\n"
 "By Volume: Cost will be divided depending on its volume."
 msgstr ""
+"Lygiomis dalimis: Sąnaudos bus padalytos po lygiai.\n"
+"Pagal kiekį: Sąnaudos bus padalytos pagal produkto kiekį.\n"
+"Pagal dabartinę savikainą: Sąnaudos bus padalytos pagal produkto dabartinę savikainą.\n"
+"Pagal svorį: Sąnaudos bus padalytos pagal svorį.\n"
+"Pagal tūrį: Sąnaudos bus padalytos pagal tūrį."
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__message_follower_ids
@@ -360,6 +366,8 @@ msgid ""
 "Indicates whether the product is a landed cost: when receiving a vendor "
 "bill, you can allocate this cost on preceding receipts."
 msgstr ""
+"Nurodo, ar produktas yra galutinių kaštų dalis: gavus tiekėjo sąskaitą, šias"
+" išlaidas galima paskirstyti ankstesniems gavimams."
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__message_is_follower
@@ -438,6 +446,8 @@ msgid ""
 "Landed costs allow you to include additional costs (shipment, insurance, "
 "customs duties, etc) into the cost of the product."
 msgstr ""
+"Galutiniai kaštai leidžia įtraukti papildomas išlaidas (siuntimą, draudimą, "
+"muito mokesčius ir pan.) į bendrą produkto savikainą."
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__write_uid
@@ -531,7 +541,7 @@ msgstr "Klaidų kiekis"
 #. module: stock_landed_costs
 #: model:ir.model.fields,help:stock_landed_costs.field_stock_landed_cost__message_needaction_counter
 msgid "Number of messages requiring action"
-msgstr ""
+msgstr "Pranešimų, kuriems reikia imtis veiksmų, skaičius"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,help:stock_landed_costs.field_stock_landed_cost__message_has_error_counter
@@ -759,3 +769,5 @@ msgid ""
 "You cannot change the product type or disable landed cost option because the"
 " product is used in an account move line."
 msgstr ""
+"Negalite pakeisti produkto tipo arba pašalinti galutinių kaštų požymio, nes "
+"produktas yra naudojamas DK eilutėse."

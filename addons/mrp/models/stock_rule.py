@@ -50,28 +50,7 @@ class StockRule(models.Model):
             mo = self.env['mrp.production']
             mto_route = self.env['stock.warehouse']._find_global_route('stock.route_warehouse0_mto', _('Replenish on Order (MTO)'))
             if rule.route_id != mto_route and procurement.origin != 'MPS':
-                gpo = rule.group_propagation_option
-                group = (gpo == 'fixed' and rule.group_id) or \
-                        (gpo == 'propagate' and 'group_id' in procurement.values and procurement.values['group_id']) or False
-                domain = (
-                    ('bom_id', '=', bom.id),
-                    ('product_id', '=', procurement.product_id.id),
-                    ('state', 'in', ['draft', 'confirmed']),
-                    ('is_planned', '=', False),
-                    ('picking_type_id', '=', rule.picking_type_id.id),
-                    ('company_id', '=', procurement.company_id.id),
-                    ('user_id', '=', False),
-                )
-                if procurement.values.get('orderpoint_id'):
-                    procurement_date = datetime.combine(
-                        fields.Date.to_date(procurement.values['date_planned']) - relativedelta(days=int(bom.produce_delay)),
-                        datetime.max.time()
-                    )
-                    domain += ('|',
-                               '&', ('state', '=', 'draft'), ('date_deadline', '<=', procurement_date),
-                               '&', ('state', '=', 'confirmed'), ('date_start', '<=', procurement_date))
-                if group:
-                    domain += (('procurement_group_id', '=', group.id),)
+                domain = rule._make_mo_get_domain(procurement, bom)
                 mo = self.env['mrp.production'].sudo().search(domain, limit=1)
             if not mo:
                 new_productions_values_by_company[procurement.company_id.id].append(rule._prepare_mo_vals(*procurement, bom))
@@ -155,6 +134,32 @@ class StockRule(models.Model):
             return values['orderpoint_id'].bom_id
         return self.env['mrp.bom']._bom_find(product_id, picking_type=self.picking_type_id, bom_type='normal', company_id=company_id.id)[product_id]
 
+    def _make_mo_get_domain(self, procurement, bom):
+        gpo = self.group_propagation_option
+        group = (gpo == 'fixed' and self.group_id) or \
+                (gpo == 'propagate' and 'group_id' in procurement.values and procurement.values['group_id']) or False
+        domain = (
+            ('bom_id', '=', bom.id),
+            ('product_id', '=', procurement.product_id.id),
+            ('state', 'in', ['draft', 'confirmed']),
+            ('is_planned', '=', False),
+            ('picking_type_id', '=', self.picking_type_id.id),
+            ('company_id', '=', procurement.company_id.id),
+            ('user_id', '=', False),
+            ('location_dest_id', 'child_of', procurement.location_id.id)
+        )
+        if procurement.values.get('orderpoint_id'):
+            procurement_date = datetime.combine(
+                fields.Date.to_date(procurement.values['date_planned']) - relativedelta(days=int(bom.produce_delay)),
+                datetime.max.time()
+            )
+            domain += ('|',
+                       '&', ('state', '=', 'draft'), ('date_deadline', '<=', procurement_date),
+                       '&', ('state', '=', 'confirmed'), ('date_start', '<=', procurement_date))
+        if group:
+            domain += (('procurement_group_id', '=', group.id),)
+        return domain
+
     def _prepare_mo_vals(self, product_id, product_qty, product_uom, location_dest_id, name, origin, company_id, values, bom):
         date_planned = self._get_date_planned(bom, values)
         date_deadline = values.get('date_deadline') or date_planned + relativedelta(days=bom.produce_delay)
@@ -218,7 +223,7 @@ class StockRule(models.Model):
             for wh in warehouse:
                 if wh.manufacture_steps != 'mrp_one_step':
                     wh_manufacture_rules = product._get_rules_from_location(product.property_stock_production, route_ids=wh.pbm_route_id)
-                    extra_delays, extra_delay_description = (wh_manufacture_rules - self)._get_lead_days(product, **values)
+                    extra_delays, extra_delay_description = (wh_manufacture_rules - self).with_context(ignore_global_visibility_days=True)._get_lead_days(product, **values)
                     for key, value in extra_delays.items():
                         delays[key] += value
                     delay_description += extra_delay_description
