@@ -5,6 +5,7 @@ import odoo.tests
 from datetime import timedelta
 from odoo.addons.pos_self_order.tests.self_order_common_test import SelfOrderCommonTest
 
+
 @odoo.tests.tagged('post_install', '-at_install')
 class TestSelfOrderController(SelfOrderCommonTest):
     def make_request_to_controller(self, url, params):
