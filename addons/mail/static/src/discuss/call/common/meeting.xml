@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-name="mail.Meeting">
-        <div class="o-mail-Meeting h-100 w-100 d-flex flex-column" t-att-class="{'p-1 pb-3 gap-2': !ui.isSmall}">
+        <div class="o-mail-Meeting h-100 w-100 d-flex flex-column" t-att-class="{'p-1 pb-3': !ui.isSmall}">
             <div class="d-flex flex-grow-1 h-100 o-min-height-0 gap-1 position-relative">
                 <div class="o-mail-Meeting-callContainer h-100 flex-grow-1 o-min-width-0" t-att-class="{'d-none': ui.isSmall and threadActions.activeAction?.actionPanelComponentCondition, 'pb-0': ui.isSmall}">
                     <Call hasOverlay="false" />
@@ -10,7 +10,7 @@
                     <t t-component="threadActions.activeAction.actionPanelComponent" t-props="threadActions.activeAction.actionPanelComponentProps" thread="thread"/>
                 </div>
             </div>
-            <div class="d-flex justify-content-between overflow-x-auto" style="flex-shrink: 0;" t-att-class="{'p-2 pb-3': ui.isSmall}">
+            <div class="pt-2 d-flex justify-content-between overflow-x-auto flex-shrink-0" t-att-class="{'p-2 pb-3': ui.isSmall}">
                 <div/>
                 <CallActionList thread="store.rtc.channel"/>
                 <MeetingSideActions threadActions="threadActions"/>

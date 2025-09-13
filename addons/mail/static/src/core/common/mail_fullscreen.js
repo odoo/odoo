@@ -5,7 +5,7 @@ import { registry } from "@web/core/registry";
 const DEFAULT_ID = Symbol("default");
 
 export class MailFullscreen extends Component {
-    static props = [];
+    static props = ["component", "props?"];
     static template = "mail.Fullscreen";
 
     setup() {
@@ -15,21 +15,13 @@ export class MailFullscreen extends Component {
 }
 
 export const fullscreenService = {
-    start() {
-        registry.category("main_components").add("mail.fullscreen", { Component: MailFullscreen });
-        const state = reactive({
-            component: undefined,
-            props: undefined,
-            id: undefined,
-            exit,
-            enter,
-        });
+    start(env) {
+        const state = reactive({ enter, exit, id: undefined });
         async function exit(id = state.id) {
             if (id !== state.id) {
                 return;
             }
-            state.component = undefined;
-            state.props = undefined;
+            this.closeOverlay?.();
             state.id = undefined;
             const fullscreenElement =
                 document.webkitFullscreenElement || document.fullscreenElement;
@@ -50,16 +42,20 @@ export const fullscreenService = {
          * @param {any} [options.id]
          * @param {boolean} [options.keepBrowserHeader] - Optional flag to specify whether to keep
          * the browser's header (address bar, tabs, etc.) visible.
+         * @param {string} [options.rootId] - Optional root id to pass to the overlay.
          * @returns {Promise<void>}
          */
         async function enter(
             component,
-            { keepBrowserHeader = false, props, id = DEFAULT_ID } = {}
+            { keepBrowserHeader = false, props, rootId, id = DEFAULT_ID } = {}
         ) {
-            this.exit();
-            state.component = component;
-            state.props = props;
+            this.closeOverlay?.();
             state.id = id;
+            this.closeOverlay = env.services.overlay.add(
+                MailFullscreen,
+                { component, props },
+                { rootId }
+            );
             const el = document.body;
             if (keepBrowserHeader) {
                 return;
