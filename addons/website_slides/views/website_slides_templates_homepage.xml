@@ -3,37 +3,20 @@
 
 <template id="courses_home_side_bar">
     <div class="container o_wslides_home_main">
-        <div class="row">
-            <t t-set="has_side_column" t-value="is_view_active('website_slides.toggle_leaderboard')"/>
-            <t t-if="is_public_user">
-                <div t-if="has_side_column">
-                    <div class="row">
-                        <div class="col-12 col-md-5 col-lg-12">
-                            <div class="ps-md-5 ps-lg-0">
-                                <t t-call="website_slides.slides_home_users_small"/>
-                            </div>
-                        </div>
+        <div class="o_wslides_home_aside_loggedin p-3 p-lg-0 mb-4">
+            <div id="o_wslides_home_aside_content" class="d-none d-lg-block">
+                <div class="row g-0 mb-5 mt-3 mt-lg-0">
+                    <div class="col-12 col-sm-6 col-lg-12">
+                        <t t-call="website_slides.slides_home_user_profile_small"/>
                     </div>
-                </div>
-            </t>
-            <div t-else="">
-                <t t-set="has_side_column" t-value="True"/>
-                <div class="o_wslides_home_aside_loggedin card p-3 p-lg-0 mb-4">
-                    <div id="o_wslides_home_aside_content" class="d-none d-lg-block">
-                        <div class="row g-0 mb-5 mt-3 mt-lg-0">
-                            <div class="col-12 col-sm-6 col-lg-12">
-                                <t t-call="website_slides.slides_home_user_profile_small"/>
-                            </div>
-                            <div class="col-12 col-sm-6 col-lg-12 ps-md-5 ps-lg-0 mt-lg-4">
-                                <t t-call="website_slides.slides_home_user_achievements_small"/>
-                            </div>
-                            <div class="col-12 col-md-7 col-lg-12 ps-md-5 ps-lg-0 mt-lg-4 mb-3">
-                                <t t-call="website_slides.slides_home_achievements_small"/>
-                            </div>
-                            <div class="col-12 col-sm-6 col-lg-12 ps-md-5 ps-lg-0 mt-lg-4">
-                                <t t-call="website_slides.slides_home_users_small"/>
-                            </div>
-                        </div>
+                    <div class="col-12 col-sm-6 col-lg-12 ps-md-5 ps-lg-0 mt-lg-4">
+                        <t t-call="website_slides.slides_home_user_achievements_small"/>
+                    </div>
+                    <div class="col-12 col-md-7 col-lg-12 ps-md-5 ps-lg-0 mt-lg-4 mb-3">
+                        <t t-call="website_slides.slides_home_achievements_small"/>
+                    </div>
+                    <div class="col-12 col-sm-6 col-lg-12 ps-md-5 ps-lg-0 mt-lg-4">
+                        <t t-call="website_slides.slides_home_users_small"/>
                     </div>
                 </div>
             </div>
@@ -96,14 +79,14 @@
 <!-- Channels home template -->
 <template id='courses_home' name="Odoo Courses Homepage">
     <t t-set="body_classname" t-value="'o_wslides_body'"/>
-    <t t-set="has_side_column" t-value="not is_public_user or is_view_active('website_slides.toggle_leaderboard')"/>
+    <t t-set="has_side_column" t-value="not is_public_user"/>
     <t t-call="website.layout">
         <div id="wrap" class="wrap o_wslides_wrap">
             <div class="oe_structure oe_empty"/>
             <div class="container">
                 <t t-call="website_slides.courses_search_bar"/>
                 <div class="row">
-                    <div t-attf-class="#{'col-12 col-lg-8 col-xl-9 pe-lg-5' if has_side_column else 'col-12'}">
+                    <div t-attf-class="col-12 #{'col-lg-8 col-xl-9 pe-lg-5' if has_side_column else ''}">
                         <div t-if="invite_error_msg" role="alert" class="o_not_editable alert alert-danger text-center" t-out="invite_error_msg"/>
                         <div class="o_wslides_home_nav">
                             <div class="o_wprofile_email_validation_container">
@@ -115,11 +98,6 @@
                                     <t t-set="additional_validated_email_message"> You may now participate in our eLearning.</t>
                                 </t>
                             </div>
-                        </div>
-                        <div class="container o_wslides_home_content_section mb-3"
-                            t-if="not len(channels)">
-                            <p class="h2">No Course created yet.</p>
-                            <p groups="website_slides.group_website_slides_officer">Click on "New" in the top-right corner to write your first course.</p>
                         </div>
                         <t t-call="website_slides.courses_my"/>
                         <t t-call="website_slides.courses_search_results"/>
@@ -135,7 +113,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"/>
                 </div>
                 <div class="offcanvas-body o_wslides_home_aside_loggedin d-flex flex-column gap-4">
-                    <t t-if="is_public_user and has_side_column">
+                    <t t-if="is_public_user">
                         <t t-call="website_slides.slides_home_users_small"/>
                     </t>
                     <t t-else="">
@@ -285,7 +263,7 @@
                         class="position-absolute top-0 start-100 translate-middle border border-light rounded-circle bg-danger p-1"
                     />
                 </button>
-                <a class="btn d-block d-lg-none p-0" data-bs-toggle="offcanvas" href="#o_wslides_overview_offcanvas" role="button" aria-controls="o_wslides_overview_offcanvas">
+                <a t-if="not request.env.user._is_public()" class="btn d-block d-lg-none p-0" data-bs-toggle="offcanvas" href="#o_wslides_overview_offcanvas" role="button" aria-controls="o_wslides_overview_offcanvas">
                     <t t-call="website_slides.slides_misc_user_image">
                         <t t-set="img_class" t-value="'o_wslides_user_avatar rounded-circle'"/>
                     </t>
@@ -324,10 +302,10 @@
 
 <template id="courses_search_results">
     <div class="o_wslides_home_main pb-5">
-        <h2 t-if="not search_term and not search_slide_category and not search_my and not search_tags" class="h5 mb-3">All Courses</h2>
+        <h2 t-if="not search_term and not search_slide_category and not search_my and not search_tags and channels" class="h5 mb-3">All Courses</h2>
         <t t-call="website_slides.courses_search_tags"/>
-        <div t-if="not channels and not search_term and not search_slide_category and not search_my and not search_tags">
-            <p class="h2">No Course created yet.</p>
+        <div t-if="not channels and not search_term and not search_slide_category and not search_my and not search_tags" class="text-center">
+            <p class="h3">No Course created yet.</p>
             <p groups="website_slides.group_website_slides_officer">Click on "New" in the top-right corner to write your first course.</p>
         </div>
         <div t-elif="search_term and not channels" class="alert alert-info mb-5">
@@ -340,7 +318,7 @@
             <div t-if="original_search" class="alert alert-warning mb-5">
                 No results found for '<span t-out="original_search"/>'. Showing results for '<span t-out="search_term"/>'.
             </div>
-            <div t-attf-class="row g-4 g-lg-3 g-xxl-4 #{'row-cols-1 row-cols-sm-2 row-cols-xl-4' if (is_public_user and not has_side_column) else 'row-cols-1 row-cols-sm-2 row-cols-xl-3'}">
+            <div t-attf-class="row g-4 g-lg-3 g-xxl-4 #{'row-cols-1 row-cols-sm-2 row-cols-xl-4' if is_public_user else 'row-cols-1 row-cols-sm-2 row-cols-xl-3'}">
                 <t t-foreach="channels" t-as="channel">
                     <div class="d-flex">
                         <t t-call="website_slides.course_card"/>
@@ -458,7 +436,7 @@
 
 <template id="toggle_leaderboard" inherit_id="website_slides.slides_home_users_small" active="True" name='Display Leaderboard'>
     <xpath expr="//div[hasclass('o_wslides_home_aside')]" position="inside">
-        <div class="d-flex justify-content-between">
+        <div t-if="not is_public_user" class="d-flex justify-content-between">
             <h2 class="h6 mb-3">Leaderboard</h2>
             <a t-if="users" href="/profile/users">View all</a>
         </div>
