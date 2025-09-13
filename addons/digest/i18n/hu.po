@@ -17,7 +17,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:49+0000\n"
+"POT-Creation-Date: 2025-09-11 13:55+0000\n"
 "PO-Revision-Date: 2022-09-22 05:45+0000\n"
 "Last-Translator: Tamás Dombos, 2022\n"
 "Language-Team: Hungarian (https://app.transifex.com/odoo/teams/41243/hu/)\n"
@@ -28,13 +28,8 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: digest
-#: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_form
-msgid "<i class=\"oi oi-arrow-right\"/> Check our Documentation"
-msgstr ""
-
-#. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_mail_main
-msgid "<span class=\"button\" id=\"button_open_report\">Open Report</span>"
+msgid "<span class=\"button\" id=\"button_open_report\">➔ Open Report</span>"
 msgstr ""
 
 #. module: digest
@@ -44,8 +39,8 @@ msgstr "<span class=\"odoo_link_text\">Odoo</span>"
 
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_mail_main
-msgid "<span style=\"color: #8f8f8f;\">Unsubscribe</span>"
-msgstr "<span style=\"color: #8f8f8f;\">Lemondás</span>"
+msgid "<span style=\"color: #878d97;\">Unsubscribe</span>"
+msgstr ""
 
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_form
@@ -74,10 +69,20 @@ msgid "Available Fields"
 msgstr "Elérhető mezők"
 
 #. module: digest
+#: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_form
+msgid "Check our Documentation"
+msgstr ""
+
+#. module: digest
 #. odoo-python
 #: code:addons/digest/models/digest.py:0
 msgid "Choose the metrics you care about"
 msgstr "Állítsa be, milyen mutatóra kíváncsi!"
+
+#. module: digest
+#: model_terms:digest.tip,tip_description:digest.digest_tip_digest_6
+msgid "Click and hold on a Menu Item to reorder your Apps to your liking."
+msgstr ""
 
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_digest__company_id
@@ -182,6 +187,8 @@ msgstr ""
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_digest__display_name
 #: model:ir.model.fields,field_description:digest.field_digest_tip__display_name
+#: model:ir.model.fields,field_description:digest.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:digest.field_res_users__display_name
 msgid "Display Name"
 msgstr "Megjelenített név"
 
@@ -191,23 +198,27 @@ msgid "Email Address"
 msgstr "E-mail cím"
 
 #. module: digest
+#: model_terms:digest.tip,tip_description:digest.digest_tip_digest_5
+msgid "Feeling eye strain? Give your eyes a break by switching to Dark Mode."
+msgstr ""
+
+#. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_form
 msgid "General"
 msgstr "Általános"
 
 #. module: digest
-#: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_search
-msgid "Group by"
-msgstr "Csoportosítás..."
-
-#. module: digest
 #: model_terms:digest.tip,tip_description:digest.digest_tip_digest_1
-msgid "Have a question about a document? Click on the responsible user's picture to start a conversation. If his avatar has a green dot, he is online."
+msgid ""
+"Have a question about a document? Click on the responsible user's picture to "
+"start a conversation. If his avatar has a green dot, he is online."
 msgstr ""
 
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_digest__id
 #: model:ir.model.fields,field_description:digest.field_digest_tip__id
+#: model:ir.model.fields,field_description:digest.field_res_config_settings__id
+#: model:ir.model.fields,field_description:digest.field_res_users__id
 msgid "ID"
 msgstr "Azonosító"
 
@@ -301,7 +312,8 @@ msgstr "Név"
 
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.res_config_settings_view_form
-msgid "New users are automatically added as recipient of the following digest email."
+msgid ""
+"New users are automatically added as recipient of the following digest email."
 msgstr ""
 
 #. module: digest
@@ -333,7 +345,9 @@ msgstr ""
 
 #. module: digest
 #: model_terms:digest.tip,tip_description:digest.digest_tip_digest_0
-msgid "Press ALT in any screen to highlight shortcuts for every button in the screen. It is useful to process multiple documents in batch."
+msgid ""
+"Press ALT in any screen to highlight shortcuts for every button in the "
+"screen. It is useful to process multiple documents in batch."
 msgstr ""
 
 #. module: digest
@@ -369,11 +383,6 @@ msgid "Sequence"
 msgstr "Sorszám"
 
 #. module: digest
-#: model_terms:ir.ui.view,arch_db:digest.res_config_settings_view_form
-msgid "Statistics"
-msgstr "Statisztika"
-
-#. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_digest__state
 msgid "Status"
 msgstr "Állapot"
@@ -405,8 +414,20 @@ msgid "Tip: How to ping users in internal notes?"
 msgstr ""
 
 #. module: digest
+#: model:digest.tip,name:digest.digest_tip_digest_5
+#: model_terms:digest.tip,tip_description:digest.digest_tip_digest_5
+msgid "Tip: Join the Dark Side"
+msgstr ""
+
+#. module: digest
 #: model_terms:digest.tip,tip_description:digest.digest_tip_digest_4
 msgid "Tip: Knowledge is power"
+msgstr ""
+
+#. module: digest
+#: model:digest.tip,name:digest.digest_tip_digest_6
+#: model_terms:digest.tip,tip_description:digest.digest_tip_digest_6
+msgid "Tip: Personalize your Home Menu"
 msgstr ""
 
 #. module: digest
@@ -446,7 +467,9 @@ msgstr "Név"
 
 #. module: digest
 #: model_terms:digest.tip,tip_description:digest.digest_tip_digest_3
-msgid "Type \"@\" to notify someone in a message, or \"#\" to link to a channel. Try to notify @OdooBot to test the feature."
+msgid ""
+"Type \"@\" to notify someone in a message, or \"#\" to link to a channel. "
+"Try to notify @OdooBot to test the feature."
 msgstr ""
 
 #. module: digest
@@ -478,7 +501,9 @@ msgstr "Szeretné testreszabni ezt az emailt?"
 #. module: digest
 #. odoo-python
 #: code:addons/digest/models/digest.py:0
-msgid "We have noticed you did not connect these last few days. We have automatically switched your preference to %(new_perioridicy_str)s Digests."
+msgid ""
+"We have noticed you did not connect these last few days. We have "
+"automatically switched your preference to %(new_perioridicy_str)s Digests."
 msgstr ""
 
 #. module: digest
@@ -488,14 +513,19 @@ msgstr "Heti"
 
 #. module: digest
 #: model_terms:digest.tip,tip_description:digest.digest_tip_digest_2
-msgid "When editing a number, you can use formulae by typing the `=` character. This is useful when computing a margin or a discount on a quotation, sale order or invoice."
+msgid ""
+"When editing a number, you can use formulae by typing the `=` character. "
+"This is useful when computing a margin or a discount on a quotation, sale "
+"order or invoice."
 msgstr ""
 
 #. module: digest
 #: model_terms:digest.tip,tip_description:digest.digest_tip_digest_4
 msgid ""
-"When following documents, use the pencil icon to fine-tune the information you want to receive.\n"
-"Follow a project / sales team to keep track of this project's tasks / this team's opportunities."
+"When following documents, use the pencil icon to fine-tune the information "
+"you want to receive.\n"
+"Follow a project / sales team to keep track of this project's tasks / this "
+"team's opportunities."
 msgstr ""
 
 #. module: digest
@@ -530,3 +560,12 @@ msgstr ""
 #: code:addons/digest/models/digest.py:0
 msgid "weekly"
 msgstr ""
+
+#~ msgid "<span style=\"color: #8f8f8f;\">Unsubscribe</span>"
+#~ msgstr "<span style=\"color: #8f8f8f;\">Lemondás</span>"
+
+#~ msgid "Group by"
+#~ msgstr "Csoportosítás..."
+
+#~ msgid "Statistics"
+#~ msgstr "Statisztika"

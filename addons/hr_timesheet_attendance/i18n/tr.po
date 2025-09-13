@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:49+0000\n"
+"POT-Creation-Date: 2025-09-11 13:57+0000\n"
 "PO-Revision-Date: 2022-09-22 05:52+0000\n"
 "Last-Translator: Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2023\n"
 "Language-Team: Turkish (https://app.transifex.com/odoo/teams/41243/tr/)\n"
@@ -29,8 +29,8 @@ msgstr "Katılım Maliyeti"
 
 #. module: hr_timesheet_attendance
 #: model:ir.model.fields,field_description:hr_timesheet_attendance.field_hr_timesheet_attendance_report__total_attendance
-msgid "Attendance Hours"
-msgstr "Katılım Saatleri"
+msgid "Attendance Time"
+msgstr ""
 
 #. module: hr_timesheet_attendance
 #: model:ir.model.fields,field_description:hr_timesheet_attendance.field_hr_timesheet_attendance_report__company_id
@@ -40,7 +40,8 @@ msgstr "Şirket"
 #. module: hr_timesheet_attendance
 #: model_terms:ir.actions.act_window,help:hr_timesheet_attendance.action_hr_timesheet_attendance_report
 msgid "Compare the time recorded by your employees with their attendance."
-msgstr "Personeliniz tarafından kaydedilen süreyi katılımlarıyla karşılaştırın."
+msgstr ""
+"Personeliniz tarafından kaydedilen süreyi katılımlarıyla karşılaştırın."
 
 #. module: hr_timesheet_attendance
 #: model:ir.model.fields,field_description:hr_timesheet_attendance.field_hr_timesheet_attendance_report__cost_difference
@@ -55,23 +56,26 @@ msgstr "Tarih"
 
 #. module: hr_timesheet_attendance
 #: model:ir.model.fields,field_description:hr_timesheet_attendance.field_hr_timesheet_attendance_report__display_name
+#: model:ir.model.fields,field_description:hr_timesheet_attendance.field_ir_ui_menu__display_name
 msgid "Display Name"
 msgstr "Görünüm Adı"
 
 #. module: hr_timesheet_attendance
+#: model:ir.model.fields,field_description:hr_timesheet_attendance.field_hr_timesheet_attendance_report__employee_id
 #: model_terms:ir.ui.view,arch_db:hr_timesheet_attendance.view_hr_timesheet_attendance_report_search
 msgid "Employee"
 msgstr "Personel"
 
 #. module: hr_timesheet_attendance
-#: model:ir.model.fields,field_description:hr_timesheet_attendance.field_hr_timesheet_attendance_report__total_difference
-msgid "Hours Difference"
-msgstr "Saat Farkı"
-
-#. module: hr_timesheet_attendance
 #: model:ir.model.fields,field_description:hr_timesheet_attendance.field_hr_timesheet_attendance_report__id
+#: model:ir.model.fields,field_description:hr_timesheet_attendance.field_ir_ui_menu__id
 msgid "ID"
 msgstr "ID"
+
+#. module: hr_timesheet_attendance
+#: model_terms:ir.ui.view,arch_db:hr_timesheet_attendance.view_hr_timesheet_attendance_report_search
+msgid "Last Week"
+msgstr ""
 
 #. module: hr_timesheet_attendance
 #: model:ir.model,name:hr_timesheet_attendance.model_ir_ui_menu
@@ -94,23 +98,17 @@ msgid "No data yet!"
 msgstr "Henüz veri yok!"
 
 #. module: hr_timesheet_attendance
-#: model_terms:ir.ui.view,arch_db:hr_timesheet_attendance.hr_timesheet_attendance_report_view_tree
-msgid "Sum of Total Attendance"
-msgstr "Katılım Genel Toplamı"
+#: model_terms:ir.ui.view,arch_db:hr_timesheet_attendance.view_hr_timesheet_attendance_report_search
+msgid "This Week"
+msgstr ""
 
 #. module: hr_timesheet_attendance
-#: model_terms:ir.ui.view,arch_db:hr_timesheet_attendance.hr_timesheet_attendance_report_view_tree
-msgid "Sum of Total Difference"
-msgstr "Fark Genel Toplamı"
-
-#. module: hr_timesheet_attendance
-#: model_terms:ir.ui.view,arch_db:hr_timesheet_attendance.hr_timesheet_attendance_report_view_tree
-msgid "Sum of Total Timesheet"
-msgstr "Çalışma Çizelgesi Genel Toplamı"
+#: model:ir.model.fields,field_description:hr_timesheet_attendance.field_hr_timesheet_attendance_report__total_difference
+msgid "Time Difference"
+msgstr ""
 
 #. module: hr_timesheet_attendance
 #: model_terms:ir.ui.view,arch_db:hr_timesheet_attendance.hr_timesheet_attendance_report_view_graph
-#: model_terms:ir.ui.view,arch_db:hr_timesheet_attendance.hr_timesheet_attendance_report_view_tree
 #: model_terms:ir.ui.view,arch_db:hr_timesheet_attendance.view_hr_timesheet_attendance_report_pivot
 #: model_terms:ir.ui.view,arch_db:hr_timesheet_attendance.view_hr_timesheet_attendance_report_search
 msgid "Timesheet Attendance"
@@ -134,10 +132,31 @@ msgstr ""
 
 #. module: hr_timesheet_attendance
 #: model:ir.model.fields,field_description:hr_timesheet_attendance.field_hr_timesheet_attendance_report__total_timesheet
-msgid "Timesheets Hours"
-msgstr "Çalışma Çizelgeleri Saatleri"
+msgid "Timesheets Time"
+msgstr ""
 
 #. module: hr_timesheet_attendance
-#: model:ir.model.fields,field_description:hr_timesheet_attendance.field_hr_timesheet_attendance_report__user_id
-msgid "User"
-msgstr "Kullanıcı"
+#: model_terms:ir.ui.view,arch_db:hr_timesheet_attendance.view_hr_timesheet_attendance_report_search
+msgid "Today"
+msgstr ""
+
+#~ msgid "Attendance Hours"
+#~ msgstr "Katılım Saatleri"
+
+#~ msgid "Hours Difference"
+#~ msgstr "Saat Farkı"
+
+#~ msgid "Sum of Total Attendance"
+#~ msgstr "Katılım Genel Toplamı"
+
+#~ msgid "Sum of Total Difference"
+#~ msgstr "Fark Genel Toplamı"
+
+#~ msgid "Sum of Total Timesheet"
+#~ msgstr "Çalışma Çizelgesi Genel Toplamı"
+
+#~ msgid "Timesheets Hours"
+#~ msgstr "Çalışma Çizelgeleri Saatleri"
+
+#~ msgid "User"
+#~ msgstr "Kullanıcı"

@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-17 08:01+0000\n"
+"POT-Creation-Date: 2025-09-11 13:56+0000\n"
 "PO-Revision-Date: 2022-09-22 05:52+0000\n"
 "Last-Translator: Abe Manyo, 2023\n"
 "Language-Team: Indonesian (https://app.transifex.com/odoo/teams/41243/id/)\n"
@@ -21,8 +21,52 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: hr_org_chart
-#: model:ir.model,name:hr_org_chart.model_hr_employee_base
-msgid "Basic Employee"
+#: model_terms:ir.ui.view,arch_db:hr_org_chart.hr_employee_view_form_inherit_org_chart
+msgid ""
+"<i class=\"fa fa-share-alt fa-rotate-90 ms-1 mt-1\" role=\"img\" aria-"
+"label=\"Full Chart\"/>\n"
+"                        Full Chart"
+msgstr ""
+
+#. module: hr_org_chart
+#: model_terms:ir.ui.view,arch_db:hr_org_chart.hr_employee_public_view_form_inherit_org_chart
+msgid ""
+"<i class=\"fa fa-sitemap me-1 mt-1\"/>\n"
+"                                <span class=\"fw-bolder\">Zoom</span>"
+msgstr ""
+
+#. module: hr_org_chart
+#: model_terms:ir.ui.view,arch_db:hr_org_chart.hr_employee_public_view_form_inherit_org_chart
+msgid ""
+"<span class=\"text-uppercase fw-bolder\" style=\"font-size: "
+"13px\">Organization Chart</span>"
+msgstr ""
+
+#. module: hr_org_chart
+#: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee_public__child_all_count
+msgid "Child All Count"
+msgstr ""
+
+#. module: hr_org_chart
+#: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee_public__child_count
+msgid "Child Count"
+msgstr ""
+
+#. module: hr_org_chart
+#: model_terms:ir.actions.act_window,help:hr_org_chart.action_hr_employee_org_chart
+#: model_terms:ir.actions.act_window,help:hr_org_chart.action_hr_employee_public_org_chart
+msgid "Create an employee."
+msgstr ""
+
+#. module: hr_org_chart
+#: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee__department_color
+#: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee_public__department_color
+msgid "Department Color"
+msgstr ""
+
+#. module: hr_org_chart
+#: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee__child_count
+msgid "Direct Subordinates Count"
 msgstr ""
 
 #. module: hr_org_chart
@@ -38,20 +82,35 @@ msgid "Direct subordinates"
 msgstr ""
 
 #. module: hr_org_chart
+#: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee__display_name
+#: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee_public__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: hr_org_chart
 #: model:ir.model,name:hr_org_chart.model_hr_employee
 msgid "Employee"
 msgstr "Karyawan"
 
 #. module: hr_org_chart
-#. odoo-javascript
-#: code:addons/hr_org_chart/static/src/fields/hr_org_chart.xml:0
-msgid "In order to get an organigram, set a manager and save the record."
-msgstr "Untuk mendapatkan organigram, tetapkan manajer dan simpan record."
+#: model_terms:ir.ui.view,arch_db:hr_org_chart.hr_department_hierarchy_view
+msgid "Employees"
+msgstr ""
+
+#. module: hr_org_chart
+#: model_terms:ir.actions.act_window,help:hr_org_chart.action_hr_employee_org_chart
+#: model_terms:ir.actions.act_window,help:hr_org_chart.action_hr_employee_public_org_chart
+msgid "Find all the information on employees."
+msgstr ""
+
+#. module: hr_org_chart
+#: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee__id
+#: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee_public__id
+msgid "ID"
+msgstr ""
 
 #. module: hr_org_chart
 #: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee__child_all_count
-#: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee_base__child_all_count
-#: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee_public__child_all_count
 msgid "Indirect Subordinates Count"
 msgstr ""
 
@@ -74,21 +133,13 @@ msgid "More managers"
 msgstr ""
 
 #. module: hr_org_chart
-#. odoo-javascript
-#: code:addons/hr_org_chart/static/src/fields/hr_org_chart.xml:0
-msgid "No hierarchy position."
+#: model:ir.actions.act_window,name:hr_org_chart.action_hr_employee_org_chart
+#: model:ir.actions.act_window,name:hr_org_chart.action_hr_employee_public_org_chart
+msgid "Org Chart"
 msgstr ""
 
 #. module: hr_org_chart
-#. odoo-python
-#: code:addons/hr_org_chart/models/hr_org_chart_mixin.py:0
-msgid "Operation not supported"
-msgstr ""
-
-#. module: hr_org_chart
-#: model_terms:ir.ui.view,arch_db:hr_org_chart.hr_employee_public_view_form_inherit_org_chart
 #: model_terms:ir.ui.view,arch_db:hr_org_chart.hr_employee_view_form_inherit_org_chart
-#: model_terms:ir.ui.view,arch_db:hr_org_chart.res_users_view_form
 msgid "Organization Chart"
 msgstr "Struktur Organisasi"
 
@@ -100,13 +151,13 @@ msgstr ""
 #. module: hr_org_chart
 #. odoo-javascript
 #: code:addons/hr_org_chart/static/src/fields/hr_org_chart.xml:0
-msgid "Redirect"
-msgstr "Redirect"
+msgid "See All"
+msgstr ""
 
 #. module: hr_org_chart
 #. odoo-javascript
 #: code:addons/hr_org_chart/static/src/fields/hr_org_chart.xml:0
-msgid "See All"
+msgid "Set a manager or reports to show in org chart."
 msgstr ""
 
 #. module: hr_org_chart
@@ -117,18 +168,30 @@ msgstr "Bawahan"
 
 #. module: hr_org_chart
 #. odoo-javascript
-#: code:addons/hr_org_chart/static/src/fields/hr_org_chart.js:0
+#: code:addons/hr_org_chart/static/src/fields/hooks.js:0
 msgid "Team"
 msgstr "Tim"
 
 #. module: hr_org_chart
 #. odoo-javascript
 #: code:addons/hr_org_chart/static/src/fields/hr_org_chart.xml:0
-msgid "This employee has no manager or subordinate."
-msgstr ""
+msgid "Total"
+msgstr "Total"
 
 #. module: hr_org_chart
 #. odoo-javascript
 #: code:addons/hr_org_chart/static/src/fields/hr_org_chart.xml:0
-msgid "Total"
-msgstr "Total"
+msgid "View employee"
+msgstr ""
+
+#. module: hr_org_chart
+#. odoo-javascript
+#: code:addons/hr_org_chart/static/src/views/hr_employee_hierarchy/hr_employee_hierarchy_card.xml:0
+msgid "people"
+msgstr ""
+
+#~ msgid "In order to get an organigram, set a manager and save the record."
+#~ msgstr "Untuk mendapatkan organigram, tetapkan manajer dan simpan record."
+
+#~ msgid "Redirect"
+#~ msgstr "Redirect"

@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:56+0000\n"
+"POT-Creation-Date: 2025-09-11 13:58+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
 "Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Serbian (https://www.transifex.com/odoo/teams/41243/sr/)\n"
@@ -19,11 +19,6 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
-
-#. module: mass_mailing_themes
-#: model_terms:ir.ui.view,arch_db:mass_mailing_themes.theme_coupon_template
-msgid "$100 OFF"
-msgstr ""
 
 #. module: mass_mailing_themes
 #: model_terms:ir.ui.view,arch_db:mass_mailing_themes.theme_blogging_template
@@ -116,9 +111,23 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mass_mailing_themes.theme_newsletter_template
 msgid ""
 "<br/>\n"
-"                <span style=\"font-size: 12px;\" "
-"class=\"o_default_snippet_text\"><font style=\"color: rgb(183, 191, 199);"
-"\">To unsubscribe, </font></span>"
+"                <span style=\"font-size: 12px;\"><font style=\"color: "
+"rgb(183, 191, 199);\">To unsubscribe, </font></span>"
+msgstr ""
+
+#. module: mass_mailing_themes
+#: model_terms:ir.ui.view,arch_db:mass_mailing_themes.theme_coupon_template
+msgid "<font class=\"text-white\">$100 OFF</font>"
+msgstr ""
+
+#. module: mass_mailing_themes
+#: model_terms:ir.ui.view,arch_db:mass_mailing_themes.theme_coupon_template
+msgid "<font class=\"text-white\">Here's your coupon code*:</font>"
+msgstr ""
+
+#. module: mass_mailing_themes
+#: model_terms:ir.ui.view,arch_db:mass_mailing_themes.theme_coupon_template
+msgid "<font class=\"text-white\">VIP members only</font>"
 msgstr ""
 
 #. module: mass_mailing_themes
@@ -170,6 +179,20 @@ msgid "<font style=\"color: rgb(255, 255, 255);\">Hi there!</font>"
 msgstr ""
 
 #. module: mass_mailing_themes
+#: model_terms:ir.ui.view,arch_db:mass_mailing_themes.theme_coupon_template
+msgid ""
+"<font style=\"color: rgb(255, 255, 255);\">Join the community to see our "
+"latest news, events, discounts and much more!</font>"
+msgstr ""
+
+#. module: mass_mailing_themes
+#: model_terms:ir.ui.view,arch_db:mass_mailing_themes.theme_coupon_template
+msgid ""
+"<font style=\"color: rgb(255, 255, 255);\">Thank you for being one of our "
+"most loyal customers.</font>"
+msgstr ""
+
+#. module: mass_mailing_themes
 #: model_terms:ir.ui.view,arch_db:mass_mailing_themes.theme_event_template
 msgid ""
 "<font style=\"color: rgb(255, 255, 255);\">The next edition of <span "
@@ -197,90 +220,23 @@ msgstr ""
 #. module: mass_mailing_themes
 #: model_terms:ir.ui.view,arch_db:mass_mailing_themes.theme_promotion_template
 msgid ""
-"<font style=\"font-size: 62px; background-color: rgb(255, 255, 255);\">&amp;"
-"nbsp;10% OFF&amp;nbsp;</font>\n"
+"<font style=\"font-size: 62px; background-color: rgb(255, 255, 255);"
+"\">&amp;nbsp;10% OFF&amp;nbsp;</font>\n"
 "                    <br/>\n"
 "                        <font style=\"font-size: 62px; background-color: "
 "rgb(255, 255, 255);\">&amp;nbsp;SALES&amp;nbsp;</font>"
 msgstr ""
 
 #. module: mass_mailing_themes
-#: model_terms:ir.ui.view,arch_db:mass_mailing_themes.theme_coupon_template
-msgid ""
-"<i class=\"fa fa-2x fa-ticket\" style=\"color: rgb(36, 37, 48) !important;\"/"
-">​"
-msgstr ""
-
-#. module: mass_mailing_themes
 #: model_terms:ir.ui.view,arch_db:mass_mailing_themes.theme_training_template
-msgid "<i class=\"fa fa-map-marker\"/> London, United Kingdom​"
-msgstr ""
-
-#. module: mass_mailing_themes
-#: model_terms:ir.ui.view,arch_db:mass_mailing_themes.theme_training_template
-msgid "<span class=\"fa fa-facebook\" contenteditable=\"false\">​</span>"
-msgstr ""
-
-#. module: mass_mailing_themes
-#: model_terms:ir.ui.view,arch_db:mass_mailing_themes.theme_blogging_template
 msgid ""
-"<span class=\"fa fa-facebook\" style=\"color: rgb(54, 166, 210) !important; "
-"font-size: 18px;\"/>​"
-msgstr ""
-
-#. module: mass_mailing_themes
-#: model_terms:ir.ui.view,arch_db:mass_mailing_themes.theme_coffeebreak_template
-msgid ""
-"<span class=\"fa fa-facebook\" style=\"color: rgb(84, 52, 39) !important; "
-"background-color: rgb(211, 197, 177) !important;\">​</span>"
-msgstr ""
-
-#. module: mass_mailing_themes
-#: model_terms:ir.ui.view,arch_db:mass_mailing_themes.theme_training_template
-msgid "<span class=\"fa fa-instagram\" contenteditable=\"false\">​</span>"
-msgstr ""
-
-#. module: mass_mailing_themes
-#: model_terms:ir.ui.view,arch_db:mass_mailing_themes.theme_coffeebreak_template
-msgid ""
-"<span class=\"fa fa-instagram\" style=\"color: rgb(84, 52, 39) !important; "
-"background-color: rgb(211, 197, 177) !important;\">​</span>"
-msgstr ""
-
-#. module: mass_mailing_themes
-#: model_terms:ir.ui.view,arch_db:mass_mailing_themes.theme_training_template
-msgid "<span class=\"fa fa-linkedin\" contenteditable=\"false\">​</span>"
-msgstr ""
-
-#. module: mass_mailing_themes
-#: model_terms:ir.ui.view,arch_db:mass_mailing_themes.theme_blogging_template
-msgid ""
-"<span class=\"fa fa-linkedin\" style=\"color: rgb(54, 166, 210) !important; "
-"font-size: 18px;\"/>​"
+"<i class=\"fa fa-map-marker\" contenteditable=\"false\"/> London, United "
+"Kingdom"
 msgstr ""
 
 #. module: mass_mailing_themes
 #: model_terms:ir.ui.view,arch_db:mass_mailing_themes.theme_blogging_template
 msgid "<span class=\"fa fa-play\"/>&amp;nbsp;&amp;nbsp;WATCH VIDEO"
-msgstr ""
-
-#. module: mass_mailing_themes
-#: model_terms:ir.ui.view,arch_db:mass_mailing_themes.theme_training_template
-msgid "<span class=\"fa fa-twitter\" contenteditable=\"false\">​</span>"
-msgstr ""
-
-#. module: mass_mailing_themes
-#: model_terms:ir.ui.view,arch_db:mass_mailing_themes.theme_blogging_template
-msgid ""
-"<span class=\"fa fa-twitter\" style=\"color: rgb(54, 166, 210) !important; "
-"font-size: 18px;\"/>​"
-msgstr ""
-
-#. module: mass_mailing_themes
-#: model_terms:ir.ui.view,arch_db:mass_mailing_themes.theme_coffeebreak_template
-msgid ""
-"<span class=\"fa fa-twitter\" style=\"color: rgb(84, 52, 39) !important; "
-"background-color: rgb(211, 197, 177) !important;\">​</span>"
 msgstr ""
 
 #. module: mass_mailing_themes
@@ -348,9 +304,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mass_mailing_themes.theme_training_template
 msgid ""
 "<span style=\"font-size: 10px;\">\n"
-"                        <font style=\"color: rgb(112, 157, 225);\" "
-"class=\"o_default_snippet_text\">You are receiving this email because you "
-"showed an interest in our previous events\n"
+"                        <font style=\"color: rgb(112, 157, 225);\">You are "
+"receiving this email because you showed an interest in our previous events\n"
 "                        </font>\n"
 "                    </span>"
 msgstr ""
@@ -365,37 +320,35 @@ msgstr ""
 #. module: mass_mailing_themes
 #: model_terms:ir.ui.view,arch_db:mass_mailing_themes.theme_newsletter_template
 msgid ""
-"<span style=\"font-size: 12px;\" class=\"o_default_snippet_text\"><font "
-"style=\"color: rgb(183, 191, 199);\">.</font></span>"
+"<span style=\"font-size: 12px;\"><font style=\"color: rgb(183, 191, 199);\">."
+"</font></span>"
 msgstr ""
 
 #. module: mass_mailing_themes
 #: model_terms:ir.ui.view,arch_db:mass_mailing_themes.theme_newsletter_template
 msgid ""
-"<span style=\"font-size: 12px;\" class=\"o_default_snippet_text\"><font "
-"style=\"color: rgb(183, 191, 199);\">250 Executive Park Blvd</font></span>\n"
+"<span style=\"font-size: 12px;\"><font style=\"color: rgb(183, 191, 199);"
+"\">8000 Marina Blvd, Suite 300</font></span>\n"
 "                <br/>\n"
-"                <span style=\"font-size: 12px;\" class=\"\"><font "
-"style=\"color: rgb(183, 191, 199);\">San Francisco, California 94134</font></"
-"span>\n"
+"                <span style=\"font-size: 12px;\"><font style=\"color: "
+"rgb(183, 191, 199);\">Brisbane, California 94005</font></span>\n"
 "                <br/>\n"
-"                <span style=\"font-size: 12px;\" "
-"class=\"o_default_snippet_text\"><font style=\"color: rgb(183, 191, 199);"
-"\">You received this email from </font></span>"
+"                <span style=\"font-size: 12px;\"><font style=\"color: "
+"rgb(183, 191, 199);\">You received this email from </font></span>"
 msgstr ""
 
 #. module: mass_mailing_themes
 #: model_terms:ir.ui.view,arch_db:mass_mailing_themes.theme_newsletter_template
 msgid ""
-"<span style=\"font-size: 12px;\" class=\"o_default_snippet_text\"><font "
-"style=\"color: rgb(183, 191, 199);\">click here</font></span>"
+"<span style=\"font-size: 12px;\"><font style=\"color: rgb(183, 191, 199);"
+"\">click here</font></span>"
 msgstr ""
 
 #. module: mass_mailing_themes
 #: model_terms:ir.ui.view,arch_db:mass_mailing_themes.theme_newsletter_template
 msgid ""
-"<span style=\"font-size: 12px;\" class=\"o_default_snippet_text\"><font "
-"style=\"color: rgb(183, 191, 199);\">hello@musingsoftheweek.com</font></span>"
+"<span style=\"font-size: 12px;\"><font style=\"color: rgb(183, 191, 199);"
+"\">hello@musingsoftheweek.com</font></span>"
 msgstr ""
 
 #. module: mass_mailing_themes
@@ -428,6 +381,13 @@ msgid "<span style=\"font-weight: bolder;\">25 September 2022 - 4:30 PM</span>"
 msgstr ""
 
 #. module: mass_mailing_themes
+#: model_terms:ir.ui.view,arch_db:mass_mailing_themes.theme_coupon_template
+msgid ""
+"<span style=\"font-weight: bolder;\"><font class=\"text-white\">VIP10</"
+"font></span>"
+msgstr ""
+
+#. module: mass_mailing_themes
 #: model_terms:ir.ui.view,arch_db:mass_mailing_themes.theme_training_template
 msgid ""
 "<span style=\"font-weight: bolder;\">And what better field to upskill in "
@@ -454,11 +414,6 @@ msgstr ""
 #. module: mass_mailing_themes
 #: model_terms:ir.ui.view,arch_db:mass_mailing_themes.theme_training_template
 msgid "<span style=\"font-weight: bolder;\">Register now</span>"
-msgstr ""
-
-#. module: mass_mailing_themes
-#: model_terms:ir.ui.view,arch_db:mass_mailing_themes.theme_coupon_template
-msgid "<span style=\"font-weight: bolder;\">VIP10</span>"
 msgstr ""
 
 #. module: mass_mailing_themes
@@ -574,7 +529,7 @@ msgid "Best practices to digitize your company"
 msgstr ""
 
 #. module: mass_mailing_themes
-#: model_terms:ir.ui.view,arch_db:mass_mailing_themes.email_designer_snippets
+#: model_terms:ir.ui.view,arch_db:mass_mailing_themes.email_designer_themes
 msgid "Big News"
 msgstr ""
 
@@ -586,7 +541,7 @@ msgid ""
 msgstr ""
 
 #. module: mass_mailing_themes
-#: model_terms:ir.ui.view,arch_db:mass_mailing_themes.email_designer_snippets
+#: model_terms:ir.ui.view,arch_db:mass_mailing_themes.email_designer_themes
 msgid "Blogging"
 msgstr ""
 
@@ -624,7 +579,7 @@ msgid "Client Testimonials"
 msgstr ""
 
 #. module: mass_mailing_themes
-#: model_terms:ir.ui.view,arch_db:mass_mailing_themes.email_designer_snippets
+#: model_terms:ir.ui.view,arch_db:mass_mailing_themes.email_designer_themes
 msgid "Coffee break"
 msgstr ""
 
@@ -644,7 +599,7 @@ msgid "Contact"
 msgstr ""
 
 #. module: mass_mailing_themes
-#: model_terms:ir.ui.view,arch_db:mass_mailing_themes.email_designer_snippets
+#: model_terms:ir.ui.view,arch_db:mass_mailing_themes.email_designer_themes
 msgid "Coupon Code"
 msgstr ""
 
@@ -736,7 +691,7 @@ msgid "Easy Returns"
 msgstr ""
 
 #. module: mass_mailing_themes
-#: model_terms:ir.ui.view,arch_db:mass_mailing_themes.email_designer_snippets
+#: model_terms:ir.ui.view,arch_db:mass_mailing_themes.email_designer_themes
 msgid "Event Promo"
 msgstr ""
 
@@ -816,11 +771,6 @@ msgstr ""
 #. module: mass_mailing_themes
 #: model_terms:ir.ui.view,arch_db:mass_mailing_themes.theme_roadshow2_template
 msgid "Here are the links to our sponsors' websites if you wish to meet them:"
-msgstr ""
-
-#. module: mass_mailing_themes
-#: model_terms:ir.ui.view,arch_db:mass_mailing_themes.theme_coupon_template
-msgid "Here's your coupon code*:"
 msgstr ""
 
 #. module: mass_mailing_themes
@@ -947,12 +897,6 @@ msgstr ""
 
 #. module: mass_mailing_themes
 #: model_terms:ir.ui.view,arch_db:mass_mailing_themes.theme_coupon_template
-msgid ""
-"Join the community to see our latest news, events, discounts and much more!"
-msgstr ""
-
-#. module: mass_mailing_themes
-#: model_terms:ir.ui.view,arch_db:mass_mailing_themes.theme_coupon_template
 msgid "Join us"
 msgstr ""
 
@@ -995,7 +939,7 @@ msgid "LinkedIn"
 msgstr ""
 
 #. module: mass_mailing_themes
-#: model_terms:ir.ui.view,arch_db:mass_mailing_themes.email_designer_snippets
+#: model_terms:ir.ui.view,arch_db:mass_mailing_themes.email_designer_themes
 msgid "Magazine"
 msgstr ""
 
@@ -1045,7 +989,7 @@ msgid "New Financing in 2014"
 msgstr ""
 
 #. module: mass_mailing_themes
-#: model_terms:ir.ui.view,arch_db:mass_mailing_themes.email_designer_snippets
+#: model_terms:ir.ui.view,arch_db:mass_mailing_themes.email_designer_themes
 msgid "Newsletter"
 msgstr "Novine"
 
@@ -1094,7 +1038,7 @@ msgid ""
 msgstr ""
 
 #. module: mass_mailing_themes
-#: model_terms:ir.ui.view,arch_db:mass_mailing_themes.email_designer_snippets
+#: model_terms:ir.ui.view,arch_db:mass_mailing_themes.email_designer_themes
 msgid "Promotion Program"
 msgstr ""
 
@@ -1132,12 +1076,12 @@ msgid "Registration is free, but mandatory:"
 msgstr ""
 
 #. module: mass_mailing_themes
-#: model_terms:ir.ui.view,arch_db:mass_mailing_themes.email_designer_snippets
+#: model_terms:ir.ui.view,arch_db:mass_mailing_themes.email_designer_themes
 msgid "Roadshow Follow-up"
 msgstr ""
 
 #. module: mass_mailing_themes
-#: model_terms:ir.ui.view,arch_db:mass_mailing_themes.email_designer_snippets
+#: model_terms:ir.ui.view,arch_db:mass_mailing_themes.email_designer_themes
 msgid "Roadshow Schedule"
 msgstr ""
 
@@ -1205,11 +1149,6 @@ msgstr ""
 #. module: mass_mailing_themes
 #: model_terms:ir.ui.view,arch_db:mass_mailing_themes.theme_magazine_template
 msgid "THE DAILY"
-msgstr ""
-
-#. module: mass_mailing_themes
-#: model_terms:ir.ui.view,arch_db:mass_mailing_themes.theme_coupon_template
-msgid "Thank you for being one of our most loyal customers."
 msgstr ""
 
 #. module: mass_mailing_themes
@@ -1336,7 +1275,7 @@ msgid "Train with the best developers"
 msgstr ""
 
 #. module: mass_mailing_themes
-#: model_terms:ir.ui.view,arch_db:mass_mailing_themes.email_designer_snippets
+#: model_terms:ir.ui.view,arch_db:mass_mailing_themes.email_designer_themes
 msgid "Training"
 msgstr ""
 
@@ -1345,14 +1284,6 @@ msgstr ""
 msgid ""
 "Travel without leaving your kitchen with these international recipes. From "
 "Canada to Australia, Mexico to Sweden, and everywhere in between."
-msgstr ""
-
-#. module: mass_mailing_themes
-#: model_terms:ir.ui.view,arch_db:mass_mailing_themes.theme_blogging_template
-#: model_terms:ir.ui.view,arch_db:mass_mailing_themes.theme_coffeebreak_template
-#: model_terms:ir.ui.view,arch_db:mass_mailing_themes.theme_newsletter_template
-#: model_terms:ir.ui.view,arch_db:mass_mailing_themes.theme_training_template
-msgid "Twitter"
 msgstr ""
 
 #. module: mass_mailing_themes
@@ -1377,11 +1308,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mass_mailing_themes.theme_promotion_template
 #: model_terms:ir.ui.view,arch_db:mass_mailing_themes.theme_training_template
 msgid "Unsubscribe"
-msgstr ""
-
-#. module: mass_mailing_themes
-#: model_terms:ir.ui.view,arch_db:mass_mailing_themes.theme_coupon_template
-msgid "VIP members only"
 msgstr ""
 
 #. module: mass_mailing_themes

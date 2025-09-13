@@ -1,30 +1,32 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* pos_loyalty
-# 
+#
 # Translators:
 # Wil Odoo, 2025
 # Tony Ng, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-06 09:28+0000\n"
+"POT-Creation-Date: 2025-09-11 13:59+0000\n"
 "PO-Revision-Date: 2025-05-06 12:04+0000\n"
 "Last-Translator: Tony Ng, 2025\n"
-"Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
+"Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/"
+"zh_TW/)\n"
+"Language: zh_TW\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: zh_TW\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: pos_loyalty
 #: model:ir.model.fields,help:pos_loyalty.field_pos_order_line__reward_identifier_code
 msgid ""
 "\n"
-"        Technical field used to link multiple reward lines from the same reward together.\n"
+"        Technical field used to link multiple reward lines from the same "
+"reward together.\n"
 "    "
 msgstr ""
 "\n"
@@ -36,6 +38,16 @@ msgstr ""
 #: code:addons/pos_loyalty/static/src/app/screens/partner_list_screen/partner_line/partner_line.js:0
 msgid "%s Points"
 msgstr "%s 積分"
+
+#. module: pos_loyalty
+#: model:loyalty.program,name:pos_loyalty.15_pc_on_next_order
+msgid "15% on next order"
+msgstr ""
+
+#. module: pos_loyalty
+#: model:loyalty.reward,description:pos_loyalty.15_pc_on_next_order_reward
+msgid "15% on your order"
+msgstr ""
 
 #. module: pos_loyalty
 #. odoo-javascript
@@ -75,6 +87,12 @@ msgid "Add Balance"
 msgstr "增值"
 
 #. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/app/components/popups/manage_giftcard_popup/manage_giftcard_popup.xml:0
+msgid "Add existing Gift Card"
+msgstr ""
+
+#. module: pos_loyalty
 #: model_terms:ir.ui.view,arch_db:pos_loyalty.loyalty_program_view_form_inherit_pos_loyalty
 msgid "All PoS"
 msgstr "所有PoS"
@@ -84,6 +102,12 @@ msgstr "所有PoS"
 #: code:addons/pos_loyalty/static/src/app/components/popups/manage_giftcard_popup/manage_giftcard_popup.xml:0
 msgid "Amount"
 msgstr "金額"
+
+#. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/app/components/popups/manage_giftcard_popup/manage_giftcard_popup.js:0
+msgid "An error occurred while checking the gift card."
+msgstr ""
 
 #. module: pos_loyalty
 #: model:ir.model.fields,field_description:pos_loyalty.field_loyalty_rule__any_product
@@ -101,10 +125,28 @@ msgstr ""
 " 您仍然可以透過獎勵按鈕領取它."
 
 #. module: pos_loyalty
+#. odoo-python
+#: code:addons/pos_loyalty/models/pos_order.py:0
+msgid "Assigning order %s"
+msgstr ""
+
+#. module: pos_loyalty
+#. odoo-python
+#: code:addons/pos_loyalty/models/pos_order.py:0
+msgid "Assigning partner %s"
+msgstr ""
+
+#. module: pos_loyalty
 #. odoo-javascript
 #: code:addons/pos_loyalty/static/src/app/screens/product_screen/control_buttons/control_buttons.js:0
 msgid "Available rewards"
 msgstr "可用獎賞"
+
+#. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/app/screens/receipt_screen/order_receipt/order_receipt.xml:0
+msgid "Balance"
+msgstr ""
 
 #. module: pos_loyalty
 #. odoo-javascript
@@ -128,6 +170,11 @@ msgstr "聯絡人"
 #: model:ir.model.fields.selection,name:pos_loyalty.selection__barcode_rule__type__coupon
 msgid "Coupon"
 msgstr "優惠券"
+
+#. module: pos_loyalty
+#: model:loyalty.program,portal_point_name:pos_loyalty.15_pc_on_next_order
+msgid "Coupon point(s)"
+msgstr ""
 
 #. module: pos_loyalty
 #: model:ir.model,website_form_label:pos_loyalty.model_res_partner
@@ -202,13 +249,14 @@ msgstr "輸入金額"
 
 #. module: pos_loyalty
 #. odoo-javascript
+#: code:addons/pos_loyalty/static/src/app/components/popups/manage_giftcard_popup/manage_giftcard_popup.js:0
 #: code:addons/pos_loyalty/static/src/app/screens/product_screen/control_buttons/control_buttons.js:0
 msgid "Error"
 msgstr "錯誤"
 
 #. module: pos_loyalty
 #. odoo-javascript
-#: code:addons/pos_loyalty/static/src/app/screens/payment_screen/payment_screen.js:0
+#: code:addons/pos_loyalty/static/src/app/utils/order_payment_validation.js:0
 msgid "Error validating rewards"
 msgstr "驗證獎勵錯誤"
 
@@ -217,6 +265,17 @@ msgstr "驗證獎勵錯誤"
 #: code:addons/pos_loyalty/static/src/app/components/popups/manage_giftcard_popup/manage_giftcard_popup.xml:0
 msgid "Expiration"
 msgstr "截止日期"
+
+#. module: pos_loyalty
+#: model:loyalty.reward,description:pos_loyalty.loyalty_program_reward
+msgid "Free Product - Simple Pen"
+msgstr ""
+
+#. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/app/screens/product_screen/order_summary/order_summary.js:0
+msgid "Gift Card"
+msgstr ""
 
 #. module: pos_loyalty
 #. odoo-javascript
@@ -263,6 +322,12 @@ msgid "ID"
 msgstr "識別號"
 
 #. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/app/components/popups/manage_giftcard_popup/manage_giftcard_popup.js:0
+msgid "Invalid Gift Card Code"
+msgstr ""
+
+#. module: pos_loyalty
 #. odoo-python
 #: code:addons/pos_loyalty/models/pos_config.py:0
 msgid "Invalid gift card program reward. Use 1 currency per point discount."
@@ -302,7 +367,13 @@ msgid "Loyalty Coupon"
 msgstr "會員優惠券"
 
 #. module: pos_loyalty
+#: model:loyalty.program,portal_point_name:pos_loyalty.loyalty_program
+msgid "Loyalty Points"
+msgstr ""
+
+#. module: pos_loyalty
 #: model:ir.model,name:pos_loyalty.model_loyalty_program
+#: model:loyalty.program,name:pos_loyalty.loyalty_program
 msgid "Loyalty Program"
 msgstr "會員計劃"
 
@@ -498,12 +569,23 @@ msgid "Sell/Manage physical gift card"
 msgstr "銷售/管理實體禮物卡"
 
 #. module: pos_loyalty
+#: model:product.template,name:pos_loyalty.simple_pen_product_template
+msgid "Simple Pen"
+msgstr ""
+
+#. module: pos_loyalty
 #. odoo-python
 #: code:addons/pos_loyalty/models/pos_order.py:0
 msgid ""
 "Some coupons are invalid. The applied coupons have been updated. Please "
 "check the order."
 msgstr "部份優惠券無效。申請的優惠券已更新。請檢查訂單。"
+
+#. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/app/screens/receipt_screen/order_receipt/order_receipt.xml:0
+msgid "Spent:"
+msgstr ""
 
 #. module: pos_loyalty
 #: model:ir.model.fields,help:pos_loyalty.field_loyalty_rule__any_product
@@ -549,7 +631,8 @@ msgstr "用於申請該獎勵的優惠券."
 #. odoo-python
 #: code:addons/pos_loyalty/models/pos_order.py:0
 msgid ""
-"The following codes already exist in the database, perhaps they were already sold?\n"
+"The following codes already exist in the database, perhaps they were already "
+"sold?\n"
 "%s"
 msgstr ""
 "資料庫中已經存在以下代碼，可能它們已經售出？\n"
@@ -622,9 +705,10 @@ msgstr "這些是適用於此規則的產品."
 
 #. module: pos_loyalty
 #. odoo-javascript
-#: code:addons/pos_loyalty/static/src/app/screens/product_screen/order_summary/order_summary.js:0
-msgid "This Gift card has already been sold."
-msgstr "此禮品卡已售出。"
+#: code:addons/pos_loyalty/static/src/app/components/popups/manage_giftcard_popup/manage_giftcard_popup.js:0
+msgid ""
+"This code seems to be invalid, please check the Gift Card code and try again."
+msgstr ""
 
 #. module: pos_loyalty
 #. odoo-python
@@ -729,9 +813,21 @@ msgstr "不論這一行是否是獎勵的一部分"
 
 #. module: pos_loyalty
 #. odoo-javascript
+#: code:addons/pos_loyalty/static/src/app/screens/receipt_screen/order_receipt/order_receipt.xml:0
+msgid "Won:"
+msgstr ""
+
+#. module: pos_loyalty
+#. odoo-javascript
 #: code:addons/pos_loyalty/static/src/app/screens/product_screen/order_summary/order_summary.js:0
 msgid "Yes"
 msgstr "是"
+
+#. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/app/screens/product_screen/order_summary/order_summary.js:0
+msgid "You cannot change the quantity or price of a physical gift card."
+msgstr ""
 
 #. module: pos_loyalty
 #. odoo-javascript
@@ -775,8 +871,8 @@ msgstr "電子錢包要求選擇一位客戶"
 msgid "no expiration"
 msgstr "無到期日"
 
-#. module: pos_loyalty
-#. odoo-javascript
-#: code:addons/pos_loyalty/static/src/app/models/pos_order.js:0
-msgid "the gift cards"
-msgstr "該些禮品卡"
+#~ msgid "This Gift card has already been sold."
+#~ msgstr "此禮品卡已售出。"
+
+#~ msgid "the gift cards"
+#~ msgstr "該些禮品卡"

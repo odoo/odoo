@@ -11,10 +11,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~15.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:49+0000\n"
+"POT-Creation-Date: 2025-09-11 14:01+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
 "Last-Translator: Jeffery CHEN <jeffery9@gmail.com>, 2022\n"
-"Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
+"Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/"
+"zh_CN/)\n"
 "Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -42,11 +43,6 @@ msgid "<i class=\"fa fa-fw fa-times\"/> <b>Cancelled</b>"
 msgstr "<i class=\"fa fa-fw fa-times\"/> <b>已取消</b>"
 
 #. module: sale_mrp
-#: model_terms:ir.ui.view,arch_db:sale_mrp.sale_order_form_mrp
-msgid "<span class=\"o_stat_text\">Manufacturing</span>"
-msgstr "<span class=\"o_stat_text\">制造</span>"
-
-#. module: sale_mrp
 #: model_terms:ir.ui.view,arch_db:sale_mrp.mrp_production_form_view_sale
 msgid "<span class=\"o_stat_text\">Sale</span>"
 msgstr "<span class=\"o_stat_text\">销售</span>"
@@ -60,7 +56,8 @@ msgstr "<strong>制造订单</strong>"
 #. odoo-python
 #: code:addons/sale_mrp/models/mrp_bom.py:0
 msgid ""
-"As long as there are some sale order lines that must be delivered/invoiced and are related to these bills of materials, you can not remove them.\n"
+"As long as there are some sale order lines that must be delivered/invoiced "
+"and are related to these bills of materials, you can not remove them.\n"
 "The error concerns these products: %s"
 msgstr ""
 
@@ -85,9 +82,41 @@ msgid "Date:"
 msgstr "日期:"
 
 #. module: sale_mrp
+#: model:ir.model.fields,field_description:sale_mrp.field_account_move_line__display_name
+#: model:ir.model.fields,field_description:sale_mrp.field_mrp_bom__display_name
+#: model:ir.model.fields,field_description:sale_mrp.field_mrp_production__display_name
+#: model:ir.model.fields,field_description:sale_mrp.field_sale_order__display_name
+#: model:ir.model.fields,field_description:sale_mrp.field_sale_order_line__display_name
+#: model:ir.model.fields,field_description:sale_mrp.field_stock_move_line__display_name
+#: model:ir.model.fields,field_description:sale_mrp.field_stock_rule__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: sale_mrp
+#: model:ir.model.fields,field_description:sale_mrp.field_account_move_line__id
+#: model:ir.model.fields,field_description:sale_mrp.field_mrp_bom__id
+#: model:ir.model.fields,field_description:sale_mrp.field_mrp_production__id
+#: model:ir.model.fields,field_description:sale_mrp.field_sale_order__id
+#: model:ir.model.fields,field_description:sale_mrp.field_sale_order_line__id
+#: model:ir.model.fields,field_description:sale_mrp.field_stock_move_line__id
+#: model:ir.model.fields,field_description:sale_mrp.field_stock_rule__id
+msgid "ID"
+msgstr ""
+
+#. module: sale_mrp
 #: model:ir.model,name:sale_mrp.model_account_move_line
 msgid "Journal Item"
 msgstr "会计分录"
+
+#. module: sale_mrp
+#: model_terms:ir.ui.view,arch_db:sale_mrp.sale_order_form_mrp
+msgid "Manufacturing"
+msgstr ""
+
+#. module: sale_mrp
+#: model:ir.model,name:sale_mrp.model_mrp_production
+msgid "Manufacturing Order"
+msgstr ""
 
 #. module: sale_mrp
 #. odoo-python
@@ -101,14 +130,14 @@ msgid "Manufacturing orders associated with this sales order."
 msgstr "与此销售订单相关联的制造订单"
 
 #. module: sale_mrp
+#: model:ir.model.fields,field_description:sale_mrp.field_mrp_production__sale_line_id
+msgid "Origin sale order line"
+msgstr ""
+
+#. module: sale_mrp
 #: model:ir.model,name:sale_mrp.model_stock_move_line
 msgid "Product Moves (Stock Move Line)"
 msgstr "产品移动(移库明细)"
-
-#. module: sale_mrp
-#: model:ir.model,name:sale_mrp.model_mrp_production
-msgid "Production Order"
-msgstr "生产订单"
 
 #. module: sale_mrp
 #: model:ir.model,name:sale_mrp.model_sale_order
@@ -127,6 +156,15 @@ msgid "Sources Sale Orders of %s"
 msgstr "来源 %s 的销售订单"
 
 #. module: sale_mrp
-#: model:ir.model,name:sale_mrp.model_stock_move
-msgid "Stock Move"
-msgstr "库存移动"
+#: model:ir.model,name:sale_mrp.model_stock_rule
+msgid "Stock Rule"
+msgstr ""
+
+#~ msgid "<span class=\"o_stat_text\">Manufacturing</span>"
+#~ msgstr "<span class=\"o_stat_text\">制造</span>"
+
+#~ msgid "Production Order"
+#~ msgstr "生产订单"
+
+#~ msgid "Stock Move"
+#~ msgstr "库存移动"

@@ -11,10 +11,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-17 08:01+0000\n"
+"POT-Creation-Date: 2025-09-11 13:59+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
 "Last-Translator: Jeffery CHEN <jeffery9@gmail.com>, 2022\n"
-"Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
+"Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/"
+"zh_CN/)\n"
 "Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -24,12 +25,13 @@ msgstr ""
 #. module: phone_validation
 #. odoo-python
 #: code:addons/phone_validation/models/phone_blacklist.py:0
-msgid " Please correct the number and try again."
-msgstr "请更正号码并重试。"
+msgid "%(error)s Please correct the number and try again."
+msgstr ""
 
 #. module: phone_validation
 #: model:ir.model.fields,field_description:phone_validation.field_mail_thread_phone__message_needaction
 #: model:ir.model.fields,field_description:phone_validation.field_phone_blacklist__message_needaction
+#: model:ir.model.fields,field_description:phone_validation.field_res_partner__message_needaction
 msgid "Action Needed"
 msgstr "需要动作"
 
@@ -50,10 +52,28 @@ msgid "Archived"
 msgstr "已归档"
 
 #. module: phone_validation
+#. odoo-python
+#: code:addons/phone_validation/models/mail_thread_phone.py:0
+msgid "Are you sure you want to unblacklist this Phone Number?"
+msgstr ""
+
+#. module: phone_validation
+#. odoo-python
+#: code:addons/phone_validation/models/phone_blacklist.py:0
+msgid "Are you sure you want to unblacklist this phone number?"
+msgstr ""
+
+#. module: phone_validation
 #: model:ir.model.fields,field_description:phone_validation.field_mail_thread_phone__message_attachment_count
 #: model:ir.model.fields,field_description:phone_validation.field_phone_blacklist__message_attachment_count
+#: model:ir.model.fields,field_description:phone_validation.field_res_partner__message_attachment_count
 msgid "Attachment Count"
 msgstr "附件计数"
+
+#. module: phone_validation
+#: model:ir.model,name:phone_validation.model_base
+msgid "Base"
+msgstr ""
 
 #. module: phone_validation
 #: model_terms:ir.ui.view,arch_db:phone_validation.phone_blacklist_view_form
@@ -66,17 +86,14 @@ msgid "Blacklist Date"
 msgstr "黑名单日期"
 
 #. module: phone_validation
-#: model:ir.model.fields,field_description:phone_validation.field_mail_thread_phone__mobile_blacklisted
-msgid "Blacklisted Phone Is Mobile"
-msgstr "列入黑名单的手机是移动的"
-
-#. module: phone_validation
 #: model:ir.actions.act_window,name:phone_validation.phone_blacklist_action
 msgid "Blacklisted Phone Numbers"
 msgstr "被列入黑名单的电话号码"
 
 #. module: phone_validation
 #: model:ir.model.fields,field_description:phone_validation.field_mail_thread_phone__phone_blacklisted
+#: model:ir.model.fields,field_description:phone_validation.field_res_partner__phone_blacklisted
+#: model:ir.model.fields,field_description:phone_validation.field_res_users__phone_blacklisted
 msgid "Blacklisted Phone is Phone"
 msgstr "列入黑名单的电话是电话"
 
@@ -88,18 +105,21 @@ msgstr "被列入黑名单的电话号码不会再收到短信息邮件。"
 #. module: phone_validation
 #. odoo-python
 #: code:addons/phone_validation/models/res_users.py:0
-msgid "Blocked by deletion of portal account %(portal_user_name)s by %(user_name)s (#%(user_id)s)"
-msgstr "通过删除门户帐户 %(portal_user_name)s 由 %(user_name)s （%(user_id)s阻止"
-
-#. module: phone_validation
-#: model_terms:ir.ui.view,arch_db:phone_validation.phone_blacklist_remove_view_form
-msgid "Confirm"
-msgstr "确认"
+msgid ""
+"Blocked by deletion of portal account %(portal_user_name)s by %(user_name)s "
+"(#%(user_id)s)"
+msgstr ""
+"通过删除门户帐户 %(portal_user_name)s 由 %(user_name)s （%(user_id)s阻止"
 
 #. module: phone_validation
 #: model:ir.model,name:phone_validation.model_res_partner
 msgid "Contact"
 msgstr "联系人"
+
+#. module: phone_validation
+#: model:ir.model,website_form_label:phone_validation.model_res_partner
+msgid "Create a Customer"
+msgstr ""
 
 #. module: phone_validation
 #: model:ir.model.fields,field_description:phone_validation.field_phone_blacklist__create_uid
@@ -119,72 +139,107 @@ msgid "Discard"
 msgstr "丢弃"
 
 #. module: phone_validation
+#: model:ir.model.fields,field_description:phone_validation.field_mail_thread_phone__display_name
 #: model:ir.model.fields,field_description:phone_validation.field_phone_blacklist__display_name
 #: model:ir.model.fields,field_description:phone_validation.field_phone_blacklist_remove__display_name
+#: model:ir.model.fields,field_description:phone_validation.field_res_partner__display_name
+#: model:ir.model.fields,field_description:phone_validation.field_res_users__display_name
 msgid "Display Name"
 msgstr "显示名称"
 
 #. module: phone_validation
 #: model:ir.model.fields,help:phone_validation.field_mail_thread_phone__phone_sanitized
-msgid "Field used to store sanitized phone number. Helps speeding up searches and comparisons."
+#: model:ir.model.fields,help:phone_validation.field_res_partner__phone_sanitized
+#: model:ir.model.fields,help:phone_validation.field_res_users__phone_sanitized
+msgid ""
+"Field used to store sanitized phone number. Helps speeding up searches and "
+"comparisons."
 msgstr "用于存储已净化的电话号码的字段。有助于加快搜索和比较。"
 
 #. module: phone_validation
 #: model:ir.model.fields,field_description:phone_validation.field_mail_thread_phone__message_follower_ids
 #: model:ir.model.fields,field_description:phone_validation.field_phone_blacklist__message_follower_ids
+#: model:ir.model.fields,field_description:phone_validation.field_res_partner__message_follower_ids
 msgid "Followers"
 msgstr "关注者"
 
 #. module: phone_validation
 #: model:ir.model.fields,field_description:phone_validation.field_mail_thread_phone__message_partner_ids
 #: model:ir.model.fields,field_description:phone_validation.field_phone_blacklist__message_partner_ids
+#: model:ir.model.fields,field_description:phone_validation.field_res_partner__message_partner_ids
 msgid "Followers (Partners)"
 msgstr "关注者(业务伙伴)"
 
 #. module: phone_validation
 #: model:ir.model.fields,field_description:phone_validation.field_mail_thread_phone__has_message
 #: model:ir.model.fields,field_description:phone_validation.field_phone_blacklist__has_message
+#: model:ir.model.fields,field_description:phone_validation.field_res_partner__has_message
 msgid "Has Message"
 msgstr "有消息"
 
 #. module: phone_validation
+#: model:ir.model.fields,field_description:phone_validation.field_mail_thread_phone__id
 #: model:ir.model.fields,field_description:phone_validation.field_phone_blacklist__id
 #: model:ir.model.fields,field_description:phone_validation.field_phone_blacklist_remove__id
+#: model:ir.model.fields,field_description:phone_validation.field_res_partner__id
+#: model:ir.model.fields,field_description:phone_validation.field_res_users__id
 msgid "ID"
 msgstr "ID"
 
 #. module: phone_validation
 #: model:ir.model.fields,help:phone_validation.field_mail_thread_phone__message_needaction
 #: model:ir.model.fields,help:phone_validation.field_phone_blacklist__message_needaction
+#: model:ir.model.fields,help:phone_validation.field_res_partner__message_needaction
 msgid "If checked, new messages require your attention."
 msgstr "确认后, 出现提示消息."
 
 #. module: phone_validation
 #: model:ir.model.fields,help:phone_validation.field_mail_thread_phone__message_has_error
 #: model:ir.model.fields,help:phone_validation.field_phone_blacklist__message_has_error
+#: model:ir.model.fields,help:phone_validation.field_res_partner__message_has_error
 msgid "If checked, some messages have a delivery error."
 msgstr "如果勾选此项， 某些消息将会产生传递错误。"
 
 #. module: phone_validation
 #: model:ir.model.fields,help:phone_validation.field_mail_thread_phone__phone_sanitized_blacklisted
-msgid "If the sanitized phone number is on the blacklist, the contact won't receive mass mailing sms anymore, from any list"
-msgstr "如果已被列入的电话号码在黑名单中，则该联系人将不会再收到来自任何列表的群发短信息"
+#: model:ir.model.fields,help:phone_validation.field_res_partner__phone_sanitized_blacklisted
+#: model:ir.model.fields,help:phone_validation.field_res_users__phone_sanitized_blacklisted
+msgid ""
+"If the sanitized phone number is on the blacklist, the contact won't receive "
+"mass mailing sms anymore, from any list"
+msgstr ""
+"如果已被列入的电话号码在黑名单中，则该联系人将不会再收到来自任何列表的群发短"
+"信息"
 
 #. module: phone_validation
 #. odoo-python
 #: code:addons/phone_validation/tools/phone_validation.py:0
-msgid "Impossible number %s: probably invalid number of digits."
-msgstr "不可能的数字%s：可能是无效的数字。"
+msgid "Impossible number %s: not a valid country prefix."
+msgstr ""
 
 #. module: phone_validation
-#: model:ir.model.fields,help:phone_validation.field_mail_thread_phone__mobile_blacklisted
-msgid "Indicates if a blacklisted sanitized phone number is a mobile number. Helps distinguish which number is blacklisted             when there is both a mobile and phone field in a model."
-msgstr "指示列入黑名单的已净化电话号码是否为手机号码。帮助区分在模型中同时存在手机和手机字段时列入黑名单的号码。"
+#. odoo-python
+#: code:addons/phone_validation/tools/phone_validation.py:0
+msgid "Impossible number %s: not enough digits."
+msgstr ""
+
+#. module: phone_validation
+#. odoo-python
+#: code:addons/phone_validation/tools/phone_validation.py:0
+msgid "Impossible number %s: too many digits."
+msgstr ""
 
 #. module: phone_validation
 #: model:ir.model.fields,help:phone_validation.field_mail_thread_phone__phone_blacklisted
-msgid "Indicates if a blacklisted sanitized phone number is a phone number. Helps distinguish which number is blacklisted             when there is both a mobile and phone field in a model."
-msgstr "指示列入黑名单的已净化电话号码是否为电话号码。帮助区分在模型中同时存在手机和手机字段时列入黑名单的号码。"
+#: model:ir.model.fields,help:phone_validation.field_res_partner__phone_blacklisted
+#: model:ir.model.fields,help:phone_validation.field_res_users__phone_blacklisted
+msgid ""
+"Indicates if a blacklisted sanitized phone number is a phone number. Helps "
+"distinguish which number is blacklisted             when there is both a "
+"mobile and phone field in a model."
+msgstr ""
+"指示列入黑名单的已净化电话号码是否为电话号码。帮助区分在模型中同时存在手机和"
+"手机字段时列入黑名单的号码。"
 
 #. module: phone_validation
 #. odoo-python
@@ -201,6 +256,7 @@ msgstr "模型上的主电话字段无效 %s"
 #. module: phone_validation
 #: model:ir.model.fields,field_description:phone_validation.field_mail_thread_phone__message_is_follower
 #: model:ir.model.fields,field_description:phone_validation.field_phone_blacklist__message_is_follower
+#: model:ir.model.fields,field_description:phone_validation.field_res_partner__message_is_follower
 msgid "Is Follower"
 msgstr "关注者"
 
@@ -217,20 +273,16 @@ msgid "Last Updated on"
 msgstr "最后更新时间"
 
 #. module: phone_validation
-#: model:ir.model.fields,field_description:phone_validation.field_mail_thread_phone__message_main_attachment_id
-#: model:ir.model.fields,field_description:phone_validation.field_phone_blacklist__message_main_attachment_id
-msgid "Main Attachment"
-msgstr "主要附件"
-
-#. module: phone_validation
 #: model:ir.model.fields,field_description:phone_validation.field_mail_thread_phone__message_has_error
 #: model:ir.model.fields,field_description:phone_validation.field_phone_blacklist__message_has_error
+#: model:ir.model.fields,field_description:phone_validation.field_res_partner__message_has_error
 msgid "Message Delivery error"
 msgstr "消息传递错误"
 
 #. module: phone_validation
 #: model:ir.model.fields,field_description:phone_validation.field_mail_thread_phone__message_ids
 #: model:ir.model.fields,field_description:phone_validation.field_phone_blacklist__message_ids
+#: model:ir.model.fields,field_description:phone_validation.field_res_partner__message_ids
 msgid "Messages"
 msgstr "消息"
 
@@ -248,24 +300,28 @@ msgstr "号码已经存在"
 #. module: phone_validation
 #: model:ir.model.fields,field_description:phone_validation.field_mail_thread_phone__message_needaction_counter
 #: model:ir.model.fields,field_description:phone_validation.field_phone_blacklist__message_needaction_counter
+#: model:ir.model.fields,field_description:phone_validation.field_res_partner__message_needaction_counter
 msgid "Number of Actions"
 msgstr "动作数量"
 
 #. module: phone_validation
 #: model:ir.model.fields,field_description:phone_validation.field_mail_thread_phone__message_has_error_counter
 #: model:ir.model.fields,field_description:phone_validation.field_phone_blacklist__message_has_error_counter
+#: model:ir.model.fields,field_description:phone_validation.field_res_partner__message_has_error_counter
 msgid "Number of errors"
 msgstr "错误数"
 
 #. module: phone_validation
 #: model:ir.model.fields,help:phone_validation.field_mail_thread_phone__message_needaction_counter
 #: model:ir.model.fields,help:phone_validation.field_phone_blacklist__message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr "需要作业消息数量"
+#: model:ir.model.fields,help:phone_validation.field_res_partner__message_needaction_counter
+msgid "Number of messages requiring action"
+msgstr ""
 
 #. module: phone_validation
 #: model:ir.model.fields,help:phone_validation.field_mail_thread_phone__message_has_error_counter
 #: model:ir.model.fields,help:phone_validation.field_phone_blacklist__message_has_error_counter
+#: model:ir.model.fields,help:phone_validation.field_res_partner__message_has_error_counter
 msgid "Number of messages with delivery error"
 msgstr "发送错误的消息数量"
 
@@ -294,26 +350,26 @@ msgstr "手机黑名单Mixin"
 
 #. module: phone_validation
 #: model:ir.model.fields,field_description:phone_validation.field_mail_thread_phone__phone_sanitized_blacklisted
+#: model:ir.model.fields,field_description:phone_validation.field_res_partner__phone_sanitized_blacklisted
+#: model:ir.model.fields,field_description:phone_validation.field_res_users__phone_sanitized_blacklisted
 msgid "Phone Blacklisted"
 msgstr "电话加入黑名单"
 
 #. module: phone_validation
+#: model:ir.model.fields,field_description:phone_validation.field_mail_thread_phone__phone_mobile_search
 #: model:ir.model.fields,field_description:phone_validation.field_phone_blacklist__number
 #: model:ir.model.fields,field_description:phone_validation.field_phone_blacklist_remove__phone
+#: model:ir.model.fields,field_description:phone_validation.field_res_partner__phone_mobile_search
+#: model:ir.model.fields,field_description:phone_validation.field_res_users__phone_mobile_search
 #: model_terms:ir.ui.view,arch_db:phone_validation.phone_blacklist_remove_view_form
 msgid "Phone Number"
 msgstr "电话号码"
 
 #. module: phone_validation
-#: model:ir.model.fields,field_description:phone_validation.field_mail_thread_phone__phone_mobile_search
-msgid "Phone/Mobile"
-msgstr "电话/手机"
-
-#. module: phone_validation
 #. odoo-python
 #: code:addons/phone_validation/models/mail_thread_phone.py:0
-msgid "Please enter at least 3 characters when searching a Phone/Mobile number."
-msgstr "搜索电话/手机号码时，请至少输入3个字符。"
+msgid "Please enter at least 3 characters when searching a Phone number."
+msgstr ""
 
 #. module: phone_validation
 #: model:ir.model.fields,field_description:phone_validation.field_phone_blacklist_remove__reason
@@ -323,13 +379,23 @@ msgstr "原因"
 
 #. module: phone_validation
 #: model:ir.model,name:phone_validation.model_phone_blacklist_remove
+#: model_terms:ir.ui.view,arch_db:phone_validation.phone_blacklist_remove_view_form
 msgid "Remove phone from blacklist"
 msgstr "从黑名单中删除手机"
 
 #. module: phone_validation
 #: model:ir.model.fields,field_description:phone_validation.field_mail_thread_phone__phone_sanitized
+#: model:ir.model.fields,field_description:phone_validation.field_res_partner__phone_sanitized
+#: model:ir.model.fields,field_description:phone_validation.field_res_users__phone_sanitized
 msgid "Sanitized Number"
 msgstr "净化的号码"
+
+#. module: phone_validation
+#. odoo-python
+#: code:addons/phone_validation/tools/phone_validation.py:0
+msgid ""
+"The phone number %s is invalid! Let's fix it - you are not dialing aliens."
+msgstr ""
 
 #. module: phone_validation
 #. odoo-python
@@ -354,6 +420,52 @@ msgid "User"
 msgstr "用户"
 
 #. module: phone_validation
+#. odoo-python
+#: code:addons/phone_validation/models/mail_thread_phone.py:0
+msgid ""
+"You do not have the access right to unblacklist phone numbers. Please "
+"contact your administrator."
+msgstr ""
+
+#. module: phone_validation
+#: model_terms:ir.ui.view,arch_db:phone_validation.phone_blacklist_remove_view_form
+msgid "e.g \"Asked to receive our next newsletters\""
+msgstr ""
+
+#. module: phone_validation
 #: model_terms:ir.ui.view,arch_db:phone_validation.phone_blacklist_remove_view_form
 msgid "phone_blacklist_removal"
 msgstr "phone_blacklist_removal"
+
+#~ msgid " Please correct the number and try again."
+#~ msgstr "请更正号码并重试。"
+
+#~ msgid "Blacklisted Phone Is Mobile"
+#~ msgstr "列入黑名单的手机是移动的"
+
+#~ msgid "Confirm"
+#~ msgstr "确认"
+
+#~ msgid "Impossible number %s: probably invalid number of digits."
+#~ msgstr "不可能的数字%s：可能是无效的数字。"
+
+#~ msgid ""
+#~ "Indicates if a blacklisted sanitized phone number is a mobile number. "
+#~ "Helps distinguish which number is blacklisted             when there is "
+#~ "both a mobile and phone field in a model."
+#~ msgstr ""
+#~ "指示列入黑名单的已净化电话号码是否为手机号码。帮助区分在模型中同时存在手机"
+#~ "和手机字段时列入黑名单的号码。"
+
+#~ msgid "Main Attachment"
+#~ msgstr "主要附件"
+
+#~ msgid "Number of messages which requires an action"
+#~ msgstr "需要作业消息数量"
+
+#~ msgid "Phone/Mobile"
+#~ msgstr "电话/手机"
+
+#~ msgid ""
+#~ "Please enter at least 3 characters when searching a Phone/Mobile number."
+#~ msgstr "搜索电话/手机号码时，请至少输入3个字符。"

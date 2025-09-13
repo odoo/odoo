@@ -18,7 +18,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:49+0000\n"
+"POT-Creation-Date: 2025-09-11 13:56+0000\n"
 "PO-Revision-Date: 2022-09-22 05:52+0000\n"
 "Last-Translator: Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2023\n"
 "Language-Team: Polish (https://app.transifex.com/odoo/teams/41243/pl/)\n"
@@ -26,33 +26,48 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && (n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
+"Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && "
+"(n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && "
+"n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
 
 #. module: hr_recruitment_survey
 #: model:mail.template,body_html:hr_recruitment_survey.mail_template_applicant_interview_invite
 msgid ""
 "<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        Dear <t t-out=\"object.partner_id.name or 'applicant'\">[applicant name]</t><br><br>\n"
+"        Dear <t t-out=\"object.partner_id.name or 'applicant'\">[applicant "
+"name]</t><br/><br/>\n"
 "        <t>\n"
-"            You've progressed through the recruitment process and we would like you to answer some questions.\n"
+"            You've progressed through the recruitment process and we would "
+"like you to answer some questions.\n"
 "        </t>\n"
-"        <div style=\"margin: 16px 0px 16px 0px;\">\n"
-"            <a t-att-href=\"(object.get_start_url())\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
+"        </p><div style=\"margin: 16px 0px 16px 0px;\">\n"
+"            <a t-att-href=\"(object.get_start_url())\" t-attf-"
+"style=\"background-color: {{user.company_id.email_secondary_color or "
+"'#875A7B'}}; padding: 8px 16px 8px 16px; text-decoration: none; color: "
+"{{user.company_id.email_primary_color or '#FFFFFF'}}; border-radius: 5px; "
+"font-size:13px;\">\n"
 "                <t>\n"
 "                    Start the written interview\n"
 "                </t>\n"
 "            </a>\n"
 "        </div>\n"
 "        <t t-if=\"object.deadline\">\n"
-"            Please answer the interview for <t t-out=\"format_date(object.deadline)\">[deadline date]</t>.<br><br>\n"
+"            Please answer the interview for <t t-"
+"out=\"format_date(object.deadline)\">[deadline date]</t>.<br/><br/>\n"
 "        </t>\n"
 "        <t>\n"
-"            We wish you good luck! Thank you in advance for your participation.\n"
+"            We wish you good luck! Thank you in advance for your "
+"participation.\n"
 "        </t>\n"
-"    </p>\n"
+"    \n"
 "</div>\n"
 "            "
+msgstr ""
+
+#. module: hr_recruitment_survey
+#: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.hr_recruitment_survey_button_form_view
+msgid "<i class=\"oi oi-fw oi-arrow-right\"/>Go to Recruitment"
 msgstr ""
 
 #. module: hr_recruitment_survey
@@ -75,6 +90,11 @@ msgid "Activities"
 msgstr "Czynności"
 
 #. module: hr_recruitment_survey
+#: model_terms:ir.actions.act_window,help:hr_recruitment_survey.survey_survey_action_recruitment
+msgid "Add a new survey"
+msgstr ""
+
+#. module: hr_recruitment_survey
 #: model:ir.model,name:hr_recruitment_survey.model_hr_applicant
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_survey_invite__applicant_id
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_survey_user_input__applicant_id
@@ -87,15 +107,34 @@ msgid "Applicant: Interview"
 msgstr ""
 
 #. module: hr_recruitment_survey
+#: model:ir.model,website_form_label:hr_recruitment_survey.model_hr_applicant
+msgid "Apply for a Job"
+msgstr ""
+
+#. module: hr_recruitment_survey
 #: model:ir.model.fields,help:hr_recruitment_survey.field_hr_applicant__survey_id
 #: model:ir.model.fields,help:hr_recruitment_survey.field_hr_job__survey_id
-msgid "Choose an interview form for this job position and you will be able to print/answer this interview from all applicants who apply for this job"
-msgstr "Wybierz formularz wywiadu dla tego stanowiska pracy i będziesz miał możliwość wydrukować/odpowiedzieć na ten wywiad od wszystkich aplikantów, którzy ubiegają się o te stanowisko."
+msgid ""
+"Choose an interview form for this job position and you will be able to print/"
+"answer this interview from all applicants who apply for this job"
+msgstr ""
+"Wybierz formularz wywiadu dla tego stanowiska pracy i będziesz miał "
+"możliwość wydrukować/odpowiedzieć na ten wywiad od wszystkich aplikantów, "
+"którzy ubiegają się o te stanowisko."
 
 #. module: hr_recruitment_survey
 #: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.view_hr_job_kanban_inherit
 msgid "Display Interview Form"
 msgstr "Pokaż Formularz wywiadu"
+
+#. module: hr_recruitment_survey
+#: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_applicant__display_name
+#: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_job__display_name
+#: model:ir.model.fields,field_description:hr_recruitment_survey.field_survey_invite__display_name
+#: model:ir.model.fields,field_description:hr_recruitment_survey.field_survey_survey__display_name
+#: model:ir.model.fields,field_description:hr_recruitment_survey.field_survey_user_input__display_name
+msgid "Display Name"
+msgstr ""
 
 #. module: hr_recruitment_survey
 #: model:survey.question,title:hr_recruitment_survey.survey_recruitment_form_p1_q4
@@ -115,7 +154,8 @@ msgstr "Współpraca z kolegami"
 #. module: hr_recruitment_survey
 #: model:survey.question.answer,value:hr_recruitment_survey.survey_recruitment_form_p1_q8_row8
 msgid "Getting perks such as free parking, gym passes"
-msgstr "Otrzymywanie korzyści, takich jak bezpłatny parking, karnety na siłownię"
+msgstr ""
+"Otrzymywanie korzyści, takich jak bezpłatny parking, karnety na siłownię"
 
 #. module: hr_recruitment_survey
 #: model:survey.question.answer,value:hr_recruitment_survey.survey_recruitment_form_p1_q8_row1
@@ -131,6 +171,15 @@ msgstr "Posiadanie miłego środowiska biurowego"
 #: model:survey.question.answer,value:hr_recruitment_survey.survey_recruitment_form_p1_q8_row7
 msgid "Having freebies such as tea, coffee and stationery"
 msgstr "Posiadanie gratisów, takich jak herbata, kawa i artykuły papiernicze"
+
+#. module: hr_recruitment_survey
+#: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_applicant__id
+#: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_job__id
+#: model:ir.model.fields,field_description:hr_recruitment_survey.field_survey_invite__id
+#: model:ir.model.fields,field_description:hr_recruitment_survey.field_survey_survey__id
+#: model:ir.model.fields,field_description:hr_recruitment_survey.field_survey_user_input__id
+msgid "ID"
+msgstr ""
 
 #. module: hr_recruitment_survey
 #: model:survey.question.answer,value:hr_recruitment_survey.survey_recruitment_form_p1_q8_col2
@@ -155,12 +204,15 @@ msgid "Interview Survey"
 msgstr "Ankieta wywiadu"
 
 #. module: hr_recruitment_survey
+#: model:ir.actions.act_window,name:hr_recruitment_survey.survey_survey_action_recruitment
+#: model:ir.ui.menu,name:hr_recruitment_survey.menu_hr_recruitment_config_surveys
 #: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.view_hr_job_kanban_inherit
 msgid "Interviews"
 msgstr "Wywiady"
 
 #. module: hr_recruitment_survey
 #: model:ir.model,name:hr_recruitment_survey.model_hr_job
+#: model:ir.model.fields,field_description:hr_recruitment_survey.field_survey_survey__hr_job_ids
 msgid "Job Position"
 msgstr "Stanowisko pracy"
 
@@ -196,16 +248,22 @@ msgstr "Dotychczasowe doświadczenia zawodowe"
 
 #. module: hr_recruitment_survey
 #: model_terms:survey.survey,description:hr_recruitment_survey.survey_recruitment_form
-msgid "Please answer those questions to help recruitment officers to preprocess your application."
-msgstr "Proszę odpowiedzieć na te pytania, aby pomóc rekruterom we wstępnym przetworzeniu Twojej aplikacji."
+msgid ""
+"Please answer those questions to help recruitment officers to preprocess "
+"your application."
+msgstr ""
+"Proszę odpowiedzieć na te pytania, aby pomóc rekruterom we wstępnym "
+"przetworzeniu Twojej aplikacji."
 
 #. module: hr_recruitment_survey
 #: model_terms:survey.question,description:hr_recruitment_survey.survey_recruitment_form_p1
 msgid ""
-"Please fill information about you: who you are, what are your education, experience, and activities.\n"
+"Please fill information about you: who you are, what are your education, "
+"experience, and activities.\n"
 "    It will help us managing your application."
 msgstr ""
-"Prosimy o wypełnienie informacji o sobie: kim jesteś, jakie masz wykształcenie, doświadczenie i działalność.\n"
+"Prosimy o wypełnienie informacji o sobie: kim jesteś, jakie masz "
+"wykształcenie, doświadczenie i działalność.\n"
 "Pomoże nam to w zarządzaniu Twoją aplikacją."
 
 #. module: hr_recruitment_survey
@@ -217,13 +275,21 @@ msgstr ""
 #. module: hr_recruitment_survey
 #: model_terms:survey.question,description:hr_recruitment_survey.survey_recruitment_form_p1_q4
 #: model_terms:survey.question,description:hr_recruitment_survey.survey_recruitment_form_p1_q5
-msgid "Please summarize your education history: schools, location, diplomas, ..."
+msgid ""
+"Please summarize your education history: schools, location, diplomas, ..."
 msgstr "Proszę streścić swoją historię edukacji: szkoły, miejsce, dyplomy, ..."
 
 #. module: hr_recruitment_survey
 #: model_terms:survey.question,description:hr_recruitment_survey.survey_recruitment_form_p1_q7
-msgid "Please tell us a bit more about yourself: what are your main activities, ..."
-msgstr "Proszę powiedzieć nam nieco więcej o sobie: jakie są Pana główne zajęcia, ..."
+msgid ""
+"Please tell us a bit more about yourself: what are your main activities, ..."
+msgstr ""
+"Proszę powiedzieć nam nieco więcej o sobie: jakie są Pana główne zajęcia, ..."
+
+#. module: hr_recruitment_survey
+#: model:ir.model.fields.selection,name:hr_recruitment_survey.selection__survey_survey__survey_type__recruitment
+msgid "Recruitment"
+msgstr ""
 
 #. module: hr_recruitment_survey
 #: model:survey.survey,title:hr_recruitment_survey.survey_recruitment_form
@@ -254,6 +320,7 @@ msgstr ""
 #. module: hr_recruitment_survey
 #. odoo-python
 #: code:addons/hr_recruitment_survey/models/hr_job.py:0
+#: model:ir.model,name:hr_recruitment_survey.model_survey_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_applicant__survey_id
 msgid "Survey"
 msgstr "Ankieta"
@@ -262,6 +329,11 @@ msgstr "Ankieta"
 #: model:ir.model,name:hr_recruitment_survey.model_survey_invite
 msgid "Survey Invitation Wizard"
 msgstr "Kreator zaproszenia do ankiety"
+
+#. module: hr_recruitment_survey
+#: model:ir.model.fields,field_description:hr_recruitment_survey.field_survey_survey__survey_type
+msgid "Survey Type"
+msgstr ""
 
 #. module: hr_recruitment_survey
 #: model:ir.model,name:hr_recruitment_survey.model_survey_user_input
@@ -314,3 +386,10 @@ msgstr ""
 #: model:survey.question.answer,value:hr_recruitment_survey.survey_recruitment_form_p1_q8_row4
 msgid "Working with state of the art technology"
 msgstr "Praca z najnowocześniejszą technologią"
+
+#. module: hr_recruitment_survey
+#: model_terms:ir.actions.act_window,help:hr_recruitment_survey.survey_survey_action_recruitment
+msgid ""
+"You can create surveys used for recruitments. Design easily your interview,\n"
+"                send invitations and analyze answers."
+msgstr ""

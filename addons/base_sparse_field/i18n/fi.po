@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~14.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-12 07:50+0000\n"
+"POT-Creation-Date: 2025-09-11 13:55+0000\n"
 "PO-Revision-Date: 2022-09-22 05:45+0000\n"
 "Last-Translator: Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
@@ -34,6 +34,7 @@ msgid "Boolean"
 msgstr "Totuusarvo"
 
 #. module: base_sparse_field
+#. odoo-python
 #: code:addons/base_sparse_field/models/models.py:0
 msgid "Changing the storing system for field \"%s\" is not allowed."
 msgstr "Kentän \"%s\" tallennustavan muuttaminen ei ole sallittu."
@@ -59,6 +60,7 @@ msgid "Data"
 msgstr "Data"
 
 #. module: base_sparse_field
+#: model:ir.model.fields,field_description:base_sparse_field.field_ir_model_fields__display_name
 #: model:ir.model.fields,field_description:base_sparse_field.field_sparse_fields_test__display_name
 msgid "Display Name"
 msgstr "Näyttönimi"
@@ -79,24 +81,26 @@ msgid "Float"
 msgstr "Liukuluku"
 
 #. module: base_sparse_field
+#: model:ir.model.fields,field_description:base_sparse_field.field_ir_model_fields__id
 #: model:ir.model.fields,field_description:base_sparse_field.field_sparse_fields_test__id
 msgid "ID"
 msgstr "ID"
 
 #. module: base_sparse_field
 #: model:ir.model.fields,help:base_sparse_field.field_ir_model_fields__serialization_field_id
-msgid "If set, this field will be stored in the sparse structure of the serialization field, instead of having its own database column. This cannot be changed after creation."
-msgstr "Jos asetettu, niin tämä kenttä käsitellään sarjallistuvana kenttänä eli sillä ei ole omaa tietokannan saraketta, jossa kentän aiempia tietoja säilytetään. Tätä valintaa ei voi jälkikäteen muuttaa."
+msgid ""
+"If set, this field will be stored in the sparse structure of the "
+"serialization field, instead of having its own database column. This cannot "
+"be changed after creation."
+msgstr ""
+"Jos asetettu, niin tämä kenttä käsitellään sarjallistuvana kenttänä eli "
+"sillä ei ole omaa tietokannan saraketta, jossa kentän aiempia tietoja "
+"säilytetään. Tätä valintaa ei voi jälkikäteen muuttaa."
 
 #. module: base_sparse_field
 #: model:ir.model.fields,field_description:base_sparse_field.field_sparse_fields_test__integer
 msgid "Integer"
 msgstr "kokonaisluku"
-
-#. module: base_sparse_field
-#: model:ir.model.fields,field_description:base_sparse_field.field_sparse_fields_test____last_update
-msgid "Last Modified on"
-msgstr "Viimeksi muokattu"
 
 #. module: base_sparse_field
 #: model:ir.model.fields,field_description:base_sparse_field.field_sparse_fields_test__write_uid
@@ -119,6 +123,7 @@ msgid "Partner"
 msgstr "Kumppani"
 
 #. module: base_sparse_field
+#. odoo-python
 #: code:addons/base_sparse_field/models/models.py:0
 msgid "Renaming sparse field \"%s\" is not allowed"
 msgstr "Kentän \"%s\" uudelleen nimeäminen ei ole sallittu"
@@ -134,9 +139,12 @@ msgid "Serialization Field"
 msgstr "Serialisointi kenttä"
 
 #. module: base_sparse_field
+#. odoo-python
 #: code:addons/base_sparse_field/models/models.py:0
-msgid "Serialization field %r not found for sparse field %s!"
-msgstr "Serialisoitua kenttää %r ei löytynyt harvakentälle %s!"
+msgid ""
+"Serialization field \"%(serialization_field)s\" not found for sparse field %"
+"(sparse_field)s!"
+msgstr ""
 
 #. module: base_sparse_field
 #: model:ir.model,name:base_sparse_field.model_sparse_fields_test
@@ -152,3 +160,9 @@ msgstr "Kaksi"
 #: model:ir.model.fields.selection,name:base_sparse_field.selection__ir_model_fields__ttype__serialized
 msgid "serialized"
 msgstr "serialisoitu"
+
+#~ msgid "Last Modified on"
+#~ msgstr "Viimeksi muokattu"
+
+#~ msgid "Serialization field %r not found for sparse field %s!"
+#~ msgstr "Serialisoitua kenttää %r ei löytynyt harvakentälle %s!"

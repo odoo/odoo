@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2025-09-11 14:00+0000\n"
 "PO-Revision-Date: 2024-01-30 15:14+0400\n"
 "Last-Translator: \n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
@@ -15,7 +15,9 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || "
+"(n%100>=11 && n%100<=14)? 2 : 3);\n"
 
 #. module: privacy_lookup
 #: model:ir.model.fields,field_description:privacy_lookup.field_privacy_log__additional_note
@@ -53,6 +55,11 @@ msgstr "Можно архивировать"
 #: model:ir.model,name:privacy_lookup.model_res_partner
 msgid "Contact"
 msgstr "Контакты"
+
+#. module: privacy_lookup
+#: model:ir.model,website_form_label:privacy_lookup.model_res_partner
+msgid "Create a Customer"
+msgstr ""
 
 #. module: privacy_lookup
 #: model:ir.model.fields,field_description:privacy_lookup.field_privacy_log__create_uid
@@ -93,6 +100,7 @@ msgstr "Удалено"
 #: model:ir.model.fields,field_description:privacy_lookup.field_privacy_log__display_name
 #: model:ir.model.fields,field_description:privacy_lookup.field_privacy_lookup_wizard__display_name
 #: model:ir.model.fields,field_description:privacy_lookup.field_privacy_lookup_wizard_line__display_name
+#: model:ir.model.fields,field_description:privacy_lookup.field_res_partner__display_name
 msgid "Display Name"
 msgstr "Отображаемое имя"
 
@@ -119,11 +127,6 @@ msgid "Found Records"
 msgstr "Найденные записи"
 
 #. module: privacy_lookup
-#: model_terms:ir.ui.view,arch_db:privacy_lookup.privacy_lookup_wizard_line_view_search
-msgid "Group By"
-msgstr "Группировать по"
-
-#. module: privacy_lookup
 #: model:ir.model.fields,field_description:privacy_lookup.field_privacy_log__user_id
 msgid "Handled By"
 msgstr "Обработано"
@@ -137,6 +140,7 @@ msgstr "Имеет активную"
 #: model:ir.model.fields,field_description:privacy_lookup.field_privacy_log__id
 #: model:ir.model.fields,field_description:privacy_lookup.field_privacy_lookup_wizard__id
 #: model:ir.model.fields,field_description:privacy_lookup.field_privacy_lookup_wizard_line__id
+#: model:ir.model.fields,field_description:privacy_lookup.field_res_partner__id
 #: model_terms:ir.ui.view,arch_db:privacy_lookup.privacy_lookup_wizard_line_view_tree
 msgid "ID"
 msgstr "ID"
@@ -293,7 +297,9 @@ msgstr "Этот адрес электронной почты недействи
 
 #. module: privacy_lookup
 #: model_terms:ir.ui.view,arch_db:privacy_lookup.privacy_lookup_wizard_line_view_tree
-msgid "This operation is irreversible. Do you wish to proceed to the record deletion?"
+msgid ""
+"This operation is irreversible. Do you wish to proceed to the record "
+"deletion?"
 msgstr "Эта операция необратима. Хотите ли вы перейти к удалению записи?"
 
 #. module: privacy_lookup
@@ -306,3 +312,6 @@ msgstr "Разархивированно"
 #: model:ir.model.fields,field_description:privacy_lookup.field_privacy_lookup_wizard_line__wizard_id
 msgid "Wizard"
 msgstr "Мастер"
+
+#~ msgid "Group By"
+#~ msgstr "Группировать по"

@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-20 09:02+0000\n"
+"POT-Creation-Date: 2025-09-11 14:01+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
 "Last-Translator: Jiří Podhorecký, 2023\n"
 "Language-Team: Czech (https://app.transifex.com/odoo/teams/41243/cs/)\n"
@@ -21,7 +21,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n <= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
+"Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n "
+"<= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
 
 #. module: sale_crm
 #: model_terms:ir.ui.view,arch_db:sale_crm.crm_case_form_view_oppor
@@ -49,6 +50,11 @@ msgid "Create a new customer"
 msgstr "Vytvořit nového zákazníka"
 
 #. module: sale_crm
+#: model:ir.model,website_form_label:sale_crm.model_crm_lead
+msgid "Create an Opportunity"
+msgstr ""
+
+#. module: sale_crm
 #: model:ir.model,name:sale_crm.model_crm_quotation_partner
 msgid "Create new or use existing Customer on new Quotation"
 msgstr "Vytvořte nového nebo použijte stávajícího zákazníka na novou nabídku"
@@ -74,7 +80,10 @@ msgid "Customer"
 msgstr "Zákazník"
 
 #. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_crm_lead__display_name
 #: model:ir.model.fields,field_description:sale_crm.field_crm_quotation_partner__display_name
+#: model:ir.model.fields,field_description:sale_crm.field_crm_team__display_name
+#: model:ir.model.fields,field_description:sale_crm.field_sale_order__display_name
 msgid "Display Name"
 msgstr "Zobrazované jméno"
 
@@ -84,19 +93,18 @@ msgid "Do not link to a customer"
 msgstr "Nepřipojovat k zákazníkovi"
 
 #. module: sale_crm
+#. odoo-python
+#: code:addons/sale_crm/models/crm_lead.py:0
+msgid "Expected revenue has been updated based on the linked Sales Orders."
+msgstr ""
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_crm_lead__id
 #: model:ir.model.fields,field_description:sale_crm.field_crm_quotation_partner__id
+#: model:ir.model.fields,field_description:sale_crm.field_crm_team__id
+#: model:ir.model.fields,field_description:sale_crm.field_sale_order__id
 msgid "ID"
 msgstr "ID"
-
-#. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_res_users__target_sales_invoiced
-msgid "Invoiced in Sales Orders Target"
-msgstr "Fakturováno v cílech objednávek"
-
-#. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_crm_quotation_partner____last_update
-msgid "Last Modified on"
-msgstr "Naposled změněno"
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_crm_quotation_partner__write_uid
@@ -110,18 +118,13 @@ msgstr "Naposled upraveno"
 
 #. module: sale_crm
 #: model:ir.model,name:sale_crm.model_crm_lead
-msgid "Lead/Opportunity"
-msgstr "Potenciální zákazník / příležitost"
+msgid "Lead"
+msgstr ""
 
 #. module: sale_crm
 #: model:ir.model.fields.selection,name:sale_crm.selection__crm_quotation_partner__action__exist
 msgid "Link to an existing customer"
 msgstr "Propojit se stávajícím zákazníkem"
-
-#. module: sale_crm
-#: model_terms:ir.ui.view,arch_db:sale_crm.sale_view_inherit123
-msgid "Log in the chatter from which opportunity the order originates"
-msgstr "Přihlaste se do chatování, od které příležitosti objednávka pochází"
 
 #. module: sale_crm
 #: model:ir.ui.menu,name:sale_crm.sale_order_menu_quotations_crm
@@ -176,6 +179,7 @@ msgid "Sale Orders"
 msgstr "Prodejní objednávky"
 
 #. module: sale_crm
+#. odoo-python
 #: code:addons/sale_crm/models/crm_team.py:0
 msgid "Sales Analysis"
 msgstr "Analýza prodeje"
@@ -191,11 +195,6 @@ msgid "Sales Team"
 msgstr "Obchodní tým"
 
 #. module: sale_crm
-#: code:addons/sale_crm/models/crm_team.py:0
-msgid "Sales: Untaxed Total"
-msgstr "Tržby: celkem bez daně"
-
-#. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_crm_lead__sale_amount_total
 msgid "Sum of Orders"
 msgstr "Součet objednávek"
@@ -206,11 +205,25 @@ msgid "Untaxed Total of Confirmed Orders"
 msgstr "Nezdaněný součet potvrzených objednávek"
 
 #. module: sale_crm
-#: model:ir.model,name:sale_crm.model_res_users
-msgid "User"
-msgstr "Uživatel"
-
-#. module: sale_crm
+#. odoo-python
 #: code:addons/sale_crm/wizard/crm_opportunity_to_quotation.py:0
 msgid "You can only apply this action from a lead."
 msgstr "Tuto akci můžete použít pouze od potenciálního zákazníka."
+
+#~ msgid "Invoiced in Sales Orders Target"
+#~ msgstr "Fakturováno v cílech objednávek"
+
+#~ msgid "Last Modified on"
+#~ msgstr "Naposled změněno"
+
+#~ msgid "Lead/Opportunity"
+#~ msgstr "Potenciální zákazník / příležitost"
+
+#~ msgid "Log in the chatter from which opportunity the order originates"
+#~ msgstr "Přihlaste se do chatování, od které příležitosti objednávka pochází"
+
+#~ msgid "Sales: Untaxed Total"
+#~ msgstr "Tržby: celkem bez daně"
+
+#~ msgid "User"
+#~ msgstr "Uživatel"

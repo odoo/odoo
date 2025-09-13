@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-17 08:01+0000\n"
+"POT-Creation-Date: 2025-09-11 13:56+0000\n"
 "PO-Revision-Date: 2022-09-22 05:52+0000\n"
 "Last-Translator: Hanna Kheradroosta, 2023\n"
 "Language-Team: Persian (https://app.transifex.com/odoo/teams/41243/fa/)\n"
@@ -24,9 +24,53 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: hr_org_chart
-#: model:ir.model,name:hr_org_chart.model_hr_employee_base
-msgid "Basic Employee"
-msgstr "کارمند پایه"
+#: model_terms:ir.ui.view,arch_db:hr_org_chart.hr_employee_view_form_inherit_org_chart
+msgid ""
+"<i class=\"fa fa-share-alt fa-rotate-90 ms-1 mt-1\" role=\"img\" aria-"
+"label=\"Full Chart\"/>\n"
+"                        Full Chart"
+msgstr ""
+
+#. module: hr_org_chart
+#: model_terms:ir.ui.view,arch_db:hr_org_chart.hr_employee_public_view_form_inherit_org_chart
+msgid ""
+"<i class=\"fa fa-sitemap me-1 mt-1\"/>\n"
+"                                <span class=\"fw-bolder\">Zoom</span>"
+msgstr ""
+
+#. module: hr_org_chart
+#: model_terms:ir.ui.view,arch_db:hr_org_chart.hr_employee_public_view_form_inherit_org_chart
+msgid ""
+"<span class=\"text-uppercase fw-bolder\" style=\"font-size: "
+"13px\">Organization Chart</span>"
+msgstr ""
+
+#. module: hr_org_chart
+#: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee_public__child_all_count
+msgid "Child All Count"
+msgstr ""
+
+#. module: hr_org_chart
+#: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee_public__child_count
+msgid "Child Count"
+msgstr ""
+
+#. module: hr_org_chart
+#: model_terms:ir.actions.act_window,help:hr_org_chart.action_hr_employee_org_chart
+#: model_terms:ir.actions.act_window,help:hr_org_chart.action_hr_employee_public_org_chart
+msgid "Create an employee."
+msgstr ""
+
+#. module: hr_org_chart
+#: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee__department_color
+#: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee_public__department_color
+msgid "Department Color"
+msgstr ""
+
+#. module: hr_org_chart
+#: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee__child_count
+msgid "Direct Subordinates Count"
+msgstr ""
 
 #. module: hr_org_chart
 #: model:ir.model.fields,help:hr_org_chart.field_hr_employee__subordinate_ids
@@ -41,20 +85,35 @@ msgid "Direct subordinates"
 msgstr "زیردستان مستقیم"
 
 #. module: hr_org_chart
+#: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee__display_name
+#: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee_public__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: hr_org_chart
 #: model:ir.model,name:hr_org_chart.model_hr_employee
 msgid "Employee"
 msgstr "کارمند"
 
 #. module: hr_org_chart
-#. odoo-javascript
-#: code:addons/hr_org_chart/static/src/fields/hr_org_chart.xml:0
-msgid "In order to get an organigram, set a manager and save the record."
-msgstr "برای به دست آوردن یک ارگانیگرام، یک مدیر تنظیم کنید و رکورد را ذخیره کنید."
+#: model_terms:ir.ui.view,arch_db:hr_org_chart.hr_department_hierarchy_view
+msgid "Employees"
+msgstr ""
+
+#. module: hr_org_chart
+#: model_terms:ir.actions.act_window,help:hr_org_chart.action_hr_employee_org_chart
+#: model_terms:ir.actions.act_window,help:hr_org_chart.action_hr_employee_public_org_chart
+msgid "Find all the information on employees."
+msgstr ""
+
+#. module: hr_org_chart
+#: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee__id
+#: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee_public__id
+msgid "ID"
+msgstr ""
 
 #. module: hr_org_chart
 #: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee__child_all_count
-#: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee_base__child_all_count
-#: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee_public__child_all_count
 msgid "Indirect Subordinates Count"
 msgstr "تعداد زیردستان غیر مستقیم"
 
@@ -77,21 +136,13 @@ msgid "More managers"
 msgstr "مدیران بیشتر"
 
 #. module: hr_org_chart
-#. odoo-javascript
-#: code:addons/hr_org_chart/static/src/fields/hr_org_chart.xml:0
-msgid "No hierarchy position."
-msgstr "بدون موقعیت سلسله مراتبی."
-
-#. module: hr_org_chart
-#. odoo-python
-#: code:addons/hr_org_chart/models/hr_org_chart_mixin.py:0
-msgid "Operation not supported"
+#: model:ir.actions.act_window,name:hr_org_chart.action_hr_employee_org_chart
+#: model:ir.actions.act_window,name:hr_org_chart.action_hr_employee_public_org_chart
+msgid "Org Chart"
 msgstr ""
 
 #. module: hr_org_chart
-#: model_terms:ir.ui.view,arch_db:hr_org_chart.hr_employee_public_view_form_inherit_org_chart
 #: model_terms:ir.ui.view,arch_db:hr_org_chart.hr_employee_view_form_inherit_org_chart
-#: model_terms:ir.ui.view,arch_db:hr_org_chart.res_users_view_form
 msgid "Organization Chart"
 msgstr "چارت سازمانی"
 
@@ -103,14 +154,14 @@ msgstr "کارمند عمومی"
 #. module: hr_org_chart
 #. odoo-javascript
 #: code:addons/hr_org_chart/static/src/fields/hr_org_chart.xml:0
-msgid "Redirect"
-msgstr "تغییر مسیر"
+msgid "See All"
+msgstr "مشاهده همه"
 
 #. module: hr_org_chart
 #. odoo-javascript
 #: code:addons/hr_org_chart/static/src/fields/hr_org_chart.xml:0
-msgid "See All"
-msgstr "مشاهده همه"
+msgid "Set a manager or reports to show in org chart."
+msgstr ""
 
 #. module: hr_org_chart
 #: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee__subordinate_ids
@@ -120,18 +171,40 @@ msgstr "وابسته‌ها"
 
 #. module: hr_org_chart
 #. odoo-javascript
-#: code:addons/hr_org_chart/static/src/fields/hr_org_chart.js:0
+#: code:addons/hr_org_chart/static/src/fields/hooks.js:0
 msgid "Team"
 msgstr "تیم"
 
 #. module: hr_org_chart
 #. odoo-javascript
 #: code:addons/hr_org_chart/static/src/fields/hr_org_chart.xml:0
-msgid "This employee has no manager or subordinate."
-msgstr "این کارمند هیچ مدیر یا زیردستی ندارد."
+msgid "Total"
+msgstr "جمع کل:"
 
 #. module: hr_org_chart
 #. odoo-javascript
 #: code:addons/hr_org_chart/static/src/fields/hr_org_chart.xml:0
-msgid "Total"
-msgstr "جمع کل:"
+msgid "View employee"
+msgstr ""
+
+#. module: hr_org_chart
+#. odoo-javascript
+#: code:addons/hr_org_chart/static/src/views/hr_employee_hierarchy/hr_employee_hierarchy_card.xml:0
+msgid "people"
+msgstr ""
+
+#~ msgid "Basic Employee"
+#~ msgstr "کارمند پایه"
+
+#~ msgid "In order to get an organigram, set a manager and save the record."
+#~ msgstr ""
+#~ "برای به دست آوردن یک ارگانیگرام، یک مدیر تنظیم کنید و رکورد را ذخیره کنید."
+
+#~ msgid "No hierarchy position."
+#~ msgstr "بدون موقعیت سلسله مراتبی."
+
+#~ msgid "Redirect"
+#~ msgstr "تغییر مسیر"
+
+#~ msgid "This employee has no manager or subordinate."
+#~ msgstr "این کارمند هیچ مدیر یا زیردستی ندارد."

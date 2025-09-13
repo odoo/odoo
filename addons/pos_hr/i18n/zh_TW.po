@@ -1,23 +1,24 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* pos_hr
-# 
+#
 # Translators:
 # Wil Odoo, 2025
 # Tony Ng, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-09 20:37+0000\n"
+"POT-Creation-Date: 2025-09-11 13:59+0000\n"
 "PO-Revision-Date: 2025-05-06 12:03+0000\n"
 "Last-Translator: Tony Ng, 2025\n"
-"Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
+"Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/"
+"zh_TW/)\n"
+"Language: zh_TW\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: zh_TW\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: pos_hr
@@ -62,9 +63,9 @@ msgstr "基本權限"
 #. module: pos_hr
 #: model_terms:ir.ui.view,arch_db:pos_hr.view_pos_daily_sales_reports_wizard
 msgid ""
-"Can't generate a report per employee! as selected session has no orders "
-"associated with any employee."
-msgstr "無法按員工生成報表！因為所選時段沒有與任何員工關聯的訂單。"
+"Cannot generate report per employee: only one employee logged in during this "
+"session."
+msgstr ""
 
 #. module: pos_hr
 #. odoo-javascript
@@ -90,12 +91,6 @@ msgstr "收銀員 %s"
 #: model:ir.model.fields,field_description:pos_hr.field_pos_order__cashier
 msgid "Cashier name"
 msgstr "收銀員姓名"
-
-#. module: pos_hr
-#. odoo-javascript
-#: code:addons/pos_hr/static/src/app/utils/select_cashier_mixin.js:0
-msgid "Change Cashier"
-msgstr "更換收銀員"
 
 #. module: pos_hr
 #. odoo-python
@@ -222,6 +217,7 @@ msgstr "如果為空，則只有Odoo 用戶在PoS中擁有延伸權限"
 #. module: pos_hr
 #. odoo-javascript
 #: code:addons/pos_hr/static/src/app/components/navbar/navbar.xml:0
+#: code:addons/pos_hr/static/src/app/components/popups/cashier_selection_popup/cashier_selection_popup.xml:0
 msgid "Lock"
 msgstr "鎖定"
 
@@ -280,12 +276,6 @@ msgid "Payments"
 msgstr "付款"
 
 #. module: pos_hr
-#. odoo-javascript
-#: code:addons/pos_hr/static/src/app/components/popups/closing_popup/closing_popup.js:0
-msgid "Payments in %(paymentMethod)s"
-msgstr "使用 %(paymentMethod)s 的付款"
-
-#. module: pos_hr
 #: model:ir.model,name:pos_hr.model_pos_config
 msgid "Point of Sale Configuration"
 msgstr "POS設定"
@@ -319,6 +309,12 @@ msgstr "銷售點操作時段"
 #: model:ir.model,name:pos_hr.model_product_product
 msgid "Product Variant"
 msgstr "產品款式"
+
+#. module: pos_hr
+#. odoo-javascript
+#: code:addons/pos_hr/static/src/app/components/popups/cashier_selection_popup/cashier_selection_popup.xml:0
+msgid "Select Cashier"
+msgstr ""
 
 #. module: pos_hr
 #: model_terms:ir.ui.view,arch_db:pos_hr.pos_config_form_view_inherit
@@ -378,3 +374,14 @@ msgid ""
 "You cannot delete an employee that may be used in an active PoS session, "
 "close the session(s) first: \n"
 msgstr "您不能刪除可能在開啟PoS營業點中使用的員工，請先關閉POS營業點：\n"
+
+#~ msgid ""
+#~ "Can't generate a report per employee! as selected session has no orders "
+#~ "associated with any employee."
+#~ msgstr "無法按員工生成報表！因為所選時段沒有與任何員工關聯的訂單。"
+
+#~ msgid "Change Cashier"
+#~ msgstr "更換收銀員"
+
+#~ msgid "Payments in %(paymentMethod)s"
+#~ msgstr "使用 %(paymentMethod)s 的付款"

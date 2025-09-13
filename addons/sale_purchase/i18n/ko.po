@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-20 09:02+0000\n"
+"POT-Creation-Date: 2025-09-11 14:01+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
 "Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
@@ -30,28 +30,17 @@ msgstr ""
 "            수동 작업이 필요할 수 있습니다."
 
 #. module: sale_purchase
-#: model_terms:ir.ui.view,arch_db:sale_purchase.product_template_form_view_inherit
-msgid "<span class=\"fa fa-lg fa-building-o fa-fw\" title=\"Service to Purchase\"/>"
-msgstr ""
-
-#. module: sale_purchase
-#: model_terms:ir.ui.view,arch_db:sale_purchase.sale_order_inherited_form_purchase
-msgid "<span class=\"o_stat_text\">Purchase</span>"
-msgstr ""
-
-#. module: sale_purchase
 #: model_terms:ir.ui.view,arch_db:sale_purchase.purchase_order_inherited_form_sale
 msgid "<span class=\"o_stat_text\">Sale</span>"
 msgstr ""
 
 #. module: sale_purchase
-#: model_terms:ir.ui.view,arch_db:sale_purchase.sale_order_cancel_view_form
-msgid ""
-"<span id=\"display_invoice_alert\" position=\"after\">\n"
-"                <span id=\"display_purchase_orders_alert\" attrs=\"{'invisible': [('display_purchase_orders_alert', '=', False)]}\">\n"
-"                    There are active purchase orders linked to this sale order that are not cancelled automatically! <br/>\n"
-"                </span>\n"
-"            </span>"
+#: model:ir.model.fields,field_description:sale_purchase.field_product_template__display_name
+#: model:ir.model.fields,field_description:sale_purchase.field_purchase_order__display_name
+#: model:ir.model.fields,field_description:sale_purchase.field_purchase_order_line__display_name
+#: model:ir.model.fields,field_description:sale_purchase.field_sale_order__display_name
+#: model:ir.model.fields,field_description:sale_purchase.field_sale_order_line__display_name
+msgid "Display Name"
 msgstr ""
 
 #. module: sale_purchase
@@ -78,10 +67,24 @@ msgid "Generated Purchase Lines"
 msgstr "생성된 구매 명세"
 
 #. module: sale_purchase
+#: model:ir.model.fields,field_description:sale_purchase.field_product_template__id
+#: model:ir.model.fields,field_description:sale_purchase.field_purchase_order__id
+#: model:ir.model.fields,field_description:sale_purchase.field_purchase_order_line__id
+#: model:ir.model.fields,field_description:sale_purchase.field_sale_order__id
+#: model:ir.model.fields,field_description:sale_purchase.field_sale_order_line__id
+msgid "ID"
+msgstr ""
+
+#. module: sale_purchase
 #: model:ir.model.fields,help:sale_purchase.field_product_product__service_to_purchase
 #: model:ir.model.fields,help:sale_purchase.field_product_template__service_to_purchase
-msgid "If ticked, each time you sell this product through a SO, a RfQ is automatically created to buy the product. Tip: don't forget to set a vendor on the product."
-msgstr "체크 표시를 하면 SO를 통해 이 제품을 판매할 때마다 RfQ가 자동으로 생성되어 제품을 구매합니다. 팁 : 제품에 대한 공급업체를 설정하는 것을 잊지 마세요."
+msgid ""
+"If ticked, each time you sell this product through a SO, a RfQ is "
+"automatically created to buy the product. Tip: don't forget to set a vendor "
+"on the product."
+msgstr ""
+"체크 표시를 하면 SO를 통해 이 제품을 판매할 때마다 RfQ가 자동으로 생성되어 제"
+"품을 구매합니다. 팁 : 제품에 대한 공급업체를 설정하는 것을 잊지 마세요."
 
 #. module: sale_purchase
 #: model_terms:ir.ui.view,arch_db:sale_purchase.exception_purchase_on_sale_quantity_decreased
@@ -104,6 +107,7 @@ msgid "Number of generated purchase items"
 msgstr "생성된 구매 항목 수"
 
 #. module: sale_purchase
+#. odoo-python
 #: code:addons/sale_purchase/models/sale_order_line.py:0
 msgid "Ordered quantity decreased!"
 msgstr "주문한 수량이 감소했습니다!"
@@ -114,8 +118,11 @@ msgid "Origin Sale Item"
 msgstr "원래 판매 항목"
 
 #. module: sale_purchase
+#. odoo-python
 #: code:addons/sale_purchase/models/product_template.py:0
-msgid "Please define the vendor from whom you would like to purchase this service automatically."
+msgid ""
+"Please define the vendor from whom you would like to purchase this service "
+"automatically."
 msgstr ""
 
 #. module: sale_purchase
@@ -124,9 +131,15 @@ msgid "Product"
 msgstr "품목"
 
 #. module: sale_purchase
+#. odoo-python
 #: code:addons/sale_purchase/models/product_template.py:0
 msgid "Product that is not a service can not create RFQ."
 msgstr "서비스가 아닌 상품은 RFQ를 생성할 수 없습니다."
+
+#. module: sale_purchase
+#: model_terms:ir.ui.view,arch_db:sale_purchase.sale_order_inherited_form_purchase
+msgid "Purchase"
+msgstr ""
 
 #. module: sale_purchase
 #: model:ir.model,name:sale_purchase.model_purchase_order
@@ -134,24 +147,24 @@ msgid "Purchase Order"
 msgstr "발주서"
 
 #. module: sale_purchase
-#: model:ir.model.fields,field_description:sale_purchase.field_sale_order_cancel__display_purchase_orders_alert
-msgid "Purchase Order Alert"
-msgstr ""
-
-#. module: sale_purchase
 #: model:ir.model,name:sale_purchase.model_purchase_order_line
 msgid "Purchase Order Line"
 msgstr "발주서 내역"
 
 #. module: sale_purchase
+#. odoo-python
 #: code:addons/sale_purchase/models/sale_order.py:0
 msgid "Purchase Order generated from %s"
 msgstr ""
 
 #. module: sale_purchase
 #: model:ir.model.fields,help:sale_purchase.field_sale_order_line__purchase_line_ids
-msgid "Purchase line generated by this Sales item on order confirmation, or when the quantity was increased."
-msgstr "주문 확인 시 또는 수량이 증가된 시점에 이 판매 품목에서 생성된 구매 명세입니다."
+msgid ""
+"Purchase line generated by this Sales item on order confirmation, or when "
+"the quantity was increased."
+msgstr ""
+"주문 확인 시 또는 수량이 증가된 시점에 이 판매 품목에서 생성된 구매 명세입니"
+"다."
 
 #. module: sale_purchase
 #: model_terms:ir.ui.view,arch_db:sale_purchase.product_template_form_view_inherit
@@ -169,16 +182,12 @@ msgid "Sales Order"
 msgstr "판매 주문"
 
 #. module: sale_purchase
-#: model:ir.model,name:sale_purchase.model_sale_order_cancel
-msgid "Sales Order Cancel"
-msgstr "판매 주문 취소"
-
-#. module: sale_purchase
 #: model:ir.model,name:sale_purchase.model_sale_order_line
 msgid "Sales Order Line"
 msgstr "판매 주문 내역"
 
 #. module: sale_purchase
+#. odoo-python
 #: code:addons/sale_purchase/models/purchase_order.py:0
 msgid "Sources Sale Orders %s"
 msgstr ""
@@ -190,14 +199,29 @@ msgid "Subcontract Service"
 msgstr ""
 
 #. module: sale_purchase
-#: code:addons/sale_purchase/models/sale_order_line.py:0
-msgid "There is no vendor associated to the product %s. Please define a vendor for this product."
-msgstr "%s 상품과 관련된 공급업체가 없습니다. 이 상품에 대한 공급업체를 정의하십시오."
+#: model:ir.model.fields,field_description:sale_purchase.field_purchase_order__has_sale_order
+msgid ""
+"Technical field for whether the purchase order has associated sale orders"
+msgstr ""
 
 #. module: sale_purchase
+#. odoo-python
 #: code:addons/sale_purchase/models/sale_order_line.py:0
-msgid "You are decreasing the ordered quantity! Do not forget to manually update the purchase order if needed."
-msgstr "주문 수량을 줄입니다! 필요한 경우 구매 주문을 수동으로 업데이트하는 것을 잊지 마십시오."
+msgid ""
+"There is no vendor associated to the product %s. Please define a vendor for "
+"this product."
+msgstr ""
+"%s 상품과 관련된 공급업체가 없습니다. 이 상품에 대한 공급업체를 정의하십시오."
+
+#. module: sale_purchase
+#. odoo-python
+#: code:addons/sale_purchase/models/sale_order_line.py:0
+msgid ""
+"You are decreasing the ordered quantity! Do not forget to manually update "
+"the purchase order if needed."
+msgstr ""
+"주문 수량을 줄입니다! 필요한 경우 구매 주문을 수동으로 업데이트하는 것을 잊"
+"지 마십시오."
 
 #. module: sale_purchase
 #: model_terms:ir.ui.view,arch_db:sale_purchase.exception_purchase_on_sale_cancellation
@@ -216,3 +240,6 @@ msgstr "of"
 #: model_terms:ir.ui.view,arch_db:sale_purchase.exception_purchase_on_sale_quantity_decreased
 msgid "ordered instead of"
 msgstr "다음 대신 주문됨"
+
+#~ msgid "Sales Order Cancel"
+#~ msgstr "판매 주문 취소"

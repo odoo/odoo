@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-23 08:02+0000\n"
+"POT-Creation-Date: 2025-09-11 13:56+0000\n"
 "PO-Revision-Date: 2022-09-22 05:46+0000\n"
 "Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Spanish (https://app.transifex.com/odoo/teams/41243/es/)\n"
@@ -17,7 +17,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? "
+"1 : 2;\n"
 
 #. module: hr_gamification
 #: model_terms:ir.actions.act_window,help:hr_gamification.goals_menu_groupby_action2
@@ -26,54 +27,60 @@ msgid ""
 "                    Goals can be created automatically by using challenges."
 msgstr ""
 "Una meta es definida por un usuario y una definición de meta.\n"
-"                    Las metas pueden ser creadas automáticamente usando desafíos."
+"                    Las metas pueden ser creadas automáticamente usando "
+"desafíos."
 
 #. module: hr_gamification
 #: model:ir.model.fields,help:hr_gamification.field_hr_employee__badge_ids
-#: model:ir.model.fields,help:hr_gamification.field_hr_employee_base__badge_ids
-#: model:ir.model.fields,help:hr_gamification.field_hr_employee_public__badge_ids
-msgid "All employee badges, linked to the employee either directly or through the user"
-msgstr "Todas las insignias del empleado, vinculadas a él ya sea directamente o a través del usuario"
+msgid ""
+"All employee badges, linked to the employee either directly or through the "
+"user"
+msgstr ""
+"Todas las insignias del empleado, vinculadas a él ya sea directamente o a "
+"través del usuario"
+
+#. module: hr_gamification
+#: model_terms:ir.ui.view,arch_db:hr_gamification.view_current_badge_form
+msgid "Are you sure you want to delete this granted badge?"
+msgstr ""
 
 #. module: hr_gamification
 #: model_terms:ir.actions.act_window,help:hr_gamification.challenge_list_action2
 msgid ""
 "Assign a list of goals to chosen users to evaluate them.\n"
-"                    The challenge can use a period (weekly, monthly...) for automatic creation of goals.\n"
-"                    The goals are created for the specified users or member of the group."
+"                    The challenge can use a period (weekly, monthly...) for "
+"automatic creation of goals.\n"
+"                    The goals are created for the specified users or member "
+"of the group."
 msgstr ""
 "Asigna una lista de metas a los usuarios elegidos para evaluarlos.\n"
-"                    El desafío puede usar un periodo (semanal, mensual...) para la creación automática de metas.\n"
-"                    Las metas son creadas para los usuarios específicos o miembros de un grupo."
+"                    El desafío puede usar un periodo (semanal, mensual...) "
+"para la creación automática de metas.\n"
+"                    Las metas son creadas para los usuarios específicos o "
+"miembros de un grupo."
+
+#. module: hr_gamification
+#: model:ir.model.fields,field_description:hr_gamification.field_hr_employee_public__badge_ids
+msgid "Badge"
+msgstr ""
+
+#. module: hr_gamification
+#: model_terms:ir.ui.view,arch_db:hr_gamification.view_current_badge_form
+msgid "Badge Name"
+msgstr ""
 
 #. module: hr_gamification
 #: model:ir.model.fields,field_description:hr_gamification.field_res_users__badge_ids
 #: model:ir.ui.menu,name:hr_gamification.gamification_badge_menu_hr
+#: model_terms:ir.ui.view,arch_db:hr_gamification.hr_employee_public_view_form
+#: model_terms:ir.ui.view,arch_db:hr_gamification.hr_hr_employee_view_form
 msgid "Badges"
 msgstr "Insignias"
 
 #. module: hr_gamification
-#: model_terms:ir.ui.view,arch_db:hr_gamification.hr_employee_public_view_form
-#: model_terms:ir.ui.view,arch_db:hr_gamification.hr_hr_employee_view_form
-msgid "Badges are rewards of good work. Give them to people you believe deserve it."
-msgstr "Las insignias son premios al buen trabajo. Delas a aquellas personas que cree que las merecen."
-
-#. module: hr_gamification
 #: model:ir.model.fields,help:hr_gamification.field_hr_employee__direct_badge_ids
-#: model:ir.model.fields,help:hr_gamification.field_hr_employee_base__direct_badge_ids
-#: model:ir.model.fields,help:hr_gamification.field_hr_employee_public__direct_badge_ids
 msgid "Badges directly linked to the employee"
 msgstr "Insignias directamente relacionadas con el empleado"
-
-#. module: hr_gamification
-#: model:ir.model,name:hr_gamification.model_hr_employee_base
-msgid "Basic Employee"
-msgstr "Empleado Básico"
-
-#. module: hr_gamification
-#: model_terms:ir.ui.view,arch_db:hr_gamification.view_badge_wizard_reward
-msgid "Cancel"
-msgstr "Cancelar"
 
 #. module: hr_gamification
 #: model:ir.actions.act_window,name:hr_gamification.challenge_list_action2
@@ -93,18 +100,44 @@ msgid "Create a new goal"
 msgstr "Crear una nueva meta"
 
 #. module: hr_gamification
+#: model_terms:ir.ui.view,arch_db:hr_gamification.view_current_badge_form
+msgid "Delete"
+msgstr ""
+
+#. module: hr_gamification
 #: model_terms:ir.ui.view,arch_db:hr_gamification.view_badge_wizard_reward
+#: model_terms:ir.ui.view,arch_db:hr_gamification.view_current_badge_form
 msgid "Describe what they did and why it matters (will be public)"
 msgstr "Describa qué hizo y por qué es importante (será público)"
 
 #. module: hr_gamification
+#: model_terms:ir.ui.view,arch_db:hr_gamification.view_current_badge_form
+msgid "Description"
+msgstr ""
+
+#. module: hr_gamification
 #: model:ir.model.fields,field_description:hr_gamification.field_hr_employee__direct_badge_ids
-#: model:ir.model.fields,field_description:hr_gamification.field_hr_employee_base__direct_badge_ids
-#: model:ir.model.fields,field_description:hr_gamification.field_hr_employee_public__direct_badge_ids
 msgid "Direct Badge"
 msgstr "Insignia Directa"
 
 #. module: hr_gamification
+#: model_terms:ir.ui.view,arch_db:hr_gamification.view_badge_wizard_reward
+#: model_terms:ir.ui.view,arch_db:hr_gamification.view_current_badge_form
+msgid "Discard"
+msgstr ""
+
+#. module: hr_gamification
+#: model:ir.model.fields,field_description:hr_gamification.field_gamification_badge__display_name
+#: model:ir.model.fields,field_description:hr_gamification.field_gamification_badge_user__display_name
+#: model:ir.model.fields,field_description:hr_gamification.field_gamification_badge_user_wizard__display_name
+#: model:ir.model.fields,field_description:hr_gamification.field_hr_employee__display_name
+#: model:ir.model.fields,field_description:hr_gamification.field_hr_employee_public__display_name
+#: model:ir.model.fields,field_description:hr_gamification.field_res_users__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: hr_gamification
+#: model:ir.model,name:hr_gamification.model_hr_employee
 #: model:ir.model.fields,field_description:hr_gamification.field_gamification_badge_user__employee_id
 #: model:ir.model.fields,field_description:hr_gamification.field_gamification_badge_user_wizard__employee_id
 msgid "Employee"
@@ -112,15 +145,11 @@ msgstr "Empleado"
 
 #. module: hr_gamification
 #: model:ir.model.fields,field_description:hr_gamification.field_hr_employee__badge_ids
-#: model:ir.model.fields,field_description:hr_gamification.field_hr_employee_base__badge_ids
-#: model:ir.model.fields,field_description:hr_gamification.field_hr_employee_public__badge_ids
 msgid "Employee Badges"
 msgstr "Insignias del empleado"
 
 #. module: hr_gamification
 #: model:ir.model.fields,field_description:hr_gamification.field_hr_employee__goal_ids
-#: model:ir.model.fields,field_description:hr_gamification.field_hr_employee_base__goal_ids
-#: model:ir.model.fields,field_description:hr_gamification.field_hr_employee_public__goal_ids
 msgid "Employee HR Goals"
 msgstr "Objetivos de RRHH del empleado"
 
@@ -157,10 +186,10 @@ msgid "Grant a Badge"
 msgstr "Otorgar una insignia"
 
 #. module: hr_gamification
-#: model_terms:ir.ui.view,arch_db:hr_gamification.hr_employee_public_view_form
-#: model_terms:ir.ui.view,arch_db:hr_gamification.hr_hr_employee_view_form
-msgid "Grant this employee his first badge"
-msgstr "Otorga a este empleado su primera insignia"
+#: model:ir.actions.act_window,name:hr_gamification.action_reward_wizard
+#: model_terms:ir.ui.view,arch_db:hr_gamification.view_badge_wizard_reward
+msgid "Grant a badge"
+msgstr ""
 
 #. module: hr_gamification
 #: model_terms:ir.ui.view,arch_db:hr_gamification.hr_badge_form_view
@@ -173,28 +202,41 @@ msgid "Granted Employees Count"
 msgstr "Número de empleados a los que se ha concedido"
 
 #. module: hr_gamification
+#: model_terms:ir.ui.view,arch_db:hr_gamification.view_current_badge_form
+msgid "Granted by"
+msgstr ""
+
+#. module: hr_gamification
 #: model:ir.model.fields,field_description:hr_gamification.field_hr_employee__has_badges
-#: model:ir.model.fields,field_description:hr_gamification.field_hr_employee_base__has_badges
 #: model:ir.model.fields,field_description:hr_gamification.field_hr_employee_public__has_badges
 msgid "Has Badges"
 msgstr "Tiene insignias"
 
 #. module: hr_gamification
-#: model_terms:ir.ui.view,arch_db:hr_gamification.hr_employee_public_view_form
-#: model_terms:ir.ui.view,arch_db:hr_gamification.hr_hr_employee_view_form
-msgid "Received Badges"
-msgstr "Insignias recibidas"
+#: model:ir.model.fields,field_description:hr_gamification.field_gamification_badge_user__has_edit_delete_access
+msgid "Has Edit Delete Access"
+msgstr ""
 
 #. module: hr_gamification
-#: model:ir.model.fields,help:hr_gamification.field_gamification_badge_user_wizard__user_id
-msgid "Related user name for the resource to manage its access."
-msgstr "Usuario relacionado con el recurso para gestionar su acceso."
+#: model:ir.model.fields,field_description:hr_gamification.field_gamification_badge__id
+#: model:ir.model.fields,field_description:hr_gamification.field_gamification_badge_user__id
+#: model:ir.model.fields,field_description:hr_gamification.field_gamification_badge_user_wizard__id
+#: model:ir.model.fields,field_description:hr_gamification.field_hr_employee__id
+#: model:ir.model.fields,field_description:hr_gamification.field_hr_employee_public__id
+#: model:ir.model.fields,field_description:hr_gamification.field_res_users__id
+msgid "ID"
+msgstr ""
 
 #. module: hr_gamification
-#: model:ir.actions.act_window,name:hr_gamification.action_reward_wizard
-#: model_terms:ir.ui.view,arch_db:hr_gamification.view_badge_wizard_reward
-msgid "Reward Employee"
-msgstr "Recompensar al empleado"
+#: model:ir.model,name:hr_gamification.model_hr_employee_public
+msgid "Public Employee"
+msgstr ""
+
+#. module: hr_gamification
+#. odoo-python
+#: code:addons/hr_gamification/models/gamification.py:0
+msgid "Received Badge"
+msgstr ""
 
 #. module: hr_gamification
 #: model_terms:ir.ui.view,arch_db:hr_gamification.view_badge_wizard_reward
@@ -202,9 +244,23 @@ msgid "Reward Employee with"
 msgstr "Recompensar al empleado con"
 
 #. module: hr_gamification
+#: model_terms:ir.ui.view,arch_db:hr_gamification.view_current_badge_form
+msgid "Save"
+msgstr ""
+
+#. module: hr_gamification
+#. odoo-python
 #: code:addons/hr_gamification/models/gamification.py:0
 msgid "The selected employee does not correspond to the selected user."
 msgstr "El empleado seleccionado no corresponde con el usuario seleccionado."
+
+#. module: hr_gamification
+#: model_terms:ir.ui.view,arch_db:hr_gamification.hr_employee_public_view_form
+#: model_terms:ir.ui.view,arch_db:hr_gamification.hr_hr_employee_view_form
+msgid ""
+"There are no badges for this employee.<br/>\n"
+"                                It's time to allow the first one."
+msgstr ""
 
 #. module: hr_gamification
 #: model:ir.model,name:hr_gamification.model_res_users
@@ -213,22 +269,54 @@ msgid "User"
 msgstr "Usuario"
 
 #. module: hr_gamification
+#. odoo-python
+#: code:addons/hr_gamification/models/gamification.py:0
+msgid "View Your Badge"
+msgstr ""
+
+#. module: hr_gamification
 #: model_terms:ir.ui.view,arch_db:hr_gamification.view_badge_wizard_reward
 msgid "What are you thankful for?"
 msgstr "¿De qué está agradecido?"
 
 #. module: hr_gamification
+#. odoo-python
 #: code:addons/hr_gamification/wizard/gamification_badge_user_wizard.py:0
 msgid "You can not send a badge to yourself."
 msgstr "No puede enviarse una insignia a si mismo."
 
 #. module: hr_gamification
-#: code:addons/hr_gamification/wizard/gamification_badge_user_wizard.py:0
-msgid "You can send badges only to employees linked to a user."
-msgstr "Sólo puede enviar insignias a empleados enlazados con un usuario"
+#: model_terms:ir.ui.view,arch_db:hr_gamification.view_current_badge_form
+msgid "on"
+msgstr ""
 
-#. module: hr_gamification
-#: model_terms:ir.ui.view,arch_db:hr_gamification.hr_employee_public_view_form
-#: model_terms:ir.ui.view,arch_db:hr_gamification.hr_hr_employee_view_form
-msgid "to reward this employee for a good action"
-msgstr "para recompensar a este empleado por una buena acción"
+#~ msgid ""
+#~ "Badges are rewards of good work. Give them to people you believe deserve "
+#~ "it."
+#~ msgstr ""
+#~ "Las insignias son premios al buen trabajo. Delas a aquellas personas que "
+#~ "cree que las merecen."
+
+#~ msgid "Basic Employee"
+#~ msgstr "Empleado Básico"
+
+#~ msgid "Cancel"
+#~ msgstr "Cancelar"
+
+#~ msgid "Grant this employee his first badge"
+#~ msgstr "Otorga a este empleado su primera insignia"
+
+#~ msgid "Received Badges"
+#~ msgstr "Insignias recibidas"
+
+#~ msgid "Related user name for the resource to manage its access."
+#~ msgstr "Usuario relacionado con el recurso para gestionar su acceso."
+
+#~ msgid "Reward Employee"
+#~ msgstr "Recompensar al empleado"
+
+#~ msgid "You can send badges only to employees linked to a user."
+#~ msgstr "Sólo puede enviar insignias a empleados enlazados con un usuario"
+
+#~ msgid "to reward this employee for a good action"
+#~ msgstr "para recompensar a este empleado por una buena acción"

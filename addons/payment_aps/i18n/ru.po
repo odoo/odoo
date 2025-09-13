@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:56+0000\n"
+"POT-Creation-Date: 2025-09-11 13:58+0000\n"
 "PO-Revision-Date: 2024-01-30 15:14+0400\n"
 "Last-Translator: \n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
@@ -15,7 +15,9 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || "
+"(n%100>=11 && n%100<=14)? 2 : 3);\n"
 
 #. module: payment_aps
 #: model:ir.model.fields,field_description:payment_aps.field_payment_provider__aps_access_code
@@ -53,15 +55,21 @@ msgid "Code"
 msgstr "Код"
 
 #. module: payment_aps
+#: model:ir.model.fields,field_description:payment_aps.field_payment_provider__display_name
+#: model:ir.model.fields,field_description:payment_aps.field_payment_transaction__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: payment_aps
+#: model:ir.model.fields,field_description:payment_aps.field_payment_provider__id
+#: model:ir.model.fields,field_description:payment_aps.field_payment_transaction__id
+msgid "ID"
+msgstr ""
+
+#. module: payment_aps
 #: model_terms:ir.ui.view,arch_db:payment_aps.payment_provider_form
 msgid "Merchant Identifier"
 msgstr "Идентификатор торговца"
-
-#. module: payment_aps
-#. odoo-python
-#: code:addons/payment_aps/models/payment_transaction.py:0
-msgid "No transaction found matching reference %s."
-msgstr "Не найдено ни одной транзакции, соответствующей ссылке %s."
 
 #. module: payment_aps
 #: model:ir.model,name:payment_aps.model_payment_provider
@@ -78,12 +86,6 @@ msgstr "платеж"
 #: code:addons/payment_aps/models/payment_transaction.py:0
 msgid "Received data with missing payment state."
 msgstr "Получены данные с отсутствующим состоянием платежа."
-
-#. module: payment_aps
-#. odoo-python
-#: code:addons/payment_aps/models/payment_transaction.py:0
-msgid "Received data with missing reference %(ref)s."
-msgstr "Получены данные с отсутствующей ссылкой %(ref)s."
 
 #. module: payment_aps
 #. odoo-python
@@ -115,3 +117,9 @@ msgstr "Код торгового счета для использования �
 #: model:ir.model.fields,help:payment_aps.field_payment_provider__code
 msgid "The technical code of this payment provider."
 msgstr "Технический код данного провайдера платежей."
+
+#~ msgid "No transaction found matching reference %s."
+#~ msgstr "Не найдено ни одной транзакции, соответствующей ссылке %s."
+
+#~ msgid "Received data with missing reference %(ref)s."
+#~ msgstr "Получены данные с отсутствующей ссылкой %(ref)s."
