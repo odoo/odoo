@@ -239,9 +239,9 @@ $o-btns-bs-override: map-merge((
         hover-border: darken($o-brand-primary, 20%),
         hover-color: $o-white,
 
-        active-background: darken($o-brand-primary, 20%),
-        active-border: darken($o-brand-primary, 20%),
-        active-color: $o-white,
+        active-background: mix($o-brand-primary, $o-white, 10%),
+        active-border: $o-brand-primary,
+        active-color: darken($o-brand-primary, 20%),
     ),
     "secondary": (
         background: $o-gray-300,
