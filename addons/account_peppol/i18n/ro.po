@@ -1,24 +1,25 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* account_peppol
-# 
+#
 # Translators:
 # Wil Odoo, 2025
 # Larisa_nexterp, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-25 18:39+0000\n"
+"POT-Creation-Date: 2025-09-12 01:50+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Larisa_nexterp, 2025\n"
 "Language-Team: Romanian (https://app.transifex.com/odoo/teams/41243/ro/)\n"
+"Language: ro\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ro\n"
-"Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?2:1));\n"
+"Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?"
+"2:1));\n"
 
 #. module: account_peppol
 #. odoo-python
@@ -60,21 +61,28 @@ msgstr "%s a solicitat primirea facturilor electronice prin Peppol."
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
 msgid ""
 "<br/>\n"
-"                                In Belgium, electronic invoicing is <u>mandatory as of January 2026</u> - don't wait to register."
+"                                In Belgium, electronic invoicing is "
+"<u>mandatory as of January 2026</u> - don't wait to register."
 msgstr ""
 "<br/>\n"
-"                                În Belgia, facturarea electronică este <u>obligatorie începând cu ianuarie 2026</u> - nu așteptați să vă înregistrați."
+"                                În Belgia, facturarea electronică este "
+"<u>obligatorie începând cu ianuarie 2026</u> - nu așteptați să vă "
+"înregistrați."
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.account_peppol_view_move_form
 msgid ""
-"<span class=\"mx-1\" invisible=\"'demo_' not in peppol_message_uuid\"> (Demo)</span>\n"
-"                    <span class=\"text-muted mx-3\" invisible=\"peppol_move_state != 'to_send'\">\n"
+"<span class=\"mx-1\" invisible=\"'demo_' not in peppol_message_uuid\"> "
+"(Demo)</span>\n"
+"                    <span class=\"text-muted mx-3\" "
+"invisible=\"peppol_move_state != 'to_send'\">\n"
 "                        The invoice will be sent automatically via Peppol\n"
 "                    </span>"
 msgstr ""
-"<span class=\"mx-1\" invisible=\"'demo_' not in peppol_message_uuid\"> (Demo)</span>\n"
-"                    <span class=\"text-muted mx-3\" invisible=\"peppol_move_state != 'to_send'\">\n"
+"<span class=\"mx-1\" invisible=\"'demo_' not in peppol_message_uuid\"> "
+"(Demo)</span>\n"
+"                    <span class=\"text-muted mx-3\" "
+"invisible=\"peppol_move_state != 'to_send'\">\n"
 "                        Factura va fi trimisă automat prin Peppol\n"
 "                    </span>"
 
@@ -82,11 +90,11 @@ msgstr ""
 #. odoo-python
 #: code:addons/account_peppol/models/account_edi_proxy_user.py:0
 msgid ""
-"A participant with these details has already been registered on the network."
-" If you have previously registered to a Peppol service, please deregister."
+"A participant with these details has already been registered on the network. "
+"If you have previously registered to a Peppol service, please deregister."
 msgstr ""
-"Un participant cu aceste detalii a fost deja înregistrat în rețea. Dacă "
-"v-ați înregistrat anterior la un serviciu Peppol, vă rugăm să vă dezabonați."
+"Un participant cu aceste detalii a fost deja înregistrat în rețea. Dacă v-"
+"ați înregistrat anterior la un serviciu Peppol, vă rugăm să vă dezabonați."
 
 #. module: account_peppol
 #. odoo-python
@@ -220,8 +228,7 @@ msgstr "Anulează PEPPOL"
 #. odoo-python
 #: code:addons/account_peppol/models/account_move.py:0
 msgid "Cannot cancel an entry that has already been sent to PEPPOL"
-msgstr ""
-"Nu se poate anula o înregistrare care a fost deja trimisă către PEPPOL"
+msgstr "Nu se poate anula o înregistrare care a fost deja trimisă către PEPPOL"
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__res_partner__peppol_verification_state__not_valid_format
@@ -249,10 +256,13 @@ msgstr "Verificați partenerii"
 #: model:ir.model.fields,help:account_peppol.field_res_users__peppol_eas
 msgid ""
 "Code used to identify the Endpoint for BIS Billing 3.0 and its derivatives.\n"
-"             List available at https://docs.peppol.eu/poacc/billing/3.0/codelist/eas/"
+"             List available at https://docs.peppol.eu/poacc/billing/3.0/"
+"codelist/eas/"
 msgstr ""
-"Cod utilizat pentru a identifica punctul final pentru BIS Billing 3.0 și derivatele acestuia.\n"
-"             Lista disponibilă la https://docs.peppol.eu/poacc/billing/3.0/codelist/eas/"
+"Cod utilizat pentru a identifica punctul final pentru BIS Billing 3.0 și "
+"derivatele acestuia.\n"
+"             Lista disponibilă la https://docs.peppol.eu/poacc/billing/3.0/"
+"codelist/eas/"
 
 #. module: account_peppol
 #: model:ir.model,name:account_peppol.model_res_company
@@ -480,8 +490,7 @@ msgstr ""
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/controllers/portal.py:0
-msgid ""
-"If you want to be invoiced by Peppol, your configuration must be valid."
+msgid "If you want to be invoiced by Peppol, your configuration must be valid."
 msgstr ""
 "Dacă doriți să fiți facturat prin Peppol, configurația dvs. trebuie să fie "
 "validă."
@@ -609,8 +618,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/components/peppol_info/peppol_info.xml:0
 msgid ""
-"PEPPOL is the secure standard for e-invoices used in EU and across the "
-"world."
+"PEPPOL is the secure standard for e-invoices used in EU and across the world."
 msgstr ""
 "PEPPOL este standardul sigur pentru facturi electronice folosit în UE și în "
 "întreaga lume."
@@ -762,7 +770,8 @@ msgid ""
 "For example: +32123456789, where +32 is the country code.\n"
 "Currently, only European countries are supported."
 msgstr ""
-"Vă rugăm să introduceți numărul de telefon mobil în format internațional corect.\n"
+"Vă rugăm să introduceți numărul de telefon mobil în format internațional "
+"corect.\n"
 "De exemplu: +32123456789, unde +32 este codul de țară.\n"
 "În prezent, sunt acceptate doar țările europene."
 
@@ -798,8 +807,12 @@ msgstr "E-mail de contact principal"
 #: model:ir.model.fields,help:account_peppol.field_peppol_registration__contact_email
 #: model:ir.model.fields,help:account_peppol.field_res_company__account_peppol_contact_email
 #: model:ir.model.fields,help:account_peppol.field_res_config_settings__account_peppol_contact_email
-msgid "Primary contact email for Peppol-related communication"
-msgstr "E-mail de contact principal pentru comunicarea legată de Peppol"
+msgid ""
+"Primary contact email for Peppol connection related communications and "
+"notifications.\n"
+"In particular, this email is used by Odoo to reconnect your Peppol account "
+"in case of database change."
+msgstr ""
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_edi_proxy_client_user__proxy_type
@@ -897,10 +910,13 @@ msgstr "Test"
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
 msgid ""
 "Test mode allows sending e-invoices through the test Peppol network.\n"
-"                                    By clicking the button below I accept that Odoo may process my e-invoices."
+"                                    By clicking the button below I accept "
+"that Odoo may process my e-invoices."
 msgstr ""
-"Modul de testare permite trimiterea facturilor electronice prin rețeaua de test Peppol.\n"
-"                                    Făcând clic pe butonul de mai jos, accept că Odoo poate procesa facturile mele electronice."
+"Modul de testare permite trimiterea facturilor electronice prin rețeaua de "
+"test Peppol.\n"
+"                                    Făcând clic pe butonul de mai jos, "
+"accept că Odoo poate procesa facturile mele electronice."
 
 #. module: account_peppol
 #. odoo-python
@@ -993,8 +1009,7 @@ msgstr "Codul de verificare nu este corect"
 #. odoo-python
 #: code:addons/account_peppol/models/res_config_settings.py:0
 msgid ""
-"This feature is deprecated. Contact Odoo support if you need a migration "
-"key."
+"This feature is deprecated. Contact Odoo support if you need a migration key."
 msgstr ""
 "Această funcționalitate este învechită. Contactați suportul Odoo dacă aveți "
 "nevoie de o cheie de migrare."
@@ -1003,6 +1018,13 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
 msgid "This invoice has also been"
 msgstr "Această factură a fost de asemenea"
+
+#. module: account_peppol
+#: model:ir.model.fields,help:account_peppol.field_peppol_registration__phone_number
+#: model:ir.model.fields,help:account_peppol.field_res_company__account_peppol_phone_number
+#: model:ir.model.fields,help:account_peppol.field_res_config_settings__account_peppol_phone_number
+msgid "This number is used for identification purposes only."
+msgstr ""
 
 #. module: account_peppol
 #. odoo-python
@@ -1024,8 +1046,8 @@ msgstr ""
 #: code:addons/account_peppol/models/account_edi_proxy_user.py:0
 msgid "Too many attempts to request an SMS code. Please try again later."
 msgstr ""
-"Prea multe încercări de a solicita un cod SMS. Vă rugăm să încercați din nou"
-" mai târziu."
+"Prea multe încercări de a solicita un cod SMS. Vă rugăm să încercați din nou "
+"mai târziu."
 
 #. module: account_peppol
 #: model:ir.model.fields,help:account_peppol.field_peppol_registration__peppol_endpoint
@@ -1145,11 +1167,14 @@ msgstr "Puteți trimite această factură electronic prin Peppol."
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid ""
-"You registration has been rejected, the reason has been sent to you via email.\n"
-"                            Please contact our support if you need further assistance."
+"You registration has been rejected, the reason has been sent to you via "
+"email.\n"
+"                            Please contact our support if you need further "
+"assistance."
 msgstr ""
 "Înregistrarea dvs. a fost respinsă, motivul v-a fost trimis prin e-mail.\n"
-"                            Vă rugăm să contactați suportul nostru dacă aveți nevoie de asistență suplimentară."
+"                            Vă rugăm să contactați suportul nostru dacă "
+"aveți nevoie de asistență suplimentară."
 
 #. module: account_peppol
 #. odoo-javascript
@@ -1160,13 +1185,6 @@ msgid ""
 msgstr ""
 "Nu veți mai putea trimite sau primi documente Peppol în Odoo. Sunteți sigur "
 "că doriți să continuați?"
-
-#. module: account_peppol
-#: model:ir.model.fields,help:account_peppol.field_peppol_registration__phone_number
-#: model:ir.model.fields,help:account_peppol.field_res_company__account_peppol_phone_number
-#: model:ir.model.fields,help:account_peppol.field_res_config_settings__account_peppol_phone_number
-msgid "You will receive a verification code to this mobile number"
-msgstr "Veți primi un cod de verificare la acest număr de telefon mobil"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
@@ -1249,3 +1267,9 @@ msgstr "pentru a trimite facturi, dar aceasta"
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
 msgid "uses"
 msgstr "folosește"
+
+#~ msgid "Primary contact email for Peppol-related communication"
+#~ msgstr "E-mail de contact principal pentru comunicarea legată de Peppol"
+
+#~ msgid "You will receive a verification code to this mobile number"
+#~ msgstr "Veți primi un cod de verificare la acest număr de telefon mobil"
