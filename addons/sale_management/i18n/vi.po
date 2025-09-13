@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:48+0000\n"
+"POT-Creation-Date: 2025-09-11 14:01+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
 "Last-Translator: Thi Huong Nguyen, 2023\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
@@ -23,29 +23,9 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: sale_management
-#: model:sale.order.template.line,name:sale_management.sale_order_template_line_1
-msgid "4 Person Desk"
-msgstr "Bàn 4 chỗ ngồi"
-
-#. module: sale_management
-#: model_terms:ir.ui.view,arch_db:sale_management.res_config_settings_view_form
-msgid "<span class=\"fa fa-lg fa-building-o p-2\" title=\"Values set here are company-specific.\" groups=\"base.group_multi_company\"/>"
+#: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
+msgid "<span invisible=\"not require_payment\">of</span>"
 msgstr ""
-
-#. module: sale_management
-#: model_terms:ir.ui.view,arch_db:sale_management.report_saleorder_document_inherit_sale_management
-msgid "<span>Options</span>"
-msgstr "<span>Tùy chọn</span>"
-
-#. module: sale_management
-#: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
-msgid "<span>Payment</span>"
-msgstr "<span>Thanh toán</span>"
-
-#. module: sale_management
-#: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
-msgid "<span>Signature</span>"
-msgstr "<span>Chữ ký</span>"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__active
@@ -58,7 +38,6 @@ msgid "Add a note"
 msgstr "Thêm ghi chú"
 
 #. module: sale_management
-#: model_terms:ir.ui.view,arch_db:sale_management.sale_order_form_quote
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
 msgid "Add a product"
 msgstr "Thêm sản phẩm"
@@ -69,19 +48,9 @@ msgid "Add a section"
 msgstr "Thêm phân đoạn"
 
 #. module: sale_management
-#: model_terms:ir.ui.view,arch_db:sale_management.sale_order_portal_content_inherit_sale_management
+#: model_terms:ir.ui.view,arch_db:sale_management.sale_order_portal_optional_product_quantity
 msgid "Add one"
 msgstr "Thêm"
-
-#. module: sale_management
-#: model_terms:ir.ui.view,arch_db:sale_management.sale_order_portal_content_inherit_sale_management
-msgid "Add to cart"
-msgstr "Thêm vào giỏ hàng"
-
-#. module: sale_management
-#: model_terms:ir.ui.view,arch_db:sale_management.sale_order_form_quote
-msgid "Add to order lines"
-msgstr "Thêm vào chi tiết đơn hàng"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_digest_digest__kpi_all_sale_total
@@ -89,17 +58,15 @@ msgid "All Sales"
 msgstr "Tất cả đơn bán hàng"
 
 #. module: sale_management
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__allowed_uom_ids
+msgid "Allowed Uom"
+msgstr ""
+
+#. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_search
 msgid "Archived"
 msgstr "Đã lưu trữ"
-
-#. module: sale_management
-#: model:ir.model.fields,field_description:sale_management.field_sale_order_option__product_uom_category_id
-#: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__product_uom_category_id
-#: model:ir.model.fields,field_description:sale_management.field_sale_order_template_option__product_uom_category_id
-msgid "Category"
-msgstr "Danh mục"
 
 #. module: sale_management
 #: model:ir.model,name:sale_management.model_res_company
@@ -109,7 +76,6 @@ msgstr "Công ty"
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__company_id
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__company_id
-#: model:ir.model.fields,field_description:sale_management.field_sale_order_template_option__company_id
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_search
 msgid "Company"
 msgstr "Công ty"
@@ -125,13 +91,6 @@ msgid "Confirmation Mail"
 msgstr "Thư xác nhận"
 
 #. module: sale_management
-#: model:ir.model.fields,help:sale_management.field_sale_order_option__product_uom_category_id
-#: model:ir.model.fields,help:sale_management.field_sale_order_template_line__product_uom_category_id
-#: model:ir.model.fields,help:sale_management.field_sale_order_template_option__product_uom_category_id
-msgid "Conversion between Units of Measure can only occur if they belong to the same category. The conversion will be made based on the ratios."
-msgstr "Việc chuyển đổi qua lại giữa các Đơn vị tính chỉ có thể khả dụng nếu chúng cùng loại. Việc chuyển đổi sẽ được thực hiện dựa trên tỉ lệ."
-
-#. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.res_config_settings_view_form
 msgid "Create standardized offers with default products"
 msgstr "Tạo báo giá tiêu chuẩn với các sản phẩm mặc định"
@@ -142,18 +101,14 @@ msgid "Create your quotation template"
 msgstr "Tạo mẫu báo giá"
 
 #. module: sale_management
-#: model:ir.model.fields,field_description:sale_management.field_sale_order_option__create_uid
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__create_uid
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__create_uid
-#: model:ir.model.fields,field_description:sale_management.field_sale_order_template_option__create_uid
 msgid "Created by"
 msgstr "Được tạo bởi"
 
 #. module: sale_management
-#: model:ir.model.fields,field_description:sale_management.field_sale_order_option__create_date
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__create_date
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__create_date
-#: model:ir.model.fields,field_description:sale_management.field_sale_order_template_option__create_date
 msgid "Created on"
 msgstr "Được tạo vào"
 
@@ -168,23 +123,10 @@ msgid "Default Template"
 msgstr "Mẫu Mặc định"
 
 #. module: sale_management
-#: model_terms:ir.ui.view,arch_db:sale_management.res_config_settings_view_form
-msgid "Default values will be overwritten by values provided by the quotation template."
-msgstr ""
-
-#. module: sale_management
-#: model:ir.model.fields,field_description:sale_management.field_sale_order_option__name
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__name
-#: model:ir.model.fields,field_description:sale_management.field_sale_order_template_option__name
-#: model_terms:ir.ui.view,arch_db:sale_management.report_saleorder_document_inherit_sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
 msgid "Description"
 msgstr "Mô tả"
-
-#. module: sale_management
-#: model_terms:ir.ui.view,arch_db:sale_management.res_config_settings_view_form
-msgid "Design your quotation templates using building blocks"
-msgstr ""
 
 #. module: sale_management
 #: model:ir.model,name:sale_management.model_digest_digest
@@ -192,22 +134,13 @@ msgid "Digest"
 msgstr "Tóm tắt"
 
 #. module: sale_management
-#: model_terms:ir.ui.view,arch_db:sale_management.report_saleorder_document_inherit_sale_management
-#: model_terms:ir.ui.view,arch_db:sale_management.sale_order_form_quote
-#: model_terms:ir.ui.view,arch_db:sale_management.sale_order_portal_content_inherit_sale_management
-msgid "Disc.%"
-msgstr "% CK"
-
-#. module: sale_management
-#: model:ir.model.fields,field_description:sale_management.field_sale_order_option__discount
-msgid "Discount (%)"
-msgstr "Chiết khấu (%)"
-
-#. module: sale_management
-#: model:ir.model.fields,field_description:sale_management.field_sale_order_option__display_name
+#: model:ir.model.fields,field_description:sale_management.field_digest_digest__display_name
+#: model:ir.model.fields,field_description:sale_management.field_res_company__display_name
+#: model:ir.model.fields,field_description:sale_management.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:sale_management.field_sale_order__display_name
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_line__display_name
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__display_name
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__display_name
-#: model:ir.model.fields,field_description:sale_management.field_sale_order_template_option__display_name
 msgid "Display Name"
 msgstr "Tên hiển thị"
 
@@ -220,17 +153,15 @@ msgstr "Loại hiển thị"
 #. odoo-python
 #: code:addons/sale_management/models/digest.py:0
 msgid "Do not have access, skip this data for user's digest email"
-msgstr "Không có quyền truy cập, bỏ qua dữ liệu này cho email tóm tắt của người dùng"
+msgstr ""
+"Không có quyền truy cập, bỏ qua dữ liệu này cho email tóm tắt của người dùng"
 
 #. module: sale_management
 #: model:ir.model.constraint,message:sale_management.constraint_sale_order_template_line_non_accountable_fields_null
 msgid "Forbidden product, quantity and UoM on non-accountable sale quote line"
-msgstr "Sản phẩm bị cấm, số lượng và đơn vị tính cho mục báo giá bán hàng không thể ghi sổ"
-
-#. module: sale_management
-#: model:ir.model.fields,help:sale_management.field_sale_order_option__sequence
-msgid "Gives the sequence order when displaying a list of optional products."
-msgstr "Đặt trình tự khi hiển thị danh sách sản phẩm tùy chọn. "
+msgstr ""
+"Sản phẩm bị cấm, số lượng và đơn vị tính cho mục báo giá bán hàng không thể "
+"ghi sổ"
 
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_template_line__sequence
@@ -238,22 +169,34 @@ msgid "Gives the sequence order when displaying a list of sale quote lines."
 msgstr "Đặt thứ tự khi hiển thị danh sách chi tiết báo giá bán hàng. "
 
 #. module: sale_management
-#: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_search
-msgid "Group By"
-msgstr "Nhóm theo"
-
-#. module: sale_management
-#: model:ir.model.fields,field_description:sale_management.field_sale_order_option__id
+#: model:ir.model.fields,field_description:sale_management.field_digest_digest__id
+#: model:ir.model.fields,field_description:sale_management.field_res_company__id
+#: model:ir.model.fields,field_description:sale_management.field_res_config_settings__id
+#: model:ir.model.fields,field_description:sale_management.field_sale_order__id
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_line__id
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__id
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__id
-#: model:ir.model.fields,field_description:sale_management.field_sale_order_template_option__id
 msgid "ID"
 msgstr "ID"
 
 #. module: sale_management
+#: model:ir.model.fields,help:sale_management.field_sale_order_template__journal_id
+msgid ""
+"If set, SO with this template will invoice in this journal; otherwise the "
+"sales journal with the lowest sequence is used."
+msgstr ""
+
+#. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_template__active
-msgid "If unchecked, it will allow you to hide the quotation template without removing it."
+msgid ""
+"If unchecked, it will allow you to hide the quotation template without "
+"removing it."
 msgstr "Nếu không chọn, bạn sẽ có thể ẩn mẫu báo giá mà không cần xóa mẫu. "
+
+#. module: sale_management
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_template__journal_id
+msgid "Invoicing Journal"
+msgstr ""
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_digest_digest__kpi_all_sale_total_value
@@ -261,25 +204,16 @@ msgid "Kpi All Sale Total Value"
 msgstr "KPI Giá trị tổng tất cả doanh số"
 
 #. module: sale_management
-#: model:ir.model.fields,field_description:sale_management.field_sale_order_option__write_uid
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__write_uid
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__write_uid
-#: model:ir.model.fields,field_description:sale_management.field_sale_order_template_option__write_uid
 msgid "Last Updated by"
 msgstr "Cập nhật lần cuối bởi"
 
 #. module: sale_management
-#: model:ir.model.fields,field_description:sale_management.field_sale_order_option__write_date
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__write_date
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__write_date
-#: model:ir.model.fields,field_description:sale_management.field_sale_order_template_option__write_date
 msgid "Last Updated on"
 msgstr "Cập nhật lần cuối vào"
-
-#. module: sale_management
-#: model:ir.model.fields,field_description:sale_management.field_sale_order_option__line_id
-msgid "Line"
-msgstr "Dòng"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__sale_order_template_line_ids
@@ -290,7 +224,9 @@ msgstr "Dòng"
 #. module: sale_management
 #: model:ir.model.constraint,message:sale_management.constraint_sale_order_template_line_accountable_product_id_required
 msgid "Missing required product and UoM on accountable sale quote line."
-msgstr "Thiếu sản phẩm và đơn vị tính bắt buộc cho mục báo giá bán hàng có thể ghi sổ. "
+msgstr ""
+"Thiếu sản phẩm và đơn vị tính bắt buộc cho mục báo giá bán hàng có thể ghi "
+"sổ. "
 
 #. module: sale_management
 #: model:ir.model.fields.selection,name:sale_management.selection__sale_order_template_line__display_type__line_note
@@ -304,11 +240,6 @@ msgid "Number of days for the validity date computation of the quotation"
 msgstr "Số ngày để tính toán ngày xác nhận của báo giá"
 
 #. module: sale_management
-#: model:sale.order.template.option,name:sale_management.sale_order_template_option_1
-msgid "Office Chair"
-msgstr "Ghế văn phòng"
-
-#. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__require_payment
 msgid "Online Payment"
 msgstr "Thanh toán online"
@@ -319,57 +250,36 @@ msgid "Online Signature"
 msgstr "Chữ ký online"
 
 #. module: sale_management
-#: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
-msgid "Online confirmation"
-msgstr "Xác nhận online"
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_line__is_optional
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__is_optional
+msgid "Optional Line"
+msgstr ""
 
 #. module: sale_management
-#: model:ir.model.fields,field_description:sale_management.field_sale_order_template__sale_order_template_option_ids
-#: model_terms:ir.ui.view,arch_db:sale_management.sale_order_form_quote
-#: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
-msgid "Optional Products"
-msgstr "Sản phẩm tuỳ chọn"
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__parent_id
+msgid "Parent Section Line"
+msgstr ""
 
 #. module: sale_management
-#: model:ir.model.fields,field_description:sale_management.field_sale_order__sale_order_option_ids
-#: model:ir.model.fields,field_description:sale_management.field_sale_order_line__sale_order_option_ids
-msgid "Optional Products Lines"
-msgstr "Chi tiết sản phẩm tuỳ chọn"
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_template__prepayment_percent
+msgid "Prepayment percentage"
+msgstr ""
 
 #. module: sale_management
-#: model_terms:ir.ui.view,arch_db:sale_management.sale_order_portal_content_inherit_sale_management
-msgid "Options"
-msgstr "Tùy chọn"
+#. odoo-python
+#: code:addons/sale_management/models/sale_order_template.py:0
+msgid "Prepayment percentage must be a valid percentage."
+msgstr ""
 
 #. module: sale_management
-#: model:ir.model.fields,field_description:sale_management.field_sale_order_option__is_present
-msgid "Present on Quotation"
-msgstr "Hiện trên báo giá"
-
-#. module: sale_management
-#: model:ir.model.fields,field_description:sale_management.field_sale_order_option__product_id
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__product_id
-#: model:ir.model.fields,field_description:sale_management.field_sale_order_template_option__product_id
-#: model_terms:ir.ui.view,arch_db:sale_management.sale_order_portal_content_inherit_sale_management
 msgid "Product"
 msgstr "Sản phẩm"
 
 #. module: sale_management
-#: model:ir.model.fields,field_description:sale_management.field_sale_order_option__quantity
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__product_uom_qty
-#: model:ir.model.fields,field_description:sale_management.field_sale_order_template_option__quantity
 msgid "Quantity"
 msgstr "Số lượng"
-
-#. module: sale_management
-#: model_terms:ir.ui.view,arch_db:sale_management.sale_order_form_quote
-msgid "Quantity:"
-msgstr "Số lượng:"
-
-#. module: sale_management
-#: model:ir.model.fields,field_description:sale_management.field_res_config_settings__module_sale_quotation_builder
-msgid "Quotation Builder"
-msgstr "Trình tạo báo giá"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__number_of_days
@@ -396,13 +306,7 @@ msgid "Quotation Template Lines"
 msgstr "Chi tiết mẫu báo giá"
 
 #. module: sale_management
-#: model:ir.model,name:sale_management.model_sale_order_template_option
-msgid "Quotation Template Option"
-msgstr "Tùy chọn mẫu báo giá"
-
-#. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__sale_order_template_id
-#: model:ir.model.fields,field_description:sale_management.field_sale_order_template_option__sale_order_template_id
 msgid "Quotation Template Reference"
 msgstr "Tham chiếu mẫu báo giá"
 
@@ -417,33 +321,27 @@ msgstr "Mẫu báo giá"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
-msgid "Quotation expires after"
-msgstr "Báo giá sẽ hết hạn sau"
+msgid "Quotation Validity"
+msgstr ""
 
 #. module: sale_management
-#: model_terms:ir.ui.view,arch_db:sale_management.sale_order_portal_content_inherit_sale_management
-msgid "Remove"
-msgstr "Xóa"
-
-#. module: sale_management
-#: model_terms:ir.ui.view,arch_db:sale_management.sale_order_portal_content_inherit_sale_management
+#: model_terms:ir.ui.view,arch_db:sale_management.sale_order_portal_optional_product_quantity
 msgid "Remove one"
 msgstr "Xóa một"
 
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_template__require_signature
-msgid "Request a online signature to the customer in order to confirm orders automatically."
+msgid ""
+"Request a online signature to the customer in order to confirm orders "
+"automatically."
 msgstr "Yêu cầu chữ ký online của khách hàng để xác thực đơn hàng tự động"
 
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_template__require_payment
-msgid "Request an online payment to the customer in order to confirm orders automatically."
+msgid ""
+"Request an online payment to the customer in order to confirm orders "
+"automatically."
 msgstr "Yêu cầu thanh toán online từ khách hàng để xác nhận đơn hàng tự động. "
-
-#. module: sale_management
-#: model:ir.model,name:sale_management.model_sale_order_option
-msgid "Sale Options"
-msgstr "Tùy chọn bán hàng"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.digest_digest_view_form
@@ -461,16 +359,6 @@ msgid "Sales Order Line"
 msgstr "Mục đơn bán hàng"
 
 #. module: sale_management
-#: model:ir.model.fields,field_description:sale_management.field_sale_order_option__order_id
-msgid "Sales Order Reference"
-msgstr "Tham chiếu đơn bán hàng"
-
-#. module: sale_management
-#: model_terms:ir.ui.view,arch_db:sale_management.sale_order_form_quote
-msgid "Sales Quotation Template Lines"
-msgstr "Chi tiết mẫu báo giá bán hàng"
-
-#. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_search
 msgid "Search Quotation Template"
 msgstr "Tìm mẫu báo giá"
@@ -483,19 +371,37 @@ msgstr "Phần"
 
 #. module: sale_management
 #: model_terms:digest.tip,tip_description:sale_management.digest_tip_sale_management_1
-msgid "Selling the same product in different sizes or colors? Try the product grid and populate your orders with multiple quantities of each variant. This feature also exists in the Purchase application."
-msgstr "Bạn đang bán sản phẩm có màu sắc, kích thước khác nhau? Hãy thử lưới sản phẩm và đa dạng hóa đơn hàng với nhiều biến thể. Tính năng này cũng có trong ứng dụng Mua hàng. "
+msgid ""
+"Selling the same product in different sizes or colors? Try the product grid "
+"and populate your orders with multiple quantities of each variant. This "
+"feature also exists in the Purchase application."
+msgstr ""
+"Bạn đang bán sản phẩm có màu sắc, kích thước khác nhau? Hãy thử lưới sản "
+"phẩm và đa dạng hóa đơn hàng với nhiều biến thể. Tính năng này cũng có trong "
+"ứng dụng Mua hàng. "
 
 #. module: sale_management
-#: model:ir.model.fields,field_description:sale_management.field_sale_order_option__sequence
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_template__sequence
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__sequence
 msgid "Sequence"
 msgstr "Trình tự"
 
 #. module: sale_management
 #: model_terms:digest.tip,tip_description:sale_management.digest_tip_sale1_management_0
-msgid "Struggling with a complex product catalog? Try out the Product Configurator to help sales configure a product with different options: colors, size, capacity, etc. Make sale orders encoding easier and error-proof."
-msgstr "Bạn đang gặp khó khăn với một danh mục sản phẩm phức tạp? Hãy dùng thử Cấu hình sản phẩm để giúp bộ phận bán hàng cấu hình sản phẩm với các tùy chọn khác nhau: màu sắc, kích thước, số lượng,... Việc mã hóa đơn bán hàng giờ đây trở nên dễ dàng hơn và không gặp lỗi. "
+msgid ""
+"Struggling with a complex product catalog? Try out the Product Configurator "
+"to help sales configure a product with different options: colors, size, "
+"capacity, etc. Make sale orders encoding easier and error-proof."
+msgstr ""
+"Bạn đang gặp khó khăn với một danh mục sản phẩm phức tạp? Hãy dùng thử Cấu "
+"hình sản phẩm để giúp bộ phận bán hàng cấu hình sản phẩm với các tùy chọn "
+"khác nhau: màu sắc, kích thước, số lượng,... Việc mã hóa đơn bán hàng giờ "
+"đây trở nên dễ dàng hơn và không gặp lỗi. "
+
+#. module: sale_management
+#: model:ir.model.fields.selection,name:sale_management.selection__sale_order_template_line__display_type__line_subsection
+msgid "Subsection"
+msgstr ""
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
@@ -509,18 +415,26 @@ msgstr "Điều khoản và điều kiện"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
-msgid "The Administrator can set default Terms & Conditions in Sales Settings. Terms set here will show up instead if you select this quotation template."
-msgstr "Quản trị viên có thể đặt Điều khoản & điều kiện mặc định trong Cài đặt bán hàng. Điều khoản đặt ở đây sẽ hiển thị nếu bạn chọn mẫu báo giá này. "
+msgid ""
+"The Administrator can set default Terms & Conditions in Sales Settings. "
+"Terms set here will show up instead if you select this quotation template."
+msgstr ""
+"Quản trị viên có thể đặt Điều khoản & điều kiện mặc định trong Cài đặt bán "
+"hàng. Điều khoản đặt ở đây sẽ hiển thị nếu bạn chọn mẫu báo giá này. "
+
+#. module: sale_management
+#: model:ir.model.fields,help:sale_management.field_sale_order_template__prepayment_percent
+msgid "The percentage of the amount needed to be paid to confirm quotations."
+msgstr ""
 
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_template__mail_template_id
-msgid "This e-mail template will be sent on confirmation. Leave empty to send nothing."
-msgstr "Mẫu email này sẽ được gửi khi xác nhận. Để trống nếu bạn không muốn gửi gì cả."
-
-#. module: sale_management
-#: model:ir.model.fields,help:sale_management.field_sale_order_option__is_present
-msgid "This field will be checked if the option line's product is already present in the quotation."
-msgstr "Trường này sẽ được đánh dấu nếu sản phẩm của mục tùy chọn đã xuất hiện trong báo giá. "
+msgid ""
+"This e-mail template will be sent on confirmation. Leave empty to send "
+"nothing."
+msgstr ""
+"Mẫu email này sẽ được gửi khi xác nhận. Để trống nếu bạn không muốn gửi gì "
+"cả."
 
 #. module: sale_management
 #: model:digest.tip,name:sale_management.digest_tip_sale1_management_0
@@ -535,61 +449,37 @@ msgid "Tip: Sell or buy products in bulk with matrixes"
 msgstr "Mẹo: Bán hoặc mua sản phẩm theo lô bằng ma trận "
 
 #. module: sale_management
-#: model:ir.model.fields,field_description:sale_management.field_sale_order_option__price_unit
-#: model_terms:ir.ui.view,arch_db:sale_management.report_saleorder_document_inherit_sale_management
-#: model_terms:ir.ui.view,arch_db:sale_management.sale_order_portal_content_inherit_sale_management
-msgid "Unit Price"
-msgstr "Đơn giá"
-
-#. module: sale_management
-#: model_terms:ir.ui.view,arch_db:sale_management.sale_order_form_quote
-msgid "Unit Price:"
-msgstr "Đơn giá:"
-
-#. module: sale_management
-#: model:ir.model.fields,field_description:sale_management.field_sale_order_option__uom_id
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__product_uom_id
-#: model:ir.model.fields,field_description:sale_management.field_sale_order_template_option__uom_id
-msgid "Unit of Measure"
-msgstr "Đơn vị tính"
-
-#. module: sale_management
-#: model_terms:ir.ui.view,arch_db:sale_management.sale_order_form_quote
-msgid "UoM"
-msgstr "Đơn vị tính"
+msgid "Unit"
+msgstr ""
 
 #. module: sale_management
 #: model_terms:ir.actions.act_window,help:sale_management.sale_order_template_action
 msgid ""
 "Use templates to create polished, professional quotes in minutes.\n"
-"                Send these quotes by email and let your customers sign online.\n"
+"                Send these quotes by email and let your customers sign "
+"online.\n"
 "                Use cross-selling and discounts to push and boost your sales."
 msgstr ""
 "Dùng mẫu để tạo báo giá chuyên nghiệp, đẹp mắt chỉ trong vài phút.\n"
 "                Gửi báo giá qua email và cho phép khách hàng ký online. \n"
-"                Dùng bán chéo và chiết khấu để thúc đẩy và gia tăng doanh số. "
+"                Dùng bán chéo và chiết khấu để thúc đẩy và gia tăng doanh "
+"số. "
 
 #. module: sale_management
-#. odoo-python
-#: code:addons/sale_management/models/sale_order_option.py:0
-msgid "You cannot add options to a confirmed order."
-msgstr "Bạn không thể thêm các tuỳ chọn cho một đơn hàng đã xác nhận."
+#: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
+msgid "Visible to all"
+msgstr ""
 
 #. module: sale_management
 #. odoo-python
 #: code:addons/sale_management/models/sale_order_template_line.py:0
-msgid "You cannot change the type of a sale quote line. Instead you should delete the current line and create a new line of the proper type."
-msgstr "Bạn không thể thay đổi loại của một mục đơn bán hàng. Thay vào đó, bạn nên xóa mục hiện tại và tạo một mục mới có loại phù hợp."
-
-#. module: sale_management
-#. odoo-python
-#: code:addons/sale_management/models/sale_order.py:0
 msgid ""
-"Your quotation contains products from company %(product_company)s whereas your quotation belongs to company %(quote_company)s. \n"
-" Please change the company of your quotation or remove the products from other companies (%(bad_products)s)."
+"You cannot change the type of a sale quote line. Instead you should delete "
+"the current line and create a new line of the proper type."
 msgstr ""
-"Báo giá của bạn chứa các sản phẩm từ công ty %(product_company)s trong khi báo giá của bạn thuộc về công ty %(quote_company)s. \n"
-" Vui lòng thay đổi công ty trong báo giá của bạn hoặc xóa sản phẩm từ các công ty khác (%(bad_products)s)."
+"Bạn không thể thay đổi loại của một mục đơn bán hàng. Thay vào đó, bạn nên "
+"xóa mục hiện tại và tạo một mục mới có loại phù hợp."
 
 #. module: sale_management
 #. odoo-python
@@ -601,10 +491,13 @@ msgstr "Mẫu của bạn không thể chứa sản phẩm từ môi trường �
 #. odoo-python
 #: code:addons/sale_management/models/sale_order_template.py:0
 msgid ""
-"Your template contains products from company %(product_company)s whereas your template belongs to company %(template_company)s. \n"
-" Please change the company of your template or remove the products from other companies."
+"Your template contains products from company %(product_company)s whereas "
+"your template belongs to company %(template_company)s. \n"
+" Please change the company of your template or remove the products from "
+"other companies."
 msgstr ""
-"Mẫu của bạn chứa các sản phẩm từ công ty %(product_company)s trong khi mẫu này thuộc về công ty %(template_company)s. \n"
+"Mẫu của bạn chứa các sản phẩm từ công ty %(product_company)s trong khi mẫu "
+"này thuộc về công ty %(template_company)s. \n"
 " Vui lòng thay đổi công ty của mẫu hoặc xóa sản phẩm từ các công ty khác. "
 
 #. module: sale_management
@@ -616,3 +509,122 @@ msgstr "ngày"
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
 msgid "e.g. Standard Consultancy Package"
 msgstr "ví dụ: Gói tư vấn tiêu chuẩn"
+
+#~ msgid "4 Person Desk"
+#~ msgstr "Bàn 4 chỗ ngồi"
+
+#~ msgid "<span>Options</span>"
+#~ msgstr "<span>Tùy chọn</span>"
+
+#~ msgid "<span>Payment</span>"
+#~ msgstr "<span>Thanh toán</span>"
+
+#~ msgid "<span>Signature</span>"
+#~ msgstr "<span>Chữ ký</span>"
+
+#~ msgid "Add to cart"
+#~ msgstr "Thêm vào giỏ hàng"
+
+#~ msgid "Add to order lines"
+#~ msgstr "Thêm vào chi tiết đơn hàng"
+
+#~ msgid "Category"
+#~ msgstr "Danh mục"
+
+#~ msgid ""
+#~ "Conversion between Units of Measure can only occur if they belong to the "
+#~ "same category. The conversion will be made based on the ratios."
+#~ msgstr ""
+#~ "Việc chuyển đổi qua lại giữa các Đơn vị tính chỉ có thể khả dụng nếu "
+#~ "chúng cùng loại. Việc chuyển đổi sẽ được thực hiện dựa trên tỉ lệ."
+
+#~ msgid "Disc.%"
+#~ msgstr "% CK"
+
+#~ msgid "Discount (%)"
+#~ msgstr "Chiết khấu (%)"
+
+#~ msgid ""
+#~ "Gives the sequence order when displaying a list of optional products."
+#~ msgstr "Đặt trình tự khi hiển thị danh sách sản phẩm tùy chọn. "
+
+#~ msgid "Group By"
+#~ msgstr "Nhóm theo"
+
+#~ msgid "Line"
+#~ msgstr "Dòng"
+
+#~ msgid "Office Chair"
+#~ msgstr "Ghế văn phòng"
+
+#~ msgid "Online confirmation"
+#~ msgstr "Xác nhận online"
+
+#~ msgid "Optional Products"
+#~ msgstr "Sản phẩm tuỳ chọn"
+
+#~ msgid "Optional Products Lines"
+#~ msgstr "Chi tiết sản phẩm tuỳ chọn"
+
+#~ msgid "Options"
+#~ msgstr "Tùy chọn"
+
+#~ msgid "Present on Quotation"
+#~ msgstr "Hiện trên báo giá"
+
+#~ msgid "Quantity:"
+#~ msgstr "Số lượng:"
+
+#~ msgid "Quotation Builder"
+#~ msgstr "Trình tạo báo giá"
+
+#~ msgid "Quotation Template Option"
+#~ msgstr "Tùy chọn mẫu báo giá"
+
+#~ msgid "Quotation expires after"
+#~ msgstr "Báo giá sẽ hết hạn sau"
+
+#~ msgid "Remove"
+#~ msgstr "Xóa"
+
+#~ msgid "Sale Options"
+#~ msgstr "Tùy chọn bán hàng"
+
+#~ msgid "Sales Order Reference"
+#~ msgstr "Tham chiếu đơn bán hàng"
+
+#~ msgid "Sales Quotation Template Lines"
+#~ msgstr "Chi tiết mẫu báo giá bán hàng"
+
+#~ msgid ""
+#~ "This field will be checked if the option line's product is already "
+#~ "present in the quotation."
+#~ msgstr ""
+#~ "Trường này sẽ được đánh dấu nếu sản phẩm của mục tùy chọn đã xuất hiện "
+#~ "trong báo giá. "
+
+#~ msgid "Unit Price"
+#~ msgstr "Đơn giá"
+
+#~ msgid "Unit Price:"
+#~ msgstr "Đơn giá:"
+
+#~ msgid "Unit of Measure"
+#~ msgstr "Đơn vị tính"
+
+#~ msgid "UoM"
+#~ msgstr "Đơn vị tính"
+
+#~ msgid "You cannot add options to a confirmed order."
+#~ msgstr "Bạn không thể thêm các tuỳ chọn cho một đơn hàng đã xác nhận."
+
+#~ msgid ""
+#~ "Your quotation contains products from company %(product_company)s whereas "
+#~ "your quotation belongs to company %(quote_company)s. \n"
+#~ " Please change the company of your quotation or remove the products from "
+#~ "other companies (%(bad_products)s)."
+#~ msgstr ""
+#~ "Báo giá của bạn chứa các sản phẩm từ công ty %(product_company)s trong "
+#~ "khi báo giá của bạn thuộc về công ty %(quote_company)s. \n"
+#~ " Vui lòng thay đổi công ty trong báo giá của bạn hoặc xóa sản phẩm từ các "
+#~ "công ty khác (%(bad_products)s)."

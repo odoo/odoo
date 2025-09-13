@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-23 08:03+0000\n"
+"POT-Creation-Date: 2025-09-11 14:01+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
 "Last-Translator: Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2023\n"
 "Language-Team: Turkish (https://app.transifex.com/odoo/teams/41243/tr/)\n"
@@ -41,6 +41,17 @@ msgid "Customer to Reinvoice"
 msgstr "Müşteriye Yeniden Faturalama"
 
 #. module: sale_expense
+#: model:ir.model.fields,field_description:sale_expense.field_account_move__display_name
+#: model:ir.model.fields,field_description:sale_expense.field_account_move_line__display_name
+#: model:ir.model.fields,field_description:sale_expense.field_hr_expense__display_name
+#: model:ir.model.fields,field_description:sale_expense.field_hr_expense_split__display_name
+#: model:ir.model.fields,field_description:sale_expense.field_product_template__display_name
+#: model:ir.model.fields,field_description:sale_expense.field_sale_order__display_name
+#: model:ir.model.fields,field_description:sale_expense.field_sale_order_line__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: sale_expense
 #: model:ir.model,name:sale_expense.model_hr_expense
 msgid "Expense"
 msgstr "Masraf"
@@ -52,11 +63,6 @@ msgid "Expense Policy Tooltip"
 msgstr "Masraf Politikası Araç İpucu"
 
 #. module: sale_expense
-#: model:ir.model,name:sale_expense.model_hr_expense_sheet
-msgid "Expense Report"
-msgstr "Masraf Formu"
-
-#. module: sale_expense
 #: model:ir.model,name:sale_expense.model_hr_expense_split
 msgid "Expense Split"
 msgstr "Masraf Bölünmesi"
@@ -64,34 +70,65 @@ msgstr "Masraf Bölünmesi"
 #. module: sale_expense
 #: model:ir.actions.act_window,name:sale_expense.hr_expense_action_from_sale_order
 #: model:ir.model.fields,field_description:sale_expense.field_sale_order__expense_ids
+#: model:ir.model.fields,field_description:sale_expense.field_sale_order_line__expense_ids
 #: model_terms:ir.ui.view,arch_db:sale_expense.sale_order_form_view_inherit
 msgid "Expenses"
 msgstr "Masraflar"
 
 #. module: sale_expense
+#. odoo-python
 #: code:addons/sale_expense/models/product_template.py:0
 msgid "Expenses of this category may not be added to a Sales Order."
 msgstr "Bu kategorideki masraflar bir Satış Siparişine eklenemez."
 
 #. module: sale_expense
+#. odoo-python
 #: code:addons/sale_expense/models/product_template.py:0
-msgid "Expenses will be added to the Sales Order at their actual cost when posted."
-msgstr "Masraflar, onaylandıklarında gerçek maliyetleri üzerinden Satış Siparişine eklenecektir."
+msgid ""
+"Expenses will be added to the Sales Order at their actual cost when posted."
+msgstr ""
+"Masraflar, onaylandıklarında gerçek maliyetleri üzerinden Satış Siparişine "
+"eklenecektir."
 
 #. module: sale_expense
+#. odoo-python
 #: code:addons/sale_expense/models/product_template.py:0
-msgid "Expenses will be added to the Sales Order at their sales price (product price, pricelist, etc.) when posted."
-msgstr "Masraflar, onaylandıklarında Satış Siparişine satış fiyatı (ürün fiyatı, fiyat listesi vb.) üzerinden eklenecektir."
+msgid ""
+"Expenses will be added to the Sales Order at their sales price (product "
+"price, pricelist, etc.) when posted."
+msgstr ""
+"Masraflar, onaylandıklarında Satış Siparişine satış fiyatı (ürün fiyatı, "
+"fiyat listesi vb.) üzerinden eklenecektir."
+
+#. module: sale_expense
+#: model:ir.model.fields,field_description:sale_expense.field_account_move__id
+#: model:ir.model.fields,field_description:sale_expense.field_account_move_line__id
+#: model:ir.model.fields,field_description:sale_expense.field_hr_expense__id
+#: model:ir.model.fields,field_description:sale_expense.field_hr_expense_split__id
+#: model:ir.model.fields,field_description:sale_expense.field_product_template__id
+#: model:ir.model.fields,field_description:sale_expense.field_sale_order__id
+#: model:ir.model.fields,field_description:sale_expense.field_sale_order_line__id
+msgid "ID"
+msgstr ""
 
 #. module: sale_expense
 #: model:ir.model.fields,help:sale_expense.field_hr_expense__sale_order_id
-msgid "If the category has an expense policy, it will be reinvoiced on this sales order"
-msgstr "Kategorinin bir masraf politikası varsa, bu satış siparişinde yeniden faturalandırılır"
+msgid ""
+"If the category has an expense policy, it will be reinvoiced on this sales "
+"order"
+msgstr ""
+"Kategorinin bir masraf politikası varsa, bu satış siparişinde yeniden "
+"faturalandırılır"
 
 #. module: sale_expense
 #: model_terms:ir.ui.view,arch_db:sale_expense.product_product_view_form_inherit_sale_expense
 msgid "Invoicing"
 msgstr "Faturalama"
+
+#. module: sale_expense
+#: model:ir.model,name:sale_expense.model_account_move
+msgid "Journal Entry"
+msgstr ""
 
 #. module: sale_expense
 #: model:ir.model,name:sale_expense.model_account_move_line
@@ -104,21 +141,29 @@ msgid "Product"
 msgstr "Ürün"
 
 #. module: sale_expense
-#: code:addons/sale_expense/models/hr_expense_sheet.py:0
-msgid "Reinvoiced Sales Orders"
-msgstr "Yeniden Faturalandırılan Satış Siparişleri"
-
-#. module: sale_expense
-#: model:ir.model.fields,field_description:sale_expense.field_hr_expense_sheet__sale_order_count
-msgid "Sale Order Count"
-msgstr "Sipariş Sayısı"
+#: model:ir.model.fields,field_description:sale_expense.field_hr_expense__sale_order_line_id
+msgid "Sale Order Line"
+msgstr ""
 
 #. module: sale_expense
 #: model:ir.model,name:sale_expense.model_sale_order
+#: model_terms:ir.ui.view,arch_db:sale_expense.hr_expense_form_view_inherit_sale_expense
 msgid "Sales Order"
 msgstr "Satış Siparişi"
 
 #. module: sale_expense
-#: model_terms:ir.ui.view,arch_db:sale_expense.hr_expense_sheet_view_form
-msgid "Sales Orders"
-msgstr "Satış Siparişleri"
+#: model:ir.model,name:sale_expense.model_sale_order_line
+msgid "Sales Order Line"
+msgstr ""
+
+#~ msgid "Expense Report"
+#~ msgstr "Masraf Formu"
+
+#~ msgid "Reinvoiced Sales Orders"
+#~ msgstr "Yeniden Faturalandırılan Satış Siparişleri"
+
+#~ msgid "Sale Order Count"
+#~ msgstr "Sipariş Sayısı"
+
+#~ msgid "Sales Orders"
+#~ msgstr "Satış Siparişleri"

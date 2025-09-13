@@ -10,9 +10,10 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-23 08:02+0000\n"
+"POT-Creation-Date: 2025-09-11 13:56+0000\n"
 "PO-Revision-Date: 2022-09-22 05:52+0000\n"
-"Last-Translator: Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2022\n"
+"Last-Translator: Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, "
+"2022\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
 "Language: ja\n"
 "MIME-Version: 1.0\n"
@@ -21,16 +22,34 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: google_account
+#: model:ir.model.fields,field_description:google_account.field_google_service__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: google_account
 #: model:ir.model,name:google_account.model_google_service
 msgid "Google Service"
 msgstr "Googleサービス"
 
 #. module: google_account
-#: code:addons/google_account/models/google_service.py:0
-msgid "Method not supported [%s] not in [GET, POST, PUT, PATCH or DELETE]!"
-msgstr "サポートされていないメソッド [%s]これらは[GET、POST、PUT、PATCH、DELETE]内にありません！"
+#: model:ir.model.fields,field_description:google_account.field_google_service__id
+msgid "ID"
+msgstr ""
 
 #. module: google_account
+#. odoo-python
 #: code:addons/google_account/models/google_service.py:0
-msgid "Something went wrong during your token generation. Maybe your Authorization Code is invalid or already expired"
-msgstr "トークンの生成中に何か問題が発生しました。 承認コードが無効であるかすでに失効している可能性があります "
+msgid "Method not supported [%s] not in [GET, POST, PUT, PATCH or DELETE]!"
+msgstr ""
+"サポートされていないメソッド [%s]これらは[GET、POST、PUT、PATCH、DELETE]内に"
+"ありません！"
+
+#. module: google_account
+#. odoo-python
+#: code:addons/google_account/models/google_service.py:0
+msgid ""
+"Something went wrong during your token generation. Maybe your Authorization "
+"Code is invalid or already expired"
+msgstr ""
+"トークンの生成中に何か問題が発生しました。 承認コードが無効であるかすでに失効"
+"している可能性があります "

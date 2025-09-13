@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~15.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-12-07 10:47+0000\n"
+"POT-Creation-Date: 2025-09-11 13:57+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
 "Last-Translator: Jolien De Paepe, 2023\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
@@ -24,29 +24,50 @@ msgstr ""
 #. module: mass_mailing_crm
 #: model_terms:ir.ui.view,arch_db:mass_mailing_crm.mailing_mailing_view_form
 msgid ""
-"<span class=\"o_stat_text\" attrs=\"{'invisible': [('use_leads', '=', False)]}\">Leads</span>\n"
-"                        <span class=\"o_stat_text\" attrs=\"{'invisible': [('use_leads', '=', True)]}\">Opportunities</span>"
+"<span class=\"o_stat_text\" invisible=\"not use_leads\">Leads</span>\n"
+"                        <span class=\"o_stat_text\" "
+"invisible=\"use_leads\">Opportunities</span>"
 msgstr ""
-"<span class=\"o_stat_text\" attrs=\"{'invisible': [('use_leads', '=', False)]}\">Leads</span>\n"
-"                        <span class=\"o_stat_text\" attrs=\"{'invisible': [('use_leads', '=', True)]}\">Verkoopkansen</span>"
 
 #. module: mass_mailing_crm
+#: model:ir.model,website_form_label:mass_mailing_crm.model_crm_lead
+msgid "Create an Opportunity"
+msgstr ""
+
+#. module: mass_mailing_crm
+#: model:ir.model.fields,field_description:mass_mailing_crm.field_crm_lead__display_name
+#: model:ir.model.fields,field_description:mass_mailing_crm.field_mailing_mailing__display_name
+#: model:ir.model.fields,field_description:mass_mailing_crm.field_utm_campaign__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: mass_mailing_crm
+#: model:ir.model.fields,field_description:mass_mailing_crm.field_crm_lead__id
+#: model:ir.model.fields,field_description:mass_mailing_crm.field_mailing_mailing__id
+#: model:ir.model.fields,field_description:mass_mailing_crm.field_utm_campaign__id
+msgid "ID"
+msgstr ""
+
+#. module: mass_mailing_crm
+#. odoo-python
 #: code:addons/mass_mailing_crm/models/mailing_mailing.py:0
 msgid "LEADS"
 msgstr "LEADS"
 
 #. module: mass_mailing_crm
 #: model:ir.model,name:mass_mailing_crm.model_crm_lead
-msgid "Lead/Opportunity"
-msgstr "Lead/Verkoopkans"
+msgid "Lead"
+msgstr ""
 
 #. module: mass_mailing_crm
+#. odoo-python
 #: code:addons/mass_mailing_crm/models/mailing_mailing.py:0
 #: model:ir.model.fields.selection,name:mass_mailing_crm.selection__utm_campaign__ab_testing_winner_selection__crm_lead_count
 msgid "Leads"
 msgstr "Leads"
 
 #. module: mass_mailing_crm
+#. odoo-python
 #: code:addons/mass_mailing_crm/models/mailing_mailing.py:0
 msgid "Leads Analysis"
 msgstr "Leadsanalyse"
@@ -62,16 +83,23 @@ msgid "Mass Mailing"
 msgstr "Email marketing"
 
 #. module: mass_mailing_crm
+#. odoo-python
 #: code:addons/mass_mailing_crm/models/mailing_mailing.py:0
 msgid "No %s yet!"
 msgstr "Nog geen %s!"
 
 #. module: mass_mailing_crm
+#. odoo-python
 #: code:addons/mass_mailing_crm/models/mailing_mailing.py:0
-msgid "Note that Odoo cannot track replies if they are sent towards email addresses to this database."
-msgstr "Merk op dat Odoo geen antwoorden kan volgen als ze naar e-mailadressen van deze database worden gestuurd."
+msgid ""
+"Note that Odoo cannot track replies if they are sent towards email addresses "
+"to this database."
+msgstr ""
+"Merk op dat Odoo geen antwoorden kan volgen als ze naar e-mailadressen van "
+"deze database worden gestuurd."
 
 #. module: mass_mailing_crm
+#. odoo-python
 #: code:addons/mass_mailing_crm/models/mailing_mailing.py:0
 msgid "Opportunities"
 msgstr "Verkoopkansen"
@@ -95,3 +123,17 @@ msgstr "Gebruik leads"
 #: model:ir.model.fields,field_description:mass_mailing_crm.field_utm_campaign__ab_testing_winner_selection
 msgid "Winner Selection"
 msgstr "Winnaar selectie"
+
+#~ msgid ""
+#~ "<span class=\"o_stat_text\" attrs=\"{'invisible': [('use_leads', '=', "
+#~ "False)]}\">Leads</span>\n"
+#~ "                        <span class=\"o_stat_text\" attrs=\"{'invisible': "
+#~ "[('use_leads', '=', True)]}\">Opportunities</span>"
+#~ msgstr ""
+#~ "<span class=\"o_stat_text\" attrs=\"{'invisible': [('use_leads', '=', "
+#~ "False)]}\">Leads</span>\n"
+#~ "                        <span class=\"o_stat_text\" attrs=\"{'invisible': "
+#~ "[('use_leads', '=', True)]}\">Verkoopkansen</span>"
+
+#~ msgid "Lead/Opportunity"
+#~ msgstr "Lead/Verkoopkans"

@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-20 09:02+0000\n"
+"POT-Creation-Date: 2025-09-11 14:01+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
 "Last-Translator: Ryoko Tsuda <ryoko@quartile.co>, 2023\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
@@ -46,6 +46,11 @@ msgid "Create a new customer"
 msgstr "新規に顧客を作成"
 
 #. module: sale_crm
+#: model:ir.model,website_form_label:sale_crm.model_crm_lead
+msgid "Create an Opportunity"
+msgstr ""
+
+#. module: sale_crm
 #: model:ir.model,name:sale_crm.model_crm_quotation_partner
 msgid "Create new or use existing Customer on new Quotation"
 msgstr "新規見積に、新規新規顧客を作成、または、既存顧客を使用する"
@@ -71,7 +76,10 @@ msgid "Customer"
 msgstr "顧客"
 
 #. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_crm_lead__display_name
 #: model:ir.model.fields,field_description:sale_crm.field_crm_quotation_partner__display_name
+#: model:ir.model.fields,field_description:sale_crm.field_crm_team__display_name
+#: model:ir.model.fields,field_description:sale_crm.field_sale_order__display_name
 msgid "Display Name"
 msgstr "表示名"
 
@@ -81,19 +89,18 @@ msgid "Do not link to a customer"
 msgstr "顧客にリンクしない"
 
 #. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_crm_quotation_partner__id
-msgid "ID"
-msgstr "ID"
-
-#. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_res_users__target_sales_invoiced
-msgid "Invoiced in Sales Orders Target"
+#. odoo-python
+#: code:addons/sale_crm/models/crm_lead.py:0
+msgid "Expected revenue has been updated based on the linked Sales Orders."
 msgstr ""
 
 #. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_crm_quotation_partner____last_update
-msgid "Last Modified on"
-msgstr "最終更新日"
+#: model:ir.model.fields,field_description:sale_crm.field_crm_lead__id
+#: model:ir.model.fields,field_description:sale_crm.field_crm_quotation_partner__id
+#: model:ir.model.fields,field_description:sale_crm.field_crm_team__id
+#: model:ir.model.fields,field_description:sale_crm.field_sale_order__id
+msgid "ID"
+msgstr "ID"
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_crm_quotation_partner__write_uid
@@ -107,18 +114,13 @@ msgstr "最終更新日"
 
 #. module: sale_crm
 #: model:ir.model,name:sale_crm.model_crm_lead
-msgid "Lead/Opportunity"
-msgstr "リード / 案件"
+msgid "Lead"
+msgstr ""
 
 #. module: sale_crm
 #: model:ir.model.fields.selection,name:sale_crm.selection__crm_quotation_partner__action__exist
 msgid "Link to an existing customer"
 msgstr "既存の顧客にリンク"
-
-#. module: sale_crm
-#: model_terms:ir.ui.view,arch_db:sale_crm.sale_view_inherit123
-msgid "Log in the chatter from which opportunity the order originates"
-msgstr "注文が起きる可能性のあるチャットにログインする"
 
 #. module: sale_crm
 #: model:ir.ui.menu,name:sale_crm.sale_order_menu_quotations_crm
@@ -173,6 +175,7 @@ msgid "Sale Orders"
 msgstr "販売オーダ"
 
 #. module: sale_crm
+#. odoo-python
 #: code:addons/sale_crm/models/crm_team.py:0
 msgid "Sales Analysis"
 msgstr "販売分析"
@@ -188,11 +191,6 @@ msgid "Sales Team"
 msgstr "販売チーム"
 
 #. module: sale_crm
-#: code:addons/sale_crm/models/crm_team.py:0
-msgid "Sales: Untaxed Total"
-msgstr "売上高:非課税合計"
-
-#. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_crm_lead__sale_amount_total
 msgid "Sum of Orders"
 msgstr "注文合計"
@@ -203,11 +201,22 @@ msgid "Untaxed Total of Confirmed Orders"
 msgstr "確認済オーダの税抜合計"
 
 #. module: sale_crm
-#: model:ir.model,name:sale_crm.model_res_users
-msgid "User"
-msgstr "ユーザ"
-
-#. module: sale_crm
+#. odoo-python
 #: code:addons/sale_crm/wizard/crm_opportunity_to_quotation.py:0
 msgid "You can only apply this action from a lead."
 msgstr ""
+
+#~ msgid "Last Modified on"
+#~ msgstr "最終更新日"
+
+#~ msgid "Lead/Opportunity"
+#~ msgstr "リード / 案件"
+
+#~ msgid "Log in the chatter from which opportunity the order originates"
+#~ msgstr "注文が起きる可能性のあるチャットにログインする"
+
+#~ msgid "Sales: Untaxed Total"
+#~ msgstr "売上高:非課税合計"
+
+#~ msgid "User"
+#~ msgstr "ユーザ"

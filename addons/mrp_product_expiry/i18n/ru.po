@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2025-09-11 13:58+0000\n"
 "PO-Revision-Date: 2024-01-30 15:14+0400\n"
 "Last-Translator: \n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
@@ -15,7 +15,9 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || "
+"(n%100>=11 && n%100<=14)? 2 : 3);\n"
 
 #. module: mrp_product_expiry
 #: model_terms:ir.ui.view,arch_db:mrp_product_expiry.confirm_expiry_view_mrp_inherit
@@ -39,14 +41,26 @@ msgid "Discard"
 msgstr "Отменить"
 
 #. module: mrp_product_expiry
-#: model:ir.model.fields,field_description:mrp_product_expiry.field_expiry_picking_confirmation__production_ids
-msgid "Production"
-msgstr "Производство"
+#: model:ir.model.fields,field_description:mrp_product_expiry.field_expiry_picking_confirmation__display_name
+#: model:ir.model.fields,field_description:mrp_product_expiry.field_mrp_production__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: mrp_product_expiry
+#: model:ir.model.fields,field_description:mrp_product_expiry.field_expiry_picking_confirmation__id
+#: model:ir.model.fields,field_description:mrp_product_expiry.field_mrp_production__id
+msgid "ID"
+msgstr ""
 
 #. module: mrp_product_expiry
 #: model:ir.model,name:mrp_product_expiry.model_mrp_production
-msgid "Production Order"
-msgstr "Заказ на производство"
+msgid "Manufacturing Order"
+msgstr ""
+
+#. module: mrp_product_expiry
+#: model:ir.model.fields,field_description:mrp_product_expiry.field_expiry_picking_confirmation__production_ids
+msgid "Production"
+msgstr "Производство"
 
 #. module: mrp_product_expiry
 #: model:ir.model.fields,field_description:mrp_product_expiry.field_expiry_picking_confirmation__workorder_id
@@ -67,8 +81,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/mrp_product_expiry/wizard/confirm_expiry.py:0
 msgid ""
-"You are going to use the component %(product_name)s, %(lot_name)s which is expired.\n"
+"You are going to use the component %(product_name)s, %(lot_name)s which is "
+"expired.\n"
 "Do you confirm you want to proceed?"
 msgstr ""
-"Вы собираетесь использовать компонент %(product_name)s, %(lot_name)s, срок действия которого истек.\n"
+"Вы собираетесь использовать компонент %(product_name)s, %(lot_name)s, срок "
+"действия которого истек.\n"
 "Вы подтверждаете, что хотите продолжить?"
+
+#~ msgid "Production Order"
+#~ msgstr "Заказ на производство"

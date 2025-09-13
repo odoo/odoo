@@ -19,7 +19,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-17 08:01+0000\n"
+"POT-Creation-Date: 2025-09-11 13:56+0000\n"
 "PO-Revision-Date: 2022-09-22 05:52+0000\n"
 "Last-Translator: Piotr Szlązak <szlazakpiotr@gmail.com>, 2022\n"
 "Language-Team: Polish (https://app.transifex.com/odoo/teams/41243/pl/)\n"
@@ -27,7 +27,9 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && (n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
+"Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && "
+"(n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && "
+"n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
 
 #. module: hr_maintenance
 #: model:ir.model.fields,field_description:hr_maintenance.field_maintenance_equipment__assign_date
@@ -43,11 +45,6 @@ msgstr "Przydzielony dział"
 #: model:ir.model.fields,field_description:hr_maintenance.field_maintenance_equipment__employee_id
 msgid "Assigned Employee"
 msgstr "Przydzielony pracownik"
-
-#. module: hr_maintenance
-#: model:ir.model.fields,field_description:hr_maintenance.field_res_users__equipment_count
-msgid "Assigned Equipment"
-msgstr ""
 
 #. module: hr_maintenance
 #: model_terms:ir.ui.view,arch_db:hr_maintenance.maintenance_request_view_form_inherit_hr
@@ -69,6 +66,20 @@ msgid "Department"
 msgstr "Dział"
 
 #. module: hr_maintenance
+#: model:ir.model,name:hr_maintenance.model_hr_departure_wizard
+msgid "Departure Wizard"
+msgstr ""
+
+#. module: hr_maintenance
+#: model:ir.model.fields,field_description:hr_maintenance.field_hr_departure_wizard__display_name
+#: model:ir.model.fields,field_description:hr_maintenance.field_hr_employee__display_name
+#: model:ir.model.fields,field_description:hr_maintenance.field_hr_employee_public__display_name
+#: model:ir.model.fields,field_description:hr_maintenance.field_maintenance_equipment__display_name
+#: model:ir.model.fields,field_description:hr_maintenance.field_maintenance_request__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: hr_maintenance
 #: model:ir.model,name:hr_maintenance.model_hr_employee
 #: model:ir.model.fields,field_description:hr_maintenance.field_maintenance_request__employee_id
 #: model:ir.model.fields.selection,name:hr_maintenance.selection__maintenance_equipment__equipment_assign_to__employee
@@ -81,12 +92,30 @@ msgstr "Pracownik"
 #. module: hr_maintenance
 #: model:ir.model.fields,field_description:hr_maintenance.field_hr_employee__equipment_ids
 #: model:ir.model.fields,field_description:hr_maintenance.field_maintenance_request__equipment_id
+#: model_terms:ir.ui.view,arch_db:hr_maintenance.hr_departure_wizard_view_form
+#: model_terms:ir.ui.view,arch_db:hr_maintenance.hr_employee_public_view_form
+#: model_terms:ir.ui.view,arch_db:hr_maintenance.hr_employee_view_form
 msgid "Equipment"
 msgstr "Wyposażenie"
 
 #. module: hr_maintenance
 #: model:ir.model.fields,field_description:hr_maintenance.field_hr_employee__equipment_count
+#: model:ir.model.fields,field_description:hr_maintenance.field_hr_employee_public__equipment_count
 msgid "Equipment Count"
+msgstr ""
+
+#. module: hr_maintenance
+#: model:ir.model.fields,field_description:hr_maintenance.field_hr_departure_wizard__unassign_equipment
+msgid "Free Equiments"
+msgstr ""
+
+#. module: hr_maintenance
+#: model:ir.model.fields,field_description:hr_maintenance.field_hr_departure_wizard__id
+#: model:ir.model.fields,field_description:hr_maintenance.field_hr_employee__id
+#: model:ir.model.fields,field_description:hr_maintenance.field_hr_employee_public__id
+#: model:ir.model.fields,field_description:hr_maintenance.field_maintenance_equipment__id
+#: model:ir.model.fields,field_description:hr_maintenance.field_maintenance_request__id
+msgid "ID"
 msgstr ""
 
 #. module: hr_maintenance
@@ -98,11 +127,6 @@ msgstr "Sprzęt do konserwacji"
 #: model:ir.model,name:hr_maintenance.model_maintenance_request
 msgid "Maintenance Request"
 msgstr "Zgłoszenie konserwacji"
-
-#. module: hr_maintenance
-#: model:ir.model.fields,field_description:hr_maintenance.field_res_users__equipment_ids
-msgid "Managed Equipment"
-msgstr ""
 
 #. module: hr_maintenance
 #: model_terms:ir.ui.view,arch_db:hr_maintenance.maintenance_request_view_search_inherit_hr
@@ -120,6 +144,16 @@ msgid "Owner"
 msgstr "Właściciel"
 
 #. module: hr_maintenance
+#: model:ir.model,name:hr_maintenance.model_hr_employee_public
+msgid "Public Employee"
+msgstr ""
+
+#. module: hr_maintenance
+#: model:ir.model.fields,help:hr_maintenance.field_hr_departure_wizard__unassign_equipment
+msgid "Unassign Employee from Equipments"
+msgstr ""
+
+#. module: hr_maintenance
 #: model_terms:ir.ui.view,arch_db:hr_maintenance.maintenance_equipment_view_kanban_inherit_hr
 msgid "Unassigned"
 msgstr "Nieprzypisane"
@@ -129,7 +163,5 @@ msgstr "Nieprzypisane"
 msgid "Used By"
 msgstr "Użyte przez"
 
-#. module: hr_maintenance
-#: model:ir.model,name:hr_maintenance.model_res_users
-msgid "User"
-msgstr "Użytkownik"
+#~ msgid "User"
+#~ msgstr "Użytkownik"

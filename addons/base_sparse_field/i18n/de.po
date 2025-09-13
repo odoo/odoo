@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~14.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-12 07:50+0000\n"
+"POT-Creation-Date: 2025-09-11 13:55+0000\n"
 "PO-Revision-Date: 2022-09-22 05:45+0000\n"
 "Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
@@ -30,6 +30,7 @@ msgid "Boolean"
 msgstr "Boolesch"
 
 #. module: base_sparse_field
+#. odoo-python
 #: code:addons/base_sparse_field/models/models.py:0
 msgid "Changing the storing system for field \"%s\" is not allowed."
 msgstr "Die Speicherungstechnik für Feld \"%s\" darf nicht verändert werden."
@@ -55,6 +56,7 @@ msgid "Data"
 msgstr "Persönliche Daten"
 
 #. module: base_sparse_field
+#: model:ir.model.fields,field_description:base_sparse_field.field_ir_model_fields__display_name
 #: model:ir.model.fields,field_description:base_sparse_field.field_sparse_fields_test__display_name
 msgid "Display Name"
 msgstr "Anzeigename"
@@ -75,24 +77,26 @@ msgid "Float"
 msgstr "Textumlauf"
 
 #. module: base_sparse_field
+#: model:ir.model.fields,field_description:base_sparse_field.field_ir_model_fields__id
 #: model:ir.model.fields,field_description:base_sparse_field.field_sparse_fields_test__id
 msgid "ID"
 msgstr "ID"
 
 #. module: base_sparse_field
 #: model:ir.model.fields,help:base_sparse_field.field_ir_model_fields__serialization_field_id
-msgid "If set, this field will be stored in the sparse structure of the serialization field, instead of having its own database column. This cannot be changed after creation."
-msgstr "Wenn gesetzt, wird dieses Feld in einer zusätzlichen Struktur des Serialisierungsfeldes gespeichert anstelle einer eigenen Spalte in der Datenbank. Dies kann nach Erstellung nicht mehr geändert werden."
+msgid ""
+"If set, this field will be stored in the sparse structure of the "
+"serialization field, instead of having its own database column. This cannot "
+"be changed after creation."
+msgstr ""
+"Wenn gesetzt, wird dieses Feld in einer zusätzlichen Struktur des "
+"Serialisierungsfeldes gespeichert anstelle einer eigenen Spalte in der "
+"Datenbank. Dies kann nach Erstellung nicht mehr geändert werden."
 
 #. module: base_sparse_field
 #: model:ir.model.fields,field_description:base_sparse_field.field_sparse_fields_test__integer
 msgid "Integer"
 msgstr "Ganzzahl"
-
-#. module: base_sparse_field
-#: model:ir.model.fields,field_description:base_sparse_field.field_sparse_fields_test____last_update
-msgid "Last Modified on"
-msgstr "Letzte Änderung am"
 
 #. module: base_sparse_field
 #: model:ir.model.fields,field_description:base_sparse_field.field_sparse_fields_test__write_uid
@@ -115,6 +119,7 @@ msgid "Partner"
 msgstr "Partner"
 
 #. module: base_sparse_field
+#. odoo-python
 #: code:addons/base_sparse_field/models/models.py:0
 msgid "Renaming sparse field \"%s\" is not allowed"
 msgstr "Umbenennen des Ersatzfeldes \"%s\" ist nicht erlaubt"
@@ -130,9 +135,12 @@ msgid "Serialization Field"
 msgstr "Serialisierungs-Feld"
 
 #. module: base_sparse_field
+#. odoo-python
 #: code:addons/base_sparse_field/models/models.py:0
-msgid "Serialization field %r not found for sparse field %s!"
-msgstr "Serialisierungsfeld %r für Sparse-Feld %s nicht gefunden!"
+msgid ""
+"Serialization field \"%(serialization_field)s\" not found for sparse field %"
+"(sparse_field)s!"
+msgstr ""
 
 #. module: base_sparse_field
 #: model:ir.model,name:base_sparse_field.model_sparse_fields_test
@@ -148,3 +156,9 @@ msgstr "Zwei"
 #: model:ir.model.fields.selection,name:base_sparse_field.selection__ir_model_fields__ttype__serialized
 msgid "serialized"
 msgstr "serialisiert"
+
+#~ msgid "Last Modified on"
+#~ msgstr "Letzte Änderung am"
+
+#~ msgid "Serialization field %r not found for sparse field %s!"
+#~ msgstr "Serialisierungsfeld %r für Sparse-Feld %s nicht gefunden!"
