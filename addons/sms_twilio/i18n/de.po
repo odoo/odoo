@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-05 18:40+0000\n"
+"POT-Creation-Date: 2025-09-12 01:51+0000\n"
 "PO-Revision-Date: 2025-09-10 13:57+0000\n"
 "Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
 "Language-Team: German <https://translate.odoo.com/projects/odoo-18/"
@@ -26,6 +26,12 @@ msgid "%(failure_type)s: %(failure_reason)s"
 msgstr "%(failure_type)s: %(failure_reason)s"
 
 #. module: sms_twilio
+#. odoo-python
+#: code:addons/sms_twilio/tools/sms_api.py:0
+msgid "'To' and 'From' numbers cannot be the same"
+msgstr ""
+
+#. module: sms_twilio
 #: model_terms:ir.ui.view,arch_db:sms_twilio.sms_twilio_account_manage_view_form
 msgid "+1 555-123-4567"
 msgstr "+1 555-123-4567"
@@ -33,8 +39,8 @@ msgstr "+1 555-123-4567"
 #. module: sms_twilio
 #. odoo-python
 #: code:addons/sms_twilio/tools/sms_api.py:0
-msgid "A 'To' phone number is required."
-msgstr "Eine Empfangsnummer („An“) ist erforderlich."
+msgid "A 'To' phone number is required"
+msgstr ""
 
 #. module: sms_twilio
 #: model_terms:ir.ui.view,arch_db:sms_twilio.sms_twilio_account_manage_view_form
@@ -60,6 +66,7 @@ msgid "Auth Token"
 msgstr "Authentifizierungstoken"
 
 #. module: sms_twilio
+#: model:ir.model.fields.selection,name:sms_twilio.selection__mail_notification__failure_type__twilio_authentication
 #: model:ir.model.fields.selection,name:sms_twilio.selection__sms_sms__failure_type__twilio_authentication
 msgid "Authentication Error\""
 msgstr "Authentifizierungsfehler \""
@@ -141,12 +148,24 @@ msgid "Failure Type"
 msgstr "Fehlertyp"
 
 #. module: sms_twilio
+#: model:ir.model.fields,field_description:sms_twilio.field_mail_notification__failure_type
+msgid "Failure type"
+msgstr "Fehlertyp"
+
+#. module: sms_twilio
+#: model:ir.model.fields.selection,name:sms_twilio.selection__mail_notification__failure_type__twilio_from_to
+#: model:ir.model.fields.selection,name:sms_twilio.selection__sms_sms__failure_type__twilio_from_to
+msgid "From / To identic"
+msgstr ""
+
+#. module: sms_twilio
 #: model:ir.model.fields,field_description:sms_twilio.field_sms_twilio_account_manage__id
 #: model:ir.model.fields,field_description:sms_twilio.field_sms_twilio_number__id
 msgid "ID"
 msgstr "ID"
 
 #. module: sms_twilio
+#: model:ir.model.fields.selection,name:sms_twilio.selection__mail_notification__failure_type__twilio_callback
 #: model:ir.model.fields.selection,name:sms_twilio.selection__sms_sms__failure_type__twilio_callback
 msgid "Incorrect callback URL"
 msgstr "Falsche Rückruf-URL"
@@ -195,6 +214,17 @@ msgid "Manage Twilio SMS"
 msgstr "Twilio-SMS verwalten"
 
 #. module: sms_twilio
+#: model:ir.model,name:sms_twilio.model_mail_notification
+msgid "Message Notifications"
+msgstr ""
+
+#. module: sms_twilio
+#: model:ir.model.fields.selection,name:sms_twilio.selection__mail_notification__failure_type__twilio_from_missing
+#: model:ir.model.fields.selection,name:sms_twilio.selection__sms_sms__failure_type__twilio_from_missing
+msgid "Missing From Number"
+msgstr ""
+
+#. module: sms_twilio
 #: model_terms:ir.ui.view,arch_db:sms_twilio.sms_twilio_account_manage_view_form
 msgid ""
 "Need help ?\n"
@@ -202,8 +232,8 @@ msgid ""
 "hidden=\"true\"/>"
 msgstr ""
 "Brauchen Sie Hilfe?\n"
-"                            <i class=\"fa fa-external-link\" aria-hidden="
-"\"true\"/>"
+"                            <i class=\"fa fa-external-link\" aria-"
+"hidden=\"true\"/>"
 
 #. module: sms_twilio
 #: model:ir.model.fields,field_description:sms_twilio.field_res_company__sms_twilio_number_ids
@@ -292,15 +322,20 @@ msgstr "Die SMS wurde von %s gesendet"
 #. module: sms_twilio
 #. odoo-python
 #: code:addons/sms_twilio/tools/sms_api.py:0
-msgid "The number you're trying to reach is not correctly formatted."
+msgid "The number you're trying to reach is not correctly formatted"
 msgstr ""
-"Die Nummer, die Sie zu erreichen versuchen, ist nicht korrekt formatiert."
 
 #. module: sms_twilio
 #. odoo-python
 #: code:addons/sms_twilio/wizard/sms_twilio_account_manage.py:0
 msgid "This is a test SMS from Odoo"
 msgstr "Das ist eine Test-SMS von Odoo"
+
+#. module: sms_twilio
+#. odoo-python
+#: code:addons/sms_twilio/tools/sms_api.py:0
+msgid "Trial Account Limitation"
+msgstr ""
 
 #. module: sms_twilio
 #. odoo-python
@@ -350,6 +385,12 @@ msgid "Unknown failure at sending, please contact Odoo support"
 msgstr "Unbekannter Fehler beim Senden, wenden Sie sich an den Odoo-Support"
 
 #. module: sms_twilio
+#. odoo-python
+#: code:addons/sms_twilio/tools/sms_api.py:0
+msgid "Unverified recipient on Trial Account"
+msgstr ""
+
+#. module: sms_twilio
 #: model_terms:ir.ui.view,arch_db:sms_twilio.sms_twilio_account_manage_view_form
 msgid "Update Account"
 msgstr "Konto aktualisieren"
@@ -358,6 +399,13 @@ msgstr "Konto aktualisieren"
 #: model_terms:ir.ui.view,arch_db:sms_twilio.sms_twilio_account_manage_view_form
 msgid "abcde12345abcde12345abcde12345ab"
 msgstr "abcde12345abcde12345abcde12345ab"
+
+#~ msgid "A 'To' phone number is required."
+#~ msgstr "Eine Empfangsnummer („An“) ist erforderlich."
+
+#~ msgid "The number you're trying to reach is not correctly formatted."
+#~ msgstr ""
+#~ "Die Nummer, die Sie zu erreichen versuchen, ist nicht korrekt formatiert."
 
 #~ msgid ""
 #~ "Any number here that is not on Twilio will be deleted and the ordering "
@@ -374,6 +422,3 @@ msgstr "abcde12345abcde12345abcde12345ab"
 
 #~ msgid "Error message"
 #~ msgstr "Fehlermeldung"
-
-#~ msgid "Failure type"
-#~ msgstr "Fehlertyp"
