@@ -1,25 +1,25 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* account_peppol
-# 
+#
 # Translators:
 # Martin Trigaux, 2024
 # Wil Odoo, 2024
 # Manav Shah, 2025
 # Ujjawal Pathak, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-25 18:39+0000\n"
+"POT-Creation-Date: 2025-09-12 01:50+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Ujjawal Pathak, 2025\n"
 "Language-Team: Hindi (https://app.transifex.com/odoo/teams/41243/hi/)\n"
+"Language: hi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: hi\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: account_peppol
@@ -62,16 +62,20 @@ msgstr "%s ने Peppol पर इलेक्ट्रॉनिक इनव�
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
 msgid ""
 "<br/>\n"
-"                                In Belgium, electronic invoicing is <u>mandatory as of January 2026</u> - don't wait to register."
+"                                In Belgium, electronic invoicing is "
+"<u>mandatory as of January 2026</u> - don't wait to register."
 msgstr ""
 "<br/>\n"
-"                                बेल्जियम में, इलेक्ट्रॉनिक इनवॉइस <u>जनवरी 2026 से अनिवार्य</u> कर दिया गया है - जल्दी से रजिस्टर करें."
+"                                बेल्जियम में, इलेक्ट्रॉनिक इनवॉइस <u>जनवरी 2026 से "
+"अनिवार्य</u> कर दिया गया है - जल्दी से रजिस्टर करें."
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.account_peppol_view_move_form
 msgid ""
-"<span class=\"mx-1\" invisible=\"'demo_' not in peppol_message_uuid\"> (Demo)</span>\n"
-"                    <span class=\"text-muted mx-3\" invisible=\"peppol_move_state != 'to_send'\">\n"
+"<span class=\"mx-1\" invisible=\"'demo_' not in peppol_message_uuid\"> "
+"(Demo)</span>\n"
+"                    <span class=\"text-muted mx-3\" "
+"invisible=\"peppol_move_state != 'to_send'\">\n"
 "                        The invoice will be sent automatically via Peppol\n"
 "                    </span>"
 msgstr ""
@@ -80,18 +84,17 @@ msgstr ""
 #. odoo-python
 #: code:addons/account_peppol/models/account_edi_proxy_user.py:0
 msgid ""
-"A participant with these details has already been registered on the network."
-" If you have previously registered to a Peppol service, please deregister."
+"A participant with these details has already been registered on the network. "
+"If you have previously registered to a Peppol service, please deregister."
 msgstr ""
-"इस जानकारी वाला व्यक्ति पहले से ही नेटवर्क पर रजिस्टर है. अगर आपने पहले किसी"
-" Peppol सर्विस के लिए रजिस्टर किया था, तो पहले उसे हटा दें."
+"इस जानकारी वाला व्यक्ति पहले से ही नेटवर्क पर रजिस्टर है. अगर आपने पहले किसी Peppol "
+"सर्विस के लिए रजिस्टर किया था, तो पहले उसे हटा दें."
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/res_company.py:0
 msgid "A purchase journal must be used to receive Peppol documents."
-msgstr ""
-"Peppol के दस्तावेज़ लेने के लिए 'परचेज़ जर्नल' का इस्तेमाल करना ज़रूरी है."
+msgstr "Peppol के दस्तावेज़ लेने के लिए 'परचेज़ जर्नल' का इस्तेमाल करना ज़रूरी है."
 
 #. module: account_peppol
 #: model:ir.model,name:account_peppol.model_account_edi_proxy_client_user
@@ -186,8 +189,8 @@ msgstr "उपलब्ध Peppol भेजने के तरीके"
 msgid ""
 "By clicking the button below I accept that Odoo may process my e-invoices."
 msgstr ""
-"नीचे दिए गए बटन पर क्लिक करने का मतलब है कि आप इस बात से सहमत हैं कि Odoo "
-"कंपनी आपके इलेक्ट्रॉनिक बिल को प्रोसेस कर सकती है."
+"नीचे दिए गए बटन पर क्लिक करने का मतलब है कि आप इस बात से सहमत हैं कि Odoo कंपनी आपके "
+"इलेक्ट्रॉनिक बिल को प्रोसेस कर सकती है."
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__res_company__account_peppol_proxy_state__receiver
@@ -246,10 +249,13 @@ msgstr "पार्टनर की जांच करें"
 #: model:ir.model.fields,help:account_peppol.field_res_users__peppol_eas
 msgid ""
 "Code used to identify the Endpoint for BIS Billing 3.0 and its derivatives.\n"
-"             List available at https://docs.peppol.eu/poacc/billing/3.0/codelist/eas/"
+"             List available at https://docs.peppol.eu/poacc/billing/3.0/"
+"codelist/eas/"
 msgstr ""
-"यह एक कोड है जो BIS बिलिंग 3.0 और उससे संबंधित वर्शन के लिए भुगतान प्राप्त करने वाले सिस्टम की पहचान करता है. \n"
-"इनकी पूरी सूची दिए गए लिंक पर देखी जा सकती है: https://docs.peppol.eu/poacc/billing/3.0/codelist/eas/"
+"यह एक कोड है जो BIS बिलिंग 3.0 और उससे संबंधित वर्शन के लिए भुगतान प्राप्त करने वाले "
+"सिस्टम की पहचान करता है. \n"
+"इनकी पूरी सूची दिए गए लिंक पर देखी जा सकती है: https://docs.peppol.eu/poacc/"
+"billing/3.0/codelist/eas/"
 
 #. module: account_peppol
 #: model:ir.model,name:account_peppol.model_res_company
@@ -329,8 +335,7 @@ msgstr "इस तारीख को बनाया गया"
 #. odoo-python
 #: code:addons/account_peppol/models/account_move_send.py:0
 msgid "Customer is on Peppol but did not enable receiving documents."
-msgstr ""
-"ग्राहक Peppol पर है, लेकिन उसने दस्तावेज़ पाने की सुविधा चालू नहीं की है."
+msgstr "ग्राहक Peppol पर है, लेकिन उसने दस्तावेज़ पाने की सुविधा चालू नहीं की है."
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__peppol_registration__edi_mode__demo
@@ -370,9 +375,7 @@ msgstr "हो गया"
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/components/peppol_info/peppol_info.xml:0
 msgid "E-invoices will soon be mandatory in many countries"
-msgstr ""
-"बहुत से देशों में इलेक्ट्रॉनिक इनवॉइस का जल्द ही इस्तेमाल करना ज़रूरा हो "
-"जाएगा"
+msgstr "बहुत से देशों में इलेक्ट्रॉनिक इनवॉइस का जल्द ही इस्तेमाल करना ज़रूरा हो जाएगा"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__edi_mode
@@ -477,8 +480,7 @@ msgstr ""
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/controllers/portal.py:0
-msgid ""
-"If you want to be invoiced by Peppol, your configuration must be valid."
+msgid "If you want to be invoiced by Peppol, your configuration must be valid."
 msgstr "अगर आपको Peppol से इनवॉइस चाहिए, तो आपकी सेटिंग सही होनी चाहिए."
 
 #. module: account_peppol
@@ -600,11 +602,10 @@ msgstr "PEPPOL से ई-इनवॉइस भेजना और पाना
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/components/peppol_info/peppol_info.xml:0
 msgid ""
-"PEPPOL is the secure standard for e-invoices used in EU and across the "
-"world."
+"PEPPOL is the secure standard for e-invoices used in EU and across the world."
 msgstr ""
-"PEPPOL ई-इनवॉइस भेजने और पाने का एक सुरक्षित और यूरोपियन यूनियन और दुनिया भर"
-" में माना जाने वाला तरीका है."
+"PEPPOL ई-इनवॉइस भेजने और पाने का एक सुरक्षित और यूरोपियन यूनियन और दुनिया भर में माना "
+"जाने वाला तरीका है."
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_bank_statement_line__peppol_message_uuid
@@ -787,8 +788,12 @@ msgstr "प्राइमरी कॉन्टैक्ट ईमेल"
 #: model:ir.model.fields,help:account_peppol.field_peppol_registration__contact_email
 #: model:ir.model.fields,help:account_peppol.field_res_company__account_peppol_contact_email
 #: model:ir.model.fields,help:account_peppol.field_res_config_settings__account_peppol_contact_email
-msgid "Primary contact email for Peppol-related communication"
-msgstr "Peppol से जुड़ी कम्यूनिकेशन के लिए प्राइमरी कॉन्टैक्ट ईमेल"
+msgid ""
+"Primary contact email for Peppol connection related communications and "
+"notifications.\n"
+"In particular, this email is used by Odoo to reconnect your Peppol account "
+"in case of database change."
+msgstr ""
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_edi_proxy_client_user__proxy_type
@@ -886,11 +891,12 @@ msgstr "टेस्ट"
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
 msgid ""
 "Test mode allows sending e-invoices through the test Peppol network.\n"
-"                                    By clicking the button below I accept that Odoo may process my e-invoices."
+"                                    By clicking the button below I accept "
+"that Odoo may process my e-invoices."
 msgstr ""
-"टेस्ट मोड आपको Peppol के टेस्ट नेटवर्क का उपयोग करके इलेक्ट्रॉनिक इनवॉइस "
-"भेजने की सुविधा देता है. नीचे दिए गए बटन पर क्लिक करके, आप Odoo को अपने "
-"ई-इनवॉइस पर प्रोसेस करने की अनुमति देते हैं."
+"टेस्ट मोड आपको Peppol के टेस्ट नेटवर्क का उपयोग करके इलेक्ट्रॉनिक इनवॉइस भेजने की सुविधा "
+"देता है. नीचे दिए गए बटन पर क्लिक करके, आप Odoo को अपने ई-इनवॉइस पर प्रोसेस करने की "
+"अनुमति देते हैं."
 
 #. module: account_peppol
 #. odoo-python
@@ -914,9 +920,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account_peppol/models/account_move_send.py:0
 msgid "The document has been sent to the Peppol Access Point for processing"
-msgstr ""
-"आपका दस्तावेज़ Peppol ऐक्सेस प्वाइंट पर आगे की प्रोसेस के लिए भेज दिया गया "
-"है"
+msgstr "आपका दस्तावेज़ Peppol ऐक्सेस प्वाइंट पर आगे की प्रोसेस के लिए भेज दिया गया है"
 
 #. module: account_peppol
 #. odoo-javascript
@@ -931,8 +935,7 @@ msgid ""
 "The endpoint number might not be correct. Please check if you entered the "
 "right identification number."
 msgstr ""
-"जिस नंबर पर डेटा भेजना है, वह गलत हो सकता है. कृपया सही पहचान संख्या दोबारा "
-"जांच लें."
+"जिस नंबर पर डेटा भेजना है, वह गलत हो सकता है. कृपया सही पहचान संख्या दोबारा जांच लें."
 
 #. module: account_peppol
 #. odoo-python
@@ -942,16 +945,16 @@ msgid ""
 "configured here. If you wish to configure them differently, please contact "
 "support."
 msgstr ""
-"आपकी पहचान से जुड़ी कुछ सेवाएं यहां दिख रही हैं, पर उन्हें यहीं पर बदला नहीं"
-" जा सकता. अगर आप उनमें बदलाव करना चाहते हैं, तो सहायता टीम से संपर्क करें."
+"आपकी पहचान से जुड़ी कुछ सेवाएं यहां दिख रही हैं, पर उन्हें यहीं पर बदला नहीं जा सकता. अगर "
+"आप उनमें बदलाव करना चाहते हैं, तो सहायता टीम से संपर्क करें."
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/account_move_send.py:0
 msgid "The partner is missing Peppol EAS and/or Endpoint identifier."
 msgstr ""
-"पार्टनर के पास Peppol का पता लगाने वाली ज़रूरी जानकारी (जैसे EAS कोड या "
-"एंडपॉइंट आईडी) नहीं है."
+"पार्टनर के पास Peppol का पता लगाने वाली ज़रूरी जानकारी (जैसे EAS कोड या एंडपॉइंट "
+"आईडी) नहीं है."
 
 #. module: account_peppol
 #. odoo-python
@@ -972,8 +975,7 @@ msgstr "बेल्जियम में कंपनी की पहचा�
 #: model:ir.model.fields,help:account_peppol.field_res_config_settings__account_peppol_edi_identification
 msgid "The unique id that identifies this user, typically the vat"
 msgstr ""
-"यह एक खास नंबर है जिससे इस उपयोगकर्ता को पहचाना जाता है और यह अक्सर वैट नंबर"
-" होता है"
+"यह एक खास नंबर है जिससे इस उपयोगकर्ता को पहचाना जाता है और यह अक्सर वैट नंबर होता है"
 
 #. module: account_peppol
 #. odoo-python
@@ -985,14 +987,20 @@ msgstr ""
 #. odoo-python
 #: code:addons/account_peppol/models/res_config_settings.py:0
 msgid ""
-"This feature is deprecated. Contact Odoo support if you need a migration "
-"key."
+"This feature is deprecated. Contact Odoo support if you need a migration key."
 msgstr ""
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
 msgid "This invoice has also been"
 msgstr "इस इनवॉइस "
+
+#. module: account_peppol
+#: model:ir.model.fields,help:account_peppol.field_peppol_registration__phone_number
+#: model:ir.model.fields,help:account_peppol.field_res_company__account_peppol_phone_number
+#: model:ir.model.fields,help:account_peppol.field_res_config_settings__account_peppol_phone_number
+msgid "This number is used for identification purposes only."
+msgstr ""
 
 #. module: account_peppol
 #. odoo-python
@@ -1005,9 +1013,7 @@ msgstr ""
 msgid ""
 "To generate complete electronic invoices, also set a country for this "
 "partner."
-msgstr ""
-"इलेक्ट्रॉनिक बिल पूरी तरह से बनाने के लिए, इस पार्टनर का देश भी डालना ज़रूरी"
-" है."
+msgstr "इलेक्ट्रॉनिक बिल पूरी तरह से बनाने के लिए, इस पार्टनर का देश भी डालना ज़रूरी है."
 
 #. module: account_peppol
 #. odoo-python
@@ -1023,8 +1029,8 @@ msgid ""
 "Unique identifier used by the BIS Billing 3.0 and its derivatives, also "
 "known as 'Endpoint ID'."
 msgstr ""
-"यह एक खास पहचान संख्या है जिसका उपयोग BIS बिलिंग 3.0 और उससे जुड़े सिस्टम "
-"करते हैं. इसे 'एंडपॉइंट आईडी' भी कहते हैं."
+"यह एक खास पहचान संख्या है जिसका उपयोग BIS बिलिंग 3.0 और उससे जुड़े सिस्टम करते हैं. इसे "
+"'एंडपॉइंट आईडी' भी कहते हैं."
 
 #. module: account_peppol
 #. odoo-javascript
@@ -1072,8 +1078,7 @@ msgid ""
 "We could not find a user with this information on our server. Please check "
 "your information."
 msgstr ""
-"हमें इस जानकारी से कोई उपयोगकर्ता नहीं मिला. कृपया अपनी दी गई जानकारी दोबारा"
-" जांच लें."
+"हमें इस जानकारी से कोई उपयोगकर्ता नहीं मिला. कृपया अपनी दी गई जानकारी दोबारा जांच लें."
 
 #. module: account_peppol
 #. odoo-javascript
@@ -1131,10 +1136,13 @@ msgstr "अब आप Peppol के ज़रिए इनवॉइस भेज
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid ""
-"You registration has been rejected, the reason has been sent to you via email.\n"
-"                            Please contact our support if you need further assistance."
+"You registration has been rejected, the reason has been sent to you via "
+"email.\n"
+"                            Please contact our support if you need further "
+"assistance."
 msgstr ""
-"आपका नाम रजिस्टर नहीं हो पाया है. रजिस्ट्रेशन क्यों नहीं हुआ, यह आपको ईमेल में बताया गया है. \n"
+"आपका नाम रजिस्टर नहीं हो पाया है. रजिस्ट्रेशन क्यों नहीं हुआ, यह आपको ईमेल में बताया गया "
+"है. \n"
 "अगर कोई और जानकारी चाहिए, तो हमारी सहायता टीम से संपर्क करें."
 
 #. module: account_peppol
@@ -1144,13 +1152,6 @@ msgid ""
 "You will not be able to send or receive Peppol documents in Odoo anymore. "
 "Are you sure you want to proceed?"
 msgstr ""
-
-#. module: account_peppol
-#: model:ir.model.fields,help:account_peppol.field_peppol_registration__phone_number
-#: model:ir.model.fields,help:account_peppol.field_res_company__account_peppol_phone_number
-#: model:ir.model.fields,help:account_peppol.field_res_config_settings__account_peppol_phone_number
-msgid "You will receive a verification code to this mobile number"
-msgstr "इस मोबाइल नंबर पर आपको जांच के लिए एक कोड मिलेगा."
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
@@ -1164,8 +1165,8 @@ msgid ""
 "Your Peppol registration will be activated soon. You can already send "
 "invoices."
 msgstr ""
-"आपका Peppol पर किया गया रजिस्ट्रेशन जल्दी ही चालू हो जाएगा. आप अभी से इनवॉइस"
-" भेजना शुरू कर सकते हैं."
+"आपका Peppol पर किया गया रजिस्ट्रेशन जल्दी ही चालू हो जाएगा. आप अभी से इनवॉइस भेजना "
+"शुरू कर सकते हैं."
 
 #. module: account_peppol
 #. odoo-python
@@ -1192,8 +1193,8 @@ msgid ""
 "Your registration on Peppol network should be activated within a day. The "
 "updated status will be visible in Settings."
 msgstr ""
-"Peppol नेटवर्क पर आपका रजिस्ट्रेशन एक दिन में चालू हो जाएगा. उसकी नई स्थिति "
-"आपको सेटिंग्स में दिख जाएगी."
+"Peppol नेटवर्क पर आपका रजिस्ट्रेशन एक दिन में चालू हो जाएगा. उसकी नई स्थिति आपको "
+"सेटिंग्स में दिख जाएगी."
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
@@ -1231,3 +1232,9 @@ msgstr "इनवॉइस भेजने के लिए, हालांक�
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
 msgid "uses"
 msgstr "इस्तेमाल"
+
+#~ msgid "Primary contact email for Peppol-related communication"
+#~ msgstr "Peppol से जुड़ी कम्यूनिकेशन के लिए प्राइमरी कॉन्टैक्ट ईमेल"
+
+#~ msgid "You will receive a verification code to this mobile number"
+#~ msgstr "इस मोबाइल नंबर पर आपको जांच के लिए एक कोड मिलेगा."
