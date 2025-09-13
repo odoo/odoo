@@ -1185,12 +1185,15 @@ class PurchaseOrder(models.Model):
             params=params
         )
         if seller:
-            price = seller.price_discounted
+            price = product.uom_id._compute_price(seller.price_discounted, seller.product_uom_id)
             if seller.currency_id != self.currency_id:
-                price = seller.currency_id._convert(seller.price_discounted, self.currency_id)
+                price = seller.currency_id._convert(price, self.currency_id)
             product_infos.update(
                 price=price,
                 min_qty=seller.min_qty,
+                uomDisplayName=seller.product_uom_id.display_name,
+                productUomDisplayName=product.uom_id.display_name,
+                productUnitPrice=seller.product_uom_id._compute_price(price, product.uom_id)
             )
 
         return product_infos
@@ -1266,8 +1269,8 @@ class PurchaseOrder(models.Model):
         :param int quantity: The quantity selected in the catalog.
         :param int section_id: The id of section selected in the catalog.
         :return: The unit price of the product, based on the pricelist of the
-                 purchase order and the quantity selected.
-        :rtype: float
+                 purchase order and the quantity selected, and the price per product unit.
+        :rtype: dict
         """
         self.ensure_one()
         pol = self.order_line.filtered(
@@ -1278,7 +1281,7 @@ class PurchaseOrder(models.Model):
             if quantity != 0:
                 pol.product_qty = quantity
             elif self.state in ['draft', 'sent']:
-                price_unit = self._get_product_price_and_data(pol.product_id)['price']
+                price_unit = pol.price_unit_discounted
                 pol.unlink()
                 return price_unit
             else:
@@ -1290,14 +1293,21 @@ class PurchaseOrder(models.Model):
                 'product_qty': quantity,
                 'sequence': self._get_new_line_sequence(child_field, section_id),
             })
-            if pol.selected_seller_id:
-                # Fix the PO line's price on the seller's one.
-                seller = pol.selected_seller_id
-                price = seller.price_discounted
-                if seller.currency_id != self.currency_id:
-                    price = seller.currency_id._convert(seller.price_discounted, self.currency_id)
-                pol.price_unit = price
-        return pol.price_unit_discounted
+            params = {'order_id': self}
+            seller = pol.product_id._select_seller(
+            partner_id=self.partner_id,
+            quantity=None,
+            date=self.date_order and self.date_order.date(),
+            uom_id=pol.product_id.uom_id,
+            ordered_by='min_qty',
+            params=params,
+        )
+            if seller:
+                # Fix the PO line's price, UOM and quantity on the seller's one.
+                pol.price_unit = pol.product_id.uom_id._compute_price(seller.price_discounted, seller.product_uom_id)
+                pol.product_uom_id = seller.product_uom_id
+                pol.product_qty = quantity
+        return {'price': pol.price_unit_discounted, 'productUnitPrice': pol.product_uom_id._compute_price(pol.price_unit_discounted, pol.product_id.uom_id)}
 
     def _get_default_create_section_values(self):
         """ Return the default values for creating a section line in the purchase order through

@@ -84,7 +84,7 @@ class TestPurchaseProductCatalog(AccountTestInvoicingCommon, HttpCase):
             headers={'Content-Type': 'application/json'},
         )
         self.assertEqual(resp.status_code, 200)
-        self.assertEqual(resp.json()['result'], other_product_price_converted)
+        self.assertEqual(resp.json()['result']['price'], other_product_price_converted)
 
         resp = self.url_open(
             url='/product/catalog/update_order_line_info',
@@ -100,4 +100,4 @@ class TestPurchaseProductCatalog(AccountTestInvoicingCommon, HttpCase):
             headers={'Content-Type': 'application/json'},
         )
         self.assertEqual(resp.status_code, 200)
-        self.assertEqual(resp.json()['result'], company_product_price)
+        self.assertEqual(resp.json()['result']['price'], company_product_price)

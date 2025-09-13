@@ -59,8 +59,14 @@ export class ProductCatalogKanbanRecord extends KanbanRecord {
     //--------------------------------------------------------------------------
 
     async _updateQuantity() {
-        const price = await this._updateQuantityAndGetPrice();
-        this.productCatalogData.price = parseFloat(price);
+        const {price, productUnitPrice} = await this._updateQuantityAndGetPrice();
+        if (price){
+            this.productCatalogData.price = parseFloat(price);
+        }
+        if(productUnitPrice){
+            // To update the productUnitPrice in Purchase, if a match happens with another price
+            this.productCatalogData.productUnitPrice = parseFloat(productUnitPrice);
+        }
     }
 
     _updateQuantityAndGetPrice() {

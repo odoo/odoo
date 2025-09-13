@@ -473,11 +473,12 @@ class PurchaseOrderLine(models.Model):
             catalog_info = self.order_id._get_product_price_and_data(self.product_id)
             catalog_info.update(
                 quantity=self.product_qty,
-                price=self.price_unit * (1 - self.discount / 100),
+                price=self.price_unit_discounted,
                 readOnly=self.order_id._is_readonly(),
+                uomDisplayName=self.product_uom_id.display_name,
+                productUomDisplayName=self.product_id.uom_id.display_name,
+                productUnitPrice=self.product_uom_id._compute_price(self.price_unit_discounted, self.product_id.uom_id),
             )
-            if self.product_id.uom_id != self.product_uom_id:
-                catalog_info['uomDisplayName'] = self.product_uom_id.display_name
             return catalog_info
         elif self:
             self.product_id.ensure_one()
@@ -598,7 +599,7 @@ class PurchaseOrderLine(models.Model):
         self.ensure_one()
         # don't track anything when coming from the accrued expense entry wizard, as it is only computing fields at a past date to get relevant amounts
         # and doesn't actually change anything to the current record
-        if  self.env.context.get('accrual_entry_date'):
+        if self.env.context.get('accrual_entry_date'):
             return
         if new_qty != self.qty_received and self.order_id.state == 'purchase':
             self.order_id.message_post_with_source(

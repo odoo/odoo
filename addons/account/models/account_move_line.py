@@ -7,7 +7,8 @@ import re
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError, UserError, RedirectWarning
 from odoo.fields import Command, Domain
-from odoo.tools import frozendict, float_compare, groupby, Query, SQL, OrderedSet
+from odoo.tools import frozendict, float_compare, float_round, groupby, Query, SQL, OrderedSet
+
 from odoo.addons.web.controllers.utils import clean_action
 
 from odoo.addons.account.models.account_move import MAX_HASH_VERSION
@@ -849,8 +850,7 @@ class AccountMoveLine(models.Model):
         for line in self.filtered(lambda l: l.parent_state == 'draft'):
             # vendor bills should have the product purchase UOM
             if line.move_id.is_purchase_document():
-                seller_ids = line.product_id.seller_ids._get_filtered_supplier(line.company_id, line.product_id, False)
-                line.product_uom_id = seller_ids[:1].product_uom_id or line.product_id.uom_id
+                line.product_uom_id = line.product_id.seller_ids.filtered(lambda s: s.partner_id == line.partner_id)[:1].product_uom_id or line.product_id.uom_id
             else:
                 line.product_uom_id = line.product_id.uom_id
 
@@ -894,6 +894,7 @@ class AccountMoveLine(models.Model):
     @api.depends('product_id', 'product_uom_id')
     def _compute_price_unit(self):
         for line in self:
+            seller = 0
             if not line.product_id or line.display_type in ('line_section', 'line_subsection', 'line_note') or line.is_imported:
                 continue
             if line.move_id.is_sale_document(include_receipts=True):
@@ -902,14 +903,29 @@ class AccountMoveLine(models.Model):
                 document_type = 'purchase'
             else:
                 document_type = 'other'
-            line.price_unit = line.product_id._get_tax_included_unit_price(
-                line.move_id.company_id,
-                line.move_id.currency_id,
-                line.move_id.date,
-                document_type,
-                fiscal_position=line.move_id.fiscal_position_id,
-                product_uom=line.product_uom_id,
+
+            if document_type == 'purchase':
+                seller = line.product_id._select_seller(
+                partner_id=line.partner_id,
+                quantity=line.quantity,
+                date=line.invoice_date or fields.Date.context_today(line),
+                uom_id=line.product_uom_id,
             )
+            if seller:
+                price_unit = line.env['account.tax']._fix_tax_included_price_company(seller.price, line.product_id.supplier_taxes_id, line.tax_ids, line.company_id) if seller else 0.0
+                price_unit = seller.currency_id._convert(price_unit, line.currency_id, line.company_id, line.invoice_date or fields.Date.context_today(line), False)
+                price_unit = float_round(price_unit, precision_digits=max(line.currency_id.decimal_places, self.env['decimal.precision'].precision_get('Product Price')))
+                line.price_unit = seller.product_uom_id._compute_price(price_unit, line.product_uom_id)
+                line.discount = seller.discount or 0.0
+            else:
+                line.price_unit = line.product_id._get_tax_included_unit_price(
+                    line.move_id.company_id,
+                    line.move_id.currency_id,
+                    line.move_id.date,
+                    document_type,
+                    fiscal_position=line.move_id.fiscal_position_id,
+                    product_uom=line.product_uom_id,
+                )
 
     @api.depends('product_id', 'product_uom_id')
     def _compute_tax_ids(self):
@@ -3503,21 +3519,31 @@ class AccountMoveLine(models.Model):
                 'min_qty': int, (optional)
             }
         """
-        if self:
+        if len(self) == 1:
+            catalog_info = self.move_id._get_product_price_and_data(self.product_id)
+            catalog_info.update(
+                quantity=self.quantity,
+                price=self.price_unit,
+                readOnly=self.move_id._is_readonly(),
+                uomDisplayName=self.product_uom_id.display_name,
+                productUomDisplayName=self.product_id.uom_id.display_name,
+                productUnitPrice=self.product_uom_id._compute_price(self.price_unit, self.product_id.uom_id),
+            )
+            return catalog_info
+        elif self:
             self.product_id.ensure_one()
-            return {
-                **self[0].move_id._get_product_price_and_data(self[0].product_id),
-                'quantity': sum(
-                    self.mapped(
-                        lambda line: line.product_uom_id._compute_quantity(
-                            qty=line.quantity,
-                            to_unit=line.product_id.uom_id,
-                        )
-                    )
+            move_line = self[0]
+            catalog_info = move_line.move_id._get_product_price_and_data(self[0].product_id)
+            catalog_info['readOnly'] = True
+            catalog_info['quantity'] = sum(
+                self.mapped(
+                    lambda line: line.product_id.uom_id._compute_quantity(
+                        qty=line.quantity,
+                        to_unit=line.product_id.uom_id,
+                    ),
                 ),
-                'readOnly': self.move_id._is_readonly() or len(self) > 1,
-                'uomDisplayName': len(self) == 1 and self.product_uom_id.display_name or self.product_id.uom_id.display_name,
-            }
+                )
+            return catalog_info
         return {
             'quantity': 0,
         }
