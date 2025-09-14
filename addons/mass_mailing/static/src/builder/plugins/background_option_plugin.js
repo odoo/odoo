@@ -7,7 +7,8 @@ class BackgroundOptionPlugin extends Plugin {
     resources = {
         builder_options: [
             {
-                selector: ".s_masonry_block .row > div, .s_cover .oe_img_bg, .s_reviews_wall",
+                selector:
+                    ".s_masonry_block > .container > .row > div:not(:has(.row)), .s_cover > .container > .row > div, .s_reviews_wall",
                 OptionComponent: BackgroundOption,
                 props: {
                     withImages: true,
