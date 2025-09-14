@@ -7,6 +7,7 @@ import { getDataURLFromFile, redirect } from "@web/core/utils/urls";
 import { getCSSVariableValue } from "@html_editor/utils/formatting";
 import { _t } from "@web/core/l10n/translation";
 import { svgToPNG, webpToPNG } from "@website/js/utils";
+import { escapeRegExp } from "@web/core/utils/strings";
 import { useAutofocus, useService } from "@web/core/utils/hooks";
 import { registry } from "@web/core/registry";
 import { rpc } from "@web/core/network/rpc";
@@ -26,6 +27,7 @@ import {
 } from "@odoo/owl";
 import { standardActionServiceProps } from "@web/webclient/actions/action_service";
 import { addLoadingEffect as addButtonLoadingEffect } from "@web/core/utils/ui";
+import { fuzzyLevenshteinLookup } from "@web/core/utils/search";
 
 export const ROUTES = {
     descriptionScreen: 2,
@@ -160,6 +162,18 @@ export class DescriptionScreen extends Component {
         this.orm = useService('orm');
         useAutofocus();
 
+        this.splitRegex = /[|\s,]+/;
+
+        // Get all words from the industry names and synonyms
+        this.dictionarySet = new Set();
+        for (let industry of this.state.industries) {
+            let industryWords = this._splitToSet(industry.label);
+            if (industry.synonyms) {
+                industryWords = industryWords.union(this._splitToSet(industry.synonyms));
+            }
+            this.dictionarySet = this.dictionarySet.union(industryWords);
+        }
+
         onMounted(() => this.onMounted());
 
         // Autofocus the next field once the current one is confirmed.
@@ -189,6 +203,10 @@ export class DescriptionScreen extends Component {
         this.checkDescriptionCompletion();
     }
 
+    _splitToSet(string) {
+        return new Set(string.toLowerCase().split(this.splitRegex));
+    }
+
     get sources() {
         return [
             {
@@ -210,33 +228,30 @@ export class DescriptionScreen extends Component {
      * @param {String} term input current value
      */
     _autocompleteSearch(term) {
-        const terms = term.toLowerCase().split(/[|,\n]+/);
+        this.state.selectedIndustry = undefined;
+        let termsSet = this._splitToSet(term);
+
+        //-------words correction--------
+        // Check and correct all the terms
+        let correctedSet = new Set();
+        for (const term of termsSet) {
+            if (this.dictionarySet.has(term)) {
+                correctedSet.add(term);
+                continue;
+            }
+            const res = fuzzyLevenshteinLookup(term, this.dictionarySet);
+            correctedSet.add(res[0] || term);
+        }
+        let terms = Array.from(correctedSet);
         const limit = 30;
         // `this.state.industries` is already sorted by hit count (from IAP).
         // That order should be kept after manipulating the recordset.
         let matches = this.state.industries.filter((val, index) => {
-            // To match, every term should be contained in either the label or a
-            // synonym
-            for (const candidate of [val.label, ...(val.synonyms || '').split(/[|,\n]+/)]) {
-                if (terms.every(term => candidate.toLowerCase().includes(term))) {
-                    return true;
-                }
-            }
+            // To match, every term should be contained in the label
+            return terms.every(term => val.label.toLowerCase().includes(term));
         });
-        // Sort the matches by hit_count_total in order to suggest the most used
-        // matches first.
-        // FIXME, we made ffad59a1b7f36a141c6a32162a4254f5bd864a3b (on IAP) but:
-        // 1. hit_count_total seems to be 0 for all industries.
-        // 2. it is defined as the sum of the hit_count of 3 suggested themes
-        //    for that industry but... we can choose any theme with any industry
-        //    so that old field does not make sense anyway.
-        // 3. the order should just be done server-side and kept while matching
-        //    to given terms here client-side.
-        // So:
-        // - Remove this line
-        // - Review hit_count_total server side
-        // - Make sure it is retrieved ordered, and stay ordered
-        matches = matches.sort(match => match['hit_count_total']);
+
+        matches = matches.sort((x, y) => x.hitCountOrder - y.hitCountOrder);
         if (matches.length > limit) {
             // Keep matches with the least number of words so that e.g.
             // "restaurant" remains available even if there are 30 specific
@@ -244,12 +259,78 @@ export class DescriptionScreen extends Component {
             matches = matches.sort((x, y) => x.wordCount - y.wordCount)
                              .slice(0, limit)
                              .sort((x, y) => x.hitCountOrder - y.hitCountOrder);
+        } else {
+            let synonymMatches = this.state.industries.filter((val, index) => {
+                // To match, every term should be contained in the synonym
+                for (const candidate of [...(val.synonyms || '').split(this.splitRegex)]) {
+                    // Check if industry label has already matched
+                    if (terms.every(term => candidate.toLowerCase().includes(term)) && !matches.includes(val)) {
+                        return true;
+                    }
+                }
+                return false;
+            });
+            synonymMatches = synonymMatches.sort((x, y) => x.hitCountOrder - y.hitCountOrder);
+            matches = matches.concat(synonymMatches);
+            if (matches.length > limit) {
+                matches = matches.slice(0, limit);
+            }
         }
-        matches = matches.length ? matches : [{ label: term, id: -1 }];
+        if (matches.length === 0) {
+            matches = [{ label: term, id: -1 }];
+            terms = [term];
+        }
         return matches.map((match) => ({
             label: match.label,
+            labelTermOrder: this._getMatchTermOrder(match.label, terms),
             onSelect: () => this._setSelectedIndustry(match.label, match.id),
         }));
+    }
+
+    /**
+     * Splits the string parameter 'label' into bits based on the location
+     * of the 'terms' typed by the user.
+     *
+     * @param {string} label
+     * @param {string[]} terms
+     * @returns {object}
+     * The return object 'matchTermOrder' contains two lists:
+     * - 'labelBits' store all the segments of the split 'label'
+     * - 'searchTermIndexes' keeps the indexes of the bits that matches with the 'terms'
+     */
+    _getMatchTermOrder(label, terms) {
+        let sortedTerms = terms.sort((a, b) => b.length - a.length);
+        let matchTermOrder = {
+            labelBits: [],
+            searchTermIndexes: [],
+        };
+        if (!label) {
+            return matchTermOrder;
+        }
+
+        matchTermOrder.labelBits.push(label);
+        for (const term of sortedTerms) {
+            let bitIndex = 0;
+            while (bitIndex < matchTermOrder.labelBits.length) {
+                const currentBit = matchTermOrder.labelBits[bitIndex];
+                const splitBits = currentBit.split(new RegExp(`(${escapeRegExp(term)})`))
+                matchTermOrder.labelBits.splice(bitIndex, 1, ...splitBits);
+                bitIndex += splitBits.length;
+            }
+        }
+        // Saves the indexes of the segments matching the terms
+        const labelBits = [];
+        for (let i in matchTermOrder.labelBits) {
+            labelBits.push({
+                bit: matchTermOrder.labelBits[i],
+                id: i,
+            });
+            if (sortedTerms.includes(matchTermOrder.labelBits[i].toLowerCase())) {
+                matchTermOrder.searchTermIndexes.push(i);
+            }
+        }
+        matchTermOrder.labelBits = labelBits;
+        return matchTermOrder;
     }
 
     selectWebsiteType(id) {
