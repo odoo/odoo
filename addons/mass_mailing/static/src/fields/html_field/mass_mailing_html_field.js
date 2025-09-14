@@ -291,6 +291,7 @@ export class MassMailingHtmlField extends HtmlField {
         const shouldRestoreDisplayNone = this.iframeRef.el.classList.contains("d-none");
         // d-none must be removed for style computation.
         this.iframeRef.el.classList.remove("d-none");
+        this.iframeRef.el.style.width = "1320px";
         const processingEl = this.iframeRef.el.contentDocument.createElement("DIV");
         processingEl.append(parseHTML(this.iframeRef.el.contentDocument, value));
         const processingContainer = this.iframeRef.el.contentDocument.querySelector(
@@ -301,6 +302,7 @@ export class MassMailingHtmlField extends HtmlField {
         await toInline(processingEl, cssRules);
         const inlineValue = processingEl.innerHTML;
         processingEl.remove();
+        this.iframeRef.el.style.width = "";
         if (shouldRestoreDisplayNone) {
             this.iframeRef.el.classList.add("d-none");
         }
