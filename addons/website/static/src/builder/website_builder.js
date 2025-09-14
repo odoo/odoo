@@ -26,6 +26,7 @@ import { BuilderComponentPlugin } from "@html_builder/core/builder_component_plu
 import { BuilderActionsPlugin } from "@html_builder/core/builder_actions_plugin";
 import { CoreBuilderActionPlugin } from "@html_builder/core/core_builder_action_plugin";
 import { CarouselOptionTranslationPlugin } from "./plugins/carousel_option_translation_plugin";
+import { WebsiteSetupEditorPlugin } from "./plugins/setup_editor_plugin";
 import { ThemeTab } from "./plugins/theme/theme_tab";
 import { TranslateTableOfContentOptionPlugin } from "./plugins/options/table_of_content_option_plugin_translate";
 import { FieldChangeReplicationPlugin } from "@html_builder/core/field_change_replication_plugin";
@@ -42,6 +43,7 @@ const TRANSLATION_PLUGINS = [
     DisableSnippetsPlugin,
     SavePlugin,
     SetupEditorPlugin,
+    WebsiteSetupEditorPlugin,
     VisibilityPlugin,
     PopupVisibilityPlugin,
     SaveTranslationPlugin,

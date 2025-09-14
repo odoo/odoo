@@ -13,24 +13,24 @@
 <!-- Templates -->
 <template id="s_masonry_block_default_template" groups="base.group_user">
     <div class="row">
-        <div class="col-md-6 oe_img_bg text-center pb224 pt224" data-name="Block" style="background-image: url(/web/image/mass_mailing.s_masonry_block_default_image_1);">
+        <div class="col-md-6 col-12 oe_img_bg text-center pb224 pt224" data-name="Block" style="background-image: url(/web/image/mass_mailing.s_masonry_block_default_image_1);">
             <p><br/></p>
         </div>
-        <div class="col-md-6 s_col_no_resize o_masonry_grid_container">
+        <div class="col-md-6 col-12 s_col_no_resize o_masonry_grid_container">
             <div class="row h-100">
-                <div class="col-md-6 pt24 pb8 text-center o_cc o_cc2" data-name="Block">
+                <div class="col-md-6 col-12 pt24 pb8 text-center o_cc o_cc2" data-name="Block">
                     <h3>A great title</h3>
                     <p>And a great subtitle</p>
                 </div>
-                <div class="col-md-6 pt24 pb8 text-center o_cc o_cc3" data-name="Block">
+                <div class="col-md-6 col-12 pt24 pb8 text-center o_cc o_cc3" data-name="Block">
                     <h3><font style="color: white">A great title</font></h3>
                     <p><font style="color: white">And a great subtitle</font></p>
                 </div>
-                <div class="col-md-6 pt24 pb8 text-center o_cc o_cc4" data-name="Block">
+                <div class="col-md-6 col-12 pt24 pb8 text-center o_cc o_cc4" data-name="Block">
                     <h3><font style="color: white">A great title</font></h3>
                     <p><font style="color: white">And a great subtitle</font></p>
                 </div>
-                <div class="col-md-6 pt24 pb8 text-center o_cc o_cc2" data-name="Block">
+                <div class="col-md-6 col-12 pt24 pb8 text-center o_cc o_cc2" data-name="Block">
                     <h3>A great title</h3>
                     <p>And a great subtitle</p>
                 </div>
@@ -39,6 +39,7 @@
     </div>
 </template>
 
+<!-- TODO EGGMAIL: remove masonry variants -->
 <template id="s_masonry_block_reversed_template" groups="base.group_user">
     <div class="row">
         <div class="col-md-6 s_col_no_resize o_masonry_grid_container">
@@ -252,7 +253,7 @@
 <!-- Assets -->
 <record id="mass_mailing.s_masonry_block_001_scss" model="ir.asset">
     <field name="name">Masonry block 001 SCSS</field>
-    <field name="bundle">web.assets_frontend</field>
+    <field name="bundle">mass_mailing.assets_iframe_style</field>
     <field name="path">mass_mailing/static/src/snippets/s_masonry_block/001.scss</field>
 </record>
 

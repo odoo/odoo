@@ -9,20 +9,10 @@ export class PricelistBoxedOptionPlugin extends Plugin {
     resources = {
         builder_options: [
             withSequence(BEGIN, {
-                selector: ".s_pricelist_boxed",
+                selector: ".s_pricelist_boxed_section:has(> .container)",
                 OptionComponent: AddProductOption,
                 props: {
-                    applyTo:
-                        ":scope > :has(.s_pricelist_boxed_item):not(:has(.row > div .s_pricelist_boxed_item))",
-                    productSelector: ".s_pricelist_boxed_item",
-                },
-            }),
-            withSequence(BEGIN, {
-                selector: ".s_pricelist_boxed_section",
-                OptionComponent: AddProductOption,
-                props: {
-                    applyTo: ":scope > :has(.s_pricelist_boxed_item)",
-                    productSelector: ".s_pricelist_boxed_item",
+                    productSelector: ".container",
                 },
             }),
         ],

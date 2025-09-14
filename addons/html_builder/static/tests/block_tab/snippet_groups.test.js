@@ -2,6 +2,7 @@ import { beforeEach, expect, test } from "@odoo/hoot";
 import { animationFrame, click, queryAll, queryAllTexts, queryFirst } from "@odoo/hoot-dom";
 import { contains, onRpc, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import {
+    addBuilderPlugin,
     addDropZoneSelector,
     createTestSnippets,
     getDragHelper,
@@ -12,6 +13,7 @@ import {
     waitForSnippetDialog,
 } from "../helpers";
 import { Builder } from "@html_builder/builder";
+import { Plugin } from "@html_editor/plugin";
 
 let snippets;
 beforeEach(() => {
@@ -453,6 +455,14 @@ test("Cancel snippet drag & drop over sidebar", async () => {
 });
 
 test("Renaming custom snippets don't make an orm call", async () => {
+    class TestSetupEditorPlugin extends Plugin {
+        static id = "test.setup_editor_plugin";
+        resources = {
+            snippet_preview_dialog_bundles: ["web.assets_frontend"],
+        };
+    }
+    addBuilderPlugin(TestSetupEditorPlugin);
+
     // Stub rename_snippet RPC to succeed if it is called
     onRpc("ir.ui.view", "rename_snippet", ({ args }) => true);
 

@@ -1,3 +1,9 @@
-[data-snippet="s_blockquote"] img.s_blockquote_author_avatar {
-    width: 3rem;
+[data-snippet="s_blockquote"] {
+    div:has(> img) {
+        min-width: 40px;
+    }
+    img {
+        aspect-ratio: 1;
+        width: unset;
+    }
 }
