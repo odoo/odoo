@@ -4,8 +4,8 @@ import { Plugin } from "@html_editor/plugin";
 import { withSequence } from "@html_editor/utils/resource";
 import { registry } from "@web/core/registry";
 
-class MailingSnippetPlugin extends Plugin {
-    static id = "MailingSnippetPlugin";
+class MassMailingLayoutColumnPlugin extends Plugin {
+    static id = "mass_mailing.LayoutColumnPlugin";
     resources = {
         mark_color_level_selector_params: [{ selector: ".o_mail_snippet_general" }],
         builder_options: [
@@ -19,4 +19,6 @@ class MailingSnippetPlugin extends Plugin {
     };
 }
 
-registry.category("mass_mailing-plugins").add(MailingSnippetPlugin.id, MailingSnippetPlugin);
+registry
+    .category("mass_mailing-plugins")
+    .add(MassMailingLayoutColumnPlugin.id, MassMailingLayoutColumnPlugin);
