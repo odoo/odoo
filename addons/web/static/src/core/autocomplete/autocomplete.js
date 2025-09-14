@@ -41,6 +41,8 @@ export class AutoComplete extends Component {
         slots: { type: Object, optional: true },
         menuPositionOptions: { type: Object, optional: true },
         menuCssClass: { type: [String, Array, Object], optional: true },
+        selectOnBlur: { type: Boolean, optional: true },
+        selectOnTab: { type: Boolean, optional: true },
     };
     static defaultProps = {
         value: "",
@@ -328,6 +330,16 @@ export class AutoComplete extends Component {
             this.ignoreBlur = false;
             return;
         }
+        // If selectOnBlur is true, we select the first element
+        // of the autocomplete suggestions list, if this element exists
+        if (this.props.selectOnBlur && this.sources[0]) {
+            const firstOption = this.sources[0].options[0];
+            if (firstOption) {
+                this.state.activeSourceOption = firstOption.unselectable ? null : [0, 0];
+                this.selectOption(this.activeOption);
+                return;
+            }
+        }
         this.props.onBlur({
             inputValue: this.inputRef.el.value,
         });
@@ -397,6 +409,10 @@ export class AutoComplete extends Component {
                     return;
                 }
                 this.selectOption(this.activeOption);
+                if (this.props.selectOnBlur) {
+                    this.ignoreBlur = true;
+                    this.inputRef.el.blur();
+                }
                 break;
             case "escape":
                 if (!this.isOpened) {
@@ -405,6 +421,15 @@ export class AutoComplete extends Component {
                 this.cancel();
                 break;
             case "tab":
+                if (this.props.selectOnTab) {
+                    if (!this.isOpened || !this.state.activeSourceOption) {
+                        return;
+                    }
+                    this.selectOption(this.activeOption);
+                    this.ignoreBlur = true;
+                    this.inputRef.el.blur();
+                    break;
+                }
             case "shift+tab":
                 if (!this.isOpened) {
                     return;
