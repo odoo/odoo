@@ -48,8 +48,7 @@ class DropzonePlugin extends Plugin {
             {
                 // sizing_x
                 selector: ".row > div",
-                exclude:
-                    ".o_mail_no_resize, .o_mail_no_options, .s_col_no_resize.row > div, .s_col_no_resize",
+                exclude: ".o_mail_no_options, .s_col_no_resize.row > div, .s_col_no_resize",
                 dropNear: ".row:not(.s_col_no_resize) > div",
             },
         ],

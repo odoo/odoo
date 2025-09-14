@@ -43,6 +43,10 @@ const textProperties = [
     "color",
 ];
 
+const textContainerProperties = [
+    "margin-bottom",
+];
+
 const buttonProperties = [
     ...textProperties,
     "background-color",
@@ -69,12 +73,17 @@ export const CUSTOMIZE_MAILING_VARIABLES = Object.assign(
             const prefix = `h${depth}`;
             Object.assign(
                 variables,
-                generateSimpleMailingVariables(prefix, [prefix], textProperties)
+                generateSimpleMailingVariables(
+                    prefix,
+                    [prefix],
+                    [...textProperties, ...textContainerProperties]
+                )
             );
         }
         return variables;
     })(),
     generateSimpleMailingVariables("text", [`.${BASE_CONTAINER_CLASS}`, "p", "li"], textProperties),
+    generateSimpleMailingVariables("text-container", ["p", "ul"], textContainerProperties),
     generateSimpleMailingVariables(
         "link",
         ["a:not(.btn):not(:has(.fa, img))", "a.btn.btn-link"],
@@ -115,6 +124,9 @@ export const CUSTOMIZE_MAILING_VARIABLES_DEFAULTS = {
     "--h1-color": {
         color: "rgb(0, 0, 0)",
     },
+    "--h1-margin-bottom": {
+        "margin-bottom": "7px",
+    },
     "--h2-font-size": {
         "font-size": "23px",
     },
@@ -132,6 +144,9 @@ export const CUSTOMIZE_MAILING_VARIABLES_DEFAULTS = {
     },
     "--h2-color": {
         color: "rgb(0, 0, 0)",
+    },
+    "--h2-margin-bottom": {
+        "margin-bottom": "7px",
     },
     "--h3-font-size": {
         "font-size": "20px",
@@ -151,6 +166,9 @@ export const CUSTOMIZE_MAILING_VARIABLES_DEFAULTS = {
     "--h3-color": {
         color: "rgb(0, 0, 0)",
     },
+    "--h3-margin-bottom": {
+        "margin-bottom": "7px",
+    },
     "--text-font-size": {
         "font-size": "16px",
     },
@@ -168,6 +186,9 @@ export const CUSTOMIZE_MAILING_VARIABLES_DEFAULTS = {
     },
     "--text-color": {
         color: "rgb(0, 0, 0)",
+    },
+    "--text-container-margin-bottom": {
+        "margin-bottom": "16px",
     },
     "--link-font-size": {
         "font-size": "16px",
