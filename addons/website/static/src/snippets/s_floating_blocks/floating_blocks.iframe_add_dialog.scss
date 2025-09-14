@@ -21,7 +21,12 @@
             }
 
             .s_parallax_bg {
+                // Disable the parallax effect entirely. By default the effect
+                // is very subtle and showcasing it in the preview is not
+                // representative of the actual result.
                 background-position: top !important;
+                transform: none !important;
+                inset: 0 !important;
             }
         }
     }
