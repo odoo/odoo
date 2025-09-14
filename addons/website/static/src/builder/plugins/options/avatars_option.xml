@@ -38,21 +38,6 @@
             />
         </BuilderButtonGroup>
     </BuilderRow>
-    
-    <BuilderRow label.translate="Direction" t-if="isActiveItem('avatars_has_label_opt')">
-        <BuilderButtonGroup>
-            <BuilderButton
-                className="'oi oi-fw oi-arrows-h'"
-                title.translate="Row"
-                classAction="'flex-row'"
-            />
-            <BuilderButton
-                className="'oi oi-fw oi-arrows-v'"
-                title.translate="Column"
-                classAction="'flex-column'"
-            />
-        </BuilderButtonGroup>
-    </BuilderRow>
 
     <BuilderRow label.translate="Extra Content">
         <BuilderButton
@@ -81,6 +66,21 @@
         </BuilderButton>
     </BuilderRow>
 
+    <BuilderRow label.translate="Direction" t-if="isActiveItem('avatars_has_label_opt')">
+        <BuilderButtonGroup>
+            <BuilderButton
+                className="'oi oi-fw oi-arrows-h'"
+                title.translate="Row"
+                classAction="'flex-row'"
+            />
+            <BuilderButton
+                className="'oi oi-fw oi-arrows-v'"
+                title.translate="Column"
+                classAction="'flex-column'"
+            />
+        </BuilderButtonGroup>
+    </BuilderRow>
+
     <BuilderContext applyTo="'.s_avatars_rules_collector'">
         <BorderConfigurator withRoundCorner="false" label.translate="Border"/>
         <BuilderRow label.translate="Roundness" tooltip.translate="Applies to all avatars and count">
@@ -92,6 +92,24 @@
             />
         </BuilderRow>
     </BuilderContext>
+</t>
+
+<t t-name="website.AvatarsHeaderMiddleButtons">
+    <button class="btn btn-success-color-hover ms-0 py-0 px-1 me-1"
+            title.translate="Add Avatar"
+            aria-label="Add Avatar"
+            t-on-click="addAvatar">
+        <span class="oi oi-fw oi-plus"/>
+        <span class="oi oi-user"/>
+    </button>
+    <button class="btn btn-danger-color-hover py-0 px-1 me-3"
+            t-att-class="state.avatarEls.length lt 2 ? 'disabled' : ''"
+            title="Remove Avatar"
+            aria-label="Remove Avatar"
+            t-on-click="removeAvatar">
+        <span class="oi oi-fw oi-minus"/>
+        <span class="oi oi-user"/>
+    </button>
 </t>
 
 </templates>
