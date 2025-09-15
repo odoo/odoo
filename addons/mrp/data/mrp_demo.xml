@@ -95,6 +95,7 @@
             <field name="default_code">FURN_9666</field>
             <field name="tracking">serial</field>
             <field name="image_1920" type="base64" file="mrp/static/img/table.png"/>
+            <field name="barcode">10133785575283</field>
         </record>
         <record id="stock_warehouse_orderpoint_table" model="stock.warehouse.orderpoint">
             <field name="product_max_qty">0.0</field>
@@ -119,6 +120,7 @@
             <field name="tracking">serial</field>
             <field name="image_1920" type="base64" file="mrp/static/img/table_top.png"/>
             <field name="route_ids" eval="[Command.link(ref('mrp.route_warehouse0_manufacture'))]"/>
+            <field name="barcode">10133785575282</field>
         </record>
         <record id="product_product_computer_desk_leg" model="product.product">
             <field name="name">Table Leg</field>
@@ -132,6 +134,7 @@
             <field name="default_code">FURN_2333</field>
             <field name="tracking">lot</field>
             <field name="image_1920" type="base64" file="mrp/static/img/table_leg.png"/>
+            <field name="barcode">10133785575281</field>
         </record>
         <record id="product_supplierinfo_1" model="product.supplierinfo">
             <field name="product_tmpl_id" ref="product_product_computer_desk_leg_product_template"/>
@@ -160,6 +163,7 @@
             <field name="description">Stainless steel screw full (dia - 5mm, Length - 10mm)</field>
             <field name="default_code">CONS_89957</field>
             <field name="image_1920" type="base64" file="mrp/static/img/product_product_computer_desk_bolt.png"/>
+            <field name="barcode">20133785543124</field>
         </record>
         <record id="product_product_computer_desk_screw" model="product.product">
             <field name="name">Screw</field>

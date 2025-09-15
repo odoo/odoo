@@ -56,6 +56,10 @@
         <field name="category_id" ref="product_attribute_category_dimensions"/>
     </record>
 
+    <function model="product.product" name="write">
+        <value model="product.product" search="[('product_tmpl_id', '=', ref('product.product_product_6_product_template'))]"/>
+        <value eval="{'barcode': ''}"/>
+    </function>
     <record id="product_6_length_template_attribute_line" model="product.template.attribute.line">
         <field name="product_tmpl_id" ref="product.product_product_6_product_template"/>
         <field name="attribute_id" ref="product.pa_height"/>
@@ -67,5 +71,12 @@
                 ref('product.pav_height_100'),
         ])]"/>
     </record>
+    <function model="product.product" name="write">
+        <value model="product.product" search="[
+        ('product_tmpl_id', '=', ref('product.product_product_6_product_template')),
+        ('product_template_attribute_value_ids.product_attribute_value_id', '=', ref('product.pav_height_45'))
+        ]"/>
+        <value eval="{'barcode': '6016478556509'}"/>
+    </function>
 
 </odoo>

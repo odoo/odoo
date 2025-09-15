@@ -125,36 +125,12 @@
         <field name="expense_policy">cost</field>
     </record>
 
-    <!--
-    Handle automatically created product.template.attribute.value.
-    Check "product.product_4_attribute_1_value_2" for more information about this
-    -->
-    <function model="ir.model.data" name="_update_xmlids">
-        <value model="base" eval="[{
-            'xml_id': 'sale.product_4_attribute_1_value_3',
-            'record': obj().env.ref('product.product_4_attribute_1_product_template_attribute_line').product_template_value_ids[2],
-            'noupdate': True,
-        }]"/>
-    </function>
-
-    <function model="ir.model.data" name="_update_xmlids">
-        <value model="base" eval="[{
-            'xml_id': 'sale.product_product_4e',
-            'record': obj().env.ref('product.product_product_4_product_template')._get_variant_for_combination(obj().env.ref('sale.product_4_attribute_1_value_3') + obj().env.ref('product.product_4_attribute_2_value_1')),
-            'noupdate': True,
-        }, {
-            'xml_id': 'sale.product_product_4f',
-            'record': obj().env.ref('product.product_product_4_product_template')._get_variant_for_combination(obj().env.ref('sale.product_4_attribute_1_value_3') + obj().env.ref('product.product_4_attribute_2_value_2')),
-            'noupdate': True,
-        },]"/>
-    </function>
-
-    <record id="product_product_4e" model="product.product">
+    <record id="product.product_product_4e" model="product.product">
         <field name="default_code">DESK0005</field>
         <field name="weight">0.01</field>
     </record>
 
-    <record id="product_product_4f" model="product.product">
+    <record id="product.product_product_4f" model="product.product">
         <field name="default_code">DESK0006</field>
         <field name="weight">0.01</field>
     </record>
