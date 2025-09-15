@@ -17,7 +17,7 @@ import { Transition } from "@web/core/transition";
 import { Breadcrumbs } from "../breadcrumbs/breadcrumbs";
 import { SearchBar } from "../search_bar/search_bar";
 
-import { Component, useState, onMounted, onWillStart, useRef, useEffect } from "@odoo/owl";
+import { Component, useState, onMounted, onWillStart, useRef, useEffect, status } from "@odoo/owl";
 
 const STICKY_CLASS = "o_mobile_sticky";
 
@@ -185,42 +185,47 @@ export class ControlPanel extends Component {
                 return;
             }
 
-            if (
-                !(this.embeddedActionsKey in this.embeddedActionsConfig) &&
-                !embeddedConfigCallsMap.has(this.embeddedActionsKey)
-            ) {
-                const embeddedConfigCall = this.env.services.orm.call(
-                    "res.users.settings",
-                    "get_embedded_actions_setting",
-                    [user.settings.id, this.parentActionId, this.currentActiveId]
-                );
-                embeddedConfigCallsMap.set(this.embeddedActionsKey, embeddedConfigCall);
-                browser.localStorage.setItem(this.isEmbeddedFetchedKey, true);
-            }
-        });
-
-        onMounted(async () => {
-            if (this.state.embeddedInfos.embeddedActions?.length > 0) {
-                if (
-                    !(this.embeddedActionsKey in this.embeddedActionsConfig) &&
-                    embeddedConfigCallsMap.has(this.embeddedActionsKey)
-                ) {
-                    const embeddedConfigCall = embeddedConfigCallsMap.get(this.embeddedActionsKey);
-                    const embeddedSetting = await embeddedConfigCall;
+            if (!(this.embeddedActionsKey in this.embeddedActionsConfig)) {
+                if (!embeddedConfigCallsMap.has(this.embeddedActionsKey)) {
+                    const embeddedConfigCall = this.env.services.orm.call(
+                        "res.users.settings",
+                        "get_embedded_actions_setting",
+                        [user.settings.id, this.parentActionId, this.currentActiveId]
+                    );
+                    embeddedConfigCallsMap.set(this.embeddedActionsKey, embeddedConfigCall);
+                    browser.localStorage.setItem(this.isEmbeddedFetchedKey, true);
+                }
+                const embeddedConfigCall = embeddedConfigCallsMap.get(this.embeddedActionsKey);
+                embeddedConfigCall.then((embeddedSetting) => {
+                    // embeddedActionsConfig contains my key: another flow has set my key
+                    // chances are the data I receive are outdated
                     embeddedConfigCallsMap.delete(this.embeddedActionsKey);
+                    if (this.embeddedActionsKey in this.embeddedActionsConfig) {
+                        return;
+                    }
                     if (embeddedSetting && Object.keys(embeddedSetting).length > 0) {
+                        // Update the main source of truth.
+                        user.updateUserSettings("embedded_actions_config_ids", {
+                            ...user.settings.embedded_actions_config_ids,
+                            ...embeddedSetting,
+                        });
+
+                        if (status(this) === "destroyed") {
+                            return;
+                        }
                         this.embeddedActionsConfig[this.embeddedActionsKey] =
                             embeddedSetting[this.embeddedActionsKey];
-                        user.updateUserSettings(
-                            "embedded_actions_config_ids",
-                            this.embeddedActionsConfig
-                        );
                         this.state.embeddedInfos.visibleEmbeddedActions =
                             this._getEmbeddedActionsConfig("embedded_actions_visibility") || [];
                         this.state.embeddedInfos.showEmbedded =
                             this._getEmbeddedActionsConfig("embedded_visibility");
                     }
-                }
+                });
+            }
+        });
+
+        onMounted(async () => {
+            if (this.state.embeddedInfos.embeddedActions?.length > 0) {
                 const embeddedOrderLocalStorageKey =
                     this._getEmbeddedActionsConfig("embedded_actions_order");
                 if (embeddedOrderLocalStorageKey) {
@@ -303,7 +308,11 @@ export class ControlPanel extends Component {
         };
     }
 
-    onClickShowEmbedded() {
+    async onClickShowEmbedded() {
+        // Nobody waited for a possible call
+        // We do it here: if the call returned, the map.get return undefined
+        // other wise it returns the promise we should wait for.
+        await embeddedConfigCallsMap.get(this.embeddedActionsKey);
         if (
             !this.state.embeddedInfos.showEmbedded &&
             !(this.embeddedActionsKey in this.embeddedActionsConfig)
