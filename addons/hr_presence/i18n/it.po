@@ -1,32 +1,34 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* hr_presence
+# * hr_presence
 #
 # Translators:
 # Martin Trigaux, 2022
 # Sergio Zanchetta <primes2h@gmail.com>, 2023
 # Luca Carlo, 2023
-#
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-09-11 13:56+0000\n"
-"PO-Revision-Date: 2022-09-22 05:52+0000\n"
-"Last-Translator: Luca Carlo, 2023\n"
-"Language-Team: Italian (https://app.transifex.com/odoo/teams/41243/it/)\n"
+"PO-Revision-Date: 2025-09-14 21:20+0000\n"
+"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"Language-Team: Italian <https://translate.odoo.com/projects/odoo-19/"
+"hr_presence/it/>\n"
 "Language: it\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? "
-"1 : 2;\n"
+"Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n != 0 && n % 1000000 == 0)"
+" ? 1 : 2);\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: hr_presence
 #. odoo-python
 #: code:addons/hr_presence/models/hr_employee.py:0
 msgid "%(name)s has been noted as %(state)s today"
-msgstr ""
+msgstr "%(name)s è stato contrassegnato come %(state)s oggi"
 
 #. module: hr_presence
 #: model:mail.template,body_html:hr_presence.mail_template_presence
@@ -46,6 +48,19 @@ msgid ""
 "                </div>\n"
 "            "
 msgstr ""
+"<div>\n"
+"                    Gentile <t t-out=\"object.name or ''\">Abigail "
+"Peterson</t>,<br/><br/>\n"
+"speriamo tu stia bene. Abbiamo notato che non sei a lavoro e non sono "
+"presenti richieste di giorni di ferie. Se si tratta di un errore da parte "
+"nostra, ci scusiamo per la confusione.\n"
+"Ti preghiamo di prendere le misure necessarie per far fronte a questa "
+"assenza non programmata. Per qualsiasi domanda o necessità di assistenza, "
+"non esitare a contattare il tuo manager o l'ufficio Risorse Umane.\n"
+"Grazie per l'attenzione.\n"
+"                    <br/>Cordiali saluti,<br/><br/>\n"
+"                </div>\n"
+"            "
 
 #. module: hr_presence
 #: model:ir.model.fields.selection,name:hr_presence.selection__hr_employee__hr_presence_state_display__absent
@@ -57,7 +72,7 @@ msgstr "Assente"
 #. module: hr_presence
 #: model:ir.actions.server,name:hr_presence.action_hr_employee_presence_log
 msgid "Add a log note"
-msgstr ""
+msgstr "Aggiungi nota"
 
 #. module: hr_presence
 #: model:ir.model,name:hr_presence.model_res_company
@@ -67,12 +82,12 @@ msgstr "Aziende"
 #. module: hr_presence
 #: model:ir.model,name:hr_presence.model_res_config_settings
 msgid "Config Settings"
-msgstr ""
+msgstr "Impostazioni di configurazione"
 
 #. module: hr_presence
 #: model:ir.actions.server,name:hr_presence.action_hr_employee_presence_time_off
 msgid "Create a Time Off"
-msgstr ""
+msgstr "Crea ferie"
 
 #. module: hr_presence
 #: model:ir.model.fields,field_description:hr_presence.field_hr_employee__display_name
@@ -82,7 +97,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_presence.field_res_config_settings__display_name
 #: model:ir.model.fields,field_description:hr_presence.field_res_users_log__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Nome visualizzato"
 
 #. module: hr_presence
 #: model:ir.model.fields,field_description:hr_presence.field_hr_employee__email_sent
@@ -93,7 +108,7 @@ msgstr "E-mail inviata"
 #. module: hr_presence
 #: model:ir.model,name:hr_presence.model_hr_employee
 msgid "Employee"
-msgstr ""
+msgstr "Dipendente"
 
 #. module: hr_presence
 #: model:sms.template,name:hr_presence.sms_template_data_hr_presence
@@ -108,7 +123,7 @@ msgstr "HR Presence: cron"
 #. module: hr_presence
 #: model:mail.template,name:hr_presence.mail_template_presence
 msgid "HR: Employee Absence email"
-msgstr ""
+msgstr "Risorse umane: e-mail assenza dipendente"
 
 #. module: hr_presence
 #: model:sms.template,body:hr_presence.sms_template_data_hr_presence
@@ -117,6 +132,9 @@ msgid ""
 "an oversight from us, we apologize. Please contact your manager or HR ASAP. "
 "Thanks"
 msgstr ""
+"Ciao, abbiamo notato che non sei a lavoro e non risultano richieste di "
+"giorni di ferie. Ci scusiamo nel caso si trattasse di un errore. Contatta il "
+"tuo manager o un responsabile risorse umane il prima possibile. Grazie"
 
 #. module: hr_presence
 #: model:ir.model.fields,field_description:hr_presence.field_res_company__hr_presence_last_compute_date
@@ -137,7 +155,7 @@ msgstr "Visualizzazione stato presenza RU"
 #: model:ir.model.fields,field_description:hr_presence.field_res_config_settings__id
 #: model:ir.model.fields,field_description:hr_presence.field_res_users_log__id
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: hr_presence
 #: model:ir.model.fields,field_description:hr_presence.field_res_users_log__ip
@@ -154,7 +172,7 @@ msgstr "IP connesso"
 #: model:ir.model.fields,field_description:hr_presence.field_hr_employee__manually_set_presence
 #: model:ir.model.fields,field_description:hr_presence.field_hr_employee_public__manually_set_presence
 msgid "Manually Set Presence"
-msgstr ""
+msgstr "Imposta presenza manualmente"
 
 #. module: hr_presence
 #: model:ir.model.fields,field_description:hr_presence.field_hr_employee__manually_set_present
@@ -173,34 +191,34 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/hr_presence/static/src/search/hr_presence_cog_menu/hr_presence_cog_menu.xml:0
 msgid "Presence Control"
-msgstr ""
+msgstr "Controllo presenza"
 
 #. module: hr_presence
 #: model_terms:ir.ui.view,arch_db:hr_presence.hr_employee_view_search
 msgid "Presence/Absence"
-msgstr ""
+msgstr "Presenza/Assenza"
 
 #. module: hr_presence
 #: model:ir.model.fields.selection,name:hr_presence.selection__hr_employee__hr_presence_state_display__present
 #: model:ir.model.fields.selection,name:hr_presence.selection__hr_employee_public__hr_presence_state_display__present
 msgid "Present"
-msgstr "Corrente"
+msgstr "Presente"
 
 #. module: hr_presence
 #: model:ir.model,name:hr_presence.model_hr_employee_public
 msgid "Public Employee"
-msgstr ""
+msgstr "Dipendente pubblico"
 
 #. module: hr_presence
 #. odoo-python
 #: code:addons/hr_presence/models/hr_employee.py:0
 msgid "Send SMS"
-msgstr ""
+msgstr "Invia SMS"
 
 #. module: hr_presence
 #: model:ir.actions.server,name:hr_presence.action_hr_employee_presence_sms
 msgid "Send a SMS"
-msgstr ""
+msgstr "Invia SMS"
 
 #. module: hr_presence
 #: model:mail.template,description:hr_presence.mail_template_presence
@@ -208,16 +226,18 @@ msgid ""
 "Sent manually in presence module when an employee wasn't working despite not "
 "being off"
 msgstr ""
+"E-mail inviata manualmente al modulo presenze quando un dipendente non è a "
+"lavoro nonostante l'assenza di giorni di ferie"
 
 #. module: hr_presence
 #: model:ir.actions.server,name:hr_presence.action_hr_employee_presence_absent
 msgid "Set Absent"
-msgstr ""
+msgstr "Imposta assente"
 
 #. module: hr_presence
 #: model:ir.actions.server,name:hr_presence.action_hr_employee_presence_present
 msgid "Set Present"
-msgstr ""
+msgstr "Imposta presente"
 
 #. module: hr_presence
 #: model:mail.template,subject:hr_presence.mail_template_presence
@@ -228,7 +248,7 @@ msgstr "Assenza non attesa"
 #. odoo-python
 #: code:addons/hr_presence/models/hr_employee.py:0
 msgid "Unplanned Absence"
-msgstr ""
+msgstr "Assenza non pianificata"
 
 #. module: hr_presence
 #: model:ir.model,name:hr_presence.model_res_users_log
@@ -248,6 +268,13 @@ msgid ""
 "your manager or the HR department at your earliest convenience.\n"
 "Thank you for your prompt attention to this matter."
 msgstr ""
+"Speriamo tu stia bene. Abbiamo notato che non sei a lavoro e non sono "
+"presenti richieste di giorni di ferie. Se si tratta di un errore da parte "
+"nostra, ci scusiamo per la confusione.\n"
+" Ti preghiamo di prendere le misure necessarie per far fronte a questa "
+"assenza non programmata. Per qualsiasi domanda o necessità di assistenza, "
+"non esitare a contattare il tuo manager o l'ufficio Risorse Umane.\n"
+"Grazie per l'attenzione."
 
 #. module: hr_presence
 #. odoo-python

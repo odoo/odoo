@@ -1,25 +1,27 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* base_setup
+# * base_setup
 #
 # Translators:
 # Martin Trigaux, 2022
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2023
 # Jolien De Paepe, 2023
-#
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-09-11 13:55+0000\n"
-"PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Jolien De Paepe, 2023\n"
-"Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
+"PO-Revision-Date: 2025-09-14 08:05+0000\n"
+"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"Language-Team: Dutch <https://translate.odoo.com/projects/odoo-19/base_setup/"
+"nl/>\n"
 "Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -39,6 +41,13 @@ msgid ""
 "                                        Active Users\n"
 "                                    </span>"
 msgstr ""
+"<span class=\"o_form_label\" invisible=\"active_user_count &gt; 1\">\n"
+"                                        Actieve gebruiker\n"
+"                                    </span>\n"
+"                                    <span class=\"o_form_label\" invisible="
+"\"active_user_count &lt;= 1\">\n"
+"                                        Actieve gebruikers\n"
+"                                    </span>"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -52,6 +61,14 @@ msgid ""
 "                                    </span>\n"
 "                                    <br/>"
 msgstr ""
+"<span class=\"o_form_label\" invisible=\"company_count &gt; 1\">\n"
+"                                        Bedrijf\n"
+"                                    </span>\n"
+"                                    <span class=\"o_form_label\" invisible="
+"\"company_count &lt;= 1\">\n"
+"                                        Bedrijven\n"
+"                                    </span>\n"
+"                                    <br/>"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -64,6 +81,13 @@ msgid ""
 "                                            Languages\n"
 "                                        </span>"
 msgstr ""
+"<span class=\"o_form_label\" invisible=\"language_count &gt; 1\">\n"
+"                                            Taal\n"
+"                                        </span>\n"
+"                                        <span class=\"o_form_label\" "
+"invisible=\"language_count &lt;= 1\">\n"
+"                                            Talen\n"
+"                                        </span>"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -80,6 +104,8 @@ msgid ""
 "<strong>Save</strong> this page and come back here to set up Cloudflare "
 "turnstile."
 msgstr ""
+"<strong>Bewaar</strong> deze pagina en kom hier terug om Cloudflare "
+"turnstile in te stellen."
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -87,6 +113,8 @@ msgid ""
 "<strong>Save</strong> this page and come back here to set up Google Places "
 "API key"
 msgstr ""
+"<strong>Sla deze pagina op</strong> en kom hier terug om de Google Places "
+"API-sleutel in te stellen"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -106,7 +134,7 @@ msgstr ""
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "API Keys"
-msgstr ""
+msgstr "API keys"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -114,6 +142,8 @@ msgid ""
 "API Keys allow your users to access Odoo with external tools when multi-"
 "factor authentication is enabled."
 msgstr ""
+"API Keys geven je gebruikers toegang tot Odoo met externe tools wanneer "
+"multifactorauthenticatie is ingeschakeld."
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -134,7 +164,7 @@ msgstr "Talen toevoegen"
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Add fun feedback and motivate your employees"
-msgstr "Voeg terug leuke feedback toe en motiveer je werknemers"
+msgstr "Voeg leuke feedback toe en motiveer je werknemers"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_mail_plugin
@@ -166,7 +196,7 @@ msgstr "Dit geeft je de mogelijkheid van het gebruik van meerdere valuta's"
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Autocomplete partner addresses with Google Places"
-msgstr ""
+msgstr "Partneradressen automatisch invullen met Google Places"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -179,6 +209,9 @@ msgid ""
 "By default, new users get highest access rights for all installed apps. If "
 "unchecked, new users will only have basic employee access."
 msgstr ""
+"Nieuwe gebruikers krijgen standaard de hoogste toegangsrechten voor alle "
+"geïnstalleerde apps. Gebruikers genieten van de basistoegang voor werknemers "
+"als deze optie niet is aangevinkt."
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -188,7 +221,7 @@ msgstr "Kies de lay-out van je documenten"
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_website_cf_turnstile
 msgid "Cloudflare Turnstile"
-msgstr ""
+msgstr "Cloudflare Turnstile"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -203,7 +236,7 @@ msgstr "Bedrijf"
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__company_country_code
 msgid "Company Country Code"
-msgstr ""
+msgstr "Landcode bedrijf"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__company_informations
@@ -218,12 +251,12 @@ msgstr "Bedrijfsnaam"
 #. module: base_setup
 #: model:ir.model,name:base_setup.model_res_config_settings
 msgid "Config Settings"
-msgstr "Configuratie instellingen"
+msgstr "Configuratie-instellingen"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Configure Document Layout"
-msgstr "Configureer document lay-out"
+msgstr "Document lay-out configureren"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -242,7 +275,7 @@ msgstr "Contacten"
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__company_country_group_codes
 msgid "Country Group Codes"
-msgstr ""
+msgstr "Codes landengroepen"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -250,6 +283,8 @@ msgid ""
 "Create corresponding in/out orders and bills when you sell/buy between your "
 "companies"
 msgstr ""
+"Maak bij onderlinge verkopen en aankopen de bijbehorende inkomende en "
+"uitgaande orders en facturen aan"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__report_footer
@@ -265,7 +300,7 @@ msgstr "Standaard toegangsrechten"
 #. odoo-python
 #: code:addons/base_setup/models/res_config_settings.py:0
 msgid "Default access for new users"
-msgstr ""
+msgstr "Standaardtoegang voor nieuwe gebruikers"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_ir_http__display_name
@@ -273,12 +308,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__display_name
 #: model:ir.model.fields,field_description:base_setup.field_res_users__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Schermnaam"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Document Layout"
-msgstr ""
+msgstr "Document Lay-out"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__external_report_layout_id
@@ -288,13 +323,13 @@ msgstr "Documentsjabloon"
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Edit Layout"
-msgstr "Opmaak bewerken"
+msgstr "Lay-out bewerken"
 
 #. module: base_setup
 #. odoo-python
 #: code:addons/base_setup/models/res_config_settings.py:0
 msgid "Edit new user default group"
-msgstr ""
+msgstr "Bewerk standaardgroep voor nieuwe gebruiker"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -319,7 +354,7 @@ msgstr "Voettekst, weergegeven aan de onderzijde van alle rapportages."
 #: model:ir.ui.menu,name:base_setup.menu_config
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "General Settings"
-msgstr "Algemene instellingen"
+msgstr "Algemeen"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_base_geolocalize
@@ -329,17 +364,17 @@ msgstr "Geo-lokaliseer"
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Geolocate your partners"
-msgstr ""
+msgstr "Je partners geolokaliseren"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Geolocation"
-msgstr ""
+msgstr "Geolocatie"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_google_address_autocomplete
 msgid "Google Address Autocomplete"
-msgstr ""
+msgstr "Google Address Autocomplete"
 
 #. module: base_setup
 #: model:ir.model,name:base_setup.model_ir_http
@@ -352,7 +387,7 @@ msgstr "HTTP routing"
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__id
 #: model:ir.model.fields,field_description:base_setup.field_res_users__id
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -377,7 +412,7 @@ msgstr "Intercompany transacties"
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__is_root_company
 msgid "Is Root Company"
-msgstr ""
+msgstr "Is hoofdbedrijf"
 
 #. module: base_setup
 #: model:ir.model,name:base_setup.model_kpi_provider
@@ -398,7 +433,7 @@ msgstr "Talen"
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Layout"
-msgstr "Layout"
+msgstr "Lay-out"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -408,12 +443,12 @@ msgstr "Mail-plug-in"
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Manage API Keys"
-msgstr "Beheer API Keys"
+msgstr "API Keys beheren"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Manage Companies"
-msgstr "Beheer bedrijven"
+msgstr "Bedrijven beheren"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_account_inter_company_rules
@@ -428,7 +463,7 @@ msgstr "Talen beheren"
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Manage Users"
-msgstr "Beheer gebruikers"
+msgstr "Gebruikers beheren"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__group_multi_currency
@@ -458,12 +493,12 @@ msgstr "OAuth Authenticatie"
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Odoo"
-msgstr ""
+msgstr "Odoo"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_partner_autocomplete
 msgid "Partner Autocomplete"
-msgstr "Relatie automatisch aanvullen"
+msgstr "Partner Autocomplete"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -488,12 +523,12 @@ msgstr "Voorbeeld document"
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__profiling_enabled_until
 msgid "Profiling enabled until"
-msgstr "Profilering ingeschakeld tot"
+msgstr "Profilering ingeschakeld t/m"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Progressive Web App"
-msgstr ""
+msgstr "Progressieve Web App"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -503,7 +538,7 @@ msgstr "Bescherm je formulieren tegen spam en misbruik."
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Protect your forms with CF Turnstile."
-msgstr ""
+msgstr "Bescherm je formulieren met CF Turnstile."
 
 #. module: base_setup
 #. odoo-javascript
@@ -514,12 +549,12 @@ msgstr ""
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_sms
 msgid "SMS"
-msgstr ""
+msgstr "SMS"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Send SMS"
-msgstr "Verzend SMS"
+msgstr "SMS verzenden"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -539,7 +574,7 @@ msgstr "Instellingen"
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__show_effect
 msgid "Show Effect"
-msgstr "Toon effect"
+msgstr "Effect weergeven"
 
 #. module: base_setup
 #: model:ir.model.fields,help:base_setup.field_res_config_settings__company_country_code
@@ -547,6 +582,8 @@ msgid ""
 "The ISO country code in two chars. \n"
 "You can use this field for quick search."
 msgstr ""
+"De ISO-landcode in twee letters.\n"
+"Je kunt dit veld gebruiken voor snelzoeken."
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -554,6 +591,8 @@ msgid ""
 "This name will be used for the application when Odoo is installed through "
 "the browser."
 msgstr ""
+"Deze naam wordt gebruikt voor de applicatie wanneer Odoo via de browser "
+"wordt geïnstalleerd."
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_web_unsplash
@@ -594,7 +633,7 @@ msgstr "Gebruikers"
 #. odoo-python
 #: code:addons/base_setup/models/res_config_settings.py:0
 msgid "VAT"
-msgstr "BTW"
+msgstr "Btw"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -611,7 +650,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/base_setup/models/res_users.py:0
 msgid "You have to install the Discuss application to use this feature."
-msgstr ""
+msgstr "U moet de Chat-app installeren kunnen gebruiken."
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_google_recaptcha

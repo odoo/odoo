@@ -1,31 +1,33 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* barcodes
+# * barcodes
 #
 # Translators:
 # Martin Trigaux, 2022
 # Gunther Clauwaert <gclauwae@hotmail.com>, 2022
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2022
-#
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-16 13:49+0000\n"
-"PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2022\n"
-"Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
+"PO-Revision-Date: 2025-09-14 08:05+0000\n"
+"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"Language-Team: Dutch <https://translate.odoo.com/projects/odoo-19/barcodes/"
+"nl/>\n"
 "Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: barcodes
 #. odoo-python
 #: code:addons/barcodes/models/barcode_rule.py:0
 msgid " '*' is not a valid Regex Barcode Pattern. Did you mean '.*'?"
-msgstr ""
+msgstr " '*' is geen geldig regex barcode patroon. Bedoelde je soms '.*'?"
 
 #. module: barcodes
 #: model_terms:ir.ui.view,arch_db:barcodes.view_barcode_nomenclature_form
@@ -80,7 +82,7 @@ msgstr "Één"
 #. odoo-javascript
 #: code:addons/barcodes/static/src/components/barcode_scanner.xml:0
 msgid "Barcode"
-msgstr ""
+msgstr "Barcode"
 
 #. module: barcodes
 #: model:ir.model,name:barcodes.model_barcodes_barcode_events_mixin
@@ -209,12 +211,23 @@ msgid ""
 "                                the barcode field on the associated records <i>must</i> show these digits as\n"
 "                                zeroes."
 msgstr ""
+"Patronen kunnen ook bepalen hoe numerieke waarden zoals gewicht of prijs, in "
+"de\n"
+"                                barcode worden gecodeerd. Ze worden "
+"aangeduid met <code>{NNN}</code> waarbij N\n"
+"                                aangeeft waar de cijfers van het getal "
+"worden gecodeerd. Kommagetallen worden ook ondersteund, waarbij de\n"
+"                                decimalen aangeduid worden met D, zoals "
+"<code>{NNNDD}</code>. In deze gevallen,\n"
+"                                <i>moet</i> het barcodeveld op de "
+"bijbehorende records deze cijfers weergeven als\n"
+"                                nullen."
 
 #. module: barcodes
 #. odoo-javascript
 #: code:addons/barcodes/static/src/components/barcode_scanner.js:0
 msgid "Please, Scan again!"
-msgstr ""
+msgstr "Scan alsjeblieft opnieuw!"
 
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule__name
@@ -240,7 +253,7 @@ msgstr "Tafels"
 #. odoo-javascript
 #: code:addons/barcodes/static/src/components/barcode_scanner.xml:0
 msgid "Tap to scan"
-msgstr ""
+msgstr "Tik aan om te scannen"
 
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_rule__pattern
@@ -288,7 +301,11 @@ msgstr "Soort"
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_nomenclature__upc_ean_conv
 msgid "UPC Codes can be converted to EAN by prefixing them with a zero. This setting determines if a UPC/EAN barcode should be automatically converted in one way or another when trying to match a rule with the other encoding."
-msgstr "UPC codes kunnen naar EAN omgezet worden door ze met het prefix nul te voorzien. Deze instelling bepaalt of de UPC/EAN-omzetting automatisch moet uitgevoerd wanneer er een overeenkomst wordt gezocht in een regel met de een of andere codering. "
+msgstr ""
+"UPC codes kunnen naar EAN omgezet worden door ze met het prefix nul te "
+"voorzien. Deze instelling bepaalt of de UPC/EAN-omzetting automatisch moet "
+"uitgevoerd wanneer er een overeenkomst wordt gezocht in een regel met de een "
+"of andere codering."
 
 #. module: barcodes
 #: model:ir.model.fields.selection,name:barcodes.selection__barcode_rule__encoding__upca

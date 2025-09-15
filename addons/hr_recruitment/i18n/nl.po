@@ -1,42 +1,44 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* hr_recruitment
+# * hr_recruitment
 #
 # Translators:
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2023
 # Martin Trigaux, 2023
 # Jolien De Paepe, 2023
-#
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-09-11 13:56+0000\n"
-"PO-Revision-Date: 2022-09-22 05:52+0000\n"
-"Last-Translator: Jolien De Paepe, 2023\n"
-"Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
+"PO-Revision-Date: 2025-09-14 08:06+0000\n"
+"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"Language-Team: Dutch <https://translate.odoo.com/projects/odoo-19/"
+"hr_recruitment/nl/>\n"
 "Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_talent_pool__no_of_talents
 msgid "# Talents"
-msgstr ""
+msgstr "# Talenten"
 
 #. module: hr_recruitment
 #. odoo-python
 #: code:addons/hr_recruitment/models/hr_applicant.py:0
 msgid "%s (copy)"
-msgstr ""
+msgstr "%s (kopie)"
 
 #. module: hr_recruitment
 #. odoo-python
 #: code:addons/hr_recruitment/models/hr_applicant.py:0
 msgid "1 Meeting"
-msgstr "1 afspraak"
+msgstr "1 vergadering"
 
 #. module: hr_recruitment
 #. odoo-javascript
@@ -154,6 +156,97 @@ msgid ""
 "</div>\n"
 "        "
 msgstr ""
+"<div style=\"font-size: 13px; margin: 0px; padding: 0px;\">\n"
+"    Hallo,\n"
+"    <br/><br/>\n"
+"    Bedankt voor je sollicitatie voor de functie\n"
+"    \"<a t-att-href=\"hasattr(object.job_id, 'website_url') and "
+"object.job_id.website_url or ''\" style=\"color:#9A6C8E;\"><strong t-out=\""
+"object.job_id.name or ''\">Experienced Developer</strong></a>\" bij <strong "
+"t-out=\"object.company_id.name or ''\">YourCompany</strong>.\n"
+"    <br/><br/>\n"
+"    We nemen binnenkort contact met je op.\n"
+"\n"
+"    <div t-if="
+"\"'website_url' in object.job_id and object.job_id.website_url\" style="
+"\"padding: 16px 8px 16px 8px;\">\n"
+"        <a t-att-href=\"object.job_id.website_url\" t-attf-style"
+"=\"background-color: {{object.company_id.email_secondary_color or "
+"'#875A7B'}}; text-decoration: none; color: {{"
+"object.company_id.email_primary_color or '#FFFFFF'}}; padding: 8px 16px 8px "
+"16px; border-radius: 5px;\">Jobomschrijving</a>\n"
+"    </div>\n"
+"\n"
+"    <hr width=\"97%\" style=\"background-color: rgb(204,204,204); border: "
+"medium none; clear: both; display: block; font-size: 0px; min-height: 1px; "
+"line-height: 0; margin: 16px 0px 16px 0px;\"/>\n"
+"    <t t-if=\"object.user_id\">\n"
+"        <h3 style=\"color:#9A6C8E;\"><strong>Contactpersoon:</strong></h3>\n"
+"        <p>\n"
+"            <strong t-out=\"object.user_id.name or ''\">Mitchell "
+"Admin</strong><br/>\n"
+"            <span>E-mail: <t t-out=\"object.user_id.email or ''\""
+">admin@yourcompany.example.com</t></span><br/>\n"
+"            <span>Telefoon: <t t-out=\"object.user_id.phone or ''\">+1 "
+"650-123-4567</t></span>\n"
+"        </p>\n"
+"        <hr width=\"97%\" style=\"background-color: rgb(204,204,204); border:"
+" medium none; clear: both; display: block; font-size: 0px; min-height: 1px; "
+"line-height: 0; margin: 16px 0px 16px 0px;\"/>\n"
+"    </t>\n"
+"\n"
+"    <h3 style=\"color:#9A6C8E;\"><strong>Wat is de volgende "
+"stap?</strong></h3>\n"
+"    We proberen <strong>sollicitaties meestal binnen enkele dagen te "
+"beantwoorden.</strong><br/><br/>\n"
+"    Wens je <strong>sneller\n"
+"    feedback</strong> of heb je niets van ons gehoord?\n"
+"    Aarzel dan niet om te reageren op deze e-mail.\n"
+"\n"
+"    <hr width=\"97%\" style=\"background-color: rgb(204,204,204); border: "
+"medium none; clear: both; display: block; font-size: 0px; min-height: 1px; "
+"line-height: 0; margin: 17px 0px 16px 0px;\"/>\n"
+"    <t t-set=\"location\" t-value=\"''\"/>\n"
+"    <t t-if=\"object.job_id.address_id.name\">\n"
+"        <strong t-out=\"object.job_id.address_id.name or ''\">Teksa "
+"SpA</strong><br/>\n"
+"    </t>\n"
+"    <t t-if=\"object.job_id.address_id.street\">\n"
+"        <t t-out=\"object.job_id.address_id.street or ''\">Puerto Madero "
+"9710</t><br/>\n"
+"        <t t-set=\"location\" t-value=\"object.job_id.address_id.street\"/>\n"
+"    </t>\n"
+"    <t t-if=\"object.job_id.address_id.street2\">\n"
+"        <t t-out=\"object.job_id.address_id.street2 or ''\">Of A15, Santiago "
+"(RM)</t><br/>\n"
+"        <t t-set=\"location\" t-value="
+"\"'%s, %s' % (location, object.job_id.address_id.street2)\"/>\n"
+"    </t>\n"
+"    <t t-if=\"object.job_id.address_id.city\">\n"
+"        <t t-out=\"object.job_id.address_id.city or ''\">Pudahuel</t>,\n"
+"        <t t-set=\"location\" t-value="
+"\"'%s, %s' % (location, object.job_id.address_id.city)\"/>\n"
+"    </t>\n"
+"    <t t-if=\"object.job_id.address_id.state_id.name\">\n"
+"        <t t-out=\"object.job_id.address_id.state_id.name or ''\">C1</t>,\n"
+"        <t t-set=\"location\" t-value="
+"\"'%s, %s' % (location, object.job_id.address_id.state_id.name)\"/>\n"
+"    </t>\n"
+"    <t t-if=\"object.job_id.address_id.zip\">\n"
+"        <t t-out=\"object.job_id.address_id.zip or ''\">98450</t>\n"
+"        <t t-set=\"location\" t-value="
+"\"'%s, %s' % (location, object.job_id.address_id.zip)\"/>\n"
+"    </t>\n"
+"    <br/>\n"
+"    <t t-if=\"object.job_id.address_id.country_id.name\">\n"
+"        <t t-out=\"object.job_id.address_id.country_id.name or ''\""
+">Argentina</t><br/>\n"
+"        <t t-set=\"location\" t-value="
+"\"'%s, %s' % (location, object.job_id.address_id.country_id.name)\"/>\n"
+"    </t>\n"
+"    <br/>\n"
+"</div>\n"
+"        "
 
 #. module: hr_recruitment
 #: model:mail.template,body_html:hr_recruitment.email_template_data_applicant_refuse
@@ -200,6 +293,47 @@ msgid ""
 "</div>\n"
 "        "
 msgstr ""
+"<div style=\"font-size: 13px; margin: 0px; padding: 0px;\">\n"
+"    Hallo,<br/><br/>\n"
+"    Bedankt voor je interesse om deel uit te maken van het \n"
+"    <b><t t-out=\"object.company_id.name or ''\">YourCompany</t></b>-team. "
+"We\n"
+"    willen je laten weten dat, hoewel je cv\n"
+"     sterk is, ons wervingsteam je sollicitatie\n"
+"    <b>niet heeft geselecteerd voor verdere overweging</b>.\n"
+"    <br/><br/>\n"
+"    We begrijpen dat het wervingsproces uitdagend kan zijn en dat\n"
+"     er soms fouten worden gemaakt. Als je denkt dat we iets\n"
+"     over het hoofd hebben gezien of als je meer inzicht wilt \n"
+"    in onze beslissing, aarzel dan niet om op deze e-mail te reageren.\n"
+"    <br/><br/>\n"
+"    We bewaren je cv in onze databank en nemen contact\n"
+"     met je op zodra er een functie vrijkomt\n"
+"     die beter aansluit bij je vaardigheden en ervaring.\n"
+"    <br/><br/>\n"
+"    We wensen je veel succes met je verdere zoektocht en hopen\n"
+"     je in de toekomst opnieuw te mogen overwegen voor\n"
+"    een andere functie.\n"
+"    <br/><br/>\n"
+"    Bedankt,\n"
+"    <div style=\"font-size: 11px; color: grey;\">\n"
+"        <t t-if=\"object.user_id\">\n"
+"            -- <br/>\n"
+"            <strong t-out=\"object.user_id.name or ''\">Mitchell "
+"Admin</strong><br/>\n"
+"            E-mail: <t t-out=\"object.user_id.email or ''\""
+">admin@yourcompany.example.com</t><br/>\n"
+"            Telefoon: <t t-out=\"object.user_id.phone or ''\">+1 "
+"650-123-4567</t>\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            -- <br/>\n"
+"            <t t-out=\"object.company_id.name or ''\">YourCompany</t><br/>\n"
+"            Het HR-team\n"
+"        </t>\n"
+"    </div>\n"
+"</div>\n"
+"        "
 
 #. module: hr_recruitment
 #: model:mail.template,body_html:hr_recruitment.email_template_data_applicant_not_interested
@@ -232,6 +366,34 @@ msgid ""
 "</div>\n"
 "        "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <div style=\"font-size: 13px; margin: 0px; padding: 0px;\">\n"
+"        Beste,<br/><br/>\n"
+"        We willen je bedanken voor je interesse en de tijd die je hebt "
+"genomen.<br/>\n"
+"        We wensen je veel succes in je verdere carrière.\n"
+"        <br/><br/>\n"
+"        Met vriendelijke groet<br/>\n"
+"        <div style=\"font-size: 11px; color: grey;\">\n"
+"            <t t-if=\"object.user_id\">\n"
+"                -- <br/>\n"
+"                <strong t-out=\"object.user_id.name or ''\">Marc "
+"Demo</strong><br/>\n"
+"                E-mail: <t t-out=\"object.user_id.email or ''\""
+">mark.brown23@example.com</t><br/>\n"
+"                Telefoon: <t t-out=\"object.user_id.phone or ''\">+1 "
+"650-123-4567</t>\n"
+"            </t>\n"
+"            <t t-else=\"\">\n"
+"                -- <br/>\n"
+"                <t t-out=\"object.company_id.name or ''\">YourCompany</t><br/"
+">\n"
+"                Het HR-team<br/>\n"
+"            </t>\n"
+"        </div>\n"
+"    </div>\n"
+"</div>\n"
+"        "
 
 #. module: hr_recruitment
 #: model:mail.template,body_html:hr_recruitment.email_template_data_applicant_interest
@@ -340,6 +502,112 @@ msgid ""
 "</div>\n"
 "        "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <div style=\"text-align: center\">\n"
+"        <h2>Gefeliciteerd!</h2>\n"
+"        <div style=\"color:grey;\">We hebben je cv positief beoordeeld.</div>"
+"\n"
+"    </div>\n"
+"    <div style=\"font-size: 13px; margin: 0px; padding: 0px;\">\n"
+"        We hebben je cv bekeken en het trok onze\n"
+"        aandacht. Omdat we denken dat je goed bij de\n"
+"        functie past, staat je sollicitatie op de shortlist voor een\n"
+"        call of een interview.\n"
+"        <br/><br/>\n"
+"        <div t-if="
+"\"'website_url' in object.job_id and object.job_id.website_url\" style="
+"\"padding: 16px 8px 16px 8px;\">\n"
+"            <a t-att-href=\"object.job_id.website_url\" t-attf-style"
+"=\"background-color: {{object.company_id.email_secondary_color or "
+"'#875A7B'}}; text-decoration: none; color: {{"
+"object.company_id.email_primary_color or '#FFFFFF'}}; padding: 8px 16px 8px "
+"16px; border-radius: 5px;\">Jobomschrijving</a>\n"
+"        </div>\n"
+"\n"
+"        <t t-if=\"object.user_id\">\n"
+"            Je wordt binnenkort gecontacteerd door::<br/>\n"
+"            <strong t-out=\"object.user_id.name or ''\">Mitchell "
+"Admin</strong><br/>\n"
+"            <span>E-mail: <t t-out=\"object.user_id.email or ''\""
+">admin@yourcompany.example.com</t></span><br/>\n"
+"            <span>Telefoon: <t t-out=\"object.user_id.phone or ''\">+1 "
+"650-123-4567</t></span>\n"
+"            <br/><br/>\n"
+"        </t>\n"
+"        Tot binnenkort,\n"
+"        <div style=\"font-size: 11px; color: grey;\">\n"
+"            -- <br/>\n"
+"            Het HR-team\n"
+"            <t t-if=\"'website_url' in object.job_id and hasattr("
+"object.job_id, 'website_url') and object.job_id.website_url\">\n"
+"                Ontdek <a href=\"/jobs\" style=\"text-"
+"decoration:none;color:#717188;\">al onze vacatures</a>.<br/>\n"
+"            </t>\n"
+"        </div>\n"
+"\n"
+"        <hr width=\"97%\" style=\"background-color: rgb(204,204,204); border:"
+" medium none; clear: both; display: block; font-size: 0px; min-height: 1px; "
+"line-height: 0; margin: 16px 0px 16px 0px;\"/>\n"
+"        <h3 style=\"color:#9A6C8E;\"><strong>Wat is de volgende "
+"stap?</strong></h3>\n"
+"        We proberen <strong>sollicitaties binnen een paar dagen te "
+"beantwoorden</strong>.\n"
+"        <br/><br/>\n"
+"        De volgende stap is een telefonisch gesprek of een afspraak op "
+"kantoor.\n"
+"        <br/>\n"
+"        Reageer op deze e-mail <strong>als je sneller feedback\n"
+"        wilt,</strong> of als je binnen een redelijke termijn\n"
+"        niets van ons hoort.\n"
+"        <br/>\n"
+"\n"
+"        <hr width=\"97%\" style=\"background-color: rgb(204,204,204); border:"
+" medium none; clear: both; display: block; font-size: 0px; min-height: 1px; "
+"line-height: 0; margin: 17px 0px 16px 0px;\"/>\n"
+"        <t t-set=\"location\" t-value=\"''\"/>\n"
+"        <t t-if=\"object.job_id.address_id.name\">\n"
+"            <strong t-out=\"object.job_id.address_id.name or ''\">Teksa "
+"SpA</strong><br/>\n"
+"        </t>\n"
+"        <t t-if=\"object.job_id.address_id.street\">\n"
+"            <t t-out=\"object.job_id.address_id.street or ''\">Puerto Madero "
+"9710</t><br/>\n"
+"            <t t-set=\"location\" t-value=\"object.job_id.address_id.street\""
+"/>\n"
+"        </t>\n"
+"        <t t-if=\"object.job_id.address_id.street2\">\n"
+"            <t t-out=\"object.job_id.address_id.street2 or ''\">Of A15, "
+"Santiago (RM)</t><br/>\n"
+"            <t t-set=\"location\" t-value="
+"\"'%s, %s' % (location, object.job_id.address_id.street2)\"/>\n"
+"        </t>\n"
+"        <t t-if=\"object.job_id.address_id.city\">\n"
+"            <t t-out=\"object.job_id.address_id.city or ''\">Pudahuel</t>,\n"
+"            <t t-set=\"location\" t-value="
+"\"'%s, %s' % (location, object.job_id.address_id.city)\"/>\n"
+"        </t>\n"
+"        <t t-if=\"object.job_id.address_id.state_id.name\">\n"
+"            <t t-out=\"object.job_id.address_id.state_id.name or ''\">C1</t>,"
+"\n"
+"            <t t-set=\"location\" t-value="
+"\"'%s, %s' % (location, object.job_id.address_id.state_id.name)\"/>\n"
+"        </t>\n"
+"        <t t-if=\"object.job_id.address_id.zip\">\n"
+"            <t t-out=\"object.job_id.address_id.zip or ''\">98450</t>\n"
+"            <t t-set=\"location\" t-value="
+"\"'%s, %s' % (location, object.job_id.address_id.zip)\"/>\n"
+"        </t>\n"
+"        <br/>\n"
+"        <t t-if=\"object.job_id.address_id.country_id.name\">\n"
+"            <t t-out=\"object.job_id.address_id.country_id.name or ''\""
+">Argentina</t><br/>\n"
+"            <t t-set=\"location\" t-value="
+"\"'%s, %s' % (location, object.job_id.address_id.country_id.name)\"/>\n"
+"        </t>\n"
+"        <br/>\n"
+"    </div>\n"
+"</div>\n"
+"        "
 
 #. module: hr_recruitment
 #. odoo-javascript
@@ -371,12 +639,14 @@ msgstr ""
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
 msgid "<span class=\"o_stat_text\">Employee</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Werknemer</span>"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_survey
 msgid "<span invisible=\"address_id\" class=\"oe_read_only\">Remote</span>"
 msgstr ""
+"<span invisible=\"address_id\" class=\"oe_read_only\">Op afstand "
+"werken</span>"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_stage_form
@@ -391,16 +661,25 @@ msgid ""
 "                                </span>\n"
 "                            </span>"
 msgstr ""
+"<span invisible=\"not is_warning_visible\">\n"
+"                                <span class="
+"\"fa fa-exclamation-triangle text-danger ps-3\">\n"
+"                                </span>\n"
+"                                <span class=\"text-danger\">\n"
+"                                    Alle sollicitaties verliezen hun "
+"aanwervingsdatum en aanwervingsstatus.\n"
+"                                </span>\n"
+"                            </span>"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
 msgid "<span invisible=\"not salary_expected_extra\"> + </span>"
-msgstr ""
+msgstr "<span invisible=\"not salary_expected_extra\"> + </span>"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
 msgid "<span invisible=\"not salary_proposed_extra\"> + </span>"
-msgstr ""
+msgstr "<span invisible=\"not salary_proposed_extra\"> + </span>"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
@@ -425,7 +704,7 @@ msgstr "<span>Rapportages</span>"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_talent_pool_view_kanban
 msgid "<span>Talents</span>"
-msgstr ""
+msgstr "<span>Talenten</span>"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
@@ -465,7 +744,7 @@ msgstr "Activiteiten"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search_bis
 msgid "Activities of"
-msgstr ""
+msgstr "Activiteiten van"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__activity_count
@@ -481,12 +760,12 @@ msgstr "Activiteit uitzondering decoratie"
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_mail_activity_plan
 msgid "Activity Plan"
-msgstr ""
+msgstr "Activiteitenplan"
 
 #. module: hr_recruitment
 #: model:ir.ui.menu,name:hr_recruitment.hr_recruitment_menu_config_activity_plan
 msgid "Activity Plans"
-msgstr ""
+msgstr "Activiteitenplan"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__activity_state
@@ -504,7 +783,7 @@ msgstr "Activiteitensoort icoon"
 #: model:ir.actions.act_window,name:hr_recruitment.mail_activity_type_action_config_hr_applicant
 #: model:ir.ui.menu,name:hr_recruitment.hr_recruitment_menu_config_activity_type
 msgid "Activity Types"
-msgstr "Activiteitssoorten"
+msgstr "Activiteitensoorten"
 
 #. module: hr_recruitment
 #: model_terms:ir.actions.act_window,help:hr_recruitment.mail_activity_plan_action_config_hr_applicant
@@ -512,32 +791,35 @@ msgid ""
 "Activity plans are used to assign a list of activities in just a few clicks\n"
 "                    (e.g. \"Language Test\", \"Prepare Offer\", ...)"
 msgstr ""
+"Activiteitenplannen worden gebruikt om een lijst met activiteiten toe te "
+"wijzen in slechts een paar klikken\n"
+"                    (bijv. 'Taaltest', 'Aanbod voorbereiden', ...)"
 
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_mail_activity_schedule
 msgid "Activity schedule plan Wizard"
-msgstr ""
+msgstr "Wizard activiteitenplan"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search_bis
 msgid "Activity type"
-msgstr ""
+msgstr "Soort activiteit"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.crm_case_tree_view_job
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
 msgid "Add Applicants"
-msgstr ""
+msgstr "Sollicitanten toevoegen"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.job_add_applicants_view_form
 msgid "Add Applicants to Pool"
-msgstr ""
+msgstr "Sollicitanten aan de talentenpool toevoegen"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.talent_pool_add_applicants_view_form
 msgid "Add Applicants to the Pool"
-msgstr ""
+msgstr "Sollicitanten aan de talentenpool toevoegen"
 
 #. module: hr_recruitment
 #: model_terms:ir.actions.act_window,help:hr_recruitment.hr_job_stage_act
@@ -554,34 +836,34 @@ msgstr "Voeg een nieuw label toe"
 #. odoo-python
 #: code:addons/hr_recruitment/models/hr_applicant.py:0
 msgid "Add applicant(s) to the pool"
-msgstr ""
+msgstr "Voeg sollicitant(en) toe aan de pool"
 
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_job_add_applicants
 msgid "Add applicants to a job"
-msgstr ""
+msgstr "Sollicitanten aan een functie toevoegen"
 
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_talent_pool_add_applicants
 msgid "Add applicants to talent pool"
-msgstr ""
+msgstr "Sollicitanten aan talentenpool toevoegen"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
 msgid "Add private notes about this applicant..."
-msgstr ""
+msgstr "Voeg privénotities over deze kandidaat toe..."
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.talent_pool_add_applicants_view_form
 msgid "Add to Pool"
-msgstr ""
+msgstr "Toevoegen aan talentenpool"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.mail_followers_edit_action_from_hr_recruitment
 msgid "Add/Remove Followers"
-msgstr ""
+msgstr "Volgers toevoegen/verwijderen"
 
 #. module: hr_recruitment
 #: model:res.groups,name:hr_recruitment.group_hr_recruitment_manager
@@ -601,17 +883,17 @@ msgstr "Alias contact beveiliging"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__alias_domain_id
 msgid "Alias Domain"
-msgstr ""
+msgstr "Aliasdomein"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__alias_domain
 msgid "Alias Domain Name"
-msgstr ""
+msgstr "Aliasdomeinnaam"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__alias_full_name
 msgid "Alias Email"
-msgstr ""
+msgstr "E-mailalias"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_source__alias_id
@@ -626,12 +908,12 @@ msgstr "Aliasnaam"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__alias_status
 msgid "Alias Status"
-msgstr ""
+msgstr "Status alias"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job__alias_status
 msgid "Alias status assessed on the last message received."
-msgstr ""
+msgstr "Status alias beoordeeld op het laatste ontvangen bericht."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__alias_model_id
@@ -678,12 +960,12 @@ msgstr "Solicitant aangenomen"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__applicant_notes
 msgid "Applicant Notes"
-msgstr ""
+msgstr "Opmerkingen aanvrager"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__applicant_properties_definition
 msgid "Applicant Properties"
-msgstr ""
+msgstr "Eigenschappen sollicitant"
 
 #. module: hr_recruitment
 #: model:mail.message.subtype,name:hr_recruitment.mt_job_applicant_stage_changed
@@ -732,6 +1014,11 @@ msgid ""
 "are indexed automatically,\n"
 "                so that you can easily search through their content."
 msgstr ""
+"Sollicitanten en hun bijgevoegde cv worden automatisch aangemaakt als er een "
+"e-mail wordt verstuurd.\n"
+"                Als je de modules voor documentbeheer installeert, worden "
+"alle cv's automatisch geïndexeerd,\n"
+"                zodat je gemakkelijk door de inhoud kunt zoeken."
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
@@ -775,6 +1062,9 @@ msgid ""
 "Applications received from this Email won't be linked to a contact.There "
 "will be no email address set on the Applicant either."
 msgstr ""
+"Sollicitaties die via dit e-mailadres worden ontvangen, worden niet "
+"gekoppeld aan een contactpersoon. Er wordt ook geen e-mailadres ingesteld "
+"voor de kandidaat."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__application_count
@@ -784,12 +1074,12 @@ msgstr "Sollicitaties met dezelfde e-mail of telefoon of mobiel"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__create_date
 msgid "Applied on"
-msgstr ""
+msgstr "Gesolliciteerd op"
 
 #. module: hr_recruitment
 #: model:ir.model,website_form_label:hr_recruitment.model_hr_applicant
 msgid "Apply for a Job"
-msgstr ""
+msgstr "Solliciteren voor een functie"
 
 #. module: hr_recruitment
 #. odoo-javascript
@@ -813,7 +1103,7 @@ msgstr "Gearchiveerd"
 #. odoo-javascript
 #: code:addons/hr_recruitment/static/src/views/recruitment_form_controller.js:0
 msgid "Are you sure that you want to archive this job position?"
-msgstr ""
+msgstr "Weet je zeker dat je deze vacature wilt archiveren?"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__date_open
@@ -826,16 +1116,18 @@ msgstr "Toegewezen"
 msgid ""
 "At least one applicant doesn't have a email; you can't use send email option."
 msgstr ""
+"Ten minste één sollicitant heeft geen e-mailadres. Je kunt de optie 'E-mail "
+"verzenden' niet gebruiken."
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.applicant_send_mail_view_form
 msgid "Attach a file"
-msgstr ""
+msgstr "Bijlage toevoegen"
 
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_ir_attachment
 msgid "Attachment"
-msgstr ""
+msgstr "Bijlage"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__message_attachment_count
@@ -868,12 +1160,12 @@ msgstr "Bachelor diploma"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__is_blacklisted
 msgid "Blacklist"
-msgstr ""
+msgstr "Blacklist"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__phone_blacklisted
 msgid "Blacklisted Phone is Phone"
-msgstr ""
+msgstr "Telefoon op blacklist Is een vaste lijn"
 
 #. module: hr_recruitment
 #. odoo-python
@@ -893,12 +1185,12 @@ msgstr "Geblokkeerd"
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__body_has_template_value
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_send_mail__body_has_template_value
 msgid "Body content is the same as the template"
-msgstr ""
+msgstr "De inhoud is hetzelfde als de sjabloon"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__message_bounce
 msgid "Bounce"
-msgstr ""
+msgstr "Bounce"
 
 #. module: hr_recruitment
 #: model:ir.ui.menu,name:hr_recruitment.menu_hr_job_position
@@ -927,7 +1219,7 @@ msgstr ""
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_calendar_event
 msgid "Calendar Event"
-msgstr "Agenda-afspraak"
+msgstr "Agenda gebeurtenis"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__campaign_id
@@ -967,7 +1259,7 @@ msgstr "Kies een sollicitatie-e-mail."
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_talent_pool__color
 msgid "Color"
-msgstr ""
+msgstr "Kleur"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__color
@@ -979,7 +1271,7 @@ msgstr "Kleurindex"
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_res_company
 msgid "Companies"
-msgstr ""
+msgstr "Bedrijven"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__company_id
@@ -992,7 +1284,7 @@ msgstr "Bedrijf"
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_res_config_settings
 msgid "Config Settings"
-msgstr "Configuratie instellingen"
+msgstr "Configuratie-instellingen"
 
 #. module: hr_recruitment
 #: model:ir.ui.menu,name:hr_recruitment.menu_hr_recruitment_configuration
@@ -1049,12 +1341,12 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/hr_recruitment/static/src/js/fields/recruitment_copy_clipboard_char_field/recruitment_copy_clipboard_char_field.js:0
 msgid "Copy to Clipboard"
-msgstr ""
+msgstr "Kopiëren naar het klembord"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__message_bounce
 msgid "Counter of the number of bounced emails for this contact"
-msgstr ""
+msgstr "Aantal bounced e-mails voor dit contact"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
@@ -1068,7 +1360,7 @@ msgstr "Aanmaken"
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.job_add_applicants_view_form
 msgid "Create Applications"
-msgstr ""
+msgstr "Sollicitaties aanmaken"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
@@ -1084,7 +1376,7 @@ msgstr ""
 #. module: hr_recruitment
 #: model:ir.model,website_form_label:hr_recruitment.model_res_partner
 msgid "Create a Customer"
-msgstr ""
+msgstr "Een klant aanmaken"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.create_job_simple
@@ -1095,12 +1387,13 @@ msgstr "Vacature aanmaken"
 #. module: hr_recruitment
 #: model_terms:ir.actions.act_window,help:hr_recruitment.mail_activity_plan_action_config_hr_applicant
 msgid "Create a Recruitment Activity Plan"
-msgstr ""
+msgstr "Maak een activiteitenplan voor Werving & Selectie"
 
 #. module: hr_recruitment
 #: model_terms:ir.actions.act_window,help:hr_recruitment.action_hr_job_platforms
 msgid "Create a new rule to process emails from specific job boards."
 msgstr ""
+"Maak een nieuwe regel om e-mails van specifieke vacaturebanken te verwerken."
 
 #. module: hr_recruitment
 #. odoo-javascript
@@ -1112,7 +1405,7 @@ msgstr "Maak je eerste vacature."
 #. odoo-python
 #: code:addons/hr_recruitment/wizard/job_add_applicants.py:0
 msgid "Created %(amount)s new applications for: %(names)s"
-msgstr ""
+msgstr "%(amount)s nieuwe sollicitaties aangemaakt voor: %(names)s"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__create_uid
@@ -1159,7 +1452,7 @@ msgstr ""
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__alias_bounced_content
 msgid "Custom Bounced Message"
-msgstr "Aangepast teruggestuurd bericht"
+msgstr "Aangepast bouncebericht"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_recruitment_stage__rotting_threshold_days
@@ -1205,6 +1498,8 @@ msgid ""
 "Define a regex: Extract the applicant's name from the email's subject or "
 "body."
 msgstr ""
+"Definieer een regex: Haal de naam van de sollicitant uit het onderwerp of de "
+"tekst van de e-mail."
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
@@ -1226,6 +1521,9 @@ msgid ""
 "refused,\n"
 "                    hired."
 msgstr ""
+"Bepaal hier de fases van je wervingsproces, bijvoorbeeld:\n"
+"kwalificatie, eerste interview, tweede interview, afgewezen, \n"
+"aangenomen."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__type_id
@@ -1277,6 +1575,8 @@ msgstr "Afdelingen"
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_talent_pool_view_form
 msgid "Describe the talent pool and common traits among talent pool applicants"
 msgstr ""
+"Beschrijf de talentenpool en veelvoorkomende kenmerken van sollicitanten in "
+"de talentenpool"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_refuse_reason__name
@@ -1287,32 +1587,32 @@ msgstr "Omschrijving"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
 msgid "Details"
-msgstr ""
+msgstr "Details"
 
 #. module: hr_recruitment
 #: model:hr.talent.pool,name:hr_recruitment.talent_pool_0
 msgid "Developer"
-msgstr ""
+msgstr "Developer"
 
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_digest_digest
 msgid "Digest"
-msgstr "Samenvatting"
+msgstr "Overzicht"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
 msgid "Digitize your résumé to extract name and email automatically."
-msgstr ""
+msgstr "Digitaliseer je cv om naam en e-mail automatisch te extraheren."
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
 msgid "Directly"
-msgstr ""
+msgstr "Directe verkoop"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search_bis
 msgid "Directly Available"
-msgstr ""
+msgstr "Onmiddellijk beschikbaar"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
@@ -1361,8 +1661,8 @@ msgstr "Schermnaam"
 #: code:addons/hr_recruitment/models/digest.py:0
 msgid "Do not have access, skip this data for user's digest email"
 msgstr ""
-"Heeft geen toegang, sla deze gegevens over voor de gebruikers overzicht e-"
-"mail"
+"Heeft geen toegang, sla deze gegevens over voor de gebruikers "
+"samenvattingsmail"
 
 #. module: hr_recruitment
 #: model:hr.recruitment.degree,name:hr_recruitment.degree_bac5
@@ -1386,7 +1686,7 @@ msgstr "Documenten"
 #. module: hr_recruitment
 #: model:hr.applicant.refuse.reason,name:hr_recruitment.refuse_reason_1
 msgid "Does not fit the job requirements"
-msgstr ""
+msgstr "Past niet bij de functie-eisen"
 
 #. module: hr_recruitment
 #: model_terms:ir.actions.act_window,help:hr_recruitment.hr_recruitment_stage_act
@@ -1394,26 +1694,28 @@ msgid ""
 "Don't forget to specify the department if your recruitment process\n"
 "                is different according to the job position."
 msgstr ""
+"Vergeet niet de afdeling te bepalen indien het wervingsproces\n"
+"                verschillend is naargelang de functie."
 
 #. module: hr_recruitment
 #: model:hr.applicant.refuse.reason,name:hr_recruitment.refuse_reason_6
 msgid "Duplicate"
-msgstr ""
+msgstr "Dubbele"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__duplicate_applicant_ids_domain
 msgid "Duplicate Applicant Ids Domain"
-msgstr ""
+msgstr "Dubbele kandidaat-ID's"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__duplicate_applicant_ids
 msgid "Duplicate Applications"
-msgstr ""
+msgstr "Dubbele sollicitaties"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__duplicates_count
 msgid "Duplicates Count"
-msgstr ""
+msgstr "Aantal dubbele"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__email_from
@@ -1428,12 +1730,12 @@ msgstr "E-mail"
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_survey
 msgid "Email Alias"
-msgstr "E-mail alias"
+msgstr "E-mailalias"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.applicant_get_refuse_reason_view_form
 msgid "Email Body..."
-msgstr ""
+msgstr "E-mailtekst..."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__template_id
@@ -1448,7 +1750,7 @@ msgid ""
 "Email alias for this job position. New emails will automatically create new "
 "applicants for this job position."
 msgstr ""
-"E-mail alias voor deze vacature. Nieuwe e-mails maken automatisch "
+"E-mailalias voor deze vacature. Nieuwe e-mails maken automatisch "
 "sollicitanten aan voor deze vacature."
 
 #. module: hr_recruitment
@@ -1459,13 +1761,13 @@ msgstr "E-mail cc"
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job__alias_domain
 msgid "Email domain e.g. 'example.com' in 'odoo@example.com'"
-msgstr ""
+msgstr "E-maildomein bijv. 'example.com' in 'odoo@example.com'"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.action_hr_job_platforms
 #: model:ir.ui.menu,name:hr_recruitment.menu_hr_recruitment_emails
 msgid "Emails"
-msgstr ""
+msgstr "E-mails"
 
 #. module: hr_recruitment
 #. odoo-python
@@ -1478,7 +1780,7 @@ msgstr "Werknemer"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__emp_is_active
 msgid "Employee Active"
-msgstr ""
+msgstr "Werknemer actief"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__employee_count
@@ -1493,7 +1795,7 @@ msgstr "Naam werknemer"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.applicant_hired_template
 msgid "Employee created:"
-msgstr ""
+msgstr "Aangemaakte werknemer:"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__employee_id
@@ -1509,7 +1811,7 @@ msgstr "Werknemers"
 #. module: hr_recruitment
 #: model:ir.ui.menu,name:hr_recruitment.menu_hr_recruitment_contract_type
 msgid "Employment Types"
-msgstr "Dienstverbandsoorten"
+msgstr "Dienstverbanden"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__priority
@@ -1525,7 +1827,7 @@ msgstr "Uitmuntend"
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__salary_expected
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
 msgid "Expected"
-msgstr ""
+msgstr "Verwacht"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__expected_degree
@@ -1564,6 +1866,8 @@ msgid ""
 "Field used to store sanitized phone number. Helps speeding up searches and "
 "comparisons."
 msgstr ""
+"Veld gebruikt om opgeschoond telefoonnummer in te bewaren. Helpt bij het "
+"versnellen van zoekopdrachten en vergelijkingen."
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.ir_attachment_hr_recruitment_list_view
@@ -1583,7 +1887,7 @@ msgstr "Gevouwen in kanban"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_recruitment_stage_kanban
 msgid "Folded in Recruitment Pipe:"
-msgstr ""
+msgstr "Gevouwen in wervingsfase:"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__message_follower_ids
@@ -1595,7 +1899,7 @@ msgstr "Volgers"
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__message_partner_ids
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_talent_pool__message_partner_ids
 msgid "Followers (Partners)"
-msgstr "Volgers (Relaties)"
+msgstr "Volgers (Partners)"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__activity_type_icon
@@ -1611,7 +1915,7 @@ msgstr "Toekomstige activiteiten"
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_applicant_get_refuse_reason
 msgid "Get Refuse Reason"
-msgstr "Krijg de reden voor afwijzing"
+msgstr "Krijg de reden voor afwijzen"
 
 #. module: hr_recruitment
 #: model:ir.model.fields.selection,name:hr_recruitment.selection__hr_applicant__priority__1
@@ -1626,7 +1930,7 @@ msgstr "Gediplomeerd"
 #. module: hr_recruitment
 #: model_terms:web_tour.tour,rainbow_man_message:hr_recruitment.hr_recruitment_tour
 msgid "Great job! You hired a new colleague!"
-msgstr ""
+msgstr "Geweldig gedaan! Je hebt een nieuwe collega aangenomen!"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage__legend_done
@@ -1671,7 +1975,7 @@ msgstr "Aanneemfase"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search_bis
 msgid "Hiring Date"
-msgstr ""
+msgstr "Aanwervingsdatum"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__id
@@ -1737,7 +2041,7 @@ msgstr "Indien aangevinkt vragen nieuwe berichten je aandacht."
 #: model:ir.model.fields,help:hr_recruitment.field_hr_talent_pool__message_has_error
 #: model:ir.model.fields,help:hr_recruitment.field_hr_talent_pool__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
-msgstr "Indien aangevinkt hebben sommige leveringen een fout."
+msgstr "Indien aangevinkt hebben sommige berichten een leveringsfout."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_recruitment_stage__hired_stage
@@ -1754,7 +2058,7 @@ msgid ""
 "applicant is set to the stage."
 msgstr ""
 "Indien aangevinkt en de sollicitant komt in deze fase, wordt een bericht "
-"verstuurt naar de sollicitant, gebruik makende van de het sjabloon."
+"verstuurt naar de sollicitant, gebruik makende van de de sjabloon."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job__alias_bounced_content
@@ -1771,6 +2075,8 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the resource "
 "record without removing it."
 msgstr ""
+"Als het actief veld uitstaat, kun je het resource record verbergen zonder "
+"deze te verwijderen."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__active
@@ -1787,6 +2093,8 @@ msgid ""
 "If the email address is on the blacklist, the contact won't receive mass "
 "mailing anymore, from any list"
 msgstr ""
+"Als het e-mail adres op de blacklist staat, zal het contact geen "
+"bulkmailingen ontvangen, van geen enkele lijst"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__phone_sanitized_blacklisted
@@ -1794,6 +2102,8 @@ msgid ""
 "If the sanitized phone number is on the blacklist, the contact won't receive "
 "mass mailing sms anymore, from any list"
 msgstr ""
+"Als het telefoonnummer op de blacklist staat, ontvangt de contactpersoon "
+"geen mass-sms meer van welke lijst dan ook"
 
 #. module: hr_recruitment
 #. odoo-python
@@ -1812,7 +2122,7 @@ msgstr "In behandeling"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
 msgid "In-App Purchases"
-msgstr ""
+msgstr "In-App aankopen"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
@@ -1820,6 +2130,9 @@ msgid ""
 "Incoming emails create applications automatically. Use it for direct "
 "applications or when posting job offers on LinkedIn, Monster, etc."
 msgstr ""
+"Inkomende e-mails maken automatisch sollicitaties aan. Gebruik het voor "
+"directe sollicitaties of bij het plaatsen van vacatures op LinkedIn, "
+"Monster, etc."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__phone_blacklisted
@@ -1828,11 +2141,14 @@ msgid ""
 "distinguish which number is blacklisted             when there is both a "
 "mobile and phone field in a model."
 msgstr ""
+"Geeft aan of een op de blacklist geplaatst nummer een telefoonnummer is. "
+"Helpt bij het onderscheiden welk nummer op de blacklist staat als een model "
+"zowel een mobiel als een telefoon veld bevat."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__industry_id
 msgid "Industry"
-msgstr ""
+msgstr "Branche"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_res_config_settings__module_hr_recruitment_survey
@@ -1842,7 +2158,7 @@ msgstr "Interviewformulieren"
 #. module: hr_recruitment
 #: model:res.groups,name:hr_recruitment.group_hr_recruitment_interviewer
 msgid "Interviewer"
-msgstr ""
+msgstr "Interviewer"
 
 #. module: hr_recruitment
 #: model:res.groups,comment:hr_recruitment.group_hr_recruitment_interviewer
@@ -1850,6 +2166,9 @@ msgid ""
 "Interviewer right will give access to all job position/applications where "
 "the employee is defined. It will allow to refuse, plan meetings."
 msgstr ""
+"Het interviewerrecht geeft toegang tot alle vacatures/sollicitaties waarin "
+"de werknemer is gedefinieerd. Het zal het mogelijk maken om te weigeren, "
+"vergaderingen te plannen."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__interviewer_ids
@@ -1860,13 +2179,13 @@ msgstr "Interviewers"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__is_applicant_in_pool
 msgid "Is Applicant In Pool"
-msgstr ""
+msgstr "Is sollicitant in de pool"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__is_mail_template_editor
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_send_mail__is_mail_template_editor
 msgid "Is Editor"
-msgstr "Is editor"
+msgstr "Is bewerker"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__is_favorite
@@ -1882,7 +2201,7 @@ msgstr "Is een volger"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__is_pool_applicant
 msgid "Is Pool Applicant"
-msgstr ""
+msgstr "Is sollicitant in de pool"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage__is_warning_visible
@@ -1892,7 +2211,7 @@ msgstr "Is waarschuwing zichtbaar"
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__duration_tracking
 msgid "JSON that maps ids from a many2one field to seconds spent"
-msgstr ""
+msgstr "JSON die IDs uit een many2one-veld koppelt aan bestede seconden"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_source__job_id
@@ -1910,7 +2229,7 @@ msgstr "Sollicitaties"
 #. module: hr_recruitment
 #: model:ir.ui.menu,name:hr_recruitment.menu_hr_job_boards
 msgid "Job Boards"
-msgstr ""
+msgstr "Vacaturebanken"
 
 #. module: hr_recruitment
 #: model:utm.campaign,title:hr_recruitment.utm_campaign_job
@@ -1925,12 +2244,12 @@ msgstr "Functie locatie"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
 msgid "Job Page"
-msgstr ""
+msgstr "Jobpagina"
 
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_hr_job_platform
 msgid "Job Platforms"
-msgstr ""
+msgstr "Vacatureplatformen"
 
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_hr_job
@@ -1966,12 +2285,12 @@ msgstr "Functie publicatie"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_res_company__job_properties_definition
 msgid "Job Properties"
-msgstr ""
+msgstr "Functie-eigenschappen"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__job_source_ids
 msgid "Job Source"
-msgstr ""
+msgstr "Bron van de vacature"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage__job_ids
@@ -1981,7 +2300,7 @@ msgstr "Functiespecifiek"
 #. module: hr_recruitment
 #: model:hr.applicant.refuse.reason,name:hr_recruitment.refuse_reason_5
 msgid "Job already fulfilled"
-msgstr ""
+msgstr "Taak al vervuld"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search
@@ -2086,13 +2405,13 @@ msgstr "Te late activiteiten"
 #. module: hr_recruitment
 #: model_terms:ir.actions.act_window,help:hr_recruitment.action_hr_job_config
 msgid "Let's create a job position"
-msgstr ""
+msgstr "Laten we een vacature creëren"
 
 #. module: hr_recruitment
 #. odoo-javascript
 #: code:addons/hr_recruitment/static/src/views/recruitment_helper_view.xml:0
 msgid "Let's create a job position."
-msgstr "Laten we een vacature aanmaken."
+msgstr "Laten we een functie aanmaken."
 
 #. module: hr_recruitment
 #. odoo-javascript
@@ -2131,23 +2450,23 @@ msgstr "LinkedIn profiel"
 #. module: hr_recruitment
 #: model:ir.actions.server,name:hr_recruitment.action_load_demo_data
 msgid "Load demo data"
-msgstr ""
+msgstr "Laad demo data"
 
 #. module: hr_recruitment
 #. odoo-javascript
 #: code:addons/hr_recruitment/static/src/views/recruitment_helper_view.xml:0
 msgid "Load sample data"
-msgstr ""
+msgstr "Demodata laden"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.applicant_send_mail_view_form
 msgid "Load template"
-msgstr ""
+msgstr "Sjabloon laden"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__alias_incoming_local
 msgid "Local-part based incoming detection"
-msgstr ""
+msgstr "Inkomende mail detectie alleen op eerste deel en niet het domein"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_send_mail__template_id
@@ -2210,12 +2529,12 @@ msgstr "Berichten"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.job_add_applicants_view_form
 msgid "Move to..."
-msgstr ""
+msgstr "Verplaatsen naar..."
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search_bis
 msgid "My Activities"
-msgstr ""
+msgstr "Mijn activiteiten"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__my_activity_date_deadline
@@ -2311,7 +2630,7 @@ msgstr "Volgende activiteit deadline"
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__activity_summary
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__activity_summary
 msgid "Next Activity Summary"
-msgstr "Omschrijving volgende actie"
+msgstr "Volgende activiteit overzicht"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__activity_type_id
@@ -2334,13 +2653,13 @@ msgstr "Geen afspraak"
 #. module: hr_recruitment
 #: model_terms:ir.actions.act_window,help:hr_recruitment.action_hr_talent_pool_applications
 msgid "No Talents in the pool yet"
-msgstr ""
+msgstr "Nog geen talenten in de pool"
 
 #. module: hr_recruitment
 #. odoo-python
 #: code:addons/hr_recruitment/models/hr_applicant.py:0
 msgid "No applications found."
-msgstr ""
+msgstr "Geen sollicitaties gevonden."
 
 #. module: hr_recruitment
 #: model_terms:ir.actions.act_window,help:hr_recruitment.action_hr_job_applications
@@ -2351,7 +2670,7 @@ msgstr "Nog geen sollicitaties"
 #. module: hr_recruitment
 #: model_terms:ir.actions.act_window,help:hr_recruitment.mail_activity_type_action_config_hr_applicant
 msgid "No data to display"
-msgstr ""
+msgstr "Geen gegevens om te tonen"
 
 #. module: hr_recruitment
 #: model_terms:ir.actions.act_window,help:hr_recruitment.action_hr_recruitment_report_filtered_department
@@ -2363,12 +2682,12 @@ msgstr "Nog geen gegevens!"
 #. module: hr_recruitment
 #: model_terms:ir.actions.act_window,help:hr_recruitment.action_hr_job_platforms
 msgid "No rules have been defined."
-msgstr ""
+msgstr "Er zijn geen regels gedefinieerd."
 
 #. module: hr_recruitment
 #: model_terms:ir.actions.act_window,help:hr_recruitment.action_hr_talent_pool
 msgid "No talent pools yet"
-msgstr ""
+msgstr "Nog geen talentenpools"
 
 #. module: hr_recruitment
 #: model:ir.model.fields.selection,name:hr_recruitment.selection__hr_applicant__priority__0
@@ -2378,12 +2697,12 @@ msgstr "Normaal"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__email_normalized
 msgid "Normalized Email"
-msgstr ""
+msgstr "Genormaliseerde e-mail"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
 msgid "Note"
-msgstr ""
+msgstr "Notitie"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__message_needaction_counter
@@ -2431,12 +2750,13 @@ msgstr "Aantal fouten"
 msgid ""
 "Number of hired employees for this job position during recruitment phase."
 msgstr ""
+"Aantal aan te nemen werknemers voor deze functie tijdens de recruitment fase."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__message_needaction_counter
 #: model:ir.model.fields,help:hr_recruitment.field_hr_talent_pool__message_needaction_counter
 msgid "Number of messages requiring action"
-msgstr ""
+msgstr "Aantal berichten die actie vereisen"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__message_has_error_counter
@@ -2458,7 +2778,7 @@ msgstr ""
 #. module: hr_recruitment
 #: model:res.groups,name:hr_recruitment.group_hr_recruitment_user
 msgid "Officer: Manage all applicants"
-msgstr ""
+msgstr "Functionaris: Beheer alle sollicitanten"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__old_application_count
@@ -2485,7 +2805,7 @@ msgstr ""
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_view_tree_inherit
 msgid "Open Applications"
-msgstr ""
+msgstr "Openstaande sollicitaties"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job__alias_force_thread_id
@@ -2522,7 +2842,7 @@ msgstr ""
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
 msgid "Other benefits"
-msgstr ""
+msgstr "Andere voordelen"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__alias_parent_model_id
@@ -2541,9 +2861,9 @@ msgid ""
 "necessarily the model given by alias_model_id (example: project "
 "(parent_model) and task (model))"
 msgstr ""
-"Bovenliggend model welke de alias bezit. Het model dat de alias referentie "
-"bezit\n"
-"is niet noodzakelijk het model wat wordt gegeven door alias_model_id "
+"Bovenliggend model dat de alias bevat. Het model dat de aliasverwijzing "
+"bevat,\n"
+"is niet noodzakelijk het model dat door alias_model_id wordt gegeven "
 "(bijvoorbeeld: project (parent_model) en taak (model))"
 
 #. module: hr_recruitment
@@ -2554,18 +2874,18 @@ msgstr "Telefoon"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__phone_sanitized_blacklisted
 msgid "Phone Blacklisted"
-msgstr ""
+msgstr "Telefoon blacklist"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__phone_mobile_search
 msgid "Phone Number"
-msgstr ""
+msgstr "Telefoonnummer"
 
 #. module: hr_recruitment
 #. odoo-python
 #: code:addons/hr_recruitment/models/hr_applicant.py:0
 msgid "Please provide an applicant name."
-msgstr ""
+msgstr "Geef de naam van de sollicitant."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job__alias_contact
@@ -2578,20 +2898,20 @@ msgid ""
 msgstr ""
 "Beleid om een bericht te versturen bij een document door gebruik te maken "
 "van de mail gateway.\n"
-"-iedereen: iedereen mag versturen\n"
-"-relaties: alleen geautoriseerde relaties\n"
-"-volgers: allen volgers van een bijbehorend document of volgers van gevolgde "
+"-iedereen: iedereen mag posten\n"
+"-partners: alleen geautoriseerde partners\n"
+"-volgers: alleen volgers van een bijbehorend document of leden van gevolgde "
 "kanalen\n"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__pool_applicant_id
 msgid "Pool Applicant"
-msgstr ""
+msgstr "Sollicitant talentenpool"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_talent_pool__pool_manager
 msgid "Pool Manager"
-msgstr ""
+msgstr "Manager talentenpool"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__probability
@@ -2601,19 +2921,19 @@ msgstr "Kans"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
 msgid "Process"
-msgstr ""
+msgstr "Verwerken"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__applicant_properties
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__job_properties
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search_bis
 msgid "Properties"
-msgstr ""
+msgstr "Eigenschappen"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__salary_proposed
 msgid "Proposed"
-msgstr ""
+msgstr "Voorgesteld"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__salary_proposed_extra
@@ -2623,18 +2943,18 @@ msgstr "Voorgesteld extra salaris"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
 msgid "Publish job offers on your website"
-msgstr ""
+msgstr "Publiceer vacatures op je website"
 
 #. module: hr_recruitment
 #: model:hr.recruitment.stage,name:hr_recruitment.stage_job1
 msgid "Qualification"
-msgstr ""
+msgstr "Kwalificatie"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__rating_ids
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_talent_pool__rating_ids
 msgid "Ratings"
-msgstr ""
+msgstr "Beoordelingen"
 
 #. module: hr_recruitment
 #. odoo-python
@@ -2655,12 +2975,12 @@ msgstr "Klaar voor volgende fase"
 #: code:addons/hr_recruitment/static/src/views/recruitment_helper_view.xml:0
 #: model_terms:ir.actions.act_window,help:hr_recruitment.action_hr_job_config
 msgid "Ready to recruit more efficiently?"
-msgstr "Klaar om efficiënter re recruiten?"
+msgstr "Klaar om efficiënter te werven?"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.applicant_get_refuse_reason_view_form
 msgid "Reason"
-msgstr ""
+msgstr "Reden"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__alias_force_thread_id
@@ -2680,7 +3000,7 @@ msgstr "Recruiter"
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_department_view_kanban
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
 msgid "Recruitment"
-msgstr "Werving & Selectie"
+msgstr "Werving"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.hr_job_stage_act
@@ -2701,7 +3021,7 @@ msgstr "Wervinganalyse"
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.mail_activity_plan_action_config_hr_applicant
 msgid "Recruitment Plans"
-msgstr ""
+msgstr "Wervingplannen"
 
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_hr_recruitment_stage
@@ -2744,12 +3064,12 @@ msgstr "Afwijzen"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__refuse_date
 msgid "Refuse Date"
-msgstr ""
+msgstr "Afval Datum"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__duplicates
 msgid "Refuse Duplicate Applications"
-msgstr ""
+msgstr "Weiger dubbele sollicitaties"
 
 #. module: hr_recruitment
 #. odoo-python
@@ -2791,21 +3111,23 @@ msgid ""
 "Refused automatically because this application has been identified as a "
 "duplicate of %(link)s"
 msgstr ""
+"Automatisch afgewezen omdat deze aanvraag is herkend als een dubbele van "
+"%(link)s"
 
 #. module: hr_recruitment
 #: model:hr.applicant.refuse.reason,name:hr_recruitment.refuse_reason_2
 msgid "Refused by applicant: job fit"
-msgstr ""
+msgstr "Geweigerd door aanvrager: functie geschikt"
 
 #. module: hr_recruitment
 #: model:hr.applicant.refuse.reason,name:hr_recruitment.refuse_reason_8
 msgid "Refused by applicant: salary"
-msgstr ""
+msgstr "Geweigerd door aanvrager: salaris"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job_platform__regex
 msgid "Regex"
-msgstr ""
+msgstr "Regex"
 
 #. module: hr_recruitment
 #. odoo-python
@@ -2856,7 +3178,7 @@ msgstr "Terugzetten"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search_bis
 msgid "Resume's content"
-msgstr ""
+msgstr "Inhoud van de cv"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__is_rotting
@@ -2872,7 +3194,7 @@ msgstr "Lopende sollicitaties"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
 msgid "Résumé Digitization (OCR)"
-msgstr ""
+msgstr "C.V. digitaliseren (OCR)"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__message_has_sms_error
@@ -2893,7 +3215,7 @@ msgstr "Verwacht salaris door sollicitant, overige arbeidsvoorwaarden"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
 msgid "Salary Package"
-msgstr ""
+msgstr "Salarispakket"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__salary_proposed
@@ -2908,18 +3230,18 @@ msgstr "Salaris voorgesteld door het bedrijf, extra arbeidsvoorwaarden"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__phone_sanitized
 msgid "Sanitized Number"
-msgstr ""
+msgstr "Opgeschoond nummer"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__partner_phone_sanitized
 msgid "Sanitized Phone Number"
-msgstr ""
+msgstr "Opgeschoond telefoonnummer"
 
 #. module: hr_recruitment
 #. odoo-javascript
 #: code:addons/hr_recruitment/static/src/js/tours/hr_recruitment.js:0
 msgid "Save it!"
-msgstr ""
+msgstr "Sla het op!"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
@@ -2929,7 +3251,7 @@ msgstr "Sollicitatiegesprek plannen"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__scheduled_date
 msgid "Scheduled Date"
-msgstr ""
+msgstr "Geplande datum"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_degree__score
@@ -2967,16 +3289,18 @@ msgid ""
 "Select the location where the applicant will work. Addresses listed here are "
 "defined on the company's contact information."
 msgstr ""
+"Kies de plaats waar de sollicitant zal werken. Adressen die hier worden "
+"vermeld, zijn gedefinieerd in de contactgegevens van het bedrijf."
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
 msgid "Select the way applicant found the offer"
-msgstr ""
+msgstr "Selecteer hoe de sollicitant de vacature heeft gevonden"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
 msgid "Select where the applicant comes from"
-msgstr ""
+msgstr "Selecteer waar de sollicitant vandaan komt"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.applicant_send_mail_view_form
@@ -3004,19 +3328,20 @@ msgstr "Sollicitatie-enquête verzenden"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
 msgid "Send SMS"
-msgstr "Verzend SMS"
+msgstr "SMS verzenden"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
 msgid ""
 "Send an Interview Survey to the applicant during the recruitment process"
 msgstr ""
+"Stuur een interview-enquête naar de sollicitant tijdens het wervingsproces"
 
 #. module: hr_recruitment
 #. odoo-python
 #: code:addons/hr_recruitment/models/hr_applicant.py:0
 msgid "Send applications to"
-msgstr ""
+msgstr "Verstuur sollicitaties naar"
 
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_applicant_send_mail
@@ -3060,7 +3385,7 @@ msgstr "Instellingen"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search_bis
 msgid "Show all records whose next activity date is past"
-msgstr ""
+msgstr "Toon alle records waarvan de volgende activiteitsdatum is verstreken"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__source_id
@@ -3086,22 +3411,24 @@ msgstr "Bron van sollicitanten"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
 msgid "Sourcing"
-msgstr ""
+msgstr "Sourcing"
 
 #. module: hr_recruitment
 #: model:hr.applicant.refuse.reason,name:hr_recruitment.refuse_reason_7
 msgid "Spam"
-msgstr ""
+msgstr "Spam"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_recruitment_stage__job_ids
 msgid "Specific jobs that use this stage. Other jobs will not use this stage."
 msgstr ""
+"Specifieke opdrachten die deze stap gebruiken. Andere opdrachten gebruiken "
+"deze stap niet."
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.applicant_get_refuse_reason_view_form
 msgid "Specify Refused Applicants..."
-msgstr ""
+msgstr "Specificeer geweigerde kandidaten..."
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
@@ -3163,13 +3490,13 @@ msgid ""
 msgstr ""
 "Status gebaseerd op activiteiten\n"
 "Te laat: Datum is al gepasseerd\n"
-"Vandaag: Activiteit datum is vandaag\n"
+"Vandaag: Datum van activiteit is vandaag\n"
 "Gepland: Toekomstige activiteiten."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__duration_tracking
 msgid "Status time"
-msgstr ""
+msgstr "Statustijd"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__subject
@@ -3180,7 +3507,7 @@ msgstr "Onderwerp"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.applicant_get_refuse_reason_view_form
 msgid "Subject..."
-msgstr ""
+msgstr "Onderwerp..."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_category__name
@@ -3190,7 +3517,7 @@ msgstr "Labelnaam"
 #. module: hr_recruitment
 #: model:ir.model.constraint,message:hr_recruitment.constraint_hr_applicant_category_name_uniq
 msgid "Tag name already exists!"
-msgstr ""
+msgstr "Labelnaam bestaat al!"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.hr_applicant_category_action
@@ -3208,7 +3535,7 @@ msgstr "Labels"
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_talent_pool__talent_ids
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
 msgid "Talent"
-msgstr ""
+msgstr "Talent"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.action_hr_talent_pool
@@ -3216,23 +3543,23 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_recruitment.field_talent_pool_add_applicants__talent_pool_ids
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search_bis
 msgid "Talent Pool"
-msgstr ""
+msgstr "Talentenpool"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__talent_pool_count
 msgid "Talent Pool Count"
-msgstr ""
+msgstr "Aantal talenten in de talentenpool"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_talent_pool__description
 msgid "Talent Pool Description"
-msgstr ""
+msgstr "Beschrijving talentenpool"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__talent_pool_ids
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
 msgid "Talent Pools"
-msgstr ""
+msgstr "Talentenpools"
 
 #. module: hr_recruitment
 #: model:mail.message.subtype,description:hr_recruitment.mt_talent_new
@@ -3250,7 +3577,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search_bis
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_talent_pool_view_kanban
 msgid "Talents"
-msgstr ""
+msgstr "Talenten"
 
 #. module: hr_recruitment
 #: model:ir.model.constraint,message:hr_recruitment.constraint_hr_job_platform_email_uniq
@@ -3258,6 +3585,8 @@ msgid ""
 "The Email must be unique, this one already corresponds to another Job "
 "Platform."
 msgstr ""
+"De e-mail moet uniek zijn, deze is al gekoppeld aan een ander "
+"vacatureplatform."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job__interviewer_ids
@@ -3279,6 +3608,9 @@ msgid ""
 "job             position. The Recruiter is automatically added to all "
 "meetings with the Applicant."
 msgstr ""
+"De Recruiter wordt de standaardwaarde voor alle Sollicitanten op deze "
+"vacature. De Recruiter wordt automatisch toegevoegd aan alle vergaderingen "
+"met de Sollicitant."
 
 #. module: hr_recruitment
 #. odoo-python
@@ -3323,13 +3655,13 @@ msgid ""
 "The name of the email alias, e.g. 'jobs' if you want to catch emails for "
 "<jobs@example.odoo.com>"
 msgstr ""
-"De naam van de e-mail alias, bijvoorbeeld: 'vacature' als je alle e-mails "
-"van vacature@bedrijf.nl wilt afvangen"
+"De naam van de e-mailalias, bijvoorbeeld: 'vacature' als je alle e-mails van "
+"<vacature@jouwbedrijf.nl> wilt afvangen"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_talent_pool__no_of_talents
 msgid "The number of talents in this talent pool."
-msgstr ""
+msgstr "Het aantal talenten in deze talentenpool."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job_platform__regex
@@ -3337,6 +3669,9 @@ msgid ""
 "The regex facilitates to extract information from the subject or body of the "
 "received email to autopopulate the Applicant's name field"
 msgstr ""
+"De regex vergemakkelijkt het extraheren van informatie uit het onderwerp of "
+"de inhoud van de ontvangen e-mail om het veld Naam van de aanvrager "
+"automatisch in te vullen"
 
 #. module: hr_recruitment
 #. odoo-javascript
@@ -3345,6 +3680,8 @@ msgid ""
 "These job positions and all related applicants will be archived. Are you "
 "sure?"
 msgstr ""
+"Deze vacatures en alle gerelateerde sollicitanten worden gearchiveerd. Weet "
+"je het zeker?"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__medium_id
@@ -3352,6 +3689,8 @@ msgid ""
 "This displays how the applicant has reached out, e.g. via Email, LinkedIn, "
 "Website, etc."
 msgstr ""
+"Dit geeft weer hoe de sollicitant contact heeft opgenomen, bijvoorbeeld via "
+"e-mail, LinkedIn, website, enz."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__email_normalized
@@ -3359,6 +3698,8 @@ msgid ""
 "This field is used to search on email address as the primary email field can "
 "contain more than strictly an email address."
 msgstr ""
+"Aangezien het primaire e-mailveld meer dan alleen een e-mailadres kan "
+"bevatten, wordt dit veld gebruikt om te zoeken op e-mailadres."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__campaign_id
@@ -3386,6 +3727,8 @@ msgstr ""
 msgid ""
 "This job position and all related applicants will be archived. Are you sure?"
 msgstr ""
+"Deze vacature en alle gerelateerde sollicitanten worden gearchiveerd. Weet "
+"je het zeker?"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_recruitment_stage__fold
@@ -3405,7 +3748,7 @@ msgstr "Tip: laat kandidaten per e-mail solliciteren"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_talent_pool__name
 msgid "Title"
-msgstr ""
+msgstr "Titel"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search_bis
@@ -3432,7 +3775,7 @@ msgstr "Trackers"
 #. module: hr_recruitment
 #: model_terms:ir.actions.act_window,help:hr_recruitment.action_hr_talent_pool_applications
 msgid "Try adding some to the pool"
-msgstr ""
+msgstr "Probeer er enkele aan de pool toe te voegen"
 
 #. module: hr_recruitment
 #: model_terms:digest.tip,tip_description:hr_recruitment.digest_tip_hr_recruitment_0
@@ -3442,7 +3785,7 @@ msgstr "Probeer een e-mail te sturen"
 #. module: hr_recruitment
 #: model_terms:web_tour.tour,rainbow_man_message:hr_recruitment.hr_recruitment_tour
 msgid "Try the Website app to publish job offers online."
-msgstr ""
+msgstr "Probeer de Website app om vacatures online te publiceren."
 
 #. module: hr_recruitment
 #: model_terms:ir.actions.act_window,help:hr_recruitment.mail_activity_type_action_config_hr_applicant
@@ -3450,12 +3793,14 @@ msgid ""
 "Try to add some records, or make sure that there is no active filter in the "
 "search bar."
 msgstr ""
+"Probeer enkele records toe te voegen of zorg ervoor dat er geen actieve "
+"filter in de zoekbalk staat."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__activity_exception_decoration
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job__activity_exception_decoration
 msgid "Type of the exception activity on record."
-msgstr "Type van activiteit uitzondering op record."
+msgstr "Type van de geregistreerde uitzonderingsactiviteit."
 
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_utm_campaign
@@ -3477,6 +3822,8 @@ msgstr "UTMs"
 #: code:addons/hr_recruitment/wizard/applicant_refuse_reason.py:0
 msgid "Unable to post message, please configure the sender's email address."
 msgstr ""
+"Bericht kan niet worden geplaatst, configureer het e-mailadres van de "
+"afzender."
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
@@ -3500,11 +3847,13 @@ msgstr "Ongelezen berichten"
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
 msgid "Use OCR to fill data from a picture of the Résumr or the file itself"
 msgstr ""
+"Gebruik OCR om gegevens te vullen vanuit een foto van de Résumr of het "
+"bestand zelf"
 
 #. module: hr_recruitment
 #: model_terms:ir.actions.act_window,help:hr_recruitment.action_hr_job_sources
 msgid "Use emails and links trackers"
-msgstr "Gebruik e-mails- en link-trackers"
+msgstr "Gebruik e-mails- en link trackers"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
@@ -3535,7 +3884,7 @@ msgstr "Zeer goed"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
 msgid "Visible to all"
-msgstr ""
+msgstr "Voor iedereen zichtbaar"
 
 #. module: hr_recruitment
 #. odoo-python
@@ -3566,7 +3915,7 @@ msgstr "Websiteberichten"
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__website_message_ids
 #: model:ir.model.fields,help:hr_recruitment.field_hr_talent_pool__website_message_ids
 msgid "Website communication history"
-msgstr "Website communicatiegeschiedenis"
+msgstr "Website communicatie geschiedenis"
 
 #. module: hr_recruitment
 #. odoo-javascript
@@ -3583,12 +3932,13 @@ msgstr "Wanneer je een aanvraag weigert, kun je deze sjabloon kiezen"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
 msgid "Who can access applicants"
-msgstr ""
+msgstr "Wie kan sollicitanten raadplegen"
 
 #. module: hr_recruitment
 #: model_terms:ir.actions.act_window,help:hr_recruitment.action_hr_job_platforms
 msgid "Without a regex: The applicant's name will be the email's subject."
 msgstr ""
+"Zonder een regex: De naam van de sollicitant is het onderwerp van de e-mail."
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.applicant_send_mail_view_form
@@ -3608,6 +3958,9 @@ msgid ""
 "instead\n"
 "                            of the default labels."
 msgstr ""
+"Je kunt hier de labels bepalen die aangetoond worden voor de kanban fase in "
+"plaats\n"
+"van de standaard labels."
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_stage_form
@@ -3615,6 +3968,8 @@ msgid ""
 "You can define the requirements here. They will be displayed when you hover "
 "over the stage title."
 msgstr ""
+"Hier kun je de vereisten definiëren. Ze worden weergegeven wanneer je met de "
+"muis over de podiumtitel beweegt."
 
 #. module: hr_recruitment
 #. odoo-python
@@ -3624,6 +3979,9 @@ msgid ""
 "The email will not be sent to the following applicant(s) as they don't have "
 "an email address:"
 msgstr ""
+"Je kunt de optie E-mail verzenden niet selecteren.\n"
+"De e-mail wordt niet verzonden naar de volgende sollicitant(en) omdat ze "
+"geen e-mailadres hebben:"
 
 #. module: hr_recruitment
 #. odoo-python
@@ -3641,19 +3999,19 @@ msgstr ""
 #. odoo-python
 #: code:addons/hr_recruitment/models/hr_applicant.py:0
 msgid "You have been assigned as an interviewer for %s"
-msgstr ""
+msgstr "Je bent toegewezen als interviewer voor %s"
 
 #. module: hr_recruitment
 #. odoo-python
 #: code:addons/hr_recruitment/models/hr_applicant.py:0
 msgid "You have been assigned as an interviewer for the Applicant %s"
-msgstr ""
+msgstr "Je bent toegewezen als interviewer voor de Aanvrager %s"
 
 #. module: hr_recruitment
 #. odoo-python
 #: code:addons/hr_recruitment/models/hr_applicant.py:0
 msgid "You must define a Contact Name for this applicant."
-msgstr "Je moet een contact naam ingeven voor deze sollicitant."
+msgstr "Je moet een contactnaam ingeven voor deze sollicitant."
 
 #. module: hr_recruitment
 #: model:mail.template,subject:hr_recruitment.email_template_data_applicant_congratulations
@@ -3666,12 +4024,12 @@ msgstr "Je sollicitatie: {{ object.job_id.name }}"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_talent_pool_view_form
 msgid "e.g French-speaking, Immediately Available, Own a car"
-msgstr ""
+msgstr "bijv. Franstalig, Direct Beschikbaar, Eigen een auto"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_talent_pool_view_form
 msgid "e.g Reserve, Developers, Sales"
-msgstr ""
+msgstr "bijv. Reserves, Developers, Sales"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.quick_create_applicant_form
@@ -3686,12 +4044,12 @@ msgstr "Bijv. LinkedIn"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_platform_form
 msgid "e.g. Linkedin"
-msgstr ""
+msgstr "bijv. Linkedin"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
 msgid "e.g. Masters"
-msgstr ""
+msgstr "bijvoorbeeld Masters"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
@@ -3701,42 +4059,42 @@ msgstr "Bijv. Verkoopmanager"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
 msgid "e.g. Trainee"
-msgstr ""
+msgstr "bijv. Trainee"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_platform_form
 msgid "e.g. ^New application:.*from (.*)"
-msgstr ""
+msgstr "bijv. ^Nieuwe sollicitatie:.*van (.*)"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_survey
 msgid "e.g. domain.com"
-msgstr ""
+msgstr "bijv. domain.com"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
 msgid "e.g. https://www.linkedin.com/in/..."
-msgstr ""
+msgstr "bijvoorbeeld https://www.linkedin.com/in/..."
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_survey
 msgid "e.g. jobs"
-msgstr ""
+msgstr "bijv. vacature"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_platform_form
 msgid "e.g. jobs-listings@linkedin.com"
-msgstr ""
+msgstr "bijv. jobs-listings@linkedin.com"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
 msgid "e.g. john.doe@example.com"
-msgstr ""
+msgstr "bijvoorbeeld john.doe@example.com"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
 msgid "e.g. mycompany.com"
-msgstr ""
+msgstr "bijv. mycompany.com"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
@@ -3747,7 +4105,7 @@ msgstr "Bijv. sales-manager"
 #. odoo-python
 #: code:addons/hr_recruitment/models/hr_applicant.py:0
 msgid "id"
-msgstr ""
+msgstr "ID"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
@@ -3763,7 +4121,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/hr_recruitment/static/src/views/recruitment_helper_view.xml:0
 msgid "or"
-msgstr ""
+msgstr "of"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_applicant_get_refuse_reason__scheduled_date
@@ -3771,12 +4129,14 @@ msgid ""
 "send emails after that date. This date is considered as being in UTC "
 "timezone."
 msgstr ""
+"Stuur e-mails na deze datum. Deze datum wordt beschouwd als in de UTC-"
+"tijdzone."
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_talent_pool_view_form
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_talent_pool_view_list
 msgid "talent pool"
-msgstr ""
+msgstr "talentenpool"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban

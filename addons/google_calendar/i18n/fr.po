@@ -1,26 +1,28 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* google_calendar
+# * google_calendar
 #
 # Translators:
 # Martin Trigaux, 2022
 # Cécile Collart <cco@odoo.com>, 2022
 # Jolien De Paepe, 2023
-#
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-09-11 13:56+0000\n"
-"PO-Revision-Date: 2022-09-22 05:46+0000\n"
-"Last-Translator: Jolien De Paepe, 2023\n"
-"Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
+"PO-Revision-Date: 2025-09-14 21:09+0000\n"
+"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"Language-Team: French <https://translate.odoo.com/projects/odoo-19/"
+"google_calendar/fr/>\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % "
-"1000000 == 0 ? 1 : 2;\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : ((n != 0 && n % "
+"1000000 == 0) ? 1 : 2);\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: google_calendar
 #. odoo-python
@@ -78,16 +80,20 @@ msgid ""
 "secret on the Google APIs plateform or try to stop and restart your calendar "
 "synchronization."
 msgstr ""
+"Une erreur s'est produite lors de la génération du jeton. Votre code "
+"d'autorisation est peut-être invalide ou a déjà expiré [%s]. Vérifiez votre "
+"identifiant client et votre secret sur la plateforme des API Google ou "
+"essayer d'arrêter et de redémarrer la synchronisation de votre calendrier."
 
 #. module: google_calendar
 #: model:ir.model,name:google_calendar.model_calendar_attendee
 msgid "Calendar Attendee Information"
-msgstr "Informations des participants au calendrier"
+msgstr "Informations des participants du calendrier"
 
 #. module: google_calendar
 #: model:ir.model,name:google_calendar.model_calendar_event
 msgid "Calendar Event"
-msgstr "Calendrier de l'événement"
+msgstr "Événement calendrier"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_res_users__google_calendar_cal_id
@@ -103,7 +109,7 @@ msgstr "Annuler"
 #. module: google_calendar
 #: model_terms:ir.ui.view,arch_db:google_calendar.res_config_settings_view_form
 msgid "Client ID"
-msgstr "Id. client"
+msgstr "ID client"
 
 #. module: google_calendar
 #: model_terms:ir.ui.view,arch_db:google_calendar.res_config_settings_view_form
@@ -135,7 +141,7 @@ msgstr "Configuration"
 #. odoo-javascript
 #: code:addons/google_calendar/static/src/views/google_calendar/google_calendar_controller.js:0
 msgid "Configure"
-msgstr ""
+msgstr "Configurer"
 
 #. module: google_calendar
 #: model_terms:ir.ui.view,arch_db:google_calendar.google_calendar_reset_account_view_form
@@ -171,7 +177,7 @@ msgstr "Supprimer du compte Google Agenda actuel"
 #. odoo-javascript
 #: code:addons/google_calendar/static/src/views/google_calendar/google_calendar_controller.js:0
 msgid "Discard"
-msgstr ""
+msgstr "Ignorer"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_calendar_alarm_manager__display_name
@@ -190,12 +196,12 @@ msgstr "Nom d'affichage"
 #. odoo-python
 #: code:addons/google_calendar/models/calendar.py:0
 msgid "Email"
-msgstr "Email"
+msgstr "E-mail"
 
 #. module: google_calendar
 #: model:ir.model,name:google_calendar.model_calendar_alarm_manager
 msgid "Event Alarm Manager"
-msgstr ""
+msgstr "Gestionnaire de rappel d'événements"
 
 #. module: google_calendar
 #: model:ir.model,name:google_calendar.model_calendar_recurrence
@@ -238,12 +244,12 @@ msgstr "Google Agenda : synchronisation"
 #. module: google_calendar
 #: model:ir.model.fields.selection,name:google_calendar.selection__calendar_event__videocall_source__google_meet
 msgid "Google Meet"
-msgstr ""
+msgstr "Google Meet"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_res_config_settings__cal_sync_paused
 msgid "Google Synchronization Paused"
-msgstr ""
+msgstr "Synchronisation Google interrompue"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_res_users__google_synchronization_stopped
@@ -260,7 +266,7 @@ msgstr "Google a donné l'explication suivante : %s"
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_calendar_event__guests_readonly
 msgid "Guests Event Modification Permission"
-msgstr ""
+msgstr "Autorisation de modifier les invités à un événement"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_calendar_alarm_manager__id
@@ -288,12 +294,13 @@ msgstr ""
 #: model:ir.model.fields,help:google_calendar.field_res_config_settings__cal_sync_paused
 msgid "Indicates if synchronization with Google Calendar is paused or not."
 msgstr ""
+"Indique si la synchronisation avec Google Agenda est interrompue ou non."
 
 #. module: google_calendar
 #. odoo-python
 #: code:addons/google_calendar/models/google_sync.py:0
 msgid "It will not be synced as long at it is not updated."
-msgstr ""
+msgstr "Il ne sera pas synchronisé tant qu'il n'est pas à jour."
 
 #. module: google_calendar
 #: model:ir.model.fields,help:google_calendar.field_res_users__google_calendar_cal_id
@@ -308,12 +315,12 @@ msgstr ""
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_google_calendar_account_reset__write_uid
 msgid "Last Updated by"
-msgstr "Dernière mise à jour par"
+msgstr "Mis à jour par"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_google_calendar_account_reset__write_date
 msgid "Last Updated on"
-msgstr "Dernière mise à jour le"
+msgstr "Mis à jour le"
 
 #. module: google_calendar
 #: model:ir.model.fields.selection,name:google_calendar.selection__google_calendar_account_reset__delete_policy__dont_delete
@@ -342,12 +349,12 @@ msgstr "Prochaine synchronisation"
 #. odoo-python
 #: code:addons/google_calendar/models/calendar.py:0
 msgid "Notification"
-msgstr "Notification"
+msgstr "Notifications"
 
 #. module: google_calendar
 #: model_terms:ir.ui.view,arch_db:google_calendar.res_config_settings_view_form
 msgid "Pause Synchronization"
-msgstr ""
+msgstr "Interrompre la synchronisation"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_res_users__google_calendar_rtoken
@@ -388,7 +395,7 @@ msgid ""
 "you want to do it now?"
 msgstr ""
 "La synchronisation Google doit être configurée avant que vous ne puissiez "
-"l'utiliser, voulez-vous le faire maintenant ? "
+"l'utiliser, voulez-vous le faire maintenant ?"
 
 #. module: google_calendar
 #. odoo-python
@@ -397,12 +404,14 @@ msgid ""
 "The following event can only be updated by the organizer according to the "
 "event permissions set on Google Calendar."
 msgstr ""
+"L'événement suivant ne peut être mis à jour que par l'organisateur, en "
+"fonction des autorisations d'événement définies dans Google Agenda."
 
 #. module: google_calendar
 #. odoo-python
 #: code:addons/google_calendar/models/google_sync.py:0
 msgid "The following event could not be synced with Google Calendar."
-msgstr ""
+msgstr "L'événement suivant n'a pas pu être synchronisé avec Google Agenda."
 
 #. module: google_calendar
 #: model:ir.model.fields,help:google_calendar.field_google_calendar_account_reset__delete_policy
@@ -425,7 +434,7 @@ msgstr "Utilisateur"
 #. module: google_calendar
 #: model:ir.model,name:google_calendar.model_res_users_settings
 msgid "User Settings"
-msgstr ""
+msgstr "Paramètres utilisateur"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_res_users__google_calendar_token
@@ -441,7 +450,7 @@ msgstr "Événements existants de l'utilisateur"
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_calendar_event__videocall_source
 msgid "Videocall Source"
-msgstr ""
+msgstr "Source d'appel vidéo"
 
 #. module: google_calendar
 #. odoo-python

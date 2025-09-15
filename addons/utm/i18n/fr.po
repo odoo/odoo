@@ -1,26 +1,27 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* utm
+# * utm
 #
 # Translators:
 # Cécile Collart <cco@odoo.com>, 2022
 # Martin Trigaux, 2022
 # Jolien De Paepe, 2023
-#
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-09-11 14:02+0000\n"
-"PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Jolien De Paepe, 2023\n"
-"Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
+"PO-Revision-Date: 2025-09-14 21:12+0000\n"
+"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"Language-Team: French <https://translate.odoo.com/projects/odoo-19/utm/fr/>\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % "
-"1000000 == 0 ? 1 : 2;\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : ((n != 0 && n % "
+"1000000 == 0) ? 1 : 2);\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: utm
 #. odoo-python
@@ -43,7 +44,7 @@ msgstr "Nous permet de filtrer les campagnes pertinentes"
 #. odoo-javascript
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
 msgid "Approval-based Flow"
-msgstr "Flux basé sur l'approbation"
+msgstr "Flux basé sur la validation"
 
 #. module: utm
 #. odoo-javascript
@@ -54,7 +55,7 @@ msgstr "Approuvé"
 #. module: utm
 #: model_terms:ir.ui.view,arch_db:utm.utm_campaign_view_kanban
 msgid "Archive"
-msgstr ""
+msgstr "Archiver"
 
 #. module: utm
 #: model_terms:ir.ui.view,arch_db:utm.utm_campaign_view_form
@@ -128,7 +129,7 @@ msgstr ""
 #. module: utm
 #: model_terms:ir.ui.view,arch_db:utm.view_utm_campaign_view_search
 msgid "Campaigns that are assigned to me"
-msgstr ""
+msgstr "Campagnes qui me sont assignées"
 
 #. module: utm
 #: model:utm.campaign,title:utm.utm_campaign_christmas_special
@@ -239,22 +240,22 @@ msgstr "Nom d'affichage"
 #. odoo-javascript
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
 msgid "Done"
-msgstr "Fait"
+msgstr "Terminé"
 
 #. module: utm
 #: model_terms:ir.ui.view,arch_db:utm.utm_campaign_view_kanban
 msgid "Edit"
-msgstr "Éditer"
+msgstr "Modifier"
 
 #. module: utm
 #: model:utm.campaign,title:utm.utm_campaign_email_campaign_products
 msgid "Email Campaign - Products"
-msgstr "Campagne d'email - Produits"
+msgstr "Campagne d'e-mail - Produits"
 
 #. module: utm
 #: model:utm.campaign,title:utm.utm_campaign_email_campaign_services
 msgid "Email Campaign - Services"
-msgstr "Campagne d'email - Services"
+msgstr "Campagne d'e-mail - Services"
 
 #. module: utm
 #. odoo-javascript
@@ -308,7 +309,7 @@ msgstr "Idées"
 #: model:ir.model.fields,field_description:utm.field_utm_stage__write_uid
 #: model:ir.model.fields,field_description:utm.field_utm_tag__write_uid
 msgid "Last Updated by"
-msgstr "Dernière mise à jour par"
+msgstr "Mis à jour par"
 
 #. module: utm
 #: model:ir.model.fields,field_description:utm.field_utm_campaign__write_date
@@ -317,7 +318,7 @@ msgstr "Dernière mise à jour par"
 #: model:ir.model.fields,field_description:utm.field_utm_stage__write_date
 #: model:ir.model.fields,field_description:utm.field_utm_tag__write_date
 msgid "Last Updated on"
-msgstr "Dernière mise à jour le"
+msgstr "Mis à jour le"
 
 #. module: utm
 #. odoo-javascript
@@ -345,7 +346,7 @@ msgstr "Marketing"
 #: model:ir.model.fields,field_description:utm.field_utm_mixin__medium_id
 #: model_terms:ir.ui.view,arch_db:utm.utm_medium_view_form
 msgid "Medium"
-msgstr "Medium"
+msgstr "Médium"
 
 #. module: utm
 #: model:ir.model.fields,field_description:utm.field_utm_medium__name
@@ -362,7 +363,7 @@ msgstr "Mediums"
 #. module: utm
 #: model_terms:ir.ui.view,arch_db:utm.view_utm_campaign_view_search
 msgid "My Campaigns"
-msgstr ""
+msgstr "Mes campagnes"
 
 #. module: utm
 #: model:ir.model.fields,field_description:utm.field_utm_source_mixin__name
@@ -389,6 +390,8 @@ msgid ""
 "Oops, you can't delete the Medium '%s'.\n"
 "Doing so would be like tearing down a load-bearing wall — not the best idea."
 msgstr ""
+"Oups, vous ne pouvez pas supprimer le support '%s'.\n"
+"Cela reviendrait à démolir un mur porteur - ce n'est pas la meilleure idée."
 
 #. module: utm
 #. odoo-javascript
@@ -428,13 +431,13 @@ msgstr "Responsable"
 #. module: utm
 #: model_terms:ir.ui.view,arch_db:utm.utm_campaign_view_kanban
 msgid "Restore"
-msgstr ""
+msgstr "Restaurer"
 
 #. module: utm
 #. odoo-javascript
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
 msgid "Review"
-msgstr "Revoir"
+msgstr "Examiner"
 
 #. module: utm
 #. odoo-javascript
@@ -525,6 +528,8 @@ msgid ""
 "Stages allow you to organize your workflow  (e.g. plan, design, in progress, "
 "done, …)."
 msgstr ""
+"Les étapes vous permettent d'organiser votre flux de travail (par ex. "
+"planification, conception, en cours, terminé,...)."
 
 #. module: utm
 #: model:ir.model.fields,help:utm.field_utm_tag__color
@@ -534,12 +539,12 @@ msgid ""
 msgstr ""
 "Couleur de l'étiquette. Aucune couleur signifie aucun affichage dans le "
 "kanban pour distinguer les étiquettes internes des étiquettes de "
-"catégorisation publiques. "
+"catégorisation publiques."
 
 #. module: utm
 #: model:ir.model.constraint,message:utm.constraint_utm_tag_name_uniq
 msgid "Tag name already exists!"
-msgstr ""
+msgstr "Ce nom d'étiquette existe déjà !"
 
 #. module: utm
 #: model:ir.model.fields,field_description:utm.field_utm_campaign__tag_ids
@@ -579,7 +584,7 @@ msgstr ""
 #: model:ir.model.fields,help:utm.field_utm_mixin__medium_id
 msgid "This is the method of delivery, e.g. Postcard, Email, or Banner Ad"
 msgstr ""
-"Le mode de livraison, par ex. carte postale, email ou bannière publicitaire"
+"Le mode de livraison, par ex. carte postale, e-mail ou bannière publicitaire"
 
 #. module: utm
 #: model:ir.model.fields,help:utm.field_utm_mixin__source_id
@@ -588,7 +593,7 @@ msgid ""
 "of email list"
 msgstr ""
 "La source du lien, par ex. moteur de recherche, domaine externe ou nom de la "
-"liste d'adresses email"
+"liste d'adresses e-mail"
 
 #. module: utm
 #. odoo-javascript
@@ -603,6 +608,8 @@ msgid ""
 "Track incoming events (e.g. Christmas, Black Friday, ...) and publish timely "
 "content."
 msgstr ""
+"Gardez un œil sur les événements à venir (par ex. Noël, Black Friday,...) et "
+"publiez du contenu en temps opportun."
 
 #. module: utm
 #: model:ir.model,name:utm.model_utm_campaign
@@ -627,6 +634,8 @@ msgid ""
 "UTM Mediums track the mean that was used to attract traffic (e.g. "
 "\"Website\", \"X\", ...)."
 msgstr ""
+"Les mediums UTM suivent le moyen qui a été utilisé pour attirer le trafic ("
+"par exemple \"Site Web\", \"X\", ...)."
 
 #. module: utm
 #: model:ir.model,name:utm.model_utm_mixin
@@ -678,6 +687,8 @@ msgstr "Utiliser ceci pour mes campagnes"
 #: code:addons/utm/models/utm_source.py:0
 msgid "You cannot delete the 'Referral' UTM source record."
 msgstr ""
+"Vous ne pouvez pas supprimer l’enregistrement de source UTM "
+"\"Recommandation\"."
 
 #. module: utm
 #. odoo-python
@@ -686,21 +697,23 @@ msgid ""
 "You cannot update multiple records with the same name. The name should be "
 "unique!"
 msgstr ""
+"Vous ne pouvez pas mettre à jour plusieurs enregistrements avec le même nom. "
+"Chaque nom doit être unique !"
 
 #. module: utm
 #: model_terms:ir.ui.view,arch_db:utm.utm_stage_view_form
 msgid "e.g. \"Brainstorming\""
-msgstr ""
+msgstr "par ex. \"Brainstorming\""
 
 #. module: utm
 #: model_terms:ir.ui.view,arch_db:utm.utm_source_view_tree
 msgid "e.g. \"Christmas Mailing\""
-msgstr ""
+msgstr "par ex. \"Mailing de Noël\""
 
 #. module: utm
 #: model_terms:ir.ui.view,arch_db:utm.utm_medium_view_tree
 msgid "e.g. \"Email\""
-msgstr ""
+msgstr "par ex. \"E-mail\""
 
 #. module: utm
 #: model_terms:ir.ui.view,arch_db:utm.utm_campaign_view_form

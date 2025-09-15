@@ -1,25 +1,27 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* stock_sms
+# * stock_sms
 #
 # Translators:
 # Martin Trigaux, 2022
 # Sergio Zanchetta <primes2h@gmail.com>, 2022
-#
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-09-11 14:02+0000\n"
-"PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2022\n"
-"Language-Team: Italian (https://app.transifex.com/odoo/teams/41243/it/)\n"
+"PO-Revision-Date: 2025-09-14 21:10+0000\n"
+"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"Language-Team: Italian <https://translate.odoo.com/projects/odoo-19/"
+"stock_sms/it/>\n"
 "Language: it\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? "
-"1 : 2;\n"
+"Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n != 0 && n % 1000000 == 0)"
+" ? 1 : 2);\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: stock_sms
 #: model:sms.template,body:stock_sms.sms_template_data_stock_delivery
@@ -34,10 +36,10 @@ msgid ""
 "            "
 msgstr ""
 "\n"
-"                {{ (object.company_id.name + ': Siamo lieti di informarti "
-"che il tuo ordine n° ' + object.origin + ' e stato spedito.' if "
-"object.origin else object.company_id.name + ': Siamo lieti di informarti che "
-"il tuo ordine è stato spedito.') + (' Il tuo tracking code è ' + "
+"                {{ (object.company_id.name + ': siamo lieti di informarLa "
+"che l'ordine n° ' + object.origin + ' è stato spedito.' if object.origin "
+"else object.company_id.name + ': siamo lieti di informarLa che l'ordine è "
+"stato spedito.') + (' Il codice di rintracciabilità è ' + "
 "(object.carrier_tracking_ref) + '.' if hasattr(object, "
 "'carrier_tracking_ref') and object.carrier_tracking_ref else '') }}\n"
 "            "
@@ -140,7 +142,7 @@ msgstr "Modello SMS"
 #: model:ir.model.fields,help:stock_sms.field_res_company__stock_sms_confirmation_template_id
 #: model:ir.model.fields,help:stock_sms.field_res_config_settings__stock_sms_confirmation_template_id
 msgid "SMS sent to the customer once the order is delivered."
-msgstr ""
+msgstr "SMS inviato al cliente dopo la consegna dell'ordine."
 
 #. module: stock_sms
 #: model:ir.model,name:stock_sms.model_stock_picking
@@ -154,7 +156,7 @@ msgid ""
 "                This feature can easily be disabled from the Settings of "
 "Inventory or by clicking on \"Disable SMS\".<br/>"
 msgstr ""
-"Il buono di consegna sta per essere confermato con un messaggio SMS.<br/>\n"
+"L'ordine di consegna sta per essere confermato con un messaggio SMS.<br/>\n"
 "                Questa funzionalità può essere disattivata in modo semplice "
 "dalle impostazioni del magazzino oppure con un clic su \"Disattiva SMS\".<br/"
 ">"
