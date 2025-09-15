@@ -472,7 +472,10 @@ class PaymentPortal(portal.CustomerPortal):
     def _can_partner_pay_in_company(partner, document_company):
         """ Return whether the provided partner can pay in the provided company.
 
-        The payment is allowed either if the partner's company is not set or if the companies match.
+        The payment is allowed if one of the following is true:
+            - the partner's company is not set
+            - the partner's company matches the document company
+            - the partner has a user account with access to the document company
 
         :param recordset partner: The partner on behalf on which the payment is made, as a
                                   `res.partner` record.
@@ -481,7 +484,11 @@ class PaymentPortal(portal.CustomerPortal):
         :return: Whether the payment is allowed.
         :rtype: str
         """
-        return not partner.company_id or partner.company_id == document_company
+        return (
+            not partner.company_id
+            or partner.company_id == document_company
+            or document_company in partner.user_ids.company_ids
+        )
 
     @staticmethod
     def _validate_transaction_kwargs(kwargs, additional_allowed_keys=()):
