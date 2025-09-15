@@ -6,7 +6,7 @@
         <t t-set="groupAttClass" t-value="{
             [props.groupClass]: true,
             'flex-column w-100 bg-transparent': !props.inline,
-            'o-inline': props.inline,
+            'o-inline rounded-3': props.inline,
             'o-rounded-bubble': props.inline and !hasBtnBg,
         }"/>
         <t t-foreach="groups" t-as="group" t-key="group_index">
@@ -55,6 +55,8 @@
         'o-odooControlPanelSwitchStyle': props.odooControlPanelSwitchStyle,
         'o-hasBtnBg': hasBtnBg,
         'rounded-circle': isComposerRoundedBtn or isThreadRoundedBtn,
+        'rounded-start-3': !isComposerRoundedBtn and !isThreadRoundedBtn and props.inline and props.isFirstInGroup,
+        'rounded-end-3': !isComposerRoundedBtn and !isThreadRoundedBtn and props.inline and props.isLastInGroup,
         'o-p-1_5': props.inline and hasBtnBg and !action.tags.includes('JOIN_LEAVE_CALL'),
         'o-p-1_5 d-flex align-items-center': props.inline and hasBtnBg and action.tags.includes('JOIN_LEAVE_CALL') and !env.inChatWindow,
         'p-1 d-flex align-items-center': props.inline and hasBtnBg and action.tags.includes('JOIN_LEAVE_CALL') and env.inChatWindow,
