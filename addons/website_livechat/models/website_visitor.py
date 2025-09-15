@@ -65,32 +65,41 @@ class WebsiteVisitor(models.Model):
             operator = self.env.user
             country = visitor.country_id
             visitor_name = "Visitor #%d (%s)" % (visitor.id, country.name) if country else f"Visitor #{visitor.id}"
-            members_to_add = [Command.link(operator.partner_id.id)]
+            members_to_add = [
+                Command.create(
+                    {"partner_id": operator.partner_id.id, "livechat_member_type": "agent"}
+                )
+            ]
             if visitor.partner_id:
-                members_to_add.append(Command.link(visitor.partner_id.id))
+                members_to_add.append(
+                    Command.create(
+                        {"partner_id": visitor.partner_id.id, "livechat_member_type": "visitor"}
+                    )
+                )
+            else:
+                # sudo: mail.guest - creating a guest in a dedicated channel created from livechat
+                guest = self.env["mail.guest"].sudo().create(
+                    {
+                        "country_id": country.id,
+                        "lang": get_lang(self.env).code,
+                        "name": _("Visitor #%d", visitor.id),
+                        "timezone": visitor.timezone,
+                    }
+                )
+                members_to_add.append(
+                    Command.create({"guest_id": guest.id, "livechat_member_type": "visitor"})
+                )
             discuss_channel_vals_list.append({
-                'channel_partner_ids': members_to_add,
                 "is_pending_chat_request": True,
                 'livechat_channel_id': visitor.website_id.channel_id.id,
-                'livechat_operator_id': self.env.user.partner_id.id,
+                'livechat_operator_id': operator.partner_id.id,
+                "channel_member_ids": members_to_add,
                 'channel_type': 'livechat',
                 'country_id': country.id,
                 'name': ', '.join([visitor_name, operator.livechat_username if operator.livechat_username else operator.name]),
                 'livechat_visitor_id': visitor.id,
             })
         discuss_channels = self.env['discuss.channel'].create(discuss_channel_vals_list)
-        for channel in discuss_channels:
-            if not channel.livechat_visitor_id.partner_id:
-                # sudo: mail.guest - creating a guest in a dedicated channel created from livechat
-                guest = self.env["mail.guest"].sudo().create(
-                    {
-                        "country_id": country.id,
-                        "lang": get_lang(channel.env).code,
-                        "name": _("Visitor #%d", channel.livechat_visitor_id.id),
-                        "timezone": visitor.timezone,
-                    }
-                )
-                channel._add_members(guests=guest, post_joined_message=False)
         # Open empty channel to allow the operator to start chatting with the visitor
         Store(bus_channel=self.env.user).add(
             discuss_channels,

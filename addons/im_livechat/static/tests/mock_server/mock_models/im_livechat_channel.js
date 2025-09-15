@@ -57,12 +57,15 @@ export class LivechatChannel extends models.ServerModel {
             Command.create({
                 unpin_dt: "2021-01-01 12:00:00",
                 last_interest_dt: "2021-01-01 10:00:00",
+                livechat_member_type: "agent",
                 partner_id: agent.partner_id,
             }),
         ];
         const guest = ResUsers._is_public(this.env.uid) && MailGuest._get_guest_from_context();
         if (guest) {
-            membersToAdd.push(Command.create({ guest_id: guest.id }));
+            membersToAdd.push(
+                Command.create({ livechat_member_type: "visitor", guest_id: guest.id })
+            );
         }
         let visitorUser;
         if (this.env.user && !ResUsers._is_public(this.env.uid) && this.env.user !== agent) {

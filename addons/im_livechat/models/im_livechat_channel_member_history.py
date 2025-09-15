@@ -1,5 +1,6 @@
 from odoo import api, models, fields
 from odoo.exceptions import ValidationError
+from odoo.addons.mail.tools.discuss import Store
 
 
 class ImLivechatChannelMemberHistory(models.Model):
@@ -191,3 +192,17 @@ class ImLivechatChannelMemberHistory(models.Model):
         action["view_mode"] = "list"
         action["views"] = [view for view in action["views"] if view[1] in ("list", "form")]
         return action
+
+    def _to_store_defaults(self, target):
+        return [
+            "channel_id",
+            Store.One("guest_id", ["name"], predicate=lambda r: not r.partner_id),
+            "livechat_member_type",
+            # sudo: res.partner - reading partner related to an accessible channel member history is considered acceptable
+            Store.One(
+                "partner_id",
+                self.env["res.partner"]._get_store_livechat_username_fields(),
+                predicate=lambda r: not r.guest_id,
+                sudo=True,
+            ),
+        ]

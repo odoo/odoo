@@ -428,6 +428,12 @@ class DiscussChannel(models.Model):
                 predicate=is_livechat_channel,
                 sudo=True,
             ),
+            # sudo - visitor can access to the channel member history of an accessible channel
+            Store.Many(
+                "livechat_channel_member_history_ids",
+                predicate=is_livechat_channel,
+                sudo=True,
+            ),
         ]
         if target.is_internal(self.env):
             fields.append(

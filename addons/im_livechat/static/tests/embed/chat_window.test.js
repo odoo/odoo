@@ -1,3 +1,4 @@
+import { waitUntilSubscribe } from "@bus/../tests/bus_test_helpers";
 import {
     defineLivechatModels,
     loadDefaultEmbedConfig,
@@ -13,7 +14,7 @@ import {
     triggerHotkey,
 } from "@mail/../tests/mail_test_helpers";
 import { describe, expect, test } from "@odoo/hoot";
-import { serverState } from "@web/../tests/web_test_helpers";
+import { getService, serverState } from "@web/../tests/web_test_helpers";
 
 import { deserializeDateTime } from "@web/core/l10n/dates";
 import { getOrigin } from "@web/core/utils/urls";
@@ -37,13 +38,36 @@ test("internal users can upload file to temporary thread", async () => {
     await contains(".o-mail-Message .o-mail-AttachmentContainer:contains(text.txt)");
 });
 
-test("Conversation name is operator livechat user name", async () => {
+test("The name of the conversation changes based on the agents' names", async () => {
     const pyEnv = await startServer();
     await loadDefaultEmbedConfig();
     pyEnv["res.partner"].write(serverState.partnerId, { user_livechat_username: "MitchellOp" });
     await start({ authenticateAs: false });
     await click(".o-livechat-LivechatButton");
     await contains(".o-mail-ChatWindow-header", { text: "MitchellOp" });
+    await insertText(".o-mail-Composer-input", "Hello World!");
+    await triggerHotkey("Enter");
+    await waitUntilSubscribe();
+    const [channelId] = pyEnv["discuss.channel"].search([
+        ["channel_type", "=", "livechat"],
+        [
+            "channel_member_ids",
+            "in",
+            pyEnv["discuss.channel.member"].search([["guest_id", "=", pyEnv.cookie.get("dgid")]]),
+        ],
+    ]);
+    const userId = pyEnv["res.users"].create({
+        name: "James",
+    });
+    const secondAgent = pyEnv["res.partner"].create({
+        lang: "en",
+        name: "James",
+        user_ids: [userId],
+    });
+    getService("orm").call("discuss.channel", "add_members", [[channelId]], {
+        partner_ids: [secondAgent],
+    });
+    await contains(".o-mail-ChatWindow-header", { text: "MitchellOp, James" });
 });
 
 test("avatar url contains access token for non-internal users", async () => {

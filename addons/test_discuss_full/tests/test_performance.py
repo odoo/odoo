@@ -561,6 +561,10 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
             "im_livechat.channel": [
                 self._expected_result_for_livechat_channel(),
             ],
+            "im_livechat.channel.member.history": [
+                *self._expected_result_for_livechat_member_history(self.channel_livechat_1),
+                *self._expected_result_for_livechat_member_history(self.channel_livechat_2),
+            ],
             "mail.guest": [
                 self._expected_result_for_persona(guest=True),
             ],
@@ -853,6 +857,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "last_interest_dt": last_interest_dt,
                 "livechat_end_dt": False,
                 "livechat_channel_id": self.im_livechat_channel.id,
+                "livechat_channel_member_history_ids": self.channel_livechat_1.livechat_channel_member_history_ids.ids,
                 "livechat_note": False,
                 "livechat_outcome": "no_answer",
                 "livechat_status": "in_progress",
@@ -881,6 +886,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "last_interest_dt": last_interest_dt,
                 "livechat_end_dt": False,
                 "livechat_channel_id": self.im_livechat_channel.id,
+                "livechat_channel_member_history_ids": self.channel_livechat_2.livechat_channel_member_history_ids.ids,
                 "livechat_note": False,
                 "livechat_outcome": "no_answer",
                 "livechat_status": "in_progress",
@@ -1263,6 +1269,40 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
 
     def _expected_result_for_livechat_channel(self):
         return {"id": self.im_livechat_channel.id, "name": "support"}
+
+    def _expected_result_for_livechat_member_history(self, channel):
+        histories = channel.livechat_channel_member_history_ids
+        if channel == self.channel_livechat_1:
+            return [
+                {
+                    "channel_id": channel.id,
+                    "id": histories.filtered(lambda h: h.livechat_member_type == "agent").id,
+                    "livechat_member_type": "agent",
+                    "partner_id": self.users[0].partner_id.id,
+                },
+                {
+                    "channel_id": channel.id,
+                    "id": histories.filtered(lambda h: h.livechat_member_type == "visitor").id,
+                    "livechat_member_type": "visitor",
+                    "partner_id": self.users[1].partner_id.id,
+                },
+            ]
+        if channel == self.channel_livechat_2:
+            return [
+                {
+                    "channel_id": channel.id,
+                    "id": histories.filtered(lambda h: h.livechat_member_type == "agent").id,
+                    "livechat_member_type": "agent",
+                    "partner_id": self.users[0].partner_id.id,
+                },
+                {
+                    "channel_id": channel.id,
+                    "guest_id": self.guest.id,
+                    "id": histories.filtered(lambda h: h.livechat_member_type == "visitor").id,
+                    "livechat_member_type": "visitor",
+                },
+            ]
+        return []
 
     def _expected_result_for_message(self, channel):
         last_message = channel._get_last_messages()

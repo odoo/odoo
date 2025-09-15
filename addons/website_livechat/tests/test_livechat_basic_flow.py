@@ -215,6 +215,7 @@ class TestLivechatBasicFlowHttpCase(HttpCaseWithUserDemo, TestLivechatCommon):
                         "is_editable": True,
                         "last_interest_dt": fields.Datetime.to_string(channel.last_interest_dt),
                         "livechat_channel_id": self.livechat_channel.id,
+                        "livechat_channel_member_history_ids": channel.livechat_channel_member_history_ids.ids,
                         "livechat_end_dt": False,
                         "livechat_note": False,
                         "livechat_status": "in_progress",
@@ -256,6 +257,24 @@ class TestLivechatBasicFlowHttpCase(HttpCaseWithUserDemo, TestLivechatCommon):
                 ],
                 "im_livechat.channel": [
                     {"id": self.livechat_channel.id, "name": "The basic channel"}
+                ],
+                "im_livechat.channel.member.history": [
+                    {
+                        "channel_id": channel.id,
+                        "id": channel.livechat_channel_member_history_ids.filtered(
+                            lambda h: h.partner_id == self.operator.partner_id
+                        ).id,
+                        "livechat_member_type": "agent",
+                        "partner_id": self.operator.partner_id.id,
+                    },
+                    {
+                        "channel_id": channel.id,
+                        "guest_id": guest.id,
+                        "id": channel.livechat_channel_member_history_ids.filtered(
+                            lambda h: h.guest_id == guest
+                        ).id,
+                        "livechat_member_type": "visitor",
+                    },
                 ],
                 "mail.guest": [
                     {
@@ -355,6 +374,7 @@ class TestLivechatBasicFlowHttpCase(HttpCaseWithUserDemo, TestLivechatCommon):
                     "id": channel.id,
                     "is_editable": False,
                     "last_interest_dt": fields.Datetime.to_string(channel.last_interest_dt),
+                    "livechat_channel_member_history_ids": channel.livechat_channel_member_history_ids.ids,
                     "livechat_end_dt": fields.Datetime.to_string(agent_left_dt),
                     "livechat_operator_id": self.operator.partner_id.id,
                     "member_count": 1,

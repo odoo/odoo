@@ -24,9 +24,27 @@ export class WebsiteVisitor extends websiteModels.WebsiteVisitor {
             const operator = this.env.user;
             const country = visitor.country_id ? ResCountry.browse(visitor.country_id) : undefined;
             const visitor_name = `Visitor #${visitor.id}${country ? ` (${country.name})` : ""}`;
-            const membersToAdd = [Command.create({ partner_id: serverState.partnerId })];
+            const membersToAdd = [
+                Command.create({
+                    partner_id: serverState.partnerId,
+                    livechat_member_type: "agent",
+                }),
+            ];
             if (visitor.partner_id) {
-                membersToAdd.push(Command.create({ partner_id: visitor.partner_id }));
+                membersToAdd.push(
+                    Command.create({
+                        partner_id: visitor.partner_id,
+                        livechat_member_type: "visitor",
+                    })
+                );
+            } else {
+                const guestId = MailGuest.create({ name: `Visitor #${visitor.id}` });
+                membersToAdd.push(
+                    Command.create({
+                        guest_id: guestId,
+                        livechat_member_type: "visitor",
+                    })
+                );
             }
             const livechatId = DiscussChannel.create({
                 channel_member_ids: membersToAdd,
@@ -36,12 +54,6 @@ export class WebsiteVisitor extends websiteModels.WebsiteVisitor {
                     operator.livechat_username ? operator.livechat_username : operator.name
                 }`,
             });
-            if (!visitor.partner_id) {
-                const guestId = MailGuest.create({ name: `Visitor #${visitor.id}` });
-                DiscussChannel.write([livechatId], {
-                    channel_member_ids: [Command.create({ guest_id: guestId })],
-                });
-            }
             const [partner] = ResPartner.read(serverState.partnerId);
             const channel = DiscussChannel.browse(livechatId);
             // notify operator
