@@ -105,7 +105,12 @@ export function usePosition(refName, getTarget, options = {}) {
                     targetDocument.defaultView &&
                     targetDocument.defaultView.top !== targetDocument.defaultView
                 ) {
-                    documents.push(targetDocument.defaultView.top.document);
+                    try {
+                        documents.push(targetDocument.defaultView.top.document);
+                    } catch {
+                        // Don't access the top document if it is not allowed.
+                        // (i.e. iframe origin or sandbox restriction)
+                    }
                 }
             }
             for (const document of documents) {
