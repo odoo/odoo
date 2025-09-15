@@ -844,6 +844,19 @@ describe("sanitized values", () => {
         await contains(":iframe .test-options-target").click();
         await contains(".options-container input").edit(" a&$*+>");
         expect(".options-container input").toHaveValue("0");
+        expect(":iframe .test-options-target").toHaveAttribute("data-number", "0");
+    });
+    test("after input, displayed value is cleaned to match only numbers (default=null)", async () => {
+        addBuilderOption({
+            selector: ".test-options-target",
+            template: xml`<BuilderNumberInput dataAttributeAction="'number'" default="null"/>`,
+        });
+        await setupHTMLBuilder(`
+            <div class="test-options-target" data-number="10">Test</div>
+        `);
+        await contains(":iframe .test-options-target").click();
+        await contains(".options-container input").edit(" a&$*+>");
+        expect(".options-container input").toHaveValue("");
         expect(":iframe .test-options-target").not.toHaveAttribute("data-number");
     });
     test("after copy / pasting, displayed value is cleaned to match only numbers", async () => {
