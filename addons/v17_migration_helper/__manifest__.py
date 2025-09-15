@@ -27,11 +27,7 @@ This module should be installed before upgrading to v17.
 }
 
 # File: addons/your_custom_module/migrations/17.0.1.0.0/pre-migrate.py
-# -*- coding: utf-8 -*-
-"""
-Pre-migration script for v16 to v17 upgrade
-Runs BEFORE the main upgrade process
-"""
+# -*- coding: utf-8 -*- 
 
 import logging
 
@@ -39,9 +35,7 @@ _logger = logging.getLogger(__name__)
 
 
 def migrate(cr, version):
-    """
-    Pre-migration cleanup for v16 to v17 upgrade
-    """
+
     _logger.info("=== PRE-MIGRATION: Starting v16 to v17 cleanup ===")
     
     # Your migration code here (from the previous artifact)
@@ -159,10 +153,7 @@ def migrate(cr, version):
 
 # File: addons/your_custom_module/migrations/17.0.1.0.0/post-migrate.py
 # -*- coding: utf-8 -*-
-"""
-Post-migration script for v16 to v17 upgrade
-Runs AFTER the main upgrade process
-"""
+
 
 import logging
 
@@ -170,9 +161,7 @@ _logger = logging.getLogger(__name__)
 
 
 def migrate(cr, version):
-    """
-    Post-migration validation for v16 to v17 upgrade
-    """
+
     _logger.info("=== POST-MIGRATION: Starting v16 to v17 validation ===")
     
     modules_to_check = [
