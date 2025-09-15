@@ -20,7 +20,7 @@
                         <DropdownItem t-if="position.dragged" class="'o-mail-ChatHub-option btn border-0 d-flex align-items-center gap-2 rounded-0 fw-normal px-2'" onSelected.bind="resetPosition"><i class="fa fa-fw fa-undo"></i>Reset initial position</DropdownItem>
                     </t>
                 </Dropdown>
-                <t t-if="store.chatHub.compact" t-call="mail.ChatHub.compactButton"/>
+                <t t-if="store.chatHub.compact and chatHub.showConversations" t-call="mail.ChatHub.compactButton"/>
                 <t t-else="">
                     <t t-foreach="chatHub.folded.slice(0, chatHub.maxFolded)" t-as="cw" t-key="cw.localId">
                         <ChatBubble t-if="cw.canShow" chatWindow="cw"/>
