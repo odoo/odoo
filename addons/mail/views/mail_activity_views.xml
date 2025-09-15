@@ -17,10 +17,8 @@
                             <field name="category"/>
                             <field name="default_user_id" options="{'no_create': True}" domain="[('share', '=', False)]"
                                    widget="many2one_avatar_user"/>
-                            <field name="res_model" groups="base.group_no_one"/>
-                            <field name="res_model" invisible="1"/>
-                            <field name="res_model_change" invisible="1"/>
-                            <field name="initial_res_model" invisible="1"/>
+                            <field name="res_model" invisible="context.get('default_res_model')"
+                                placeholder="Available everywhere"/>
                             <field name="summary" placeholder="e.g. &quot;Discuss proposal&quot;"/>
                             <field name="icon" groups="base.group_no_one"/>
                             <field name="decoration_type" groups="base.group_no_one"/>
@@ -46,7 +44,6 @@
                     </group>
                     <label for="default_note" class="fw-bold"/>
                     <field nolabel="1" name="default_note" placeholder="e.g. &quot;Go over the offer and discuss details&quot;" class="oe-bordered-editor"/>
-                    <p class="alert alert-info" role="alert" invisible="not res_model_change">Modifying the model can have an impact on existing activities using this activity type, be careful.</p>
                 </sheet>
             </form>
         </field>
@@ -73,7 +70,7 @@
                 <field name="summary"/>
                 <field name="delay_label" string="Planned in" class="text-end"/>
                 <field name="delay_from" string="Type"/>
-                <field name="res_model" groups="base.group_no_one"/>
+                <field name="res_model" column_invisible="context.get('default_res_model')"/>
                 <field name="icon" groups="base.group_no_one"/>
                 <field name="triggered_next_type_id" optional="hide"
                     string="Triggered Next"/>
