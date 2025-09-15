@@ -7,7 +7,7 @@ import { KeepLast } from "@web/core/utils/concurrency";
 import { useService } from "@web/core/utils/hooks";
 import { renderToMarkup } from "@web/core/utils/render";
 import { getDataURLFromFile } from "@web/core/utils/urls";
-import { onWillStart } from "@odoo/owl";
+import { status, useComponent } from "@odoo/owl";
 
 /**
  * Get list of companies via Autocomplete API
@@ -19,20 +19,26 @@ import { onWillStart } from "@odoo/owl";
 export function usePartnerAutocomplete() {
     const keepLastOdoo = new KeepLast();
 
+    const component = useComponent();
     const notification = useService("notification");
     const orm = useService("orm");
 
     let lastNoResultsQuery = null;
-
-    onWillStart(async () => {
-        await loadJS("/partner_autocomplete/static/lib/jsvat.js");
-    });
 
     function sanitizeVAT(value) {
         return value ? value.replace(/[^A-Za-z0-9]/g, '') : '';
     }
 
     async function isVATNumber(value) {
+        // Lazyload jsvat only if the component is being used.
+        await loadJS("/partner_autocomplete/static/lib/jsvat.js");
+
+        // Protect the method if the component is destroyed.
+        // Same behaviour as : _protectMethod in web/static/src/core/utils/hooks.js
+        if (status(component) === "destroyed") {
+            return new Promise(() => {});
+        }
+
         // checkVATNumber is defined in library jsvat.
         // It validates that the input has a valid VAT number format
         return checkVATNumber(sanitizeVAT(value));
