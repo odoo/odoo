@@ -114,6 +114,21 @@ def main(args):
 
     stop = config["stop_after_init"]
 
+    # Deprecated option warning
+    if not stop:
+        for map_ in config.options.maps:
+            if 'http_interface' in map_:
+                if map_ is config._file_options and map_['http_interface'] == '':  # noqa: PLC1901
+                    del map_['http_interface']
+                elif map_ is config._default_options:
+                    config._log(
+                        logging.WARNING,
+                        "missing %s, using 0.0.0.0 by default, will change to 127.0.0.1 in 20.0",
+                        config.options_index['http_interface'],
+                    )
+                else:
+                    break
+
     setup_pid_file()
     rc = server.start(preload=config['db_name'], stop=stop)
     sys.exit(rc)

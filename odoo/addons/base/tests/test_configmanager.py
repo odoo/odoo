@@ -11,10 +11,6 @@ EMPTY_CONFIG_PATH = file_path('base/tests/config/empty.conf')
 PROJECT_PATH = odoo.tools.config.root_path.removesuffix('/odoo')
 DEFAULT_DATADIR = odoo.tools.config._default_options['data_dir']
 
-MISSING_HTTP_INTERFACE = """\
-WARNING:odoo.tools.config:missing --http-interface/http_interface, \
-using 0.0.0.0 by default, will change to 127.0.0.1 in 20.0"""
-
 
 class TestConfigManager(TransactionCase):
     maxDiff = None
@@ -458,13 +454,11 @@ class TestConfigManager(TransactionCase):
 
     def test_05_repeat_parse_config(self):
         """Emulate multiple calls to parse_config()"""
-        with self.assertLogs('odoo.tools.config', 'WARNING') as capture:
-            config = configmanager()
-            config._parse_config()
-            config._warn_deprecated_options()
-            config._parse_config()
-            config._warn_deprecated_options()
-        self.assertEqual(capture.output, [MISSING_HTTP_INTERFACE] * 2)
+        config = configmanager()
+        config._parse_config()
+        config._warn_deprecated_options()
+        config._parse_config()
+        config._warn_deprecated_options()
 
     def test_06_cli(self):
         with file_open('base/tests/config/cli') as file:

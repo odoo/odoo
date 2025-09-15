@@ -1,4 +1,5 @@
 import io
+import logging
 import os
 import re
 import subprocess as sp
@@ -11,6 +12,14 @@ from pathlib import Path
 from odoo.cli.command import commands, load_addons_commands, load_internal_commands
 from odoo.tests import BaseCase, TransactionCase
 from odoo.tools import config, file_path
+
+
+def select_not_available():
+    return os.name != 'posix' and sys.version_info < (3, 12)
+
+
+_logger = logging.getLogger(__name__)
+SELECT_MESSAGE = "os.set_blocking on files only available in windows starting 3.12"
 
 
 class TestCommand(BaseCase):
@@ -28,7 +37,7 @@ class TestCommand(BaseCase):
             capture_output=capture_output,
             check=check,
             text=text,
-            **kwargs
+            **kwargs,
         )
 
     def popen_command(self, *args, capture_output=True, text=True, **kwargs):
@@ -37,7 +46,7 @@ class TestCommand(BaseCase):
         return sp.Popen(
             [*self.run_args, *args],
             text=text,
-            **kwargs
+            **kwargs,
         )
 
     def test_docstring(self):
@@ -136,38 +145,30 @@ class TestCommand(BaseCase):
 
 class TestCommandUsingDb(TestCommand, TransactionCase):
 
-    @unittest.skipIf(
-        os.name != 'posix' and sys.version_info < (3, 12),
-        "os.set_blocking on files only available in windows starting 3.12",
-    )
-    def test_i18n_export(self):
-        # i18n export is a process that takes a long time to run, we are
-        # not interrested in running it in full, we are only interrested
-        # in making sure it starts correctly.
-        #
-        # This test only asserts the first few lines and then SIGTERM
-        # the process. We took the challenge to write a cross-platform
-        # test, the lack of a select-like API for Windows makes the code
-        # a bit complicated. Sorry :/
+    def _expect(self, command_args, expected_text, maxlen=None, timeout=15, stream=sys.stdout):
+        """ Wait for a process that takes a long time to run, then compare
+            the first part of the result. We are only interested in making
+            sure it starts correctly.
 
-        expected_text = textwrap.dedent("""\
-            # Translation of Odoo Server.
-            # This file contains the translation of the following modules:
-            # \t* base
-        """).encode()
+            This test only asserts the first few lines and then SIGTERM
+            the process. We took the challenge to write a cross-platform
+            test, the lack of a select-like API for Windows makes the code
+            a bit complicated. Sorry :/
+        """
 
-        proc = self.popen_command(
-            'i18n', 'export', '-d', self.env.cr.dbname, '-o', '-', 'base',
-            # ensure we get a io.FileIO and not a buffered or text shit
-            text=False, bufsize=0,
-        )
-
-        # Feed the buffer for maximum 15 seconds.
+        assert stream in (sys.stdout, sys.stderr)
+        maxlen = maxlen or len(expected_text)
         buffer = io.BytesIO()
-        timeout = time.monotonic() + 15
-        os.set_blocking(proc.stdout.fileno(), False)
-        while buffer.tell() < len(expected_text) and time.monotonic() < timeout:
-            if chunk := proc.stdout.read(len(expected_text) - buffer.tell()):
+
+        # ensure we get a io.FileIO and not a buffer or text
+        proc = self.popen_command(*command_args, text=False, bufsize=0)
+        stream = proc.stdout if stream == sys.stdout else proc.stderr
+        os.set_blocking(stream.fileno(), False)
+
+        # Feed the buffer for maximum timeout seconds.
+        maxtime = time.monotonic() + timeout
+        while buffer.tell() < maxlen and time.monotonic() < maxtime:
+            if chunk := stream.read(maxlen - buffer.tell()):
                 buffer.write(chunk)
             else:
                 # would had loved to use select() for its timeout, but
@@ -182,5 +183,30 @@ class TestCommandUsingDb(TestCommand, TransactionCase):
             proc.kill()
             raise
 
-        self.assertEqual(buffer.getvalue(), expected_text,
-            "The subprocess did not write the prelude in under 15 seconds.")
+        buffer_text = buffer.getvalue().decode()
+        _logger.info(buffer_text)
+        self.assertTrue(expected_text in buffer_text,
+            f"The subprocess did not write the prelude in under {timeout} seconds.")
+
+    @unittest.skipIf(select_not_available(), SELECT_MESSAGE)
+    def test_i18n_export(self):
+        expected_text = textwrap.dedent("""\
+            # Translation of Odoo Server.
+            # This file contains the translation of the following modules:
+            # \t* base
+        """)
+        command_args = ('i18n', 'export', '-d', self.env.cr.dbname, '-o', '-', 'base')
+        self._expect(command_args, expected_text)
+
+    @unittest.skipIf(select_not_available(), SELECT_MESSAGE)
+    def test_server_http_interface_deprecation(self):
+        expected_text = (
+            "odoo.tools.config: missing --http-interface/http_interface,"
+            " using 0.0.0.0 by default, will change to 127.0.0.1 in 20.0"
+        )
+        command_args = ('-d', self.env.cr.dbname, '-i', 'base', '-p', '8075')
+        config["stop_after_init"] = False
+        for map_ in config.options.maps:
+            if map_ is config._file_options and 'http_interface' in map_:
+                map_['http_interface'] = ''
+        self._expect(command_args, expected_text, maxlen=2048, timeout=10, stream=sys.stderr)
