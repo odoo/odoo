@@ -84,7 +84,7 @@ class L10nMyEDITestFileGeneration(AccountTestInvoicingCommon):
         """
         Simply test that with a valid configuration, we can generate the file.
         """
-        invoice = self.init_invoice('out_invoice', products=self.product_a, post=True)
+        invoice = self.init_invoice('out_invoice', taxes=self.company_data['default_tax_sale'], products=self.product_a, post=True)
         myinvois_document = invoice._create_myinvois_document()
 
         file, errors = myinvois_document._myinvois_generate_xml_file()
@@ -213,7 +213,7 @@ class L10nMyEDITestFileGeneration(AccountTestInvoicingCommon):
         Set a few optional fields, and ensure that they appear as expecting in the file.
         """
         invoice = self.init_invoice(
-            'out_invoice', currency=self.other_currency, products=self.product_a
+            'out_invoice', currency=self.other_currency, taxes=self.company_data['default_tax_sale'], products=self.product_a
         )
         invoice.write({
             'invoice_incoterm_id': self.env.ref('account.incoterm_CFR').id,
@@ -280,7 +280,7 @@ class L10nMyEDITestFileGeneration(AccountTestInvoicingCommon):
         uuid is present in an adjustment invoice.
         """
         invoice = self.init_invoice(
-            'out_invoice', currency=self.other_currency, products=self.product_a, post=True,
+            'out_invoice', currency=self.other_currency, taxes=self.company_data['default_tax_sale'], products=self.product_a, post=True,
         )
         invoice_document = invoice._create_myinvois_document()
         # Simulate that the document was sent
@@ -615,7 +615,7 @@ class L10nMyEDITestFileGeneration(AccountTestInvoicingCommon):
         Ensure that when an invoice contains a customs number; it is treated as an importation and not exportation.
         """
         invoice = self.init_invoice(
-            'out_invoice', products=self.product_a, post=True
+            'out_invoice', taxes=self.company_data['default_tax_sale'], products=self.product_a, post=True
         )
         myinvois_document = invoice._create_myinvois_document()
 
@@ -637,7 +637,7 @@ class L10nMyEDITestFileGeneration(AccountTestInvoicingCommon):
         """
         Ensure the prepaid amount is present in the UBL XML under <cac:PrepaidPayment>
         """
-        invoice = self.init_invoice('out_invoice', currency=self.other_currency, products=self.product_a, post=True)
+        invoice = self.init_invoice('out_invoice', currency=self.other_currency, taxes=self.company_data['default_tax_sale'], products=self.product_a, post=True)
         myinvois_document = invoice._create_myinvois_document()
 
         self.env['account.payment.register'].with_context(active_model='account.move', active_ids=invoice.ids).create({
@@ -660,7 +660,7 @@ class L10nMyEDITestFileGeneration(AccountTestInvoicingCommon):
         when the two codes differ.
         """
         invoice = self.init_invoice(
-            'out_invoice', products=self.product_a,
+            'out_invoice', taxes=self.company_data['default_tax_sale'], products=self.product_a,
         )
         invoice.line_ids[0].write({
             'l10n_my_edi_classification_code': '002',
