@@ -57,7 +57,7 @@ export default class DevicesSynchronisation {
      * This method will collect the synchronization of records from the backend
      * to update the records in the frontend.
      * @param {Object} data - The data that needs to be synchronized.
-     * @param {Number} data.device_identifier - Session login number.
+     * @param {String} data.device_identifier - Session login number.
      * @param {Number} data.session_id - Current session id.
      * @param {Object} data.static_records - Records data that need to be synchronized.
      */
