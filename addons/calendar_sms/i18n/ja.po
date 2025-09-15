@@ -1,23 +1,26 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* calendar_sms
+# * calendar_sms
 #
 # Translators:
 # Martin Trigaux, 2022
 #
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-09-11 13:55+0000\n"
-"PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
-"Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
+"PO-Revision-Date: 2025-09-14 21:10+0000\n"
+"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"Language-Team: Japanese <https://translate.odoo.com/projects/odoo-19/"
+"calendar_sms/ja/>\n"
 "Language: ja\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: calendar_sms
 #: model:ir.model,name:calendar_sms.model_calendar_event
@@ -27,14 +30,14 @@ msgstr "カレンダーイベント"
 #. module: calendar_sms
 #: model:sms.template,name:calendar_sms.sms_template_data_calendar_reminder
 msgid "Calendar Event: Reminder"
-msgstr "カレンダーイベント: リマインダ"
+msgstr "カレンダイベント: リマインダ"
 
 #. module: calendar_sms
 #: model:ir.model.fields,field_description:calendar_sms.field_calendar_alarm__display_name
 #: model:ir.model.fields,field_description:calendar_sms.field_calendar_alarm_manager__display_name
 #: model:ir.model.fields,field_description:calendar_sms.field_calendar_event__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "表示名"
 
 #. module: calendar_sms
 #: model:ir.model,name:calendar_sms.model_calendar_alarm
@@ -58,13 +61,15 @@ msgid ""
 "Event reminder: {{ object.name }}, "
 "{{ object.get_display_time_tz(object.partner_id.tz) }}"
 msgstr ""
+"イベントリマインダ: {{ object.name }}, {{ "
+"object.get_display_time_tz(object.partner_id.tz) }}"
 
 #. module: calendar_sms
 #: model:ir.model.fields,field_description:calendar_sms.field_calendar_alarm__id
 #: model:ir.model.fields,field_description:calendar_sms.field_calendar_alarm_manager__id
 #: model:ir.model.fields,field_description:calendar_sms.field_calendar_event__id
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: calendar_sms
 #: model_terms:ir.ui.view,arch_db:calendar_sms.view_calendar_event_form_inherited
@@ -96,13 +101,13 @@ msgstr "出席者にSMS配信"
 #. module: calendar_sms
 #: model:ir.model.fields,help:calendar_sms.field_calendar_alarm__sms_template_id
 msgid "Template used to render SMS reminder content."
-msgstr ""
+msgstr "SMSリマインダーコンテンツのレンダリングに使用されるテンプレート"
 
 #. module: calendar_sms
 #. odoo-python
 #: code:addons/calendar_sms/models/calendar_event.py:0
 msgid "There are no attendees on these events"
-msgstr ""
+msgstr "これらのイベントの参加者がいません"
 
 #. module: calendar_sms
 #: model:ir.model.fields,field_description:calendar_sms.field_calendar_alarm__alarm_type

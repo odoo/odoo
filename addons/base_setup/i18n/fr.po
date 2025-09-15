@@ -1,26 +1,28 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* base_setup
+# * base_setup
 #
 # Translators:
 # Cécile Collart <cco@odoo.com>, 2022
 # Martin Trigaux, 2023
 # Jolien De Paepe, 2023
-#
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-09-11 13:55+0000\n"
-"PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Jolien De Paepe, 2023\n"
-"Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
+"PO-Revision-Date: 2025-09-14 21:15+0000\n"
+"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"Language-Team: French <https://translate.odoo.com/projects/odoo-19/"
+"base_setup/fr/>\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % "
-"1000000 == 0 ? 1 : 2;\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : ((n != 0 && n % "
+"1000000 == 0) ? 1 : 2);\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -41,6 +43,13 @@ msgid ""
 "                                        Active Users\n"
 "                                    </span>"
 msgstr ""
+"<span class=\"o_form_label\" invisible=\"active_user_count &gt; 1\">\n"
+"                                        Utilisateur actif\n"
+"                                    </span>\n"
+"                                    <span class=\"o_form_label\" invisible="
+"\"active_user_count &lt;= 1\">\n"
+"                                        Utilisateurs actifs\n"
+"                                    </span>"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -54,6 +63,14 @@ msgid ""
 "                                    </span>\n"
 "                                    <br/>"
 msgstr ""
+"<span class=\"o_form_label\" invisible=\"company_count &gt; 1\">\n"
+"                                        Société\n"
+"                                    </span>\n"
+"                                    <span class=\"o_form_label\" invisible="
+"\"company_count &lt;= 1\">\n"
+"                                        Sociétés\n"
+"                                    </span>\n"
+"                                    <br/>"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -66,6 +83,13 @@ msgid ""
 "                                            Languages\n"
 "                                        </span>"
 msgstr ""
+"<span class=\"o_form_label\" invisible=\"language_count &gt; 1\">\n"
+"                                            Langue\n"
+"                                        </span>\n"
+"                                        <span class=\"o_form_label\" "
+"invisible=\"language_count &lt;= 1\">\n"
+"                                            Langues\n"
+"                                        </span>"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -73,7 +97,7 @@ msgid ""
 "<strong>Save</strong> this page and come back here to choose your Geo "
 "Provider."
 msgstr ""
-"<strong>Sauvegardez</strong> cette page et revenez ici pour choisir votre "
+"<strong>Enregistrez</strong> cette page et revenez ici pour choisir votre "
 "Fournisseur Geo."
 
 #. module: base_setup
@@ -82,6 +106,8 @@ msgid ""
 "<strong>Save</strong> this page and come back here to set up Cloudflare "
 "turnstile."
 msgstr ""
+"<strong>Enregistrez</strong> cette page et revenez ici pour configurer "
+"Cloudflare turnstile."
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -89,12 +115,14 @@ msgid ""
 "<strong>Save</strong> this page and come back here to set up Google Places "
 "API key"
 msgstr ""
+"<strong>Enregistrez</strong> cette page et revenez ici pour configurer la "
+"clé API Google Places"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "<strong>Save</strong> this page and come back here to set up reCaptcha."
 msgstr ""
-"<strong>Sauvegardez</strong> cette page et revenez ici pour configurer "
+"<strong>Enregistrez</strong> cette page et revenez ici pour configurer "
 "reCaptcha."
 
 #. module: base_setup
@@ -102,13 +130,13 @@ msgstr ""
 msgid ""
 "<strong>Save</strong> this page and come back here to set up the feature."
 msgstr ""
-"<strong>Sauvegardez</strong> cette page et revenez ici pour configurer la "
+"<strong>Enregistrez</strong> cette page et revenez ici pour configurer la "
 "fonctionnalité."
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "API Keys"
-msgstr ""
+msgstr "Clés API"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -116,6 +144,8 @@ msgid ""
 "API Keys allow your users to access Odoo with external tools when multi-"
 "factor authentication is enabled."
 msgstr ""
+"Les clés API permettent à vos utilisateurs d'accéder à Odoo avec des outils "
+"externes lorsque l'authentification à facteurs multiples est activée."
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -136,7 +166,7 @@ msgstr "Ajouter des langues"
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Add fun feedback and motivate your employees"
-msgstr "Ajoutez des commentaires amusants et motivez vos employés"
+msgstr "Ajouter des commentaires amusants et motiver vos employés"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_mail_plugin
@@ -155,7 +185,7 @@ msgstr ""
 msgid "Allow the users to synchronize their calendar with Outlook Calendar"
 msgstr ""
 "Permettre aux utilisateurs de synchroniser leur calendrier avec Outlook "
-"Calendar"
+"Calendrier"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_base_import
@@ -171,13 +201,13 @@ msgstr "Vous permet de travailler avec plusieurs devises"
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Autocomplete partner addresses with Google Places"
-msgstr ""
+msgstr "Complétion automatique des adresses des partenaires avec Google Places"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Automatically enrich your contact base with company data"
 msgstr ""
-"Enrichissez automatiquement votre base de contacts avec des données sur les "
+"Enrichir automatiquement votre base de contacts avec des données sur les "
 "entreprises"
 
 #. module: base_setup
@@ -186,16 +216,19 @@ msgid ""
 "By default, new users get highest access rights for all installed apps. If "
 "unchecked, new users will only have basic employee access."
 msgstr ""
+"Les nouveaux utilisateurs obtiennent par défaut les droits d'accès maximaux "
+"pour toutes les applications installées. Si la case n'est pas cochée, les "
+"nouveaux utilisateurs n'auront qu'un accès de base en tant qu'employés"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Choose the layout of your documents"
-msgstr "Choisissez la mise en page de vos documents"
+msgstr "Choisir la mise en page de vos documents"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_website_cf_turnstile
 msgid "Cloudflare Turnstile"
-msgstr ""
+msgstr "Cloudflare Turnstile"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -210,7 +243,7 @@ msgstr "Société"
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__company_country_code
 msgid "Company Country Code"
-msgstr ""
+msgstr "Code de pays de l'entreprise"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__company_informations
@@ -230,7 +263,7 @@ msgstr "Paramètres de configuration"
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Configure Document Layout"
-msgstr "Configurez la mise en page du document"
+msgstr "Configurer la mise en page du document"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -250,7 +283,7 @@ msgstr "Contacts"
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__company_country_group_codes
 msgid "Country Group Codes"
-msgstr ""
+msgstr "Codes des groupes de pays"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -258,6 +291,8 @@ msgid ""
 "Create corresponding in/out orders and bills when you sell/buy between your "
 "companies"
 msgstr ""
+"Créez les commandes d’entrée/sortie et les factures correspondantes lorsque "
+"vous vendez/achetez entre vos sociétés"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__report_footer
@@ -273,7 +308,7 @@ msgstr "Droits d'accès par défaut"
 #. odoo-python
 #: code:addons/base_setup/models/res_config_settings.py:0
 msgid "Default access for new users"
-msgstr ""
+msgstr "Accès par défaut pour les nouveaux utilisateurs"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_ir_http__display_name
@@ -281,12 +316,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__display_name
 #: model:ir.model.fields,field_description:base_setup.field_res_users__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Nom d'affichage"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Document Layout"
-msgstr ""
+msgstr "Mise en page du document"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__external_report_layout_id
@@ -296,13 +331,13 @@ msgstr "Modèle de document"
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Edit Layout"
-msgstr "Éditer la mise en page"
+msgstr "Modifier la mise en page"
 
 #. module: base_setup
 #. odoo-python
 #: code:addons/base_setup/models/res_config_settings.py:0
 msgid "Edit new user default group"
-msgstr ""
+msgstr "Modifiez le groupe par défaut du nouvel utilisateur."
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -316,7 +351,7 @@ msgstr ""
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Find free high-resolution images from Unsplash"
-msgstr "Trouvez des images gratuites haute résolution sur Unsplash"
+msgstr "Trouver des images gratuites haute résolution sur Unsplash"
 
 #. module: base_setup
 #: model:ir.model.fields,help:base_setup.field_res_config_settings__report_footer
@@ -337,17 +372,17 @@ msgstr "Géolocaliser"
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Geolocate your partners"
-msgstr ""
+msgstr "Géolocaliser vos partenaires"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Geolocation"
-msgstr ""
+msgstr "Géolocalisation"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_google_address_autocomplete
 msgid "Google Address Autocomplete"
-msgstr ""
+msgstr "Autocomplétion des adresses Google"
 
 #. module: base_setup
 #: model:ir.model,name:base_setup.model_ir_http
@@ -360,7 +395,7 @@ msgstr "Routage HTTP"
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__id
 #: model:ir.model.fields,field_description:base_setup.field_res_users__id
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -380,12 +415,12 @@ msgstr "Intégrations"
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Inter-Company Transactions"
-msgstr "Opérations inter-entreprises"
+msgstr "Opérations intersociétés"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__is_root_company
 msgid "Is Root Company"
-msgstr ""
+msgstr "Est société racine"
 
 #. module: base_setup
 #: model:ir.model,name:base_setup.model_kpi_provider
@@ -466,7 +501,7 @@ msgstr "Authentification OAuth"
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Odoo"
-msgstr ""
+msgstr "Odoo"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_partner_autocomplete
@@ -476,7 +511,7 @@ msgstr "Autocomplétion de partenaires"
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Performance"
-msgstr "Performance"
+msgstr "Performances"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -496,22 +531,22 @@ msgstr "Prévisualiser le document"
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__profiling_enabled_until
 msgid "Profiling enabled until"
-msgstr "Profilage activé jusqu'à"
+msgstr "Profilage activé jusqu'au"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Progressive Web App"
-msgstr ""
+msgstr "Progressive Web App"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Protect your forms from spam and abuse."
-msgstr "Protégez vos formulaires du spam et des abus."
+msgstr "Protéger vos formulaires du spam et des abus."
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Protect your forms with CF Turnstile."
-msgstr ""
+msgstr "Protégez vos formulaires grâce à CF Turnstile."
 
 #. module: base_setup
 #. odoo-javascript
@@ -522,23 +557,22 @@ msgstr ""
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_sms
 msgid "SMS"
-msgstr ""
+msgstr "SMS"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Send SMS"
-msgstr "Envoyer le SMS"
+msgstr "Envoyer un SMS"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Send texts to your contacts"
-msgstr "Envoyez des textes à vos contacts"
+msgstr "Envoyer des sms à vos contacts"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Set custom access rights for new users"
-msgstr ""
-"Définissez les droits d'accès personnalisés pour les nouveaux utilisateurs"
+msgstr "Définir les droits d'accès personnalisés pour les nouveaux utilisateurs"
 
 #. module: base_setup
 #: model:ir.actions.act_window,name:base_setup.action_general_configuration
@@ -556,6 +590,8 @@ msgid ""
 "The ISO country code in two chars. \n"
 "You can use this field for quick search."
 msgstr ""
+"Code de pays ISO en deux caractères. \n"
+"Vous pouvez utiliser ce champ pour une recherche rapide."
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -563,6 +599,8 @@ msgid ""
 "This name will be used for the application when Odoo is installed through "
 "the browser."
 msgstr ""
+"Ce nom sera utilisé pour l'application lorsqu'Odoo est installé par le biais "
+"du navigateur."
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_web_unsplash
@@ -572,24 +610,24 @@ msgstr "Bibliothèque d'images Unsplash"
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Update Info"
-msgstr "Mise à jour de l'information"
+msgstr "Mettre à jour les informations"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Use LDAP credentials to log in"
-msgstr "Utilisez les informations d'identification LDAP pour vous connecter"
+msgstr "Utiliser les informations d'identification LDAP pour vous connecter"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Use external accounts to log in (Google, Facebook, etc.)"
 msgstr ""
-"Utilisez des comptes externes pour vous connecter (Google, Facebook, etc.)"
+"Utiliser des comptes externes pour vous connecter (Google, Facebook, etc.)"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_auth_oauth
 msgid "Use external authentication providers (OAuth)"
 msgstr ""
-"Utilisez des fournisseurs d'authentification externes pour vous connecter "
+"Utiliser des fournisseurs d'authentification externes pour vous connecter "
 "(OAuth)"
 
 #. module: base_setup
@@ -624,6 +662,8 @@ msgstr ""
 #: code:addons/base_setup/models/res_users.py:0
 msgid "You have to install the Discuss application to use this feature."
 msgstr ""
+"Vous devez installer l’application Discussion pour utiliser cette "
+"fonctionnalité."
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_google_recaptcha

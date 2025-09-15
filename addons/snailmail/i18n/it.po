@@ -1,30 +1,32 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* snailmail
+# * snailmail
 #
 # Translators:
 # Martin Trigaux, 2022
 # Sergio Zanchetta <primes2h@gmail.com>, 2022
-#
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-09-11 14:02+0000\n"
-"PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2022\n"
-"Language-Team: Italian (https://app.transifex.com/odoo/teams/41243/it/)\n"
+"PO-Revision-Date: 2025-09-14 21:09+0000\n"
+"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"Language-Team: Italian <https://translate.odoo.com/projects/odoo-19/"
+"snailmail/it/>\n"
 "Language: it\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? "
-"1 : 2;\n"
+"Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n != 0 && n % 1000000 == 0)"
+" ? 1 : 2);\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: snailmail
 #: model:ir.model.fields.selection,name:snailmail.selection__snailmail_letter__error_code__attachment_error
 msgid "ATTACHMENT_ERROR"
-msgstr ""
+msgstr "ATTACHMENT_ERROR"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_res_company__snailmail_cover
@@ -38,6 +40,8 @@ msgstr "Aggiungere pagina di copertina"
 msgid ""
 "An error occurred when sending a letter with Snailmail on “%(record_name)s”"
 msgstr ""
+"Si è verificato un errore durante l'invio di una lettera con posta ordinaria "
+"a \"%(record_name)s\""
 
 #. module: snailmail
 #. odoo-javascript
@@ -101,7 +105,7 @@ msgstr "Annulla"
 #: code:addons/snailmail/static/src/core/notification_model_patch.js:0
 #: model:ir.model.fields.selection,name:snailmail.selection__snailmail_letter__state__canceled
 msgid "Cancelled"
-msgstr ""
+msgstr "Annullato"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__city
@@ -142,7 +146,7 @@ msgstr "Nazione"
 #. odoo-javascript
 #: code:addons/snailmail/static/src/core/notification_model_patch.js:0
 msgid "Country Not Supported"
-msgstr ""
+msgstr "Paese non supportato"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__cover
@@ -152,7 +156,7 @@ msgstr "Pagina di copertina"
 #. module: snailmail
 #: model:ir.model,website_form_label:snailmail.model_res_partner
 msgid "Create a Customer"
-msgstr ""
+msgstr "Crea cliente"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__create_uid
@@ -242,13 +246,13 @@ msgstr "Informazioni"
 #. odoo-javascript
 #: code:addons/snailmail/static/src/core/notification_model_patch.js:0
 msgid "Insufficient Credits"
-msgstr ""
+msgstr "Credito non sufficiente"
 
 #. module: snailmail
 #. odoo-python
 #: code:addons/snailmail/models/snailmail_letter.py:0
 msgid "Invalid recipient name."
-msgstr ""
+msgstr "Nome destinatario non valido."
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__write_uid
@@ -296,7 +300,7 @@ msgstr "Notifiche messaggio"
 #. odoo-javascript
 #: code:addons/snailmail/static/src/core/notification_model_patch.js:0
 msgid "Missing Required Fields"
-msgstr ""
+msgstr "Campi richiesti mancanti"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__model
@@ -312,13 +316,13 @@ msgstr "PREZZO_NON_DISPONIBILE"
 #. odoo-javascript
 #: code:addons/snailmail/static/src/core/notification_model_patch.js:0
 msgid "No IAP Credits"
-msgstr ""
+msgstr "Nessun credito IAP"
 
 #. module: snailmail
 #. odoo-python
 #: code:addons/snailmail/models/snailmail_letter.py:0
 msgid "Not enough credits for Snail Mail"
-msgstr ""
+msgstr "Crediti non sufficenti per snail mail."
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_mail_notification__notification_type
@@ -345,7 +349,7 @@ msgstr "Documento opzionale da stampare e allegare"
 #. odoo-python
 #: code:addons/snailmail/models/snailmail_letter.py:0
 msgid "Please use an A4 Paper format."
-msgstr ""
+msgstr "Utilizza un formato di carta A4."
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_res_config_settings__snailmail_duplex
@@ -381,6 +385,8 @@ msgstr "Invia ora"
 #: model:iap.service,description:snailmail.iap_service_snailmail
 msgid "Send your customer invoices and follow-up reports by post, worldwide."
 msgstr ""
+"Invia le fatture cliente e i rendiconti di follow-up via posta, in tutto il "
+"mondo."
 
 #. module: snailmail
 #. odoo-javascript
@@ -398,7 +404,7 @@ msgstr "Inviata da"
 #. odoo-python
 #: code:addons/snailmail/models/snailmail_letter.py:0
 msgid "Snail Mails are successfully sent"
-msgstr ""
+msgstr "Le snail mail sono state inviate con successo"
 
 #. module: snailmail
 #: model:ir.model.fields.selection,name:snailmail.selection__mail_message__message_type__snailmail
@@ -409,12 +415,12 @@ msgstr "Posta ordinaria"
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_res_company__snailmail_color
 msgid "Snailmail Color"
-msgstr ""
+msgstr "Colore posta ordinaria"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_res_config_settings__snailmail_cover_readonly
 msgid "Snailmail Cover Readonly"
-msgstr ""
+msgstr "Copertina posta ordinaria di sola lettura"
 
 #. module: snailmail
 #: model:ir.model.fields.selection,name:snailmail.selection__mail_notification__failure_type__sn_credit
@@ -425,7 +431,7 @@ msgstr "Errore crediti posta ordinaria"
 #. odoo-javascript
 #: code:addons/snailmail/static/src/messaging_menu/messaging_menu_patch.js:0
 msgid "Snailmail Failure: %(modelName)s"
-msgstr ""
+msgstr "Fallimento posta ordinaria: %(modelName)s"
 
 #. module: snailmail
 #. odoo-javascript
@@ -463,7 +469,7 @@ msgstr "Nessun prezzo disponibile per posta ordinaria"
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__message_id
 msgid "Snailmail Status Message"
-msgstr "Messaggio di stato Snailmail"
+msgstr "Messaggio di stato posta ordinaria"
 
 #. module: snailmail
 #: model:ir.model.fields.selection,name:snailmail.selection__mail_notification__failure_type__sn_trial
@@ -489,7 +495,7 @@ msgstr "Posta ordinaria: elaborazione coda delle lettere"
 #. module: snailmail
 #: model:iap.service,unit_name:snailmail.iap_service_snailmail
 msgid "Stamps"
-msgstr ""
+msgstr "Francobolli"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__state_id
@@ -559,7 +565,7 @@ msgstr "ERRORE_SCONOSCIUTO"
 #. odoo-javascript
 #: code:addons/snailmail/static/src/core/notification_model_patch.js:0
 msgid "Unknown Error"
-msgstr ""
+msgstr "Errore sconosciuto"
 
 #. module: snailmail
 #: model:ir.model.fields,help:snailmail.field_mail_mail__message_type
@@ -574,6 +580,15 @@ msgid ""
 "acknowledgment\n"
 "'user_notification': generated for a specific recipient"
 msgstr ""
+"Utilizzato per categorizzare i messaggi creati\n"
+"'email': generato da un e-mail in arrivo ad es. mailgateway\n"
+"'comment': generato dall'inserimento di un utente ad es. attraverso discuti "
+"o compositore\n"
+"'email_outgoing': generato da e-mail di massa\n"
+"'notification': generato dal sistema ad es. messaggi tracciati\n"
+"'auto_comment': generato da un meccanismo di notifica automatico ad es. "
+"riconoscimento\n"
+"'user_notification': generato da un destinatario specifico"
 
 #. module: snailmail
 #: model:ir.model.fields,help:snailmail.field_snailmail_letter__state
@@ -595,9 +610,8 @@ msgid ""
 "You don't have an IAP account registered for this service.<br>Please go to "
 "<a href=%s target=\"new\">iap.odoo.com</a> to claim your free credits."
 msgstr ""
-"Nessun account acquisti integrati (IAP) registrato per il servizio."
-"<br>Andare su <a href=%s target=\"new\">iap.odoo.com</a> per richiedere "
-"crediti gratuiti."
+"Nessun conto IAP registrato per il servizio.<br>Andare su <a href=%s target="
+"\"new\">iap.odoo.com</a> per richiedere crediti gratuiti."
 
 #. module: snailmail
 #. odoo-python
@@ -606,8 +620,8 @@ msgid ""
 "You don't have enough credits to perform this operation.<br>Please go to "
 "your <a href=%s target=\"new\">iap account</a>."
 msgstr ""
-"Crediti non sufficienti per eseguire l'operazione.<br>Proseguire verso l'<a "
-"href=%s target=\"new\">account acquisti integrati (IAP)</a>"
+"Crediti non sufficienti per eseguire l'operazione.<br>Andare al <a href=%s "
+"target=\"new\">conto IAP</a>"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__zip

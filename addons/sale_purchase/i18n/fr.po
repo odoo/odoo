@@ -1,26 +1,28 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* sale_purchase
+# * sale_purchase
 #
 # Translators:
 # Martin Trigaux, 2022
 # Cécile Collart <cco@odoo.com>, 2022
 # Jolien De Paepe, 2023
-#
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-09-11 14:01+0000\n"
-"PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Jolien De Paepe, 2023\n"
-"Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
+"PO-Revision-Date: 2025-09-14 21:20+0000\n"
+"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"Language-Team: French <https://translate.odoo.com/projects/odoo-19/"
+"sale_purchase/fr/>\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % "
-"1000000 == 0 ? 1 : 2;\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : ((n != 0 && n % "
+"1000000 == 0) ? 1 : 2);\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: sale_purchase
 #: model_terms:ir.ui.view,arch_db:sale_purchase.exception_purchase_on_sale_cancellation
@@ -35,7 +37,7 @@ msgstr ""
 #. module: sale_purchase
 #: model_terms:ir.ui.view,arch_db:sale_purchase.purchase_order_inherited_form_sale
 msgid "<span class=\"o_stat_text\">Sale</span>"
-msgstr "<span class=\"o_stat_text\">Vente</span>"
+msgstr "<span class=\"o_stat_text\">Ventes</span>"
 
 #. module: sale_purchase
 #: model:ir.model.fields,field_description:sale_purchase.field_product_template__display_name
@@ -44,7 +46,7 @@ msgstr "<span class=\"o_stat_text\">Vente</span>"
 #: model:ir.model.fields,field_description:sale_purchase.field_sale_order__display_name
 #: model:ir.model.fields,field_description:sale_purchase.field_sale_order_line__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Nom d'affichage"
 
 #. module: sale_purchase
 #: model_terms:ir.ui.view,arch_db:sale_purchase.exception_sale_on_purchase_cancellation
@@ -55,7 +57,7 @@ msgstr "Des exceptions sont survenues sur le(s) bon(s) de commande :"
 #: model_terms:ir.ui.view,arch_db:sale_purchase.exception_purchase_on_sale_cancellation
 #: model_terms:ir.ui.view,arch_db:sale_purchase.exception_purchase_on_sale_quantity_decreased
 msgid "Exception(s) occurred on the sale order(s):"
-msgstr "Des exceptions sont survenues sur la (les) commande(s) client(s) :"
+msgstr "Des exceptions sont survenues sur le(s) bon(s) de commande :"
 
 #. module: sale_purchase
 #: model_terms:ir.ui.view,arch_db:sale_purchase.exception_purchase_on_sale_cancellation
@@ -76,7 +78,7 @@ msgstr "Lignes d'achat générées"
 #: model:ir.model.fields,field_description:sale_purchase.field_sale_order__id
 #: model:ir.model.fields,field_description:sale_purchase.field_sale_order_line__id
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: sale_purchase
 #: model:ir.model.fields,help:sale_purchase.field_product_product__service_to_purchase
@@ -93,7 +95,7 @@ msgstr ""
 #. module: sale_purchase
 #: model_terms:ir.ui.view,arch_db:sale_purchase.exception_purchase_on_sale_quantity_decreased
 msgid "Manual actions may be needed."
-msgstr "Des actions manuelles pourraient être requises. "
+msgstr "Des actions manuelles pourraient être requises."
 
 #. module: sale_purchase
 #: model:ir.model.fields,field_description:sale_purchase.field_sale_order__purchase_order_count
@@ -146,17 +148,17 @@ msgstr ""
 #. module: sale_purchase
 #: model_terms:ir.ui.view,arch_db:sale_purchase.sale_order_inherited_form_purchase
 msgid "Purchase"
-msgstr ""
+msgstr "Achats"
 
 #. module: sale_purchase
 #: model:ir.model,name:sale_purchase.model_purchase_order
 msgid "Purchase Order"
-msgstr "Bon de commande"
+msgstr "Bon de commande fournisseur"
 
 #. module: sale_purchase
 #: model:ir.model,name:sale_purchase.model_purchase_order_line
 msgid "Purchase Order Line"
-msgstr "Ligne de commande d'achat"
+msgstr "Ligne de bon de commande"
 
 #. module: sale_purchase
 #. odoo-python
@@ -186,7 +188,7 @@ msgstr "Commande client"
 #. module: sale_purchase
 #: model:ir.model,name:sale_purchase.model_sale_order
 msgid "Sales Order"
-msgstr "Commandes clients"
+msgstr "Commande client"
 
 #. module: sale_purchase
 #: model:ir.model,name:sale_purchase.model_sale_order_line
@@ -210,6 +212,8 @@ msgstr "Service sous-traité"
 msgid ""
 "Technical field for whether the purchase order has associated sale orders"
 msgstr ""
+"Champ technique indiquant si le bon de commande est lié à des commandes "
+"client."
 
 #. module: sale_purchase
 #. odoo-python
@@ -235,7 +239,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale_purchase.exception_purchase_on_sale_cancellation
 #: model_terms:ir.ui.view,arch_db:sale_purchase.exception_sale_on_purchase_cancellation
 msgid "cancelled"
-msgstr "annulé"
+msgstr "annulé(s)"
 
 #. module: sale_purchase
 #: model_terms:ir.ui.view,arch_db:sale_purchase.exception_purchase_on_sale_cancellation
@@ -247,7 +251,7 @@ msgstr "de"
 #. module: sale_purchase
 #: model_terms:ir.ui.view,arch_db:sale_purchase.exception_purchase_on_sale_quantity_decreased
 msgid "ordered instead of"
-msgstr "commandé à la place de"
+msgstr "commandés au lieu de"
 
 #~ msgid ""
 #~ "<span class=\"fa fa-lg fa-building-o fa-fw\" title=\"Service to "

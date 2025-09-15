@@ -1,42 +1,45 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* account_check_printing
+# * account_check_printing
 #
 # Translators:
 # Martin Trigaux, 2022
 # Jolien De Paepe, 2023
 #
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-09-11 13:54+0000\n"
-"PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Jolien De Paepe, 2023\n"
-"Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
+"PO-Revision-Date: 2025-09-14 21:19+0000\n"
+"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"Language-Team: French <https://translate.odoo.com/projects/odoo-19/"
+"account_check_printing/fr/>\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % "
-"1000000 == 0 ? 1 : 2;\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : ((n != 0 && n % "
+"1000000 == 0) ? 1 : 2);\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: account_check_printing
 #. odoo-python
 #: code:addons/account_check_printing/models/account_journal.py:0
 msgid "%(journal)s: Check Number Sequence"
-msgstr ""
+msgstr "%(journal)s : Séquence des numéros de chèques"
 
 #. module: account_check_printing
 #. odoo-python
 #: code:addons/account_check_printing/models/account_payment.py:0
 msgid "%(number)s in journal %(journal)s"
-msgstr ""
+msgstr "%(number)s dans le journal %(journal)s"
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.account_journal_dashboard_kanban_view_inherited
 msgid "<span>&amp;nbsp;</span>"
-msgstr ""
+msgstr "<span>&amp;nbsp;</span>"
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_res_company__account_check_printing_margin_left
@@ -60,7 +63,7 @@ msgstr "Montant en toutes lettres"
 #. odoo-python
 #: code:addons/account_check_printing/models/account_payment.py:0
 msgid "Bills"
-msgstr ""
+msgstr "Factures fournisseurs"
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
@@ -128,7 +131,7 @@ msgstr "Cochez pour imprimer"
 #: code:addons/account_check_printing/models/account_payment.py:0
 #: model:account.payment.method,name:account_check_printing.account_payment_method_check
 msgid "Checks"
-msgstr "Chèques"
+msgstr "Contrôles"
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_account_journal__check_sequence_id
@@ -170,7 +173,7 @@ msgstr "Créé le"
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.view_account_journal_form_inherited
 msgid "Default"
-msgstr ""
+msgstr "Par défaut"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_account_journal__display_name
@@ -191,7 +194,7 @@ msgstr "Aller au panneau de configuration"
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_account_payment__check_layout_available
 msgid "Has Check Layout"
-msgstr ""
+msgstr "A un format de chèque"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_account_journal__id
@@ -221,12 +224,12 @@ msgstr "Journal"
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_print_prenumbered_checks__write_uid
 msgid "Last Updated by"
-msgstr "Dernière mise à jour par"
+msgstr "Mis à jour par"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_print_prenumbered_checks__write_date
 msgid "Last Updated on"
-msgstr "Dernière mise à jour le"
+msgstr "Mis à jour le"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_account_journal__check_manual_sequencing
@@ -300,7 +303,7 @@ msgid ""
 "and not have already been reconciled"
 msgstr ""
 "Les paiements à imprimer en tant que chèques doivent avoir 'Chèque' de "
-"sélectionner comme mode de paiement et ne doivent pas être déjà réconciliés"
+"sélectionner comme mode de paiement et ne doivent pas être déjà lettrés"
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
@@ -344,7 +347,7 @@ msgstr "Imprimer les chèques pré-numérotés"
 #. odoo-python
 #: code:addons/account_check_printing/models/account_payment.py:0
 msgid "Refunds"
-msgstr ""
+msgstr "Remboursements"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_res_company__account_check_printing_margin_right
@@ -359,7 +362,7 @@ msgid ""
 "checks on.\n"
 "In order to disable the printing feature, select 'None'."
 msgstr ""
-"Choisissez le format de vos chèques.\n"
+"Choisir le format de vos chèques.\n"
 "Pour désactiver la fonctionnalité d'impression, sélectionnez 'Aucun'."
 
 #. module: account_check_printing
@@ -446,8 +449,8 @@ msgstr ""
 msgid ""
 "This will allow to save on payments the number of the corresponding check."
 msgstr ""
-"Ceci permettra de sauvegarder sur les paiements le numéro du chèque "
-"correspondant. "
+"Ceci permettra d'enregistrer sur les paiements le numéro du chèque "
+"correspondant."
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.view_account_payment_form_inherited
@@ -457,7 +460,7 @@ msgstr "Décochez ceux qui ont été envoyés"
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.view_account_payment_form_inherited
 msgid "Void Check"
-msgstr "Chèque nul"
+msgstr "Annuler le chèque"
 
 #. module: account_check_printing
 #. odoo-python
@@ -474,19 +477,19 @@ msgstr ""
 #. odoo-python
 #: code:addons/account_check_printing/models/account_payment.py:0
 msgid "check_number"
-msgstr ""
+msgstr "check_number"
 
 #. module: account_check_printing
 #. odoo-python
 #: code:addons/account_check_printing/models/account_payment.py:0
 msgid "out_refund"
-msgstr ""
+msgstr "out_refund"
 
 #. module: account_check_printing
 #. odoo-python
 #: code:addons/account_check_printing/models/account_payment.py:0
 msgid "sep"
-msgstr ""
+msgstr "sep"
 
 #~ msgid "Contact"
 #~ msgstr "Contact"
