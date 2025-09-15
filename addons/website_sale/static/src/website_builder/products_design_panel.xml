@@ -103,7 +103,7 @@
                 type: 'list',
                 className: 'o_wsale_products_opt_layout_list o_wsale_products_opt_design_showcase o_wsale_products_opt_rounded_0',
                 img: '/website_sale/static/src/img/products_entries_design/style_list_showcase.svg',
-                suggestedClasses: suggestedClassesListDefault + ' o_wsale_products_opt_cc o_wsale_products_opt_cc5 o_wsale_products_opt_name_color_regular o_wsale_products_opt_actions_theme o_wsale_products_opt_thumb_4_3 o_wsale_products_opt_has_description',
+                suggestedClasses: suggestedClassesListDefault + ' o_wsale_products_opt_cc o_wsale_products_opt_cc5 o_wsale_products_opt_name_color_regular o_wsale_products_opt_actions_theme o_wsale_products_opt_thumb_4_3 o_wsale_products_opt_has_description o_wsale_products_opt_overlay_opacity_7',
                 gap: 0,
             },
             {
@@ -320,6 +320,28 @@
                         </BuilderSelectItem>
                     </t>
                 </BuilderSelect>
+            </BuilderRow>
+            <BuilderRow
+                label.translate="Overlay"
+                tooltip.translate="Opacity of the overlay"
+                level="1"
+                t-if="this.isActiveItem('wsale_design_showcase_list')"
+            >
+                <BuilderRange
+                    action="'setClassRange'"
+                    actionParam="[
+                        'o_wsale_products_opt_overlay_opacity_0',
+                        'o_wsale_products_opt_overlay_opacity_1',
+                        'o_wsale_products_opt_overlay_opacity_2',
+                        'o_wsale_products_opt_overlay_opacity_3',
+                        'o_wsale_products_opt_overlay_opacity_4',
+                        'o_wsale_products_opt_overlay_opacity_5',
+                        'o_wsale_products_opt_overlay_opacity_6',
+                        'o_wsale_products_opt_overlay_opacity_7',
+                        'o_wsale_products_opt_overlay_opacity_8',
+                        'o_wsale_products_opt_overlay_opacity_9',
+                        'o_wsale_products_opt_overlay_opacity_10'
+                    ]" max="10"/>
             </BuilderRow>
 
             <div class="o_wsale_design_panel_section_title ps-2 pt-3 pb-1 fw-bold">Text &amp; content</div>
