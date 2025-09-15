@@ -112,19 +112,23 @@ class PrinterDriver(Driver):
                 if model and model in PPDs[ppd]['ppd-product']:
                     ppd_file = ppd
                     break
-            with cups_lock:
-                if ppd_file:
-                    conn.addPrinter(name=device['identifier'], ppdname=ppd_file, device=device['url'])
-                else:
-                    conn.addPrinter(name=device['identifier'], device=device['url'])
+            with cups_lock, helpers.writable():
+                try:
+                    if ppd_file:
+                        conn.addPrinter(name=device['identifier'], ppdname=ppd_file, device=device['url'])
+                    else:
+                        conn.addPrinter(name=device['identifier'], device=device['url'])
 
-                conn.setPrinterInfo(device['identifier'], device['device-make-and-model'])
-                conn.enablePrinter(device['identifier'])
-                conn.acceptJobs(device['identifier'])
-                conn.setPrinterUsersAllowed(device['identifier'], ['all'])
-                conn.addPrinterOptionDefault(device['identifier'], "usb-no-reattach", "true")
-                conn.addPrinterOptionDefault(device['identifier'], "usb-unidir", "true")
-            return True
+                    conn.setPrinterInfo(device['identifier'], device['device-make-and-model'])
+                    conn.enablePrinter(device['identifier'])
+                    conn.acceptJobs(device['identifier'])
+                    conn.setPrinterUsersAllowed(device['identifier'], ['all'])
+                    conn.addPrinterOptionDefault(device['identifier'], "usb-no-reattach", "true")
+                    conn.addPrinterOptionDefault(device['identifier'], "usb-unidir", "true")
+                    return True
+                except IPPError:
+                    _logger.exception("Failed to add printer '%s'", device['identifier'])
+                    return False
         return False
 
     @classmethod
