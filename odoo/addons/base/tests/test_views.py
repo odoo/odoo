@@ -2219,6 +2219,16 @@ class TestViews(ViewCase):
                 'inherit_id': False,
             })
 
+    def test_attribute_node_with_no_name(self):
+        """Ensure that an attribute node with no name raises ValidationError"""
+        with self.assertRaises(ValidationError):
+            self.View.create({
+                'name': 'also_invalid_view',
+                'type': 'list',
+                'arch': '<attribute></attribute>',
+                'inherit_id': False,
+            })
+
     def test_context_in_view(self):
         arch = """
             <form string="View">

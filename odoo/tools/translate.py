@@ -87,6 +87,8 @@ FIELD_TRANSLATE = {
 
 
 def is_translatable_attrib(key):
+    if not key:
+        return False
     return key in TRANSLATED_ATTRS or key.endswith('.translate')
 
 def is_translatable_attrib_value(node):
