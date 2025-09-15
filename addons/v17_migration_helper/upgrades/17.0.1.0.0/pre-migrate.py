@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
+"""
+Pre-migration script for v16 to v17 upgrade
+"""
 
 import logging
 
@@ -7,7 +9,9 @@ _logger = logging.getLogger(__name__)
 
 
 def migrate(cr, version):
-
+    """
+    Migration function for v16 to v17 upgrade
+    """
     _logger.info("Starting v16 to v17 migration cleanup...")
     
     # List of incompatible modules to remove
@@ -27,13 +31,13 @@ def migrate(cr, version):
         _logger.info("Marking incompatible modules as uninstalled...")
         
         if modules_to_remove:
-            module_names = "','".join(modules_to_remove)
+            placeholders = ','.join(['%s'] * len(modules_to_remove))
             cr.execute(f"""
                 UPDATE ir_module_module 
                 SET state = 'uninstalled' 
-                WHERE name IN ('{module_names}')
+                WHERE name IN ({placeholders})
                 AND state != 'uninstalled'
-            """)
+            """, modules_to_remove)
             
             affected_rows = cr.rowcount
             _logger.info(f"Marked {affected_rows} modules as uninstalled")
@@ -45,8 +49,8 @@ def migrate(cr, version):
         cr.execute("""
             SELECT id, name, key, arch_db
             FROM ir_ui_view 
-            WHERE arch_db::text ILIKE '%chatter_position%'
-        """)
+            WHERE arch_db::text ILIKE %s
+        """, ('%chatter_position%',))
         
         problematic_views = cr.fetchall()
         _logger.info(f"Found {len(problematic_views)} views with chatter_position references")
@@ -84,30 +88,30 @@ def migrate(cr, version):
         
         # Remove model data from problematic modules
         if modules_to_remove:
-            module_names = "','".join(modules_to_remove)
+            placeholders = ','.join(['%s'] * len(modules_to_remove))
             cr.execute(f"""
                 DELETE FROM ir_model_data 
-                WHERE module IN ('{module_names}')
-            """)
+                WHERE module IN ({placeholders})
+            """, modules_to_remove)
             deleted_data = cr.rowcount
             _logger.info(f"Removed {deleted_data} model data records")
         
         # Remove chatter_position field definitions
         cr.execute("""
             DELETE FROM ir_model_fields 
-            WHERE model = 'res.users' AND name = 'chatter_position'
-        """)
+            WHERE model = %s AND name = %s
+        """, ('res.users', 'chatter_position'))
         deleted_fields = cr.rowcount
         if deleted_fields:
             _logger.info(f"Removed {deleted_fields} chatter_position field definitions")
         
         # Remove module dependencies
         if modules_to_remove:
-            module_names = "','".join(modules_to_remove)
+            placeholders = ','.join(['%s'] * len(modules_to_remove))
             cr.execute(f"""
                 DELETE FROM ir_module_module_dependency 
-                WHERE name IN ('{module_names}')
-            """)
+                WHERE name IN ({placeholders})
+            """, modules_to_remove)
             deleted_deps = cr.rowcount
             if deleted_deps:
                 _logger.info(f"Removed {deleted_deps} module dependency records")
