@@ -1026,8 +1026,7 @@ class PreforkServer(CommonServer):
         signal.signal(signal.SIGUSR2, log_ormcache_stats)
 
         if config['http_enable']:
-            socket_activation = os.getenv('LISTEN_FDS') == '1' and os.getenv('LISTEN_PID') == str(os.getpid())
-            if socket_activation:
+            if config.http_socket_activation:
                 _logger.info('HTTP service (werkzeug) running through socket activation')
             else:
                 _logger.info('HTTP service (werkzeug) running on %s:%s', self.interface, self.port)
@@ -1035,7 +1034,7 @@ class PreforkServer(CommonServer):
             if os.environ.get('ODOO_HTTP_SOCKET_FD'):
                 # reload
                 self.socket = socket.socket(fileno=int(os.environ.pop('ODOO_HTTP_SOCKET_FD')))
-            elif socket_activation:
+            elif config.http_socket_activation:
                 # socket activation
                 SD_LISTEN_FDS_START = 3
                 self.socket = socket.fromfd(SD_LISTEN_FDS_START, socket.AF_INET, socket.SOCK_STREAM)
