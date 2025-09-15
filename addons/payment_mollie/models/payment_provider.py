@@ -19,7 +19,8 @@ class PaymentProvider(models.Model):
     mollie_api_key = fields.Char(
         string="Mollie API Key",
         help="The Test or Live API Key depending on the configuration of the provider",
-        required_if_provider="mollie", groups="base.group_system"
+        required_if_provider="mollie", groups="base.group_system",
+        copy=False,
     )
 
     # === COMPUTE METHODS === #

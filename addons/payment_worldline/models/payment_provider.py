@@ -21,16 +21,30 @@ class PaymentProvider(models.Model):
     code = fields.Selection(
         selection_add=[('worldline', "Worldline")], ondelete={'worldline': 'set default'}
     )
-    worldline_pspid = fields.Char(string="Worldline PSPID", required_if_provider='worldline')
-    worldline_api_key = fields.Char(string="Worldline API Key", required_if_provider='worldline')
+    worldline_pspid = fields.Char(
+        string="Worldline PSPID",
+        required_if_provider='worldline',
+        copy=False,
+    )
+    worldline_api_key = fields.Char(
+        string="Worldline API Key",
+        required_if_provider='worldline',
+        copy=False,
+    )
     worldline_api_secret = fields.Char(
-        string="Worldline API Secret", required_if_provider='worldline'
+        string="Worldline API Secret",
+        required_if_provider='worldline',
+        copy=False,
     )
     worldline_webhook_key = fields.Char(
-        string="Worldline Webhook Key", required_if_provider='worldline'
+        string="Worldline Webhook Key",
+        required_if_provider='worldline',
+        copy=False,
     )
     worldline_webhook_secret = fields.Char(
-        string="Worldline Webhook Secret", required_if_provider='worldline'
+        string="Worldline Webhook Secret",
+        required_if_provider='worldline',
+        copy=False,
     )
 
     # === COMPUTE METHODS === #
