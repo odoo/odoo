@@ -64,6 +64,15 @@ export class DiscussChannel extends Record {
         return this.member_count === this.channel_member_ids.length;
     }
 
+    onlineMembers = fields.Many("discuss.channel.member", {
+        /** @this {import("models").Thread} */
+        compute() {
+            return this.channel_member_ids
+                .filter((member) => this.store.onlineMemberStatuses.includes(member.im_status))
+                .sort((m1, m2) => this.store.sortMembers(m1, m2)); // FIXME: sort are prone to infinite loop (see test "Display livechat custom name in typing status")
+        },
+    });
+
     offlineMembers = fields.Many("discuss.channel.member", {
         compute() {
             return this._computeOfflineMembers().sort(

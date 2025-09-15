@@ -28,7 +28,7 @@ export class ChannelMemberList extends Component {
 
     get onlineSectionText() {
         return _t("Online - %(online_count)s", {
-            online_count: this.props.thread.onlineMembers.length,
+            online_count: this.props.thread.channel?.onlineMembers.length,
         });
     }
 

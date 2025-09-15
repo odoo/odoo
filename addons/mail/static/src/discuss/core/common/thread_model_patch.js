@@ -178,14 +178,6 @@ const threadPatch = {
         /** @type {string} name: only for channel. For generic thread, @see display_name */
         this.name = undefined;
         this.channel_name_member_ids = fields.Many("discuss.channel.member");
-        this.onlineMembers = fields.Many("discuss.channel.member", {
-            /** @this {import("models").Thread} */
-            compute() {
-                return this.channel?.channel_member_ids
-                    .filter((member) => this.store.onlineMemberStatuses.includes(member.im_status))
-                    .sort((m1, m2) => this.store.sortMembers(m1, m2)); // FIXME: sort are prone to infinite loop (see test "Display livechat custom name in typing status")
-            },
-        });
         this.self_member_id = fields.One("discuss.channel.member", {
             inverse: "threadAsSelf",
         });
