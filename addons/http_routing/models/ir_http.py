@@ -134,6 +134,11 @@ class IrHttp(models.AbstractModel):
         # '/shop/furn-0269-chaise-de-bureau-noire-17', otherwise -> 404
         url, sep, qs = url.partition('?')
 
+        # Homepage's canonical url is always '/'
+        homepage_url = request.website._get_cached('homepage_url')
+        if url == homepage_url and canonical_domain:
+            url = '/'
+
         try:
             # Re-match the controller where the request path routes.
             rule, args = request.env['ir.http']._match(url)
