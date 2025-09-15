@@ -1623,6 +1623,8 @@ class WebsiteSale(payment_portal.PaymentPortal):
         :return int: The order's partner id.
         """
         order_sudo = request.website.sale_get_order()
+        if not order_sudo:
+            return []
 
         # Update the partner with all the information
         self._include_country_and_state_in_address(billing_address)
