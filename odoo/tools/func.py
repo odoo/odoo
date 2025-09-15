@@ -33,7 +33,7 @@ class lazy_property(functools.cached_property):
     def __init__(self, func):
         super().__init__(func)
         warnings.warn(
-            "lazy_property is deprecated since Odoo 19, use `functools.cached_property` HIII",
+            "lazy_property is deprecated since Odoo 19, use `functools.cached_property` HELLO",
             category=DeprecationWarning,
             stacklevel=2,
         )
