@@ -153,9 +153,11 @@
                                         <div class="o_address_format">
                                             <field name="private_street" placeholder="Street..." class="o_address_street"/>
                                             <field name="private_street2" placeholder="Street 2..." class="o_address_street"/>
-                                            <field name="private_city" placeholder="City" class="o_address_city"/>
-                                            <field name="private_state_id" class="o_address_state" placeholder="State" options="{'no_open': True, 'no_quick_create': True}" context="{'default_country_id': private_country_id}"/>
-                                            <field name="private_zip" placeholder="ZIP" class="o_address_zip"/>
+                                            <div class="d-flex align-items-center">
+                                                <field name="private_city" placeholder="City" class="o_address_city"/>
+                                                <field name="private_state_id" class="o_address_state" placeholder="State" options="{'no_open': True, 'no_quick_create': True}" context="{'default_country_id': private_country_id}"/>
+                                                <field name="private_zip" placeholder="ZIP" class="o_address_zip"/>
+                                            </div>
                                             <field name="private_country_id" placeholder="Country" class="o_address_country" options='{"no_open": True, "no_create": True}'/>
                                         </div>
                                         <field name="private_email" placeholder="e.g. myprivateemail@example.com"/>
