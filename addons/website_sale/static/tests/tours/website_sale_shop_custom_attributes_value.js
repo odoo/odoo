@@ -12,13 +12,13 @@ registry.category("web_tour.tours").add("a_shop_custom_attribute_value", {
         run: "click",
         expectUnloadPage: true,
 }, {
-    trigger: 'a.js_add_cart_json:has(i.oi-plus)',
+    trigger: 'button.js_add_cart_json:has(i.oi-plus)',
     run: 'click',
 }, {
     trigger: 'span.oe_currency_value:contains(750)',
 }, {
     id: 'add_cart_step',
-    trigger: 'a:contains(Add to cart)',
+    trigger: 'button:contains(Add to cart)',
     run: 'click',
 }, {
     trigger: configuratorTourUtils.optionalProductSelector("Conference Chair (TEST) (Steel)"),

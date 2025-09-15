@@ -12,7 +12,7 @@ export class WebsiteSale extends Interaction {
     static selector = '.oe_website_sale';
     dynamicContent = {
         '.js_main_product input[name="add_qty"]': { 't-on-change': this.onChangeAddQuantity },
-        'a.js_add_cart_json': { 't-on-click.prevent': this.onChangeQuantity },
+        'button.js_add_cart_json': { 't-on-click.prevent': this.onChangeQuantity },
         'form.js_attributes input, form.js_attributes select': {
             't-on-change.prevent': this.onChangeAttribute,
         },

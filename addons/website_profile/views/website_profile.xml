@@ -45,7 +45,7 @@
                             </div>
 
                             <div class="btn-group flex-grow-1">
-                                <a class="btn bg-black-25 text-white dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Nav</a>
+                                <button class="btn bg-black-25 text-white dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Nav</button>
 
                                 <ul class="dropdown-menu">
                                     <a class="dropdown-item" t-att-href="home_url or '/'">Home</a>
@@ -55,7 +55,7 @@
                             </div>
 
                             <div class="btn-group">
-                                <a class="btn bg-black-25 text-white dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-search"></i></a>
+                                <button class="btn bg-black-25 text-white dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-search"></i></button>
                                 <div class="dropdown-menu dropdown-menu-end w-100">
                                     <form class="px-3" t-attf-action="/profile/users" role="search" method="get">
                                         <div class="input-group">
@@ -198,10 +198,10 @@
                             </div>
                             <div t-if="user.partner_id.website_description" class="mb32">
                                 <t t-if="request.env.user == user and user.karma != 0 or request.env.user._is_admin()">
-                                    <a href="#" class="o_wprofile_editor btn btn-link float-end"
+                                    <button class="o_wprofile_editor btn btn-link float-end"
                                         t-att-data-user-id="user.id" data-focus-website-description="true">
                                         <i class="fa fa-pencil me-1"/>Edit
-                                    </a>
+                                    </button>
                                 </t>
                                 <h5 class="border-bottom pb-1">Biography</h5>
                                 <span class="o_forum_profile_bio text-break" t-field="user.partner_id.website_description"/>
@@ -572,13 +572,13 @@
         <div t-elif="not validation_email_sent and not is_public_user and user.karma == 0" t-att-class="send_alert_classes" role="alert">
             <button type="button" class="btn-close validation_email_close" data-bs-dismiss="alert" aria-label="Close"/>
             Your Account has not yet been verified.<br/>
-            Click <a class="send_validation_email alert-link" href="#" t-att-data-redirect_url="redirect_url"><u>here</u></a> to receive a verification email<t t-out="additional_validation_email_message"/>!
+            Click <button class="send_validation_email alert-link border-0 bg-transparent p-0" t-att-data-redirect_url="redirect_url"><u>here</u></button> to receive a verification email<t t-out="additional_validation_email_message"/>!
         </div>
         <div t-elif="validation_email_sent and not validation_email_done" t-att-class="done_alert_classes">
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             Verification Email sent to <t t-out="user.email"/>!<br/>
             Did not receive it? <a class="alert-link" t-att-href="my_account_redirect"><u>Correct your email address</u></a> 
-            or <a class="send_validation_email alert-link" href="#" t-att-data-redirect_url="redirect_url"><u>Send Again</u></a>.
+            or <button class="send_validation_email alert-link border-0 bg-transparent p-0" t-att-data-redirect_url="redirect_url"><u>Send Again</u></button>.
         </div>
         <div t-if="validation_email_done" t-att-class="done_alert_classes" role="status">
             <button type="button" class="btn-close validated_email_close" data-bs-dismiss="alert" aria-label="Close"/>

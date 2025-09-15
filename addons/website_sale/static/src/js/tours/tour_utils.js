@@ -261,7 +261,7 @@ export function selectPriceList(pricelist) {
     return [
         {
             content: "Click on pricelist dropdown",
-            trigger: "div.o_pricelist_dropdown a[data-bs-toggle=dropdown]",
+            trigger: "div.o_pricelist_dropdown button[data-bs-toggle=dropdown]",
             run: "click",
         },
         {
