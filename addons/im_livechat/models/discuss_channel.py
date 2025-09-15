@@ -1,5 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from collections import defaultdict
+
 from odoo import api, fields, models, _, tools
 from odoo.addons.base.models.ir_qweb_fields import nl2br
 from odoo.addons.mail.tools.discuss import Store
@@ -440,6 +442,15 @@ class DiscussChannel(models.Model):
                 predicate=is_livechat_channel,
                 sudo=True,
             ),
+            # sudo - visitor can access to the channel member history of an accessible channel
+            Store.Many(
+                "livechat_channel_member_history_ids",
+                self.env[
+                    "im_livechat.channel.member.history"
+                ]._get_store_channel_member_history_fields(),
+                predicate=is_livechat_channel,
+                sudo=True,
+            ),
         ]
         if target.is_internal(self.env):
             fields.append(
@@ -732,7 +743,25 @@ class DiscussChannel(models.Model):
             post_joined_message=post_joined_message,
             inviting_partner=inviting_partner,
         )
+        if not any(is_livechat_channel(channel) for channel in self):
+            return all_new_members
+        history_by_channel = defaultdict(lambda: self.env["im_livechat.channel.member.history"])
+        for history in all_new_members.livechat_member_history_ids:
+            history_by_channel[history.channel_id] |= history
         for channel in all_new_members.channel_id:
+            if histories_to_add := history_by_channel.get(channel):
+                Store(bus_channel=channel).add(
+                    channel,
+                    Store.Many(
+                        "livechat_channel_member_history_ids",
+                        self.env[
+                            "im_livechat.channel.member.history"
+                        ]._get_store_channel_member_history_fields(),
+                        mode="ADD",
+                        value=histories_to_add,
+                        sudo=True,
+                    ),
+                ).bus_send()
             # sudo: discuss.channel - accessing livechat_status in internal code is acceptable
             if channel.sudo().livechat_status == "need_help":
                 # sudo: discuss.channel - writing livechat_status when a new operator joins is acceptable
