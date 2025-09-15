@@ -551,6 +551,24 @@ class TestOnchange(SavepointCaseWithUserDemo):
             })],
         )
 
+    def test_onchange_sibling_one2many(self):
+        new_discu = self.env['test_orm.discussion'].new(
+            {
+                'name': 'test',
+                'important_messages': [
+                    Command.create({
+                        'important': True,
+                        'name': 'Important message'
+                    }),
+                ],
+            },
+        )
+        self.assertEqual(len(new_discu.important_messages), 1)
+        self.assertEqual(new_discu.important_messages.discussion, new_discu)
+
+        self.assertEqual(len(new_discu.messages), 1)
+        self.assertEqual(new_discu.messages, new_discu.important_messages)
+
     def test_onchange_related(self):
         user = self.env.user
 
