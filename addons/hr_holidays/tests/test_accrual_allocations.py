@@ -4014,3 +4014,39 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         self.assertEqual(allocation_data[self.employee_emp][0][1]['virtual_remaining_leaves'], 28, "The carryover did not expire yet so the remaining leaves should be 28")
         allocation_data = leave_type.get_allocation_data(self.employee_emp, '2031-09-01')
         self.assertEqual(allocation_data[self.employee_emp][0][1]['virtual_remaining_leaves'], 23, "The carryover expired after 6 month so the remaining leaves should be 23")
+
+    def test_accrual_leaves_cancel_cron_with_refused_allocation(self):
+        leave_type = self.env['hr.leave.type'].create({
+            'name': 'Test Accrual',
+            'time_type': 'leave',
+            'requires_allocation': 'yes',
+            'allocation_validation_type': 'no_validation',
+            'leave_validation_type': 'no_validation',
+            'allows_negative': False,
+        })
+
+        accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
+            'name': 'Accrual Plan',
+            'carryover_date': 'year_start',
+            'accrued_gain_time': 'end',
+        })
+
+        with freeze_time("2024-01-01"):
+            allocation = self.env['hr.leave.allocation'].create({
+                'employee_id': self.employee_emp.id,
+                'holiday_status_id': leave_type.id,
+                'allocation_type': 'accrual',
+                'accrual_plan_id': accrual_plan.id,
+                'number_of_days': 1,
+            })
+
+            leave = self.env['hr.leave'].create({
+                'employee_id': self.employee_emp.id,
+                'holiday_status_id': leave_type.id,
+                'request_date_from': '2024-01-05',
+                'request_date_to': '2024-01-05',
+            })
+
+            allocation.action_refuse()
+            self.env['hr.leave']._cancel_invalid_leaves()
+            self.assertEqual(leave.state, 'validate')
