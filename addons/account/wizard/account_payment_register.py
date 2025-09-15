@@ -180,6 +180,10 @@ class AccountPaymentRegister(models.TransientModel):
         if len(lines.move_id) == 1:
             move = lines.move_id
             label = move.payment_reference or move.ref or move.name
+        elif any(move.is_outbound() for move in lines.move_id):
+            # outgoing payments references should use moves references
+            labels = {move.payment_reference or move.ref or move.name for move in lines.move_id}
+            return ', '.join(sorted(filter(lambda l: l, labels)))
         else:
             label = self.company_id.get_next_batch_payment_communication()
         return label
@@ -1163,7 +1167,7 @@ class AccountPaymentRegister(models.TransientModel):
         payments = self.env['account.payment']
         for vals in to_process:
             payments |= vals['payment']
-        payments.action_post()
+        payments.with_context(skip_sale_auto_invoice_send=True).action_post()
 
     def _reconcile_payments(self, to_process, edit_mode=False):
         """ Reconcile the payments.

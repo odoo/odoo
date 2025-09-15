@@ -209,6 +209,9 @@ class StockMoveLine(models.Model):
         else:
             return super()._get_linkable_moves()
 
+    def _exclude_requiring_lot(self):
+        return (self.move_id.unbuild_id and not self.move_id.origin_returned_move_id.move_line_ids.lot_id) or super()._exclude_requiring_lot()
+
 
 class StockMove(models.Model):
     _inherit = 'stock.move'
@@ -450,6 +453,8 @@ class StockMove(models.Model):
                 values['date_deadline'] = mo.date_deadline
                 if not values.get('location_dest_id'):
                     values['location_dest_id'] = mo.location_dest_id.id
+                if not values.get('location_final_id'):
+                    values['location_final_id'] = mo.warehouse_id.lot_stock_id.id
         return super().create(vals_list)
 
     def write(self, vals):

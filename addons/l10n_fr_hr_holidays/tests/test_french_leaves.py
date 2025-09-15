@@ -294,8 +294,8 @@ class TestFrenchLeaves(TransactionCase):
         """
         Test Case:
         ==========
-        - Employee works from 8 to 12 and 14 to 17 Monday to Wednesday
-        - Company works from 9 to 12 and 13 to 18 Monday to Friday
+        - Employee works from 8 to 12 and 14 to 17 Monday to Wednesday -> 7h/d
+        - Company works from 9 to 12 and 13 to 18 Monday to Friday -> 8h/d
         - Employee requests 1 day off on Monday -> duration should be 1.0
         - Employee requests 0.5 day off on Monday morning or afternoon -> duration should be 0.5
         """
@@ -346,6 +346,7 @@ class TestFrenchLeaves(TransactionCase):
             'request_date_to': '2024-07-22',
         })
         self.assertEqual(leave.number_of_days, 1, 'The duration should be 1 day.')
+        self.assertNotEqual(leave.number_of_hours, 8.0, 'Company and employee hours per day should not match in this case')
 
         leave = self.env['hr.leave'].create({
             'name': 'Test',
@@ -359,11 +360,13 @@ class TestFrenchLeaves(TransactionCase):
         self.assertEqual(leave.number_of_days, 0.5, 'The duration should be 0.5 day.')
         self.assertEqual(leave.date_from.date(), date(2024, 7, 29))
         self.assertEqual(leave.date_to.date(), date(2024, 7, 29))
+        self.assertNotEqual(leave.number_of_hours, 8.0, 'Company and employee hours per day should not match in this case')
 
         leave.request_date_from_period = 'pm'
         self.assertEqual(leave.number_of_days, 0.5, 'The duration should be 0.5 day.')
         self.assertEqual(leave.date_from.date(), date(2024, 7, 29))
         self.assertEqual(leave.date_to.date(), date(2024, 7, 29))
+        self.assertNotEqual(leave.number_of_hours, 8.0, 'Company and employee hours per day should not match in this case')
 
     def test_leave_full_day_different_working_hours(self):
         """Check full days leave creation for an employee with different working hours than the 2 weeks company's calendar."""

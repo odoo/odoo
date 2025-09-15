@@ -66,11 +66,23 @@ export class WebClient extends Component {
         // ** url-retrocompatibility **
         // the menu_id in the url is only possible if we came from an old url
         let menuId = Number(router.current.menu_id || 0);
+        const storedMenuId = Number(browser.sessionStorage.getItem("menu_id"));
         const firstAction = router.current.actionStack?.[0]?.action;
         if (!menuId && firstAction) {
-            menuId = this.menuService
+            // Find all menus that match this action
+            const matchingMenus = this.menuService
                 .getAll()
-                .find((m) => m.actionID === firstAction || m.actionPath === firstAction)?.appID;
+                .filter((m) => m.actionID === firstAction || m.actionPath === firstAction);
+
+            if (matchingMenus.length > 0) {
+                // Use sessionStorage context to determine the correct menu
+                menuId = matchingMenus.find(m => 
+                    m.appID === storedMenuId
+                )?.appID;
+                if (!menuId) {
+                    menuId = matchingMenus[0]?.appID;
+                }
+            }
         }
         if (menuId) {
             this.menuService.setCurrentMenu(menuId);
@@ -97,7 +109,7 @@ export class WebClient extends Component {
             menuId = this.menuService.getAll().find((m) => m.actionID === actionId)?.appID;
             if (!menuId) {
                 // Setting the menu based on the session storage if no other menu was found
-                menuId = Number(browser.sessionStorage.getItem("menu_id"));
+                menuId = storedMenuId;
             }
             if (menuId) {
                 // Sets the menu according to the current action

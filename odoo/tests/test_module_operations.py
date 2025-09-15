@@ -178,6 +178,7 @@ def test_uninstall(args):
 
 def test_standalone(args):
     """ Tries to launch standalone scripts tagged with @post_testing """
+    odoo.service.db._check_faketime_mode(args.database)  # noqa: SLF001
     # load the registry once for script discovery
     registry = Registry(args.database)
     for module_name in registry._init_modules:
@@ -208,7 +209,7 @@ def test_standalone(args):
 if __name__ == '__main__':
     args = parse_args()
 
-    config['dbname'] = threading.current_thread().dbname = args.database
+    config['db_name'] = threading.current_thread().dbname = args.database
     # handle paths option
     if args.addons_path:
         odoo.tools.config['addons_path'] = ','.join([args.addons_path, odoo.tools.config['addons_path']])

@@ -73,7 +73,7 @@ class PaymentProvider(models.Model):
             self.env['account.payment.method.line'].create(create_values)
 
     def _get_payment_method_outstanding_account_id(self, payment_method_id):
-        if self.code in ['custom', 'demo']:
+        if self.code == 'custom':
             return False
         account_ref = 'account_journal_payment_debit_account_id' if payment_method_id.payment_type == 'inbound' else 'account_journal_payment_credit_account_id'
         chart_template = self.with_context(allowed_company_ids=self.company_id.root_id.ids).env['account.chart.template']

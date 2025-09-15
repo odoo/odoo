@@ -5,6 +5,7 @@ import {
     defineMailModels,
     dragenterFiles,
     dropFiles,
+    focus,
     inputFiles,
     insertText,
     onRpcBefore,
@@ -29,7 +30,7 @@ import {
 } from "@web/../tests/web_test_helpers";
 
 import { Composer } from "@mail/core/common/composer";
-import { queryFirst } from "@odoo/hoot-dom";
+import { edit, press, queryFirst } from "@odoo/hoot-dom";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -277,7 +278,7 @@ test("composer text input cleared on message post", async () => {
     await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "test message");
     await contains(".o-mail-Composer-input", { value: "test message" });
-    await click(".o-mail-Composer-send:not([disabled])");
+    await click(".o-mail-Composer-send:enabled");
     await contains(".o-mail-Message");
     await contains(".o-mail-Composer-input", { value: "" });
 });
@@ -442,9 +443,15 @@ test('post message on channel with "Enter" keyboard shortcut', async () => {
     const channelId = pyEnv["discuss.channel"].create({ name: "general" });
     await start();
     await openDiscuss(channelId);
-    await insertText(".o-mail-Composer-input", "Test");
+    await focus(".o-mail-Composer-input");
+    await edit("Test");
     await contains(".o-mail-Message", { count: 0 });
-    triggerHotkey("Enter");
+    await press("Enter");
+    await contains(".o-mail-Message");
+    // check composition mode doesn't send message
+    await edit("test", { composition: true });
+    await press("Enter", { isComposing: true });
+    await animationFrame();
     await contains(".o-mail-Message");
 });
 
@@ -607,11 +614,11 @@ test("composer: drop attachments", async () => {
     await contains(".o-mail-AttachmentCard", { count: 0 });
     await dropFiles(".o-Dropzone", files);
     await contains(".o-Dropzone", { count: 0 });
-    await contains(".o-mail-AttachmentCard", { count: 2 });
+    await contains(".o-mail-AttachmentCard:not(.o-isUploading)", { count: 2 });
     const extraFiles = [text3];
     await dragenterFiles(".o-mail-Composer-input", extraFiles);
     await dropFiles(".o-Dropzone", extraFiles);
-    await contains(".o-mail-AttachmentCard", { count: 3 });
+    await contains(".o-mail-AttachmentCard:not(.o-isUploading)", { count: 3 });
 });
 
 test("composer: add an attachment", async () => {
@@ -621,9 +628,11 @@ test("composer: add an attachment", async () => {
     await start();
     await openDiscuss(channelId);
     await inputFiles(".o-mail-Composer-coreMain .o_input_file", [text]);
-    await contains(".o-mail-AttachmentCard .fa-check");
+    await contains('.o-mail-AttachmentCard:not(.o-isUploading):contains("text.txt") .fa-check');
     await contains(".o-mail-Composer-footer .o-mail-AttachmentList");
-    await contains(".o-mail-Composer-footer .o-mail-AttachmentList .o-mail-AttachmentCard");
+    await contains(
+        ".o-mail-Composer-footer .o-mail-AttachmentList .o-mail-AttachmentCard:not(.o-isUploading):contains(text.txt)"
+    );
 });
 
 test("composer: add an attachment in reply to message in history", async () => {
@@ -645,9 +654,11 @@ test("composer: add an attachment in reply to message in history", async () => {
     await openDiscuss("mail.box_history");
     await click("[title='Reply']");
     await inputFiles(".o-mail-Composer-coreMain .o_input_file", [text]);
-    await contains(".o-mail-AttachmentCard .fa-check");
+    await contains(".o-mail-AttachmentCard:not(.o-isUploading):contains(text.txt) .fa-check");
     await contains(".o-mail-Composer-footer .o-mail-AttachmentList");
-    await contains(".o-mail-Composer-footer .o-mail-AttachmentList .o-mail-AttachmentCard");
+    await contains(
+        ".o-mail-Composer-footer .o-mail-AttachmentList .o-mail-AttachmentCard:not(.o-isUploading):contains(text.txt)"
+    );
 });
 
 test("composer: send button is disabled if attachment upload is not finished", async () => {
@@ -659,11 +670,11 @@ test("composer: send button is disabled if attachment upload is not finished", a
     await start();
     await openDiscuss(channelId);
     await inputFiles(".o-mail-Composer-coreMain .o_input_file", [text]);
-    await contains(".o-mail-AttachmentCard.o-isUploading");
+    await contains(".o-mail-AttachmentCard.o-isUploading:contains(text.txt)");
     await contains(".o-mail-Composer-send:disabled");
     // simulates attachment finishes uploading
     attachmentUploadedDef.resolve();
-    await contains(".o-mail-AttachmentCard");
+    await contains(".o-mail-AttachmentCard:not(.o-isUploading):contains(text.txt)");
     await contains(".o-mail-AttachmentCard.o-isUploading", { count: 0 });
     await contains(".o-mail-Composer-send:enabled");
 });
@@ -675,9 +686,8 @@ test("remove an attachment from composer does not need any confirmation", async 
     await start();
     await openDiscuss(channelId);
     await inputFiles(".o-mail-Composer-coreMain .o_input_file", [text]);
-    await contains(".o-mail-AttachmentCard .fa-check");
+    await contains(".o-mail-AttachmentCard:not(.o-isUploading):contains(text.txt) .fa-check");
     await contains(".o-mail-Composer-footer .o-mail-AttachmentList");
-    await contains(".o-mail-AttachmentList .o-mail-AttachmentCard");
     await click(".o-mail-AttachmentCard-unlink");
     await contains(".o-mail-AttachmentList .o-mail-AttachmentCard", { count: 0 });
 });
@@ -691,7 +701,9 @@ test("composer: paste attachments", async () => {
     await contains(".o-mail-Composer-input");
     await contains(".o-mail-AttachmentList .o-mail-AttachmentCard", { count: 0 });
     await pasteFiles(".o-mail-Composer-input", [text]);
-    await contains(".o-mail-AttachmentList .o-mail-AttachmentCard");
+    await contains(
+        ".o-mail-AttachmentList .o-mail-AttachmentCard:not(.o-isUploading):contains(text.txt)"
+    );
 });
 
 test.tags("focus required");
@@ -721,8 +733,9 @@ test("remove an uploading attachment", async () => {
     await start();
     await openDiscuss(channelId);
     await inputFiles(".o-mail-Composer-coreMain .o_input_file", [text]);
-    await contains(".o-mail-AttachmentCard.o-isUploading");
-    await click(".o-mail-AttachmentCard-unlink");
+    await click(
+        ".o-mail-AttachmentCard.o-isUploading:contains(text.txt) .o-mail-AttachmentCard-unlink"
+    );
     await contains(".o-mail-Composer .o-mail-AttachmentCard", { count: 0 });
 });
 
@@ -768,6 +781,27 @@ test("Show 'No recipient found.' with 0 followers.", async () => {
     await contains(".o-mail-Chatter-top", { text: "To: No recipient" });
 });
 
+test("Show display_name of recipients without name in the recipient list.", async () => {
+    const pyEnv = await startServer();
+    const [parentPartner, partner] = pyEnv["res.partner"].create([
+        { name: "Test Partner", email: "test1@odoo.com" },
+        { type: "invoice" },
+    ]);
+    pyEnv["res.partner"].write(partner, { parent_id: parentPartner });
+    pyEnv["mail.followers"].create({
+        is_active: true,
+        partner_id: partner,
+        res_id: parentPartner,
+        res_model: "res.partner",
+    });
+    await start();
+    await openFormView("res.partner", parentPartner);
+    await click("button", { text: "Send message" });
+    await contains(".o-mail-Chatter span.text-muted", {
+        text: "Test Partner, Invoice Address",
+    });
+});
+
 test("Uploading multiple files in the composer create multiple temporary attachments", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "test" });
@@ -777,8 +811,8 @@ test("Uploading multiple files in the composer create multiple temporary attachm
     await start();
     await openDiscuss(channelId);
     await inputFiles(".o-mail-Composer-coreMain .o_input_file", [text1, text2]);
-    await contains(".o-mail-AttachmentCard", { text: "text1.txt" });
-    await contains(".o-mail-AttachmentCard", { text: "text2.txt" });
+    await contains(".o-mail-AttachmentCard.o-isUploading:contains(text1.txt)");
+    await contains(".o-mail-AttachmentCard.o-isUploading:contains(text2.txt)");
     await contains(".o-mail-AttachmentCard-aside div[title='Uploading']", { count: 2 });
 });
 
@@ -796,14 +830,14 @@ test("[technical] does not crash when an attachment is removed before its upload
     await start();
     await openDiscuss(channelId);
     await inputFiles(".o-mail-Composer-coreMain .o_input_file", [text1, text2]);
-    await contains(".o-mail-AttachmentCard.o-isUploading", { text: "text1.txt" });
-    await click(".o-mail-AttachmentCard-unlink", {
-        parent: [".o-mail-AttachmentCard.o-isUploading", { text: "text2.txt" }],
-    });
+    await contains(".o-mail-AttachmentCard.o-isUploading:contains(text1.txt)");
+    await click(
+        ".o-mail-AttachmentCard.o-isUploading:contains(text2.txt) .o-mail-AttachmentCard-unlink"
+    );
     await contains(".o-mail-AttachmentCard", { count: 0, text: "text2.txt" });
     // Simulates the completion of the upload of the first attachment
     uploadDef.resolve();
-    await contains(".o-mail-AttachmentCard:not(.o-isUploading)", { text: "text1.txt" });
+    await contains(".o-mail-AttachmentCard:not(.o-isUploading):contains(text1.txt)");
 });
 
 test("Message is sent only once when pressing enter twice in a row", async () => {

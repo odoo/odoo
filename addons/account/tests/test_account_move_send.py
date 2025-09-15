@@ -162,7 +162,7 @@ class TestAccountComposerPerformance(AccountTestInvoicingCommon, MailCommon):
         with self.mock_mail_gateway(mail_unlink_sent=False):
             self.env['account.move.send']._generate_and_send_invoices(
                 test_moves,
-                sending_methods=['email'],
+                sending_methods={'email'},
                 mail_template=move_template,
             )
 
@@ -723,6 +723,21 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
                 'email': {'count': 1, 'label': 'by Email'},
             })
 
+    def test_invoice_multi_child_contact(self):
+        """ Test bulk invoice sending will retrieve info from the main partner. """
+        self.partner_a.write({'invoice_sending_method': 'manual'})
+        partner = self.env['res.partner'].create({
+            'type': 'invoice',
+            'email': 'child@example.com',
+            'parent_id': self.partner_a.id
+        })
+        invoice1 = self.init_invoice("out_invoice", amounts=[1000], partner=partner, post=True)
+        invoice2 = self.init_invoice("out_invoice", amounts=[1000], partner=partner, post=True)
+        wizard = self.create_send_and_print(invoice1 + invoice2)
+        self.assertEqual(wizard.summary_data, {
+            'manual': {'count': 2, 'label': 'Manually'}
+        })
+
     def test_invoice_mail_attachments_widget(self):
         invoice = self.init_invoice("out_invoice", amounts=[1000], post=True)
 
@@ -1092,9 +1107,9 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
         wizard = self.create_send_and_print(invoice)
         
         expected_results = {
-            'sending_methods': ['email'],
+            'sending_methods': {'email'},
             'invoice_edi_format': False,
-            'extra_edis': [],
+            'extra_edis': {},
             'pdf_report': self.env.ref('account.account_invoices'),
             'author_user_id': self.env.user.id,
             'author_partner_id': self.env.user.partner_id.id,
@@ -1107,3 +1122,33 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
         }
         results = wizard._get_sending_settings()
         self.assertDictEqual(results, expected_results)
+
+    def test_invoice_email_subtitle(self):
+        """ Test email notification subtitle for Invoice with and without partner name. """
+        partner = self.env['res.partner'].create({'type': 'invoice', 'parent_id': self.partner_a.id})
+        invoice = self.init_invoice("out_invoice", amounts=[1000], partner=partner, post=True)
+        context = invoice._notify_by_email_prepare_rendering_context(message=self.env['mail.message'])
+        self.assertEqual(context.get('subtitles')[0], invoice.name)
+
+        invoice.partner_id.name = "Test Partner"
+        context = invoice._notify_by_email_prepare_rendering_context(message=self.env['mail.message'])
+        self.assertEqual(context.get('subtitles')[0], f"{invoice.name} - Test Partner")
+
+    def test_get_invoice_report_filename(self):
+        mock_template = self.env.ref('account.account_invoices_without_payment')
+        mock_template.write({
+            'is_invoice_report': True,
+            'print_report_name': "('CustomName_%s' % (object._get_report_base_filename()))",
+        })
+        # Test: filename when no template is set.
+        move = self.init_invoice("out_invoice", amounts=[1000], partner=self.partner_a, post=True)
+        wizard_1 = self.create_send_and_print(move)
+        wizard_1.action_send_and_print()
+        self.assertEqual(move.message_main_attachment_id.name, f"{move._get_report_base_filename().replace('/', '_')}.pdf")
+
+        # Test: filename when template is set.
+        self.partner_a.invoice_template_pdf_report_id = mock_template.id
+        move2 = self.init_invoice("out_invoice", amounts=[1000], partner=self.partner_a, post=True)
+        wizard_2 = self.create_send_and_print(move2)
+        wizard_2.action_send_and_print()
+        self.assertEqual(move2.message_main_attachment_id.name, f"CustomName_{move2._get_report_base_filename().replace('/', '_')}.pdf")

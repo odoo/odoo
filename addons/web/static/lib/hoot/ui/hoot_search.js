@@ -19,6 +19,7 @@ import {
     storageSet,
     stringify,
     title,
+    useHootKey,
     useWindowListener,
 } from "../hoot_utils";
 import { HootTagButton } from "./hoot_tag_button";
@@ -62,6 +63,13 @@ function addRegExp(query) {
 }
 
 /**
+ * @param {"suite" | "tag" | "test"} category
+ */
+function categoryToType(category) {
+    return category === "tag" ? category : "id";
+}
+
+/**
  * @param {string} query
  */
 function removeExact(query) {
@@ -81,12 +89,13 @@ function removeRegExp(query) {
  * @param {string} tagName
  */
 const templateIncludeWidget = (tagName) => /* xml */ `
-    <t t-set="includeStatus" t-value="runnerState.includeSpecs[category][job.id] or 0" />
+    <t t-set="type" t-value="category === 'tag' ? category : 'id'" />
+    <t t-set="includeStatus" t-value="runnerState.includeSpecs[type][job.id] or 0" />
     <t t-set="readonly" t-value="isReadonly(includeStatus)" />
 
     <${tagName}
         class="flex items-center gap-1 cursor-pointer select-none"
-        t-on-click.stop="() => this.toggleInclude(category, job.id)"
+        t-on-click.stop="() => this.toggleInclude(type, job.id)"
     >
         <div
             class="hoot-include-widget h-5 p-px flex items-center relative border rounded-full"
@@ -97,7 +106,7 @@ const templateIncludeWidget = (tagName) => /* xml */ `
             }"
             t-att-title="readonly and 'Cannot change because it depends on a tag modifier in the code'"
             t-on-pointerup="focusSearchInput"
-            t-on-change="(ev) => this.onIncludeChange(category, job.id, ev.target.value)"
+            t-on-change="(ev) => this.onIncludeChange(type, job.id, ev.target.value)"
         >
             <input
                 type="radio"
@@ -135,7 +144,7 @@ const templateIncludeWidget = (tagName) => /* xml */ `
                     <span class="text-gray px-1" t-esc="suite.name" />
                     <span class="font-normal">/</span>
                 </t>
-                <t t-set="isSet" t-value="job.id in runnerState.includeSpecs[category]" />
+                <t t-set="isSet" t-value="job.id in runnerState.includeSpecs.id" />
                 <span
                     class="truncate px-1"
                     t-att-class="{
@@ -318,11 +327,11 @@ export class HootSearch extends Component {
                         >
                             <span class="bg-btn px-1 transition-colors" t-esc="count.category" />
                             <span class="mx-1 flex gap-1">
-                                <t t-if="count.include">
-                                    <span class="text-emerald" t-esc="count.include" />
+                                <t t-if="count.include.length">
+                                    <span class="text-emerald" t-esc="count.include.length" />
                                 </t>
-                                <t t-if="count.exclude">
-                                    <span class="text-rose" t-esc="count.exclude" />
+                                <t t-if="count.exclude.length">
+                                    <span class="text-rose" t-esc="count.exclude.length" />
                                 </t>
                             </span>
                         </button>
@@ -344,7 +353,7 @@ export class HootSearch extends Component {
                         class="hoot-search-icon cursor-pointer p-1"
                         title="Use exact match (Alt + X)"
                         tabindex="0"
-                        t-on-keydown="onRegExpKeyDown"
+                        t-on-keydown="onExactKeyDown"
                     >
                         <input
                             type="checkbox"
@@ -371,7 +380,7 @@ export class HootSearch extends Component {
                         <i class="fa fa-asterisk text-gray transition-colors" />
                     </label>
                     <label
-                        class="hoot-search-icon p-1"
+                        class="hoot-search-icon cursor-pointer p-1"
                         title="Debug mode (Alt + D)"
                         t-on-keydown="onDebugKeyDown"
                     >
@@ -438,6 +447,10 @@ export class HootSearch extends Component {
         });
         this.runnerState = useState(runner.state);
 
+        useHootKey(["Alt", "r"], this.toggleRegExp);
+        useHootKey(["Alt", "x"], this.toggleExact);
+        useHootKey(["Escape"], this.closeDropdown);
+
         useWindowListener(
             "click",
             (ev) => {
@@ -453,6 +466,17 @@ export class HootSearch extends Component {
         );
 
         this.keepSelection = useKeepSelection(this.searchInputRef);
+    }
+
+    /**
+     * @param {KeyboardEvent} ev
+     */
+    closeDropdown(ev) {
+        if (!this.state.showDropdown) {
+            return;
+        }
+        ev.preventDefault();
+        this.state.showDropdown = false;
     }
 
     /**
@@ -484,9 +508,9 @@ export class HootSearch extends Component {
         const { suites, tags, tests } = this.env.runner;
         const parsedQuery = parseQuery(this.trimmedQuery);
         return {
-            suite: this.filterItems(parsedQuery, suites, "suite"),
+            suite: this.filterItems(parsedQuery, suites, "id"),
             tag: this.filterItems(parsedQuery, tags, "tag"),
-            test: this.filterItems(parsedQuery, tests, "test"),
+            test: this.filterItems(parsedQuery, tests, "id"),
         };
     }
 
@@ -496,25 +520,32 @@ export class HootSearch extends Component {
 
     getCategoryCounts() {
         const { includeSpecs } = this.runnerState;
+        const { suites, tests } = this.env.runner;
         const counts = [];
         for (const category of this.categories) {
-            let include = 0;
-            let exclude = 0;
-            for (const value of $values(includeSpecs[category])) {
+            const include = [];
+            const exclude = [];
+            for (const [id, value] of $entries(includeSpecs[categoryToType(category)])) {
+                if (
+                    (category === "suite" && !suites.has(id)) ||
+                    (category === "test" && !tests.has(id))
+                ) {
+                    continue;
+                }
                 switch (value) {
                     case +INCLUDE_LEVEL.url:
                     case +INCLUDE_LEVEL.tag: {
-                        include++;
+                        include.push(id);
                         break;
                     }
                     case -INCLUDE_LEVEL.url:
                     case -INCLUDE_LEVEL.tag: {
-                        exclude++;
+                        exclude.push(id);
                         break;
                     }
                 }
             }
-            if (include + exclude) {
+            if (include.length || exclude.length) {
                 counts.push({ category, tip: `Remove all ${category}`, include, exclude });
             }
         }
@@ -599,19 +630,32 @@ export class HootSearch extends Component {
     }
 
     /**
-     * @param {SearchFilter} categoryId
+     * @param {KeyboardEvent} ev
+     */
+    onExactKeyDown(ev) {
+        switch (ev.key) {
+            case "Enter":
+            case " ": {
+                this.toggleExact(ev);
+                break;
+            }
+        }
+    }
+
+    /**
+     * @param {SearchFilter} type
      * @param {string} id
      * @param {"exclude" | "include"} value
      */
-    onIncludeChange(categoryId, id, value) {
+    onIncludeChange(type, id, value) {
         if (value === "include" || value === "exclude") {
             this.setInclude(
-                categoryId,
+                type,
                 id,
                 value === "include" ? +INCLUDE_LEVEL.url : -INCLUDE_LEVEL.url
             );
         } else {
-            this.setInclude(categoryId, id, 0);
+            this.setInclude(type, id, 0);
         }
     }
 
@@ -631,13 +675,6 @@ export class HootSearch extends Component {
             case "Enter": {
                 return refresh();
             }
-            case "Escape": {
-                if (this.state.showDropdown) {
-                    ev.preventDefault();
-                    this.state.showDropdown = false;
-                }
-                return;
-            }
         }
     }
 
@@ -648,8 +685,7 @@ export class HootSearch extends Component {
         switch (ev.key) {
             case "Enter":
             case " ": {
-                ev.preventDefault();
-                this.toggleRegExp();
+                this.toggleRegExp(ev);
                 break;
             }
         }
@@ -687,18 +723,6 @@ export class HootSearch extends Component {
                 }
                 break;
             }
-            case "r": {
-                if (ev.altKey) {
-                    this.toggleRegExp();
-                }
-                break;
-            }
-            case "x": {
-                if (ev.altKey) {
-                    this.toggleExact();
-                }
-                break;
-            }
         }
 
         if (this.config.fun) {
@@ -707,13 +731,13 @@ export class HootSearch extends Component {
     }
 
     /**
-     * @param {SearchFilter} categoryId
+     * @param {SearchFilter} type
      * @param {string} id
      * @param {number} [value]
      */
-    setInclude(categoryId, id, value) {
+    setInclude(type, id, value) {
         this.config.filter = "";
-        this.env.runner.include(categoryId, id, value);
+        this.env.runner.include(type, id, value);
     }
 
     /**
@@ -731,7 +755,12 @@ export class HootSearch extends Component {
         this.config.debugTest = !this.config.debugTest;
     }
 
-    toggleExact() {
+    /**
+     * @param {Event} ev
+     */
+    toggleExact(ev) {
+        ev.preventDefault();
+
         const currentQuery = this.trimmedQuery;
         let query = currentQuery;
         if (this.hasRegExpFilter(query)) {
@@ -747,24 +776,29 @@ export class HootSearch extends Component {
     }
 
     /**
-     * @param {SearchFilter} categoryId
+     * @param {SearchFilter} type
      * @param {string} id
      */
-    toggleInclude(categoryId, id) {
-        const currentValue = this.runnerState.includeSpecs[categoryId][id];
+    toggleInclude(type, id) {
+        const currentValue = this.runnerState.includeSpecs[type][id];
         if (this.isReadonly(currentValue)) {
             return; // readonly
         }
         if (currentValue > 0) {
-            this.setInclude(categoryId, id, -INCLUDE_LEVEL.url);
+            this.setInclude(type, id, -INCLUDE_LEVEL.url);
         } else if (currentValue < 0) {
-            this.setInclude(categoryId, id, 0);
+            this.setInclude(type, id, 0);
         } else {
-            this.setInclude(categoryId, id, +INCLUDE_LEVEL.url);
+            this.setInclude(type, id, +INCLUDE_LEVEL.url);
         }
     }
 
-    toggleRegExp() {
+    /**
+     * @param {Event} ev
+     */
+    toggleRegExp(ev) {
+        ev.preventDefault();
+
         const currentQuery = this.trimmedQuery;
         let query = currentQuery;
         if (this.hasExactFilter(query)) {
@@ -780,16 +814,15 @@ export class HootSearch extends Component {
     }
 
     uncheckLastCategory() {
-        for (const category of [...this.categories].reverse()) {
-            let foundItemToUncheck = false;
-            for (const [key, value] of $entries(this.runnerState.includeSpecs[category])) {
+        for (const count of this.getCategoryCounts().reverse()) {
+            const type = categoryToType(count.category);
+            const includeSpecs = this.runnerState.includeSpecs[type];
+            for (const id of [...count.exclude, ...count.include]) {
+                const value = includeSpecs[id];
                 if (this.isReadonly(value)) {
                     continue;
                 }
-                foundItemToUncheck = true;
-                this.setInclude(category, key, 0);
-            }
-            if (foundItemToUncheck) {
+                this.setInclude(type, id, 0);
                 return true;
             }
         }

@@ -3,16 +3,17 @@
 # 	* google_calendar
 # 
 # Translators:
-# Wil Odoo, 2024
 # Marianna Ciofani, 2025
+# Wil Odoo, 2025
+# Sergio Zanchetta <primes2h@gmail.com>, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-06-27 18:39+0000\n"
+"POT-Creation-Date: 2025-07-18 18:38+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Marianna Ciofani, 2025\n"
+"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2025\n"
 "Language-Team: Italian (https://app.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -64,8 +65,8 @@ msgid ""
 "An administrator needs to configure Google Synchronization before you can "
 "use it!"
 msgstr ""
-"Un amministratore di sistema deve configurare la sincronizzazione con "
-"Google, prima di poterla usare!"
+"Per essere utilizzata, la sincronizzazione Google deve essere configurata da"
+" un amministratore."
 
 #. module: google_calendar
 #. odoo-python
@@ -96,7 +97,7 @@ msgstr "Evento in calendario"
 #: model:ir.model.fields,field_description:google_calendar.field_res_users__google_calendar_cal_id
 #: model:ir.model.fields,field_description:google_calendar.field_res_users_settings__google_calendar_cal_id
 msgid "Calendar ID"
-msgstr "ID Calendario"
+msgstr "ID calendario"
 
 #. module: google_calendar
 #: model_terms:ir.ui.view,arch_db:google_calendar.google_calendar_reset_account_view_form
@@ -106,12 +107,12 @@ msgstr "Annulla"
 #. module: google_calendar
 #: model_terms:ir.ui.view,arch_db:google_calendar.res_config_settings_view_form
 msgid "Client ID"
-msgstr "ID cliente"
+msgstr "ID client"
 
 #. module: google_calendar
 #: model_terms:ir.ui.view,arch_db:google_calendar.res_config_settings_view_form
 msgid "Client Secret"
-msgstr "Segreto client"
+msgstr "Chiave privata client"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_res_config_settings__cal_client_id
@@ -168,7 +169,7 @@ msgstr "Elimina da entrambi"
 #. module: google_calendar
 #: model:ir.model.fields.selection,name:google_calendar.selection__google_calendar_account_reset__delete_policy__delete_google
 msgid "Delete from the current Google Calendar account"
-msgstr "Elimina dall'account corrente di Google Calendar"
+msgstr "Elimina dall'account calendario Google corrente"
 
 #. module: google_calendar
 #. odoo-javascript
@@ -186,6 +187,11 @@ msgstr "Nome visualizzato"
 #: code:addons/google_calendar/models/calendar.py:0
 msgid "Email"
 msgstr "E-mail"
+
+#. module: google_calendar
+#: model:ir.model,name:google_calendar.model_calendar_alarm_manager
+msgid "Event Alarm Manager"
+msgstr "Gestore avviso evento"
 
 #. module: google_calendar
 #: model:ir.model,name:google_calendar.model_calendar_recurrence
@@ -207,18 +213,18 @@ msgstr "Calendario Google"
 #: model:ir.actions.act_window,name:google_calendar.google_calendar_reset_account_action
 #: model:ir.model,name:google_calendar.model_google_calendar_account_reset
 msgid "Google Calendar Account Reset"
-msgstr "Reimpostazione Account Google Calendar"
+msgstr "Ripristino account calendario Google"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_calendar_event__google_id
 msgid "Google Calendar Event Id"
-msgstr "Google Calendar ID Evento"
+msgstr "ID evento calendario Google"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_calendar_recurrence__google_id
 #: model:ir.model.fields,field_description:google_calendar.field_google_calendar_sync__google_id
 msgid "Google Calendar Id"
-msgstr "Google Calendar Id"
+msgstr "ID calendario Google"
 
 #. module: google_calendar
 #: model:ir.actions.server,name:google_calendar.ir_cron_sync_all_cals_ir_actions_server
@@ -285,9 +291,8 @@ msgid ""
 "Last Calendar ID who has been synchronized. If it is changed, we remove all "
 "links between GoogleID and Odoo Google Internal ID"
 msgstr ""
-"Ultimo ID calendario che è stato sincronizzato. Se è cambiato verranno "
-"rimossi tutti i collegamenti tra l'ID google e l'ID del calendario interno "
-"in Odoo"
+"Ultimo ID del calendario che è stato sincronizzato. Se è cambiato, vengono "
+"rimossi tutti i collegamenti tra ID Google e ID Google interno a Odoo"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_google_calendar_account_reset__write_uid
@@ -315,7 +320,7 @@ msgstr "Sincronizzazione richiesta"
 #: model:ir.model.fields,field_description:google_calendar.field_res_users__google_calendar_sync_token
 #: model:ir.model.fields,field_description:google_calendar.field_res_users_settings__google_calendar_sync_token
 msgid "Next Sync Token"
-msgstr "Prossimo token di sincronizzazione"
+msgstr "Token prossima sincronizzazione"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_google_calendar_account_reset__sync_policy
@@ -347,12 +352,12 @@ msgstr "Ripristina account"
 #. module: google_calendar
 #: model_terms:ir.ui.view,arch_db:google_calendar.google_calendar_reset_account_view_form
 msgid "Reset Google Calendar Account"
-msgstr "Resettare l'account di Google Calendar"
+msgstr "Ripristino account calendario Google"
 
 #. module: google_calendar
 #: model:ir.model,name:google_calendar.model_google_calendar_sync
 msgid "Synchronize a record with Google Calendar"
-msgstr "Sincronizza un record con Google Calendar"
+msgstr "Sincronizzazione di un record con Google Calendar"
 
 #. module: google_calendar
 #: model:ir.model.fields.selection,name:google_calendar.selection__google_calendar_account_reset__sync_policy__all
@@ -371,8 +376,8 @@ msgid ""
 "The Google Synchronization needs to be configured before you can use it, do "
 "you want to do it now?"
 msgstr ""
-"La sincronizzazione con Google deve essere configurata prima di essere "
-"usata, vuoi configurarla ora?"
+"Per essere usata, la sincronizzazione Google deve essere configurata, "
+"procedere ora?"
 
 #. module: google_calendar
 #. odoo-python
@@ -394,13 +399,13 @@ msgstr ""
 #. module: google_calendar
 #: model:ir.model.fields,help:google_calendar.field_google_calendar_account_reset__delete_policy
 msgid "This will only affect events for which the user is the owner"
-msgstr "Questo influenzerà solo gli eventi di cui l'utente è il proprietario"
+msgstr "Influirà solo sugli eventi di cui l'utente è proprietario"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_res_users__google_calendar_token_validity
 #: model:ir.model.fields,field_description:google_calendar.field_res_users_settings__google_calendar_token_validity
 msgid "Token Validity"
-msgstr "Validità Token"
+msgstr "Validità token"
 
 #. module: google_calendar
 #: model:ir.model,name:google_calendar.model_res_users

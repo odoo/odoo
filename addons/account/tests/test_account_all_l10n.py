@@ -2,6 +2,7 @@
 import logging
 import time
 
+from odoo.tools import make_index_name, SQL
 from odoo.tests import standalone
 from odoo.addons.account.models.chart_template import AccountChartTemplate
 from unittest.mock import patch
@@ -46,6 +47,27 @@ def test_all_l10n(env):
 
     env.reset()     # clear the set of environments
     env = env()     # get an environment that refers to the new registry
+    idxs = []
+    for model in env.registry.values():
+        if not model._auto:
+            continue
+
+        for field in model._fields.values():
+            # TODO: handle non-orm indexes where the account field is alone or first
+            if not field.store or field.index \
+                    or field.type != 'many2one' \
+                    or field.comodel_name != 'account.account':
+                continue
+
+            idxname = make_index_name(model._table, field.name)
+            env.cr.execute(SQL(
+                "CREATE INDEX IF NOT EXISTS %s ON %s (%s)%s",
+                SQL.identifier(idxname),
+                SQL.identifier(model._table),
+                SQL.identifier(field.name),
+                SQL("") if field.required else SQL(" WHERE %s IS NOT NULL", SQL.identifier(field.name)),
+            ))
+            idxs.append(idxname)
 
     # Install Charts of Accounts
     _logger.info('Loading chart of account')
@@ -70,7 +92,7 @@ def test_all_l10n(env):
     start = time.time()
     env.cr.execute('ANALYZE')
     logger = logging.getLogger('odoo.loading')
-    logger.runbot('ANALYZE took %s seconds', time.time() - start)  # not sure this one is usefull
+    logger.runbot('ANALYZE took %s seconds', time.time() - start)  # not sure this one is useful
     for (template_code, _template), company in zip(not_loaded_codes, companies):
         env.user.company_ids += company
         env.user.company_id = company
@@ -81,3 +103,6 @@ def test_all_l10n(env):
         except Exception:
             _logger.error("Error when creating COA %s", template_code, exc_info=True)
             env.cr.rollback()
+
+    env.cr.execute(SQL("DROP INDEX %s", SQL(", ").join(map(SQL.identifier, idxs))))
+    env.cr.commit()

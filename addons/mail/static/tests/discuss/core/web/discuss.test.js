@@ -274,14 +274,14 @@ test("Chat is added to discuss on other tab that the one that joined", async () 
     const env2 = await start({ asTab: true });
     await openDiscuss(undefined, { target: env1 });
     await openDiscuss(undefined, { target: env2 });
-    await click(".o-mail-DiscussSidebarCategory-chat .o-mail-DiscussSidebarCategory-add", {
-        target: env1,
-    });
-    await insertText(".o-discuss-ChannelSelector input", "Jer", { target: env1 });
-    await click(".o-discuss-ChannelSelector-suggestion", { target: env1 });
+    await click(
+        `${env1.selector} .o-mail-DiscussSidebarCategory-chat .o-mail-DiscussSidebarCategory-add`
+    );
+    await insertText(`${env1.selector} .o-discuss-ChannelSelector input`, "Jer");
+    await click(`${env1.selector} .o-discuss-ChannelSelector-suggestion`);
     triggerHotkey("Enter");
-    await contains(".o-mail-DiscussSidebarChannel", { target: env1, text: "Jerry Golay" });
-    await contains(".o-mail-DiscussSidebarChannel", { target: env2, text: "Jerry Golay" });
+    await contains(`${env1.selector} .o-mail-DiscussSidebarChannel`, { text: "Jerry Golay" });
+    await contains(`${env2.selector} .o-mail-DiscussSidebarChannel`, { text: "Jerry Golay" });
 });
 
 test("no conversation selected when opening non-existing channel in discuss", async () => {

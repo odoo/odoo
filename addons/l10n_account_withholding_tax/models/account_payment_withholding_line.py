@@ -33,7 +33,10 @@ class AccountPaymentWithholdingLine(models.Model):
     @api.depends('payment_id.payment_type')
     def _compute_type_tax_use(self):
         for line in self:
-            line.type_tax_use = 'sale' if line.payment_id.payment_type == 'inbound' else 'purchase'
+            if line.tax_id:
+                line.type_tax_use = line.tax_id.type_tax_use
+            else:
+                line.type_tax_use = 'sale' if line.payment_id.payment_type == 'inbound' else 'purchase'
 
     @api.depends('payment_register_id.amount')
     def _compute_comodel_full_amount(self):
@@ -89,3 +92,6 @@ class AccountPaymentWithholdingLine(models.Model):
             self.payment_id.journal_id.outbound_payment_method_line_ids.payment_account_id |
             self.payment_id.outstanding_account_id
         )
+
+    def _get_comodel_partner(self):
+        return self.payment_id.partner_id

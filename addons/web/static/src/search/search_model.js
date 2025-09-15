@@ -815,7 +815,8 @@ export class SearchModel extends EventBus {
 
         const getFieldDef = await this.makeGetFieldDef(this.resModel, treeFromDomain(domain));
         const tree = treeFromDomain(domain, { distributeNot: !this.isDebugMode, getFieldDef });
-        const trees = !tree.negate && tree.value === "&" ? tree.children : [tree];
+        const containsChildren = !tree.negate && tree.type === "connector" && tree.value == "&";
+        const trees = containsChildren ? tree.children : [tree];
         const promises = trees.map(async (tree) => {
             const description = await this.getDomainTreeDescription(this.resModel, tree);
             const preFilter = {

@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from unittest.mock import ANY, patch
+from unittest.mock import patch
 
 from odoo.exceptions import AccessError
 from odoo.tests import JsonRpcException, tagged
@@ -40,7 +40,8 @@ class TestSalePayment(AccountPaymentCommon, SaleCommon, PaymentHttpCommon, MailC
             '._compute_show_tokenize_input_mapping'
         ) as patched:
             tx_context = self._get_portal_pay_context(**route_values)
-            patched.assert_called_once_with(ANY, sale_order_id=ANY)
+            patched.assert_called_once()
+            self.assertIn('sale_order_id', patched.call_args[1])
 
         self.assertEqual(tx_context['currency_id'], self.sale_order.currency_id.id)
         self.assertEqual(tx_context['partner_id'], self.sale_order.partner_invoice_id.id)
@@ -639,3 +640,40 @@ class TestSalePayment(AccountPaymentCommon, SaleCommon, PaymentHttpCommon, MailC
             notification_mail_mock.assert_called_with(
                 self.env.ref('sale.mail_template_sale_confirmation'))
             self.assertEqual(self.sale_order.state, 'sale')
+
+    def test_automatic_invoice_mail_author(self):
+        self.env['ir.config_parameter'].sudo().set_param('sale.automatic_invoice', 'True')
+
+        portal_user = self.env['res.users'].create({
+            'name': 'Portal Customer',
+            'login': 'portal@test.com',
+            'email': 'portal@test.com',
+            'partner_id': self.partner_a.id,
+            'groups_id': [(6, 0, [self.env.ref('base.group_portal').id])],
+        })
+        portal_user.partner_id.invoice_sending_method = 'email'
+
+        sale_order = self.env['sale.order'].with_user(portal_user).sudo().create({
+            'partner_id': portal_user.partner_id.id,
+            'order_line': [(0, 0, {
+                'product_id': self.product_a.id,
+                'product_uom_qty': 1,
+                'price_unit': 100.0,
+            })],
+        })
+
+        self.amount = sale_order.amount_total
+        tx = self._create_transaction(
+            flow='redirect',
+            sale_order_ids=[sale_order.id],
+            state='done'
+        )
+
+        with mute_logger('odoo.addons.sale.models.payment_transaction'):
+            tx.with_user(portal_user).sudo()._post_process()
+
+        # Verify invoice was created and sent successfully
+        invoice = sale_order.invoice_ids[0]
+        self.assertTrue(invoice.is_move_sent, "Invoice should be marked as sent")
+        invoice_sent_mail = invoice.message_ids[0]
+        self.assertTrue(invoice_sent_mail.author_id.id not in invoice_sent_mail.notified_partner_ids.ids)

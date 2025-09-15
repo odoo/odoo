@@ -90,6 +90,10 @@ try:
             phone_fmt = phonenumbers.PhoneNumberFormat.NATIONAL
         return phonenumbers.format_number(phone_nbr, phone_fmt)
 
+    def phone_get_country_code_for_number(number):
+        region_data = phone_get_region_data_for_number(number)
+        return region_data['code']
+
     def phone_get_region_data_for_number(number):
         try:
             phone_obj = phone_parse(number, None)
@@ -119,6 +123,9 @@ except ImportError:
             )
             _phonenumbers_lib_warning = True
         return number
+
+    def phone_get_country_code_for_number(number):
+        return ''
 
     def phone_get_region_data_for_number(number):
         return {

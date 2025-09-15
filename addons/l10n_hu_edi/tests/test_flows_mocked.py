@@ -236,6 +236,86 @@ class L10nHuEdiTestFlowsMocked(L10nHuEdiTestCommon, TestAccountMoveSendCommon):
                 {'amount_currency': 762.00,    'balance': 254.00},
             ])
 
+    def test_case_1_invoice_payment_storno(self):
+        inv = self.create_invoice_simple(amount=1000)
+        inv.action_post()
+        operation = inv._l10n_hu_edi_get_operation_type()
+        self.assertEqual(operation, 'CREATE')
+        self.register_payment(inv, 1000)
+        self.create_reversal(inv, is_modify=True)
+        operation = inv.reversal_move_ids._l10n_hu_edi_get_operation_type()
+        self.assertEqual(operation, 'STORNO')
+
+    def test_case_2_modify_then_storno(self):
+        inv = self.create_invoice_simple(amount=1000)
+        inv.action_post()
+        operation = inv._l10n_hu_edi_get_operation_type()
+        self.assertEqual(operation, 'CREATE')
+        mod1 = self.create_reversal(inv, amount=100)
+        mod1.action_post()
+        operation = mod1._l10n_hu_edi_get_operation_type()
+        self.assertEqual(operation, 'MODIFY')
+        storno = self.create_reversal(inv, amount=900)
+        storno.action_post()
+        operation = storno._l10n_hu_edi_get_operation_type()
+        self.assertEqual(operation, 'STORNO')
+
+    def test_case_3_multiple_modifications_then_storno(self):
+        inv = self.create_invoice_simple(amount=1000)
+        inv.action_post()
+        operation = inv._l10n_hu_edi_get_operation_type()
+        self.assertEqual(operation, 'CREATE')
+        mod1 = self.create_reversal(inv, amount=100)
+        mod1.action_post()
+        operation = mod1._l10n_hu_edi_get_operation_type()
+        self.assertEqual(operation, 'MODIFY')
+        mod2 = self.create_reversal(inv, amount=100)
+        mod2.action_post()
+        operation = mod2._l10n_hu_edi_get_operation_type()
+        self.assertEqual(operation, 'MODIFY')
+        storno = self.create_reversal(inv, amount=800)
+        storno.action_post()
+        operation = storno._l10n_hu_edi_get_operation_type()
+        self.assertEqual(operation, 'STORNO')
+
+    def test_case_4_modification_payment_then_storno(self):
+        inv = self.create_invoice_simple(amount=1000)
+        inv.action_post()
+        operation = inv._l10n_hu_edi_get_operation_type()
+        self.assertEqual(operation, 'CREATE')
+        mod1 = self.create_reversal(inv, amount=100)
+        mod1.action_post()
+        operation = mod1._l10n_hu_edi_get_operation_type()
+        self.assertEqual(operation, 'MODIFY')
+        self.register_payment(inv, 900)
+        self.create_reversal(inv, is_modify=True)
+        mod2 = inv.reversal_move_ids
+        mod2.button_draft()
+        mod2.invoice_line_ids[0].write({
+            'price_unit': 900,
+        })
+        mod2.action_post()
+        # Reconcile the outstanding payment line from mod1 with the invoice
+        inv.js_assign_outstanding_line(mod1.line_ids.filtered(lambda l: l.debit == 0).id)
+        operation = mod2._l10n_hu_edi_get_operation_type()
+        self.assertEqual(operation, 'STORNO')
+
+    def test_case_5_debit_note_then_storno(self):
+        inv = self.create_invoice_simple(amount=1000)
+        inv.action_post()
+        operation = inv._l10n_hu_edi_get_operation_type()
+        self.assertEqual(operation, 'CREATE')
+        dn = self.create_debit_note(inv, amount=100)
+        dn.action_post()
+        operation = dn._l10n_hu_edi_get_operation_type()
+        self.assertEqual(operation, 'MODIFY')
+        storno = self.create_reversal(inv, amount=1100)
+        storno.action_post()
+        # Reconcile the outstanding payment line from dn with the storno
+        storno.js_assign_outstanding_line(dn.line_ids.filtered(lambda l: l.credit == 0).id)
+        operation = storno._l10n_hu_edi_get_operation_type()
+        self.assertEqual(operation, 'STORNO')
+
     # === Helpers === #
 
     @contextlib.contextmanager

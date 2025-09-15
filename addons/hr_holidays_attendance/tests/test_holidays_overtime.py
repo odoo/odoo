@@ -121,8 +121,8 @@ class TestHolidaysOvertime(TransactionCase):
         self.assertEqual(self.employee.total_overtime, 8)
 
         leave.action_reset_confirm()
-        self.assertFalse(leave.overtime_id.exists(), "Overtime should not be created")
-        self.assertEqual(self.employee.total_overtime, 8)
+        self.assertTrue(leave.overtime_id.exists(), "Overtime should created")
+        self.assertEqual(self.employee.total_overtime, 0)
 
         overtime = leave.overtime_id
         leave.unlink()
@@ -265,3 +265,24 @@ class TestHolidaysOvertime(TransactionCase):
 
         self.assertEqual(self.employee.total_overtime, 0, "Should have 0 hours of overtime as the public holiday doesn't impact his company")
         self.assertEqual(self.manager.total_overtime, 8, 'Should have 8 hours of overtime (there is one hour of lunch)')
+
+    def test_overtime_approval_after_refusal(self):
+        self.new_attendance(check_in=datetime(2021, 1, 2, 8), check_out=datetime(2021, 1, 2, 16))
+        self.new_attendance(check_in=datetime(2021, 1, 3, 8), check_out=datetime(2021, 1, 3, 16))
+        self.assertEqual(self.employee.total_overtime, 16)
+
+        leave = self.env['hr.leave'].create({
+            'name': 'no overtime',
+            'employee_id': self.employee.id,
+            'holiday_status_id': self.leave_type_no_alloc.id,
+            'request_date_from': '2022-1-6',
+            'request_date_to': '2022-1-6',
+        })
+        leave.with_user(self.user_manager).action_approve()
+        self.assertEqual(self.employee.total_overtime, 8)
+
+        leave.with_user(self.user_manager).action_refuse()
+        self.assertEqual(self.employee.total_overtime, 16)
+
+        leave.with_user(self.user_manager).action_approve(check_state=False)
+        self.assertEqual(self.employee.total_overtime, 8)

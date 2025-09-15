@@ -26,7 +26,7 @@ class L10nUYWebsiteSale(WebsiteSale):
             rendering_values.update({
                 'identification': partner_sudo.l10n_latam_identification_type_id or request.env.ref('l10n_uy.it_ci').id,
                 'identification_types': LatamIdentificationType.search([
-                    '|', ('country_id', '=', False), ('country_id.code', '=', 'PE')
+                    '|', ('country_id', '=', False), ('country_id.code', '=', 'UY')
                 ]) if can_edit_vat else LatamIdentificationType,
                 'vat_label': request.env._("Identification Number"),
             })

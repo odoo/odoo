@@ -1,23 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* pos_self_order
-# 
+#
 # Translators:
 # Wil Odoo, 2024
 # Thi Huong Nguyen, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-06-06 18:38+0000\n"
+"POT-Creation-Date: 2025-08-08 18:38+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Thi Huong Nguyen, 2025\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
+"Language: vi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: vi\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: pos_self_order
@@ -32,8 +32,8 @@ msgid ""
 "%s is not available anymore, it has thus been removed from your order. "
 "Please review your order and validate it again."
 msgstr ""
-"%s không còn nữa, nên đã bị xóa khỏi đơn hàng của bạn. Vui lòng kiểm tra đơn"
-" hàng và xác nhận lại."
+"%s không còn nữa, nên đã bị xóa khỏi đơn hàng của bạn. Vui lòng kiểm tra đơn "
+"hàng và xác nhận lại."
 
 #. module: pos_self_order
 #. odoo-python
@@ -404,11 +404,15 @@ msgstr "Mỗi đơn hàng"
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
 msgid ""
-"Each table in your floor plan is assigned a unique QR code based on your configuration. For security reasons,\n"
-"                    both the point of sale and table names are encrypted in the generated URL, as shown in the example below:."
+"Each table in your floor plan is assigned a unique QR code based on your "
+"configuration. For security reasons,\n"
+"                    both the point of sale and table names are encrypted in "
+"the generated URL, as shown in the example below:."
 msgstr ""
-"Mỗi bàn trong sơ đồ tầng của bạn được gán một mã QR duy nhất theo cách bạn cấu hình. Vì lý do bảo mật,\n"
-"                     cả tên POS và tên bàn đều được mã hóa trong URL được tạo, như trong ví dụ dưới đây:"
+"Mỗi bàn trong sơ đồ tầng của bạn được gán một mã QR duy nhất theo cách bạn "
+"cấu hình. Vì lý do bảo mật,\n"
+"                     cả tên POS và tên bàn đều được mã hóa trong URL được "
+"tạo, như trong ví dụ dưới đây:"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -424,6 +428,13 @@ msgstr "Chỉnh sửa"
 
 #. module: pos_self_order
 #. odoo-javascript
+#: code:addons/pos_self_order/static/src/overrides/components/qr_order_button/qr_order_button.js:0
+msgid ""
+"Enable QR menu in the Restaurant settings to get QR codes for free on tables."
+msgstr ""
+
+#. module: pos_self_order
+#. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/attribute_selection/attribute_selection.xml:0
 msgid "Enter your custom value"
 msgstr "Nhập giá trị tùy chỉnh của bạn"
@@ -431,8 +442,8 @@ msgstr "Nhập giá trị tùy chỉnh của bạn"
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
 msgid ""
-"Feel free to use and print this QR code as many times as needed according to"
-" your requirements."
+"Feel free to use and print this QR code as many times as needed according to "
+"your requirements."
 msgstr ""
 "Hãy thoải mái sử dụng và in mã QR này bao nhiêu lần cũng được, tùy theo yêu "
 "cầu của bạn."
@@ -458,6 +469,18 @@ msgstr "Làm theo hướng dẫn trên thiết bị đầu cuối"
 #: code:addons/pos_self_order/models/pos_config.py:0
 msgid "Generic"
 msgstr "Chung"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/overrides/components/qr_order_button/qr_order_button.xml:0
+msgid "Get QR Codes"
+msgstr ""
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/overrides/components/qr_order_button/qr_order_button.js:0
+msgid "Get QR codes"
+msgstr ""
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -520,11 +543,15 @@ msgstr "Nếu sản phẩm này có sẵn trong màn hình Tự phục vụ"
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
 msgid ""
-"If you need customized QR codes, start by scanning the relevant QR code to acquire the URL. Then, make\n"
-"                use of a QR code generator like https://www.qrcode-monkey.com or https://www.qr-code-generator.com"
+"If you need customized QR codes, start by scanning the relevant QR code to "
+"acquire the URL. Then, make\n"
+"                use of a QR code generator like https://www.qrcode-"
+"monkey.com or https://www.qr-code-generator.com"
 msgstr ""
-"Nếu bạn cần mã QR tùy chỉnh, hãy bắt đầu bằng cách quét mã QR liên quan để lấy URL. Sau đó, sử dụng\n"
-"                 trình tạo mã QR như https://www.qrcode-monkey.com hoặc https://www.qr-code-generator.com"
+"Nếu bạn cần mã QR tùy chỉnh, hãy bắt đầu bằng cách quét mã QR liên quan để "
+"lấy URL. Sau đó, sử dụng\n"
+"                 trình tạo mã QR như https://www.qrcode-monkey.com hoặc "
+"https://www.qr-code-generator.com"
 
 #. module: pos_self_order
 #: model:ir.model.fields,help:pos_self_order.field_pos_config__self_ordering_image_brand
@@ -994,11 +1021,11 @@ msgstr "Chọn bàn"
 #: model:ir.model.fields,help:pos_self_order.field_pos_self_order_custom_link__pos_config_ids
 msgid ""
 "Select for which points of sale you want to display this link. Leave empty "
-"to display it for all points of sale. You have to select among the points of"
-" sale that have the 'QR Code Menu' feature enabled."
+"to display it for all points of sale. You have to select among the points of "
+"sale that have the 'QR Code Menu' feature enabled."
 msgstr ""
-"Chọn POS mà bạn muốn hiển thị liên kết này. Để trống để hiển thị trên tất cả"
-" POS. Bạn phải chọn trong số các POS có bật tính năng 'Menu mã QR'."
+"Chọn POS mà bạn muốn hiển thị liên kết này. Để trống để hiển thị trên tất cả "
+"POS. Bạn phải chọn trong số các POS có bật tính năng 'Menu mã QR'."
 
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_config__self_ordering_image_brand

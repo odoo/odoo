@@ -287,18 +287,18 @@ class TestExpiringLeaves(HttpCase, TestHrHolidaysCommon):
                 'number_of_days': 0,
             })
 
-        target_date = date(2025, 12, 30)
-        allocation_data = self.leave_type.get_allocation_data(logged_in_emp, target_date)
+            target_date = date(2025, 12, 30)
+            allocation_data = self.leave_type.get_allocation_data(logged_in_emp, target_date)
 
-        # Assert the date of expiration
-        self.assertEqual(allocation_data[logged_in_emp][0][1]['closest_allocation_expire'],
-                    allocation_with_carryover._get_carryover_date(target_date).strftime('%m/%d/%Y'),
-                    "The expiration date should match the carryover date")
+            # Assert the date of expiration
+            self.assertEqual(allocation_data[logged_in_emp][0][1]['closest_allocation_expire'],
+                        allocation_with_carryover._get_carryover_date(target_date).strftime('%m/%d/%Y'),
+                        "The expiration date should match the carryover date")
 
-        # Assert the number of expiring leaves
-        self.assertEqual(allocation_data[logged_in_emp][0][1]['closest_allocation_remaining'],
-                         (number_of_accrued_days - leave.number_of_days - carryover_limit) + number_of_accrued_days,
-                         "All the remaining days of the allocation will expire")
+            # Assert the number of expiring leaves
+            self.assertEqual(allocation_data[logged_in_emp][0][1]['closest_allocation_remaining'],
+                            (number_of_accrued_days - leave.number_of_days - carryover_limit) + number_of_accrued_days,
+                            "All the remaining days of the allocation will expire")
 
     @users('enguerran')
     def test_expiring_allocation_without_carried_over_leaves(self):

@@ -8,11 +8,14 @@ patch(helpers, {
         ...helpers.SUPPORTED_M2X_AVATAR_MODELS,
         "hr.employee",
         "hr.employee.public",
+        "hr.candidate",
     ],
     buildOpenChatParams(resModel, id) {
-        if (["hr.employee", "hr.employee.public"].includes(resModel)) {
+        if (resModel === "hr.candidate") {
+            return;
+        } else if (["hr.employee", "hr.employee.public"].includes(resModel)) {
             return { employeeId: id };
         }
         return super.buildOpenChatParams(...arguments);
-    }
+    },
 });

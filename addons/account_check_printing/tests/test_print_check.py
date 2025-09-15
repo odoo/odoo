@@ -281,3 +281,69 @@ class TestPrintCheck(AccountTestInvoicingCommon):
 
         report_pages = payment._check_get_pages()
         self.assertEqual(len(report_pages), 1)
+
+    def test_multiple_payments_check_number_uniqueness(self):
+        """Test that when multiple payments are created at once with check printing,
+        each payment gets a unique check number when posted.
+        """
+        # Configure the bank journal with manual check sequencing
+        self.company_data['default_journal_bank'].write({
+            'check_manual_sequencing': True,
+            'check_next_number': '10001',
+        })
+
+        # Create three vendor bills
+        in_invoices = self.env['account.move'].create([
+            {
+                'move_type': 'in_invoice',
+                'partner_id': self.partner_a.id,
+                'date': '2023-01-01',
+                'invoice_date': '2023-01-01',
+                'invoice_line_ids': [Command.create({
+                    'product_id': self.product_a.id,
+                    'price_unit': 100.0,
+                    'tax_ids': []
+                })]
+            },
+            {
+                'move_type': 'in_invoice',
+                'partner_id': self.partner_a.id,
+                'date': '2023-01-01',
+                'invoice_date': '2023-01-01',
+                'invoice_line_ids': [Command.create({
+                    'product_id': self.product_a.id,
+                    'price_unit': 200.0,
+                    'tax_ids': []
+                })]
+            },
+            {
+                'move_type': 'in_invoice',
+                'partner_id': self.partner_b.id,
+                'date': '2023-01-01',
+                'invoice_date': '2023-01-01',
+                'invoice_line_ids': [Command.create({
+                    'product_id': self.product_a.id,
+                    'price_unit': 200.0,
+                    'tax_ids': []
+                })]
+            }
+        ])
+        in_invoices.action_post()
+
+        # Create grouped payments , using the check payment method
+        payments = self.env['account.payment.register'].with_context(
+            active_model='account.move',
+            active_ids=in_invoices.ids
+        ).create({
+            'group_payment': True,
+            'payment_method_line_id': self.payment_method_line_check.id,
+        })._create_payments()
+
+        # Check that the payments have different check numbers
+        check_numbers = payments.mapped('check_number')
+        self.assertEqual(len(check_numbers), 2, "Both payments should have a check number")
+        self.assertEqual(set(check_numbers), {'10001', '10002'}, "Check numbers should be sequential")
+
+        move_names = payments.move_id.line_ids.mapped('name')
+        self.assertIn(f"Checks - 10001: {payments[0].memo}", move_names)
+        self.assertIn(f"Checks - 10002: {payments[1].memo}", move_names)

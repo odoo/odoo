@@ -99,8 +99,8 @@ patch(ProductScreen.prototype, {
                         userData.phone = answer;
                     } else if (question.question_type === "name") {
                         userData.name = answer;
-                    } else if (question.question_type === "company") {
-                        userData.company = answer;
+                    } else if (question.question_type === "company_name") {
+                        userData.company_name = answer;
                     }
                 }
 

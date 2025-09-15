@@ -6,20 +6,20 @@ defineAnalyticModels()
 const searchViewArch = `
     <search>
         <filter name="account_id" context="{'group_by': 'account_id'}"/>
-        <filter name="x_plan122_id" context="{'group_by': 'x_plan122_id'}"/>
-        <filter name="x_plan122_id_1" context="{'group_by': 'x_plan122_id_1'}"/>
-        <filter name="x_plan122_id_2" context="{'group_by': 'x_plan122_id_2'}"/>
+        <filter name="x_plan1_id" context="{'group_by': 'x_plan1_id'}"/>
+        <filter name="x_plan1_id_1" context="{'group_by': 'x_plan1_id_1'}"/>
+        <filter name="x_plan1_id_2" context="{'group_by': 'x_plan1_id_2'}"/>
     </search>
 `
 
 beforeEach(async () => {
     const { env } = await makeMockServer();
     const root = env['account.analytic.plan'].create({ name: "State" });
-    const eu = env['account.analytic.plan'].create({ name: "Europe", parent_id: root });
-    const be = env['account.analytic.plan'].create({ name: "Belgium", parent_id: eu });
-    const fr = env['account.analytic.plan'].create({ name: "France", parent_id: eu });
-    const am = env['account.analytic.plan'].create({ name: "America", parent_id: root });
-    const us = env['account.analytic.plan'].create({ name: "USA", parent_id: am });
+    const eu = env['account.analytic.plan'].create({ name: "Europe", parent_id: root, root_id: root });
+    const be = env['account.analytic.plan'].create({ name: "Belgium", parent_id: eu, root_id: root });
+    const fr = env['account.analytic.plan'].create({ name: "France", parent_id: eu, root_id: root });
+    const am = env['account.analytic.plan'].create({ name: "America", parent_id: root, root_id: root });
+    const us = env['account.analytic.plan'].create({ name: "USA", parent_id: am, root_id: root });
     const accounts = env['account.analytic.account'].create([
         { plan_id: be, name: "Brussels" },
         { plan_id: be, name: "Antwerpen" },
@@ -29,12 +29,12 @@ beforeEach(async () => {
         { plan_id: us, name: "Los Angeles" },
     ])
     env["account.analytic.line"].create([
-        { x_plan122_id: accounts[0], x_plan122_id_1: eu, x_plan122_id_2: be, amount: 1 },
-        { x_plan122_id: accounts[1], x_plan122_id_1: eu, x_plan122_id_2: be, amount: 10 },
-        { x_plan122_id: accounts[2], x_plan122_id_1: eu, x_plan122_id_2: fr, amount: 100 },
-        { x_plan122_id: accounts[3], x_plan122_id_1: eu, x_plan122_id_2: fr, amount: 1000 },
-        { x_plan122_id: accounts[4], x_plan122_id_1: am, x_plan122_id_2: us, amount: 10000 },
-        { x_plan122_id: accounts[5], x_plan122_id_1: am, x_plan122_id_2: us, amount: 100000 },
+        { x_plan1_id: accounts[0], x_plan1_id_1: eu, x_plan1_id_2: be, analytic_distribution: {[accounts[0]]: 100}, amount: 1 },
+        { x_plan1_id: accounts[1], x_plan1_id_1: eu, x_plan1_id_2: be, analytic_distribution: {[accounts[1]]: 100}, amount: 10 },
+        { x_plan1_id: accounts[2], x_plan1_id_1: eu, x_plan1_id_2: fr, analytic_distribution: {[accounts[2]]: 100}, amount: 100 },
+        { x_plan1_id: accounts[3], x_plan1_id_1: eu, x_plan1_id_2: fr, analytic_distribution: {[accounts[3]]: 100}, amount: 1000 },
+        { x_plan1_id: accounts[4], x_plan1_id_1: am, x_plan1_id_2: us, analytic_distribution: {[accounts[4]]: 100}, amount: 10000 },
+        { x_plan1_id: accounts[5], x_plan1_id_1: am, x_plan1_id_2: us, analytic_distribution: {[accounts[5]]: 100}, amount: 100000 },
     ]);
 });
 

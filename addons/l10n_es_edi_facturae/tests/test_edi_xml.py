@@ -201,8 +201,9 @@ class TestEdiFacturaeXmls(AccountTestInvoicingCommon):
         invoice = self.create_invoice(partner_id=self.partner_a.id, move_type='out_invoice', invoice_line_ids=[{'price_unit': 100.0, 'tax_ids': [self.tax.id]}])
         invoice.action_post()
         wizard = self.create_send_and_print(invoice)
-        wizard.action_send_and_print()
-        self.assertFalse(invoice.l10n_es_edi_facturae_xml_id)
+        # Expect a UserError if no certificate is configured
+        with self.assertRaises(UserError):
+            wizard.action_send_and_print()
 
     def test_tax_withheld(self):
         with freeze_time(self.frozen_today), \

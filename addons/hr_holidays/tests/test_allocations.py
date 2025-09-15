@@ -426,3 +426,47 @@ class TestAllocations(TestHrHolidaysCommon):
 
         self.assertEqual(leave_request.employee_id, self.employee)
         self.assertEqual(leave_request.state, 'validate')
+
+    def test_leave_allocation_by_removing_employee(self):
+        """
+        Test that creating a leave allocation and then removing the employee will
+        not raise an error
+        """
+        self.leave_type.request_unit = "hour"
+        with self.assertRaises(AssertionError):  # AssertionError raised by Form as employee is required
+            with Form(self.env['hr.leave.allocation']) as allocation_form:
+                allocation_form.allocation_type = "regular"
+                allocation_form.holiday_status_id = self.leave_type
+                allocation_form.number_of_hours_display = 10
+                allocation_form.employee_id = self.env["hr.employee"]
+            allocation_form.save()
+
+    def test_employee_holidays_archived_display(self):
+        admin_user = self.env.ref('base.user_admin')
+
+        employee = self.env['hr.employee'].create({
+            'name': 'test_employee',
+        })
+
+        leave_type = self.env['hr.leave.type'].with_user(admin_user)
+
+        holidays_type_1 = leave_type.create({
+            'name': 'archived_holidays',
+            'allocation_validation_type': 'no_validation',
+        })
+
+        self.env['hr.leave.allocation'].create({
+            'name': 'archived_holidays_allocation',
+            'employee_id': employee.id,
+            'holiday_status_id': holidays_type_1.id,
+            'number_of_days': 10,
+            'state': 'confirm',
+            'date_from': '2022-01-01',
+        })
+
+        self.assertEqual(employee.allocation_display, '10')
+
+        holidays_type_1.active = False
+        employee._compute_allocation_remaining_display()
+
+        self.assertEqual(employee.allocation_display, '0')

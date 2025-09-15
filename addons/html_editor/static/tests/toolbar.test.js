@@ -333,6 +333,20 @@ test("toolbar works: can select font size", async () => {
     expect(inputEl).toHaveValue(oSmallSize);
 });
 
+test("should focus the editable area after selecting a font size item", async () => {
+    const { editor, el } = await setupEditor("<p>[test]</p>");
+    await expectElementCount(".o-we-toolbar", 1);
+    const iframeEl = queryOne(".o-we-toolbar [name='font-size'] iframe");
+    const inputEl = iframeEl.contentWindow.document?.querySelector("input");
+    await contains(".o-we-toolbar [name='font-size'] .dropdown-toggle").click();
+    expect(getActiveElement()).toBe(inputEl);
+    await waitFor(".o_font_size_selector_menu .dropdown-item:contains('21')");
+    await contains(".o_font_size_selector_menu .dropdown-item:contains('21')").click();
+    expect(getActiveElement()).toBe(editor.editable);
+    expect(getActiveElement()).not.toBe(inputEl);
+    expect(getContent(el)).toBe(`<p><span class="h2-fs">[test]</span></p>`);
+});
+
 test.tags("desktop");
 test("toolbar works: display correct font size on select all", async () => {
     const { el } = await setupEditor("<p>test</p>");
@@ -808,7 +822,7 @@ test("toolbar buttons should have title attribute with translated text", async (
 });
 
 test.tags("desktop");
-test("close the toolbar if the selection contains any nodes (traverseNode = [])", async () => {
+test("keep the toolbar if the selection crosses two blocks, even if their contents aren't selected", async () => {
     const { el } = await setupEditor("<p>a</p><p>b</p>");
     await expectElementCount(".o-we-toolbar", 0);
 
@@ -821,11 +835,11 @@ test("close the toolbar if the selection contains any nodes (traverseNode = [])"
     setContent(el, "<p>a[</p><p>]b</p>");
     await tick(); // selectionChange
     await animationFrame();
-    await expectElementCount(".o-we-toolbar", 0);
+    await expectElementCount(".o-we-toolbar", 1);
 });
 
 test.tags("desktop");
-test("close the toolbar if the selection contains any nodes (traverseNode = [], ignore whitespace)", async () => {
+test("keep the toolbar if the selection crosses two blocks, even if their contents aren't selected (ignore whitespace)", async () => {
     const { el } = await setupEditor("<p>a</p>\n<p>b</p>");
     await expectElementCount(".o-we-toolbar", 0);
 
@@ -838,7 +852,7 @@ test("close the toolbar if the selection contains any nodes (traverseNode = [], 
     setContent(el, "<p>a[</p>\n<p>]b</p>");
     await tick(); // selectionChange
     await animationFrame();
-    await expectElementCount(".o-we-toolbar", 0);
+    await expectElementCount(".o-we-toolbar", 1);
 });
 
 test.tags("desktop");

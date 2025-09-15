@@ -36,8 +36,7 @@ import { setupEditor } from "./_helpers/editor";
 import { unformat } from "./_helpers/format";
 import { getContent, setSelection } from "./_helpers/selection";
 import { addStep, deleteBackward, deleteForward, redo, undo } from "./_helpers/user_actions";
-import { makeMockEnv } from "@web/../tests/_framework/env_test_helpers";
-import { patchWithCleanup } from "@web/../tests/web_test_helpers";
+import { makeMockEnv, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { Deferred } from "@web/core/utils/concurrency";
 import { Plugin } from "@html_editor/plugin";
 import { dispatchClean, dispatchCleanForSave } from "./_helpers/dispatch";
@@ -448,9 +447,9 @@ describe("Mount and Destroy embedded components", () => {
         // the editable element, before being removed again.
         const fixture = getFixture();
         expect(
-            [...fixture.querySelectorAll("[data-embedded]")].filter((elem) => {
-                return !elem.closest(".odoo-editor-editable");
-            })
+            [...fixture.querySelectorAll("[data-embedded]")].filter(
+                (elem) => !elem.closest(".odoo-editor-editable")
+            )
         ).toEqual([]);
     });
 
@@ -477,9 +476,9 @@ describe("Mount and Destroy embedded components", () => {
         // the editable element, before being removed again.
         const fixture = getFixture();
         expect(
-            [...fixture.querySelectorAll("[data-embedded]")].filter((elem) => {
-                return !elem.closest(".odoo-editor-editable");
-            })
+            [...fixture.querySelectorAll("[data-embedded]")].filter(
+                (elem) => !elem.closest(".odoo-editor-editable")
+            )
         ).toEqual([]);
     });
 
@@ -508,9 +507,9 @@ describe("Mount and Destroy embedded components", () => {
         // the editable element, before being removed again.
         const fixture = getFixture();
         expect(
-            [...fixture.querySelectorAll("[data-embedded]")].filter((elem) => {
-                return !elem.closest(".odoo-editor-editable");
-            })
+            [...fixture.querySelectorAll("[data-embedded]")].filter(
+                (elem) => !elem.closest(".odoo-editor-editable")
+            )
         ).toEqual([]);
         expect(editor.editable.contains(parent)).toBe(false);
         expect(parent.contains(hostElement)).toBe(true);

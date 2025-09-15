@@ -47,7 +47,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/sale_project/models/project_project.py:0
 msgid "%(name)s's Sales Order Items"
-msgstr ""
+msgstr "%(name)ss salgsordrelinje"
 
 #. module: sale_project
 #. odoo-python
@@ -64,6 +64,11 @@ msgid ""
 "the cancellation of the sales order.\" invisible=\"sale_order_state != "
 "'cancel'\"/>"
 msgstr ""
+"<span class=\"fa fa-exclamation-triangle text-warning\" title=\"The sales "
+"order associated with this project has been cancelled. We recommend either "
+"updating the sales order item or cancelling this project in alignment with "
+"the cancellation of the sales order.\" invisible=\"sale_order_state != "
+"'cancel'\"/>"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.view_sale_project_inherit_form
@@ -74,6 +79,11 @@ msgid ""
 "cancellation of the sales order.\" invisible=\"sale_order_state != "
 "'cancel'\"/>"
 msgstr ""
+"<span class=\"fa fa-exclamation-triangle text-warning\" title=\"The sales "
+"order associated with this task has been cancelled. We recommend either "
+"updating the sales order item or cancelling this task in alignment with the "
+"cancellation of the sales order.\" invisible=\"sale_order_state != "
+"'cancel'\"/>"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.view_edit_project_inherit_form
@@ -85,6 +95,12 @@ msgid ""
 "                            Make Billable\n"
 "                        </span>"
 msgstr ""
+"<span class=\"o_stat_text\">\n"
+"                            <span class=\"o_stat_value\">0</span> Salgsordre\n"
+"                        </span>\n"
+"                        <span class=\"o_stat_text\">\n"
+"                            Gør fakturerbar\n"
+"                        </span>"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.view_edit_project_inherit_form
@@ -103,6 +119,8 @@ msgid ""
 "<span class=\"o_stat_text\">Customer</span>\n"
 "                        <span class=\"o_stat_text\">Preview</span>"
 msgstr ""
+"<span class=\"o_stat_text\">Kunde</span>\n"
+"                        <span class=\"o_stat_text\">Forhåndsvisning</span>"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.project_milestone_view_form
@@ -128,6 +146,8 @@ msgid ""
 "A project must be defined on the quotation %(order)s or on the form of products creating a task on order.\n"
 "The following product need a project in which to put its task: %(product_name)s"
 msgstr ""
+"Et projekt skal angives på tilbuddet %(order)s eller på produktformularen ved oprettelse af en opgave på ordren.\n"
+"Følgende produkter skal tilknyttes et projekt, hvor opgaven skal placeres: %(product_name)s"
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_sale_order__project_id
@@ -136,6 +156,9 @@ msgid ""
 "analytic distribution of this project will also serve as a reference for "
 "newly created sales order items."
 msgstr ""
+"En opgave oprettes til projektet, når en salgsordre bekræftes. Den "
+"analytiske fordeling af projektet fungerer desuden som reference for nyligt "
+"oprettede salgsordrelinjer."
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_sale_order_line__qty_delivered_method
@@ -156,13 +179,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/sale_project/models/product_template.py:0
 msgid "Based on Delivered Quantity (Manual)"
-msgstr ""
+msgstr "Baseret på leverede mængde (manuel)"
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/product_template.py:0
 msgid "Based on Milestones"
-msgstr ""
+msgstr "Baseret på milepæle"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_project__allow_billable
@@ -191,12 +214,12 @@ msgstr "Pris for solgte vare"
 #. odoo-python
 #: code:addons/sale_project/models/project_project.py:0
 msgid "Cost of Goods Sold Items"
-msgstr ""
+msgstr "Kostprisen på solgte varer"
 
 #. module: sale_project
 #: model:ir.actions.server,name:sale_project.model_sale_order_action_create_project
 msgid "Create Project"
-msgstr ""
+msgstr "Opret projekt"
 
 #. module: sale_project
 #. odoo-python
@@ -217,12 +240,16 @@ msgid ""
 "Create a project for the order with a task for each sales order line to "
 "track the time spent."
 msgstr ""
+"Opret et projekt for ordren med en opgave til hver salgsordrelinje for at "
+"holde øje med tidsforbruget."
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/product_template.py:0
 msgid "Create a task in an existing project to track the time spent."
 msgstr ""
+"Opret en opgave i et eksisterende projekt for at holde øje med "
+"tidsforbruget."
 
 #. module: sale_project
 #. odoo-python
@@ -234,7 +261,7 @@ msgstr "Opret leverandørfaktura"
 #. odoo-python
 #: code:addons/sale_project/models/product_template.py:0
 msgid "Create an empty project for the order to track the time spent."
-msgstr ""
+msgstr "Opret et tomt projekt for ordren for at holde øje med tidsforbruget."
 
 #. module: sale_project
 #. odoo-python
@@ -269,6 +296,8 @@ msgid ""
 "Create projects or tasks later, and link them to order to track the time "
 "spent."
 msgstr ""
+"Opret projekter eller opgaver senere, og knyt dem til ordrer for at holde "
+"øje med tidsforbruget."
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_project__partner_id
@@ -285,7 +314,7 @@ msgstr "Kundefakturaer"
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.product_template_form_view_invoice_policy_inherit_sale_project
 msgid "Defined on quotation"
-msgstr ""
+msgstr "Angivet på tilbud"
 
 #. module: sale_project
 #. odoo-javascript
@@ -296,12 +325,12 @@ msgstr "Leveret"
 #. module: sale_project
 #: model:product.template,name:sale_project.product_service_create_project_only_product_template
 msgid "Digital Marketing Campaign (project)"
-msgstr ""
+msgstr "Digital marketingkampagne (projekt)"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_task__display_sale_order_button
 msgid "Display Sales Order"
-msgstr ""
+msgstr "Vis salgsordre"
 
 #. module: sale_project
 #. odoo-python
@@ -318,12 +347,12 @@ msgstr "Forudbetalinger"
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.product_template_form_view_invoice_policy_inherit_sale_project
 msgid "Empty project"
-msgstr ""
+msgstr "Tomt projekt"
 
 #. module: sale_project
 #: model:product.template,name:sale_project.product_product_flooring_product_template
 msgid "Flooring Services"
-msgstr ""
+msgstr "Gulvlægningsservice"
 
 #. module: sale_project
 #. odoo-python
@@ -335,7 +364,7 @@ msgstr "I gang"
 #. odoo-python
 #: code:addons/sale_project/models/product_template.py:0
 msgid "Invoice your milestones when they are reached."
-msgstr ""
+msgstr "Fakturér dine milepæle, når du har nået dem."
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.project_project_view_form_simplified_inherit
@@ -413,7 +442,7 @@ msgstr "Milepæle"
 #. odoo-python
 #: code:addons/sale_project/models/sale_order_line.py:0
 msgid "New Sales Order Item"
-msgstr ""
+msgstr "Ny salgsordrelinje"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.project_milestone_view_form
@@ -430,7 +459,7 @@ msgstr "Ikke faktureret"
 #. module: sale_project
 #: model:product.template,name:sale_project.product_service_create_task_only_product_template
 msgid "Office Furniture Set (task)"
-msgstr ""
+msgstr "Kontormøbler (opgave)"
 
 #. module: sale_project
 #. odoo-python
@@ -448,7 +477,7 @@ msgstr "Andre tjenester"
 #. module: sale_project
 #: model:product.template,name:sale_project.product_product_painting_product_template
 msgid "Painting"
-msgstr ""
+msgstr "Male"
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_project_milestone__quantity_percentage
@@ -456,23 +485,25 @@ msgid ""
 "Percentage of the ordered quantity that will automatically be delivered once"
 " the milestone is reached."
 msgstr ""
+"Procentdel af den bestilte mængde, der automatisk bliver leveret, når "
+"milepælen er nået."
 
 #. module: sale_project
 #: model:product.template,name:sale_project.product_product_plumbing_product_template
 msgid "Plumbing Services"
-msgstr ""
+msgstr "VVS-service"
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/project_task.py:0
 msgid "Portal Sale Order"
-msgstr ""
+msgstr "Salgsordre i portalen"
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/product_template.py:0
 msgid "Prepaid/Fixed Price"
-msgstr ""
+msgstr "Forudbetalt/fast pris"
 
 #. module: sale_project
 #: model:ir.model,name:sale_project.model_product_template
@@ -491,6 +522,9 @@ msgid ""
 "generate analytic costs, will be re-invoiced in this sales order if they are"
 " set up for it."
 msgstr ""
+"Produkter, der er tilføjet lagerplukninger, og som har en driftstype "
+"konfigureret til at generere analytiske omkostninger, vil blive "
+"genfaktureret i denne salgsordre, hvis det er aktiveret."
 
 #. module: sale_project
 #: model:ir.model,name:sale_project.model_project_project
@@ -520,7 +554,7 @@ msgstr "Projekt milepæl"
 #. module: sale_project
 #: model:ir.model.fields.selection,name:sale_project.selection__product_template__service_type__milestones
 msgid "Project Milestones"
-msgstr ""
+msgstr "Projektmilepæle"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_product_product__project_template_id
@@ -549,7 +583,7 @@ msgstr "Antal"
 #: model:ir.model.fields,field_description:sale_project.field_project_milestone__quantity_percentage
 #: model_terms:ir.ui.view,arch_db:sale_project.project_milestone_view_tree
 msgid "Quantity (%)"
-msgstr ""
+msgstr "Mængde (%)"
 
 #. module: sale_project
 #: model:ir.model,name:sale_project.model_sale_order_template_line
@@ -559,7 +593,7 @@ msgstr "Tilbud skabelon linje"
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.view_edit_project_inherit_form
 msgid "Sales & Invoicing"
-msgstr ""
+msgstr "Salg og fakturering"
 
 #. module: sale_project
 #: model:ir.model,name:sale_project.model_sale_report
@@ -593,7 +627,7 @@ msgstr "Salgsordre Emne"
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_project_milestone__sale_line_id
 msgid "Sales Order Item that will be updated once the milestone is reached."
-msgstr ""
+msgstr "Salgsordrelinje opdateres, når milepælen er nået."
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_project_task__sale_line_id
@@ -602,6 +636,9 @@ msgid ""
 "By default the sales order item set on the project will be selected. In the absence of one, the last prepaid sales order item that has time remaining will be used.\n"
 "Remove the sales order item in order to make this task non billable. You can also change or remove the sales order item of each timesheet entry individually."
 msgstr ""
+"Salgsordrelinjen, som tidsforbruget for denne opgave tilføjes med henblik på fakturering til kunden.\n"
+"Som standard vælges den salgsordrelinje, der er angivet på projektet. Hvis ingen er angivet, bruges den seneste forudbetalte salgsordrelinje med resterende tid.\n"
+"Fjern salgsordrelinjen for at gøre opgaven ikke-fakturerbar. Du kan også ændre eller fjerne salgsordrelinjen for hver enkelt tidsregistrering."
 
 #. module: sale_project
 #. odoo-javascript
@@ -630,6 +667,8 @@ msgid ""
 "Sales order item that will be selected by default on the tasks and timesheets of this project, except if the employee set on the timesheets is explicitely linked to another sales order item on the project.\n"
 "It can be modified on each task and timesheet entry individually if necessary."
 msgstr ""
+"Salgsordrelinjen, der som standard vælges på opgaver og timesedler i dette projekt, medmindre medarbejderen på timesedlen eksplicit er knyttet til en anden salgsordrelinje i projektet.\n"
+"Den kan om nødvendigt ændres individuelt for hver opgave og tidsregistrering."
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_project_task__sale_order_id
@@ -639,7 +678,7 @@ msgstr "Salgsordre som opgaven er knyttet til."
 #. module: sale_project
 #: model:product.template,name:sale_project.product_product_screw_driver_product_template
 msgid "Screw Driver"
-msgstr ""
+msgstr "Skruetrækker"
 
 #. module: sale_project
 #. odoo-python
@@ -656,7 +695,7 @@ msgstr "Søg i salgsordre"
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.project_project_view_form_simplified_inherit
 msgid "Select who to bill..."
-msgstr ""
+msgstr "Vælg, hvem der skal faktureres ..."
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_product_product__service_policy
@@ -685,7 +724,7 @@ msgstr "Opgave"
 #. odoo-python
 #: code:addons/sale_project/models/sale_order_line.py:0
 msgid "Task Created (%(name)s): %(link)s"
-msgstr ""
+msgstr "Opgave oprettet (%(name)s): %(link)s"
 
 #. module: sale_project
 #: model:ir.model,name:sale_project.model_project_task_recurrence
@@ -757,6 +796,7 @@ msgstr ""
 #: code:addons/sale_project/models/sale_order_line.py:0
 msgid "This task has been created from: %(order_link)s (%(product_name)s)"
 msgstr ""
+"Denne opgave er blevet oprettet ud fra: %(order_link)s (%(product_name)s)"
 
 #. module: sale_project
 #. odoo-python
@@ -785,17 +825,17 @@ msgstr "Leverandørfakturaer"
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.project_milestone_view_tree
 msgid "View Sales Order"
-msgstr ""
+msgstr "Se salgsordrer"
 
 #. module: sale_project
 #: model:product.template,name:sale_project.product_service_create_project_and_task_product_template
 msgid "Website Redesign Service (project & task)"
-msgstr ""
+msgstr "Omstrukturering af hjemmesiden (projekt og opgave)"
 
 #. module: sale_project
 #: model:product.template,name:sale_project.product_product_wiring_product_template
 msgid "Wiring Services"
-msgstr ""
+msgstr "Kabelservice"
 
 #. module: sale_project
 #. odoo-python

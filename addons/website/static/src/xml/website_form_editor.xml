@@ -85,7 +85,7 @@
                 type="hidden"
                 class="form-control s_website_form_input"
                 t-att-name="field.name"
-                t-att-value="field.value"
+                t-attf-value="#{field.value}"
                 t-att-id="field.id"
             />
         </t>
@@ -99,7 +99,7 @@
                 class="form-control s_website_form_input"
                 t-att-name="field.name"
                 t-att-required="field.required || field.modelRequired || None"
-                t-att-value="field.value"
+                t-attf-value="#{field.value}"
                 t-att-data-fill-with="field.fillWith"
                 t-att-placeholder="field.placeholder"
                 t-att-id="field.id"
@@ -155,7 +155,7 @@
                 t-att-name="field.name"
                 step="1"
                 t-att-required="field.required || field.modelRequired || None"
-                t-att-value="field.value"
+                t-attf-value="#{field.value}"
                 t-att-placeholder="field.placeholder"
                 t-att-id="field.id"
             />
@@ -171,7 +171,7 @@
                 t-att-name="field.name"
                 step="any"
                 t-att-required="field.required || field.modelRequired || None"
-                t-att-value="field.value"
+                t-attf-value="#{field.value}"
                 t-att-placeholder="field.placeholder"
                 t-att-id="field.id"
             />
@@ -187,7 +187,7 @@
                         class="form-control datetimepicker-input s_website_form_input"
                         t-att-name="field.name"
                         t-att-required="field.required || field.modelRequired || None"
-                        t-att-value="field.value"
+                        t-attf-value="#{field.value}"
                         t-att-placeholder="field.placeholder"
                         t-att-id="field.id"
                 />
@@ -205,7 +205,7 @@
                         class="form-control datetimepicker-input s_website_form_input"
                         t-att-name="field.name"
                         t-att-required="field.required || field.modelRequired || None"
-                        t-att-value="field.value"
+                        t-attf-value="#{field.value}"
                         t-att-placeholder="field.placeholder"
                         t-att-id="field.id"
                 />

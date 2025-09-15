@@ -109,7 +109,10 @@ test("should make qweb tag strikeThrough", async () => {
 test("should make a whole heading strikeThrough after a triple click", async () => {
     await testEditor({
         contentBefore: `<h1>[ab</h1><p>]cd</p>`,
-        stepFunction: strikeThrough,
+        stepFunction: async (editor) => {
+            await tripleClick(editor.editable.querySelector("h1"));
+            strikeThrough(editor);
+        },
         contentAfter: `<h1>${s(`[ab]`)}</h1><p>cd</p>`,
     });
 });

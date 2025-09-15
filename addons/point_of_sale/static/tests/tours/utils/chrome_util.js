@@ -45,11 +45,14 @@ export function isSyncStatusConnected() {
     };
 }
 export function clickPlanButton() {
-    return {
-        content: "go back to the floor screen",
-        trigger: ".pos-leftheader .back-button:not(.btn-primary)",
-        run: "click",
-    };
+    return [
+        {
+            content: "go back to the floor screen",
+            trigger: ".pos-leftheader .back-button:not(.btn-primary)",
+            run: "click",
+        },
+        ...waitRequest(),
+    ];
 }
 export function startPoS() {
     return [

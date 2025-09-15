@@ -5,6 +5,7 @@
 # Translators:
 # Lyall Kindmurr, 2024
 # Wil Odoo, 2025
+# Larisa_nexterp, 2025
 # 
 msgid ""
 msgstr ""
@@ -12,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-09-26 08:56+0000\n"
 "PO-Revision-Date: 2024-09-25 09:42+0000\n"
-"Last-Translator: Wil Odoo, 2025\n"
+"Last-Translator: Larisa_nexterp, 2025\n"
 "Language-Team: Romanian (https://app.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -24,7 +25,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/stock_delivery/models/sale_order.py:0
 msgid "%(name)s (Estimated Cost: %(cost)s)"
-msgstr ""
+msgstr "%(name)s (Cost estimat: %(cost)s)"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.view_quant_package_weight_form
@@ -45,23 +46,23 @@ msgstr "<span> - Greutate: </span>"
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.report_package_barcode_small_delivery
 msgid "<span>Shipping Weight: </span>"
-msgstr "<span>Transport Greutate: </span>"
+msgstr "<span>Greutate livrare: </span>"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.report_delivery_document2
 #: model_terms:ir.ui.view,arch_db:stock_delivery.report_shipping2
 msgid "<strong>Carrier</strong>"
-msgstr ""
+msgstr "<strong>Transportator</strong>"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.report_shipping2
 msgid "<strong>Shipping Method:</strong>"
-msgstr ""
+msgstr "<strong>Metodă de livrare:</strong>"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.report_package_barcode_delivery
 msgid "<strong>Shipping Weight: </strong>"
-msgstr "<strong>Transport Greutate: </strong>"
+msgstr "<strong>Greutate livrare: </strong>"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.report_package_barcode_delivery
@@ -69,18 +70,18 @@ msgid ""
 "<strong>Shipping Weight:</strong>\n"
 "                    <br/>"
 msgstr ""
-"<strong>Transport Greutate:</strong>\n"
+"<strong>Greutate livrare:</strong>\n"
 "                    <br/>"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.report_delivery_document2
 msgid "<strong>Total Weight</strong>"
-msgstr ""
+msgstr "<strong>Greutate totală</strong>"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.report_delivery_document2
 msgid "<strong>Tracking Number</strong>"
-msgstr ""
+msgstr "<strong>Număr de urmărire</strong>"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.report_package_barcode_delivery
@@ -90,12 +91,12 @@ msgstr "<strong>Greutate: </strong>"
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.report_shipping2
 msgid "<strong>Weight</strong>"
-msgstr ""
+msgstr "<strong>Greutate</strong>"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_route__shipping_selectable
 msgid "Applicable on Shipping Methods"
-msgstr "Aplicabil pe metodele de expediere"
+msgstr "Aplicabil pe metodele de livrare"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.view_picking_withcarrier_out_form
@@ -108,7 +109,7 @@ msgid ""
 "Cancelling a delivery may not be undoable. Are you sure you want to "
 "continue?"
 msgstr ""
-"Anularea unei livrări poate nu poate fi anulată. Sigur doriți să continuați?"
+"Anularea unei livrări poate fi ireversibilă. Sigur doriți să continuați?"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_move_line__carrier_id
@@ -126,7 +127,7 @@ msgstr "Cod transportator"
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.stock_move_line_view_search_delivery
 msgid "Carrier name"
-msgstr "Nume curier"
+msgstr "Nume transportator"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_choose_delivery_package__company_id
@@ -147,12 +148,12 @@ msgstr "Creat de"
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_choose_delivery_package__create_date
 msgid "Created on"
-msgstr "Creat pe"
+msgstr "Creat la"
 
 #. module: stock_delivery
 #: model:ir.model,name:stock_delivery.model_choose_delivery_carrier
 msgid "Delivery Carrier Selection Wizard"
-msgstr "Expert de selecție a operatorului de livrare"
+msgstr "Expert selecție transportator livrare"
 
 #. module: stock_delivery
 #: model:ir.ui.menu,name:stock_delivery.menu_action_delivery_carrier_form
@@ -162,12 +163,12 @@ msgstr "Metode de livrare"
 #. module: stock_delivery
 #: model:ir.model,name:stock_delivery.model_choose_delivery_package
 msgid "Delivery Package Selection Wizard"
-msgstr "Wizard de selecție a pachetului de livrare"
+msgstr "Expert selecție pachet livrare"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_choose_delivery_package__delivery_package_type_id
 msgid "Delivery Package Type"
-msgstr "Tipul pachetului de livrare"
+msgstr "Tip pachet livrare"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.vpicktree_view_tree
@@ -183,7 +184,7 @@ msgstr "Țara destinație"
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.choose_delivery_package_view_form
 msgid "Discard"
-msgstr "Abandonează"
+msgstr "Renunță"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_choose_delivery_package__display_name
@@ -193,7 +194,7 @@ msgstr "Nume afișat"
 #. module: stock_delivery
 #: model:ir.actions.act_window,name:stock_delivery.act_delivery_trackers_url
 msgid "Display tracking links"
-msgstr "Afișați linkuri de urmărire"
+msgstr "Afișează linkuri de urmărire"
 
 #. module: stock_delivery
 #: model:ir.model.fields,help:stock_delivery.field_delivery_carrier__invoice_policy
@@ -201,14 +202,14 @@ msgid ""
 "Estimated Cost: the customer will be invoiced the estimated cost of the shipping.\n"
 "Real Cost: the customer will be invoiced the real cost of the shipping, the cost of theshipping will be updated on the SO after the delivery."
 msgstr ""
-"Cost estimat: clientul va fi facturat cu costul estimat al transportului.\n"
-"Cost real: clientul va fi facturat cu costul real al transportului, costul transportului va fi actualizat pe SO după livrare."
+"Cost estimat: clientul va fi facturat cu costul estimat al livrării.\n"
+"Cost real: clientul va fi facturat cu costul real al livrării, costul livrării va fi actualizat pe SO după livrare."
 
 #. module: stock_delivery
 #. odoo-python
 #: code:addons/stock_delivery/models/stock_picking.py:0
 msgid "Exception occurred with respect to carrier on the transfer"
-msgstr ""
+msgstr "A apărut o excepție legată de transportator la transfer"
 
 #. module: stock_delivery
 #. odoo-python
@@ -247,28 +248,28 @@ msgstr "Politică de facturare"
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_picking__is_return_picking
 msgid "Is Return Picking"
-msgstr "Este returnare"
+msgstr "Este retur"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_choose_delivery_package__write_uid
 msgid "Last Updated by"
-msgstr "Ultima actualizare făcută de"
+msgstr "Ultima actualizare de"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_choose_delivery_package__write_date
 msgid "Last Updated on"
-msgstr "Ultima actualizare pe"
+msgstr "Ultima actualizare la"
 
 #. module: stock_delivery
 #. odoo-python
 #: code:addons/stock_delivery/models/stock_picking.py:0
 msgid "Manual actions might be needed."
-msgstr ""
+msgstr "Pot fi necesare acțiuni manuale."
 
 #. module: stock_delivery
 #: model:ir.model.fields.selection,name:stock_delivery.selection__stock_package_type__package_carrier_type__none
 msgid "No carrier integration"
-msgstr "Nicio integrare a operatorului de transport"
+msgstr "Fără integrare transportator"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.delivery_tracking_url_warning_form
@@ -296,7 +297,7 @@ msgstr "Detalii pachet"
 #. odoo-python
 #: code:addons/stock_delivery/wizard/choose_delivery_package.py:0
 msgid "Package too heavy!"
-msgstr "Pachetul este prea greu!"
+msgstr "Pachet prea greu!"
 
 #. module: stock_delivery
 #: model:ir.model,name:stock_delivery.model_stock_quant_package
@@ -312,7 +313,7 @@ msgstr "Livrare"
 #: model_terms:ir.ui.view,arch_db:stock_delivery.sale_order_portal_content_inherit_sale_stock_inherit_website_sale
 #: model_terms:ir.ui.view,arch_db:stock_delivery.view_picking_withcarrier_out_form
 msgid "Print Return Label"
-msgstr "Imprimați eticheta de returnare"
+msgstr "Printează eticheta de retur"
 
 #. module: stock_delivery
 #: model:ir.model,name:stock_delivery.model_product_template
@@ -322,7 +323,7 @@ msgstr "Produs"
 #. module: stock_delivery
 #: model:ir.model,name:stock_delivery.model_stock_move_line
 msgid "Product Moves (Stock Move Line)"
-msgstr "Mișcări de produs (linie mișcare de stoc)"
+msgstr "Mișcări produs (linie mișcare stoc)"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_picking__delivery_type
@@ -337,7 +338,7 @@ msgstr "Cost real"
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_picking__return_label_ids
 msgid "Return Label"
-msgstr "Etichetă Returnare"
+msgstr "Etichetă retur"
 
 #. module: stock_delivery
 #: model:ir.model,name:stock_delivery.model_stock_return_picking
@@ -358,7 +359,7 @@ msgid ""
 "As such, the ‘origin’ is the 'economic nationality' of goods traded in commerce."
 msgstr ""
 "Regulile de origine determină unde provin bunurile, adică nu de unde au fost expediate, ci unde au fost produse sau fabricate.\n"
-"Ca atare, 'originea' este 'naționalitatea economică' a bunurilor comercializate."
+"Astfel, 'originea' este 'naționalitatea economică' a bunurilor comercializate."
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_move_line__sale_price
@@ -383,7 +384,7 @@ msgstr "Salvează"
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.view_picking_withcarrier_out_form
 msgid "Send to Shipper"
-msgstr "Trimite la Curier"
+msgstr "Trimite la curier"
 
 #. module: stock_delivery
 #. odoo-python
@@ -403,13 +404,13 @@ msgstr "Cost livrare"
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.view_picking_withcarrier_out_form
 msgid "Shipping Information"
-msgstr "Informații de livrare"
+msgstr "Informații livrare"
 
 #. module: stock_delivery
 #: model:ir.model,name:stock_delivery.model_delivery_carrier
 #: model_terms:ir.ui.view,arch_db:stock_delivery.stock_location_route_view_form_inherit_stock_delivery
 msgid "Shipping Methods"
-msgstr "Metode de expediere"
+msgstr "Metode de livrare"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_choose_delivery_package__shipping_weight
@@ -419,18 +420,19 @@ msgstr "Greutate livrare"
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.report_package_barcode_small_delivery
 msgid "Shipping Weight:"
-msgstr "Masa livrată:"
+msgstr "Greutate livrare:"
 
 #. module: stock_delivery
 #: model:ir.model.fields,help:stock_delivery.field_product_product__hs_code
 #: model:ir.model.fields,help:stock_delivery.field_product_template__hs_code
 msgid "Standardized code for international shipping and goods declaration."
 msgstr ""
+"Cod standardizat pentru expediere internațională și declarație de bunuri."
 
 #. module: stock_delivery
 #: model:ir.model,name:stock_delivery.model_stock_move
 msgid "Stock Move"
-msgstr "Mișcare de stoc"
+msgstr "Mișcare stoc"
 
 #. module: stock_delivery
 #: model:ir.model,name:stock_delivery.model_stock_package_type
@@ -440,14 +442,14 @@ msgstr "Tip pachet stoc"
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_quant_package__weight_uom_rounding
 msgid "Technical field indicating weight's number of decimal places"
-msgstr "Câmp tehnic care indică numărul de zecimale al greutății"
+msgstr "Câmp tehnic ce indică numărul de zecimale pentru greutate"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_quant_package__weight_is_kg
 msgid "Technical field indicating whether weight uom is kg or not (i.e. lb)"
 msgstr ""
-"Câmp tehnic care indică dacă unitatea de măsură a greutății este kg sau nu "
-"(adica lb)"
+"Câmp tehnic ce indică dacă unitatea de măsură a greutății este kg sau nu "
+"(ex: lb)"
 
 #. module: stock_delivery
 #: model:ir.model.fields,help:stock_delivery.field_stock_move_line__destination_country_code
@@ -457,7 +459,7 @@ msgid ""
 "You can use this field for quick search."
 msgstr ""
 "Codul ISO al țării din două caractere.\n"
-"Puteți utiliza acest câmp pentru căutări rapide."
+"Puteți folosi acest câmp pentru căutare rapidă."
 
 #. module: stock_delivery
 #. odoo-python
@@ -467,13 +469,13 @@ msgid ""
 "the picking is 0.0 %s"
 msgstr ""
 "Pachetul nu poate fi creat deoarece greutatea totală a produselor din "
-"picking este 0.0 %s"
+"livrare este 0.0 %s"
 
 #. module: stock_delivery
 #. odoo-python
 #: code:addons/stock_delivery/wizard/choose_delivery_carrier.py:0
 msgid "The shipping price will be set once the delivery is done."
-msgstr "Prețul de expediere va fi stabilit după finalizarea livrării."
+msgstr "Prețul livrării va fi stabilit după finalizarea livrării."
 
 #. module: stock_delivery
 #. odoo-python
@@ -482,8 +484,8 @@ msgid ""
 "The weight of your package is higher than the maximum weight authorized for "
 "this package type. Please choose another package type."
 msgstr ""
-"Masa ambalajului este mai mare decât masa maximă autorizată pentru acest tip"
-" de ambalaj. Alegeți un alt tip de pachet."
+"Greutatea pachetului depășește greutatea maximă autorizată pentru acest tip "
+"de pachet. Vă rugăm să alegeți alt tip de pachet."
 
 #. module: stock_delivery
 #. odoo-python
@@ -494,7 +496,7 @@ msgstr "Nu există o regulă de livrare potrivită."
 #. module: stock_delivery
 #: model:ir.model.fields,help:stock_delivery.field_stock_quant_package__weight
 msgid "Total weight of all the products contained in the package."
-msgstr "Greutatea totală a tuturor produselor conținute în pachet."
+msgstr "Greutatea totală a tuturor produselor din pachet."
 
 #. module: stock_delivery
 #: model:ir.model.fields,help:stock_delivery.field_stock_picking__weight
@@ -548,19 +550,19 @@ msgstr "Greutate"
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.view_picking_withcarrier_out_form
 msgid "Weight for shipping"
-msgstr "Masă de livrat"
+msgstr "Greutate pentru livrare"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_choose_delivery_package__weight_uom_name
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_picking__weight_uom_name
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_quant_package__weight_uom_name
 msgid "Weight unit of measure label"
-msgstr "Eticheta unității de măsură a greutății"
+msgstr "Etichetă unitate de măsură greutate"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.report_package_barcode_small_delivery
 msgid "Weight:"
-msgstr "Masa:"
+msgstr "Greutate:"
 
 #. module: stock_delivery
 #. odoo-python
@@ -570,15 +572,14 @@ msgid ""
 "carriers (i.e. check that all of their transfers have a carrier assigned and"
 " are using the same carrier)."
 msgstr ""
-"Nu puteți împacheta produsele în același pachet atunci când acestea au "
-"transportatori diferiți (adică verificați că toate transferurile lor au un "
-"transportator atribuit și folosesc același transportator)."
+"Nu puteți împacheta produsele în același pachet dacă au transportatori "
+"diferiți (verificați ca toate transferurile să aibă același transportator)."
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.delivery_tracking_url_warning_form
 msgid "You have multiple tracker links, they are available in the chatter."
 msgstr ""
-"Aveți link-uri multiple de urmărire, acestea sunt disponibile în chat."
+"Aveți mai multe linkuri de urmărire, acestea sunt disponibile în chat."
 
 #. module: stock_delivery
 #. odoo-python
@@ -587,23 +588,23 @@ msgid ""
 "Your delivery method has no redirect on courier provider's website to track "
 "this order."
 msgstr ""
-"Metoda de livrare nu are nicio redirecționare pe site-ul furnizorului de "
-"curierat pentru a urmări această comandă."
+"Metoda de livrare nu are redirecționare pe site-ul curierului pentru a "
+"urmări această comandă."
 
 #. module: stock_delivery
 #: model:ir.ui.menu,name:stock_delivery.menu_delivery_zip_prefix
 msgid "Zip Prefix"
-msgstr "Prefixul codului poștal"
+msgstr "Prefix cod poștal"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.label_package_template_view_delivery
 msgid "^A0N,44,33^FDShipping Weight:"
-msgstr "^A0N,44,33^FDGrutate de livrat:"
+msgstr "^A0N,44,33^FDGreutate livrare:"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.label_package_template_view_delivery
 msgid "^A0N,44,33^FDWeight:"
-msgstr "^A0N,44,33^FDMasa:"
+msgstr "^A0N,44,33^FDGreutate:"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.label_package_template_view_delivery

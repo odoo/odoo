@@ -180,6 +180,10 @@ class StockValuationLayerRevaluation(models.TransientModel):
                 revaluation_svl_vals.append(
                     dict(vals, value=value, lot_id=lot)
                 )
+                # update the lot's standard price
+                if cost_method in ['average', 'fifo']:
+                    lot = self.env['stock.lot'].browse(lot).with_company(self.company_id)
+                    lot.with_context(disable_auto_svl=True).standard_price += self.added_value / total_qty
 
         revaluation_svl = self.env['stock.valuation.layer'].create(revaluation_svl_vals)
 

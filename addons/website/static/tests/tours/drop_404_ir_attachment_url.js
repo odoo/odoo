@@ -5,6 +5,7 @@ import {
     insertSnippet,
     registerWebsitePreviewTour,
 } from '@website/js/tours/tour_utils';
+import wUtils from '@website/js/utils';
 
 registerWebsitePreviewTour('drop_404_ir_attachment_url', {
     url: '/',
@@ -26,11 +27,10 @@ registerWebsitePreviewTour('drop_404_ir_attachment_url', {
     {
         content: 'Once the image UI appears, check the image has no size (404)',
         trigger: ':iframe .s_404_snippet img',
-        run() {
+        async run() {
             const imgEl = this.anchor;
-            if (!imgEl.complete
-                || imgEl.naturalWidth !== 0
-                || imgEl.naturalHeight !== 0) {
+            await wUtils.onceAllImagesLoaded($(imgEl));
+            if (imgEl.naturalWidth !== 0 || imgEl.naturalHeight !== 0) {
                 throw new Error('This is supposed to be a 404 image');
             }
         },
@@ -40,11 +40,10 @@ registerWebsitePreviewTour('drop_404_ir_attachment_url', {
     {
         content: 'Once the shape is applied, check the image has now a size (placeholder image)',
         trigger: ':iframe .s_404_snippet img[src^="data:"]',
-        run() {
+        async run() {
             const imgEl = this.anchor;
-            if (!imgEl.complete
-                || imgEl.naturalWidth === 0
-                || imgEl.naturalHeight === 0) {
+            await wUtils.onceAllImagesLoaded($(imgEl));
+            if (imgEl.naturalWidth === 0 || imgEl.naturalHeight === 0) {
                 throw new Error('Even though the original image was a 404, the option should have been applied on the placeholder image');
             }
         },

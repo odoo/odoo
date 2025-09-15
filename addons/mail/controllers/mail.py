@@ -3,15 +3,14 @@
 import logging
 
 from werkzeug.urls import url_encode
-from werkzeug.exceptions import NotFound, Unauthorized
+from werkzeug.exceptions import NotFound
+from urllib.parse import parse_qsl, urlencode, urlparse
 
 from odoo import _, http
 from odoo.exceptions import AccessError
 from odoo.http import request
 from odoo.tools import consteq
-from odoo.addons.mail.controllers.discuss.public_page import PublicPageController
 from odoo.addons.mail.models.discuss.mail_guest import add_guest_to_context
-from odoo.addons.mail.tools.discuss import Store
 
 _logger = logging.getLogger(__name__)
 
@@ -139,7 +138,13 @@ class MailController(http.Controller):
         record_action.pop('target_type', None)
         # the record has an URL redirection: use it directly
         if record_action['type'] == 'ir.actions.act_url':
-            return request.redirect(record_action['url'])
+            url = record_action["url"]
+            if highlight_message_id := kwargs.get("highlight_message_id"):
+                parsed_url = urlparse(url)
+                url = parsed_url._replace(query=urlencode(
+                    parse_qsl(parsed_url.query) + [("highlight_message_id", highlight_message_id)]
+                )).geturl()
+            return request.redirect(url)
         # anything else than an act_window is not supported
         elif record_action['type'] != 'ir.actions.act_window':
             return cls._redirect_to_messaging()
@@ -162,6 +167,8 @@ class MailController(http.Controller):
         view_id = record_sudo.get_formview_id()
         if view_id:
             url_params['view_id'] = view_id
+        if highlight_message_id := kwargs.get("highlight_message_id"):
+            url_params["highlight_message_id"] = highlight_message_id
         if cids:
             request.future_response.set_cookie('cids', '-'.join([str(cid) for cid in cids]))
 
@@ -234,28 +241,6 @@ class MailController(http.Controller):
         if not message:
             if request.env.user._is_public():
                 return request.redirect(f'/web/login?redirect=/mail/message/{message_id}')
-            raise Unauthorized()
-
-        # sudo: public user can access some relational fields of mail.message
-        if message.sudo()._filter_empty():
             raise NotFound()
-        if not request.env.user._is_internal():
-            thread = request.env[message.model].search([('id', '=', message.res_id)])
-            if message.model == 'discuss.channel':
-                store = Store({'isChannelTokenSecret': True})
-                store.add(thread, {'highlightMessage': Store.one(message, only_id=True)})
-                return PublicPageController()._response_discuss_channel_invitation(store, thread)
-            elif hasattr(thread, '_get_share_url'):
-                return request.redirect(thread._get_share_url(share_token=False))
-            else:
-                raise Unauthorized()
 
-        if message.model == 'discuss.channel':
-            url = f'/odoo/action-mail.action_discuss?active_id={message.res_id}&highlight_message_id={message_id}'
-        else:
-            # @see commit c63d14a0485a553b74a8457aee158384e9ae6d3f
-            # @see router.js: heuristics to discrimate a model name from an action path
-            # is the presence of dots, or the prefix m- for models
-            model_in_url = model if "." in (model := message.model) else "m-" + model
-            url = f'/odoo/{model_in_url}/{message.res_id}?highlight_message_id={message_id}'
-        return request.redirect(url)
+        return self._redirect_to_record(message.model, message.res_id, highlight_message_id=message_id)

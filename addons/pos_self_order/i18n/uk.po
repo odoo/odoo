@@ -1,23 +1,26 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* pos_self_order
-# 
+#
 # Translators:
 # Wil Odoo, 2024
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-06-06 18:38+0000\n"
+"POT-Creation-Date: 2025-08-08 18:38+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Ukrainian (https://app.transifex.com/odoo/teams/41243/uk/)\n"
+"Language: uk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: uk\n"
-"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != "
+"11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % "
+"100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || "
+"(n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
 
 #. module: pos_self_order
 #: model:ir.actions.report,print_report_name:pos_self_order.report_self_order_qr_codes_page
@@ -322,8 +325,8 @@ msgid ""
 "Custom links that the restaurant can configure to be displayed on the self "
 "order screen"
 msgstr ""
-"Кастомні посилання, які ресторан може налаштувати для відображення на екрані"
-" самостійного замовлення"
+"Кастомні посилання, які ресторан може налаштувати для відображення на екрані "
+"самостійного замовлення"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
@@ -403,11 +406,15 @@ msgstr "Кожне замовлення"
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
 msgid ""
-"Each table in your floor plan is assigned a unique QR code based on your configuration. For security reasons,\n"
-"                    both the point of sale and table names are encrypted in the generated URL, as shown in the example below:."
+"Each table in your floor plan is assigned a unique QR code based on your "
+"configuration. For security reasons,\n"
+"                    both the point of sale and table names are encrypted in "
+"the generated URL, as shown in the example below:."
 msgstr ""
-"Кожному столику на вашому плані залу присвоюється унікальний QR-код на основі вашої конфігурації. З міркувань\n"
-" безпеки і точки продажу, і назви столика зашифровані у створеній URL-адресі, як показано в прикладі нижче:."
+"Кожному столику на вашому плані залу присвоюється унікальний QR-код на "
+"основі вашої конфігурації. З міркувань\n"
+" безпеки і точки продажу, і назви столика зашифровані у створеній URL-"
+"адресі, як показано в прикладі нижче:."
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -423,6 +430,13 @@ msgstr "Редагувати"
 
 #. module: pos_self_order
 #. odoo-javascript
+#: code:addons/pos_self_order/static/src/overrides/components/qr_order_button/qr_order_button.js:0
+msgid ""
+"Enable QR menu in the Restaurant settings to get QR codes for free on tables."
+msgstr ""
+
+#. module: pos_self_order
+#. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/attribute_selection/attribute_selection.xml:0
 msgid "Enter your custom value"
 msgstr "Введіть ваше кастомне значення"
@@ -430,8 +444,8 @@ msgstr "Введіть ваше кастомне значення"
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
 msgid ""
-"Feel free to use and print this QR code as many times as needed according to"
-" your requirements."
+"Feel free to use and print this QR code as many times as needed according to "
+"your requirements."
 msgstr ""
 "Не соромтеся використовувати та друкувати цей QR-код стільки разів, скільки "
 "потрібно відповідно до ваших вимог."
@@ -457,6 +471,18 @@ msgstr "Слідуйте інструкціям на терміналі"
 #: code:addons/pos_self_order/models/pos_config.py:0
 msgid "Generic"
 msgstr "Загальний"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/overrides/components/qr_order_button/qr_order_button.xml:0
+msgid "Get QR Codes"
+msgstr ""
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/overrides/components/qr_order_button/qr_order_button.js:0
+msgid "Get QR codes"
+msgstr ""
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -519,11 +545,15 @@ msgstr "Чм цей товар доступний на екранах самоо
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
 msgid ""
-"If you need customized QR codes, start by scanning the relevant QR code to acquire the URL. Then, make\n"
-"                use of a QR code generator like https://www.qrcode-monkey.com or https://www.qr-code-generator.com"
+"If you need customized QR codes, start by scanning the relevant QR code to "
+"acquire the URL. Then, make\n"
+"                use of a QR code generator like https://www.qrcode-"
+"monkey.com or https://www.qr-code-generator.com"
 msgstr ""
-"Якщо вам потрібні налаштовані QR-коди, почніть зі сканування відповідного QR-коду, щоб отримати URL-адресу. Потім\n"
-" скористайтеся генератором QR-кодів, наприклад https://www.qrcode-monkey.com or https://www.qr-code-generator.com"
+"Якщо вам потрібні налаштовані QR-коди, почніть зі сканування відповідного QR-"
+"коду, щоб отримати URL-адресу. Потім\n"
+" скористайтеся генератором QR-кодів, наприклад https://www.qrcode-monkey.com "
+"or https://www.qr-code-generator.com"
 
 #. module: pos_self_order
 #: model:ir.model.fields,help:pos_self_order.field_pos_config__self_ordering_image_brand
@@ -931,8 +961,7 @@ msgstr "QR-коди"
 #: code:addons/pos_self_order/models/res_config_settings.py:0
 msgid "QR codes can only be generated in mobile or consultation mode."
 msgstr ""
-"QR-коди можна згенерувати лише в мобільному режимі або в режимі "
-"консультації."
+"QR-коди можна згенерувати лише в мобільному режимі або в режимі консультації."
 
 #. module: pos_self_order
 #: model:ir.model.fields.selection,name:pos_self_order.selection__pos_config__self_ordering_mode__consultation
@@ -998,11 +1027,11 @@ msgstr ""
 #: model:ir.model.fields,help:pos_self_order.field_pos_self_order_custom_link__pos_config_ids
 msgid ""
 "Select for which points of sale you want to display this link. Leave empty "
-"to display it for all points of sale. You have to select among the points of"
-" sale that have the 'QR Code Menu' feature enabled."
+"to display it for all points of sale. You have to select among the points of "
+"sale that have the 'QR Code Menu' feature enabled."
 msgstr ""
-"Виберіть, для яких точок продажу ви хочете відображати це посилання. Залиште"
-" порожнім, щоб відобразити його для всіх точок продажу. Ви повинні вибрати "
+"Виберіть, для яких точок продажу ви хочете відображати це посилання. Залиште "
+"порожнім, щоб відобразити його для всіх точок продажу. Ви повинні вибрати "
 "серед торгових точок, у яких увімкнено функцію «Меню QR-коду»."
 
 #. module: pos_self_order

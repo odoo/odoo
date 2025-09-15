@@ -45,7 +45,7 @@ test("can color cells", async () => {
     await tick();
 
     const cells = queryAll("td");
-    expect(cells[0]).toHaveStyle({ "background-color": "rgb(107, 173, 222)" });
-    expect(cells[1]).toHaveStyle({ "background-color": "rgb(107, 173, 222)" });
-    expect(cells[2]).not.toHaveStyle({ "background-color": "rgb(107, 173, 222)" });
+    expect(cells[0]).toHaveStyle({ "background-color": "rgba(107, 173, 222, 0.6)" });
+    expect(cells[1]).toHaveStyle({ "background-color": "rgba(107, 173, 222, 0.6)" });
+    expect(cells[2]).not.toHaveStyle({ "background-color": "rgba(107, 173, 222, 0.6)" });
 });

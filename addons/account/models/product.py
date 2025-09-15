@@ -291,7 +291,10 @@ class ProductProduct(models.Model):
         if default_code:
             domains.append([('default_code', '=', default_code)])
         if name:
-            domains += [[('name', '=', name)], [('name', 'ilike', name)]]
+            domains.append([('name', '=', name)])
+            # avoid matching unrelated products whose names merely contain that short string
+            if len(name) > 4:
+                domains.append([('name', 'ilike', name)])
 
         company = company or self.env.company
         for company_domain in (

@@ -95,7 +95,7 @@
                 </button>
             </xpath>
             <xpath expr="//group[@name='managers']" position="inside">
-                <field name="attendance_manager_id" string="Attendance" widget="many2one_avatar_user"/>
+                <field name="attendance_manager_id" readonly="not can_edit" string="Attendance" widget="many2one_avatar_user"/>
             </xpath>
             <xpath expr="//group[@name='managers']" position="attributes">
                 <attribute name="invisible">0</attribute>

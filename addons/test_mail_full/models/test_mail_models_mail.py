@@ -123,6 +123,10 @@ class MailTestRating(models.Model):
     def _rating_get_partner(self):
         return self.customer_id
 
+    @api.model
+    def _allow_publish_rating_stats(self):
+        return True
+
 
 class MailTestRatingThread(models.Model):
     """A model inheriting from mail.thread with minimal fields for testing

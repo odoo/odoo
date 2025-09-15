@@ -59,6 +59,7 @@ export {
     Deferred,
     delay,
     freezeTime,
+    unfreezeTime,
     microTick,
     setFrameRate,
     tick,

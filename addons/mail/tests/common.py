@@ -1417,7 +1417,7 @@ class MailCase(MockEmail):
         notif_messages = [n.message for n in bus_notifs]
         for expected in message_items or []:
             for notification in notif_messages:
-                if json_dump(expected) == notification:
+                if json.loads(json_dump(expected)) == json.loads(notification):
                     break
             else:
                 matching_notifs = [m for m in notif_messages if json.loads(m).get("type") == expected.get("type")]

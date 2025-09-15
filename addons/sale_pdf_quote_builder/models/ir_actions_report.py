@@ -142,7 +142,7 @@ class IrActionsReport(models.Model):
                     formatted_value_ = format_amount(
                         self.env, value_, currency_id_ or order.currency_id
                     )
-                elif not value_:
+                elif not value_ and field_type_ not in {'integer', 'float'}:
                     formatted_value_ = ''
                 elif field_type_ == 'date':
                     formatted_value_ = format_date(self.env, value_)

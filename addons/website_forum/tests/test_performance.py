@@ -30,7 +30,7 @@ class TestForumPerformance(UtilPerf):
 
     def test_perf_sql_forum_standard_data(self):
         number_of_queries = self._get_url_hot_query(self.forum._compute_website_url())
-        self.assertEqual(number_of_queries, 23)
+        self.assertEqual(number_of_queries, 22)
         number_of_queries = self._get_url_hot_query(self.forum._compute_website_url(), cache=False)
         self.assertLessEqual(number_of_queries, 28)
         number_of_queries = self._get_url_hot_query(self.post.website_url)

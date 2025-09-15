@@ -5,6 +5,7 @@
 # Translators:
 # Lyall Kindmurr, 2024
 # Wil Odoo, 2024
+# Larisa_nexterp, 2025
 # 
 msgid ""
 msgstr ""
@@ -12,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-09-25 08:39+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Larisa_nexterp, 2025\n"
 "Language-Team: Romanian (https://app.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -28,12 +29,12 @@ msgstr "1.5"
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_portal_content_inherit_sale_management
 msgid "<span class=\"btn btn-secondary\">Add to order</span>"
-msgstr ""
+msgstr "<span class=\"btn btn-secondary\">Adaugă la comandă</span>"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
 msgid "<span invisible=\"not require_payment\">of</span>"
-msgstr "<span invisible=\"not require_payment\">of</span>"
+msgstr "<span invisible=\"not require_payment\">din</span>"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.report_saleorder_document_inherit_sale_management
@@ -48,7 +49,7 @@ msgstr "Activ"
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
 msgid "Add a note"
-msgstr "Adăugați o notă"
+msgstr "Adaugă o notă"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_form_quote
@@ -115,7 +116,7 @@ msgstr "Setări de configurare"
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__mail_template_id
 msgid "Confirmation Mail"
-msgstr "Mail de confirmare"
+msgstr "E-mail de confirmare"
 
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_option__product_uom_category_id
@@ -125,18 +126,18 @@ msgid ""
 "Conversion between Units of Measure can only occur if they belong to the "
 "same category. The conversion will be made based on the ratios."
 msgstr ""
-"Conversia între Unitățile de Măsură poate fi efectuată numai dacă acestea "
-"aparțin aceleiași categorii. Conversia va fi făcută pe baza indicilor."
+"Conversia între Unitățile de Măsură poate avea loc doar dacă acestea aparțin"
+" aceleiași categorii. Conversia se va face pe baza rapoartelor."
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.res_config_settings_view_form
 msgid "Create standardized offers with default products"
-msgstr "Creați oferte standardizate cu produse implicite"
+msgstr "Creează oferte standardizate cu produse implicite"
 
 #. module: sale_management
 #: model_terms:ir.actions.act_window,help:sale_management.sale_order_template_action
 msgid "Create your quotation template"
-msgstr "Creați șablonul dvs. de ofertă"
+msgstr "Creează șablonul tău de ofertă"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_option__create_uid
@@ -152,7 +153,7 @@ msgstr "Creat de"
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__create_date
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_option__create_date
 msgid "Created on"
-msgstr "Creat pe"
+msgstr "Creat la"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_res_company__sale_order_template_id
@@ -183,7 +184,7 @@ msgstr "Rezumat"
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_form_quote
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_portal_content_inherit_sale_management
 msgid "Disc.%"
-msgstr "Disc.%"
+msgstr "Reduc.%"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_option__discount
@@ -201,18 +202,19 @@ msgstr "Nume afișat"
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__display_type
 msgid "Display Type"
-msgstr "Tipul de afișare"
+msgstr "Tip afișare"
 
 #. module: sale_management
 #. odoo-python
 #: code:addons/sale_management/models/digest.py:0
 msgid "Do not have access, skip this data for user's digest email"
-msgstr "Nu aveți acces, săriți aceste date pentru e-mail-ul utilizatorului"
+msgstr ""
+"Nu aveți acces, săriți aceste date pentru e-mailul rezumat al utilizatorului"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.report_saleorder_document_inherit_sale_management
 msgid "Extra Chips"
-msgstr "Chip-uri suplimentare"
+msgstr "Chipsuri suplimentare"
 
 #. module: sale_management
 #: model:ir.model.constraint,message:sale_management.constraint_sale_order_template_line_non_accountable_fields_null
@@ -224,14 +226,13 @@ msgstr ""
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_option__sequence
 msgid "Gives the sequence order when displaying a list of optional products."
-msgstr ""
-"Oferă ordinea secvenței atunci când afișează o listă de produse opționale."
+msgstr "Oferă ordinea secvenței la afișarea unei liste de produse opționale."
 
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_template_line__sequence
 msgid "Gives the sequence order when displaying a list of sale quote lines."
 msgstr ""
-"Oferă ordinea secvenței atunci când afișează o listă de linii de ofertă de "
+"Oferă ordinea secvenței la afișarea unei liste de linii de ofertă de "
 "vânzare."
 
 #. module: sale_management
@@ -253,8 +254,8 @@ msgid ""
 "If set, SO with this template will invoice in this journal; otherwise the "
 "sales journal with the lowest sequence is used."
 msgstr ""
-"Dacă este setat, SO-ul cu acest model va fi facturat în acest jurnal; în caz"
-" contrar, se utilizează jurnalul de vânzări cu cea mai mică secvență."
+"Dacă este setat, SO cu acest șablon va factura în acest jurnal; altfel se "
+"folosește jurnalul de vânzări cu cea mai mică secvență."
 
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_template__active
@@ -262,18 +263,18 @@ msgid ""
 "If unchecked, it will allow you to hide the quotation template without "
 "removing it."
 msgstr ""
-"Dacă nu este bifat, vă va permite să ascundeți șablonul de cotație fără a-l "
+"Dacă nu este bifat, vă permite să ascundeți șablonul de ofertă fără a-l "
 "elimina."
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__journal_id
 msgid "Invoicing Journal"
-msgstr "Jurnal facturare"
+msgstr "Jurnal de facturare"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_digest_digest__kpi_all_sale_total_value
 msgid "Kpi All Sale Total Value"
-msgstr "Kpi Valoarea totală a tuturor vânzărilor"
+msgstr "Valoarea totală KPI a tuturor vânzărilor"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_option__write_uid
@@ -281,7 +282,7 @@ msgstr "Kpi Valoarea totală a tuturor vânzărilor"
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__write_uid
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_option__write_uid
 msgid "Last Updated by"
-msgstr "Ultima actualizare făcută de"
+msgstr "Ultima actualizare de către"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_option__write_date
@@ -289,7 +290,7 @@ msgstr "Ultima actualizare făcută de"
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__write_date
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_option__write_date
 msgid "Last Updated on"
-msgstr "Ultima actualizare pe"
+msgstr "Ultima actualizare la"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_option__line_id
@@ -306,8 +307,8 @@ msgstr "Linii"
 #: model:ir.model.constraint,message:sale_management.constraint_sale_order_template_line_accountable_product_id_required
 msgid "Missing required product and UoM on accountable sale quote line."
 msgstr ""
-"Lipsește produsul necesar și unitatea de măsură de pe linia de ofertă de "
-"vânzare contabilă."
+"Lipsește produsul necesar și unitatea de măsură pe linia de ofertă de "
+"vânzare contabilizată."
 
 #. module: sale_management
 #: model:ir.model.fields.selection,name:sale_management.selection__sale_order_template_line__display_type__line_note
@@ -318,7 +319,7 @@ msgstr "Notă"
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_template__number_of_days
 msgid "Number of days for the validity date computation of the quotation"
-msgstr "Numărul de zile pentru calcularea datei de valabilitate a cotației"
+msgstr "Numărul de zile pentru calcularea datei de valabilitate a ofertei"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__require_payment
@@ -351,7 +352,7 @@ msgstr "Opțiuni"
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__prepayment_percent
 msgid "Prepayment percentage"
-msgstr "Procent de plată în avans"
+msgstr "Procent plată în avans"
 
 #. module: sale_management
 #. odoo-python
@@ -396,22 +397,22 @@ msgstr "Durata ofertei"
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_tree
 msgid "Quotation Template"
-msgstr "Șablon ofertă"
+msgstr "Șablon de ofertă"
 
 #. module: sale_management
 #: model:ir.model,name:sale_management.model_sale_order_template_line
 msgid "Quotation Template Line"
-msgstr "Linia șablonului de ofertă"
+msgstr "Linie șablon de ofertă"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
 msgid "Quotation Template Lines"
-msgstr "Linii șablon ofertă"
+msgstr "Linii șablon de ofertă"
 
 #. module: sale_management
 #: model:ir.model,name:sale_management.model_sale_order_template_option
 msgid "Quotation Template Option"
-msgstr "Opțiunea șablon de ofertă"
+msgstr "Opțiune șablon de ofertă"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__sale_order_template_id
@@ -441,7 +442,7 @@ msgstr "Elimină"
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_portal_content_inherit_sale_management
 msgid "Remove one"
-msgstr "Eliminați unul"
+msgstr "Elimină unul"
 
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_template__require_signature
@@ -458,12 +459,12 @@ msgid ""
 "Request an online payment to the customer in order to confirm orders "
 "automatically."
 msgstr ""
-"Solicitați o plată online către client pentru a confirma automat comenzile."
+"Solicitați o plată online clientului pentru a confirma automat comenzile."
 
 #. module: sale_management
 #: model:ir.model,name:sale_management.model_sale_order_option
 msgid "Sale Options"
-msgstr "Opțiuni vânzare"
+msgstr "Opțiuni de vânzare"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.digest_digest_view_form
@@ -483,17 +484,17 @@ msgstr "Linie comandă de vânzare"
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_option__order_id
 msgid "Sales Order Reference"
-msgstr "Referință comandă vânzare"
+msgstr "Referință comandă de vânzare"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_form_quote
 msgid "Sales Quotation Template Lines"
-msgstr "Liniile de șablon ale ofertelor de vânzare"
+msgstr "Linii șablon ofertă de vânzare"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_search
 msgid "Search Quotation Template"
-msgstr "Căutare șablon de ofertă"
+msgstr "Caută șablon de ofertă"
 
 #. module: sale_management
 #: model:ir.model.fields.selection,name:sale_management.selection__sale_order_template_line__display_type__line_section
@@ -510,7 +511,7 @@ msgid ""
 msgstr ""
 "Vindeți același produs în diferite dimensiuni sau culori? Încercați grila de"
 " produse și completați comenzile cu cantități multiple din fiecare variantă."
-" Această caracteristică există și în aplicația Achiziție."
+" Această funcționalitate există și în aplicația Achiziții."
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_option__sequence
@@ -526,9 +527,9 @@ msgid ""
 "to help sales configure a product with different options: colors, size, "
 "capacity, etc. Make sale orders encoding easier and error-proof."
 msgstr ""
-"Vă confruntați cu un catalog de produse complex? Încercați configuratorul de"
-" produs pentru a ajuta vânzările să configureze un produs cu diferite "
-"opțiuni: culori, dimensiuni, capacitate etc. Faceți codificarea comenzilor "
+"Vă confruntați cu un catalog de produse complex? Încercați Configuratorul de"
+" produse pentru a ajuta vânzările să configureze un produs cu diferite "
+"opțiuni: culori, dimensiuni, capacitate etc. Faceți introducerea comenzilor "
 "de vânzare mai ușoară și fără erori."
 
 #. module: sale_management
@@ -547,14 +548,14 @@ msgid ""
 "The Administrator can set default Terms & Conditions in Sales Settings. "
 "Terms set here will show up instead if you select this quotation template."
 msgstr ""
-"Administratorul poate seta termenii și condițiile implicite în setările "
-"modulului de vânzări. Termenii setați aici vor fi afișați dacă selectați "
-"acest șablon de ofertă."
+"Administratorul poate seta Termeni & Condiții implicite în setările de "
+"vânzări. Termenii setați aici vor fi afișați dacă selectați acest șablon de "
+"ofertă."
 
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_template__prepayment_percent
 msgid "The percentage of the amount needed to be paid to confirm quotations."
-msgstr "Procentul din suma care trebuie plătită pentru confirmarea ofertelor."
+msgstr "Procentul din sumă care trebuie plătit pentru a confirma ofertele."
 
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_template__mail_template_id
@@ -562,7 +563,7 @@ msgid ""
 "This e-mail template will be sent on confirmation. Leave empty to send "
 "nothing."
 msgstr ""
-"Acest șablon de e-mail va fi trimis după confirmare. Lăsați gol pentru a nu "
+"Acest șablon de e-mail va fi trimis la confirmare. Lăsați gol pentru a nu "
 "trimite nimic."
 
 #. module: sale_management
@@ -584,7 +585,7 @@ msgstr "Sfat: Odoo acceptă produse configurabile"
 #: model:digest.tip,name:sale_management.digest_tip_sale_management_1
 #: model_terms:digest.tip,tip_description:sale_management.digest_tip_sale_management_1
 msgid "Tip: Sell or buy products in bulk with matrixes"
-msgstr "Sfat: Vindeți sau cumpărați produse vrac cu matrice"
+msgstr "Sfat: Vindeți sau cumpărați produse în vrac cu matrice"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_option__price_unit
@@ -603,7 +604,7 @@ msgstr "Preț unitar:"
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__product_uom_id
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_option__uom_id
 msgid "Unit of Measure"
-msgstr "Unitatea de măsură"
+msgstr "Unitate de măsură"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_form_quote
@@ -617,9 +618,9 @@ msgid ""
 "                Send these quotes by email and let your customers sign online.\n"
 "                Use cross-selling and discounts to push and boost your sales."
 msgstr ""
-"Utilizați șabloane pentru a crea oferte profesionale în câteva minute.\n"
-"Trimiteți aceste oferte prin e-mail și permiteți clienților dvs. să semneze online.\n"
-"Utilizați vânzările încrucișate și reducerile pentru a vă stimula vânzările."
+"Utilizați șabloane pentru a crea oferte profesionale, finisate, în câteva minute.\n"
+"Trimiteți aceste oferte prin e-mail și permiteți clienților să semneze online.\n"
+"Folosiți vânzarea încrucișată și reducerile pentru a vă crește vânzările."
 
 #. module: sale_management
 #. odoo-python
@@ -634,8 +635,8 @@ msgid ""
 "You cannot change the type of a sale quote line. Instead you should delete "
 "the current line and create a new line of the proper type."
 msgstr ""
-"Nu puteți modifica tipul unei linii de ofertă de vânzare. În schimb, trebuie"
-" să ștergeți linia curentă și să creați o nouă linie de tipul corespunzător."
+"Nu puteți schimba tipul unei linii de ofertă de vânzare. În schimb, trebuie "
+"să ștergeți linia curentă și să creați o linie nouă de tipul potrivit."
 
 #. module: sale_management
 #. odoo-python
@@ -644,8 +645,8 @@ msgid ""
 "Your quotation contains products from company %(product_company)s whereas your quotation belongs to company %(quote_company)s. \n"
 " Please change the company of your quotation or remove the products from other companies (%(bad_products)s)."
 msgstr ""
-"Oferta dvs. conține produse de la companie %(product_company)s în timp ce oferta dvs. aparține companiei %(quote_company)s. \n"
-" Vă rugăm să schimbați compania de unde este oferta sau să eliminați produsele din alte companii(%(bad_products)s)."
+"Oferta dvs. conține produse de la compania %(product_company)s, în timp ce oferta aparține companiei %(quote_company)s.\n"
+" Vă rugăm să schimbați compania ofertei sau să eliminați produsele din alte companii (%(bad_products)s)."
 
 #. module: sale_management
 #. odoo-python
@@ -660,8 +661,8 @@ msgid ""
 "Your template contains products from company %(product_company)s whereas your template belongs to company %(template_company)s. \n"
 " Please change the company of your template or remove the products from other companies."
 msgstr ""
-"Șablonul dvs. conține produse de la compania %(product_company)s în timp ce șablonul dvs. aparține companiei %(template_company)s. \n"
-"Vă rugăm să schimbați compania de unde este oferta. sau să eliminați produsele de la alte companii."
+"Șablonul dvs. conține produse de la compania %(product_company)s, în timp ce șablonul aparține companiei %(template_company)s.\n"
+" Vă rugăm să schimbați compania șablonului sau să eliminați produsele din alte companii."
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
@@ -671,4 +672,4 @@ msgstr "zile"
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
 msgid "e.g. Standard Consultancy Package"
-msgstr "de ex. Pachet standard de consultanță"
+msgstr "ex: Pachet standard de consultanță"

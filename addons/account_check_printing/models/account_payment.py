@@ -121,6 +121,10 @@ class AccountPayment(models.Model):
             field_desc['readonly'] = True
         return result
 
+    @api.model
+    def _get_trigger_fields_to_synchronize(self):
+        return super()._get_trigger_fields_to_synchronize() + ('check_number',)
+
     def _get_aml_default_display_name_list(self):
         # Extends 'account'
         self.ensure_one()

@@ -37,6 +37,12 @@ test("no conflicts between file uploads", async () => {
     await inputFiles(".o-mail-ChatWindow .o-mail-Composer input[type=file]", [text2]);
     await contains(".o-mail-Chatter .o-mail-AttachmentCard");
     await contains(".o-mail-ChatWindow .o-mail-AttachmentCard");
+    await contains(
+        ".o-mail-Chatter .o-mail-AttachmentCard:not(.o-isUploading):contains(text1.txt)"
+    );
+    await contains(
+        ".o-mail-ChatWindow .o-mail-AttachmentCard:not(.o-isUploading):contains(text2.txt)"
+    );
 });
 
 test("Attachment shows spinner during upload", async () => {
@@ -47,5 +53,5 @@ test("Attachment shows spinner during upload", async () => {
     await start();
     await openDiscuss(channelId);
     await inputFiles(".o-mail-Composer input[type=file]", [text2]);
-    await contains(".o-mail-AttachmentCard .fa-spinner");
+    await contains(".o-mail-AttachmentCard.o-isUploading:contains(text2.txt) .fa-spinner");
 });

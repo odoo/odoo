@@ -167,5 +167,7 @@ class WebsiteCustomer(GoogleMap):
                     return request.redirect('/customers/%s' % request.env['ir.http']._slug(partner))
                 values = {}
                 values['main_object'] = values['partner'] = partner
+                # See REVIEW_CAN_PUBLISH_UNSUDO
+                values['main_object'] = values['main_object'].with_context(can_publish_unsudo_main_object=True)
                 return request.render("website_customer.details", values)
         raise request.not_found()

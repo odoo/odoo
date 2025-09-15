@@ -148,7 +148,7 @@ var PortalComposer = publicWidget.Widget.extend({
      * @private
      */
     _prepareMessageData: function () {
-        return Object.assign(this.options || {}, {
+        return {
             thread_model: this.options.res_model,
             thread_id: this.options.res_id,
             post_data: {
@@ -161,7 +161,7 @@ var PortalComposer = publicWidget.Widget.extend({
             token: this.options.token,
             hash: this.options.hash,
             pid: this.options.pid,
-        });
+        };
     },
     /**
      * @private

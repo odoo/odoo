@@ -22,6 +22,7 @@
                 >
                 <field name="active"/>
                 <field name="alias_email"/>
+                <field name="allowed_user_ids" invisible="1"/>
                 <templates>
                     <t t-name="menu" groups="hr_recruitment.group_hr_recruitment_user">
                         <div class="container">
@@ -174,8 +175,9 @@
                 <attribute name="invisible">0</attribute>
             </page>
              <div name="recruitment_target" position="after">
+                <field name="allowed_user_ids" invisible="1"/>
                 <field name="user_id" widget="many2one_avatar_user"/>
-                <field name="interviewer_ids" widget="many2many_tags_avatar" options="{'no_create': True, 'no_create_edit': True}" />
+                <field name="interviewer_ids" widget="many2many_tags_avatar" options="{'no_create': True, 'no_create_edit': True}"/>
             </div>
             <xpath expr="//field[@name='department_id']" position="after">
                 <label for="address_id"/>
@@ -289,6 +291,7 @@
                 <field name="company_id" column_invisible="True"/>
                 <field name="alias_name" column_invisible="True"/>
                 <field name="alias_id" invisible="not alias_name" optional="hide"/>
+                <field name="allowed_user_ids" invisible="1"/>
                 <field name="user_id" widget="many2one_avatar_user" optional="hide"/>
             </field>
             <list position="attributes">

@@ -1,24 +1,25 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* pos_self_order
-# 
+#
 # Translators:
 # Wil Odoo, 2024
 # Malaz Abuidris <msea@odoo.com>, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-06-06 18:38+0000\n"
+"POT-Creation-Date: 2025-08-08 18:38+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Malaz Abuidris <msea@odoo.com>, 2025\n"
 "Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
+"Language: ar\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ar\n"
-"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
+"&& n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
 
 #. module: pos_self_order
 #: model:ir.actions.report,print_report_name:pos_self_order.report_self_order_qr_codes_page
@@ -403,11 +404,15 @@ msgstr "كل طلب "
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
 msgid ""
-"Each table in your floor plan is assigned a unique QR code based on your configuration. For security reasons,\n"
-"                    both the point of sale and table names are encrypted in the generated URL, as shown in the example below:."
+"Each table in your floor plan is assigned a unique QR code based on your "
+"configuration. For security reasons,\n"
+"                    both the point of sale and table names are encrypted in "
+"the generated URL, as shown in the example below:."
 msgstr ""
-"يتم تعيين رمز QR فريد لكل طاولة في مخطط الطابق الخاص بك بناءً على تهيئتك. لأسباب أمنية،\n"
-"يتم ترميز كل من أسماء نقاط البيع والطاولات في عنوان URL الذي تم إنشاؤه، كما هو موضح في المثال أدناه:. "
+"يتم تعيين رمز QR فريد لكل طاولة في مخطط الطابق الخاص بك بناءً على تهيئتك. "
+"لأسباب أمنية،\n"
+"يتم ترميز كل من أسماء نقاط البيع والطاولات في عنوان URL الذي تم إنشاؤه، كما "
+"هو موضح في المثال أدناه:. "
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -423,6 +428,13 @@ msgstr "تحرير"
 
 #. module: pos_self_order
 #. odoo-javascript
+#: code:addons/pos_self_order/static/src/overrides/components/qr_order_button/qr_order_button.js:0
+msgid ""
+"Enable QR menu in the Restaurant settings to get QR codes for free on tables."
+msgstr ""
+
+#. module: pos_self_order
+#. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/attribute_selection/attribute_selection.xml:0
 msgid "Enter your custom value"
 msgstr "قم بإدخال قيمتك المخصصة "
@@ -430,8 +442,8 @@ msgstr "قم بإدخال قيمتك المخصصة "
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
 msgid ""
-"Feel free to use and print this QR code as many times as needed according to"
-" your requirements."
+"Feel free to use and print this QR code as many times as needed according to "
+"your requirements."
 msgstr ""
 "لا تتردد في استخدام وطباعة رمز QR هذا عدة مرات حسب الحاجة وفقاً لمتطلباتك. "
 
@@ -459,6 +471,18 @@ msgstr "عام"
 
 #. module: pos_self_order
 #. odoo-javascript
+#: code:addons/pos_self_order/static/src/overrides/components/qr_order_button/qr_order_button.xml:0
+msgid "Get QR Codes"
+msgstr ""
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/overrides/components/qr_order_button/qr_order_button.js:0
+msgid "Get QR codes"
+msgstr ""
+
+#. module: pos_self_order
+#. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/stand_number_page/stand_number_page.xml:0
 msgid "Get a tracker and enter its number here"
 msgstr "احصل على متتبع وأدخل رقمه هنا "
@@ -480,8 +504,8 @@ msgid ""
 "Hey, looks like you forgot to create products or add them to pos_config. "
 "Please add them before using the Self Order"
 msgstr ""
-"مرحبًا، يبدو أنك نسيت إنشاء المنتجات أو إضافتها إلى pos_config. يرجى إضافتها"
-" قبل استخدام خاصية الطلب الذاتي "
+"مرحبًا، يبدو أنك نسيت إنشاء المنتجات أو إضافتها إلى pos_config. يرجى إضافتها "
+"قبل استخدام خاصية الطلب الذاتي "
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
@@ -518,11 +542,15 @@ msgstr "إذا كان هذا المنتج متوفراً في شاشات الط�
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
 msgid ""
-"If you need customized QR codes, start by scanning the relevant QR code to acquire the URL. Then, make\n"
-"                use of a QR code generator like https://www.qrcode-monkey.com or https://www.qr-code-generator.com"
+"If you need customized QR codes, start by scanning the relevant QR code to "
+"acquire the URL. Then, make\n"
+"                use of a QR code generator like https://www.qrcode-"
+"monkey.com or https://www.qr-code-generator.com"
 msgstr ""
-"إذا كنت بحاجة إلى رموز QR مخصصة، فابدأ بمسح رمز QR ذو الصلة للحصول على رابط URL. ثم\n"
-"                استخدم أدوات إنشاء رموز QR مثل https://www.qrcode-monkey.com أو https://www.qr-code-generator.com "
+"إذا كنت بحاجة إلى رموز QR مخصصة، فابدأ بمسح رمز QR ذو الصلة للحصول على رابط "
+"URL. ثم\n"
+"                استخدم أدوات إنشاء رموز QR مثل https://www.qrcode-monkey.com "
+"أو https://www.qr-code-generator.com "
 
 #. module: pos_self_order
 #: model:ir.model.fields,help:pos_self_order.field_pos_config__self_ordering_image_brand
@@ -992,12 +1020,12 @@ msgstr "اختر طاولة "
 #: model:ir.model.fields,help:pos_self_order.field_pos_self_order_custom_link__pos_config_ids
 msgid ""
 "Select for which points of sale you want to display this link. Leave empty "
-"to display it for all points of sale. You have to select among the points of"
-" sale that have the 'QR Code Menu' feature enabled."
+"to display it for all points of sale. You have to select among the points of "
+"sale that have the 'QR Code Menu' feature enabled."
 msgstr ""
-"قم بتحديد أي نقاط البيع ترغب في عرض هذا الرابط لها. اتركه فارغاَ لعرضه لكافة"
-" نقاط البيع. عليك الاختيار من بين نقاط البيع حتى تتمكن من تمكين خاصية "
-"\"قائمة رمز QR\". "
+"قم بتحديد أي نقاط البيع ترغب في عرض هذا الرابط لها. اتركه فارغاَ لعرضه لكافة "
+"نقاط البيع. عليك الاختيار من بين نقاط البيع حتى تتمكن من تمكين خاصية \"قائمة "
+"رمز QR\". "
 
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_config__self_ordering_image_brand

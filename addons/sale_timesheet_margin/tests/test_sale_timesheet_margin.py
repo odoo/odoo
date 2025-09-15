@@ -65,6 +65,12 @@ class TestSaleTimesheetMargin(TestCommonSaleTimesheet):
         self.assertEqual(sale_order.order_line.purchase_price, expected_cost, "Sale order line cost should be number of working hours on one day * timesheet cost of the employee set on the timesheet linked to the SOL.")
 
     def test_no_recompute_purchase_price_not_timesheet(self):
+        """
+        check that if a sale order line is linked to a task but the service is ordered_prepaid,
+        adding a timesheet line does not trigger a recomputation of purchase_price.
+        We also check that the pruchase price of new sale order lines added after the confirmation
+        is computed correctly.
+        """
         project = self.env['project.project'].create({
             'name': "Test",
         })
@@ -76,6 +82,14 @@ class TestSaleTimesheetMargin(TestCommonSaleTimesheet):
             'service_tracking': 'task_global_project',
             'project_id': project.id,
             'standard_price': 2,
+        })
+        simple_service = self.env['product.product'].create({
+            'name': "Simple service",
+            'list_price': 1.0,
+            'type': 'service',
+            'invoice_policy': 'order',
+            'service_type': 'timesheet',
+            'standard_price': 5,
         })
         sale_order = self.env['sale.order'].create({
             'name': 'Test_SO0002',
@@ -93,7 +107,6 @@ class TestSaleTimesheetMargin(TestCommonSaleTimesheet):
         sale_order.order_line.purchase_price = 3
         # Confirm the sales order, create project and task.
         sale_order.action_confirm()
-
         # Add timesheet line
         self.env['account.analytic.line'].create({
             'name': 'Test Line 222',
@@ -106,4 +119,11 @@ class TestSaleTimesheetMargin(TestCommonSaleTimesheet):
             'so_line': sale_order.order_line.id,
         })
         self.env.flush_all()
-        self.assertEqual(sale_order.order_line.purchase_price, 3)
+        self.assertEqual(sale_order.order_line.filtered(lambda sol: sol.product_id == self.product_1).purchase_price, 3)
+        sale_order.order_line = [Command.create({
+            'product_id': simple_service.id,
+            'price_unit': 1.0,
+            'product_uom': self.ref('uom.product_uom_unit'),
+            'product_uom_qty': 1.0,
+        })]
+        self.assertEqual(sale_order.order_line.filtered(lambda sol: sol.product_id == simple_service).purchase_price, 5)

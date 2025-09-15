@@ -57,7 +57,8 @@
             <t t-set="is_custom" t-value="false"/>
 
             <select class="configurator_select form-select form-select-md" t-model="state.attribute_value_ids">
-                <option t-foreach="values" t-as="value" t-key="value.id" t-att-value="value.id" t-att-class="{'ptav-not-available': value.excluded}">
+                <option t-foreach="values" t-as="value" t-key="value.id" t-att-value="value.id" t-att-class="{'ptav-not-available': value.excluded}"
+                    t-att-selected="value.id == state.attribute_value_ids">
                     <t t-set="is_custom" t-value="is_custom || (value.is_custom and value.id == state.attribute_value_ids)"/>
                     <t t-esc="value.name"/>
                     <t t-if="value.price_extra">
@@ -129,12 +130,12 @@
                 <div t-if="isArchivedCombination()" class="alert alert-warning mt-3">
                     <span>This combination does not exist.</span>
                 </div>
-                <div t-foreach="this.props.product.attribute_line_ids" t-as="attributeLine" t-key="attributeLine.id" class="attribute mb-3">
+                <div t-foreach="this.validAttributeLineIds" t-as="attributeLine" t-key="attributeLine.id" class="attribute mb-3">
                     <div class="attribute_name mb-2 fw-bolder" t-esc="attributeLine.attribute_id.name"/>
-                    <RadioProductAttribute t-if="attributeLine.attribute_id.display_type === 'radio'" attributeLine="attributeLine"/>
-                    <PillsProductAttribute t-elif="attributeLine.attribute_id.display_type === 'pills'" attributeLine="attributeLine"/>
-                    <SelectProductAttribute t-elif="attributeLine.attribute_id.display_type === 'select'" attributeLine="attributeLine"/>
-                    <ColorProductAttribute t-elif="attributeLine.attribute_id.display_type === 'color'" attributeLine="attributeLine"/>
+                    <RadioProductAttribute t-if="attributeLine.attribute_id.display_type === 'radio'" attributeLine="attributeLine" defaultValues="this.props.defaultValues"/>
+                    <PillsProductAttribute t-elif="attributeLine.attribute_id.display_type === 'pills'" attributeLine="attributeLine" defaultValues="this.props.defaultValues"/>
+                    <SelectProductAttribute t-elif="attributeLine.attribute_id.display_type === 'select'" attributeLine="attributeLine" defaultValues="this.props.defaultValues"/>
+                    <ColorProductAttribute t-elif="attributeLine.attribute_id.display_type === 'color'" attributeLine="attributeLine" defaultValues="this.props.defaultValues"/>
                     <MultiProductAttribute t-elif="attributeLine.attribute_id.display_type === 'multi'" attributeLine="attributeLine"/>
                 </div>
             </div>

@@ -7,6 +7,7 @@ from werkzeug.urls import url_parse
 
 from odoo.addons.website.tools import MockRequest
 from odoo.tests import common
+from odoo.exceptions import UserError
 
 
 class TestMenu(common.TransactionCase):
@@ -235,6 +236,49 @@ class TestMenu(common.TransactionCase):
         # anchor and query string are not messing with the slug url compare
         submenu.url = '/sub/slug-3'
         test_full_case(submenu)
+
+    def test_07_menu_hierarchy_validation(self):
+        Menu = self.env['website.menu']
+
+        # Validation 1: Parent menu validation
+        self.main_menu = Menu.create({
+            'name': 'Main',
+        })
+        self.child_menu_1 = Menu.create({
+            'name': 'Child1',
+        })
+        self.child_menu_1.parent_id = self.main_menu.id
+
+        # Attempt to assign a second child menu as a child of the first child menu,
+        # which should raise a UserError due to hierarchy restrictions.
+        self.child_menu_2 = Menu.create({
+            'name': 'Child2',
+        })
+        with self.assertRaises(UserError):
+            self.child_menu_2.parent_id = self.child_menu_1.id
+
+        # Validation 2: Mega menu validation
+        self.mega_menu = Menu.create({
+            'name': 'Mega menu',
+            'is_mega_menu': True,
+        })
+        self.another_menu = Menu.create({
+            'name': 'Sample_menu',
+        })
+
+        # Attempt to assign a parent to the mega menu and a child to it,
+        # which should both raise UserErrors due to mega menu restrictions.
+        with self.assertRaises(UserError):
+            self.mega_menu.parent_id = self.another_menu.id
+
+        with self.assertRaises(UserError):
+            self.another_menu.parent_id = self.mega_menu.id
+
+        # Validation 3: Child menu condition validation
+        # Attempt to assign another_menu as a parent of main_menu chain having Child1,
+        # which should raise a UserError because a main_menu had child.
+        with self.assertRaises(UserError):
+            self.main_menu.parent_id = self.another_menu.id
 
 
 class TestMenuHttp(common.HttpCase):

@@ -16,6 +16,13 @@ Saudi Arabia POS Localization
         'point_of_sale._assets_pos': [
             'web/static/lib/zxing-library/zxing-library.js',
             'l10n_sa_pos/static/src/**/*',
+        ],
+        'web.assets_tests': [
+            'l10n_sa_pos/static/tests/tours/**/*',
+        ],
+        'web.assets_unit_tests': [
+            'l10n_sa_pos/static/src/app/utils/qr.js',
+            'l10n_sa_pos/static/tests/unit/**/*',
         ]
     },
     'auto_install': True,

@@ -55,6 +55,9 @@ class PosSelfOrderController(http.Controller):
             'amount_total': amount_total,
         })
 
+        if amount_total == 0:
+            order_ids._process_saved_order(False)
+
         order_ids.send_table_count_notification(order_ids.mapped('table_id'))
         return self._generate_return_values(order_ids, pos_config)
 

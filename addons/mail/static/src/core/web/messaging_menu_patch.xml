@@ -32,7 +32,7 @@
             </div>
         </xpath>
         <xpath expr="//*[@name='threads']" position="before">
-            <div t-if="store.channels.status !== 'fetching' and !hasPreviews" class="d-flex justify-content-center py-4 px-2 text-muted">
+            <div t-if="store.channels.status !== 'fetching' and !hasPreviews and !store.discuss.searchTerm" class="d-flex justify-content-center py-4 px-2 text-muted">
                 No conversation yet...
             </div>
             <div t-if="store.discuss.searchTerm and !threads.length" class="d-flex justify-content-center py-4 px-2 text-muted">

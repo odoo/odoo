@@ -69,6 +69,10 @@ class MassSMSCase(SMSCase, MockLinkTracker):
             ('mass_mailing_id', 'in', mailing.ids),
             ('res_id', 'in', records.ids)
         ])
+        debug_info = '\n'.join(
+            f'Trace: to {t.sms_number} - state {t.trace_status} - res_id {t.res_id}'
+            for t in traces
+        )
 
         traces_info = []
         for trace in traces:
@@ -103,6 +107,8 @@ class MassSMSCase(SMSCase, MockLinkTracker):
                 # trace info
                 'failure_type',
                 'trace_status',
+                # check control
+                'check_sms',
             }
             if invalid:
                 raise AssertionError(f"assertSMSTraces: invalid input {invalid}")
@@ -118,15 +124,22 @@ class MassSMSCase(SMSCase, MockLinkTracker):
             # content
             content = recipient_info.get('content', None)
             record = record or recipient_info.get('record')
+            # checks
+            recipient_check_sms = recipient_info.get('check_sms', check_sms)
 
             trace = traces.filtered(
                 lambda t: t.sms_number == number and t.trace_status == status and (t.res_id == record.id if record else True)
             )
-            self.assertTrue(len(trace) == 1,
-                            'SMS: found %s notification for number %s, (status: %s) (1 expected)\n%s' % (len(trace), number, status, debug_info))
+            self.assertTrue(
+                len(trace) == 1,
+                'SMS: found %s notification for number %s (res_id: %s) (status: %s) (1 expected)\n--MOCKED DATA\n%s' % (
+                    len(trace), number, record.id,
+                    status, debug_info
+                )
+            )
             self.assertTrue(bool(trace.sms_id_int))
 
-            if check_sms:
+            if recipient_check_sms:
                 if status in {'process', 'pending', 'sent'}:
                     if sent_unlink:
                         self.assertSMSIapSent([number], content=content)

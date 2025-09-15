@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* pos_restaurant
-# 
+# * pos_restaurant
+#
 # Translators:
 # Robin Calvin, 2024
 # Claes-Johan Dahlin, 2024
@@ -15,21 +15,23 @@
 # Lasse L, 2024
 # Anders Wallenquist <anders.wallenquist@vertel.se>, 2024
 # Martin Trigaux, 2024
-# Jakob Krabbe <jakob.krabbe@vertel.se>, 2024
-# 
+# Jakob Krabbe <jakob.krabbe@vertel.se>, 2024, 2025.
+# Claes-Johan Dahlin <user-89@users.noreply.translate.odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-12-16 13:39+0000\n"
-"PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Jakob Krabbe <jakob.krabbe@vertel.se>, 2024\n"
-"Language-Team: Swedish (https://app.transifex.com/odoo/teams/41243/sv/)\n"
+"PO-Revision-Date: 2025-09-12 14:12+0000\n"
+"Last-Translator: Jakob Krabbe <jakob.krabbe@vertel.se>\n"
+"Language-Team: Swedish <https://translate.odoo.com/projects/odoo-18/"
+"pos_restaurant/sv/>\n"
+"Language: sv\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: sv\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -70,7 +72,7 @@ msgstr "<strong>Våningsplanets namn:</strong>"
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.view_restaurant_floor_kanban
 msgid "<strong>Point of Sales:</strong>"
-msgstr "<strong>Punkt för försäljning:</strong>"
+msgstr "<strong>Kassasystem, POS:</strong>"
 
 #. module: pos_restaurant
 #: model_terms:ir.actions.act_window,help:pos_restaurant.action_restaurant_floor_form
@@ -78,7 +80,8 @@ msgid ""
 "A restaurant floor represents the place where customers are served, this is where you can\n"
 "                define and position the tables."
 msgstr ""
-"Ett restauranggolv representerar den plats där kunderna serveras, det är här du kan\n"
+"Ett våningsplan representerar den plats där kunderna serveras, det är här du "
+"kan\n"
 "                definiera och placera ut borden."
 
 #. module: pos_restaurant
@@ -91,7 +94,7 @@ msgstr "Aktiv"
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/floor_screen/floor_screen.xml:0
 msgid "Add Floor"
-msgstr "Lägg till våning"
+msgstr "Lägg till ett våningsplan"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -103,7 +106,7 @@ msgstr "Lägg till bord"
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/floor_screen/floor_screen.xml:0
 msgid "Add a new floor to get started."
-msgstr "Lägg till en ny våning för att komma igång."
+msgstr "Lägg till ett nytt våningsplan för att komma igång."
 
 #. module: pos_restaurant
 #: model_terms:ir.actions.act_window,help:pos_restaurant.action_restaurant_floor_form
@@ -148,19 +151,19 @@ msgid ""
 "Adjust the tax rate based on whether customers are dining in or opting for "
 "takeout."
 msgstr ""
-"Justera skattesatsen beroende på om kunderna äter på plats eller väljer att "
-"ta med sig mat."
+"Justera momssatsen beroende på om kunderna äter på plats eller väljer att ta "
+"med sig mat."
 
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
 msgid "Allow Bill Splitting"
-msgstr "Tillåt delning av räkningar"
+msgstr "Tillåt delad nota"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_pos_config__takeaway
 #: model:ir.model.fields,help:pos_restaurant.field_res_config_settings__pos_takeaway
 msgid "Allow to create orders for takeaway customers."
-msgstr "Gör det möjligt att skapa beställningar för takeaway-kunder."
+msgstr "Gör det möjligt att skapa beställningar för ta med-kunder."
 
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
@@ -236,21 +239,21 @@ msgstr "Belgiska färska hemlagade pommes frites"
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/control_buttons/control_buttons.xml:0
 msgid "Bill"
-msgstr "Faktura"
+msgstr "Nota"
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/bill_screen/bill_screen.xml:0
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_config__iface_printbill
 msgid "Bill Printing"
-msgstr "Utskrift av fakturor"
+msgstr "Utskriven nota"
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/split_bill_screen/split_bill_screen.xml:0
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_config__iface_splitbill
 msgid "Bill Splitting"
-msgstr "Uppdelning av räkningar"
+msgstr "Delad nota"
 
 #. module: pos_restaurant
 #: model:product.attribute.value,name:pos_restaurant.product_attribute_value_black_olives
@@ -261,7 +264,7 @@ msgstr "Svarta oliver"
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/product_screen/order_summary/order_summary.xml:0
 msgid "Book table"
-msgstr "Bokbord"
+msgstr "Boka bord"
 
 #. module: pos_restaurant
 #: model:product.template,description_sale:pos_restaurant.product_old_fashioned_product_template
@@ -288,7 +291,7 @@ msgstr "Vagn"
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/floor_screen/floor_screen.xml:0
 msgid "Change Floor Background"
-msgstr "Ändra golvets bakgrund"
+msgstr "Ändra våningplanets bakgrund"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -357,7 +360,7 @@ msgstr "Cosmopolitan"
 #. module: pos_restaurant
 #: model:product.template,description_sale:pos_restaurant.product_cosmopolitan_product_template
 msgid "Cranberry Jus, lime jus, vodka and Cointreau"
-msgstr "Cranberry Jus, lime Jus, vodka och Cointreau"
+msgstr "Cranberryjuice, limejuice, vodka och Cointreau"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_floor__create_uid
@@ -381,18 +384,18 @@ msgstr "Ta bort"
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/floor_screen/floor_screen.js:0
 msgid "Delete Error"
-msgstr "Radera fel"
+msgstr "Ta bort fel"
 
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
 msgid "Design floors and assign orders to tables"
-msgstr "Designa golv och tilldela order till bord"
+msgstr "Designa våningsplanet och tilldela beställning till borden"
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/overrides/models/pos_store.js:0
 msgid "Dine in"
-msgstr "Ät i"
+msgstr "Ät inne"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_floor__display_name
@@ -413,25 +416,25 @@ msgstr "Tidig utskrift av kvitton"
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
 msgid "Eat in / Take out"
-msgstr "Äta i / ta ut"
+msgstr "Äta inne / ta med ut"
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/control_buttons/control_buttons.js:0
 #: code:addons/pos_restaurant/static/src/app/control_buttons/control_buttons.xml:0
 msgid "Edit Order Name"
-msgstr "Redigera ordernamn"
+msgstr "Redigera beställningsnamn"
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/overrides/components/navbar/navbar.xml:0
 msgid "Edit Plan"
-msgstr "Redigera plan"
+msgstr "Redigera våningsplan"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_pos_config__iface_splitbill
 msgid "Enables Bill Splitting in the Point of Sale."
-msgstr "Aktiverar delning av fakturor i kassan."
+msgstr "Aktiverar delning av fakturor i kassansystemet."
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -461,7 +464,7 @@ msgstr "Extra ost"
 #: model:product.attribute,name:pos_restaurant.product_extra_pasta
 #: model:product.attribute,name:pos_restaurant.product_extra_pizza
 msgid "Extras"
-msgstr "Extramaterial"
+msgstr "Tillbehör"
 
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.fanta_product_template
@@ -482,62 +485,62 @@ msgstr "Finansiell ställning"
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
 msgid "Fiscal Positions"
-msgstr "Finanspolitiska positioner"
+msgstr "Skatteområden"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__floor_id
 msgid "Floor"
-msgstr "Golv"
+msgstr "Våningsplan"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_floor__floor_background_image
 msgid "Floor Background Image"
-msgstr "Bakgrundsbild för golv"
+msgstr "Bakgrundsbild för våningsplan"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_floor__name
 msgid "Floor Name"
-msgstr "Golvets namn"
+msgstr "Våningsplanets namn"
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/floor_screen/floor_screen.js:0
 msgid "Floor Name ?"
-msgstr "Golvets namn ?"
+msgstr "Våningsplanets namn ?"
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/overrides/components/navbar/navbar.xml:0
 msgid "Floor Plan"
-msgstr "Planlösning"
+msgstr "Våningsplan"
 
 #. module: pos_restaurant
 #: model:ir.actions.act_window,name:pos_restaurant.action_restaurant_floor_form
 #: model:ir.ui.menu,name:pos_restaurant.menu_restaurant_floor_all
 msgid "Floor Plans"
-msgstr "Planlösningar"
+msgstr "Våningsplaner"
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/floor_screen/floor_screen.js:0
 msgid "Floor name"
-msgstr "Golvets namn"
+msgstr "Våningsplanets namn"
 
 #. module: pos_restaurant
 #. odoo-python
 #: code:addons/pos_restaurant/models/pos_restaurant.py:0
 msgid "Floor: %(floor)s - PoS Config: %(config)s \n"
-msgstr "Våning: %(floor)s - PoS Config: %(config)s\n"
+msgstr "Våningsplan: %(floor)s - PoS Config: %(config)s \n"
 
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
 msgid "Floors"
-msgstr "Golv"
+msgstr "Våningsplanen"
 
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
 msgid "Floors & Tables Map"
-msgstr "Golv & Bord Karta"
+msgstr "Våningsplans- & Bords Karta"
 
 #. module: pos_restaurant
 #: model:pos.category,name:pos_restaurant.food
@@ -603,7 +606,7 @@ msgstr "ID"
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.ice_tea_product_template
 msgid "Ice Tea"
-msgstr "Ice Tea"
+msgstr "Is Te"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_table__active
@@ -611,8 +614,8 @@ msgid ""
 "If false, the table is deactivated and will not be available in the point of"
 " sale"
 msgstr ""
-"Om den är falsk avaktiveras tabellen och kommer inte att vara tillgänglig på"
-" försäljningsstället"
+"Om falskt, avmarkera bordet och det kommer inte att vara tillgänglig på "
+"försäljningsstället"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -733,13 +736,13 @@ msgstr "Negroni"
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/floor_screen/floor_screen.js:0
 msgid "New Floor"
-msgstr "Ny våning"
+msgstr "Nytt våningsplan"
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/tip_screen/tip_screen.xml:0
 msgid "No Tip"
-msgstr "Inget tips"
+msgstr "Ingen dricks"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -756,7 +759,7 @@ msgstr "Antal sittplatser?"
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.product_old_fashioned_product_template
 msgid "Old Fashioned"
-msgstr "Old Fashioned"
+msgstr "Gammaldags"
 
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
@@ -773,7 +776,7 @@ msgstr "Endast webbkompatibla bildformat som .png eller .jpeg stöds."
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/floor_screen/floor_screen.xml:0
 msgid "Oops! No floors available."
-msgstr "Oops! Inga våningar tillgängliga."
+msgstr "Oops! Inga våningsplan tillgängliga."
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -792,7 +795,7 @@ msgstr "Öppna"
 #: code:addons/pos_restaurant/static/src/overrides/components/product_screen/actionpad_widget/actionpad_widget.xml:0
 #: code:addons/pos_restaurant/static/src/overrides/components/product_screen/product_screen.xml:0
 msgid "Order"
-msgstr "Order"
+msgstr "Beställning"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -803,12 +806,12 @@ msgstr "PRO FORM"
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__parent_id
 msgid "Parent Table"
-msgstr "Föräldrabord"
+msgstr "Överordnat bord"
 
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.pos_food_4formaggi_product_template
 msgid "Pasta 4 Formaggi"
-msgstr "Pasta 4 ostsorter"
+msgstr "Pasta 4 Formaggi"
 
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.pos_food_bolo_product_template
@@ -864,22 +867,22 @@ msgstr "Vegetarisk pizza"
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/overrides/components/navbar/navbar.xml:0
 msgid "Plan"
-msgstr "Planera"
+msgstr "Våningsplan"
 
 #. module: pos_restaurant
 #: model:ir.model,name:pos_restaurant.model_pos_config
 msgid "Point of Sale Configuration"
-msgstr "Kassakonfigurering"
+msgstr "Konfiguration av kassasystemet"
 
 #. module: pos_restaurant
 #: model:ir.model,name:pos_restaurant.model_pos_order
 msgid "Point of Sale Orders"
-msgstr "Kassaorder"
+msgstr "Beställning hanterad i kassasystemet"
 
 #. module: pos_restaurant
 #: model:ir.model,name:pos_restaurant.model_pos_payment
 msgid "Point of Sale Payments"
-msgstr "Kassa-betalningar"
+msgstr "Betalningar i kassasystemet"
 
 #. module: pos_restaurant
 #: model:ir.model,name:pos_restaurant.model_pos_session
@@ -889,22 +892,22 @@ msgstr "Kassasession"
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_floor__pos_config_ids
 msgid "Point of Sales"
-msgstr "Kassa"
+msgstr "Kassasystemet"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_res_config_settings__pos_iface_printbill
 msgid "Pos Iface Printbill"
-msgstr "Pos Iface Printbill"
+msgstr "Skriv ut notan i kassasystemet"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_res_config_settings__pos_iface_splitbill
 msgid "Pos Iface Splitbill"
-msgstr "Pos Iface Splitbill"
+msgstr "Dela notan i kassasystemet"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_res_config_settings__pos_set_tip_after_payment
 msgid "Pos Set Tip After Payment"
-msgstr "Pos Set Tip efter betalning"
+msgstr "Fråga om dricks efter betalning"
 
 #. module: pos_restaurant
 #: model:product.attribute.value,name:pos_restaurant.product_attribute_value_potato_thyme
@@ -926,38 +929,38 @@ msgstr "Prosecco, aperol, läsk"
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/product_screen/order_summary/order_summary.xml:0
 msgid "Release Order"
-msgstr "Släpp order"
+msgstr "Frigör beställning"
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/product_screen/order_summary/order_summary.xml:0
 msgid "Release table"
-msgstr "Släpp tabell"
+msgstr "Frigör bord"
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/floor_screen/floor_screen.js:0
 msgid "Removing a floor cannot be undone. Do you still want to remove %s?"
 msgstr ""
-"Att ta bort ett golv kan inte göras ogjort. Vill du fortfarande ta bort %s?"
+"Att ta bort ett våningsplan kan inte ångras. Vill du fortfarande ta bort %s?"
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/floor_screen/floor_screen.js:0
 msgid "Removing a table cannot be undone"
-msgstr "Det går inte att ångra borttagningen av en tabell"
+msgstr "Det går inte att ångra borttagningen av ett bord"
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/floor_screen/floor_screen.xml:0
 msgid "Rename"
-msgstr "Byt namn"
+msgstr "Namnbyte"
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/tip_screen/tip_screen.xml:0
 msgid "Reprint receipts"
-msgstr "Skriv ut kvitton på nytt"
+msgstr "Skriv ut kvittot på nytt"
 
 #. module: pos_restaurant
 #. odoo-python
@@ -976,7 +979,7 @@ msgstr "Restaurangvåningen"
 #: model:ir.model.fields,field_description:pos_restaurant.field_res_config_settings__pos_floor_ids
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.view_restaurant_floor_tree
 msgid "Restaurant Floors"
-msgstr "Restaurang Golv"
+msgstr "Restaurangvåningarna"
 
 #. module: pos_restaurant
 #: model:ir.model,name:pos_restaurant.model_restaurant_table
@@ -994,12 +997,12 @@ msgstr "Kreditera"
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/overrides/components/payment_screen/payment_screen_payment_lines/payment_screen_payment_lines.xml:0
 msgid "Reverse Payment"
-msgstr "Återta Betalning"
+msgstr "Återbetalning"
 
 #. module: pos_restaurant
 #: model:ir.model.fields.selection,name:pos_restaurant.selection__restaurant_table__shape__round
 msgid "Round"
-msgstr "Runda"
+msgstr "Rund"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -1026,8 +1029,7 @@ msgstr "Spara"
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
 msgid "Save this page and come back here to set up the feature."
-msgstr ""
-"Spara den här sidan och kom tillbaka hit för att konfigurera funktionen."
+msgstr "Spara den här sidan och kom tillbaka för att konfigurera funktionen."
 
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.schweppes_product_template
@@ -1045,7 +1047,7 @@ msgstr "Säten"
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/overrides/components/navbar/navbar.xml:0
 msgid "Select table to transfer order"
-msgstr "Välj bord för att överföra order"
+msgstr "Välj bord för att genomföra beställning"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_floor__sequence
@@ -1055,14 +1057,14 @@ msgstr "Sekvens"
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_config__set_tip_after_payment
 msgid "Set Tip After Payment"
-msgstr "Ställ in tips efter betalning"
+msgstr "Ställ in dricks efter betalning"
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/tip_screen/tip_screen.xml:0
 #: code:addons/pos_restaurant/static/src/overrides/components/ticket_screen/ticket_screen.xml:0
 msgid "Settle"
-msgstr "Bosätta sig"
+msgstr "Notan"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__shape
@@ -1072,7 +1074,7 @@ msgstr "Form"
 #. module: pos_restaurant
 #: model:product.attribute,name:pos_restaurant.product_sides_buns_pizza
 msgid "Sides"
-msgstr "Sidor"
+msgstr "Tillbehör"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -1083,7 +1085,7 @@ msgstr "Signatur"
 #. module: pos_restaurant
 #: model:product.attribute.value,name:pos_restaurant.product_attribute_value_smashed_sweet_potatoes
 msgid "Smashed sweet potatoes"
-msgstr "Smulad sötpotatis"
+msgstr "Smashed sweet potatoes"
 
 #. module: pos_restaurant
 #: model:pos.category,name:pos_restaurant.pos_category_soft_drinks
@@ -1105,7 +1107,7 @@ msgstr "Dela"
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/split_bill_screen/split_bill_screen.xml:0
 msgid "Split Order"
-msgstr "Delad order"
+msgstr "Dela beställning"
 
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
@@ -1138,19 +1140,19 @@ msgstr "Pommes frites av sötpotatis"
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/overrides/components/navbar/navbar.xml:0
 msgid "Switch Floor View"
-msgstr "Vy över växelns golv"
+msgstr "Byt våningsplansvy"
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/control_buttons/control_buttons.xml:0
 msgid "Switch to Dine in"
-msgstr "Byt till att äta på restaurang"
+msgstr "Byt till att \"äta här\""
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/control_buttons/control_buttons.xml:0
 msgid "Switch to Takeaway"
-msgstr "Byt till takeaway"
+msgstr "Byt till \"ta med\""
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -1160,66 +1162,66 @@ msgstr "Byt till takeaway"
 #: code:addons/pos_restaurant/static/src/overrides/components/ticket_screen/ticket_screen.xml:0
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_order__table_id
 msgid "Table"
-msgstr "Tabell"
+msgstr "Bord"
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/overrides/components/receipt_header_patch.js:0
 msgid "Table %(number)s"
-msgstr ""
+msgstr "Bord %(number)s"
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/overrides/components/receipt_header_patch.js:0
 msgid "Table %(number)s, Guests: %(count)s"
-msgstr ""
+msgstr "Bord %(number)s, Gäster: %(count)s"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_config__module_pos_restaurant_appointment
 #: model:ir.model.fields,field_description:pos_restaurant.field_res_config_settings__pos_module_pos_restaurant_appointment
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
 msgid "Table Booking"
-msgstr "Bokning av bord"
+msgstr "Bordsbokning"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__table_number
 msgid "Table Number"
-msgstr "Tabellnummer"
+msgstr "Bordsnummer"
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/overrides/components/navbar/navbar.js:0
 #: code:addons/pos_restaurant/static/src/overrides/components/navbar/navbar.xml:0
 msgid "Table Selector"
-msgstr "Väljare för bord"
+msgstr "Bordsväljare"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_floor__table_ids
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.view_restaurant_floor_form
 msgid "Tables"
-msgstr "Tabeller"
+msgstr "Bord"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_order__takeaway
 msgid "Take Away"
-msgstr "Ta bort"
+msgstr "Ta med"
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/overrides/models/pos_store.js:0
 msgid "Take out"
-msgstr ""
+msgstr "Ta med"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_config__takeaway
 #: model:ir.model.fields,field_description:pos_restaurant.field_res_config_settings__pos_takeaway
 msgid "Takeaway"
-msgstr "Takeaway"
+msgstr "\"Ta med\""
 
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
 msgid "Taxes must be included in price."
-msgstr "Skatter måste ingå i priset."
+msgstr "Moms måste ingå i priset."
 
 #. module: pos_restaurant
 #: model:product.template,description_sale:pos_restaurant.product_margarita_product_template
@@ -1229,28 +1231,27 @@ msgstr "Tequila Jose Cuervo, limejus, sockerrör Cointreau"
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_pos_order__customer_count
 msgid "The amount of customers that have been served by this order."
-msgstr "Det antal kunder som har betjänats av denna order."
+msgstr "Det antal kunder som har betjänats av denna beställning."
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_floor__background_color
 msgid "The background color of the floor in a html-compatible format"
-msgstr "Golvets bakgrundsfärg i ett html-kompatibelt format"
+msgstr "Våningplanets bakgrundsfärg i ett html-kompatibelt format"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_table__seats
 msgid "The default number of customer served at this table."
-msgstr "Standardantalet kunder som serveras vid detta bord."
+msgstr "Standardantalet gäster vid detta bordet."
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_table__table_number
 msgid "The number of the table as displayed on the floor plan"
-msgstr "Bordets nummer som det visas på planritningen"
+msgstr "Bordets nummer som det visas på våningsplanet"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_table__parent_id
 msgid "The parent table if this table is part of a group of tables"
-msgstr ""
-"Den överordnade tabellen om denna tabell är en del av en grupp tabeller"
+msgstr "Det överordnade bordet, om detta bordet är en del av en grupp av bord"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_pos_config__floor_ids
@@ -1268,33 +1269,30 @@ msgstr "Bordet där denna beställning serverades"
 msgid ""
 "The table's color, expressed as a valid 'background' CSS property value"
 msgstr ""
-"Tabellens färg, uttryckt som ett giltigt CSS-egenskapsvärde för \"background"
+"Bordets färg, uttryckt som ett giltigt CSS-egenskapsvärde för \"background\""
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_table__height
 msgid "The table's height in pixels"
-msgstr "Tabellens höjd i pixlar"
+msgstr "Bordets höjd i pixlar"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_table__position_h
 msgid ""
 "The table's horizontal position from the left side to the table's center, in"
 " pixels"
-msgstr ""
-"Tabellens horisontella position från vänster sida till tabellens mitt, i "
-"pixlar"
+msgstr "Bordets horisontella läge från vänster sida till bordets mitt, i pixlar"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_table__position_v
 msgid ""
 "The table's vertical position from the top to the table's center, in pixels"
-msgstr ""
-"Tabellens vertikala position från toppen till mitten av tabellen, i pixlar"
+msgstr "Bordets vertikala läge från topp till mitten av bordet, i pixlar"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_table__width
 msgid "The table's width in pixels"
-msgstr "Tabellens bredd i pixlar"
+msgstr "Bordets bredd i pixlar"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_pos_config__takeaway_fp_id
@@ -1303,8 +1301,8 @@ msgid ""
 "This is useful for restaurants with onsite and take-away services that imply"
 " specific tax rates."
 msgstr ""
-"Detta är användbart för restauranger med servering på plats och take-away-"
-"tjänster som innebär specifika skattesatser."
+"Detta är användbart för restauranger med serveringsalternativen \" äta här\" "
+"och \"ta med\" som innebär olika momssatser."
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -1313,8 +1311,8 @@ msgid ""
 "This order is not yet synced to server. Make sure it is synced then try "
 "again."
 msgstr ""
-"Denna order har ännu inte synkroniserats med servern. Kontrollera att den "
-"har synkroniserats och försök igen."
+"Denna beställning har ännu inte synkroniserats med servern. Kontrollera att "
+"den synkar och försök igen."
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -1326,19 +1324,19 @@ msgstr "Dricks"
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/tip_screen/tip_screen.xml:0
 msgid "Tip Amount"
-msgstr "Tips Belopp"
+msgstr "Dricksbelopp"
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/tip_receipt/tip_receipt.xml:0
 msgid "Tip:"
-msgstr "Tips:"
+msgstr "Dricks:"
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/overrides/components/ticket_screen/ticket_screen.js:0
 msgid "Tipping"
-msgstr "Tippning"
+msgstr "Dricksa"
 
 #. module: pos_restaurant
 #: model:product.template,description_sale:pos_restaurant.pos_food_margherita_product_template
@@ -1355,7 +1353,7 @@ msgstr "Total:"
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/control_buttons/control_buttons.xml:0
 msgid "Transfer / Merge"
-msgstr "Överföring / sammanslagning"
+msgstr "Genomför / sammanslagning"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -1367,7 +1365,7 @@ msgstr "Filformat som inte stöds"
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/tip_screen/tip_screen.js:0
 msgid "Unsynced order"
-msgstr "Osynkroniserad order"
+msgstr "Osynkroniserad beställningar"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -1421,16 +1419,16 @@ msgstr "Bredd"
 msgid ""
 "You cannot delete a floor when orders are still in draft for this floor."
 msgstr ""
-"Du kan inte ta bort en våning när det fortfarande finns order i utkast för "
-"denna våning."
+"Du kan inte ta bort ett våningsplan när det fortfarande finns en beställning "
+"i utkast för denna våning."
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/floor_screen/floor_screen.js:0
 msgid "You cannot delete a floor with orders still in draft for this floor."
 msgstr ""
-"Du kan inte ta bort en våning med order som fortfarande är i utkast för "
-"denna våning."
+"Du kan inte ta bort ett våningsplan med en beställning som fortfarande är i "
+"utkast för denna våning."
 
 #. module: pos_restaurant
 #. odoo-python
@@ -1438,16 +1436,16 @@ msgstr ""
 msgid ""
 "You cannot delete a table when orders are still in draft for this table."
 msgstr ""
-"Du kan inte ta bort en tabell när det fortfarande finns order i utkast för "
-"denna tabell."
+"Du kan inte ta bort ett bord när det fortfarande finns en beställning i "
+"utkast för detta bordet."
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/floor_screen/floor_screen.js:0
 msgid "You cannot delete a table with orders still in draft for this table."
 msgstr ""
-"Du kan inte ta bort en tabell med order som fortfarande är i utkast för "
-"denna tabell."
+"Du kan inte ta bort ett bord med en beställning som fortfarande är i utkast "
+"för detta bordet."
 
 #. module: pos_restaurant
 #. odoo-python
@@ -1456,8 +1454,8 @@ msgid ""
 "You cannot remove a floor that is used in a PoS session, close the "
 "session(s) first: \n"
 msgstr ""
-"Du kan inte ta bort ett golv som används i en PoS-session, stäng "
-"sessionen/sessionerna först:\n"
+"Du kan inte ta bort ett våningsplan som används i en kassasystems-session, "
+"stäng sessionen (-erna) först: \n"
 
 #. module: pos_restaurant
 #. odoo-python
@@ -1466,8 +1464,8 @@ msgid ""
 "You cannot remove a table that is used in a PoS session, close the "
 "session(s) first."
 msgstr ""
-"Du kan inte ta bort ett bord som används i en PoS-session, stäng "
-"sessionen/sessionerna först."
+"Du kan inte ta bort ett bord som används i en kassasystems-session, stäng "
+"sessionen (-erna) först."
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -1497,4 +1495,4 @@ msgstr "artiklar"
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/overrides/components/order_widget/order_widget.js:0
 msgid "or book the table for later"
-msgstr "eller boka bordet för senare tillfälle"
+msgstr "eller boka bordet för ett senare tillfälle"

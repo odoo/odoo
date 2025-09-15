@@ -348,6 +348,10 @@ class AccountEdiXmlUBL20(models.AbstractModel):
             'name': product.name or description,
             'sellers_item_identification_vals': {'id': product.code},
             'classified_tax_category_vals': tax_category_vals_list,
+            'standard_item_identification_vals': {
+                'id': product.barcode,
+                'id_attrs': {'schemeID': '0160'},  # GTIN
+            } if product.barcode else {},
         }
 
     def _get_document_allowance_charge_vals_list(self, invoice, taxes_vals=None):
@@ -475,7 +479,7 @@ class AccountEdiXmlUBL20(models.AbstractModel):
         else:
             gross_price_subtotal = net_price_subtotal / (1.0 - (line.discount or 0.0) / 100.0)
         # Price subtotal with discount / quantity:
-        gross_price_unit = gross_price_subtotal / line.quantity if line.quantity else 0.0
+        gross_price_unit = gross_price_subtotal / line.quantity if line.quantity and not line.currency_id.is_zero(gross_price_subtotal) else 0.0
 
         uom = self._get_uom_unece_code(line.product_uom_id)
 
@@ -1739,8 +1743,14 @@ class AccountEdiXmlUBL20(models.AbstractModel):
         line_node['cac:Item'] = {
             'cbc:Description': {'_text': product.description_sale},
             'cbc:Name': {'_text': product.name},
+            'cac:SellersItemIdentification': {
+                'cbc:ID': {'_text': product.default_code},
+            },
             'cac:StandardItemIdentification': {
-                'cbc:ID': {'_text': product.barcode},
+                'cbc:ID': {
+                    '_text': product.barcode,
+                    'schemeID': '0160',  # GTIN
+                } if product.barcode else None,
             },
             'cac:AdditionalItemProperty': [
                 {

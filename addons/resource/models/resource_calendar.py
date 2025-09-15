@@ -391,21 +391,22 @@ class ResourceCalendar(models.Model):
                     max_hours_per_day = resource.calendar_id.hours_per_day
 
                     intervals = []
-                    current_monday = start_date - timedelta(days=start_date.weekday())
+                    current_start_day = start_date
 
-                    while current_monday <= end_date:
-                        current_sunday = current_monday + timedelta(days=6)
+                    while current_start_day <= end_date:
+                        current_end_of_week = current_start_day + timedelta(days=6)
 
-                        week_start = max(current_monday, start_date)
-                        week_end = min(current_sunday, end_date)
+                        week_start = max(current_start_day, start_date)
+                        week_end = min(current_end_of_week, end_date)
 
-                        if current_monday < start_date:
-                            prior_days = (start_date - current_monday).days
+                        if current_start_day < start_date:
+                            prior_days = (start_date - current_start_day).days
                             prior_hours = min(full_time_required_hours, max_hours_per_day * prior_days)
                         else:
                             prior_hours = 0
 
                         remaining_hours = max(0, full_time_required_hours - prior_hours)
+                        remaining_hours = min(remaining_hours, (end_dt - start_dt).total_seconds() / 3600)
 
                         current_day = week_start
                         while current_day <= week_end:
@@ -427,7 +428,7 @@ class ResourceCalendar(models.Model):
 
                             current_day += timedelta(days=1)
 
-                        current_monday += timedelta(days=7)
+                        current_start_day += timedelta(days=7)
 
                     result_per_resource_id[resource.id] = WorkIntervals(intervals)
                 elif resource in per_resource_result:
@@ -680,7 +681,10 @@ class ResourceCalendar(models.Model):
         if company_id:
             domain = [('company_id', 'in', (company_id.id, False))]
         if self.flexible_hours:
-            works = {d[0].date() for d in self._leave_intervals_batch(start_dt, end_dt, domain=domain)[False]}
+            leave_intervals = self._leave_intervals_batch(start_dt, end_dt, domain=domain)[False]
+            works = set()
+            for start_int, end_int, _ in leave_intervals:
+                works.update(start_int.date() + timedelta(days=i) for i in range((end_int.date() - start_int.date()).days + 1))
             return {fields.Date.to_string(day.date()): (day.date() in works) for day in rrule(DAILY, start_dt, until=end_dt)}
         works = {d[0].date() for d in self._work_intervals_batch(start_dt, end_dt, domain=domain)[False]}
         return {fields.Date.to_string(day.date()): (day.date() not in works) for day in rrule(DAILY, start_dt, until=end_dt)}

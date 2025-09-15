@@ -29,7 +29,7 @@ class AccountChartTemplate(models.AbstractModel):
             'ON': ('hst_sale_tax_13', 'hst_purchase_tax_13'),
             'NB': ('hst_sale_tax_15', 'hst_purchase_tax_15'),
             'NL': ('hst_sale_tax_15', 'hst_purchase_tax_15'),
-            'NS': ('hst_sale_tax_15', 'hst_purchase_tax_15'),
+            'NS': ('hst_sale_tax_14', 'hst_purchase_tax_14'),
             'PE': ('hst_sale_tax_15', 'hst_purchase_tax_15'),
         }.get(self.env.company.state_id.code, ('gst_sale_tax_5', 'gst_purchase_tax_5'))
 

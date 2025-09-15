@@ -618,9 +618,11 @@ function isValidFieldValue(record, fieldDef) {
         case "binary":
         case "char":
         case "html":
-        case "json":
         case "text": {
             return typeof value === "string";
+        }
+        case "json": {
+            return typeof value === "string" || typeof value === "object";
         }
         case "boolean": {
             return typeof value === "boolean";

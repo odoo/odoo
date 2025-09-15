@@ -200,6 +200,7 @@ class MailTestActivity(models.Model):
     date = fields.Date()
     email_from = fields.Char()
     active = fields.Boolean(default=True)
+    company_id = fields.Many2one('res.company')
 
     def action_start(self, action_summary):
         return self.activity_schedule(

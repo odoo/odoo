@@ -398,18 +398,20 @@ class ImageConverter(models.AbstractModel):
         except binascii.Error:
             raise ValueError("Invalid image content") from None
 
-        if img_b64 and guess_mimetype(img_b64, '') == 'image/webp':
+        mimetype = guess_mimetype(img_b64, '') if img_b64 else None
+        if mimetype == 'image/webp':
             return self.env["ir.qweb"]._get_converted_image_data_uri(value)
+        elif mimetype != "image/svg+xml":
+            try:
+                image = Image.open(BytesIO(img_b64))
+                image.verify()
+                mimetype = Image.MIME[image.format]
+            except OSError as exc:
+                raise ValueError("Non-image binary fields can not be converted to HTML") from exc
+            except Exception as exc:  # noqa: BLE001
+                raise ValueError("Invalid image content") from exc
 
-        try:
-            image = Image.open(BytesIO(img_b64))
-            image.verify()
-        except IOError:
-            raise ValueError("Non-image binary fields can not be converted to HTML") from None
-        except: # image.verify() throws "suitable exceptions", I have no idea what they are
-            raise ValueError("Invalid image content") from None
-
-        return "data:%s;base64,%s" % (Image.MIME[image.format], value.decode('ascii'))
+        return "data:%s;base64,%s" % (mimetype, value.decode('ascii'))
 
     @api.model
     def value_to_html(self, value, options):

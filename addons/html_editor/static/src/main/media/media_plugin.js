@@ -1,6 +1,7 @@
 import { Plugin } from "@html_editor/plugin";
 import {
     ICON_SELECTOR,
+    EDITABLE_MEDIA_CLASS,
     isIconElement,
     isMediaElement,
     isProtected,
@@ -67,6 +68,7 @@ export class MediaPlugin extends Plugin {
 
         unsplittable_node_predicates: isIconElement, // avoid merge
         functional_empty_node_predicates: isMediaElement,
+        is_node_editable_predicates: this.isEditableMediaElement.bind(this),
 
         selectors_for_feff_providers: () => ICON_SELECTOR,
     };
@@ -75,9 +77,16 @@ export class MediaPlugin extends Plugin {
         return this.config.getRecordInfo ? this.config.getRecordInfo() : {};
     }
 
+    isEditableMediaElement(node) {
+        return (
+            (isMediaElement(node) || node.nodeName === "IMG") &&
+            node.classList.contains(EDITABLE_MEDIA_CLASS)
+        );
+    }
+
     replaceImage() {
-        const selectedNodes = this.dependencies.selection.getSelectedNodes();
-        const node = selectedNodes.find((node) => node.tagName === "IMG");
+        const targetedNodes = this.dependencies.selection.getTargetedNodes();
+        const node = targetedNodes.find((node) => node.tagName === "IMG");
         if (node) {
             this.openMediaDialog({ node });
             this.dependencies.history.addStep();

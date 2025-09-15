@@ -94,7 +94,7 @@ export class ColorSelector extends Component {
     }
 
     onColorPreview(ev) {
-        const color = ev.hex ? ev.hex : this.processColorFromEvent(ev);
+        const color = ev.cssColor ? ev.cssColor : this.processColorFromEvent(ev);
         this.props.applyColorPreview({ color: color || "", mode: this.mode });
     }
 

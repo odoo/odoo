@@ -73,9 +73,9 @@ class StockMove(models.Model):
                 return {self.env['stock.lot']: price_unit}
         else:
             if self.product_id.lot_valuated:
-                return {lot: lot.standard_price or self.product_id.standard_price for lot in self.lot_ids}
+                return {lot: lot.standard_price or self.product_id.with_company(self.company_id).standard_price for lot in self.lot_ids}
             else:
-                return {self.env['stock.lot']: self.product_id.standard_price}
+                return {self.env['stock.lot']: self.product_id.with_company(self.company_id).standard_price}
 
     @api.model
     def _get_valued_types(self):
@@ -757,9 +757,7 @@ class StockMove(models.Model):
                 cost = -1 * cost
                 anglosaxon_am_vals = self.with_company(self.company_id)._prepare_account_move_vals(acc_valuation, acc_dest, journal_id, qty, description, svl_id, cost)
         elif self._is_dropshipped_returned():
-            if cost > 0 and self.location_dest_id._should_be_valued():
-                anglosaxon_am_vals = self.with_company(self.company_id).with_context(is_returned=True)._prepare_account_move_vals(acc_valuation, acc_src, journal_id, qty, description, svl_id, cost)
-            elif cost > 0:
+            if cost > 0:
                 anglosaxon_am_vals = self.with_company(self.company_id).with_context(is_returned=True)._prepare_account_move_vals(acc_dest, acc_valuation, journal_id, qty, description, svl_id, cost)
             else:
                 cost = -1 * cost

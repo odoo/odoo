@@ -32,3 +32,19 @@ class TestUi(odoo.tests.HttpCase):
         })
 
         self.start_tour('/odoo', 'project_task_history_tour', login='admin')
+
+    def test_project_task_last_history_steps(self):
+        """This tour will check that the history works properly."""
+        stage = self.env['project.task.type'].create({'name': 'To Do'})
+        project = self.env['project.project'].create([{
+            'name': 'Test History Project',
+            'type_ids': stage.ids,
+        }])
+
+        self.env['project.task'].create({
+            'name': 'Test History Task',
+            'stage_id': stage.id,
+            'project_id': project.id,
+        })
+
+        self.start_tour('/odoo', 'project_task_last_history_steps_tour', login='admin')

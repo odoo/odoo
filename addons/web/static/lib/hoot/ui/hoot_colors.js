@@ -48,7 +48,7 @@ const current = reactive(
             return;
         }
         for (const callback of colorChangedCallbacks) {
-            callback();
+            callback(current.scheme);
         }
     }
 );
@@ -71,8 +71,12 @@ export function generateStyleSheets() {
     return styles;
 }
 
+export function getColorScheme() {
+    return current.scheme;
+}
+
 /**
- * @param {() => any} callback
+ * @param {(scheme: ColorScheme) => any} callback
  */
 export function onColorSchemeChange(callback) {
     colorChangedCallbacks.push(callback);

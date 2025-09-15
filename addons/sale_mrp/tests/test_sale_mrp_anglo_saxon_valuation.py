@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo.fields import Command
 from odoo.tests import Form, tagged
 
 from odoo.addons.stock_account.tests.test_anglo_saxon_valuation_reconciliation_common import ValuationReconciliationTestCommon
@@ -622,3 +623,58 @@ class TestSaleMRPAngloSaxonValuation(ValuationReconciliationTestCommon):
         cogs_aml = amls.filtered(lambda aml: aml.account_id == self.company_data['default_account_expense'])
         self.assertAlmostEqual(cogs_aml.debit, 8.00, msg="Should include include the components from all subkits, with the price adapted for 1 Main kit")
         self.assertEqual(cogs_aml.credit, 0)
+
+    def test_sell_kit_invoice_before_delivery(self):
+        """ When a kit product is invoiced prior to delivery, we want to make sure to reconcile all
+        the AMLs from its explosion together, else we risk re-reconciliation attempts (which will
+        block certain actions from being performed altogether).
+        """
+        self.stock_account_product_categ.property_cost_method = 'average'
+
+        compo01 = self._create_product(name="Compo 01", is_storable=True, standard_price=10)
+        compo02 = self._create_product(name="Compo 02", is_storable=True, standard_price=20)
+        kit = self._create_product(name="Kit", is_storable=True, standard_price=30)
+        warehouse = self.company_data['default_warehouse']
+        self.env['stock.quant']._update_available_quantity(compo01, warehouse.lot_stock_id, 1.0)
+        self.env['stock.quant']._update_available_quantity(compo02, warehouse.lot_stock_id, 2.0)
+        self.env['mrp.bom'].create({
+            'type': 'phantom',
+            'product_id': kit.id,
+            'product_tmpl_id': kit.product_tmpl_id.id,
+            'product_qty': 1,
+            'bom_line_ids': [
+                Command.create({'product_id': compo01.id, 'product_qty': 1}),
+                Command.create({'product_id': compo02.id, 'product_qty': 1}),
+            ],
+        })
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [
+                Command.create({
+                    'product_id': kit.id,
+                    'product_uom_qty': 1,
+                    'price_unit': 10,
+                }),
+                Command.create({
+                    'product_id': compo02.id,
+                    'product_uom_qty': 1,
+                    'price_unit': 5,
+                }),
+            ],
+        })
+        sale_order.action_confirm()
+        invoice = sale_order.with_context(default_journal_id=self.company_data['default_journal_sale'].id)._create_invoices()
+        invoice.action_post()
+        delivery = sale_order.picking_ids
+        # would fail due to attempted re-reconciliation prior to this commit
+        delivery.button_validate()
+        stock_output_amls = self.env['account.move.line'].search([('account_id', '=', self.company_data['default_account_stock_out'].id)], order='id asc')
+        self.assertRecordValues(stock_output_amls,
+            [
+                {'product_id': kit.id,       'reconciled': True,    'debit': 0.0,     'credit':  30.0},
+                {'product_id': compo02.id,   'reconciled': True,    'debit': 0.0,     'credit':  20.0},
+                {'product_id': compo01.id,   'reconciled': True,    'debit': 10.0,    'credit':  0.0},
+                {'product_id': compo02.id,   'reconciled': True,    'debit': 20.0,    'credit':  0.0},
+                {'product_id': compo02.id,   'reconciled': True,    'debit': 20.0,    'credit':  0.0},
+            ]
+        )

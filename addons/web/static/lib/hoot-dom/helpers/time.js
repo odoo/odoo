@@ -1,5 +1,7 @@
 /** @odoo-module */
 
+import { isInstanceOf } from "../hoot_dom_utils";
+
 /**
  * @typedef {{
  *  animationFrame?: boolean;
@@ -227,11 +229,12 @@ export function delay(duration) {
     return new Promise((resolve) => setTimeout(resolve, duration));
 }
 
-/**
- * @param {boolean} setFreeze
- */
-export function freezeTime(setFreeze) {
-    frozen = setFreeze ?? !frozen;
+export function freezeTime() {
+    frozen = true;
+}
+
+export function unfreezeTime() {
+    frozen = false;
 }
 
 export function getTimeOffset() {
@@ -433,7 +436,7 @@ export async function waitUntil(predicate, options) {
                 if (typeof message === "function") {
                     message = message();
                 }
-                if (message instanceof Error) {
+                if (isInstanceOf(message, Error)) {
                     reject(message);
                 } else {
                     reject(new HootTimingError(message.replace("%timeout%", String(timeout))));

@@ -244,3 +244,18 @@ env['lunch.supplier'].browse([{self.supplier_kothai.id}])._send_auto_email()""")
             'topping_ids_3': [(2, supplier.topping_ids_3.id)],
         })
         self.assertFalse(supplier.topping_ids_3)
+
+    def test_lunch_order_with_minimum_threshold(self):
+        """ Test that lunch order is allowed within the overdraft threshold. """
+
+        self.env.company.lunch_minimum_threshold = 200.0
+        order = self.env['lunch.order'].create({
+            'product_id': self.product_pizza.id,
+            'date': self.monday_1pm.date(),
+            'supplier_id': self.supplier_pizza_inn.id,
+            'quantity': 11,
+        })
+        self.assertTrue(order.display_add_button)
+
+        order.action_order()
+        self.assertEqual(order.state, "ordered")

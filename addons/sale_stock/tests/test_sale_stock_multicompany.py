@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo.addons.stock_account.tests.test_anglo_saxon_valuation_reconciliation_common import ValuationReconciliationTestCommon
 from odoo.addons.sale.tests.common import TestSaleCommon
+from odoo.fields import Command
 from odoo.tests import tagged
 
 
@@ -147,3 +148,36 @@ class TestSaleStockMultiCompany(TestSaleCommon, ValuationReconciliationTestCommo
 
         # make sure an order line is created for the new stock move
         self.assertEqual(len(picking.sale_id.order_line), 2)
+
+    def test_intercompany_show_lot_on_invoice(self):
+        """
+        Check that lots and serial numbers are displayed on inter-companies invoices.
+        """
+        self.env.user.groups_id |= self.env.ref('stock_account.group_lot_on_invoice')
+        company2 = self.company_data_2['company']
+        self.product_a.write({
+            'is_storable': 'True',
+            'tracking': 'serial',
+            'invoice_policy': 'delivery',
+        })
+        self.product_a.tracking = 'serial'
+        sn = self.env['stock.lot'].create({'name': 'SN0012', 'product_id': self.product_a.id})
+        self.env['stock.quant']._update_available_quantity(self.product_a, self.warehouse_A.lot_stock_id, 1.0, lot_id=sn)
+        so = self.env['sale.order'].create({
+            'partner_id': company2.partner_id.id,
+            'order_line': [Command.create({
+                'name': self.product_a.name,
+                'product_id': self.product_a.id,
+                'product_uom_qty': 1.0,
+                'product_uom': self.product_a.uom_id.id,
+                'price_unit': self.product_a.list_price})],
+        })
+        so.action_confirm()
+        delivery = so.picking_ids
+        delivery.button_validate()
+        invoice = so._create_invoices()
+        invoice.action_post()
+        self.assertEqual(
+            [(rec['product_name'], rec['lot_id']) for rec in invoice._get_invoiced_lot_values()],
+            [(self.product_a.name, sn.id)]
+        )

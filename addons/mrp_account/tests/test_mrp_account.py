@@ -201,8 +201,7 @@ class TestMrpAccount(TestMrpCommon):
         bom_form.product_id = self.dining_table
 
     def test_two_productions_unbuild_one_sell_other_fifo(self):
-        """ Unbuild orders, when supplied with a specific MO record, should restrict their SVL
-        consumption to layers linked to moves originating from that MO record.
+        """ Valuation of unbuild orders for products valuated via FIFO should adhere to FIFO
         """
         final_product = self.env['product.product'].create({
             'is_storable': True,
@@ -270,10 +269,10 @@ class TestMrpAccount(TestMrpCommon):
         self.assertRecordValues(
             self.env['stock.valuation.layer'].search([('product_id', '=', final_product.id)]),
             [
-                {'remaining_qty': 1.0, 'value': 1.0, 'quantity': 1.0},
-                {'remaining_qty': 0.0, 'value': 2.0, 'quantity': 1.0},
-                # Unbuild SVL value is derived from MO_2, as precised on the unbuild form
-                {'remaining_qty': 0.0, 'value': -2.0, 'quantity': -1.0},
+                {'remaining_qty': 0.0, 'value': 1.0},
+                {'remaining_qty': 1.0, 'value': 2.0},
+                # Unbuild SVL value is derived from MO_1 according to FIFO
+                {'remaining_qty': 0.0, 'value': -1.0},
             ]
         )
         out_move = self.env['stock.move'].create({
@@ -291,13 +290,96 @@ class TestMrpAccount(TestMrpCommon):
         self.assertRecordValues(
             self.env['stock.valuation.layer'].search([('product_id', '=', final_product.id)]),
             [
-                {'remaining_qty': 0.0, 'value': 1.0, 'quantity': 1.0},
-                {'remaining_qty': 0.0, 'value': 2.0, 'quantity': 1.0},
-                {'remaining_qty': 0.0, 'value': -2.0, 'quantity': -1.0},
-                # Out move SVL value is derived from MO_1, the only candidate origin with some `remaining_qty`
-                {'remaining_qty': 0.0, 'value': -1.0, 'quantity': -1.0},
+                {'remaining_qty': 0.0, 'value': 1.0},
+                {'remaining_qty': 0.0, 'value': 2.0},
+                {'remaining_qty': 0.0, 'value': -1.0},
+                # Out move SVL value is derived from MO_2
+                {'remaining_qty': 0.0, 'value': -2.0},
             ]
         )
+
+    def test_labor_cost_posting_is_not_rounded_incorrectly(self):
+        """ Test to ensure that labor costs are posted accurately without rounding errors."""
+
+        wc1_account, wc2_account, input_account, output_account, stock_valuation_account = self.env['account.account'].create([{
+            'name': 'Workcenter 1 account',
+            'code': 'WC1',
+            'account_type': 'expense',
+        }, {
+            'name': 'Workcenter 2 account',
+            'code': 'WC2',
+            'account_type': 'expense',
+        }, {
+            'name': 'Input Account',
+            'code': 'InputAccount',
+            'account_type': 'expense',
+        }, {
+            'name': 'Output Account',
+            'code': 'OutputAccount',
+            'account_type': 'income',
+        }, {
+            'name': 'Stock Valuation Account',
+            'code': 'StockValuationAccount',
+            'account_type': 'asset_current',
+        }])
+
+        self.mrp_workcenter.write({'costs_hour': 0.01, "expense_account_id": wc1_account.id})
+        self.mrp_workcenter_1.write({'costs_hour': 0.01, "expense_account_id": wc2_account.id})
+
+        self.categ_real.write({
+            'property_stock_account_input_categ_id': input_account.id,
+            'property_stock_account_output_categ_id': output_account.id,
+            'property_stock_valuation_account_id': stock_valuation_account.id,
+            'property_stock_journal': self.env['account.journal'].create({
+                'name': 'Stock Journal',
+                'code': 'STK',
+                'type': 'general',
+                'company_id': self.env.company.id,
+            }).id,
+            'property_valuation': 'real_time',
+        })
+        final_product = self.env['product.product'].create({
+            'is_storable': True,
+            'name': 'final product',
+            'categ_id': self.categ_real.id,
+        })
+        self.bom_1.write({
+            'product_id': final_product.id,
+            'operation_ids': [
+                Command.create({'name': 'work', 'workcenter_id': self.mrp_workcenter.id,   'time_cycle': 30.2}),
+                Command.create({'name': 'work', 'workcenter_id': self.mrp_workcenter_1.id, 'time_cycle': 30.2}),
+            ],
+            'bom_line_ids': [
+                Command.create({
+                    'product_id': self.product_2.id,
+                    'product_qty': 1.0,
+                })],
+        })
+
+        # Build
+        production_form = Form(self.env['mrp.production'])
+        production_form.product_id = final_product
+        production_form.bom_id = self.bom_1
+        production_form.product_qty = 1
+        production = production_form.save()
+        production.action_confirm()
+        workorder = production.workorder_ids
+        workorder.duration = 30.2
+        workorder.time_ids.write({'duration': 30.2})  # Ensure that the duration is correct
+        production.all_move_raw_ids.filtered(lambda m: m.product_id == self.product_2)[0].write({
+            'quantity': 1.0,
+        })
+
+        mo_form = Form(production)
+        mo_form.qty_producing = 1
+        production = mo_form.save()
+        production._post_inventory()
+        production.button_mark_done()
+
+        self.assertEqual(production.workorder_ids.mapped('time_ids').mapped('account_move_line_id').mapped('credit'), [
+            0.01, 0.01
+        ])
+
 
 @tagged("post_install", "-at_install")
 class TestMrpAccountMove(TestAccountMoveStockCommon):

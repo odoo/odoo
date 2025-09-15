@@ -799,6 +799,17 @@ class TestSaleOrder(SaleCommon):
             msg="price_total should be equal to expected_total",
         )
 
+    def test_sale_order_email_subtitle(self):
+        """Test email notification subtitle for Sale Order with and without partner name."""
+        partner = self.env['res.partner'].create({'type': 'invoice', 'parent_id': self.partner.id})
+        self.sale_order.partner_id = partner
+        context = self.sale_order._notify_by_email_prepare_rendering_context(message=self.env['mail.message'])
+        self.assertEqual(context['subtitles'][0], self.sale_order.name)
+
+        self.sale_order.partner_id.name = "Test Partner"
+        context = self.sale_order._notify_by_email_prepare_rendering_context(message=self.env['mail.message'])
+        self.assertEqual(context['subtitles'][0], f"{self.sale_order.name} - Test Partner")
+
 
 @tagged('post_install', '-at_install')
 class TestSaleOrderInvoicing(AccountTestInvoicingCommon, SaleCommon):

@@ -89,15 +89,8 @@ export function clickInvoiceButton() {
 export function clickValidate() {
     return [
         {
-            isActive: ["desktop"],
             content: "validate payment",
-            trigger: `.payment-screen .button.next.highlight`,
-            run: "click",
-        },
-        {
-            isActive: ["mobile"],
-            content: "validate payment",
-            trigger: `.payment-screen .btn-switchpane:contains('Validate')`,
+            trigger: `.payment-screen button.validation-button.next`,
             run: "click",
         },
     ];
@@ -259,17 +252,10 @@ export function validateButtonIsHighlighted(isHighlighted = true) {
     return [
         {
             isActive: ["desktop"],
-            content: `validate button is ${isHighlighted ? "highlighted" : "not highligted"}`,
+            content: `validate button is ${isHighlighted ? "highlighted" : "not highlighted"}`,
             trigger: isHighlighted
-                ? `.payment-screen .button.next.highlight`
-                : `.payment-screen .button.next:not(:has(.highlight))`,
-        },
-        {
-            isActive: ["mobile"],
-            content: `validate button is ${isHighlighted ? "highlighted" : "not highligted"}`,
-            trigger: isHighlighted
-                ? `.payment-screen .btn-switchpane:not(.secondary):contains('Validate')`
-                : `.payment-screen .btn-switchpane.secondary:contains('Validate')`,
+                ? `.payment-screen button.validation-button.next.highlight`
+                : `.payment-screen button.validation-button.next:not(:has(.highlight))`,
         },
     ];
 }

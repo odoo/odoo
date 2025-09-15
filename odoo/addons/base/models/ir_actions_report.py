@@ -692,6 +692,9 @@ class IrActionsReport(models.Model):
         if kwargs['humanReadable']:
             kwargs['fontName'] = _DEFAULT_BARCODE_FONT
 
+        if kwargs['width'] * kwargs['height'] > 1200000 or max(kwargs['width'], kwargs['height']) > 10000:
+            raise ValueError("Barcode too large")
+
         if barcode_type == 'UPCA' and len(value) in (11, 12, 13):
             barcode_type = 'EAN13'
             if len(value) in (11, 12):
@@ -943,9 +946,11 @@ class IrActionsReport(models.Model):
                         stream = io.BytesIO()
                         attachment_writer.write(stream)
                         collected_streams[res_ids_wo_stream[i]]['stream'] = stream
-
                     return collected_streams
-
+                else:
+                    for res_id in res_ids_wo_stream:
+                        individual_collected_stream = self._render_qweb_pdf_prepare_streams(report_ref=report_ref, data=data, res_ids=[res_id])
+                        collected_streams[res_id]['stream'] = individual_collected_stream[res_id]['stream']
             collected_streams[False] = {'stream': pdf_content_stream, 'attachment': None}
 
         return collected_streams

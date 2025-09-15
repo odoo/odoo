@@ -4,7 +4,7 @@ from odoo import models, fields
 class ResPartner(models.Model):
     _inherit = 'res.partner'
 
-    invoice_edi_format = fields.Selection(selection_add=[('pint_jp', "PINT Japan")])
+    invoice_edi_format = fields.Selection(selection_add=[('pint_jp', "Japan (Peppol PINT JP)")])
 
     def _get_edi_builder(self, invoice_edi_format):
         # EXTENDS 'account_edi_ubl_cii'

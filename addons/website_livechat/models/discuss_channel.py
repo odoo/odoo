@@ -36,12 +36,15 @@ class DiscussChannel(models.Model):
             visitor = channel.livechat_visitor_id
             try:
                 country_id = visitor.partner_id.country_id or visitor.country_id
+                # sudo: members can read the visitor history (either the visitor himself or agents).
+                history_data = self.sudo()._get_visitor_history_data(visitor)
                 channel_info['visitor'] = {
                     'name': visitor.partner_id.name or visitor.partner_id.display_name or visitor.display_name or _("Visitor #%(id)d.", id=visitor.id),
                     'country': {'id': country_id.id, 'code': country_id.code.lower()} if country_id else False,
                     'id': visitor.id,
                     'is_connected': visitor.is_connected,
-                    'history': self.sudo()._get_visitor_history(visitor),
+                    'history': self._format_visitor_history(history_data),
+                    'history_data': history_data,
                     'website_name': visitor.website_id.name,
                     'lang_name': visitor.lang_id.name,
                     'partner_id': visitor.partner_id.id,
@@ -51,14 +54,29 @@ class DiscussChannel(models.Model):
                 pass
             store.add(channel, channel_info)
 
+    def _get_visitor_history_data(self, visitor):
+        recent_history = self.env["website.track"].search(
+            [("page_id", "!=", False), ("visitor_id", "=", visitor.id)], limit=3
+        )
+        return [
+            (visit.page_id.name, fields.Datetime.to_string(visit.visit_datetime))
+            for visit in reversed(recent_history)
+        ]
+
     def _get_visitor_history(self, visitor):
         """
         Prepare history string to render it in the visitor info div on discuss livechat channel view.
         :param visitor: website.visitor of the channel
         :return: arrow separated string containing navigation history information
         """
-        recent_history = self.env['website.track'].search([('page_id', '!=', False), ('visitor_id', '=', visitor.id)], limit=3)
-        return ' → '.join(visit.page_id.name + ' (' + visit.visit_datetime.strftime('%H:%M') + ')' for visit in reversed(recent_history))
+        history_data = self._get_visitor_history_data(visitor)
+        return self._format_visitor_history(history_data)
+
+    def _format_visitor_history(self, history_data):
+        return " → ".join(
+            f"{label} ({fields.Datetime.from_string(date).strftime('%H:%M')})"
+            for label, date in history_data
+        )
 
     def _get_visitor_leave_message(self, operator=False, cancel=False):
         if not cancel:

@@ -336,7 +336,7 @@ export const editorCommands = {
                         const [left, right] = splitElement(currentNode.parentElement, offset);
                         if (isUnbreakable(nodeToInsert) && container.childNodes.length === 1) {
                             fillEmpty(right);
-                        } else if (isEmptyBlock(right)) {
+                        } else if (isEmptyBlock(right) && !insertBefore) {
                             right.remove();
                         }
                         currentNode = insertBefore && right.isConnected ? right : left;
@@ -746,9 +746,19 @@ export const editorCommands = {
         if (isEmptyBlock(range.endContainer)) {
             selectionNodes.push(range.endContainer, ...descendants(range.endContainer));
         }
-        const selectedNodes = mode === "backgroundColor"
+        let selectedNodes = mode === "backgroundColor"
             ? selectionNodes.filter(node => !closestElement(node, 'table.o_selected_table'))
             : selectionNodes;
+        const findTopMostDecoration = (current) => {
+            const decoration = closestElement(current.parentNode, "s, u");
+            return decoration?.textContent === current.textContent
+                ? findTopMostDecoration(decoration)
+                : current;
+        };
+        selectedNodes = selectedNodes.map((node) => {
+            return findTopMostDecoration(node);
+        });
+
         const selectedFieldNodes = new Set(getSelectedNodes(editor.editable)
                 .map(n => closestElement(n, "*[t-field],*[t-out],*[t-esc]"))
                 .filter(Boolean));

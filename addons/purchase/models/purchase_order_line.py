@@ -469,6 +469,7 @@ class PurchaseOrderLine(models.Model):
             partner_id=self.order_id.partner_id,
             quantity=None,
             date=self.order_id.date_order and self.order_id.date_order.date() or fields.Date.context_today(self),
+            ordered_by='min_qty',
             params=self._get_select_sellers_params(),
         )
         if seller_min_qty:

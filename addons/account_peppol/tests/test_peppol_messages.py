@@ -474,3 +474,15 @@ class TestPeppolMessage(TestAccountMoveSendCommon):
             wizard.action_send_and_print()
             self.env.ref('account.ir_cron_account_move_send').method_direct_trigger()
         self.assertEqual(move_1.peppol_move_state, 'error')
+
+    def test_compute_available_peppol_eas_multi_partner(self):
+        """Check _compute_available_peppol_eas works with multiple partners"""
+
+        # Create multiple partners
+        partners = self.env['res.partner'].create([
+            {'name': 'Partner A'},
+            {'name': 'Partner B'},
+        ])
+        partners._compute_available_peppol_eas()
+        for partner in partners:
+            self.assertFalse('odemo' in partner.available_peppol_eas)

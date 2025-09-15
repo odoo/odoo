@@ -16,9 +16,14 @@ import { createModelWithDataSource } from "@spreadsheet/../tests/helpers/model";
  * @param {number} [params.linesNumber]
  * @param {[number, number]} [params.position]
  * @param {string} [params.sheetId]
+ * @param {{name: string, asc: boolean}[]} [params.orderBy]
  */
 export function insertListInSpreadsheet(model, params) {
-    const { definition, columns } = generateListDefinition(params.model, params.columns);
+    const { definition, columns } = generateListDefinition(
+        params.model,
+        params.columns,
+        params.orderBy
+    );
     const [col, row] = params.position || [0, 0];
 
     model.dispatch("INSERT_ODOO_LIST", {
@@ -42,6 +47,7 @@ export function insertListInSpreadsheet(model, params) {
  * @param {number} [params.linesNumber]
  * @param {[number, number]} [params.position]
  * @param {string} [params.sheetId]
+ * @param {{name: string, asc: boolean}[]} [params.orderBy]
  *
  * @returns { Promise<{ model: OdooSpreadsheetModel, env: Object }>}
  */
@@ -57,6 +63,7 @@ export async function createSpreadsheetWithList(params = {}) {
         linesNumber: params.linesNumber,
         position: params.position,
         sheetId: params.sheetId,
+        orderBy: params.orderBy,
     });
 
     const env = model.config.custom.env;

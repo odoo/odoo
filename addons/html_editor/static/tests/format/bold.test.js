@@ -78,7 +78,10 @@ test("should make a whole heading bold after a triple click", async () => {
     await testEditor({
         styleContent: styleH1Bold,
         contentBefore: `<h1>${notStrong(`[ab`)}</h1><p>]cd</p>`,
-        stepFunction: bold,
+        stepFunction: async (editor) => {
+            await tripleClick(editor.editable.querySelector("h1"));
+            bold(editor);
+        },
         contentAfter: `<h1>[ab]</h1><p>cd</p>`,
     });
 });

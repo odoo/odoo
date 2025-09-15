@@ -94,7 +94,7 @@ test("HtmlMail save inline html", async function () {
     expect(".odoo-editor-editable").toHaveInnerHTML("<h1> first </h1>");
 
     await contains(".o_form_button_save").click();
-    expect.verifySteps(["web_save"]);
+    await expect.waitForSteps(["web_save"]);
 });
 
 test("HtmlMail don't have access to column commands", async function () {
@@ -148,5 +148,5 @@ test("HtmlMail add icon and save inline html", async function () {
     await contains("span.fa-glass").click();
 
     await contains(".o_form_button_save").click();
-    expect.verifySteps(["web_save"]);
+    await expect.waitForSteps(["web_save"]);
 });

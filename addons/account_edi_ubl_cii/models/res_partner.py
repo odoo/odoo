@@ -13,12 +13,12 @@ class ResPartner(models.Model):
 
     invoice_edi_format = fields.Selection(
         selection_add=[
-            ('facturx', "Factur-X (CII)"),
-            ('ubl_bis3', "BIS Billing 3.0"),
-            ('xrechnung', "XRechnung CIUS"),
-            ('nlcius', "NLCIUS"),
-            ('ubl_a_nz', "BIS Billing 3.0 A-NZ"),
-            ('ubl_sg', "BIS Billing 3.0 SG"),
+            ('facturx', "France (FacturX)"),
+            ('ubl_bis3', "EU Standard (Peppol Bis 3.0)"),
+            ('xrechnung', "Germany (XRechnung)"),
+            ('nlcius', "Netherlands (NLCIUS)"),
+            ('ubl_a_nz', "Australia BIS Billing 3.0 A-NZ"),
+            ('ubl_sg', "Singapore BIS Billing 3.0 SG"),
         ],
     )
     is_ubl_format = fields.Boolean(compute='_compute_is_ubl_format')
@@ -63,6 +63,8 @@ class ResPartner(models.Model):
             ('0002', "France SIRENE"),
             ('0009', "France SIRET"),
             ('9957', "France VAT"),
+            ('0225', "France FRCTC Electronic Address"),
+            ('0240', "France Register of legal persons"),
             ('0204', "Germany Leitweg-ID"),
             ('9930', "Germany VAT"),
             ('9933', "Greece VAT"),
@@ -73,6 +75,7 @@ class ResPartner(models.Model):
             ('0097', "Italia FTI"),
             ('0188', "Japan SST"),
             ('0221', "Japan IIN"),
+            ('0218', "Latvia Unified registration number"),
             ('9939', "Latvia VAT"),
             ('9936', "Liechtenstein VAT"),
             ('0200', "Lithuania JAK"),
@@ -100,6 +103,7 @@ class ResPartner(models.Model):
             ('9927', "Swiss VAT"),
             ('0183', "Swiss UIDB"),
             ('9952', "Turkey VAT"),
+            ('0235', "UAE Tax Identification Number (TIN)"),
             ('9932', "United Kingdom VAT"),
             ('9959', "USA EIN"),
             ('0060', "DUNS Number"),
@@ -125,6 +129,7 @@ class ResPartner(models.Model):
             ('EM', "Electronic mail"),
         ]
     )
+    available_peppol_eas = fields.Json(compute='_compute_available_peppol_eas')
 
     @api.constrains('peppol_endpoint')
     def _check_peppol_fields(self):
@@ -240,6 +245,12 @@ class ResPartner(models.Model):
                                 new_eas = eas
                                 break
                     partner.peppol_eas = new_eas
+
+    @api.depends_context('company')
+    @api.depends('company_id')
+    def _compute_available_peppol_eas(self):
+        # TO OVERRIDE
+        self.available_peppol_eas = list(dict(self._fields['peppol_eas'].selection))
 
     def _build_error_peppol_endpoint(self, eas, endpoint):
         """ This function contains all the rules regarding the peppol_endpoint."""

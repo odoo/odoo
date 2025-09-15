@@ -167,7 +167,8 @@ class SendSMS(models.TransientModel):
     def _compute_body(self):
         for record in self:
             if record.template_id and record.composition_mode == 'comment' and record.res_id:
-                record.body = record.template_id._render_field('body', [record.res_id], compute_lang=True)[record.res_id]
+                additional_context = record._get_additional_render_context().get('body', {})
+                record.body = record.template_id._render_field('body', [record.res_id], compute_lang=True, add_context=additional_context)[record.res_id]
             elif record.template_id:
                 record.body = record.template_id.body
 
@@ -212,8 +213,9 @@ class SendSMS(models.TransientModel):
                 self.sanitized_numbers.split(',') if self.sanitized_numbers else [self.recipient_single_number_itf or self.recipient_single_number or '']
             )
         ]
-        self.env['sms.sms'].sudo().create(sms_values).send()
-        return True
+        sms_su = self.env['sms.sms'].sudo().create(sms_values)
+        sms_su.send()
+        return sms_su
 
     def _action_send_sms_comment_single(self, records=None):
         # If we have a recipient_single_original number, it's possible this number has been corrected in the popup
@@ -290,10 +292,11 @@ class SendSMS(models.TransientModel):
         return recipients_info
 
     def _prepare_body_values(self, records):
+        additional_context = self._get_additional_render_context().get('body', {})
         if self.template_id and self.body == self.template_id.body:
-            all_bodies = self.template_id._render_field('body', records.ids, compute_lang=True)
+            all_bodies = self.template_id._render_field('body', records.ids, compute_lang=True, add_context=additional_context)
         else:
-            all_bodies = self.env['mail.render.mixin']._render_template(self.body, records._name, records.ids)
+            all_bodies = self.env['mail.render.mixin']._render_template(self.body, records._name, records.ids, add_context=additional_context)
         return all_bodies
 
     def _prepare_mass_sms_values(self, records):
@@ -350,6 +353,18 @@ class SendSMS(models.TransientModel):
         }
 
     # ------------------------------------------------------------
+    # Render
+    # ------------------------------------------------------------
+
+    def _get_additional_render_context(self):
+        """
+        Return a dict associating fields with their relevant render context if any.
+
+        e.g. {'body': {'additional_value': self.env.context.get('additional_value')}}
+        """
+        return {}
+
+    # ------------------------------------------------------------
     # Tools
     # ------------------------------------------------------------
 
@@ -358,7 +373,8 @@ class SendSMS(models.TransientModel):
         if composition_mode == 'comment':
             if not body and template_id and res_id:
                 template = self.env['sms.template'].browse(template_id)
-                result['body'] = template._render_template(template.body, res_model, [res_id])[res_id]
+                additional_context = self._get_additional_render_context().get('body', {})
+                result['body'] = template._render_template(template.body, res_model, [res_id], add_context=additional_context)[res_id]
             elif template_id:
                 template = self.env['sms.template'].browse(template_id)
                 result['body'] = template.body

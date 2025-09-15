@@ -1,11 +1,12 @@
 import { describe, expect, test } from "@odoo/hoot";
-import { click, press, waitFor } from "@odoo/hoot-dom";
+import { click, press, waitFor, waitForNone } from "@odoo/hoot-dom";
 import { animationFrame, tick } from "@odoo/hoot-mock";
-import { makeMockEnv, onRpc } from "@web/../tests/web_test_helpers";
+import { contains, makeMockEnv, onRpc } from "@web/../tests/web_test_helpers";
 import { setupEditor } from "./_helpers/editor";
 import { getContent } from "./_helpers/selection";
 import { insertText } from "./_helpers/user_actions";
 import { expectElementCount } from "./_helpers/ui_expectations";
+import { delay } from "@web/core/utils/concurrency";
 
 test("Can replace an image", async () => {
     onRpc("ir.attachment", "search_read", () => [
@@ -162,5 +163,27 @@ test("cropper should not open for external image", async () => {
 
     await click('.btn[name="image_crop"]');
     await waitFor(".o_notification_manager .o_notification", { timeout: 1000 });
+    expect("img.o_we_cropper_img").toHaveCount(0);
+});
+
+test("Image cropper disappear on backspace", async () => {
+    onRpc("/html_editor/get_image_info", () => ({
+        original: {
+            image_src: "#",
+        },
+    }));
+    onRpc("/web/image/__odoo__unknown__src__/", async () => {
+        await delay(50);
+        return {};
+    });
+
+    await setupEditor(`<p>[<img src="#">]</p>`);
+    await waitFor(".o-we-toolbar");
+
+    await contains('.o-we-toolbar .btn[name="image_crop"]').click();
+    await waitFor(".o_we_crop_widget", { timeout: 1000 });
+    expect("img.o_we_cropper_img").toHaveCount(1);
+    press("backspace");
+    await waitForNone(".o_we_crop_widget", { timeout: 1000 });
     expect("img.o_we_cropper_img").toHaveCount(0);
 });

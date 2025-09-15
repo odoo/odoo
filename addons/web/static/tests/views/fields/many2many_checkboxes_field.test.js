@@ -159,6 +159,27 @@ test("Many2ManyCheckBoxesField: start non empty, then remove twice", async () =>
     expect("div.o_field_widget div.form-check input:eq(1)").not.toBeChecked();
 });
 
+test("Many2ManyCheckBoxesField: many2many read, field context is properly sent", async () => {
+    onRpc((args) => {
+        expect.step(args.method);
+        if (args.method === "web_read") {
+            expect(args.kwargs.specification.timmy.context).toEqual({ hello: "world" });
+        } else if (args.method === "name_search") {
+            expect(args.kwargs.context.hello).toEqual("world");
+        }
+    });
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        resId: 1,
+        arch: `
+            <form>
+                <field name="timmy" widget="many2many_checkboxes" context="{ 'hello': 'world' }" />
+            </form>`,
+    });
+    expect.verifySteps(["get_views", "web_read", "name_search"]);
+});
+
 test("Many2ManyCheckBoxesField: values are updated when domain changes", async () => {
     await mountView({
         type: "form",

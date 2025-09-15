@@ -645,6 +645,9 @@ export class Rtc extends Record {
      * @param {Boolean} [param2.important] if the log is important and should be kept even if logRtc is disabled
      */
     log(session, entry, { error, step, state, important, ...data } = {}) {
+        if (!session) {
+            return;
+        }
         session.logStep = entry;
         if (!this.store.settings.logRtc && !important) {
             return;
@@ -925,6 +928,9 @@ export class Rtc extends Record {
         this.state.channel.rtcInvitingSession = undefined;
         if (camera) {
             await this.toggleVideo("camera");
+        }
+        if (!this.selfSession) {
+            return;
         }
         await this._initConnection();
         await this.resetAudioTrack({ force: audio });
@@ -1258,6 +1264,10 @@ export class Rtc extends Record {
                     : _t('%s" requires "screen recording" access', window.location.host);
             this.notification.add(str, { type: "warning" });
             stopVideo();
+            return;
+        }
+        if (!this.selfSession) {
+            closeStream(sourceStream);
             return;
         }
         let outputTrack = sourceStream ? sourceStream.getVideoTracks()[0] : undefined;

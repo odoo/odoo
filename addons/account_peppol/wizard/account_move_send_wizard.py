@@ -52,8 +52,9 @@ class AccountMoveSendWizard(models.TransientModel):
         # EXTENDS 'account'
         self.ensure_one()
         if self.sending_methods and 'peppol' in self.sending_methods:
-            if self.move_id.partner_id.commercial_partner_id.peppol_verification_state != 'valid':
+            move = self.move_id.with_company(self.move_id.company_id)
+            if move.partner_id.commercial_partner_id.peppol_verification_state != 'valid':
                 raise UserError(_("Partner doesn't have a valid Peppol configuration."))
-            if registration_action := self._do_peppol_pre_send(self.move_id):
+            if registration_action := self._do_peppol_pre_send(move):
                 return registration_action
         return super().action_send_and_print(allow_fallback_pdf=allow_fallback_pdf)

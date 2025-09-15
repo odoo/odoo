@@ -15,6 +15,7 @@ class TestReports(L10nInTestInvoicingCommon):
         cls.partner_b.l10n_in_gst_treatment = 'regular'
         cls.partner_a.l10n_in_gst_treatment = 'composition'
         cls.partner_foreign.l10n_in_gst_treatment = 'overseas'
+        cls.partner_foreign_no_state.l10n_in_gst_treatment = 'overseas'
 
         cls.igst_sale_18 = cls.env['account.chart.template'].ref('igst_sale_18')
 
@@ -128,5 +129,15 @@ class TestReports(L10nInTestInvoicingCommon):
             self.invoice_a,
             [{
                 'l10n_in_state_id': self.partner_a.state_id.id,
+            }]
+        )
+
+    def test_foreign_customer_without_state(self):
+        """ Verify foreign customer without state_id gets foreign state reference """
+        self.assertRecordValues(
+            self.invoice_d,
+            [{
+                'l10n_in_gst_treatment': 'overseas',
+                'l10n_in_state_id': self.env.ref("l10n_in.state_in_oc").id,
             }]
         )

@@ -738,6 +738,7 @@ class account_journal(models.Model):
             *self.env['account.move']._check_company_domain(self.env.companies),
             ('journal_id', 'in', self.ids),
             ('checked', '=', False),
+            ('state', '=', 'posted'),
         ])
 
     def _count_results_and_sum_amounts(self, results_dict, target_currency):
@@ -1031,7 +1032,7 @@ class account_journal(models.Model):
             action['domain'] = ast.literal_eval(action['domain'] or '[]')
         if not self._context.get('action_name'):
             if self.type == 'sale':
-                action['domain'] = [(domain_type_field, 'in', ('out_invoice', 'out_refund', 'out_receipt'))]
+                action['domain'] = [(domain_type_field, 'in', ('out_invoice', 'out_refund', 'out_receipt', 'entry'))]
             elif self.type == 'purchase':
                 action['domain'] = [(domain_type_field, 'in', ('in_invoice', 'in_refund', 'in_receipt', 'entry'))]
 
