@@ -33,22 +33,31 @@ class PaymentProvider(models.Model):
         inverse='_inverse_mercado_pago_account_country_id',
         domain=[('code', 'in', list(const.SUPPORTED_COUNTRIES))],
         required_if_provider='mercado_pago',
+        copy=False,
     )
     # TODO anko remove in 19.1
     mercado_pago_is_oauth_supported = fields.Boolean(compute='_compute_mercado_pago_is_oauth_supported')
 
     # OAuth fields
     mercado_pago_access_token = fields.Char(
-        string="Mercado Pago Access Token", groups='base.group_system'
+        string="Mercado Pago Access Token",
+        copy=False,
+        groups='base.group_system',
     )
     mercado_pago_access_token_expiry = fields.Datetime(
-        string="Mercado Pago Access Token Expiry", groups='base.group_system'
+        string="Mercado Pago Access Token Expiry",
+        copy=False,
+        groups='base.group_system',
     )
     mercado_pago_refresh_token = fields.Char(
-        string="Mercado Pago Refresh Token", groups='base.group_system'
+        string="Mercado Pago Refresh Token",
+        copy=False,
+        groups='base.group_system',
     )
     mercado_pago_public_key = fields.Char(
-        string="Mercado Pago Public Key", groups='base.group_system'
+        string="Mercado Pago Public Key",
+        copy=False,
+        groups='base.group_system',
     )
 
     # === COMPUTE METHODS === #

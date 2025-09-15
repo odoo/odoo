@@ -26,21 +26,32 @@ class PaymentProvider(models.Model):
         help="The public business email solely used to identify the account with PayPal",
         required_if_provider='paypal',
         default=lambda self: self.env.company.email,
+        copy=False,
     )
-    paypal_client_id = fields.Char(string="PayPal Client ID", required_if_provider='paypal')
-    paypal_client_secret = fields.Char(string="PayPal Client Secret", groups='base.group_system')
+    paypal_client_id = fields.Char(
+        string="PayPal Client ID",
+        required_if_provider='paypal',
+        copy=False,
+    )
+    paypal_client_secret = fields.Char(
+        string="PayPal Client Secret",
+        copy=False,
+        groups='base.group_system',
+    )
     paypal_access_token = fields.Char(
         string="PayPal Access Token",
         help="The short-lived token used to access Paypal APIs",
+        copy=False,
         groups='base.group_system',
     )
     paypal_access_token_expiry = fields.Datetime(
         string="PayPal Access Token Expiry",
         help="The moment at which the access token becomes invalid.",
         default='1970-01-01',
+        copy=False,
         groups='base.group_system',
     )
-    paypal_webhook_id = fields.Char(string="PayPal Webhook ID")
+    paypal_webhook_id = fields.Char(string="PayPal Webhook ID", copy=False)
 
     # === COMPUTE METHODS === #
 

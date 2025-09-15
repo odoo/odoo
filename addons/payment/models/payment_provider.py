@@ -46,6 +46,7 @@ class PaymentProvider(models.Model):
         string="Published",
         help="Whether the provider is visible on the website or not. Tokens remain functional but "
              "are only visible on manage forms.",
+        copy=False,
     )
     company_id = fields.Many2one(  # Indexed to speed-up ORM searches (from ir_rule or others)
         string="Company", comodel_name='res.company', default=lambda self: self.env.company.id,
