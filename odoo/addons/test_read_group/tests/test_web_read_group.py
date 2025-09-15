@@ -730,6 +730,99 @@ class TestWebReadGroup(common.TransactionCase):
                 },
             )
 
+    # The patch exists to test that MAX_NUMBER_OPENED_GROUPS is ignored in case of forced opened groups
+    @patch("odoo.addons.web.models.models.MAX_NUMBER_OPENED_GROUPS", 1)
+    def test_specific_opened_group_and_unfold_limit(self):
+        Model = self.env["test_read_group.aggregate"]
+        records = Model.create(
+            [
+                {"key": 1, "value": 1},
+                {"key": 1, "value": 2},
+                {"key": 1, "value": 3},
+                {"key": 2, "value": 4},
+                {"key": 2},
+                {"key": 2, "value": 5},
+                {},
+                {"value": 6},
+            ],
+        )
+
+        opening_info = [
+            {
+                "value": 1,
+                "folded": False,  # open the partner group (key=1)
+                "limit": 2,
+                "offset": 0,
+                "progressbar_domain": [],
+            },
+            {
+                "value": 2,
+                "folded": True,  # close the partner group (key=2)
+            },
+            {
+                "value": False,  # manually open the partner group (key=False)
+                "folded": False,
+                "limit": 2,
+                "offset": 0,
+                "progressbar_domain": [],
+            },
+        ]
+
+        read_spec = {"value": {}}
+
+        # warmup ormcache
+        Model.web_read_group(
+            domain=[],
+            groupby=["key"],
+            aggregates=["value:sum"],
+            auto_unfold=True,
+            opening_info=opening_info,
+            unfold_read_specification=read_spec,
+        )
+
+        self.env.invalidate_all()
+
+        # One query for the _read_group
+        # One query get records of the first column
+        # One query get records of the third column
+        # One query to read all records opened
+        with self.assertQueryCount(4):
+            self.assertEqual(
+                Model.web_read_group(
+                    domain=[],
+                    groupby=["key"],
+                    aggregates=["value:sum"],
+                    auto_unfold=True,
+                    opening_info=opening_info,
+                    unfold_read_specification=read_spec,
+                ),
+                {
+                    "groups": [
+                        {
+                            "key": 1,
+                            "__extra_domain": [("key", "=", 1)],
+                            "value:sum": 6,
+                            "__count": 3,
+                            "__records": records[:2].web_read(read_spec),
+                        },
+                        {
+                            "key": 2,
+                            "__extra_domain": [("key", "=", 2)],
+                            "value:sum": 9,
+                            "__count": 3,
+                        },
+                        {
+                            "key": False,
+                            "__extra_domain": [("key", "=", False)],
+                            "value:sum": 6,
+                            "__count": 2,
+                            "__records": records[-2:].web_read(read_spec),
+                        },
+                    ],
+                    "length": 3,
+                },
+            )
+
     def test_auto_fold_info(self):
         """Test when __fold exists in subgroup"""
         order_1, order_2, order_3, order_4 = self.env["test_read_group.order"].create(
