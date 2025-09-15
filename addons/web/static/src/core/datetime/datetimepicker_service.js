@@ -3,7 +3,7 @@ import { areDatesEqual, formatDate, formatDateTime, parseDate, parseDateTime } f
 import { makePopover } from "../popover/popover_hook";
 import { registry } from "../registry";
 import { ensureArray, zip, zipWith } from "../utils/arrays";
-import { deepCopy, shallowEqual } from "../utils/objects";
+import { shallowEqual } from "../utils/objects";
 import { DateTimePicker } from "./datetime_picker";
 import { DateTimePickerPopover } from "./datetime_picker_popover";
 
@@ -31,11 +31,6 @@ import { DateTimePickerPopover } from "./datetime_picker_popover";
  * }} DateTimePickerServiceParams
  */
 
-/** @type {typeof shallowEqual} */
-function arePropsEqual(obj1, obj2) {
-    return shallowEqual(obj1, obj2, (a, b) => areDatesEqual(a, b) || shallowEqual(a, b));
-}
-
 /**
  * @template {object} T
  * @param {T} obj
@@ -49,6 +44,17 @@ function markValuesRaw(obj) {
         } else {
             copy[key] = value;
         }
+    }
+    return copy;
+}
+
+/**
+ * @param {Record<string, any>} props
+ */
+function stringifyProps(props) {
+    const copy = {};
+    for (const [key, value] of Object.entries(props)) {
+        copy[key] = JSON.stringify(value);
     }
     return copy;
 }
@@ -77,16 +83,22 @@ export const datetimePickerService = {
                  * Wrapper method on the "onApply" callback to only call it when the
                  * value has changed, and set other internal variables accordingly.
                  */
-                function apply() {
-                    const valueCopy = deepCopy(pickerProps.value);
-                    if (areDatesEqual(lastAppliedValue, valueCopy)) {
+                async function apply() {
+                    const { value } = pickerProps;
+                    const stringValue = JSON.stringify(value);
+                    if (
+                        stringValue === lastAppliedStringValue ||
+                        stringValue === stringProps.value
+                    ) {
                         return;
                     }
 
-                    inputsChanged = ensureArray(pickerProps.value).map(() => false);
+                    lastAppliedStringValue = stringValue;
+                    inputsChanged = ensureArray(value).map(() => false);
 
-                    params.onApply?.(pickerProps.value);
-                    lastAppliedValue = valueCopy;
+                    await params.onApply?.(value);
+
+                    stringProps.value = stringValue;
                 }
 
                 function enable() {
@@ -344,38 +356,35 @@ export const datetimePickerService = {
                  * @param {"input" | "picker"} source
                  */
                 function updateValue(value, unit, source) {
-                    const previousValue = pickerProps.value;
-                    pickerProps.value = value;
-
-                    if (source === "input" && areDatesEqual(previousValue, pickerProps.value)) {
+                    if (source === "input" && areDatesEqual(pickerProps.value, value)) {
                         return;
                     }
 
-                    if (unit !== "time") {
-                        if (pickerProps.range && source === "picker") {
-                            if (!value[0]) {
-                                pickerProps.focusedDateIndex = 0;
-                            } else if (
-                                pickerProps.focusedDateIndex === 0 ||
-                                (value[0] && value[1] && value[1] < value[0])
-                            ) {
-                                // If selecting either:
-                                // - the first value
-                                // - OR a second value before the first:
-                                // Then:
-                                // - Set the DATE (year + month + day) of all values
-                                // to the one that has been selected.
-                                const { year, month, day } = value[pickerProps.focusedDateIndex];
-                                for (let i = 0; i < value.length; i++) {
-                                    value[i] = value[i] && value[i].set({ year, month, day });
-                                }
-                                pickerProps.focusedDateIndex = 1;
-                            } else {
-                                // If selecting the second value after the first:
-                                // - simply toggle the focus index
-                                pickerProps.focusedDateIndex =
-                                    pickerProps.focusedDateIndex === 1 ? 0 : 1;
+                    pickerProps.value = value;
+
+                    if (pickerProps.range && unit !== "time" && source === "picker") {
+                        if (!value[0]) {
+                            pickerProps.focusedDateIndex = 0;
+                        } else if (
+                            pickerProps.focusedDateIndex === 0 ||
+                            (value[0] && value[1] && value[1] < value[0])
+                        ) {
+                            // If selecting either:
+                            // - the first value
+                            // - OR a second value before the first:
+                            // Then:
+                            // - Set the DATE (year + month + day) of all values
+                            // to the one that has been selected.
+                            const { year, month, day } = value[pickerProps.focusedDateIndex];
+                            for (let i = 0; i < value.length; i++) {
+                                value[i] = value[i] && value[i].set({ year, month, day });
                             }
+                            pickerProps.focusedDateIndex = 1;
+                        } else {
+                            // If selecting the second value after the first:
+                            // - simply toggle the focus index
+                            pickerProps.focusedDateIndex =
+                                pickerProps.focusedDateIndex === 1 ? 0 : 1;
                         }
                     }
 
@@ -425,7 +434,9 @@ export const datetimePickerService = {
                     ...DateTimePicker.defaultProps,
                     onReset: () => {
                         updateValue(
-                            ensureArray(pickerProps.value).length === 2 ? [false, false] : false
+                            ensureArray(pickerProps.value).length === 2 ? [false, false] : false,
+                            "date",
+                            "picker"
                         );
                         saveAndClose();
                     },
@@ -458,27 +469,24 @@ export const datetimePickerService = {
                     shouldFocus = true;
                 });
                 const popover = createPopover(DateTimePickerPopover, {
-                    onClose() {
+                    async onClose() {
                         updateValueFromInputs();
-                        apply();
                         setFocusClass(null);
-                        if (restoreTargetMargin) {
-                            restoreTargetMargin();
-                            restoreTargetMargin = null;
-                        }
+                        restoreTargetMargin?.();
+                        restoreTargetMargin = null;
+                        await apply();
                         params.onClose?.();
                     },
                 });
 
                 /** @type {boolean[]} */
                 let inputsChanged = [];
-                /** @type {DateTimePickerProps | null} */
-                let lastInitialProps = null;
-                /** @type {DateTimePickerProps["value"] | null}*/
-                let lastAppliedValue = null;
+                let lastAppliedStringValue = "";
                 /** @type {(() => void) | null} */
                 let restoreTargetMargin = null;
                 let shouldFocus = false;
+                /** @type {Partial<DateTimePickerProps>} */
+                let stringProps = {};
                 /** @type {OwlRef | null} */
                 let targetRef = null;
 
@@ -488,22 +496,20 @@ export const datetimePickerService = {
                     }
 
                     onWillRender(function computeBasePickerProps() {
-                        const nextInitialProps = markValuesRaw(params.pickerProps);
-                        const propsCopy = deepCopy(nextInitialProps);
+                        const nextProps = markValuesRaw(params.pickerProps);
+                        const oldStringProps = stringProps;
 
-                        if (lastInitialProps && arePropsEqual(lastInitialProps, propsCopy)) {
+                        stringProps = stringifyProps(nextProps);
+                        lastAppliedStringValue = stringProps.value;
+
+                        if (shallowEqual(oldStringProps, stringProps)) {
                             return;
                         }
 
-                        lastInitialProps = propsCopy;
-                        lastAppliedValue = propsCopy.value;
-                        inputsChanged = ensureArray(lastInitialProps.value).map(() => false);
+                        inputsChanged = ensureArray(nextProps.value).map(() => false);
 
-                        for (const [key, value] of Object.entries(nextInitialProps)) {
-                            if (
-                                pickerProps[key] !== value &&
-                                !areDatesEqual(pickerProps[key], value)
-                            ) {
+                        for (const [key, value] of Object.entries(nextProps)) {
+                            if (!areDatesEqual(pickerProps[key], value)) {
                                 pickerProps[key] = value;
                             }
                         }
