@@ -1,14 +1,17 @@
 import { session } from "@web/session";
 import { browser } from "../../core/browser/browser";
 import { registry } from "../../core/registry";
-
-const loadMenusUrl = `/web/webclient/load_menus`;
+import { IndexedDB } from "@web/core/utils/indexed_db";
 
 export const menuService = {
     dependencies: ["action"],
     async start(env) {
         let currentAppId;
         let menusData;
+        const menuDB = new IndexedDB("webclient_menu", session.registry_hash);
+        const table = "menu";
+        const key = JSON.stringify({ debug: !!env.debug });
+        const loadMenusUrl = `/web/webclient/load_menus`;
 
         const fetchMenus = async (reload) => {
             if (!reload && odoo.loadMenusPromise) {
@@ -20,19 +23,14 @@ export const menuService = {
             }
             return res.json();
         };
-        const storedMenus = browser.localStorage.getItem("webclient_menus");
-        const storedMenusVersion = browser.localStorage.getItem("webclient_menus_version");
+        const storedMenus = await menuDB.read(table, key);
 
-        if (storedMenus && storedMenusVersion === session.registry_hash) {
+        if (storedMenus) {
             fetchMenus().then((res) => {
                 if (res) {
                     const fetchedMenus = JSON.stringify(res);
                     if (fetchedMenus !== storedMenus) {
-                        try {
-                            browser.localStorage.setItem("webclient_menus", fetchedMenus);
-                        } catch (error) {
-                            console.error("Error while storing menus in localStorage", error);
-                        }
+                        menuDB.write(table, key, fetchedMenus);
                         menusData = res;
                         env.bus.trigger("MENUS:APP-CHANGED");
                     }
@@ -42,12 +40,7 @@ export const menuService = {
         } else {
             menusData = await fetchMenus();
             if (menusData) {
-                try {
-                    browser.localStorage.setItem("webclient_menus_version", session.registry_hash);
-                    browser.localStorage.setItem("webclient_menus", JSON.stringify(menusData));
-                } catch (error) {
-                    console.error("Error while storing menus in localStorage", error);
-                }
+                menuDB.write(table, key, JSON.stringify(menusData));
             }
         }
 

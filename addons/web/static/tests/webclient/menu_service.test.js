@@ -13,6 +13,7 @@ import {
 import { browser } from "@web/core/browser/browser";
 import { Deferred } from "@odoo/hoot-mock";
 import { animationFrame } from "@odoo/hoot-dom";
+import { IndexedDB } from "@web/core/utils/indexed_db";
 
 defineActions([
     {
@@ -75,18 +76,21 @@ defineMenus([
 test.tags("desktop");
 test(`use stored menus, and don't update on load_menus return (if identical)`, async () => {
     const def = new Deferred();
+    const menuDB = new IndexedDB("webclient_menu");
     redirect("/odoo/action-666");
     onRpc("/web/webclient/load_menus", () => def);
 
     // Initial Stored values
-    browser.localStorage.webclient_menus_version =
-        "05500d71e084497829aa807e3caa2e7e9782ff702c15b2f57f87f2d64d049bd0";
-    browser.localStorage.webclient_menus = JSON.stringify({
-        1: { appID: 1, children: [2, 3], name: "App1", id: 1, actionID: 666 },
-        2: { appID: 1, children: [], name: "Test1", id: 2, actionID: 666 },
-        3: { appID: 1, children: [], name: "Test2", id: 3, actionID: 666 },
-        root: { id: "root", name: "root", appID: "root", children: [1] },
-    });
+    menuDB.write(
+        "menu",
+        JSON.stringify({ debug: false }),
+        JSON.stringify({
+            1: { appID: 1, children: [2, 3], name: "App1", id: 1, actionID: 666 },
+            2: { appID: 1, children: [], name: "Test1", id: 2, actionID: 666 },
+            3: { appID: 1, children: [], name: "Test2", id: 3, actionID: 666 },
+            root: { id: "root", name: "root", appID: "root", children: [1] },
+        })
+    );
 
     const webClient = await mountWebClient();
     webClient.env.bus.addEventListener("MENUS:APP-CHANGED", () => expect.step("Don't Update"));
@@ -102,18 +106,21 @@ test(`use stored menus, and don't update on load_menus return (if identical)`, a
 test.tags("desktop");
 test(`use stored menus, and update on load_menus return`, async () => {
     const def = new Deferred();
+    const menuDB = new IndexedDB("webclient_menu");
     redirect("/odoo/action-666");
     onRpc("/web/webclient/load_menus", () => def);
 
     // Initial Stored values
     // There is no menu "Test2" in the initial values
-    browser.localStorage.webclient_menus_version =
-        "05500d71e084497829aa807e3caa2e7e9782ff702c15b2f57f87f2d64d049bd0";
-    browser.localStorage.webclient_menus = JSON.stringify({
-        1: { id: 1, children: [2], name: "App1", appID: 1, actionID: 666 },
-        2: { id: 2, children: [], name: "Test1", appID: 1, actionID: 666 },
-        root: { id: "root", children: [1], name: "root", appID: "root" },
-    });
+    menuDB.write(
+        "menu",
+        JSON.stringify({ debug: false }),
+        JSON.stringify({
+            1: { id: 1, children: [2], name: "App1", appID: 1, actionID: 666 },
+            2: { id: 2, children: [], name: "Test1", appID: 1, actionID: 666 },
+            root: { id: "root", children: [1], name: "root", appID: "root" },
+        })
+    );
 
     const webClient = await mountWebClient();
     webClient.env.bus.addEventListener("MENUS:APP-CHANGED", () => expect.step("Update Menus"));
@@ -124,7 +131,7 @@ test(`use stored menus, and update on load_menus return`, async () => {
     def.resolve();
     await animationFrame();
     expect(".o_menu_sections").toHaveText("Test1\nTest2");
-    expect(JSON.parse(browser.localStorage.webclient_menus)).toEqual({
+    expect(JSON.parse(menuDB.mockIndexedDB.menu[JSON.stringify({ debug: false })])).toEqual({
         1: {
             actionID: 666,
             appID: 1,
