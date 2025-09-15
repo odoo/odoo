@@ -336,8 +336,9 @@ class Base(models.AbstractModel):
         :param limit: The maximum number of top-level groups to return. see :meth:`~.formatted_read_group`
         :param offset: The offset for the top-level groups. see :meth:`~.formatted_read_group`
         :param order: A sort string, as used in :meth:`~.search`
-        :param auto_unfold: If `True`, unfolds the 10 first groups regardless of its `__fold` status.
-            Typically `True` for kanban views and `False` for list views.
+        :param auto_unfold: If `True`, automatically unfolds the first 10 groups according to their
+            `__fold` key, if present; otherwise, it is unfolded by default.
+            This is typically `True` for kanban views and `False` for list views.
         :param opening_info: The state of currently opened groups, used for reloading.
           ::
 
@@ -559,13 +560,8 @@ class Base(models.AbstractModel):
             fold_info = '__fold' in group
             fold = group.pop('__fold', False)
 
-            # Apply the limit of unfolded if there is whatever the parent_opening_info
-            # That's weird, but keeps the old behavior
-            if nb_opened_group >= max_number_opened_group:
-                continue
-
             groupby_value = group[groupby_spec]
-            # For relational field
+            # For relational/date/datetime field
             raw_groupby_value = groupby_value[0] if isinstance(groupby_value, tuple) else groupby_value
 
             limit = unfold_read_default_limit
@@ -583,6 +579,7 @@ class Base(models.AbstractModel):
             elif (
                 # Auto Fold/unfold
                 (not auto_unfold and not fold_info)
+                or nb_opened_group >= max_number_opened_group
                 or fold
                 # Empty recordset is folded by default
                 or (field.relational and not group[groupby_spec])
