@@ -54,6 +54,7 @@ export class Call extends Component {
     setup() {
         super.setup();
         this.grid = useRef("grid");
+        this.root = useRef("root");
         this.notification = useService("notification");
         this.rtc = useService("discuss.rtc");
         this.isMobileOs = isMobileOS();

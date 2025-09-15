@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="mail.ActionPanel">
-        <ResizablePanel t-if="props.resizable and !env.inChatWindow and !env.inChatter and !ui.isSmall" class="classNames" handleSide="'start'" initialWidth="props.initialWidth ?? store.discuss.INSPECTOR_WIDTH" minWidth="props.minWidth ?? store.discuss.INSPECTOR_WIDTH">
+        <ResizablePanel t-if="props.resizable and !env.inChatWindow and !env.inChatter and !ui.isSmall" class="classNames" handleSide="'start'" initialWidth="initialWidth" minWidth="minWidth">
             <t t-call="mail.ActionPanel.content"/>
         </ResizablePanel>
         <div t-else="" t-att-class="classNames">

@@ -40,4 +40,12 @@ export class ActionPanel extends Component {
             rounded: !this.props.resizable,
         });
     }
+
+    get minWidth() {
+        return this.props.minWidth;
+    }
+
+    get initialWidth() {
+        return this.props.initialWidth;
+    }
 }
