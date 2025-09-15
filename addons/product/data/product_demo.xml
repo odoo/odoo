@@ -72,6 +72,7 @@
             <field name="uom_id" ref="uom.product_uom_unit"/>
             <field name="default_code">FURN_8888</field>
             <field name="image_1920" type="base64" file="product/static/img/product_lamp.png"/>
+            <field name="barcode">40164785534112</field>
         </record>
 
         <record id="product_order_01" model="product.product">
@@ -153,6 +154,10 @@
                 'record': obj().env.ref('product.product_4_attribute_1_product_template_attribute_line').product_template_value_ids[1],
                 'noupdate': True,
             }, {
+                'xml_id': 'product.product_4_attribute_1_value_3',
+                'record': obj().env.ref('product.product_4_attribute_1_product_template_attribute_line').product_template_value_ids[2],
+                'noupdate': True,
+            }, {
                 'xml_id': 'product.product_4_attribute_2_value_1',
                 'record': obj().env.ref('product.product_4_attribute_2_product_template_attribute_line').product_template_value_ids[0],
                 'noupdate': True,
@@ -175,6 +180,14 @@
             }, {
                 'xml_id': 'product.product_product_4c',
                 'record': obj().env.ref('product.product_product_4_product_template')._get_variant_for_combination(obj().env.ref('product.product_4_attribute_1_value_2') + obj().env.ref('product.product_4_attribute_2_value_1')),
+                'noupdate': True,
+            }, {
+                'xml_id': 'product.product_product_4e',
+                'record': obj().env.ref('product.product_product_4_product_template')._get_variant_for_combination(obj().env.ref('product.product_4_attribute_1_value_3') + obj().env.ref('product.product_4_attribute_2_value_1')),
+                'noupdate': True,
+            }, {
+                'xml_id': 'product.product_product_4f',
+                'record': obj().env.ref('product.product_product_4_product_template')._get_variant_for_combination(obj().env.ref('product.product_4_attribute_1_value_3') + obj().env.ref('product.product_4_attribute_2_value_2')),
                 'noupdate': True,
             },]"/>
         </function>
@@ -539,6 +552,7 @@
             <field name="uom_id" ref="uom.product_uom_unit"/>
             <field name="default_code">FURN_9001</field>
             <field name="image_1920" type="base64" file="product/static/img/product_product_20-image.png"/>
+            <field name="barcode">40164785512001</field>
         </record>
         <record id="product_product_22" model="product.product">
             <field name="name">Desk Stand with Screen</field>
@@ -590,6 +604,11 @@
         <function model="ir.model.data" name="_update_xmlids">
             <value model="base" eval="[
                 {
+                    'xml_id': 'product.acoustic_ptav_white',
+                    'record': obj().env.ref('product.product_template_acoustic_bloc_screens').attribute_line_ids[0].product_template_value_ids[0],
+                    'noupdate': True,
+                },
+                {
                     'xml_id': 'product.acoustic_ptav_black',
                     'record': obj().env.ref('product.product_template_acoustic_bloc_screens').attribute_line_ids[0].product_template_value_ids[1],
                     'noupdate': True,
@@ -598,6 +617,11 @@
         </function>
         <function model="ir.model.data" name="_update_xmlids">
             <value model="base" eval="[
+                {
+                    'xml_id': 'product.product_product_acoustic_bloc_screens_white',
+                    'record': obj().env.ref('product.product_template_acoustic_bloc_screens')._get_variant_for_combination(obj().env.ref('product.acoustic_ptav_white')),
+                    'noupdate': True,
+                },
                 {
                     'xml_id': 'product.product_product_acoustic_bloc_screens_black',
                     'record': obj().env.ref('product.product_template_acoustic_bloc_screens')._get_variant_for_combination(obj().env.ref('product.acoustic_ptav_black')),
