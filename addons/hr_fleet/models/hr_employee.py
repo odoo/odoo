@@ -8,7 +8,7 @@ from odoo.fields import Domain
 class HrEmployee(models.Model):
     _inherit = 'hr.employee'
 
-    employee_cars_count = fields.Integer(compute="_compute_employee_cars_count", string="Cars", groups="fleet.fleet_group_manager")
+    employee_cars_count = fields.Integer(compute="_compute_employee_cars_count", string="Cars", groups="fleet.fleet_group_user")
     car_ids = fields.One2many(
         'fleet.vehicle', 'driver_employee_id', string='Vehicles (private)',
         groups="fleet.fleet_group_manager,hr.group_hr_user",
@@ -91,7 +91,8 @@ class HrEmployeePublic(models.Model):
     employee_cars_count = fields.Integer(compute="_compute_employee_cars_count", string="Cars", groups="fleet.fleet_group_user")
 
     def action_open_employee_cars(self):
-        return self.env['hr.employee'].browse(self.ids).action_open_employee_cars()
+        self.ensure_one()
+        return self.employee_id.action_open_employee_cars()
 
     def _compute_employee_cars_count(self):
         self._compute_from_employee('employee_cars_count')
