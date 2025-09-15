@@ -1,4 +1,3 @@
-import { animationFrame } from "@odoo/hoot-dom";
 import { registerWebsitePreviewTour } from "@website/js/tours/tour_utils";
 
 let numNavChildren;
@@ -6,7 +5,7 @@ let numNavChildren;
 const getTheLayoutChildren = {
     content: "Get the number of elements in the navbar",
     trigger: ":iframe #o_main_nav ul[role='menu']",
-    async run() {
+    async run({ animationFrame }) {
         await animationFrame();
         numNavChildren = this.anchor.children.length;
     },
@@ -15,7 +14,7 @@ const getTheLayoutChildren = {
 const checkThatLayoutChanged = {
     content: "Ensure that the navbar layout has changed",
     trigger: ":iframe #o_main_nav ul[role='menu']",
-    async run() {
+    async run({ animationFrame }) {
         await animationFrame();
         if (this.anchor.children.length === numNavChildren) {
             throw new Error("Navbar layout should change");

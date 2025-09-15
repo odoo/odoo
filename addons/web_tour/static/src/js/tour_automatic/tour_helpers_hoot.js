@@ -364,4 +364,8 @@ patch(TourHelpers.prototype, {
     waitUntil(predicate, options) {
         return hoot.waitUntil(predicate, options);
     },
+
+    animationFrame(...args) {
+        return hoot.animationFrame(...args);
+    },
 });
