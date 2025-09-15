@@ -730,7 +730,9 @@ test("rendering of inbox message", async () => {
     await contains("[title='Add a Reaction']");
     await contains("[title='Mark as Todo']");
     await contains("[title='Mark as Read']");
+    await click("[title='Expand']");
     await contains("[title='Reply']");
+    await contains("[title='Translate']");
 });
 
 test("Unfollow message", async function () {
@@ -773,24 +775,24 @@ test("Unfollow message", async function () {
     });
     await contains(".o-mail-Message-moreMenu", { count: 1 });
     await contains("[title='Unfollow']", { count: 1 });
-    await contains(".o-mail-Message:eq(2) [title='Expand']", { count: 0 });
+    await click(".o-mail-Message:eq(2) [title='Expand']");
     await contains(".o-mail-Message:eq(2)", {
         contains: [[".o-mail-Message-header small", { text: "on Thread not followed" }]],
     });
-    await contains(".o-mail-Message:eq(2) [title='Unfollow']", { count: 0 });
+    await contains("[title='Unfollow']", { count: 0 });
     await click(".o-mail-Message:eq(0) [title='Expand']");
     await click("[title='Unfollow']");
     await contains(".o-mail-Message", { count: 2 }); // Unfollowing message 0 marks it as read -> Message removed
     await contains(".o-mail-Message:eq(0)", {
         contains: [[".o-mail-Message-header small", { text: "on Thread followed" }]],
     });
-    await contains(".o-mail-Message:eq(0) [title='Expand']", { count: 0 });
-    await contains(".o-mail-Message:eq(0) [title='Unfollow']", { count: 0 });
+    await click(".o-mail-Message:eq(0) [title='Expand']");
+    await contains("[title='Unfollow']", { count: 0 });
     await contains(".o-mail-Message:eq(1)", {
         contains: [[".o-mail-Message-header small", { text: "on Thread not followed" }]],
     });
-    await contains(".o-mail-Message:eq(1) [title='Expand']", { count: 0 });
-    await contains(".o-mail-Message:eq(1) [title='Unfollow']", { count: 0 });
+    await click(".o-mail-Message:eq(1) [title='Expand']");
+    await contains("[title='Unfollow']", { count: 0 });
 });
 
 test('messages marked as read move to "History" mailbox', async () => {

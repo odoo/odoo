@@ -1,4 +1,5 @@
-import { describe, test } from "@odoo/hoot";
+import { test } from "@odoo/hoot";
+import { mockUserAgent } from "@odoo/hoot-mock";
 import {
     assertSteps,
     click,
@@ -12,9 +13,9 @@ import {
 } from "@mail/../tests/mail_test_helpers";
 import { serverState } from "@web/../tests/web_test_helpers";
 
-describe.current.tags("desktop");
 defineMailModels();
 
+test.tags("desktop");
 test("Toggle display of original/translated version of chatter message", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
@@ -46,6 +47,7 @@ test("Toggle display of original/translated version of chatter message", async (
     await assertSteps(["Request"]);
 });
 
+test.tags("desktop");
 test("translation of email message", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
@@ -79,5 +81,28 @@ test("translation of email message", async () => {
     await contains("span", {
         text: "Al mal tiempo, buena cara.",
         parent: [".o-mail-Message-body > div", { shadowRoot: true }],
+    });
+});
+
+test.tags("mobile");
+test("Toggle message translation on mobile", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({});
+    pyEnv["mail.message"].create({
+        model: "res.partner",
+        body: "Al mal tiempo, buena cara.",
+        author_id: serverState.odoobotId,
+        res_id: partnerId,
+    });
+    onRpcBefore("/mail/message/translate", () => {
+        return { body: "To bad weather, good face.", lang_name: "Spanish", error: null };
+    });
+    mockUserAgent("Chrome/0.0.0 Android (OdooMobile; Linux; Android 13; Odoo TestSuite)");
+    await start();
+    await openFormView("res.partner", partnerId);
+    await click("button[title='Expand']");
+    await click("span", { text: "Translate" });
+    await contains(".o-mail-Message-body", {
+        text: "To bad weather, good face.(Translated from: Spanish)",
     });
 });
