@@ -8,6 +8,7 @@ import { formatList } from "@web/core/l10n/utils";
 import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 import { Deferred } from "@web/core/utils/concurrency";
+import { createElementWithContent } from "@web/core/utils/html";
 import { patch } from "@web/core/utils/patch";
 import { imageUrl } from "@web/core/utils/urls";
 
@@ -449,14 +450,15 @@ const threadPatch = {
     },
     /** @param {string} body */
     async post(body) {
-        if (this.model === "discuss.channel" && body.startsWith("/")) {
-            const [firstWord] = body.substring(1).split(/\s/);
+        const textContent = createElementWithContent("div", body).textContent.trim();
+        if (this.model === "discuss.channel" && textContent.startsWith("/")) {
+            const [firstWord] = textContent.substring(1).split(/\s/);
             const command = commandRegistry.get(firstWord, false);
             if (
                 command &&
                 (!command.channel_types || command.channel_types.includes(this.channel_type))
             ) {
-                await this.executeCommand(command, body);
+                await this.executeCommand(command, textContent);
                 return;
             }
         }
