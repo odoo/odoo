@@ -29,13 +29,29 @@ class PaymentProvider(models.Model):
         inverse='_inverse_paymob_account_country_id',
         domain=f'[("code", "in", {list(const.API_MAPPING.keys())})]',
         required_if_provider='paymob',
+        copy=False,
     )
-    paymob_public_key = fields.Char(string="Paymob Public Key", required_if_provider='paymob')
+    paymob_public_key = fields.Char(
+        string="Paymob Public Key",
+        required_if_provider='paymob',
+        copy=False,
+    )
     paymob_secret_key = fields.Char(
-        string="Paymob Secret Key", required_if_provider='paymob', groups='base.group_system'
+        string="Paymob Secret Key",
+        required_if_provider='paymob',
+        copy=False,
+        groups='base.group_system',
     )
-    paymob_hmac_key = fields.Char(string="Paymob HMAC Key", required_if_provider='paymob')
-    paymob_api_key = fields.Char(string="Paymob API Key", required_if_provider='paymob')
+    paymob_hmac_key = fields.Char(
+        string="Paymob HMAC Key",
+        required_if_provider='paymob',
+        copy=False,
+    )
+    paymob_api_key = fields.Char(
+        string="Paymob API Key",
+        required_if_provider='paymob',
+        copy=False,
+    )
 
     # === CONSTRAINT METHODS === #
 
