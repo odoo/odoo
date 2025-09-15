@@ -65,7 +65,7 @@ export class DiscussContent extends Component {
     }
 
     get showThreadAvatar() {
-        return ["channel", "group", "chat"].includes(this.thread.channel_type);
+        return ["channel", "group", "chat"].includes(this.thread.channel?.channel_type);
     }
 
     get isThreadAvatarEditable() {

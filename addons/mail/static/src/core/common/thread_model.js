@@ -318,6 +318,9 @@ export class Thread extends Record {
     }
 
     get avatarUrl() {
+        if (this.channel) {
+            return this.channel.avatarUrl;
+        }
         return this.module_icon ?? this.store.DEFAULT_AVATAR;
     }
 

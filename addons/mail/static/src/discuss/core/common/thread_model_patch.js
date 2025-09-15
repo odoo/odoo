@@ -10,7 +10,6 @@ import { registry } from "@web/core/registry";
 import { Deferred } from "@web/core/utils/concurrency";
 import { createElementWithContent } from "@web/core/utils/html";
 import { patch } from "@web/core/utils/patch";
-import { imageUrl } from "@web/core/utils/urls";
 
 const commandRegistry = registry.category("discuss.channel_commands");
 
@@ -71,6 +70,7 @@ const threadPatch = {
                         member_count: this.member_count,
                         self_member_id: this.self_member_id,
                         typingMembers: this.typingMembers,
+                        avatar_cache_key: this.avatar_cache_key,
                     };
                 }
                 return undefined;
@@ -197,17 +197,7 @@ const threadPatch = {
         });
         this.typingMembers = fields.Many("discuss.channel.member", { inverse: "threadAsTyping" });
     },
-    get avatarUrl() {
-        if (this.channel?.channel_type === "channel" || this.channel?.channel_type === "group") {
-            return imageUrl("discuss.channel", this.id, "avatar_128", {
-                unique: this.avatar_cache_key,
-            });
-        }
-        if (this.channel?.correspondent) {
-            return this.channel.correspondent.avatarUrl;
-        }
-        return super.avatarUrl;
-    },
+
     /** @override */
     async checkReadAccess() {
         const res = await super.checkReadAccess();

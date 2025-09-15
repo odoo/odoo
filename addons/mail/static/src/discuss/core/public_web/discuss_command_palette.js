@@ -236,7 +236,7 @@ export class DiscussCommandPalette {
                 name: thread.displayName,
                 category,
                 props: {
-                    imgUrl: thread.parent_channel_id?.avatarUrl ?? thread.avatarUrl,
+                    imgUrl: thread.parent_channel_id?.avatarUrl ?? thread.channel?.avatarUrl,
                     channel: thread.channel_type !== "chat" ? thread : undefined,
                     persona:
                         thread.channel_type === "chat"

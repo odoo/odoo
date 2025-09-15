@@ -1,4 +1,5 @@
 import { fields, Record } from "@mail/core/common/record";
+import { imageUrl } from "@web/core/utils/urls";
 
 export class DiscussChannel extends Record {
     static _name = "discuss.channel";
@@ -6,7 +7,8 @@ export class DiscussChannel extends Record {
 
     /** @type {number} */
     id;
-
+    /** @type {String} */
+    avatar_cache_key;
     thread = fields.One("Thread", {
         inverse: "channel",
         onDelete: (r) => r.delete(),
@@ -107,6 +109,15 @@ export class DiscussChannel extends Record {
             return this.otherTypingMembers.length > 0;
         },
     });
+
+    get avatarUrl() {
+        if (this.channel_type === "channel" || this.channel_type === "group") {
+            return imageUrl("discuss.channel", this.id, "avatar_128", {
+                unique: this.avatar_cache_key,
+            });
+        }
+        return this.correspondent?.avatarUrl;
+    }
 }
 
 DiscussChannel.register();
