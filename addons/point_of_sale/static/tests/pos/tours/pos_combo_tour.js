@@ -17,6 +17,22 @@ registry.category("web_tour.tours").add("ProductComboPriceTaxIncludedTour", {
         [
             Chrome.startPoS(),
             Dialog.confirm("Open Register"),
+            ...ProductScreen.clickDisplayedProduct("Sofa Combo"),
+            combo.select("Combo Product Sofa (L)"),
+            Dialog.confirm(),
+            inLeftSide([
+                ...Order.hasLine({
+                    withoutClass: ".selected",
+                    productName: "Combo Product Sofa",
+                    run: "click",
+                    quantity: "1",
+                    attributeLine: "L",
+                    priceUnit: 34.5,
+                }),
+                Numpad.click("⌫"),
+                Numpad.click("⌫"),
+                ...Order.doesNotHaveLine(),
+            ]),
             scan_barcode("SuperCombo"),
             combo.select("Combo Product 3"),
             combo.isConfirmationButtonDisabled(),

@@ -28,11 +28,14 @@ export const computeComboItems = (
         if (comboItem.id == childLineConf[childLineConf.length - 1].combo_item_id.id) {
             priceUnit += remainingTotal;
         }
-        const attribute_value_ids = conf.configuration?.attribute_value_ids?.map(
-            (id) => productTemplateAttributeValueById[id]
-        );
+        const attribute_value_ids =
+            conf.configuration?.attribute_value_ids?.map(
+                (id) => productTemplateAttributeValueById[id]
+            ) || conf.combo_item_id?.product_id?.product_template_attribute_value_ids;
         const attributesPriceExtra = (attribute_value_ids ?? [])
-            .map((attr) => attr?.price_extra || 0)
+            .map((attr) =>
+                attr?.attribute_id?.create_variant === "always" ? 0 : attr?.price_extra || 0
+            )
             .reduce((acc, price) => acc + price, 0);
         const totalPriceExtra = priceUnit + attributesPriceExtra + comboItem.extra_price;
         comboItems.push({
