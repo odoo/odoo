@@ -1,7 +1,7 @@
 import { patch } from '@web/core/utils/patch';
-import { WebsiteSale } from '@website_sale/interactions/website_sale';
+import { ProductPage } from '@website_sale/interactions/product_page';
 
-patch(WebsiteSale.prototype, {
+patch(ProductPage.prototype, {
     /**
      * Override of `website_sale` to trigger a state update of the ClickAndCollectAvailability
      * component when the combination info is updated.

@@ -1,9 +1,9 @@
 import { patch } from '@web/core/utils/patch';
-import { WebsiteSale } from '@website_sale/interactions/website_sale';
+import { ProductPage } from '@website_sale/interactions/product_page';
 
-patch(WebsiteSale.prototype, {
+patch(ProductPage.prototype, {
     /**
-     * Override of `website_sale` to update the product's excluded price based on the selected
+     * Override of `website_sale` to update the product's tax excluded price based on the selected
      * variant.
      *
      * @param {Event} ev

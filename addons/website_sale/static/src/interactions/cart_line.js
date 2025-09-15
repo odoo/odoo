@@ -71,14 +71,14 @@ export class CartLine extends Interaction {
             input.value = data.quantity
         );
 
-        const cart = this.el.closest('#shop_cart');
+        const websiteSale = document.querySelector('.oe_website_sale');
         // `updateCartNavBar` regenerates the cart lines and `updateQuickReorderSidebar`
         // regenerates the quick reorder products, so we need to stop and start interactions
         // to make sure the regenerated cart lines and reorder products are properly handled.
-        this.services['public.interactions'].stopInteractions(cart);
+        this.services['public.interactions'].stopInteractions(websiteSale);
         wSaleUtils.updateCartNavBar(data);
         wSaleUtils.updateQuickReorderSidebar(data);
-        this.services['public.interactions'].startInteractions(cart);
+        this.services['public.interactions'].startInteractions(websiteSale);
         wSaleUtils.showWarning(data.warning);
         // Propagate the change to the express checkout forms.
         this.env.bus.trigger('cart_amount_changed', [data.amount, data.minor_amount]);

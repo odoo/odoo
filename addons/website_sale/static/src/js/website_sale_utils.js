@@ -46,7 +46,7 @@ function updateCartNavBar(data) {
     updateCartSummary(data);
 
     // Adjust the cart's left column width to accommodate the cart summary (right column). The left
-    // column of an empty cart initially takes the full width, but adding products (e.g. via quick 
+    // column of an empty cart initially takes the full width, but adding products (e.g. via quick
     // reorder) enables the cart summary on the right.
     document.querySelector('.oe_cart').classList.toggle('col-lg-7', !!data.cart_quantity);
 
@@ -113,7 +113,7 @@ function showWarning(message) {
     alertDiv.id = 'data_warning';
     const closeButton = document.createElement('button');
     closeButton.classList.add('btn-close');
-    closeButton.type = 'button';
+    closeButton.type = 'button'; // Avoid default submit type in case of a form.
     closeButton.dataset.bsDismiss = 'alert';
     const messageSpan = document.createElement('span');
     messageSpan.textContent = message;

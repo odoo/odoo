@@ -96,7 +96,7 @@
                         t-attf-class="row align-items-lg-start {{website.product_page_cols_order == 'inverse' and 'flex-lg-row-reverse' or ''}}"
                         id="product_detail_main"
                         data-name="Product Page"
-                        t-att-data-image_layout="website.product_page_image_layout"
+                        t-att-data-image-layout="website.product_page_image_layout"
                     >
                         <div
                             t-attf-class="o_wsale_product_images col o_wsale_sticky_object"
@@ -496,9 +496,7 @@
         <ul
             t-if="product._has_multiple_uoms()"
             t-attf-class="o_wsale_product_page_variants d-flex flex-column gap-4 list-unstyled js_add_cart_variants mt-4 #{ul_class}"
-            t-att-data-attribute-exclusions="json.dumps(attribute_exclusions)"
         >
-            <!-- NOTE: the t-att-data-attribute-exclusions is only there to match existing events selectors -->
             <li>
                 <!-- Separate template to reduce views duplication -->
                 <t t-call="website_sale.packaging_title"/>

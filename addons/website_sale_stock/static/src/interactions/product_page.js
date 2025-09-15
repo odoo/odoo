@@ -6,9 +6,9 @@ import { formatFloat } from '@web/core/utils/numbers';
 import { setElementContent } from '@web/core/utils/html';
 import { patchDynamicContent } from '@web/public/utils';
 import { markup } from '@odoo/owl';
-import { WebsiteSale } from '@website_sale/interactions/website_sale';
+import { ProductPage } from '@website_sale/interactions/product_page';
 
-patch(WebsiteSale.prototype, {
+patch(ProductPage.prototype, {
     setup() {
         super.setup();
         patchDynamicContent(this.dynamicContent, {
@@ -82,10 +82,7 @@ patch(WebsiteSale.prototype, {
         super._onChangeCombination(...arguments);
         const has_max_combo_quantity = 'max_combo_quantity' in combination
         if (!combination.is_storable && !has_max_combo_quantity) return;
-        if (!parent.matches('.js_main_product') || !combination.product_id) {
-            // if we're not on product page or the product is dynamic
-            return;
-        }
+        if (!combination.product_id) return; // If the product is dynamic.
 
         const addQtyInput = parent.querySelector('input[name="add_qty"]');
         let qty = addQtyInput.value;
@@ -122,15 +119,12 @@ patch(WebsiteSale.prototype, {
         }
 
         // needed xml-side for formatting of remaining qty
-        combination.formatQuantity = (qty) => {
+        combination.formatQuantity = qty => {
             if (Number.isInteger(qty)) {
                 return qty;
             } else {
-                const decimals = Math.max(
-                    0,
-                    Math.ceil(-Math.log10(combination.uom_rounding))
-                );
-                return formatFloat(qty, {digits: [false, decimals]});
+                const decimals = Math.max(0, Math.ceil(-Math.log10(combination.uom_rounding)));
+                return formatFloat(qty, { digits: [false, decimals] });
             }
         }
 
@@ -146,16 +140,5 @@ patch(WebsiteSale.prototype, {
         this.el.querySelector('div.availability_messages').append(renderToFragment(
             'website_sale_stock.product_availability', combination
         ));
-    },
-
-    /**
-     * Recomputes the combination after adding a product to the cart
-     */
-    async onClickAdd(ev) {
-        const quantity = await this.waitFor(super.onClickAdd(...arguments));
-        if (this.el.querySelector('div.availability_messages')) {
-            await this.waitFor(this._getCombinationInfo(ev));
-        }
-        return quantity;
     },
 });
