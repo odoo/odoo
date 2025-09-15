@@ -18,42 +18,48 @@ table.o_section_and_note_list_view {
                 width: 1px;  // to prevent the column to expand
             }
 
-            td[name="price_subtotal"] {
-                color: $gray-700;
+            .o_field_product_label_section_and_note_cell .o_input {
+                text-overflow: ellipsis;
             }
         }
 
         &.o_is_line_section {
             --table-hover-bg: #{rgba($body-emphasis-color, .08)};
             --table-bg-type: #{rgba($body-emphasis-color, .06)};
+            --ListRenderer-data-row-focused-striped-bg: var(--table-bg-type);
 
-            .o_handle_cell .o_row_handle {
-                transition: opacity $_SectionAndNote-transition;
+            font-weight: $font-weight-bolder;
+
+            &:where(:not(:empty)) {
+                // When dragging, an empty tr is created we don't want
+                // a border here.
+                border-top-color: var(--o-SectionAndNote-border-color);
             }
 
-            &:where(:not(.o_selected_row)) {
-                div:has(> div.o_field_product_label_section_and_note_cell) {
-                    transition: transform $_SectionAndNote-transition;
-                    position: absolute;
-                }
-
-                &:not(:hover, .o_dragged) {
-                    div:has(> div.o_field_product_label_section_and_note_cell) {
-                        transform: translateX(($font-size-base + $table-cell-padding-x-sm * 2) * -1);
-                    }
-
-                    .o_handle_cell .o_row_handle {
-                        cursor: default;
-                        pointer-events: none;
-                        opacity: 0;
-                    }
-                }
+            &.o_dragged {
+                border-width: $border-width 0;
             }
         }
 
         &.o_is_line_subsection {
             --table-hover-bg: #{rgba($body-emphasis-color, .05)};
             --table-bg-type: #{rgba($body-emphasis-color, .03)};
+
+            font-weight: $font-weight-bold;
+
+            &.o_dragged {
+                // We rely on td borders, when dragged we need to remove
+                // the borders on .o_data_row to avoid double borders
+                --ListRenderer-data-row-border-bottom-width: 0;
+            }
+
+            td {
+                border-bottom-width: $border-width;
+
+                &:not(.o_handle_cell) {
+                    border-color: var(--o-SectionAndNote-border-color);
+                }
+            }
         }
 
         // Check if next sibling is a section to apply a border-color.
