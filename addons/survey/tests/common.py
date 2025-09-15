@@ -230,6 +230,12 @@ class SurveyCase(common.TransactionCase):
         post_data.update(**additional_post_data)
         return post_data
 
+    def _session_next_question(self, survey):
+        return self.url_open(survey.get_base_url() + f'/survey/session/next_question/{survey.access_token}', json={})
+
+    def _session_disable_answers(self, survey):
+        return self.url_open(survey.get_base_url() + f'/survey/session/disable_answers/{survey.access_token}', json={})
+
     # ------------------------------------------------------------
     # UTILS / TOOLS
     # ------------------------------------------------------------
