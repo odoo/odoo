@@ -8,6 +8,7 @@ import {
 import { toggleBlockEmbedding } from "@html_editor/others/embedded_components/core/toggle_block/toggle_block";
 import { videoEmbedding } from "@html_editor/others/embedded_components/backend/video/video";
 import { readonlyVideoEmbedding } from "@html_editor/others/embedded_components/core/video/readonly_video";
+import { syntaxHighlightingEmbedding } from "@html_editor/others/embedded_components/backend/syntax_highlighting/syntax_highlighting";
 
 export const MAIN_EMBEDDINGS = [
     fileEmbedding,
@@ -15,6 +16,7 @@ export const MAIN_EMBEDDINGS = [
     toggleBlockEmbedding,
     videoEmbedding,
     captionEmbedding,
+    syntaxHighlightingEmbedding,
 ];
 
 export const READONLY_MAIN_EMBEDDINGS = [
@@ -23,4 +25,5 @@ export const READONLY_MAIN_EMBEDDINGS = [
     toggleBlockEmbedding,
     readonlyVideoEmbedding,
     captionEmbedding,
+    syntaxHighlightingEmbedding,
 ];

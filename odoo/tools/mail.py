@@ -80,6 +80,7 @@ safe_attrs = defs.safe_attrs | frozenset(
      'data-ai-field', 'data-ai-record-id',
      'data-heading-link-id',
      'data-mimetype-before-conversion',
+     'data-language-id', 'data-syntax-highlighting-value'
      ])
 SANITIZE_TAGS = {
     # allow new semantic HTML5 tags
