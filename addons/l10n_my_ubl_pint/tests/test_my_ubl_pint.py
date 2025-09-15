@@ -54,7 +54,7 @@ class TestMyUBLPint(AccountTestInvoicingCommon):
         )
 
     def test_invoice_with_sst(self):
-        invoice = self.init_invoice('out_invoice', currency=self.other_currency, products=self.product_a)
+        invoice = self.init_invoice('out_invoice', taxes=self.company_data['default_tax_sale'], currency=self.other_currency, products=self.product_a)
 
         invoice.write({
             'invoice_incoterm_id': self.env.ref('account.incoterm_CFR').id,

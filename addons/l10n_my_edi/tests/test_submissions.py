@@ -53,14 +53,12 @@ class L10nMyEDITestNewSubmission(TestAccountMoveSendCommon):
         cls.product_a.l10n_my_edi_classification_code = "001"
 
         # We can reuse this invoice for the flow tests.
-        cls.basic_invoice = cls.init_invoice('out_invoice', products=cls.product_a)
+        cls.basic_invoice = cls.init_invoice('out_invoice', taxes=cls.company_data['default_tax_sale'], products=cls.product_a)
         cls.basic_invoice.action_post()
 
         # For simplicity, we will test everything using a 'test' mode user, but we create it using demo to avoid triggering any api calls.
         cls.proxy_user = cls.env['account_edi_proxy_client.user']._register_proxy_user(cls.company_data['company'], 'l10n_my_edi', 'demo')
         cls.proxy_user.edi_mode = 'test'
-
-        cls.env['ir.config_parameter'].set_param('l10n_my_edi.disable.send_and_print.first', 'True')
 
     @freeze_time('2024-07-15 10:00:00')
     def test_01_new_basic_submission(self):
@@ -364,7 +362,7 @@ class L10nMyEDITestNewSubmission(TestAccountMoveSendCommon):
             first_batch = self.env['account.move']
             for i in range(5):
                 first_batch |= self.init_invoice(
-                    'out_invoice', products=self.product_a, post=True,
+                    'out_invoice', taxes=self.company_data['default_tax_sale'], products=self.product_a, post=True,
                 )
             with freeze_time('2024-07-15 10:00:00'):
                 first_batch.action_l10n_my_edi_send_invoice()
@@ -377,7 +375,7 @@ class L10nMyEDITestNewSubmission(TestAccountMoveSendCommon):
             second_batch = self.basic_invoice
             for i in range(4):
                 second_batch |= self.init_invoice(
-                    'out_invoice', products=self.product_a, post=True,
+                    'out_invoice', taxes=self.company_data['default_tax_sale'], products=self.product_a, post=True,
                 )
             with freeze_time('2024-07-15 10:00:00'):
                 second_batch.action_l10n_my_edi_send_invoice()
