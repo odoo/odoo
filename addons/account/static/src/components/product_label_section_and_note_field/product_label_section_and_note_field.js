@@ -14,7 +14,8 @@ export class ProductLabelSectionAndNoteField extends ProductNameAndDescriptionFi
 
     get sectionAndNoteClasses() {
         return {
-            "fw-bold": this.isSection(),
+            "fw-bolder": this.isTopSection(),
+            "fw-bold": this.isSection() && !this.isTopSection(),
             "fst-italic": this.isNote(),
             "text-warning": this.shouldShowWarning(),
         };
