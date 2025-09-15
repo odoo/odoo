@@ -214,11 +214,11 @@
 
 .o_bottom_sheet .o-form-buttonbox {
     --button-box-per-row: 1;
-    --o-stat-text-color: black;
-    --o-stat-button-color: black;
+    --o-stat-text-color: currentColor;
+    --o-stat-button-color: currentColor;
+    --button-box-gap: 0;
 
     display: grid;
-    gap: map-get($spacers, 2);
     padding: map-get($spacers, 3) !important;
 
     &.o-form-buttonbox-small:not(:has(.o-dropdown-item:only-child)) {
@@ -226,18 +226,20 @@
     }
 
     .o-dropdown-item {
-        --oi-font-size: 1.5rem;
-
-        border: solid 1px lightgray;
-        border-radius: 5px;
         outline: none;
 
+        &:not(:last-child) {
+            border-bottom: solid 1px var(--o-stat-button-border-color, #{$border-color});
+        }
+
         .oe_stat_button {
-            gap: map-get($spacers, 3);
+            gap: map-get($spacers, 2);
             height: unset;
+            padding: var(--dropdown-item-padding-y) var(--dropdown-item-padding-x);
 
             &, * {
-                font-size: 1rem;
+                font-size: $h5-font-size;
+                font-weight: $o-font-weight-medium;
             }
 
             .o_button_icon {
@@ -248,6 +250,12 @@
                     text-align: center;
                 }
             }
+        }
+
+        .o_field_statinfo, .o_stat_info {
+            flex-direction: row-reverse;
+            align-items: baseline;
+            gap: map-get($spacers, 1);
         }
     }
 }
