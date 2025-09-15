@@ -4,7 +4,7 @@
         <xpath expr="//t[@name='chat']" position="replace">
             <div t-if="props.thread.channel?.hasOtherMembersTyping" class="bg-inherit rounded-pill" style="padding: 1px;">
                 <div class="bg-success rounded-pill" style="padding: 3px;">
-                    <Typing member="props.member" channel="props.thread" size="props.size" displayText="false" />
+                    <Typing member="props.member" thread="props.thread" size="props.size" displayText="false" />
                 </div>
             </div>
             <t t-else="">$0</t>

@@ -4,7 +4,7 @@ import { _t } from "@web/core/l10n/translation";
 
 /**
  * @typedef {Object} Props
- * @property {import("models").Thread} channel
+ * @property {import("models").Thread} thread
  * @property {string} [size]
  * @property {boolean} [displayText]
  * @extends {Component<Props, Env>}
@@ -14,14 +14,14 @@ export class Typing extends Component {
         size: "small",
         displayText: true,
     };
-    static props = ["channel?", "size?", "displayText?", "member?"];
+    static props = ["thread?", "size?", "displayText?", "member?"];
     static template = "discuss.Typing";
 
     /** @returns {string} */
     get text() {
         const typingMemberNames = this.props.member
             ? [this.props.member.name]
-            : this.props.channel.channel.otherTypingMembers.map(({ name }) => name);
+            : this.props.thread.channel.otherTypingMembers.map(({ name }) => name);
         if (typingMemberNames.length === 1) {
             return _t("%s is typing...", typingMemberNames[0]);
         }
