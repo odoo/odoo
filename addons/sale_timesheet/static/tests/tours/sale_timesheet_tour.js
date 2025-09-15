@@ -33,6 +33,12 @@ registry.category("web_tour.tours").add('sale_timesheet_tour', {
     content: 'Add a new project.',
     run: "click",
 }, {
+    isActive: ["body:has(.o-project-form-dropdown-menu)"],
+    trigger: ".dropdown-item:contains('New Project')",
+    content: 'Let\'s create a regular project.',
+    tooltipPosition: "right",
+    run: "click",
+}, {
     trigger: '.o_field_widget.o_project_name input',
     content: 'Select your project name (e.g. Project for Freeman)',
     run: "edit Project for Freeman",
@@ -144,6 +150,12 @@ registry.category("web_tour.tours").add('sale_timesheet_tour', {
 }, {
     trigger: 'button.o_list_button_add',
     content: 'Click on Create button to create a new project and see the different configuration available for the project.',
+    run: "click",
+}, {
+    isActive: ["body:has(.o-project-form-dropdown-menu)"],
+    trigger: ".dropdown-item:contains('New Project')",
+    content: 'Let\'s create a regular project.',
+    tooltipPosition: "right",
     run: "click",
 },
 {

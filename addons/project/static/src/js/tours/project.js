@@ -28,6 +28,12 @@ registry.category("web_tour.tours").add('project_tour', {
     tooltipPosition: 'bottom',
     run: "click",
 }, {
+    isActive: ["body:has(.o-project-form-dropdown-menu)"],
+    trigger: ".dropdown-item:contains('New Project')",
+    content: markup(_t("Let\'s create a regular <b>project</b>.")),
+    tooltipPosition: "right",
+    run: "click",
+}, {
     trigger: '.o_project_name input',
     content: markup(_t('Choose a <b>name</b> for your project. <i>It can be anything you want: the name of a customer, of a product, of a team, of a construction site, etc.</i>')),
     tooltipPosition: 'right',
