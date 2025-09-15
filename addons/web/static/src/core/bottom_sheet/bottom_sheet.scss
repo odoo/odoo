@@ -235,10 +235,10 @@
         position: relative;
         border: $border-width solid $list-group-active-border-color;
         border-radius: $border-radius-lg;
-        color: color-contrast($component-active-bg);
+        color: var(--BottomSheetStatusBar__entry-color--active, #{color-contrast($component-active-bg)});
 
         &:not(.focus) {
-            background: rgba($component-active-bg, .5);
+            background: var(--BottomSheetStatusBar__entry-background--active, #{rgba($component-active-bg, .5)});
         }
 
         &::before {
@@ -274,6 +274,7 @@
 
         font-size: $h5-font-size;
         font-weight: $o-font-weight-medium;
+        text-align: start !important;
     }
 
     .o_bottom_sheet_body:not(.o_custom_bottom_sheet) {
@@ -302,6 +303,31 @@
         &.open::after {
             // .fa-caret-up
             content: "\f0d8";
+        }
+    }
+
+    .o_kanban_card_manage_settings:has(.o_colorlist) {
+        &, > div:last-child {
+            padding: 0;
+        }
+    }
+    .row.o_kanban_card_manage_settings:last-child {
+        flex-direction: column;
+
+        div[class*="col-"] + div[class*="col-"] {
+            border-left: none;
+        }
+
+        > div[class*="col-"] {
+            width: 100%;
+            padding: 0;
+
+            a {
+                margin: 0;
+                padding: #{map-get($spacers, 3)} var(--BottomSheet-Entry-paddingX);
+                font-size: $h5-font-size;
+                font-weight: $o-font-weight-medium;
+            }
         }
     }
 }
