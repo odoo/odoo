@@ -109,15 +109,42 @@
         <field name="inherit_id" ref="stock_picking_batch.stock_picking_batch_kanban"/>
         <field name="arch" type="xml">
             <data>
-                <xpath expr="//footer" position="replace">
-                    <footer class="pt-0">
-                        <field name="dock_id"/>
+                <xpath expr="//field[@name='company_id']" position="after">
+                    <field name="vehicle_id"/>
+                    <field name="vehicle_weight_capacity"/>
+                    <field name="vehicle_volume_capacity"/>
+                </xpath>
+                <xpath expr="//field[@name='scheduled_date']" position="after">
+                    <i class="mx-2 fa fa-long-arrow-right" title="Scheduled Date"/>
+                    <field name="end_date"/>
+                </xpath>
+                <xpath expr="//div[field[@name='scheduled_date']]" position="after">
+                    <t t-set="weight_capacity" t-value="record.vehicle_weight_capacity.raw_value"/>
+                    <t t-set="volume_capacity" t-value="record.vehicle_volume_capacity.raw_value"/>
+                    <div t-if="record.vehicle_id.raw_value" class="d-flex">
                         <div>
-                            <field name="state" widget="state_selection" class="float-start pt-1 me-1"/>
-                            <field name="scheduled_date" readonly="state in ['cancel', 'done']"/>
+                            <i class="me-2 fa fa-truck text-primary" title="Vehicle"/>
                         </div>
-                        <field name="user_id" widget="many2one_avatar_user" readonly="state not in ['draft', 'in_progress']" class="ms-auto"/>
-                    </footer>
+                        <div>
+                            <field name="vehicle_id" class="me-1"/>
+                            <span class="text-muted text-nowrap" t-if="weight_capacity or volume_capacity">
+                                (<t t-if="weight_capacity">
+                                    <t t-out="weight_capacity"/> <field name="weight_uom_name"/>
+                                </t>
+                                <t t-if="weight_capacity and volume_capacity">, </t>
+                                <t t-if="volume_capacity">
+                                    <t t-out="volume_capacity"/> <field name="volume_uom_name"/>
+                                </t>)
+                            </span>
+                        </div>
+                    </div>
+                    <div t-if="record.dock_id.raw_value" class="text-truncate">
+                        <i class="me-2 fa fa-cubes text-primary" title="Location"/>
+                        <field name="dock_id"/>
+                    </div>
+                </xpath>
+                <xpath expr="//span[hasclass('text-success')]" position="attributes">
+                    <attribute name="t-att-class">!record.vehicle_id.raw_value or (used_weight > weight_capacity or used_volume > volume_capacity) and 'text-danger' or 'text-success'</attribute>
                 </xpath>
             </data>
         </field>
