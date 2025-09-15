@@ -1,38 +1,36 @@
 import { reactive } from "@odoo/owl";
+
+import { browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
 
 export const composerService = {
-    dependencies: ["mail.store", "legacy_multi_tab"],
+    dependencies: ["mail.store"],
     /**
      * Enable Html composer with: odoo.__WOWL_DEBUG__.root.env.services["mail.composer"].setHtmlComposer()
-     * @param {import("@web/env").OdooEnv}
-     * @param {Partial<import("services").Services>} services
      */
-    start(env, { legacy_multi_tab }) {
+    start(env) {
         const state = reactive({
-            htmlEnabled: legacy_multi_tab.getSharedValue("mail.html_composer.enabled", false),
+            htmlEnabled: JSON.parse(browser.localStorage.getItem("mail.html_composer.enabled")),
             setHtmlComposer() {
                 if (state.htmlEnabled) {
                     return;
                 }
                 state.htmlEnabled = true;
-                legacy_multi_tab.setSharedValue("mail.html_composer.enabled", true);
+                browser.localStorage.setItem("mail.html_composer.enabled", true);
             },
             setTextComposer() {
                 if (!state.htmlEnabled) {
                     return;
                 }
                 state.htmlEnabled = false;
-                legacy_multi_tab.setSharedValue("mail.html_composer.enabled", false);
+                browser.localStorage.setItem("mail.html_composer.enabled", false);
             },
         });
-
-        legacy_multi_tab.bus.addEventListener("shared_value_updated", ({ detail }) => {
-            if (detail.key === "mail.html_composer.enabled") {
-                state.htmlEnabled = JSON.parse(detail.newValue);
+        browser.addEventListener("storage", ({ key, newValue }) => {
+            if (key === "mail.html_composer.enabled") {
+                state.htmlEnabled = JSON.parse(newValue);
             }
         });
-
         return state;
     },
 };

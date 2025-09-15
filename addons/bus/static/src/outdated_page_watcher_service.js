@@ -12,11 +12,12 @@ export class OutdatedPageWatcherService {
      * @param {import("@web/env").OdooEnv}
      * @param {Partial<import("services").Services>} services
      */
-    setup(env, { bus_service, multi_tab, legacy_multi_tab, notification }) {
+    setup(env, { bus_service, multi_tab, notification }) {
         this.notification = notification;
         this.multi_tab = multi_tab;
-        this.legacy_multi_tab = legacy_multi_tab;
-        this.lastNotificationId = legacy_multi_tab.getSharedValue("last_notification_id");
+        this.lastNotificationId = parseInt(
+            browser.localStorage.getItem("bus.last_notification_id") ?? 0
+        );
         this.closeNotificationFn;
         let wasBusAlreadyConnected;
         bus_service.addEventListener(
@@ -26,11 +27,11 @@ export class OutdatedPageWatcherService {
             },
             { once: true }
         );
-        bus_service.addEventListener(
-            "BUS:DISCONNECT",
-            () =>
-                (this.lastNotificationId = legacy_multi_tab.getSharedValue("last_notification_id"))
-        );
+        bus_service.addEventListener("BUS:DISCONNECT", () => {
+            this.lastNotificationId = parseInt(
+                browser.localStorage.getItem("bus.last_notification_id") ?? 0
+            );
+        });
         bus_service.addEventListener("BUS:CONNECT", async () => {
             if (wasBusAlreadyConnected) {
                 this.checkHasMissedNotifications();
@@ -38,7 +39,7 @@ export class OutdatedPageWatcherService {
             wasBusAlreadyConnected = true;
         });
         bus_service.addEventListener("BUS:RECONNECT", () => this.checkHasMissedNotifications());
-        legacy_multi_tab.bus.addEventListener("shared_value_updated", ({ detail: { key } }) => {
+        browser.addEventListener("storage", ({ key }) => {
             if (key === "bus.has_missed_notifications") {
                 this.showOutdatedPageNotification();
             }
@@ -56,7 +57,7 @@ export class OutdatedPageWatcherService {
         );
         if (hasMissedNotifications) {
             this.showOutdatedPageNotification();
-            this.legacy_multi_tab.setSharedValue("bus.has_missed_notifications", Date.now());
+            localStorage.setItem("bus.has_missed_notifications", Date.now());
         }
     }
 
@@ -81,7 +82,7 @@ export class OutdatedPageWatcherService {
 }
 
 export const outdatedPageWatcherService = {
-    dependencies: ["bus_service", "multi_tab", "legacy_multi_tab", "notification"],
+    dependencies: ["bus_service", "multi_tab", "notification"],
     start(env, services) {
         return new OutdatedPageWatcherService(env, services);
     },

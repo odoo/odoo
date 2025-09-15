@@ -2315,7 +2315,6 @@ export const rtcService = {
         "mail.fullscreen",
         "mail.sound_effects",
         "mail.store",
-        "legacy_multi_tab",
         "notification",
         "presence",
     ],
