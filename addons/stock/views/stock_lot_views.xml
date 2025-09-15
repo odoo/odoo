@@ -69,12 +69,12 @@
                 <field name="name" decoration-bf="1"/>
                 <field name="product_id" readonly="1"/>
                 <field name="ref" optional="hide"/>
-                <field name="create_date" optional="show"/>
-                <field name="company_id" groups="base.group_multi_company"/>
+                <field name="create_date" optional="hide"/>
+                <field name="company_id" optional="hide" groups="base.group_multi_company"/>
                 <field name="partner_ids" optional="hide" widget="many2many_tags" string="Transfer to"/>
                 <field name="activity_ids" widget="list_activity" optional="show"/>
                 <field name="lot_properties" optional="hide"/>
-                <field name="product_qty" optional="hide"/>
+                <field name="product_qty" optional="show"/>
             </list>
         </field>
     </record>
