@@ -10,12 +10,11 @@
         "views/settings.xml",
     ],
     'assets': {
-        'web.assets_backend': [
-            'cloud_storage/static/src/core/common/**/*',
-            'cloud_storage/static/src/**/web_portal/**/*',
+        "mail.assets_core_common": [
+            "cloud_storage/static/src/core/common/**/*",
         ],
-        'mail.assets_public': [
-            'cloud_storage/static/src/core/common/**/*',
+        "mail.assets_feature_web_portal": [
+            "cloud_storage/static/src/**/web_portal/**/*",
         ],
     },
     'author': 'Odoo S.A.',

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
@@ -66,6 +65,15 @@ A synchronization with an internal agenda (Meetings of the CRM module) is also p
     'installable': True,
     'application': True,
     'assets': {
+        "discuss.assets_core_common": [
+            "hr_holidays/static/src/discuss/core/common/**/*",
+        ],
+        "discuss.assets_core_public_web": [
+            "hr_holidays/static/src/discuss/core/public_web/**/*",
+        ],
+        "mail.assets_core_common": [
+            "hr_holidays/static/src/core/common/**/*",
+        ],
         'web.assets_backend': [
             'hr_holidays/static/src/**/*',
             ('remove', 'hr_holidays/static/src/views/graph/**'),
@@ -77,12 +85,6 @@ A synchronization with an internal agenda (Meetings of the CRM module) is also p
         ],
         "web.assets_web_dark": [
             'hr_holidays/static/src/**/*.dark.scss',
-        ],
-        'im_livechat.assets_embed_core': [
-            'hr_holidays/static/src/core/common/**/*',
-        ],
-        'mail.assets_public': [
-            'hr_holidays/static/src/core/common/**/*',
         ],
         'web.assets_unit_tests': [
             'hr_holidays/static/tests/**/*',

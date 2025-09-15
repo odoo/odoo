@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 {
     'name': 'Live Chat',
     'version': '1.0',
@@ -75,13 +74,52 @@ Help your customers with this chat, and analyse their feedback.
     'installable': True,
     'application': True,
     'assets': {
+        "discuss.assets_core_common": [
+            "im_livechat/static/src/discuss/core/common/**/*",
+        ],
+        "discuss.assets_core_public_web": [
+            "im_livechat/static/src/discuss/core/public_web/**/*",
+        ],
+        "discuss.assets_core_web": [
+            "im_livechat/static/src/discuss/core/web/**/*",
+        ],
+        "discuss.assets_feature_common": [
+            "im_livechat/static/src/discuss/**/common/**/*",
+        ],
+        "discuss.assets_feature_web": [
+            "im_livechat/static/src/discuss/**/web/**/*",
+        ],
+        "im_livechat.assets_core_common": [],
+        "im_livechat.assets_core_cors": [
+            "im_livechat/static/src/core/cors/**/*",
+        ],
+        "im_livechat.assets_core_cors_external": [
+            "im_livechat/static/src/core/cors_external/**/*",
+        ],
+        "im_livechat.assets_core_cors_external_frontend": [
+            # path should be changed to core/cors_external_frontend
+            'im_livechat/static/src/embed/common/**/*',
+        ],
+        "im_livechat.assets_core_frontend": [
+            "im_livechat/static/src/core/frontend/**/*",
+        ],
+        "mail.assets_public": [
+            ("include", "im_livechat.assets_core_common"),
+        ],
+        "portal.assets_chatter_helpers_no_style": [
+            ("remove", "im_livechat/static/src/**/*.scss"),
+        ],
+        # top level bundle used to embed on the current website (same origin)
         'web.assets_frontend': [
             'web/static/src/views/fields/file_handler.*',
             'web/static/src/views/fields/formatters.js',
-            ('include', 'im_livechat.assets_embed_core'),
-            'im_livechat/static/src/embed/frontend/**/*',
+            ("include", "im_livechat.assets_discuss_cors_external_frontend"),
+            ("include", "im_livechat.assets_core_common"),
+            ("include", "im_livechat.assets_core_cors_external_frontend"),
+            ("include", "im_livechat.assets_core_frontend"),
         ],
         'web.assets_backend': [
+            ("include", "im_livechat.assets_core_common"),
             'im_livechat/static/src/js/colors_reset_button/*',
             'im_livechat/static/src/js/im_livechat_chatbot_steps_one2many.js',
             'im_livechat/static/src/js/im_livechat_chatbot_script_answers_m2m.js',
@@ -89,9 +127,6 @@ Help your customers with this chat, and analyse their feedback.
             ('remove', 'im_livechat/static/src/views/lazy/**/*'),
             'im_livechat/static/src/scss/im_livechat_history.scss',
             'im_livechat/static/src/scss/im_livechat_form.scss',
-            'im_livechat/static/src/core/common/**/*',
-            'im_livechat/static/src/core/public_web/**/*',
-            'im_livechat/static/src/core/web/**/*',
             ('remove', 'im_livechat/static/src/**/*.dark.scss'),
         ],
         'web.assets_backend_lazy': [
@@ -111,21 +146,21 @@ Help your customers with this chat, and analyse their feedback.
         'web.assets_tests': [
             'im_livechat/static/tests/tours/**/*',
         ],
-        'im_livechat.assets_embed_core': [
-            ('remove', 'web/static/src/core/browser/title_service.js'),
+        # Technical bundle common to current website, support page, and external websites. This
+        # bundles contains the minimal discuss dependencies necessary to run the live chat code in
+        # contexts where the discuss code is not already present, but it should not contain the live
+        # chat code directly.
+        "im_livechat.assets_discuss_cors_external_frontend": [
             ("include", "html_editor.assets_editor"),
-            'mail/static/src/model/**/*',
-            'mail/static/src/core/common/**/*',
-            'mail/static/src/discuss/core/common/*',
-            'mail/static/src/discuss/call/common/**',
-            'mail/static/src/discuss/typing/**/*',
-            'mail/static/src/utils/common/**/*',
-            ('remove', 'mail/static/src/**/*.dark.scss'),
-            "rating/static/src/core/common/**/*",
-            'im_livechat/static/src/core/common/**/*',
-            'im_livechat/static/src/embed/common/**/*',
+            ("include", "mail.assets_core_common"),
+            ("include", "mail.assets_feature_common"),
+            ("include", "discuss.assets_core_common"),
+            ("include", "discuss.assets_feature_common"),
         ],
-        'im_livechat.assets_embed_external': [
+        # Technical bundle common to embed on support page and on external website. This bundle
+        # contains the minimal framework dependencies necessary to run the live chat code in embed
+        # contexts, but it should not contain the discuss nor the live chat code directly.
+        "im_livechat.assets_framework_cors_external": [
             ('include', 'web._assets_helpers'),
             ('include', 'web._assets_backend_helpers'),
             'web/static/src/scss/pre_variables.scss',
@@ -150,12 +185,21 @@ Help your customers with this chat, and analyse their feedback.
             ('remove', 'bus/static/src/outdated_page_watcher_service.js'),
             ('remove', 'bus/static/src/services/assets_watchdog_service.js'),
             ('remove', 'bus/static/src/simple_notification_service.js'),
-            ('include', 'im_livechat.assets_embed_core'),
-            'im_livechat/static/src/embed/external/**/*',
         ],
+        # top level bundle used to embed on the support page (same origin)
+        'im_livechat.assets_embed_external': [
+            ("include", "im_livechat.assets_framework_cors_external"),
+            ("include", "im_livechat.assets_discuss_cors_external_frontend"),
+            ("include", "im_livechat.assets_core_cors_external_frontend"),
+            ("include", "im_livechat.assets_core_cors_external"),
+        ],
+        # top level bundle used to embed on an external website (different origin)
         'im_livechat.assets_embed_cors': [
-            ('include', 'im_livechat.assets_embed_external'),
-            'im_livechat/static/src/embed/cors/**/*',
+            ("include", "im_livechat.assets_framework_cors_external"),
+            ("include", "im_livechat.assets_discuss_cors_external_frontend"),
+            ("include", "im_livechat.assets_core_cors_external_frontend"),
+            ("include", "im_livechat.assets_core_cors_external"),
+            ("include", "im_livechat.assets_core_cors"),
         ],
         'im_livechat.embed_assets_unit_tests_setup': [
             ('include', 'web.assets_unit_tests_setup'),
@@ -187,10 +231,6 @@ Help your customers with this chat, and analyse their feedback.
         'im_livechat.embed_assets_unit_tests': [
             'web/static/tests/_framework/**/*',
             'im_livechat/static/tests/embed/**/*',
-        ],
-        "mail.assets_public": [
-            "im_livechat/static/src/core/common/**/*",
-            "im_livechat/static/src/core/public_web/**/*",
         ],
     },
     'author': 'Odoo S.A.',

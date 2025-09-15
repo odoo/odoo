@@ -54,14 +54,17 @@
     'installable': True,
     'application': True,
     'assets': {
+        "discuss.assets_core_web": [
+            "hr/static/src/discuss/core/web/**/*",
+        ],
+        "mail.assets_core_common": [
+            "hr/static/src/core/common/**/*",
+        ],
+        "mail.assets_core_web": [
+            "hr/static/src/core/web/**/*",
+        ],
         'web.assets_backend': [
             'hr/static/src/**/*',
-        ],
-        'im_livechat.assets_embed_core': [
-            'hr/static/src/core/common/**/*',
-        ],
-        'mail.assets_public': [
-            'hr/static/src/core/common/**/*',
         ],
         'web.qunit_suite_tests': [
             'hr/static/tests/legacy/**/*',

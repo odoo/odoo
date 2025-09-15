@@ -18,7 +18,7 @@ import {
 import { useService } from "@web/core/utils/hooks";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { patch } from "@web/core/utils/patch";
-import { AvatarCardPopover } from "@mail/discuss/web/avatar_card/avatar_card_popover";
+import { AvatarCardPopover } from "@mail/core/web/avatar_card/avatar_card_popover";
 import { messageActionOpenFullComposer } from "@mail/core/web/message_actions_patch";
 
 patch(Message.prototype, {
