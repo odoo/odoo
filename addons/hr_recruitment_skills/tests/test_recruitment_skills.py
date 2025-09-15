@@ -2,6 +2,7 @@
 
 from psycopg2.errors import UniqueViolation
 
+from odoo import Command
 from odoo.tests import Form, tagged, TransactionCase
 from odoo.tools.misc import mute_logger
 
@@ -73,6 +74,35 @@ class TestRecruitmentSkills(TransactionCase):
                 skill.skill_id = self.t_skill_1
                 skill.skill_level_id = self.t_skill_level_1
             app_form.save()
+
+    def test_access_error_on_adding_applicant(self):
+        """
+        Test that adding an applicant to a talent pool via the wizard
+        fails with AccessError if the user lacks read access on Employees.
+        """
+        # Create a fresh applicant never added to any pool
+        new_applicant = self.env["hr.applicant"].create({
+            "partner_name": "New Applicant Access Test",
+            "job_id": self.t_job.id,
+        })
+
+        # Create a restricted user with Recruitment access only
+        recruitment_group = self.env.ref('hr_recruitment.group_hr_recruitment_user')
+        user_demo = self.env["res.users"].create({
+            "name": "Recruitment User",
+            "login": "recruitment_user@example.com",
+            "email": "recruitment_user@example.com",
+            "group_ids": [Command.set(recruitment_group.ids)],
+        })
+
+        # No error should be raised.
+        self.env["talent.pool.add.applicants"].create({
+            "applicant_ids": [(6, 0, [new_applicant.id])],
+            "talent_pool_ids": [(6, 0, [self.t_talent_pool.id])],
+        }).with_user(user_demo).action_add_applicants_to_pool()
+
+        talent_pool_applicants = self.t_talent_pool.talent_ids
+        self.assertEqual(len(talent_pool_applicants), 1)
 
     def test_one_skill_is_copied_from_applicant_to_talent(self):
         """
