@@ -7,6 +7,9 @@ import { ensureArray } from "@web/core/utils/arrays";
 
 export class DiscussChannel extends mailModels.DiscussChannel {
     livechat_channel_id = fields.Many2one({ relation: "im_livechat.channel", string: "Channel" }); // FIXME: somehow not fetched properly
+    livechat_channel_member_history_ids = fields.Many2many({
+        relation: "im_livechat.channel.member.history",
+    });
     livechat_note = fields.Html({ sanitize: true });
     livechat_status = fields.Selection({
         selection: [
@@ -93,6 +96,19 @@ export class DiscussChannel extends mailModels.DiscussChannel {
                       name: country.name,
                   }
                 : false;
+            channelInfo["livechat_channel_member_history_ids"] = mailDataHelpers.Store.many(
+                this.env["im_livechat.channel.member.history"].browse(
+                    channel.livechat_channel_member_history_ids
+                ),
+                makeKwArgs({
+                    fields: [
+                        mailDataHelpers.Store.one("channel_id", makeKwArgs({ as_thread: true })),
+                        mailDataHelpers.Store.one("guest_id", makeKwArgs({ fields: ["name"] })),
+                        "livechat_member_type",
+                        mailDataHelpers.Store.one("partner_id", makeKwArgs({ fields: ["name"] })),
+                    ],
+                })
+            );
             // add the last message date
             if (channel.channel_type === "livechat") {
                 // add the operator id

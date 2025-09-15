@@ -21,6 +21,7 @@ test("Do not show bot IM status", async () => {
     });
     const partnerId2 = pyEnv["res.partner"].create({ name: "Dummy" });
     const channelId2 = pyEnv["discuss.channel"].create({
+        name: "Dummy",
         channel_member_ids: [
             Command.create({ partner_id: partnerId2, livechat_member_type: "bot" }),
         ],

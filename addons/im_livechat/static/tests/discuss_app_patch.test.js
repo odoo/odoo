@@ -60,7 +60,7 @@ test("add livechat in the sidebar on visitor sending first message", async () =>
     await contains(
         ".o-mail-DiscussSidebarCategory-livechat + .o-mail-DiscussSidebarChannel-container",
         {
-            text: "Visitor (Belgium)",
+            text: "Visitor",
         }
     );
 });

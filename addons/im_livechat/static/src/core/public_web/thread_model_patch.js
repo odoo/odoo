@@ -38,23 +38,6 @@ patch(Thread.prototype, {
         return correspondent;
     },
 
-    get displayName() {
-        if (
-            this.channel?.channel_type !== "livechat" ||
-            !this.correspondent ||
-            this.self_member_id?.custom_channel_name
-        ) {
-            return super.displayName;
-        }
-        if (!this.correspondent.persona.is_public && this.correspondent.persona.country) {
-            return `${this.correspondent.name} (${this.correspondent.persona.country.name})`;
-        }
-        if (this.country_id) {
-            return `${this.correspondent.name} (${this.country_id.name})`;
-        }
-        return this.correspondent.name;
-    },
-
     get inChathubOnNewMessage() {
         return this.channel?.channel_type === "livechat" || super.inChathubOnNewMessage;
     },

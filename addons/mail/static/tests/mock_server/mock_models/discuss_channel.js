@@ -164,25 +164,26 @@ export class DiscussChannel extends models.ServerModel {
             const subtype_xmlid = "mail.mt_comment";
             this.message_post(channel.id, makeKwArgs({ body, message_type, subtype_xmlid }));
         }
-        const isSelfMember =
-            DiscussChannelMember.search_count([
-                ["partner_id", "=", this.env.user.partner_id],
-                ["channel_id", "=", channel.id],
-            ]) > 0;
-        if (isSelfMember) {
+        if (insertedChannelMembers.length) {
             BusBus._sendone(
                 channel,
                 "mail.record/insert",
                 new mailDataHelpers.Store(this.browse(channel.id), {
-                    invited_member_ids: kwargs.invite_to_rtc_call
-                        ? [["ADD", insertedChannelMembers]]
-                        : false,
                     member_count: DiscussChannelMember.search_count([
                         ["channel_id", "=", channel.id],
                     ]),
                 })
                     .add(DiscussChannelMember.browse(insertedChannelMembers))
                     .get_result()
+            );
+        }
+        if (kwargs.invite_to_rtc_call) {
+            BusBus._sendone(
+                channel,
+                "mail.record/insert",
+                new mailDataHelpers.Store(this.browse(channel.id), {
+                    invited_member_ids: [["ADD", insertedChannelMembers]],
+                }).get_result()
             );
         }
         return DiscussChannelMember.browse(insertedChannelMembers);

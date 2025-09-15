@@ -1,4 +1,3 @@
-import { mailModels } from "@mail/../tests/mail_test_helpers";
 import { animationFrame } from "@odoo/hoot-mock";
 import { registry } from "@web/core/registry";
 import { buildEditableInteractions } from "@website/core/website_edit_service";
@@ -28,7 +27,6 @@ export async function switchToEditMode(core) {
 }
 
 export const websiteModels = {
-    ...mailModels,
     Website,
     WebsitePage,
     WebsiteTrack,

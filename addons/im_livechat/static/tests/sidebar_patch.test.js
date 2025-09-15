@@ -1,14 +1,6 @@
-import { waitForChannels } from "@bus/../tests/bus_test_helpers";
-import {
-    click,
-    contains,
-    insertText,
-    openDiscuss,
-    start,
-    startServer,
-} from "@mail/../tests/mail_test_helpers";
+import { click, contains, openDiscuss, start, startServer } from "@mail/../tests/mail_test_helpers";
 import { withGuest } from "@mail/../tests/mock_server/mail_mock_server";
-import { describe, expect, test } from "@odoo/hoot";
+import { describe, test } from "@odoo/hoot";
 import { mockDate, tick } from "@odoo/hoot-mock";
 import { Command, serverState } from "@web/../tests/web_test_helpers";
 
@@ -16,7 +8,6 @@ import { deserializeDateTime } from "@web/core/l10n/dates";
 import { rpc } from "@web/core/network/rpc";
 import { url } from "@web/core/utils/urls";
 import { defineLivechatModels } from "./livechat_test_helpers";
-import { press } from "@odoo/hoot-dom";
 import { browser } from "@web/core/browser/browser";
 
 describe.current.tags("desktop");
@@ -371,51 +362,6 @@ test("Message unread counter", async () => {
         })
     );
     await contains(".o-mail-DiscussSidebarChannel .badge", { text: "1" });
-});
-
-test("unknown livechat can be displayed and interacted with", async () => {
-    mockDate("2023-01-03 12:00:00");
-    const pyEnv = await startServer();
-    pyEnv["res.users"].write(serverState.userId, { notification_type: "inbox" });
-    const partnerId = pyEnv["res.partner"].create({ name: "Jane" });
-    const channelId = pyEnv["discuss.channel"].create({
-        channel_member_ids: [
-            Command.create({
-                partner_id: partnerId,
-                last_interest_dt: "2021-01-01 10:00:00",
-                livechat_member_type: "agent",
-            }),
-            Command.create({
-                guest_id: pyEnv["mail.guest"].create({ name: "Jane" }),
-                livechat_member_type: "visitor",
-            }),
-        ],
-        channel_type: "livechat",
-        livechat_operator_id: partnerId,
-        create_uid: serverState.publicUserId,
-    });
-    const env = await start();
-    env.services.bus_service.subscribe("discuss.channel/new_message", () =>
-        expect.step("discuss.channel/new_message")
-    );
-    await openDiscuss("mail.box_inbox");
-    await contains("button.o-active", { text: "Inbox" });
-    await contains(".o-mail-DiscussSidebarCategory-livechat", { count: 0 });
-    await contains(".o-mail-DiscussSidebarChannel", { count: 0 });
-    await openDiscuss(channelId);
-    await waitForChannels([`discuss.channel_${channelId}`]);
-    await contains(".o-mail-DiscussSidebarChannel.o-active", { text: "Jane" });
-    await insertText(".o-mail-Composer-input", "Hello", { replace: true });
-    await press("Enter");
-    await contains(".o-mail-Message", { text: "Hello" });
-    await expect.waitForSteps(["discuss.channel/new_message"]);
-    await click("button", { text: "Inbox" });
-    await contains(".o-mail-DiscussSidebarChannel:not(.o-active)", { text: "Jane" });
-    await click("[title='Chat Actions']");
-    await click(".o-dropdown-item:contains('Leave Channel')");
-    await click("button:contains('Leave Conversation')");
-    await contains(".o-mail-DiscussSidebarCategory-livechat", { count: 0 });
-    await contains(".o-mail-DiscussSidebarChannel", { count: 0 });
 });
 
 test("Local sidebar category state is shared between tabs", async () => {

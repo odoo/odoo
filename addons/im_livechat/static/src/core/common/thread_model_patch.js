@@ -1,6 +1,7 @@
 import { fields } from "@mail/model/export";
 import { Thread } from "@mail/core/common/thread_model";
 
+import { formatList } from "@web/core/l10n/utils";
 import { patch } from "@web/core/utils/patch";
 
 patch(Thread.prototype, {
@@ -76,5 +77,56 @@ patch(Thread.prototype, {
             return persona.user_livechat_username;
         }
         return super.getPersonaName(persona);
+    },
+    get displayName() {
+        if (this.channel?.channel_type !== "livechat" || this.self_member_id?.custom_channel_name) {
+            return super.displayName;
+        }
+        const memberType = this.self_member_id?.livechat_member_type;
+        if (memberType === "visitor") {
+            const agents = this.correspondents.filter((c) => c.livechat_member_type === "agent");
+            if (agents.length) {
+                return formatList(
+                    agents.map((agent) => agent.name),
+                    { style: "standard-narrow" }
+                );
+            }
+            if (this.channel?.livechat_agent_history_ids.length) {
+                return formatList(
+                    this.channel.livechat_agent_history_ids.map((h) =>
+                        this.getPersonaName(h.partner_id)
+                    ),
+                    { style: "standard-narrow" }
+                );
+            }
+        }
+        if (memberType === "agent") {
+            const visitors = this.correspondents.filter(
+                (c) => c.livechat_member_type === "visitor"
+            );
+            if (visitors.length) {
+                return formatList(
+                    visitors.map((visitor) => visitor.name),
+                    { style: "standard-narrow" }
+                );
+            }
+            if (this.channel?.livechat_customer_history_ids.length) {
+                return formatList(
+                    this.channel?.livechat_customer_history_ids.map((h) =>
+                        this.getPersonaName(h.partner_id || h.guest_id)
+                    ),
+                    { style: "standard-narrow" }
+                );
+            }
+        }
+        if (!memberType) {
+            const allNamesFromHistory = this.channel?.livechat_channel_member_history_ids
+                .map((h) => this.getPersonaName(h.partner_id || h.guest_id))
+                .filter(Boolean);
+            if (allNamesFromHistory.length) {
+                return formatList(allNamesFromHistory, { style: "standard-narrow" });
+            }
+        }
+        return super.displayName;
     },
 });

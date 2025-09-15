@@ -5,6 +5,7 @@ declare module "models" {
     import { ChatbotScriptStepAnswer as ChatbotScriptStepAnswerClass } from "@im_livechat/core/common/chatbot_script_step_answer_model";
     import { ChatbotStep as ChatbotStepClass } from "@im_livechat/core/common/chatbot_step_model";
     import { LivechatChannel as LivechatChannelClass } from "@im_livechat/core/common/livechat_channel_model";
+    import { LivechatChannelMemberHistory as LivechatChannelMemberHistoryClass } from "@im_livechat/core/common/livechat_channel_member_history_model";
     import { LivechatChannelRule as LivechatChannelRuleClass } from "@im_livechat/core/common/livechat_channel_rule_model";
     import { LivechatExpertise as LivechatExpertiseClass } from "@im_livechat/core/common/livechat_expertise_model";
 
@@ -14,6 +15,7 @@ declare module "models" {
     export interface ChatbotScriptStepAnswer extends ChatbotScriptStepAnswerClass {}
     export interface ChatbotStep extends ChatbotStepClass {}
     export interface LivechatChannel extends LivechatChannelClass {}
+    export interface LivechatChannelMemberHistory extends LivechatChannelMemberHistoryClass {}
     export interface LivechatChannelRule extends LivechatChannelRuleClass {}
     export interface LivechatExpertise extends LivechatExpertiseClass {}
 
@@ -24,7 +26,10 @@ declare module "models" {
         chatbot_step: ChatbotStep;
     }
     export interface DiscussChannel {
+        livechat_agent_history_ids: LivechatChannelMemberHistory[];
         livechat_channel_id: LivechatChannel;
+        livechat_channel_member_history_ids: LivechatChannelMemberHistory[];
+        livechat_customer_history_ids: LivechatChannelMemberHistory[];
     }
     export interface LivechatChannel {
         channel_ids: DiscussChannel[];
@@ -46,6 +51,7 @@ declare module "models" {
         "chatbot.script.step": StaticMailRecord<ChatbotScriptStep, typeof ChatbotScriptStepClass>;
         ChatbotStep: StaticMailRecord<ChatbotStep, typeof ChatbotStepClass>;
         "im_livechat.channel": StaticMailRecord<LivechatChannel, typeof LivechatChannelClass>;
+        "im_livechat.channel.member.history": StaticMailRecord<LivechatChannelMemberHistory, typeof LivechatChannelMemberHistoryClass>;
         "im_livechat.channel.rule": StaticMailRecord<LivechatChannelRule, typeof LivechatChannelRuleClass>;
         "im_livechat.expertise": StaticMailRecord<LivechatExpertise, typeof LivechatExpertiseClass>;
     }
@@ -64,6 +70,7 @@ declare module "models" {
         "chatbot.script.step": ChatbotScriptStep;
         ChatbotStep: ChatbotStep;
         "im_livechat.channel": LivechatChannel;
+        "im_livechat.channel.member.history": LivechatChannelMemberHistory;
         "im_livechat.channel.rule": LivechatChannelRule;
         "im_livechat.expertise": LivechatExpertise;
     }
