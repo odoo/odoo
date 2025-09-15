@@ -334,6 +334,9 @@
             };
         }
         _strokeBegin(event) {
+            if (document.activeElement) {
+                document.activeElement.blur();
+            }
             const cancelled = !this.dispatchEvent(new CustomEvent('beginStroke', { detail: event, cancelable: true }));
             if (cancelled) {
                 return;
