@@ -134,7 +134,10 @@
                             groups="stock.group_reception_report"/>
                     </div>
                     <div class="oe_title">
-                        <h1><field name="name" class="oe_inline"/></h1>
+                        <h1>
+                            <field name="priority" widget="priority" class="me-3"/>
+                            <field name="name" class="oe_inline"/>
+                        </h1>
                     </div>
                     <group>
                         <group id="batch_delivery_data">
@@ -170,6 +173,7 @@
         <field name="arch" type="xml">
             <list string="Stock Batch Transfer" multi_edit="1" sample="1" class="oe_stock_picking_batch">
                 <field name="company_id" column_invisible="True"/>
+                <field name="priority" optional="show" widget="priority" nolabel="1"/>
                 <field name="name" decoration-bf="1"/>
                 <field name="description"/>
                 <field name="scheduled_date" readonly="state in ['cancel', 'done']"/>
@@ -188,18 +192,32 @@
         <field name="arch" type="xml">
             <kanban class="o_kanban_mobile oe_stock_picking_batch" sample="1">
                 <field name="company_id"/>
+                <field name="picking_ids"/>
                 <templates>
                     <t t-name="card">
                         <div class="d-flex">
-                            <field name="name" class="fw-bolder fs-5"/>
-                            <field name="state" widget="label_selection" class="ms-auto"/>
+                            <field name="priority" widget="priority" class="pt-1"/>
+                            <field name="name" class="fw-bolder fs-5 ms-1"/>
+                            <field name="state" widget="label_selection" options="{'classes': {'draft': 'default', 'in_progress': 'primary', 'done': 'success', 'cancel': 'danger'}}" class="ms-auto ps-3"/>
                         </div>
-                        <field name="description" class="fw-bold mb-2"/>
-                        <footer class="pt-0">
-                            <field name="picking_type_id" readonly="state != 'draft'"/>
-                            <div class="d-flex">
-                                <field name="scheduled_date" readonly="state in ['cancel', 'done']"/>
-                                <field name="user_id" widget="many2one_avatar_user" readonly="state not in ['draft', 'in_progress']"/>
+                        <div class="fw-bold mb-1 w-75 text-truncate">
+                            <field name="description"/>
+                        </div>
+                        <div t-if="record.scheduled_date.raw_value">
+                            <i class="fa fa-calendar text-primary me-2" title="Calendar"/>
+                            <field name="scheduled_date"/>
+                        </div>
+                        <footer class="mt-auto">
+                            <div>
+                                <span name="transfer_count" class="fw-bold text-muted">
+                                    <t t-out="record.picking_ids.raw_value.length"/>
+                                    <t t-if="record.picking_ids.raw_value.length == 1"> Transfer</t>
+                                    <t t-else=""> Transfers</t>
+                                </span>
+                            </div>
+                            <div class="d-flex ms-auto align-items-center">
+                                <field name="user_id" widget="many2one_avatar_user" readonly="state not in ['draft', 'in_progress']" class="me-1"/>
+                                <field name="activity_ids" widget="kanban_activity"/>
                             </div>
                         </footer>
                     </t>
@@ -258,7 +276,7 @@
         <field name="path">batch-transfers</field>
         <field name="view_mode">list,kanban,form</field>
         <field name="domain">[('is_wave', '=', False)]</field>
-        <field name="context">{'search_default_draft': True, 'search_default_in_progress': True}</field>
+        <field name="context">{'search_default_draft': True, 'search_default_in_progress': True, 'skip_acquisition_date': True}</field>
         <field name="search_view_id" ref="stock_picking_batch_filter"/>
         <field name="help" type="html">
             <div class="container mt-5">
