@@ -1583,13 +1583,15 @@ class Website(models.CachedModel):
         return all(p.name in rule._converters for p in params
                    if p.kind in supported_kinds and p.default is inspect.Parameter.empty)
 
-    def _enumerate_pages(self, query_string=None, force=False):
+    def _enumerate_pages(self, query_string=None, force=False, ignore_custom_homepage=False):
         """ Available pages in the website/CMS. This is mostly used for links
             generation and can be overridden by modules setting up new HTML
             controllers for dynamic pages (e.g. blog).
             By default, returns template views marked as pages.
             :param str query_string: a (user-provided) string, fetches pages
                                      matching the string
+            :param boolean ignore_custom_homepage: used to exclude the hompage url
+                from the page list if the homepage is not ``/``
             :returns: a list of mappings with two keys: ``name`` is the displayable
                       name of the resource (page), ``url`` is the absolute URL
                       of the same.
@@ -1608,9 +1610,12 @@ class Website(models.CachedModel):
         if query_string:
             domain += [('url', 'like', query_string)]
 
+        homepage_url = self.homepage_url
         pages = self._get_website_pages(domain)
 
         for page in pages:
+            if ignore_custom_homepage and homepage_url == page['url']:
+                continue
             record = {'loc': page['url'], 'id': page['id'], 'name': page['name']}
             if page.view_id.priority != 16:
                 record['priority'] = min(round(page.view_id.priority / 32.0, 1), 1)
@@ -1622,6 +1627,9 @@ class Website(models.CachedModel):
         # ==== CONTROLLERS ====
         router = self.env['ir.http'].routing_map()
         url_set = set()
+
+        if ignore_custom_homepage and homepage_url != '/':
+            url_set.add(homepage_url)
 
         sitemap_endpoint_done = set()
 
@@ -1881,8 +1889,12 @@ class Website(models.CachedModel):
     def _get_canonical_url(self):
         """ Returns the canonical URL of the current request. """
         self.ensure_one()
+        # Homepage's canonical url is always '/'
+        url = request.httprequest.path
+        if url == self.homepage_url:
+            url = '/'
         return self.env['ir.http']._url_localized(
-            lang_code=request.lang.code, canonical_domain=self.get_base_url()
+            url=url, lang_code=request.lang.code, canonical_domain=self.get_base_url()
         )
 
     def _is_canonical_url(self):

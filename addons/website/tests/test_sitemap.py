@@ -122,3 +122,26 @@ class TestWebsiteSitemap(TransactionCase):
         self.assertEqual(call_count['n'], 1)
         # And the returned loc should be present (normalized already)
         self.assertIn({'loc': '/once'}, locs)
+
+    def test_enumerate_pages_homepage_filtering(self):
+        website = self.env['website'].search([], limit=1)
+        homepage_url = '/custom-homepage'
+        self.env['website.page'].create({
+            'name': 'Custom Homepage',
+            'website_id': website.id,
+            'url': homepage_url,
+            'type': 'qweb',
+            'arch': '<t t-call="website.layout"/>',
+            'is_published': True,
+        })
+        website.homepage_url = homepage_url
+
+        locs_with_homepage = list(website.with_user(website.user_id)._enumerate_pages())
+        locs_with_homepage_urls = [page['loc'] for page in locs_with_homepage]
+        self.assertIn('/', locs_with_homepage_urls)
+        self.assertIn(homepage_url, locs_with_homepage_urls)
+
+        locs_without_homepage = list(website.with_user(website.user_id)._enumerate_pages(ignore_custom_homepage=True))
+        locs_without_homepage_urls = [page['loc'] for page in locs_without_homepage]
+        self.assertIn('/', locs_without_homepage_urls)
+        self.assertNotIn(homepage_url, locs_without_homepage_urls)
