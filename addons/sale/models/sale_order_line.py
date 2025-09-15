@@ -464,7 +464,11 @@ class SaleOrderLine(models.Model):
         for line in self:
             # check if there is already invoiced amount. if so, the price shouldn't change as it might have been
             # manually edited
-            if line.qty_invoiced > 0 or (line.product_id.expense_policy == 'cost' and line.is_expense):
+            if (
+                line.qty_invoiced > 0 or
+                (line.product_id.expense_policy == 'cost' and line.is_expense) or
+                line._is_discount_line()
+            ):
                 continue
             if not line.product_uom or not line.product_id:
                 line.price_unit = 0.0
@@ -839,6 +843,10 @@ class SaleOrderLine(models.Model):
         """
         self.ensure_one()
         return self.product_id.id != self.company_id.sale_discount_product_id.id
+
+    def _is_discount_line(self):
+        self.ensure_one()
+        return self.product_id in self.company_id.sale_discount_product_id
 
     @api.depends('invoice_lines', 'invoice_lines.price_total', 'invoice_lines.move_id.state', 'invoice_lines.move_id.move_type')
     def _compute_untaxed_amount_invoiced(self):

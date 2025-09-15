@@ -212,7 +212,7 @@ class AccountAnalyticLine(models.Model):
             employee_out_id = False
             if employee_per_company:
                 company_id = list(employee_per_company)[0] if len(employee_per_company) == 1\
-                        else vals.get('company_id', self.env.company.id)
+                        else vals.get('company_id') or self.env.company.id
                 employee_out_id = employee_per_company.get(company_id, False)
 
             if employee_out_id:
