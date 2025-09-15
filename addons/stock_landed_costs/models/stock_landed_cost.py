@@ -129,6 +129,31 @@ class StockLandedCost(models.Model):
                 # Prorate the value at what's still in stock
                 move_qty = line.move_id.product_uom._compute_quantity(line.move_id.quantity, line.move_id.product_id.uom_id)
                 cost_to_add = (remaining_qty / move_qty) * line.additional_landed_cost
+<<<<<<< 30bda97d1cc968e879b1d02eee4240418539aad9
+||||||| af2f19d8984cbd4c7821684172e5d78efe196b24
+                if not cost.company_id.currency_id.is_zero(cost_to_add):
+                    valuation_layer = self.env['stock.valuation.layer'].create({
+                        'value': cost_to_add,
+                        'unit_cost': 0,
+                        'quantity': 0,
+                        'remaining_qty': 0,
+                        'stock_valuation_layer_id': linked_layer.id,
+                        'description': cost.name,
+                        'stock_move_id': line.move_id.id,
+                        'product_id': line.move_id.product_id.id,
+                        'stock_landed_cost_id': cost.id,
+                        'company_id': cost.company_id.id,
+                    })
+                    linked_layer.remaining_value += cost_to_add
+                    valuation_layer_ids.append(valuation_layer.id)
+                # Update the AVCO/FIFO
+=======
+                if not cost.company_id.currency_id.is_zero(cost_to_add):
+                    valuation_layer = line._create_in_landed_costs_svl(cost_to_add, linked_layer)
+                    linked_layer.remaining_value += cost_to_add
+                    valuation_layer_ids.append(valuation_layer.id)
+                # Update the AVCO/FIFO
+>>>>>>> e832c7f2268a2bb62b56a5f081bceb213201bf95
                 product = line.move_id.product_id
                 if not cost.company_id.currency_id.is_zero(cost_to_add):
                     vals_list = []
@@ -503,3 +528,24 @@ class AdjustmentLines(models.Model):
                 AccountMoveLine.append([0, 0, credit_line])
 
         return AccountMoveLine
+
+    def _prepare_in_landed_costs_svl_values(self, cost_to_add, linked_layer):
+        self.ensure_one()
+        linked_layer.ensure_one()
+        cost = self.cost_id
+        return {
+            'value': cost_to_add,
+            'unit_cost': 0,
+            'quantity': 0,
+            'remaining_qty': 0,
+            'stock_valuation_layer_id': linked_layer.id,
+            'description': cost.name,
+            'stock_move_id': self.move_id.id,
+            'product_id': self.move_id.product_id.id,
+            'stock_landed_cost_id': cost.id,
+            'company_id': cost.company_id.id,
+        }
+
+    def _create_in_landed_costs_svl(self, cost_to_add, linked_layer):
+        values = self._prepare_in_landed_costs_svl_values(cost_to_add, linked_layer)
+        return self.env['stock.valuation.layer'].create(values)
