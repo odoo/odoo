@@ -1,6 +1,6 @@
 import { registry } from "@web/core/registry";
-import { Call } from "@mail/discuss/call/common/call";
 import { reactive } from "@odoo/owl";
+import { Meeting } from "./meeting";
 
 export const callPipService = {
     dependencies: ["mail.popout"],
@@ -38,8 +38,8 @@ export const callPipService = {
             }
             state.active = true;
             const isShadowRoot = context?.root?.el?.getRootNode() instanceof ShadowRoot;
-            pipWindow = await popout.pip(Call, {
-                props: { isPip: true, thread: rtc.channel },
+            pipWindow = await popout.pip(Meeting, {
+                props: { isPip: true },
                 options: { useAlternativeAssets: isShadowRoot },
             });
             pipWindow.addEventListener("keydown", (ev) => {
