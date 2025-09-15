@@ -313,6 +313,11 @@ class PaymentTransaction(models.Model):
         if self.provider_code != 'adyen':
             return super()._extract_amount_data(payment_data)
 
+        # Redirection payments don't have the amount or currency in their payment_data, but
+        # processing them results in a pending transaction anyway.
+        if payment_data.get('action', {}).get('type') == 'redirect':
+            return None  # Skip the validation
+
         amount_data = payment_data.get('amount', {})
         amount = payment_utils.to_major_currency_units(
             amount_data.get('value', 0),
