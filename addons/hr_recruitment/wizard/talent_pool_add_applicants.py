@@ -50,7 +50,7 @@ class TalentPoolAddApplicants(models.TransientModel):
         return talents
 
     def action_add_applicants_to_pool(self):
-        talents = self._add_applicants_to_pool()
+        talents = self.sudo()._add_applicants_to_pool()
         if len(talents) == 1:
             return {
                 "type": "ir.actions.act_window",
