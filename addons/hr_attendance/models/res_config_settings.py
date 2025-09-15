@@ -46,6 +46,10 @@ class ResConfigSettings(models.TransientModel):
         if any(self[field] != company[field] for field in fields_to_check):
             company.write({field: self[field] for field in fields_to_check})
 
+        # run auto checkout cron immediatly one it gets enabled.
+        if self.auto_check_out:
+            self.env['hr.attendance']._cron_auto_check_out()
+
     def regenerate_kiosk_key(self):
         if self.env.user.has_group("hr_attendance.group_hr_attendance_user"):
             self.company_id._regenerate_attendance_kiosk_key()

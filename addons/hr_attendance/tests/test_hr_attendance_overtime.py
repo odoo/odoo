@@ -525,6 +525,21 @@ class TestHrAttendanceOvertime(TransactionCase):
         # Employee with flexible working schedule should not be checked out
         self.assertEqual(attendance_flexible_pending.check_out, False)
 
+    @freeze_time("2024-02-05 23:00:00")
+    def test_auto_checkout_past_day(self):
+        # Auto checkout last 7 days attendance, if any.
+        self.company.write({
+            'auto_check_out': True,
+            'auto_check_out_tolerance': 1,
+        })
+        attendance_utc_pending_7th_day = self.env['hr.attendance'].create({
+            'employee_id': self.employee.id,
+            'check_in': datetime(2024, 2, 1, 14, 0),
+        })
+        self.assertEqual(attendance_utc_pending_7th_day.check_out, False)
+        self.env['hr.attendance']._cron_auto_check_out()
+        self.assertEqual(attendance_utc_pending_7th_day.check_out, datetime(2024, 2, 1, 23, 0))
+
     @freeze_time("2024-02-2 20:00:00")
     def test_auto_check_out_calendar_tz(self):
         """Check expected working hours and previously worked hours are from the correct day when
