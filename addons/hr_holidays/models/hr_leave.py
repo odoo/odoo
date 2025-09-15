@@ -758,8 +758,11 @@ class HrLeave(models.Model):
             leave_data = leave_type.get_allocation_data(employees, date_from)
             if leave_type.allows_negative:
                 max_excess = leave_type.max_allowed_negative
+                is_cancellation = all(leave.state in ('cancel', 'refuse') for leave in leaves)
                 for employee in employees:
-                    if not leave_data[employee]:
+                    if is_cancellation:
+                        continue
+                    if not leave_data[employee][0][1]['max_leaves']:
                         if self.env.context.get('multi_leave_request', False):
                             employees_without_allocation |= employee
                         else:
@@ -778,7 +781,7 @@ class HrLeave(models.Model):
             for employee in employees:
                 previous_emp_data = previous_leave_data[employee] and previous_leave_data[employee][0][1]['virtual_excess_data']
                 emp_data = leave_data[employee] and leave_data[employee][0][1]['virtual_excess_data']
-                if not leave_data[employee]:
+                if not leave_data[employee][0][1]['max_leaves']:
                     if self.env.context.get('multi_leave_request', False):
                         employees_without_allocation |= employee
                     else:
@@ -990,7 +993,8 @@ class HrLeave(models.Model):
                 values['request_date_to'] = values['date_to']
         result = super().write(values)
         if any(field in values for field in ['request_date_from', 'date_from', 'request_date_from', 'date_to', 'holiday_status_id', 'employee_id', 'state']):
-            self._check_validity()
+            if not values.get('state') or values.get('state') not in ('refuse', 'cancel'):
+                self._check_validity()
             self.env['hr.leave.allocation'].invalidate_model(['leaves_taken', 'max_leaves'])  # missing dependency on compute
         if not self.env.context.get('leave_fast_create'):
             for holiday in self:
@@ -1708,6 +1712,9 @@ class HrLeave(models.Model):
             leave_type = leave.holiday_status_id
             date = leave.date_from.date()
             leave_type_data = leave_type.get_allocation_data(leave.employee_id, date)
+            if not leave_type_data[leave.employee_id][0][1]['max_leaves']:
+                leave._force_cancel(reason, 'mail.mt_note')
+                continue
             exceeding_duration = leave_type_data[leave.employee_id][0][1]['total_virtual_excess']
             excess_limit = leave_type.max_allowed_negative if leave_type.allows_negative else 0
             if exceeding_duration <= excess_limit:
