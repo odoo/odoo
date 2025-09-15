@@ -131,3 +131,9 @@ class TestWebsiteResUsers(TransactionCase):
                 Command.link(self.env.ref('base.group_user').id),
                 Command.unlink(self.env.ref('base.group_portal').id),
             ]
+
+    def test_internal_user_no_website(self):
+        website = self.env['website'].create({'name': "Awesome Website"})
+        internal_user = new_test_user(self.env, login='Internal', groups='base.group_user')
+        with self.assertRaises(ValidationError):
+            internal_user.website_id = website

@@ -18,6 +18,12 @@ class ResUsers(models.Model):
         ('login_key', 'unique (login, website_id)', 'You can not have two users with the same login!'),
     ]
 
+    @api.constrains('website_id')
+    def _check_internal_has_no_website(self, reason=None):
+        internal = self.env.ref('base.group_user')
+        if any(user.website_id and internal in user.groups_id for user in self):
+            raise ValidationError(reason or _("Internal user cannot be restricted to a website."))
+
     @api.constrains('login', 'website_id')
     def _check_login(self):
         """ Do not allow two users with the same login without website """
@@ -34,6 +40,11 @@ class ResUsers(models.Model):
         )
         if self.env.cr.rowcount:
             raise ValidationError(_('You can not have two users with the same login!'))
+
+    @api.constrains('groups_id')
+    def _check_one_user_type(self):
+        super()._check_one_user_type()
+        self._check_internal_has_no_website(_("Remove website on related partner before they become internal user."))
 
     @api.model
     def _get_login_domain(self, login):
@@ -98,13 +109,6 @@ class ResUsers(models.Model):
                 visitor_pre_authenticate_sudo.access_token = user_partner.id
                 visitor_pre_authenticate_sudo._update_visitor_last_visit()
         return auth_info
-
-    @api.constrains('groups_id')
-    def _check_one_user_type(self):
-        super()._check_one_user_type()
-        internal_users = self.env.ref('base.group_user').users & self
-        if any(user.website_id for user in internal_users):
-            raise ValidationError(_("Remove website on related partner before they become internal user."))
 
     # The model inherits the publishing fields from res.partner, this implements
     # the required method.
