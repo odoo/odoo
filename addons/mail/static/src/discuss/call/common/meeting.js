@@ -3,7 +3,11 @@ import { Thread } from "@mail/core/common/thread";
 import { Call } from "@mail/discuss/call/common/call";
 import { CallActionList } from "@mail/discuss/call/common/call_action_list";
 import { ChannelInvitation } from "@mail/discuss/core/common/channel_invitation";
-import { useMessageScrolling } from "@mail/utils/common/hooks";
+import {
+    inDiscussCallViewProps,
+    useInDiscussCallView,
+    useMessageScrolling,
+} from "@mail/utils/common/hooks";
 
 import { Component, onMounted, onWillUnmount, useChildSubEnv, useSubEnv } from "@odoo/owl";
 
@@ -22,7 +26,7 @@ import { useMessageSearch } from "@mail/core/common/message_search_hook";
  */
 export class Meeting extends Component {
     static template = "mail.Meeting";
-    static props = ["autoOpenAction?"];
+    static props = ["autoOpenAction?", ...inDiscussCallViewProps];
     static components = {
         Call,
         CallActionList,
@@ -44,6 +48,7 @@ export class Meeting extends Component {
                     ?.onSelected();
             }
         });
+        useInDiscussCallView();
         useSubEnv({
             inMeetingView: {
                 openChat: () =>

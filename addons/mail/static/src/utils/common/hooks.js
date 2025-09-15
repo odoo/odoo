@@ -8,6 +8,7 @@ import {
     useEffect,
     useRef,
     useState,
+    useSubEnv,
     xml,
 } from "@odoo/owl";
 
@@ -644,4 +645,16 @@ export function useLongPress(refName, { action, predicate = () => true } = {}) {
     );
     useLazyExternalListener(() => ref.el, "touchend", reset);
     useLazyExternalListener(() => ref.el, "touchcancel", reset);
+}
+
+export const inDiscussCallViewProps = ["isPip?"];
+export function useInDiscussCallView() {
+    const component = useComponent();
+    useSubEnv({
+        inDiscussCallView: {
+            get isPip() {
+                return component.props.isPip;
+            },
+        },
+    });
 }
