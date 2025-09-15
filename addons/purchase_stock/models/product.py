@@ -124,7 +124,13 @@ class ProductProduct(models.Model):
 
     @api.model
     def _get_monthly_demand_moves_location_domain(self):
-        return [('location_dest_usage', 'in', ['customer', 'production'])]
+        return Domain.OR([
+            [('location_dest_usage', 'in', ['customer', 'production'])],
+            Domain.AND([
+                [('location_final_id.usage', '=', 'customer')],
+                [('move_dest_ids', '=', False)],
+            ])
+        ])
 
     def _get_quantity_in_progress(self, location_ids=False, warehouse_ids=False):
         if not location_ids:
