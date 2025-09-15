@@ -52,6 +52,13 @@ export function constructAttributeString(line) {
         }
 
         attributeString = attributeString.slice(0, -2);
+    } else if (
+        attributeString === "" &&
+        line?.product_id?.product_template_variant_value_ids?.length > 0
+    ) {
+        attributeString = line.product_id.product_template_variant_value_ids
+            ?.map((attr) => attr.name)
+            .join(", ");
     }
 
     return attributeString;
