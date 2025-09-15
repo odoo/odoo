@@ -39,18 +39,13 @@ class ProjectProject(models.Model):
         count_fields = {fname for fname in self._fields if 'count' in fname}
         if count_field not in count_fields:
             raise ValueError(f"Parameter 'count_field' can only be one of {count_fields}, got {count_field} instead.")
-        domain = Domain('project_id', 'in', self.ids)
+        domain = Domain('project_id', 'in', self.ids) & Domain('is_template', '=', False)
         if additional_domain:
             domain &= Domain(additional_domain)
         ProjectTask = self.env['project.task'].with_context(active_test=any(project.active for project in self))
         tasks_count_by_project = dict(ProjectTask._read_group(domain, ['project_id'], ['__count']))
-        templates_count_by_project = dict(ProjectTask._read_group(domain & Domain('is_template', '=', True), ['project_id'], ['__count']))
         for project in self:
-            if project.is_template:
-                count = templates_count_by_project.get(project, 0)
-            else:
-                count = tasks_count_by_project.get(project, 0) - templates_count_by_project.get(project, 0)
-            project.update({count_field: count})
+            project.update({count_field: tasks_count_by_project.get(project, 0)})
 
     def _compute_task_count(self):
         self.__compute_task_count()
@@ -113,7 +108,7 @@ class ProjectProject(models.Model):
     task_count = fields.Integer(compute='_compute_task_count', string="Task Count", export_string_translation=False)
     open_task_count = fields.Integer(compute='_compute_open_task_count', string="Open Task Count", export_string_translation=False)
     task_ids = fields.One2many('project.task', 'project_id', string='Tasks', export_string_translation=False,
-                               domain="[('is_closed', '=', False), ('is_template', 'in', [is_template, True])]")
+                               domain="[('is_closed', '=', False)]")
     color = fields.Integer(string='Color Index', export_string_translation=False)
     user_id = fields.Many2one('res.users', string='Project Manager', default=lambda self: self.env.user, tracking=True, falsy_value_label=_lt("👤 Unassigned"))
     alias_id = fields.Many2one(help="Internal email associated with this project. Incoming emails are automatically synchronized "
@@ -928,10 +923,7 @@ class ProjectProject(models.Model):
             })
         action['context'] = context
         if self.is_template:
-            action['context'].update({'default_is_template': True})
-            domain = ast.literal_eval(action['domain'].replace('active_id', str(self.id)))
-            domain.remove(('has_template_ancestor', '=', False))
-            action['domain'] = domain
+            action['context'].update({'template_project': True})
             action['views'] = [(view_id, view_type) for view_id, view_type in action['views'] if view_type not in ('pivot', 'graph')]
         return action
 
@@ -1387,7 +1379,6 @@ class ProjectProject(models.Model):
     def _toggle_template_mode(self, is_template):
         self.ensure_one()
         self.is_template = is_template
-        self.task_ids.write({"is_template": is_template})
         if not is_template:
             self.task_ids.role_ids = False
 
@@ -1422,7 +1413,7 @@ class ProjectProject(models.Model):
             for key, value in self.env.context.items()
             if key.startswith('default_') and key.removeprefix('default_') in self._get_template_default_context_whitelist()
         } | values
-        project = self.with_context(copy_from_template=True).copy(default=default)
+        project = self.with_context(copy_from_template=True, copy_from_project_template=True).copy(default=default)
         project.message_post(body=self.env._("Project created from template %(name)s.", name=self.name))
 
         # Tasks dispatching using project roles
