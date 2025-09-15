@@ -27,6 +27,41 @@ const seoContext = reactive({
     brokenLinks: [],
 });
 
+const LINK_CHECK_BASE_OPTIONS = {
+    method: "GET",
+    referrerPolicy: "no-referrer",
+    credentials: "omit",
+};
+const LINK_CHECK_MANUAL_OPTIONS = { ...LINK_CHECK_BASE_OPTIONS, redirect: "manual" };
+const LINK_CHECK_NO_CORS_OPTIONS = { ...LINK_CHECK_BASE_OPTIONS, mode: "no-cors" };
+
+const inspectLink = async (url, options) => {
+    try {
+        const response = await fetch(url, options);
+        if (response.type === "opaqueredirect") {
+            return "external_redirect";
+        }
+        if (response.status >= 400) {
+            return "error";
+        }
+        return "ok";
+    } catch {
+        return "failed";
+    }
+};
+
+const checkLinkStatus = async (url, { useNoCorsFallback = false } = {}) => {
+    let status = await inspectLink(url, LINK_CHECK_BASE_OPTIONS);
+    if (status === "failed") {
+        const fallbackStatus = await inspectLink(url, LINK_CHECK_MANUAL_OPTIONS);
+        status = fallbackStatus === "external_redirect" ? "ok" : fallbackStatus;
+    }
+    if (useNoCorsFallback && status === "failed") {
+        status = await inspectLink(url, LINK_CHECK_NO_CORS_OPTIONS);
+    }
+    return status;
+};
+
 const getSeo = async (self, onlyKeywords = false) => {
     const pageTextContentEl = self.website.pageDocument.documentElement.querySelector("#wrap");
     const lang = self.state.language || "en";
@@ -649,17 +684,12 @@ export class BrokenLink extends Component {
             broken = true;
         }
         if (url?.protocol === "http:" || url?.protocol === "https:") {
-            try {
-                const response = await fetch(link.newLink, {
-                    method: "GET",
-                    mode: "no-cors",
-                    referrerPolicy: "no-referrer",
-                    credentials: "omit",
-                });
-                broken = response.status === 404;
-            } catch {
-                broken = true;
-            }
+            const sameOrigin = url.origin === window.location.origin;
+            const targetUrl = sameOrigin ? url.pathname + url.search : url.href;
+            const status = await checkLinkStatus(targetUrl, {
+                useNoCorsFallback: !sameOrigin,
+            });
+            broken = status === "error" || status === "failed";
         }
         link.broken = broken;
         link.validLink = !broken ? link.newLink : null;
@@ -757,7 +787,7 @@ export class SeoChecks extends Component {
 
     async getBrokenLinks() {
         this.state.checkingLinks = true;
-        this.state.counterLinks = 0;
+        this.state.counterLinks = 1;
         const hrefEls =
             this.website.pageDocument.documentElement.querySelectorAll("#wrapwrap a[href]:not(.oe_unremovable)");
         let links = Array.from(hrefEls)
@@ -805,7 +835,7 @@ export class SeoChecks extends Component {
                 return {
                     link: path.pathname + path.search,
                     res_model: recordEl.dataset.resModel || recordEl.dataset.oeModel,
-                    res_id: parseInt(recordEl.dataset.resId || recordEl.dataset.oeId),
+                    res_id: parseInt(recordEl.dataset.resId || recordEl.dataset.oeId, 10),
                     field: recordEl.dataset.oeField || null,
                     label: label,
                     isImageLink: isImageLink,
@@ -813,25 +843,25 @@ export class SeoChecks extends Component {
                 };
             })
             .filter(Boolean);
-        links = Array.from(new Set(links.map((item) => JSON.stringify(item)))).map((item) =>
-            JSON.parse(item)
-        );
+        const seen = new Set();
+        links = links.filter((item) => {
+            const key = `${item.link}::${item.res_model || ""}::${item.res_id || ""}::${item.field || ""}`;
+            if (seen.has(key)) {
+                return false;
+            }
+            seen.add(key);
+            return true;
+        });
         this.state.totalLinks = links.length;
         const brokenLinks = [];
         const promises = links.map(async (link) => {
-            try {
-                const response = await fetch(link.link, {
-                    method: "GET",
-                    mode: "no-cors",
-                    referrerPolicy: "no-referrer",
-                    credentials: "omit",
-                });
-                if (response.status === 404) {
-                    brokenLinks.push(link);
-                }
-            } catch {
+            // Let the browser follow internal redirects; most site routes land here.
+            const status = await checkLinkStatus(link.link);
+
+            if (status === "error" || status === "failed") {
                 brokenLinks.push(link);
             }
+
             this.state.counterLinks++;
         });
         await Promise.all(promises);
