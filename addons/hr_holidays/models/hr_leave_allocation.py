@@ -571,6 +571,7 @@ class HrLeaveAllocation(models.Model):
                 if allocation.accrual_plan_id.accrued_gain_time == 'start' and allocation.last_executed_carryover_date:
                     last_carryover_date = allocation.last_executed_carryover_date
                     carryover_level, carryover_level_idx = allocation._get_current_accrual_plan_level_id(last_carryover_date)
+                    carryover_period_start = carryover_level._get_previous_date(last_carryover_date)
                     carryover_period_end = carryover_level._get_next_date(last_carryover_date)
                     # Adjust carryover_period_end based on level_transition.
                     if carryover_level_idx < (len(level_ids) - 1) and allocation.accrual_plan_id.transition_mode == 'immediately':
@@ -586,7 +587,8 @@ class HrLeaveAllocation(models.Model):
                     # That is why (allocation.nextcall == period_end) is used instead of (is_accrual_date)
                     accrued = not allocation.already_accrued and allocation.nextcall == period_end
                     # If the days were accrued on the carryover period, then apply the carryover policy
-                    if accrued and last_carryover_date <= allocation.nextcall <= carryover_period_end:
+                    # If allocation.actual_lastcall == carryover_period_start, it means this loop has already been run once (skip to avoid applying the carryover twice)
+                    if accrued and last_carryover_date <= allocation.nextcall <= carryover_period_end and allocation.actual_lastcall != carryover_period_start:
                         if carryover_level.action_with_unused_accruals == 'lost' or carryover_level.carryover_options == 'limited':
                             allocation.last_executed_carryover_date = carryover_date
                             allocated_days_left = allocation.number_of_days - leaves_taken
