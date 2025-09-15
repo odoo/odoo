@@ -58,6 +58,7 @@ PROJECT_TASK_READABLE_FIELDS = {
     'display_follow_button',
     'is_template',
     'has_template_ancestor',
+    'has_project_template',
     'stage_id_color',
     'access_token',
     'access_url',
@@ -188,7 +189,7 @@ class ProjectTask(models.Model):
         help="Date on which the state of your task has last been modified.\n"
             "Based on this information you can identify tasks that are stalling and get statistics on the time it usually takes to move tasks from one stage/state to another.")
 
-    project_id = fields.Many2one('project.project', string='Project', domain="['|', ('company_id', '=', False), ('company_id', '=?',  company_id), ('is_template', 'in', [is_template, False])]",
+    project_id = fields.Many2one('project.project', string='Project', domain="['|', ('company_id', '=', False), ('company_id', '=?',  company_id)]",
                                  compute="_compute_project_id", store=True, precompute=True, recursive=True, readonly=False, index=True, tracking=True, change_default=True, falsy_value_label=_lt("🔒 Private"))
     display_in_project = fields.Boolean(compute='_compute_display_in_project', store=True, export_string_translation=False)
     task_properties = fields.Properties('Properties', definition='project_id.task_properties_definition', copy=True)
@@ -322,7 +323,7 @@ class ProjectTask(models.Model):
             Make sure to use the right format and order e.g. Improve the configuration screen #feature #v16 @Mitchell !""",
     )
     link_preview_name = fields.Char(compute='_compute_link_preview_name', export_string_translation=False)
-    is_template = fields.Boolean(copy=False, export_string_translation=False)
+    is_template = fields.Boolean(export_string_translation=False)
     has_project_template = fields.Boolean(related='project_id.is_template', string="Has Project Template", export_string_translation=False)
     has_template_ancestor = fields.Boolean(compute='_compute_has_template_ancestor', search='_search_has_template_ancestor',
                                            recursive=True, export_string_translation=False, store=True)
@@ -871,8 +872,8 @@ class ProjectTask(models.Model):
             if not has_default_users and vals['user_ids']:
                 task_active_users = task.user_ids & active_users
                 vals['user_ids'] = [Command.set(task_active_users.ids)]
-            if task.is_template and not self.env.context.get('copy_from_template'):
-                vals['is_template'] = True
+            if self.env.context.get('copy_from_template') and not self.env.context.get('copy_from_project_template'):
+                vals['is_template'] = False
             if self.env.context.get('copy_from_template'):
                 for field in set(self._get_template_field_blacklist()) & set(vals.keys()):
                     del vals[field]
@@ -1985,9 +1986,6 @@ class ProjectTask(models.Model):
                 },
             }
         if self.is_template:
-            if self.project_id.is_template:
-                raise UserError(self.env._("Tasks in a project template cannot be converted into regular tasks."))
-
             return {
                 'type': 'ir.actions.client',
                 'tag': 'project_show_template_undo_confirmation_dialog',
@@ -1996,6 +1994,7 @@ class ProjectTask(models.Model):
                 },
             }
         self.is_template = True
+        self.role_ids = False
         self.message_post(body=_("Task converted to template"))
         return {
             'type': 'ir.actions.client',
@@ -2012,7 +2011,6 @@ class ProjectTask(models.Model):
     def action_undo_convert_to_template(self):
         self.ensure_one()
         self.is_template = False
-        self.role_ids = False
         self.message_post(body=_("Template converted back to regular task"))
         return {
             'type': 'ir.actions.client',
