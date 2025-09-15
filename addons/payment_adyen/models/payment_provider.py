@@ -21,20 +21,35 @@ class PaymentProvider(models.Model):
     adyen_merchant_account = fields.Char(
         string="Merchant Account",
         help="The code of the merchant account to use with this provider",
-        required_if_provider='adyen', groups='base.group_system')
+        required_if_provider='adyen',
+        copy=False,
+        groups='base.group_system',
+    )
     adyen_api_key = fields.Char(
-        string="API Key", help="The API key of the webservice user", required_if_provider='adyen',
-        groups='base.group_system')
+        string="API Key",
+        help="The API key of the webservice user",
+        required_if_provider='adyen',
+        copy=False,
+        groups='base.group_system',
+    )
     adyen_client_key = fields.Char(
-        string="Client Key", help="The client key of the webservice user",
-        required_if_provider='adyen')
+        string="Client Key",
+        help="The client key of the webservice user",
+        required_if_provider='adyen',
+        copy=False,
+    )
     adyen_hmac_key = fields.Char(
-        string="HMAC Key", help="The HMAC key of the webhook", required_if_provider='adyen',
-        groups='base.group_system')
+        string="HMAC Key",
+        help="The HMAC key of the webhook",
+        required_if_provider='adyen',
+        copy=False,
+        groups='base.group_system',
+    )
     adyen_api_url_prefix = fields.Char(
         string="API URL Prefix",
         help="The base URL for the API endpoints",
         required_if_provider='adyen',
+        copy=False,
     )
 
     # === CRUD METHODS === #

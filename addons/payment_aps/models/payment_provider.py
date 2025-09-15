@@ -21,21 +21,25 @@ class PaymentProvider(models.Model):
         string="APS Merchant Identifier",
         help="The code of the merchant account to use with this provider.",
         required_if_provider='aps',
+        copy=False,
     )
     aps_access_code = fields.Char(
         string="APS Access Code",
         help="The access code associated with the merchant account.",
         required_if_provider='aps',
+        copy=False,
         groups='base.group_system',
     )
     aps_sha_request = fields.Char(
         string="APS SHA Request Phrase",
         required_if_provider='aps',
+        copy=False,
         groups='base.group_system',
     )
     aps_sha_response = fields.Char(
         string="APS SHA Response Phrase",
         required_if_provider='aps',
+        copy=False,
         groups='base.group_system',
     )
 

@@ -20,9 +20,12 @@ class PaymentProvider(models.Model):
     code = fields.Selection(
         selection_add=[('iyzico', "Iyzico")], ondelete={'iyzico': 'set default'}
     )
-    iyzico_key_id = fields.Char(string="Iyzico Key Id", required_if_provider='iyzico')
+    iyzico_key_id = fields.Char(string="Iyzico Key Id", required_if_provider='iyzico', copy=False)
     iyzico_key_secret = fields.Char(
-        string="Iyzico Key Secret", required_if_provider='iyzico', groups='base.group_system'
+        string="Iyzico Key Secret",
+        required_if_provider='iyzico',
+        copy=False,
+        groups='base.group_system',
     )
 
     # === COMPUTE METHODS === #

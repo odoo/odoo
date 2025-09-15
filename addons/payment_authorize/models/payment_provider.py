@@ -21,15 +21,28 @@ class PaymentProvider(models.Model):
     code = fields.Selection(
         selection_add=[('authorize', 'Authorize.Net')], ondelete={'authorize': 'set default'})
     authorize_login = fields.Char(
-        string="API Login ID", help="The ID solely used to identify the account with Authorize.Net",
-        required_if_provider='authorize')
+        string="API Login ID",
+        help="The ID solely used to identify the account with Authorize.Net",
+        required_if_provider='authorize',
+        copy=False,
+    )
     authorize_transaction_key = fields.Char(
-        string="API Transaction Key", required_if_provider='authorize', groups='base.group_system')
+        string="API Transaction Key",
+        required_if_provider='authorize',
+        copy=False,
+        groups='base.group_system',
+    )
     authorize_signature_key = fields.Char(
-        string="API Signature Key", required_if_provider='authorize', groups='base.group_system')
+        string="API Signature Key",
+        required_if_provider='authorize',
+        copy=False,
+        groups='base.group_system',
+    )
     authorize_client_key = fields.Char(
         string="API Client Key",
-        help="The public client key. To generate directly from Odoo or from Authorize.Net backend.")
+        help="The public client key. To generate directly from Odoo or from Authorize.Net backend.",
+        copy=False,
+    )
 
     # === CONSTRAINT METHODS ===#
 

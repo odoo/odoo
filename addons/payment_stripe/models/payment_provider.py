@@ -25,15 +25,24 @@ class PaymentProvider(models.Model):
     code = fields.Selection(
         selection_add=[('stripe', "Stripe")], ondelete={'stripe': 'set default'})
     stripe_publishable_key = fields.Char(
-        string="Publishable Key", help="The key solely used to identify the account with Stripe",
-        required_if_provider='stripe')
+        string="Publishable Key",
+        help="The key solely used to identify the account with Stripe",
+        required_if_provider='stripe',
+        copy=False,
+    )
     stripe_secret_key = fields.Char(
-        string="Secret Key", required_if_provider='stripe', groups='base.group_system')
+        string="Secret Key",
+        required_if_provider='stripe',
+        copy=False,
+        groups='base.group_system',
+    )
     stripe_webhook_secret = fields.Char(
         string="Webhook Signing Secret",
         help="If a webhook is enabled on your Stripe account, this signing secret must be set to "
              "authenticate the messages sent from Stripe to Odoo.",
-        groups='base.group_system')
+        copy=False,
+        groups='base.group_system',
+    )
 
     # === COMPUTE METHODS === #
 

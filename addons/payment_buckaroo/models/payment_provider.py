@@ -15,10 +15,17 @@ class PaymentProvider(models.Model):
     code = fields.Selection(
         selection_add=[('buckaroo', "Buckaroo")], ondelete={'buckaroo': 'set default'})
     buckaroo_website_key = fields.Char(
-        string="Website Key", help="The key solely used to identify the website with Buckaroo",
-        required_if_provider='buckaroo')
+        string="Website Key",
+        help="The key solely used to identify the website with Buckaroo",
+        required_if_provider='buckaroo',
+        copy=False,
+    )
     buckaroo_secret_key = fields.Char(
-        string="Buckaroo Secret Key", required_if_provider='buckaroo', groups='base.group_system')
+        string="Buckaroo Secret Key",
+        required_if_provider='buckaroo',
+        copy=False,
+        groups='base.group_system',
+    )
 
     # === COMPUTE METHODS ===#
 
