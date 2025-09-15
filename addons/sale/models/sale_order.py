@@ -85,6 +85,7 @@ class SaleOrder(models.Model):
         string="Creation Date", index=True, readonly=True)
     commitment_date = fields.Datetime(
         string="Delivery Date", copy=False,
+        compute='_compute_commitment_date', store=True, readonly=False,
         help="This is the delivery date promised to the customer. "
              "If set, the delivery order will be scheduled based on "
              "this date rather than product lead times.")
@@ -374,6 +375,10 @@ class SaleOrder(models.Model):
 
     def _compute_journal_id(self):
         self.journal_id = False
+
+    def _compute_commitment_date(self):
+        for order in self:
+            order.commitment_date = order.commitment_date
 
     @api.depends('partner_id')
     def _compute_note(self):
