@@ -55,6 +55,7 @@ export class GridLayoutPlugin extends Plugin {
 
     setup() {
         this.overlayTarget = null;
+        this.mobileBreakpoint = this.config.mobileBreakpoint;
     }
 
     /**
@@ -244,8 +245,8 @@ export class GridLayoutPlugin extends Plugin {
         const columnSpan = dragState.snippet.gridColumnSpan || 6;
         columnEl.classList.add(
             "o_grid_item",
-            `col-lg-${columnSpan}`,
-            `g-col-lg-${columnSpan}`,
+            `col-${this.mobileBreakpoint}-${columnSpan}`,
+            `g-col-${this.mobileBreakpoint}-${columnSpan}`,
             "g-height-1"
         );
         columnEl.style.gridArea = `1 / 1 / 2 / ${columnSpan + 1}`;
@@ -445,7 +446,7 @@ export class GridLayoutPlugin extends Plugin {
                 // Toggle the grid mode if it is not already on.
                 if (!isRowInGridMode) {
                     const preserveSelection = this.dependencies.selection.preserveSelection;
-                    toggleGridMode(containerEl, preserveSelection, this.config.mobileBreakpoint);
+                    toggleGridMode(containerEl, preserveSelection, this.mobileBreakpoint);
                 }
                 const gridItemProps = getGridItemProperties(columnEl);
 
@@ -500,7 +501,7 @@ export class GridLayoutPlugin extends Plugin {
                 columnEl,
                 columnWidth,
                 columnHeight,
-                this.config.mobileBreakpoint
+                this.mobileBreakpoint
             );
             dragState.columnSpan = spans.columnSpan;
             dragState.rowSpan = spans.rowSpan;
@@ -606,7 +607,7 @@ export class GridLayoutPlugin extends Plugin {
             resizeGrid(rowEl);
         } else if (columnEl.classList.contains("o_grid_item")) {
             // Case when dropping a grid item in a non-grid dropzone.
-            convertToNormalColumn(columnEl, this.config.mobileBreakpoint);
+            convertToNormalColumn(columnEl, this.mobileBreakpoint);
         }
     }
 
@@ -630,7 +631,7 @@ export class GridLayoutPlugin extends Plugin {
                     columnEl,
                     columnWidth,
                     columnHeight,
-                    this.config.mobileBreakpoint
+                    this.mobileBreakpoint
                 );
                 dragState.columnSpan = spans.columnSpan;
                 dragState.rowSpan = spans.rowSpan;
@@ -649,7 +650,7 @@ export class GridLayoutPlugin extends Plugin {
             resizeGrid(rowEl);
         } else if (columnEl.classList.contains("o_grid_item")) {
             // Case when a grid item is dropped near a non-grid dropzone.
-            convertToNormalColumn(columnEl, this.config.mobileBreakpoint);
+            convertToNormalColumn(columnEl, this.mobileBreakpoint);
         }
     }
 
