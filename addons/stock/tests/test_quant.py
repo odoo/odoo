@@ -1383,6 +1383,53 @@ class TestStockQuant(TestStockCommon):
             'lot_id': False,
         }])
 
+    def test_quants_search_last_count_date(self):
+        """Test that the 'last_count_date' filter works correctly on stock quants with different operators.
+        """
+        self.product_consu.is_storable = True
+        products = [self.product_consu, self.product_lot, self.product_serial]
+        lots = [False, None, None]
+        for id, (name, product) in enumerate([('LOT-001', self.product_lot), ('SN-001', self.product_serial)]):
+            lots[id + 1] = self.env['stock.lot'].create({
+                'name': name,
+                'product_id': product.id,
+            })
+        dates = [datetime.today() + timedelta(days=1), datetime.today() - timedelta(days=1), datetime.today()]
+
+        self.env['stock.quant']._update_available_quantity(self.product_consu, self.shelf_2, 1, lot_id=lots[0])
+        self.env['stock.quant']._update_available_quantity(self.product_lot, self.shelf_2, 1, lot_id=lots[1])
+        self.env['stock.quant']._update_available_quantity(self.product_serial, self.shelf_2, 1, lot_id=lots[2])
+
+        for i in range(len(products)):
+            move = self.env['stock.move'].create({
+                'product_id': products[i].id,
+                'product_uom_qty': 1,
+                'location_id': self.stock_location.id,
+                'location_dest_id': self.shelf_2.id,
+                'is_inventory': True,
+            })
+
+            move._action_confirm()
+            move._action_assign()
+            move.picked = True
+            move._action_done()
+            move.move_line_ids.write({
+                'date': dates[i],
+            })
+
+        self.env.cr.flush()
+        today = datetime.today().date()
+        result_eq = self.env['stock.quant'].search_count([('last_count_date', '=', today)])
+        self.assertEqual(result_eq, 1)
+        result_lt = self.env['stock.quant'].search_count([('last_count_date', '<', today)])
+        self.assertEqual(result_lt, 1)
+        result_gt = self.env['stock.quant'].search_count([('last_count_date', '>', today)])
+        self.assertEqual(result_gt, 1)
+        result_gt_eq = self.env['stock.quant'].search_count([('last_count_date', '>=', today)])
+        self.assertEqual(result_gt_eq, 2)
+        result_lt_eq = self.env['stock.quant'].search_count([('last_count_date', '<=', today)])
+        self.assertEqual(result_lt_eq, 2)
+
 
 @tagged('at_install', '-post_install')  # LEGACY at_install
 class TestStockQuantRemovalStrategy(TestStockCommon):
