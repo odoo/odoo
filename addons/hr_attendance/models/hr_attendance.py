@@ -450,7 +450,7 @@ class HrAttendance(models.Model):
                 stop_dt = min(planned_end_dt, local_check_out)
                 work_duration += (stop_dt - start_dt).total_seconds() / 3600.0
                 # remove lunch time from work duration
-                if not employee.is_flexible:
+                if not employee.sudo().is_flexible:
                     lunch_intervals = employee._employee_attendance_intervals(start_dt, stop_dt, lunch=True)
                     work_duration -= sum((i[1] - i[0]).total_seconds() / 3600.0 for i in lunch_intervals)
 
