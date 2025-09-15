@@ -70,6 +70,7 @@ class TestGetOperatorCommon(HttpCase):
                 "last_interest_dt": fields.Datetime.now(),
             }
         )
+        channel.with_user(operator).message_post(body="Hello, how can I help you?")
         if in_call:
             member = self.env["discuss.channel.member"].search(
                 [("partner_id", "=", operator.partner_id.id), ("channel_id", "=", channel.id)]
