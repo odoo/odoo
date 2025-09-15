@@ -11,7 +11,7 @@ import { registry } from "@web/core/registry";
 describe.current.tags("desktop");
 
 const mainErrorMessage = (trigger) =>
-    `ERROR during perform action:\nPotential non deterministic behavior found in 300ms for trigger ${trigger}.`;
+    `Error: Potential non deterministic behavior found in 300ms for trigger ${trigger}.`;
 
 let macro;
 async function waitForMacro() {
@@ -69,7 +69,10 @@ beforeEach(async () => {
     });
     patchWithCleanup(browser.console, {
         log: (s) => expect.step(`log: ${s}`),
-        error: (s) => expect.step(`error: ${s}`),
+        error: (s) => {
+            s = s.replace(/\n +at.*/g, ""); // strip stack trace
+            expect.step(`error: ${s}`)
+        },
         warn: () => {},
         dir: () => {},
     });
