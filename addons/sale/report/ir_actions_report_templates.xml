@@ -137,13 +137,13 @@
                             <t t-set="line_padding" t-value="line_padding + 1"/>
                         </t>
 
-                        <t t-set="padding_class" t-value="line_padding and ('px-' + str(line_padding)) or ''"/>
+                        <t t-set="padding_style" t-value="line_padding and ('padding-left:' + str(line_padding * 8) + 'px') or 'padding-left: 4px'"/>
 
                         <t t-if="not line.collapse_composition">
                             <tr
                                 t-if="is_section or is_subsection"
                                 name="tr_section"
-                                t-att-class="'fw-bolder o_line_section' if is_section else 'fw-bold o_line_subsection'"
+                                t-attf-class="fw-bold {{'o_line_section' if is_section else 'o_line_subsection'}}"
                             >
                                 <t t-set="show_section_total" t-value="is_section or not line.parent_id.collapse_prices"/>
                                 <t
@@ -156,15 +156,15 @@
                                 <td
                                     name="td_section_name"
                                     t-att-colspan="section_name_colspan"
-                                    t-att-class="padding_class"
+                                    class="border-end-0"
+                                    t-att-style="padding_style"
                                 >
                                     <span t-field="line.name">A section title</span>
                                 </td>
                                 <td t-if="show_section_total" name="td_section_price" class="text-end o_price_total">
                                     <span
-                                        name="price_subtotal_section"
                                         t-out="line._get_section_totals(price_field)"
-                                        class="text-nowrap"
+                                        class="o_price_subtotal_section text-nowrap"
                                         t-options="{'widget': 'monetary', 'display_currency': doc.currency_id}"
                                     >
                                         27.00
@@ -175,7 +175,7 @@
                                 <td
                                     name="td_note_name"
                                     colspan="99"
-                                    t-att-class="padding_class"
+                                    t-att-style="padding_style"
                                 >
                                     <span t-field="line.name">A note, whose content usually applies to the section or product above.</span>
                                 </td>
@@ -184,7 +184,8 @@
                                 <td
                                     name="td_combo_name"
                                     t-att-colspan="3 + (1 if display_discount else 0) + (1 if display_taxes else 0)"
-                                    t-att-class="padding_class"
+                                    class="border-end-0"
+                                    t-att-style="padding_style"
                                 >
                                     <span t-field="line.name">Combo Product</span>
                                     x <span t-field="line.product_uom_qty" t-options="{'widget': 'integer'}"/>
@@ -204,7 +205,7 @@
                             <tr t-else="" name="tr_product">
                                 <td
                                     name="td_product_name"
-                                    t-att-class="padding_class"
+                                    t-att-style="padding_style"
                                 >
                                     <span t-field="line.name">Bacon Burger</span>
                                 </td>
@@ -258,7 +259,7 @@
                                 name="tr_section_group"
                                 class="o_line_section"
                             >
-                                <td name="td_section_group_name" t-att-class="padding_class">
+                                <td name="td_section_group_name" t-att-style="padding_style">
                                     <span t-field="line.name">
                                         Section Summary
                                     </span>
