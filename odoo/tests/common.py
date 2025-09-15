@@ -133,6 +133,12 @@ BROWSER_WAIT = CHECK_BROWSER_SLEEP * CHECK_BROWSER_ITERATIONS # seconds
 DEFAULT_SUCCESS_SIGNAL = 'test successful'
 TEST_CURSOR_COOKIE_NAME = 'test_request_key'
 
+IGNORED_MSGS = re.compile(r"""
+    (?: failed\ to\ fetch  # base error
+      | connectionlosterror:  # conversion by offlineFailToFetchErrorHandler
+    )
+""", flags=re.VERBOSE | re.IGNORECASE).search
+
 def get_db_name():
     db = odoo.tools.config['db_name']
     # If the database name is not provided on the command-line,
@@ -1558,7 +1564,7 @@ class ChromeBrowser:
 
         log_type = type
         _logger = self._logger.getChild('browser')
-        if self._result.done() and 'failed to fetch' in message.casefold():
+        if self._result.done() and IGNORED_MSGS(message):
             log_type = 'dir'
         _logger.log(
             self._TO_LEVEL.get(log_type, logging.INFO),
@@ -1638,7 +1644,7 @@ which leads to stray network requests and inconsistencies."""
             message += '\n' + stack
 
         if self._result.done():
-            if 'failed to fetch' not in message.casefold():
+            if not IGNORED_MSGS(message):
                 self._logger.getChild('browser').error(
                     "Exception received after termination: %s", message)
             return
