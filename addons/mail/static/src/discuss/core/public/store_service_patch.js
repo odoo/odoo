@@ -16,6 +16,7 @@ const storeServicePatch = {
         this.discuss_public_thread = fields.One("Thread");
         /** @type {boolean|undefined} */
         this.shouldDisplayWelcomeViewInitially;
+        /** @type {boolean|undefined} */
         this.shouldDisplayWelcomeView = fields.Attr(undefined, {
             compute() {
                 return this.shouldDisplayWelcomeView ?? this.shouldDisplayWelcomeViewInitially;

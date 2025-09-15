@@ -6,6 +6,7 @@ declare module "models" {
     import { ChatbotStep as ChatbotStepClass } from "@im_livechat/core/common/chatbot_step_model";
     import { LivechatChannel as LivechatChannelClass } from "@im_livechat/core/common/livechat_channel_model";
     import { LivechatChannelRule as LivechatChannelRuleClass } from "@im_livechat/core/common/livechat_channel_rule_model";
+    import { LivechatExpertise as LivechatExpertiseClass } from "@im_livechat/core/common/livechat_expertise_model";
 
     export interface Chatbot extends ChatbotClass {}
     export interface ChatbotScript extends ChatbotScriptClass {}
@@ -14,9 +15,13 @@ declare module "models" {
     export interface ChatbotStep extends ChatbotStepClass {}
     export interface LivechatChannel extends LivechatChannelClass {}
     export interface LivechatChannelRule extends LivechatChannelRuleClass {}
+    export interface LivechatExpertise extends LivechatExpertiseClass {}
 
     export interface ChatWindow {
         livechatStep: undefined|"CONFIRM_CLOSE"|"FEEDBACK";
+    }
+    export interface DataResponse {
+        chatbot_step: ChatbotStep;
     }
     export interface Message {
         chatbotStep: ChatbotStep;
@@ -33,6 +38,7 @@ declare module "models" {
         ChatbotStep: StaticMailRecord<ChatbotStep, typeof ChatbotStepClass>;
         "im_livechat.channel": StaticMailRecord<LivechatChannel, typeof LivechatChannelClass>;
         "im_livechat.channel.rule": StaticMailRecord<LivechatChannelRule, typeof LivechatChannelRuleClass>;
+        "im_livechat.expertise": StaticMailRecord<LivechatExpertise, typeof LivechatExpertiseClass>;
     }
     export interface Thread {
         composerDisabled: Readonly<boolean>;
@@ -51,5 +57,6 @@ declare module "models" {
         ChatbotStep: ChatbotStep;
         "im_livechat.channel": LivechatChannel;
         "im_livechat.channel.rule": LivechatChannelRule;
+        "im_livechat.expertise": LivechatExpertise;
     }
 }

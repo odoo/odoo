@@ -33,6 +33,7 @@ declare module "models" {
         channel_member_ids: ChannelMember[];
         computeCorrespondent: () => ChannelMember;
         correspondent: ChannelMember;
+        correspondentCountry: Country;
         correspondents: Readonly<ChannelMember[]>;
         default_display_mode: "video_full_screen"|undefined;
         fetchChannelInfoDeferred: Deferred<Thread|undefined>;
@@ -40,6 +41,7 @@ declare module "models" {
         fetchChannelMembers: () => Promise<void>;
         fetchMoreAttachments: (limit: number) => Promise<void>;
         firstUnreadMessage: Message;
+        group_ids: ResGroups[];
         hasMemberList: Readonly<boolean>;
         hasOtherMembersTyping: boolean;
         hasSeenFeature: boolean;
@@ -60,6 +62,7 @@ declare module "models" {
         otherTypingMembers: ChannelMember[];
         scrollUnread: boolean;
         selfMember: ChannelMember;
+        showCorrespondentCountry: Readonly<boolean>;
         showUnreadBanner: Readonly<boolean>;
         toggleBusSubscription: boolean;
         typingMembers: ChannelMember[];
