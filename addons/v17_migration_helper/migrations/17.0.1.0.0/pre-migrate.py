@@ -1,10 +1,5 @@
 # -*- coding: utf-8 -*-
-"""
-Migration script for Odoo v16 to v17 upgrade
-Removes incompatible modules and fixes template references
-
-File location: addons/your_module/migrations/17.0.1.0.0/pre-migrate.py
-"""
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
 
@@ -12,13 +7,7 @@ _logger = logging.getLogger(__name__)
 
 
 def migrate(cr, version):
-    """
-    Migration function called during module upgrade
-    
-    Args:
-        cr: Database cursor
-        version: Current version being migrated to
-    """
+
     _logger.info("Starting v16 to v17 migration cleanup...")
     
     # List of incompatible modules to remove
