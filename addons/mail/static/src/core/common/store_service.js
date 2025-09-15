@@ -198,7 +198,7 @@ export class Store extends BaseStore {
 
     shouldSimulateDarkTheme(ctx) {
         return (
-            (ctx?.env?.inDiscussCallView || ctx?.env?.inMeetingView) &&
+            ctx?.env?.inDiscussCallView &&
             this.isOdooWhiteTheme &&
             !ctx?.env.inMeetingSideActions &&
             !ctx?.env.inDiscussActionPanel
