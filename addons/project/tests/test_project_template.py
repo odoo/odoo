@@ -1,7 +1,6 @@
 from datetime import date
 
 from odoo import Command
-from odoo.exceptions import UserError
 from odoo.tests import freeze_time
 
 from odoo.addons.project.tests.test_project_base import TestProjectCommon
@@ -17,10 +16,27 @@ class TestProjectTemplates(TestProjectCommon):
             "date_start": date(2025, 6, 1),
             "date": date(2025, 6, 11),
         })
-        cls.task_inside_template = cls.env["project.task"].create({
-            "name": "Task in Project Template",
+        cls.task_inside_template, cls.task_template_inside_template = cls.env["project.task"].create([{
+            "name": "A Task in Project Template",
             "project_id": cls.project_template.id,
-        })
+        }, {
+            "name": "B Task Template in Project Template",
+            "project_id": cls.project_template.id,
+            "is_template": True,
+        }])
+
+    def test_convert_project_to_template(self):
+        """
+        Converting a project to a project template should leave the tasks unchanged.
+        """
+        self.project_template.is_template = False
+        client_action = self.project_template.action_create_template_from_project()
+        created_template = self.env["project.project"].browse(client_action["params"]["project_id"])
+        task_a, task_b = created_template.task_ids.sorted("name")
+        self.assertEqual(task_a.name, self.task_inside_template.name, "The copied task should have the same name as the original.")
+        self.assertFalse(task_a.is_template, "The copied tasks should retain their template status.")
+        self.assertEqual(task_b.name, self.task_template_inside_template.name, "The copied task should have the same name as the original.")
+        self.assertTrue(task_b.is_template, "The copied tasks should retain their template status.")
 
     def test_create_from_template(self):
         """
@@ -31,7 +47,12 @@ class TestProjectTemplates(TestProjectCommon):
         self.assertFalse(project.is_template, "The created Project should be a normal project and not a template.")
         self.assertFalse(project.partner_id, "The created Project should not have a customer.")
 
-        self.assertEqual(len(project.task_ids), 1, "The tasks of the template should be copied too.")
+        self.assertEqual(len(project.task_ids), 2, "The tasks of the template should be copied too.")
+        task_a, task_b = project.task_ids.sorted("name")
+        self.assertEqual(task_a.name, self.task_inside_template.name, "The copied task should have the same name as the original.")
+        self.assertFalse(task_a.is_template, "The copied tasks should retain their template status.")
+        self.assertEqual(task_b.name, self.task_template_inside_template.name, "The copied task should have the same name as the original.")
+        self.assertTrue(task_b.is_template, "The copied tasks should retain their template status.")
 
     def test_copy_template(self):
         """
@@ -40,7 +61,12 @@ class TestProjectTemplates(TestProjectCommon):
         copied_template = self.project_template.copy()
         self.assertEqual(copied_template.name, "Project Template (copy)", "The project name should be `Project Template` (copy).")
         self.assertTrue(copied_template.is_template, "The copy of the template should also be a template.")
-        self.assertEqual(len(copied_template.task_ids), 1, "The child of the template should be copied too.")
+        self.assertEqual(len(copied_template.task_ids), 2, "The child of the template should be copied too.")
+        task_a, task_b = copied_template.task_ids.sorted("name")
+        self.assertEqual(task_a.name, self.task_inside_template.name, "The copied task should have the same name as the original.")
+        self.assertFalse(task_a.is_template, "The copied tasks should retain their template status.")
+        self.assertEqual(task_b.name, self.task_template_inside_template.name, "The copied task should have the same name as the original.")
+        self.assertTrue(task_b.is_template, "The copied tasks should retain their template status.")
 
     def test_revert_template(self):
         """
@@ -48,14 +74,6 @@ class TestProjectTemplates(TestProjectCommon):
         """
         self.project_template.action_undo_convert_to_template()
         self.assertFalse(self.project_template.is_template, "The reverted template should become a normal template.")
-
-    def test_revert_task_template(self):
-        """
-        A template task should not be reverted to a regular task.
-        """
-        self.task_inside_template.is_template = True
-        with self.assertRaises(UserError, msg="A UserError should be raised when attempting to revert a template task to a regular one."):
-            self.task_inside_template.action_convert_to_template()
 
     def test_tasks_dispatching_from_template(self):
         """
