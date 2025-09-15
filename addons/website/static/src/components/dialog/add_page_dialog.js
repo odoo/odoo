@@ -514,7 +514,7 @@ export class AddPageDialog extends Component {
         if (!this.cssLinkEls) {
             this.cssLinkEls = new Promise((resolve) => {
                 const container = document.querySelector(".o_website_preview .o_iframe_container");
-                const iframe = container?.lastElementChild;
+                const iframe = container?.querySelector('iframe:not([src="/website/iframefallback"])');
                 if (iframe?.contentDocument.body.getAttribute("is-ready") === "true") {
                     // If there is a fully loaded website preview, use it.
                     resolve(iframe.contentDocument.head.querySelectorAll("link[type='text/css']"));
