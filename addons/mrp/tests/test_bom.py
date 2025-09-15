@@ -790,6 +790,118 @@ class TestBoM(TestMrpCommon):
         # 5 min 'Prepare biscuits' + 3 min 'Prepare butter' + 5 min 'Mix manually' = 13 minutes
         self.assertEqual(report_values['lines']['operations_time'], 660.0, 'Operation time should be the same for 1 unit or for the batch')
 
+    def test_bom_report_planning_with_producible_qty(self):
+        """ Simulate a BoM of a pickaxe, and test that the BoM structure report
+            respects the hardcoded limit of 700 planning days.
+        """
+        location = self.env.ref('stock.stock_location_stock')
+        pickaxe = self.env['product.product'].create({
+            'name': 'Iron Pickaxe',
+            'is_storable': True,
+            'route_ids': [(6, 0, [self.ref('mrp.route_warehouse0_manufacture')])],
+        })
+        stick = self.env['product.product'].create({
+            'name': 'Stick',
+            'is_storable': True,
+        })
+        iron = self.env['product.product'].create({
+            'name': 'Iron Ingot',
+            'is_storable': True,
+        })
+
+        bom_form_pickaxe = Form(self.env['mrp.bom'])
+        bom_form_pickaxe.product_tmpl_id = pickaxe.product_tmpl_id
+        bom_form_pickaxe.product_qty = 1
+        bom_pickaxe = bom_form_pickaxe.save()
+
+        workcenter = self.env['mrp.workcenter'].create({
+            'costs_hour': 10,
+            'name': 'Crafting Table'
+        })
+
+        # Required to display `operation_ids` in the form view
+        self.env.user.group_ids += self.env.ref("mrp.group_mrp_routings")
+        with Form(bom_pickaxe) as bom:
+            with bom.bom_line_ids.new() as line:
+                line.product_id = stick
+                line.product_qty = 2
+            with bom.bom_line_ids.new() as line:
+                line.product_id = iron
+                line.product_qty = 3
+            with bom.operation_ids.new() as operation:
+                operation.workcenter_id = workcenter
+                operation.name = 'Place items'
+                operation.time_cycle_manual = 10
+            with bom.operation_ids.new() as operation:
+                operation.workcenter_id = workcenter
+                operation.name = 'Craft items'
+                operation.time_cycle_manual = 5
+
+        report_values = self.env['report.mrp.report_bom_structure']._get_report_data(bom_id=bom_pickaxe.id, searchQty=1, searchVariant=False)
+        # 10 min 'Place items' + 5 min 'Craft items' = 15 minutes for 1 pickaxe
+        self.assertEqual(report_values['lines']['operations_time'], 15.0)
+        self.assertEqual(report_values['lines']['producible_qty'], 0)
+
+        report_values = self.env['report.mrp.report_bom_structure']._get_report_data(bom_id=bom_pickaxe.id, searchQty=2, searchVariant=False)
+        # 10 min 'Place items' + 5 min 'Craft items' = 30 minutes for 2 pickaxes
+        self.assertEqual(report_values['lines']['operations_time'], 30.0)
+        self.assertEqual(report_values['lines']['producible_qty'], 0)
+
+        # The planning is limited to 700 days and the calendar is 40h/week
+        # So the 700 days limit is equivalent to 700 / 7 * 40 = 4000 hours
+        # With 4000 hours, we can plan 16000 pickaxes.
+
+        # Populate the workcenter's planning
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.bom_id = bom_pickaxe
+        mo_form.product_qty = 16000 - 1  # Keep 1 slot available
+        mo = mo_form.save()
+        mo.action_confirm()
+        mo.button_plan()
+
+        # 1 quantity should still work
+        report_values = self.env['report.mrp.report_bom_structure']._get_report_data(bom_id=bom_pickaxe.id, searchQty=1, searchVariant=False)
+        self.assertEqual(report_values['lines']['operations_time'], 15.0)
+        self.assertEqual(report_values['lines']['producible_qty'], 0)
+
+        # 2 quantities should be over the limit
+        with self.assertRaises(exceptions.UserError):
+            report_values = self.env['report.mrp.report_bom_structure']._get_report_data(bom_id=bom_pickaxe.id, searchQty=2, searchVariant=False)
+            # should raise above; test the operations time for easier debugging
+            self.assertEqual(report_values['lines']['operations_time'], 15.0)
+            self.assertEqual(report_values['lines']['producible_qty'], 0)
+
+        # Add quantities on hand to increase the 'producible_qty'
+        self.env['stock.quant']._update_available_quantity(stick, location, 2.0)
+        self.env['stock.quant']._update_available_quantity(iron, location, 3.0)
+        (stick | iron).invalidate_recordset(['free_qty'])
+        self.assertEqual(stick.free_qty, 2)
+        self.assertEqual(iron.free_qty, 3)
+
+        # 1 quantity should work too
+        report_values = self.env['report.mrp.report_bom_structure']._get_report_data(bom_id=bom_pickaxe.id, searchQty=1, searchVariant=False)
+        self.assertEqual(report_values['lines']['operations_time'], 15.0)
+        self.assertEqual(report_values['lines']['producible_qty'], 1)
+
+        # Add a second procucible quantity
+        self.env['stock.quant']._update_available_quantity(stick, location, 2.0)
+        self.env['stock.quant']._update_available_quantity(iron, location, 3.0)
+        (stick | iron).invalidate_recordset(['free_qty'])
+        self.assertEqual(stick.free_qty, 4)
+        self.assertEqual(iron.free_qty, 6)
+
+        # If we have 2 producible quantity, it should still work, as we requested 1 quantity
+        report_values = self.env['report.mrp.report_bom_structure']._get_report_data(bom_id=bom_pickaxe.id, searchQty=1, searchVariant=False)
+        self.assertEqual(report_values['lines']['operations_time'], 15.0)
+        self.assertEqual(report_values['lines']['producible_qty'], 2)
+
+        with self.assertRaises(exceptions.UserError):
+            # but 2 won't, as expected
+            report_values = self.env['report.mrp.report_bom_structure']._get_report_data(bom_id=bom_pickaxe.id, searchQty=2, searchVariant=False)
+            # should raise above
+            self.assertEqual(report_values['lines']['operations_time'], 15.0)
+            self.assertEqual(report_values['lines']['producible_qty'], 2)
+
     def test_21_bom_report_variant(self):
         """ Test a sub BoM process with multiple variants.
         BOM 1:
