@@ -992,9 +992,15 @@ export class PropertiesField extends Component {
      * bus event, if the PropertiesField component cannot enter edit mode.
      */
     _getPropertyEditWarningText() {
+        const parentFieldLabel = this.props.record.fields[this.definitionRecordField].string;
+        if (!this.definitionRecordId) {
+            return _t("Oops! You need to define %(parentFieldLabel)s to edit its properties.", {
+                parentFieldLabel,
+            });
+        }
         return _t('Oops! You cannot edit the %(parentFieldLabel)s "%(parentName)s".', {
+            parentFieldLabel,
             parentName: this.props.record.data[this.definitionRecordField][1],
-            parentFieldLabel: this.props.record.fields[this.definitionRecordField].string,
         });
     }
 }
