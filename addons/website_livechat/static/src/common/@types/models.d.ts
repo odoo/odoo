@@ -1,5 +1,5 @@
 declare module "models" {
     export interface Thread {
-        visitor: Persona;
+        livechat_visitor_id: website.visitor;
     }
 }

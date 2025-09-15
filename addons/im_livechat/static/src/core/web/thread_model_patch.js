@@ -10,8 +10,10 @@ patch(Thread.prototype, {
     setup() {
         super.setup();
         this.hasFetchedLivechatSessionData = false;
+        /** @type {"in_progress"|"waiting"|"need_help"|undefined} */
         this.livechat_status = undefined;
         this.livechat_note = fields.Html();
+        /** @type {string|undefined} */
         this.livechatNoteText = fields.Attr(undefined, {
             compute() {
                 if (this.livechat_note !== undefined) {
@@ -20,6 +22,7 @@ patch(Thread.prototype, {
                 return this.livechatNoteText;
             },
         });
+        /** @type {"no_answer"|"no_agent"|"no_failure"|"escalated"|undefined} */
         this.livechat_outcome = undefined;
         this.livechat_expertise_ids = fields.Many("im_livechat.expertise");
     },
@@ -35,6 +38,7 @@ patch(Thread.prototype, {
         }
         return _t("In progress");
     },
+    /** @param {"in_progress"|"waiting"|"need_help"} status */
     updateLivechatStatus(status) {
         if (this.livechat_status === status) {
             return;

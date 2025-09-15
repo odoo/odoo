@@ -28,6 +28,7 @@ declare module "models" {
     export interface Thread {
         activities: Activity[];
         follow: () => Promise<void>;
+        isDisplayedInDiscussAppDesktop: boolean;
         loadMoreFollowers: () => Promise<void>;
         loadMoreRecipients: () => Promise<void>;
         recipients: Follower[];

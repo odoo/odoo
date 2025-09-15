@@ -32,6 +32,11 @@ const StorePatch = {
             fromThread.open({ focus: false });
         }
     },
+    /**
+     * @override
+     * @param {MouseEvent} ev
+     * @param {number} id
+     */
     onClickPartnerMention(ev, id) {
         this.env.services.popover.add(ev.target, AvatarCardPopover, {
             id,
