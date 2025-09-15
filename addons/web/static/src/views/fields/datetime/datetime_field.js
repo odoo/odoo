@@ -1,4 +1,4 @@
-import { Component, onWillRender, useState, useRef, useEffect } from "@odoo/owl";
+import { Component, onWillRender, useEffect, useRef, useState } from "@odoo/owl";
 import { useDateTimePicker } from "@web/core/datetime/datetime_picker_hook";
 import { areDatesEqual, deserializeDate, deserializeDateTime, today } from "@web/core/l10n/dates";
 import { _t } from "@web/core/l10n/translation";
@@ -6,9 +6,9 @@ import { evaluateBooleanExpr } from "@web/core/py_js/py";
 import { registry } from "@web/core/registry";
 import { ensureArray } from "@web/core/utils/arrays";
 import { exprToBoolean } from "@web/core/utils/strings";
-import { standardFieldProps } from "../standard_field_props";
 import { FIELD_WIDTHS } from "@web/views/list/column_width_hook";
 import { formatDate, formatDateTime } from "../formatters";
+import { standardFieldProps } from "../standard_field_props";
 
 const { DateTime } = luxon;
 
@@ -114,29 +114,7 @@ export class DateTimeField extends Component {
                 range: this.isRange(value),
                 showRangeToggler:
                     this.relatedField && !this.props.required && !this.props.alwaysRange,
-                onToggleRange: () => {
-                    this.state.range = !this.state.range;
-
-                    if (this.state.range) {
-                        let values = this.values;
-                        const optionalFieldIndex = values[0] ? 1 : 0;
-
-                        if (!values[0] && !values[1]) {
-                            values = [DateTime.local(), DateTime.local()];
-                        }
-                        values[optionalFieldIndex] = optionalFieldIndex
-                            ? values[0].plus({ hours: 1 })
-                            : values[1].minus({ hours: 1 });
-
-                        this.state.focusedDateIndex = 0;
-                        this.state.value = values;
-                    } else {
-                        const mainFieldIndex = this.props.name === this.startDateField ? 0 : 1;
-
-                        this.state.focusedDateIndex = mainFieldIndex;
-                        this.state.value[mainFieldIndex ? 0 : 1] = false;
-                    }
-                },
+                onToggleRange,
             };
             if (this.props.maxDate) {
                 pickerProps.maxDate = this.parseLimitDate(this.props.maxDate);
@@ -158,6 +136,30 @@ export class DateTimeField extends Component {
             return pickerProps;
         };
 
+        const onToggleRange = () => {
+            this.state.range = !this.state.range;
+
+            if (this.state.range) {
+                let values = this.values;
+                const optionalFieldIndex = values[0] ? 1 : 0;
+
+                if (!values[0] && !values[1]) {
+                    values = [DateTime.local(), DateTime.local()];
+                }
+                values[optionalFieldIndex] = optionalFieldIndex
+                    ? values[0].plus({ hours: 1 })
+                    : values[1].minus({ hours: 1 });
+
+                this.state.focusedDateIndex = 0;
+                this.state.value = values;
+            } else {
+                const mainFieldIndex = this.props.name === this.startDateField ? 0 : 1;
+
+                this.state.focusedDateIndex = mainFieldIndex;
+                this.state.value[mainFieldIndex ? 0 : 1] = false;
+            }
+        };
+
         const dateTimePicker = useDateTimePicker({
             target: "root",
             showSeconds: this.props.showSeconds,
@@ -169,8 +171,9 @@ export class DateTimeField extends Component {
             },
             onClose: () => {
                 this.picker.activeInput = "";
+                this.state.value = this.getRecordValue();
             },
-            onApply: () => {
+            onApply: async () => {
                 const toUpdate = {};
                 if (Array.isArray(this.state.value)) {
                     // Value is already a range
@@ -187,7 +190,7 @@ export class DateTimeField extends Component {
                 }
 
                 if (Object.keys(toUpdate).length) {
-                    this.props.record.update(toUpdate);
+                    await this.props.record.update(toUpdate);
                 }
             },
         });
