@@ -93,9 +93,6 @@ class Website(Home):
         def match(loc):
             return not qs or qs.lower() in loc.lower()
 
-        if homepage_url and homepage_url != '/' and match(homepage_url):
-            yield {'loc': homepage_url}
-            return
         website_page = env['website.page'].sudo().search([
             ('url', '=', '/'),
             ('is_published', '=', True),
@@ -298,7 +295,7 @@ class Website(Home):
             sitemaps.unlink()
 
             pages = 0
-            locs = request.website.with_user(request.website.user_id)._enumerate_pages()
+            locs = request.website.with_user(request.website.user_id)._enumerate_pages(ignore_custom_homepage=True)
             while True:
                 values = {
                     'locs': islice(locs, 0, LOC_PER_SITEMAP),
