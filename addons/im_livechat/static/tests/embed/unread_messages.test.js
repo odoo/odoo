@@ -1,5 +1,5 @@
 import { waitUntilSubscribe } from "@bus/../tests/bus_test_helpers";
-import { expirableStorage } from "@im_livechat/core/common/expirable_storage";
+import { expirableStorage } from "@im_livechat/discuss/core/common/expirable_storage";
 import {
     defineLivechatModels,
     loadDefaultEmbedConfig,

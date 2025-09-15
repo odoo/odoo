@@ -2,7 +2,7 @@ import { patchWithCleanup } from "@web/../tests/helpers/utils";
 import { contains } from "@web/../tests/utils";
 import { registry } from "@web/core/registry";
 import { Deferred } from "@web/core/utils/concurrency";
-import { Chatbot } from "@im_livechat/core/common/chatbot_model";
+import { Chatbot } from "@im_livechat/discuss/core/common/chatbot_model";
 
 const messagesContain = (text) => `.o-livechat-root:shadow .o-mail-Message:contains("${text}")`;
 let chatbotDelayProcessingDef;

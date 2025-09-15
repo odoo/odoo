@@ -1,7 +1,7 @@
 import { onWillStart } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { useOpenChat } from "@mail/core/web/open_chat_hook";
-import { AvatarCardPopover } from "@mail/discuss/web/avatar_card/avatar_card_popover";
+import { AvatarCardPopover } from "@mail/core/web/avatar_card/avatar_card_popover";
 
 export class AvatarCardResourcePopover extends AvatarCardPopover {
     static template = "resource_mail.AvatarCardResourcePopover";

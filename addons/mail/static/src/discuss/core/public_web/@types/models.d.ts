@@ -22,12 +22,13 @@ declare module "models" {
     export interface Thread {
         _computeDiscussAppCategory: () => undefined|unknown;
         appAsUnreadChannels: DiscussApp;
-        categoryAsThreadWithCounter: DiscussAppCategory
+        categoryAsThreadWithCounter: DiscussAppCategory;
         createSubChannel: (param0: { initialMessage: Message, name: string }) => Promise<void>;
         discussAppCategory: DiscussAppCategory;
         displayInSidebar: boolean;
         from_message_id: Message;
         hasSubChannelFeature: Readonly<boolean>;
+        isBusSubscribed: boolean;
         lastSubChannelLoaded: Thread|null;
         loadMoreSubChannels: (param0: { searchTerm: string }) => Promise<Thread[]|undefined>;
         loadSubChannelsDone: boolean;

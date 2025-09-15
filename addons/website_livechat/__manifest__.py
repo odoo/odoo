@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 {
     'name': 'Website Live Chat',
     'category': 'Website/Live Chat',
@@ -22,9 +21,14 @@
         'demo/im_livechat_session_11.xml',
     ],
     'assets': {
-        "im_livechat.assets_embed_core": [
-            "website/static/src/**/common/**/*",
-            "website_livechat/static/src/**/common/**/*",
+        "discuss.assets_core_common": [
+            "website_livechat/static/src/discuss/core/common/**/*",
+        ],
+        "im_livechat.assets_core_common": [
+            "website_livechat/static/src/im_livechat/core/common/**/*",
+        ],
+        "im_livechat.assets_core_frontend": [
+            "website_livechat/static/src/im_livechat/core/frontend/**/*",
         ],
         'im_livechat.embed_assets_unit_tests_setup': [
             ('remove', 'website_livechat/static/**'),
@@ -34,22 +38,14 @@
             "website/static/tests/mock_server/**/*",
             "website_livechat/static/tests/mock_server/**/*",
         ],
-        "mail.assets_public": [
-            "website_livechat/static/src/**/common/**/*",
-        ],
         'website.assets_wysiwyg': [
             "website/static/src/**/common/**/*",
         ],
         'website.assets_editor': [
             'website_livechat/static/src/js/**/*',
         ],
-        'web.assets_frontend': [
-            "website_livechat/static/src/**/common/**/*",
-            'website_livechat/static/src/**/frontend/**/*',
-        ],
         'web.assets_backend': [
-            "website_livechat/static/src/**/common/**/*",
-            'website_livechat/static/src/**/*',
+            'website_livechat/static/src/js/**/*',
         ],
         'web.assets_unit_tests': [
             'website_livechat/static/tests/**/*',

@@ -3,7 +3,7 @@ import { useAssignUserCommand } from "@mail/views/web/fields/assign_user_command
 import { registry } from "@web/core/registry";
 import { TagsList } from "@web/core/tags_list/tags_list";
 import { usePopover } from "@web/core/popover/popover_hook";
-import { AvatarCardPopover } from "@mail/discuss/web/avatar_card/avatar_card_popover";
+import { AvatarCardPopover } from "@mail/core/web/avatar_card/avatar_card_popover";
 import {
     Many2ManyTagsAvatarField,
     many2ManyTagsAvatarField,

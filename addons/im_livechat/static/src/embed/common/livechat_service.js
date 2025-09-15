@@ -1,4 +1,4 @@
-import { expirableStorage } from "@im_livechat/core/common/expirable_storage";
+import { expirableStorage } from "@im_livechat/discuss/core/common/expirable_storage";
 
 import { reactive } from "@odoo/owl";
 import { rpc } from "@web/core/network/rpc";
@@ -54,7 +54,7 @@ export class LivechatService {
      * @returns {Promise<import("models").Thread|undefined>}
      */
     async open(options = {}) {
-        const thread = await this._createThread({ persist: false, options});
+        const thread = await this._createThread({ persist: false, options });
         await thread?.openChatWindow({ focus: true });
         return thread;
     }
@@ -116,7 +116,9 @@ export class LivechatService {
             {
                 channel_id: options.channel_id ?? this.options.channel_id,
                 previous_operator_id: expirableStorage.getItem(OPERATOR_STORAGE_KEY),
-                chatbot_script_id: originThread?.chatbot?.script.id ?? this.store.livechat_rule?.chatbot_script_id?.id,
+                chatbot_script_id:
+                    originThread?.chatbot?.script.id ??
+                    this.store.livechat_rule?.chatbot_script_id?.id,
                 persisted: options.persist ?? persist,
                 ...this.getSessionExtraParams(originThread, options),
             },

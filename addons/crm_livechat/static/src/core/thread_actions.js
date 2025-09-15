@@ -1,4 +1,4 @@
-import { LivechatCommandDialog } from "@im_livechat/core/common/livechat_command_dialog";
+import { LivechatCommandDialog } from "@im_livechat/discuss/core/common/livechat_command_dialog";
 
 import { registerThreadAction } from "@mail/core/common/thread_actions";
 import "@mail/discuss/call/common/thread_actions";

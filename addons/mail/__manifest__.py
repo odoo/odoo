@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 {
     'name': 'Discuss',
     'version': '1.19',
@@ -137,8 +135,97 @@ For more specific needs, you may also assign custom-defined actions
     'application': True,
     'post_init_hook': '_mail_post_init',
     'assets': {
+        # Bundle naming: "{module}.assets_{feature}_{scope}"
+        # Matching folder: {module?}/{feature}/{scope}
+        #   - module:
+        #       - mail: shared code between mail and discuss + mail/chatter/activity specific code.
+        #       - discuss: channel specific code (to be moved out of mail, into specific module eventually).
+        #   - feature:
+        #       - core: special "feature" that is guaranteed to be loaded before all others.
+        #       - {name}: arbitrary feature name when splitting code is desirable.
+        #   - scope:
+        #       - common: code shared between backend, discuss public page, livechat and portal chatter.
+        #           - Note: frontend is not included as non-framework code should always be lazy-loaded in frontend.
+        #           - Most code should be in "common" unless there is a good reason to split it.
+        #               Typical reason to split is when code depends on non-available features in a
+        #               specific scope (webclient actions are only available in backend for example
+        #               -> code making use of them should be in "web" and not in "common").
+        #           - In particular, models and fields definition should always be in "common" as
+        #               their data can be received on the bus on any page having mail.store service.
+        #       - web: code specific to the backend (Odoo web client)
+        #       - public: code specific to the discuss channel public page (not frontend, see note above)
+        #       - portal: code specific to the portal chatter
+        #       - {combination}: name of modules can be combined with underscore when code should be
+        #           in multiple scopes at the same time but cannot be in common. When combining
+        #           modules, their name should be in alphabetical order.
+        # Bundle ordering:
+        #   Particularly important to apply overrides in the correct order (JS patches, SCSS rules
+        #       and variables, XML template extension)
+        #   - Feature level: core, {feature}, discuss core, discuss {feature}
+        #   - Scope level: most to least generic (common -> {combination} -> public/portal/web)
+        "discuss.assets_core_common": [
+            "mail/static/src/discuss/core/common/**/*",
+            ("remove", "mail/static/src/**/*.dark.scss"),
+        ],
+        "discuss.assets_core_public_web": [
+            "mail/static/src/discuss/core/public_web/**/*",
+            ("remove", "mail/static/src/**/*.dark.scss"),
+        ],
+        "discuss.assets_core_web": [
+            "mail/static/src/discuss/core/web/**/*",
+        ],
+        "discuss.assets_feature_common": [
+            "mail/static/src/discuss/**/common/**/*",
+            ("remove", "mail/static/src/**/*.dark.scss"),
+        ],
+        "discuss.assets_feature_public": [
+            "mail/static/src/discuss/**/public/**/*",
+        ],
+        "discuss.assets_feature_public_web": [
+            "mail/static/src/discuss/**/public_web/**/*",
+            ("remove", "mail/static/src/**/*.dark.scss"),
+        ],
+        "discuss.assets_feature_web": [
+            "mail/static/src/discuss/**/web/**/*",
+        ],
+        "mail.assets_core_common": [
+            "mail/static/src/model/**/*",
+            "mail/static/src/core/common/**/*",
+            ("remove", "mail/static/src/**/*.dark.scss"),
+        ],
+        "mail.assets_core_public_web": [
+            "mail/static/src/core/public_web/**/*",
+            ("remove", "mail/static/src/**/*.dark.scss"),
+        ],
+        "mail.assets_core_web": [
+            "mail/static/src/core/web/**/*",
+        ],
+        "mail.assets_core_web_portal": [
+            "mail/static/src/core/web_portal/**/*",
+        ],
+        "mail.assets_feature_common": [
+            "mail/static/src/**/common/**/*",
+            ("remove", "mail/static/src/discuss/**/*"),
+            ("remove", "mail/static/src/**/*.dark.scss"),
+        ],
+        "mail.assets_feature_public": [
+            "mail/static/src/**/public/**/*",
+            ("remove", "mail/static/src/discuss/**/*"),
+        ],
+        "mail.assets_feature_public_web": [
+            "mail/static/src/**/public_web/**/*",
+            ("remove", "mail/static/src/discuss/**/*"),
+            ("remove", "mail/static/src/**/*.dark.scss"),
+        ],
+        "mail.assets_feature_web": [
+            "mail/static/src/**/web/**/*",
+            ("remove", "mail/static/src/discuss/**/*"),
+        ],
+        "mail.assets_feature_web_portal": [
+            "mail/static/src/**/web_portal/**/*",
+        ],
         'web._assets_primary_variables': [
-            'mail/static/src/**/primary_variables.scss',
+            'mail/static/src/primary_variables.scss',
         ],
         'web.assets_backend': [
             # depends on BS variables, can't be loaded in assets_primary or assets_secondary
@@ -146,25 +233,20 @@ For more specific needs, you may also assign custom-defined actions
             'mail/static/src/scss/*.scss',
             'mail/static/lib/selfie_segmentation/selfie_segmentation.js',
             'mail/static/src/js/**/*',
-            'mail/static/src/model/**/*',
-            'mail/static/src/core/common/**/*',
-            'mail/static/src/core/public_web/**/*',
-            'mail/static/src/core/web_portal/**/*',
-            'mail/static/src/core/web/**/*',
-            'mail/static/src/**/common/**/*',
-            'mail/static/src/**/public_web/**/*',
-            'mail/static/src/**/web_portal/**/*',
-            'mail/static/src/**/web/**/*',
-            ('remove', 'mail/static/src/**/*.dark.scss'),
-            # discuss (loaded last to fix dependencies)
-            ('remove', 'mail/static/src/discuss/**/*'),
-            'mail/static/src/discuss/core/common/**/*',
-            'mail/static/src/discuss/core/public_web/**/*',
-            'mail/static/src/discuss/core/web/**/*',
-            'mail/static/src/discuss/**/common/**/*',
-            'mail/static/src/discuss/**/public_web/**/*',
-            'mail/static/src/discuss/**/web/**/*',
-            ('remove', 'mail/static/src/discuss/**/*.dark.scss'),
+            ("include", "mail.assets_core_common"),
+            ("include", "mail.assets_core_public_web"),
+            ("include", "mail.assets_core_web_portal"),
+            ("include", "mail.assets_core_web"),
+            ("include", "mail.assets_feature_common"),
+            ("include", "mail.assets_feature_public_web"),
+            ("include", "mail.assets_feature_web_portal"),
+            ("include", "mail.assets_feature_web"),
+            ("include", "discuss.assets_core_common"),
+            ("include", "discuss.assets_core_public_web"),
+            ("include", "discuss.assets_core_web"),
+            ("include", "discuss.assets_feature_common"),
+            ("include", "discuss.assets_feature_public_web"),
+            ("include", "discuss.assets_feature_web"),
             'mail/static/src/views/fields/**/*',
             ('remove', 'mail/static/src/views/web/activity/**'),
         ],
@@ -236,24 +318,20 @@ For more specific needs, you may also assign custom-defined actions
 
             ("include", "html_editor.assets_editor"),
 
-            'mail/static/src/model/**/*',
-            'mail/static/src/core/common/**/*',
-            'mail/static/src/core/public_web/**/*',
-            'mail/static/src/**/common/**/*',
-            'mail/static/src/**/public_web/**/*',
-            'mail/static/src/**/public/**/*',
-            'mail/static/lib/selfie_segmentation/selfie_segmentation.js',
-            ('remove', 'mail/static/src/**/*.dark.scss'),
-            # discuss (loaded last to fix dependencies)
-            ('remove', 'mail/static/src/discuss/**/*'),
-            'mail/static/src/discuss/core/common/**/*',
-            'mail/static/src/discuss/core/public_web/**/*',
-            'mail/static/src/discuss/core/public/**/*',
-            'mail/static/src/discuss/**/common/**/*',
-            'mail/static/src/discuss/**/public_web/**/*',
-            'mail/static/src/discuss/**/public/**/*',
-            ('remove', 'mail/static/src/discuss/**/*.dark.scss'),
             ('remove', 'web/static/src/**/*.dark.scss'),
+            ("include", "mail.assets_core_common"),
+            ("include", "mail.assets_core_public_web"),
+            ("include", "mail.assets_feature_common"),
+            ("include", "mail.assets_feature_public_web"),
+            ("include", "mail.assets_feature_public"),
+            'mail/static/lib/selfie_segmentation/selfie_segmentation.js',
+            # discuss (loaded last to fix dependencies)
+            ("include", "discuss.assets_core_common"),
+            ("include", "discuss.assets_core_public_web"),
+            ("include", "discuss.assets_core_public"),
+            ("include", "discuss.assets_feature_common"),
+            ("include", "discuss.assets_feature_public_web"),
+            ("include", "discuss.assets_feature_public"),
         ]
     },
     'author': 'Odoo S.A.',

@@ -68,9 +68,14 @@
     'post_init_hook': '_project_post_init',
     'uninstall_hook': '_project_uninstall_hook',
     'assets': {
+        "mail.assets_core_common": [
+            "project/static/src/core/common/**/*",
+        ],
+        "mail.assets_core_web": [
+            "project/static/src/core/web/**/*",
+        ],
         'web.assets_backend': [
             'project/static/src/css/project.css',
-            'project/static/src/core/web/**/*',
             'project/static/src/utils/**/*',
             'project/static/src/actions/client_actions.js',
             'project/static/src/components/**/*',
