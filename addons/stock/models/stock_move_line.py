@@ -852,7 +852,7 @@ class StockMoveLine(models.Model):
             description = description.removeprefix(name).strip()
         elif description.startswith(product.name):
             description = description.removeprefix(product.name).strip()
-        line_key = f'{product.id}_{product.display_name}_{description or ""}_{uom.id}'
+        line_key = f'{product.id}_{product.display_name}_{description or ""}_{uom.id}_{packaging_uom.id}'
         return {
             'line_key': line_key,
             'name': name,
