@@ -352,6 +352,10 @@ test("Can compact chat hub", async () => {
     // alternative compact: click hidden button
     await click(".o-mail-ChatBubble", { text: "+13" });
     await contains(".o-mail-ChatBubble i.fa.fa-comments");
+    // don't show compact button in discuss app
+    await openDiscuss();
+    await contains(".o-mail-Discuss[data-active]");
+    await contains(".o-mail-ChatBubble i.fa.fa-comments", { count: 0 });
 });
 
 test("Compact chat hub is crosstab synced", async () => {
