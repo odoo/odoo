@@ -16,7 +16,7 @@
                         <ActionList actions="optionActions" dropdown="true"/>
                     </t>
                 </Dropdown>
-                <t t-if="store.chatHub.compact" t-call="mail.ChatHub.compactButton"/>
+                <t t-if="store.chatHub.compact and chatHub.showConversations" t-call="mail.ChatHub.compactButton"/>
                 <t t-else="">
                     <t t-foreach="chatHub.folded.slice(0, chatHub.maxFolded)" t-as="cw" t-key="cw.localId">
                         <ChatBubble t-if="cw.canShow" chatWindow="cw"/>
