@@ -1,10 +1,12 @@
 import { expect, test } from "@odoo/hoot";
 import { manuallyDispatchProgrammaticEvent } from "@odoo/hoot-dom";
-import { patchWithCleanup } from "@web/../tests/web_test_helpers";
+import { tick } from "@odoo/hoot-mock";
+import { onRpc, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { setupEditor, testEditor } from "../_helpers/editor";
 import { cleanLinkArtifacts } from "../_helpers/format";
 import { getContent, setSelection } from "../_helpers/selection";
 import { insertText, undo } from "../_helpers/user_actions";
+import { expectElementCount } from "../_helpers/ui_expectations";
 
 async function insertSpace(editor) {
     const keydownEvent = await manuallyDispatchProgrammaticEvent(editor.editable, "keydown", {
@@ -190,4 +192,26 @@ test("transform text url into link and undo it", async () => {
 
     undo(editor);
     expect(cleanLinkArtifacts(getContent(el))).toBe("<p>www.abc.jpg[]</p>");
+});
+
+test("should show replace URL button if link is created by transformation", async () => {
+    onRpc("/html_editor/link_preview_external", () => ({
+        og_description:
+            "From ERP to CRM, eCommerce and CMS. Download Odoo or use it in the cloud. Grow Your Business.",
+        og_image: "https://www.odoo.com/web/image/41207129-1abe7a15/homepage-seo.png",
+        og_title: "Open Source ERP and CRM | Odoo",
+        og_type: "website",
+        og_site_name: "Odoo",
+        source_url: "https://odoo.com",
+    }));
+    const { editor } = await setupEditor(`<p>[]</p>`);
+    await insertText(editor, "https://odoo.com ");
+    const link = document.querySelector("a");
+    setSelection({
+        anchorNode: link,
+        anchorOffset: 0,
+    });
+    await tick();
+    await expectElementCount(".o-we-linkpopover", 1);
+    expect("button.o_we_replace_title_btn").toHaveCount(1);
 });

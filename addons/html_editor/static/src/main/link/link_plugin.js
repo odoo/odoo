@@ -1166,6 +1166,9 @@ export class LinkPlugin extends Plugin {
                 const textNodeToReplace = selection.anchorNode.splitText(startOffset);
                 textNodeToReplace.splitText(match[0].length);
                 selection.anchorNode.parentElement.replaceChild(link, textNodeToReplace);
+                if (link.getAttribute("href") === link.textContent) {
+                    this.newlyInsertedLinks.add(link);
+                }
                 return nodeForSelectionRestore;
             }
         }
