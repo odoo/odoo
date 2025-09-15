@@ -111,16 +111,14 @@
         <t t-set="pricelist" t-value="request.pricelist"/>
         <t t-set="pricelist_label">Pricelist</t>
         <div t-attf-class="o_pricelist_dropdown dropdown #{_classes if hasPricelistDropdown else 'd-none'}">
-            <a
-                role="button"
-                href="#"
+            <button
                 t-attf-class="dropdown-toggle btn px-2"
                 data-bs-toggle="dropdown"
             >
                 <small class="d-none d-md-inline opacity-75"><t t-out="pricelist_label"/>:</small>
                 <span class="d-none d-md-inline" t-out="pricelist and pricelist.name or ' - '" />
                 <span class="d-md-none"><t t-out="pricelist_label"/></span>
-            </a>
+            </button>
             <div class="dropdown-menu" role="menu">
                 <t t-foreach="website_sale_pricelists" t-as="pl">
                     <t t-set="_is_active" t-value="pricelist.id == pl.id"/>
@@ -390,16 +388,14 @@
                                                 <t t-call="website_sale.search" placeholder="placeholder" search="original_search or search"/>
                                             </div>
                                             <!-- Mobile Search button -->
-                                            <a
+                                            <button
                                                 t-attf-class="btn o_not_editable d-inline-block d-sm-none me-auto btn-{{navClass}}"
                                                 data-bs-target="#o_wsale_search_modal"
                                                 data-bs-toggle="modal"
-                                                role="button"
                                                 title="Search Products"
-                                                href="#"
                                             >
                                                 <i class="oi oi-search" role="img"/>
-                                            </a>
+                                            </button>
                                         </t>
                                         <div t-attf-class="{{'d-lg-none' if not hasPricelistDropdown and not is_view_active('website_sale.sort') else ''}} o_wsale_products_header_dropdown_wrap d-flex gap-3">
                                             <t
@@ -632,9 +628,7 @@
                 t-value="isSortingBy and isSortingBy[0][0] or website.shop_default_sort"
             />
             <t t-set="_sort_label">Sort By</t>
-            <a
-                role="button"
-                href="#"
+            <button
                 t-attf-class="dropdown-toggle btn px-2"
                 data-bs-toggle="dropdown"
             >
@@ -646,7 +640,7 @@
                     <span t-else="" t-out="dict(website_sale_sortable)[website.shop_default_sort]"/>
                 </span>
                 <i t-if="_icon_classes" t-attf-class="fa fa-sort {{_icon_classes}}" role="img"/>
-            </a>
+            </button>
             <div class="dropdown-menu dropdown-menu-end" role="menu">
                 <t t-foreach="website_sale_sortable" t-as="sortby">
                     <t t-set="_is_active" t-value="_current_sort == sortby[0]"/>
@@ -1266,16 +1260,14 @@
                     t-attf-class="navbar position-sticky d-flex gap-1 gap-lg-2 flex-shrink-0 bg-body rounded mb-2 px-2 px-lg-3 shadow {{floatBar_hasSearch and 'ps-1 ps-lg-1'}}"
                 >
                     <div t-if="floatBar_hasSearch">
-                        <a
+                        <button
                             t-attf-class="btn o_not_editable {{(wsale_has_filters_btn or floatBar_hasSort or floatBar_hasPricelist) and 'me-n2'}}"
                             data-bs-target="#o_wsale_search_modal"
                             data-bs-toggle="modal"
-                            role="button"
                             title="Search Products"
-                            href="#"
                         >
                             <i class="oi oi-search" role="img"/>
-                        </a>
+                        </button>
                     </div>
                     <span
                         t-if="floatBar_hasSearch and (wsale_has_filters_btn or floatBar_hasSort or floatBar_hasPricelist)"

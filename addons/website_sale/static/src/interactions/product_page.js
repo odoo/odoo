@@ -16,7 +16,7 @@ export class ProductPage extends Interaction {
     static selector = '.o_wsale_product_page';
     dynamicContent = {
         '.js_product input[name="add_qty"]': { 't-on-change': this.onChangeAddQuantity },
-        'a.js_add_cart_json': { 't-on-click.prevent': this.incOrDecQuantity },
+        'button.js_add_cart_json': { 't-on-click.prevent': this.incOrDecQuantity },
         '.o_wsale_product_page_variants': { 't-on-change': this.onChangeVariant },
         '.o_product_page_reviews_link': { 't-on-click': this.onClickReviewsLink },
         '.css_attribute_color input': { 't-on-change': this.onChangeColorAttribute },
