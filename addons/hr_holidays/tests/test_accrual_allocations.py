@@ -4565,3 +4565,42 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         res_hour = allocation_hour._get_future_leaves_on(future_date)
 
         self.assertEqual(res_hour, 16.0, f"Expected 16.0 hours (2 days) increase, got {res_hour}")
+
+    def test_accrual_leaves_cancel_cron_with_refused_allocation(self):
+        """ Test that the _cancel_invalid_leaves cron cancels leaves without valid allocation"""
+        leave_type = self.env['hr.leave.type'].create({
+            'name': 'Test Accrual',
+            'time_type': 'leave',
+            'requires_allocation': 'yes',
+            'allocation_validation_type': 'no_validation',
+            'leave_validation_type': 'no_validation',
+            'allows_negative': True,
+            'max_allowed_negative': 2,
+            'unit_of_measure': 'day',
+        })
+
+        accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
+            'name': 'Accrual Plan',
+            'carryover_date': 'year_start',
+            'accrued_gain_time': 'end',
+        })
+
+        with freeze_time("2024-01-01"):
+            allocation = self.env['hr.leave.allocation'].create({
+                'employee_id': self.employee_emp.id,
+                'holiday_status_id': leave_type.id,
+                'allocation_type': 'accrual',
+                'accrual_plan_id': accrual_plan.id,
+                'number_of_days': 1,
+            })
+
+            leave = self.env['hr.leave'].create({
+                'employee_id': self.employee_emp.id,
+                'holiday_status_id': leave_type.id,
+                'request_date_from': '2024-01-05',
+                'request_date_to': '2024-01-05',
+            })
+
+            allocation.action_refuse()
+            self.env['hr.leave']._cancel_invalid_leaves()
+            self.assertEqual(leave.state, 'cancel')
