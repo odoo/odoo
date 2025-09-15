@@ -2067,6 +2067,9 @@ class SaleOrder(models.Model):
             'extra_tax_data': extra_tax_data,
         }
 
+    def _get_amount_to_pay(self):
+        return self.amount_total
+
     def _get_prepayment_required_amount(self):
         """ Return the minimum amount needed to automatically confirm the quotation.
 
