@@ -457,12 +457,13 @@ export class SurveySessionManage extends Interaction {
      * @private
      */
     async onEndSessionClick(ev) {
+        // ev could not exist (onNextQuestionDone )
+        const showResults = ev?.currentTarget?.dataset?.showResults;
         await this.waitFor(
             this.services.orm.call("survey.survey", "action_end_session", [[this.surveyId]])
         );
         this.protectSyncAfterAsync(() => {
-            // ev could not exist (onNextQuestionDone )
-            if (ev?.currentTarget.dataset.showResults) {
+            if (showResults) {
                 window.location.href = `/survey/results/${encodeURIComponent(this.surveyId)}`;
             } else {
                 window.location.reload();
