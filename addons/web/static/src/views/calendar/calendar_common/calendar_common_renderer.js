@@ -4,7 +4,6 @@ import { _t } from "@web/core/l10n/translation";
 import { is24HourFormat } from "@web/core/l10n/dates";
 import { localization } from "@web/core/l10n/localization";
 import { renderToString } from "@web/core/utils/render";
-import { useDebounced } from "@web/core/utils/timing";
 import { getColor } from "../colors";
 import { useCalendarPopover, useClickHandler, useFullCalendar } from "../hooks";
 import { CalendarCommonPopover } from "./calendar_common_popover";
@@ -49,7 +48,6 @@ export class CalendarCommonRenderer extends Component {
         this.fc = useFullCalendar("fullCalendar", this.options);
         this.click = useClickHandler(this.onClick, this.onDblClick);
         this.popover = useCalendarPopover(this.constructor.components.Popover);
-        this.onWindowResizeDebounced = useDebounced(this.onWindowResize, 200);
 
         onMounted(() => {
             if (this.props.model.scale === "day" || this.props.model.scale === "week") {
@@ -117,7 +115,7 @@ export class CalendarCommonRenderer extends Component {
             weekNumberCalculation: (date) => getWeekNumber(date, this.props.model.firstDayOfWeek),
             weekNumbers: true,
             weekNumbersWithinDays: !this.env.isSmall,
-            windowResize: this.onWindowResizeDebounced,
+            windowResize: this.onWindowResize,
             columnHeaderHtml: this.getHeaderHtml,
         };
     }
