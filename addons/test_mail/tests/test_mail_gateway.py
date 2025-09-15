@@ -1279,7 +1279,18 @@ class TestMailgateway(MailGatewayCommon):
         self.assertEqual(self.test_record.message_bounce, 0)
         self.assertEqual(other_record.message_bounce, 10)
         self.assertEqual(yet_other_record.message_bounce, 10)
+        # MAX_BOUNCE_LIMIT in discuss_channel is set to 10,
+        # If this partner exceeds the limit, remove them from the channel.
         self.assertNotIn(self.partner_1, test_channel.channel_partner_ids)
+
+        # On a new successful incoming email, the partner bounce counter should be reset.
+        self.format_and_process(
+            MAIL_TEMPLATE, self.partner_1.email_formatted,
+            f'groups@{self.alias_domain}',
+            subject='Test Working Email Subject',
+            extra=f'In-Reply-To:\r\n\t{self.fake_email.message_id}\n',
+        )
+        self.assertEqual(self.partner_1.message_bounce, 0)
 
     @mute_logger('odoo.addons.mail.models.mail_thread')
     def test_message_process_bounce_records_partner(self):
