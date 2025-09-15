@@ -32,7 +32,7 @@ export function addSectionFromProductCatalog() {
                     [...document.querySelectorAll('.o_kanban_record')].find(el =>
                         el.textContent.includes('Test Product')
                     )?.click();
-                }, 500);
+                }, 1000);
             },
         },
         {
