@@ -4,19 +4,7 @@
     'version': '17.0.1.0.0',
     'category': 'Tools',
     'summary': 'Migration helper for v16 to v17 upgrade',
-    'description': """
-Migration Helper Module
-======================
-
-This module contains migration scripts to handle the upgrade from Odoo v16 to v17.
-
-Features:
-- Removes incompatible v16 modules
-- Fixes chatter_position template references
-- Cleans up residual data
-
-This module should be installed before upgrading to v17.
-    """,
+    'description': 'Migration helper module for upgrading from Odoo v16 to v17. Removes incompatible modules and fixes template references.',
     'author': 'Your Company',
     'website': 'https://www.yourcompany.com',
     'depends': ['base', 'web'],
