@@ -70,6 +70,7 @@ import { EmbeddedVideoPlugin } from "@html_editor/others/embedded_components/plu
 import { EmbeddedYoutubePlugin } from "./others/embedded_components/plugins/video_plugin/embedded_youtube_plugin";
 import { CaptionPlugin } from "@html_editor/others/embedded_components/plugins/caption_plugin/caption_plugin";
 import { EmbeddedFilePlugin } from "@html_editor/others/embedded_components/plugins/embedded_file_plugin/embedded_file_plugin";
+import { SyntaxHighlightingPlugin } from "@html_editor/others/embedded_components/plugins/syntax_highlighting_plugin/syntax_highlighting_plugin";
 import { QWebPlugin } from "./others/qweb_plugin";
 import { EditorVersionPlugin } from "./core/editor_version_plugin";
 import { ImagePostProcessPlugin } from "./main/media/image_post_process_plugin";
@@ -207,6 +208,7 @@ export const EMBEDDED_COMPONENT_PLUGINS = [
     EmbeddedYoutubePlugin,
     CaptionPlugin,
     EmbeddedFilePlugin,
+    SyntaxHighlightingPlugin,
 ];
 
 export const NO_EMBEDDED_COMPONENTS_FALLBACK_PLUGINS = [FilePlugin, VideoPlugin, YoutubePlugin];
