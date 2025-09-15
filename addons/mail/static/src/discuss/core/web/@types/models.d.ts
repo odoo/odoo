@@ -3,5 +3,6 @@ declare module "models" {
         getSelfImportantChannels: () => Thread[];
         getSelfRecentChannels: () => Thread[];
         initChannelsUnreadCounter: number;
+        onClickPartnerMention: (ev: MouseEvent, id: number) => void;
     }
 }

@@ -9,15 +9,22 @@ declare module "models" {
         rtc_inviting_session_id: RtcSession;
         rtcSession: RtcSession;
     }
-    export interface Persona {
+    export interface MailGuest {
+        currentRtcSession: RtcSession;
+    }
+    export interface ResPartner {
         currentRtcSession: RtcSession;
     }
     export interface Settings {
         getVolume: (rtcSession: RtcSession) => number;
     }
     export interface Store {
+        _hasFullscreenUrl: boolean;
+        _hasFullscreenUrlOnUpdate: () => void;
         allActiveRtcSessions: RtcSession[];
         "discuss.channel.rtc.session": StaticMailRecord<RtcSession, typeof RtcSessionClass>;
+        fullscreenChannel: Thread;
+        meetingViewOpened: boolean;
         nextTalkingTime: number;
         ringingThreads: Thread[];
         rtc: Rtc;
@@ -26,12 +33,18 @@ declare module "models" {
     export interface Thread {
         activeRtcSession: RtcSession;
         cancelRtcInvitationTimeout: number|undefined;
+        focusAvailableVideo: () => void;
+        focusStack: RtcSession[];
         hadSelfSession: boolean;
         lastSessionIds: Set<number>;
         promoteFullscreen: typeof CALL_PROMOTE_FULLSCREEN[keyof CALL_PROMOTE_FULLSCREEN];
         rtc_session_ids: RtcSession[];
+        showCallView: Readonly<boolean>;
+        updateCallFocusStack: (session: RtcSession) => void;
+        useCameraByDefault: null;
         videoCount: number;
         videoCountNotSelf: number;
+        visibleCards: CardData[];
     }
 
     export interface Models {

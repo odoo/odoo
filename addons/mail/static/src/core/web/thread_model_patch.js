@@ -18,6 +18,7 @@ const threadPatch = {
                 r.remove();
             },
         });
+        /** @type {boolean} */
         this.isDisplayedInDiscussAppDesktop = fields.Attr(undefined, {
             /** @this {import("models").Thread} */
             compute() {
