@@ -257,7 +257,7 @@ export class Message extends Component {
 
     get attClass() {
         return {
-            "user-select-none": isMobileOS(),
+            "user-select-none o-isMobileOS": isMobileOS(),
             [this.props.className]: true,
             "o-card p-2 ps-1 mx-1 mt-1 mb-1 border border-dark rounded-2": this.props.asCard,
             "pt-1": !this.props.asCard && !this.props.squashed,
@@ -313,6 +313,9 @@ export class Message extends Component {
 
     /** Max amount of quick actions, including "..." */
     get quickActionCount() {
+        if (isMobileOS()) {
+            return 1;
+        }
         return this.env.inChatWindow || this.env.inMeetingChat ? 2 : 4;
     }
 
