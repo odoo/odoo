@@ -605,7 +605,7 @@ class ProductTemplate(models.Model):
                 currency=currency,
             )
 
-        has_discounted_price = price_before_discount > pricelist_price
+        has_discounted_price = currency.compare_amounts(price_before_discount, pricelist_price) == 1
         combination_info = {
             'list_price': max(pricelist_price, price_before_discount),
             'price': pricelist_price,
