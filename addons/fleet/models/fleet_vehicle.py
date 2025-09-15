@@ -5,7 +5,7 @@ from dateutil.relativedelta import relativedelta
 from datetime import datetime
 
 from odoo import api, fields, models, _
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, RedirectWarning
 from odoo.fields import Domain
 from odoo.addons.fleet.models.fleet_vehicle_model import FUEL_TYPES
 
@@ -330,6 +330,61 @@ class FleetVehicle(models.Model):
     def _get_analytic_name(self):
         # This function is used in fleet_account and is overrided in l10n_be_hr_payroll_fleet
         return self.license_plate or _('No plate')
+
+    @api.constrains('license_plate')
+    def _check_duplicate_license_plate(self):
+        vehicles_with_plate = self.filtered('license_plate')
+        if not vehicles_with_plate:
+            return
+        # Detect duplicates within the same batch
+        plate_counts = {}
+        for plate in vehicles_with_plate.mapped('license_plate'):
+            plate_counts[plate] = plate_counts.get(plate, 0) + 1
+        duplicate_plates_in_batch = {p for p, c in plate_counts.items() if c > 1}
+        if duplicate_plates_in_batch:
+            # Clear plates for duplicates within batch
+            vehicles_with_plate.filtered(
+                lambda v: v.license_plate in duplicate_plates_in_batch
+            ).write({'license_plate': False})
+
+        # Check duplicates against existing database records
+        remaining_with_plate = vehicles_with_plate.filtered('license_plate')
+        if not remaining_with_plate:
+            return
+        grouped = self.with_context(active_test=False)._read_group(
+            domain=[('license_plate', 'in', remaining_with_plate.mapped('license_plate'))],
+            groupby=['license_plate'],
+            aggregates=['id:recordset'],
+            having=[('__count', '>', 1)],
+        )
+
+        for plate, vehicles in grouped:
+            current = vehicles & self
+            other = vehicles - self
+            if len(vehicles_with_plate) > 1:
+                # clear plates for batch record duplicates agaist existing records
+                current.write({'license_plate': False})
+            elif other:
+                duplicate = other[0]
+                current._raise_redirect_to_duplicate_plate(duplicate)
+
+    def _raise_redirect_to_duplicate_plate(self, duplicate_vehicle):
+        message = self.env._(
+            "It's forbidden to have the same plate on two vehicles.\n"
+            "There is another vehicle in the database using that plate already.\n\n"
+            "Vehicle: %s",
+            duplicate_vehicle.name,
+        )
+        action = {
+            'type': 'ir.actions.act_window',
+            'name': self.env._('Vehicle'),
+            'res_model': 'fleet.vehicle',
+            'view_mode': 'form',
+            'views': [[self.env.ref('fleet.fleet_vehicle_view_form').id, 'form']],
+            'res_id': duplicate_vehicle.id,
+            'target': 'current',
+        }
+        raise RedirectWarning(message, action, self.env._("Check the other vehicle"))
 
     def _search_contract_renewal_due_soon(self, operator, value):
         if operator != 'in':
