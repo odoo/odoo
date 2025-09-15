@@ -202,15 +202,19 @@ class MaintenanceEquipment(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         equipments = super().create(vals_list)
-        for equipment in equipments:
-            if equipment.owner_user_id:
-                equipment.message_subscribe(partner_ids=[equipment.owner_user_id.partner_id.id])
+        equipments.subscribe_equipment_owner()
         return equipments
 
+    def subscribe_equipment_owner(self):
+        for equipment in self:
+            if equipment.owner_user_id:
+                equipment.message_subscribe(partner_ids=[equipment.owner_user_id.partner_id.id])
+
     def write(self, vals):
+        res = super(MaintenanceEquipment, self).write(vals)
         if vals.get('owner_user_id'):
-            self.message_subscribe(partner_ids=self.env['res.users'].browse(vals['owner_user_id']).partner_id.ids)
-        return super(MaintenanceEquipment, self).write(vals)
+            self.subscribe_equipment_owner()
+        return res
 
     @api.model
     def _read_group_category_ids(self, categories, domain, order):
