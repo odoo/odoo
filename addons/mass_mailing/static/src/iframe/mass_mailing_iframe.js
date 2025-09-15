@@ -199,6 +199,8 @@ export class MassMailingIframe extends Component {
         this.iframeRef.el.contentDocument.body.classList.add("o_in_iframe");
         if (this.props.withBuilder) {
             this.iframeRef.el.contentDocument.body.classList.add("o_mass_mailing_with_builder");
+        } else {
+            this.iframeRef.el.contentDocument.body.classList.add("bg-white");
         }
         this.iframeRef.el.contentDocument.head.appendChild(this.renderHeadContent());
         this.iframeRef.el.contentDocument.body.appendChild(this.renderBodyContent());

@@ -19,4 +19,4 @@ class MovePlugin extends Plugin {
     };
 }
 
-registry.category("builder-plugins").add(MovePlugin.id, MovePlugin);
+registry.category("mass_mailing-plugins").add(MovePlugin.id, MovePlugin);
