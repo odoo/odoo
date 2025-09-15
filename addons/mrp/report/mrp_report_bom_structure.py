@@ -42,7 +42,7 @@ class ReportMrpReport_Bom_Structure(models.AbstractModel):
         earliest_capacity = 0
         lead_time = bom_data['lead_time']
         res = {}
-        if bom_data.get('producible_qty', 0):
+        if bom_data.get('producible_qty', 0) and not self.env.context.get('skip_producible_qty'):
             # Some quantities are producible today, at the earliest time possible
             earliest_capacity = bom_data['producible_qty']
 
@@ -124,7 +124,14 @@ class ReportMrpReport_Bom_Structure(models.AbstractModel):
             warehouse = self.env['stock.warehouse'].browse(self.get_warehouses()[0]['id'])
 
         lines = self._get_bom_data(bom, warehouse, product=product, line_qty=bom_quantity, level=0)
-        production_capacities = self._compute_production_capacities(bom_quantity, lines)
+        try:
+            production_capacities = self._compute_production_capacities(bom_quantity, lines)
+        except UserError as e:
+            if not hasattr(e, '_planning_error'):
+                raise
+            # The planning failed, try again with the requested quantity
+            production_capacities = self.with_context(skip_producible_qty=True)._compute_production_capacities(bom_quantity, lines)
+
         lines.update(production_capacities)
         return {
             'lines': lines,
@@ -875,7 +882,9 @@ class ReportMrpReport_Bom_Structure(models.AbstractModel):
                 best_duration_expected = duration_expected
         # If none of the workcenter are available, raise
         if best_date_finished == datetime.max:
-            raise UserError(_('Impossible to plan. Please check the workcenter availabilities.'))
+            err = UserError(_('Impossible to plan. Please check the workcenter availabilities.'))
+            err._planning_error = True
+            raise err
         planning_per_operation[operation] = {
             'date_start': best_date_start,
             'date_finished': best_date_finished,
