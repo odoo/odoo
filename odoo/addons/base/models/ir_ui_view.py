@@ -2551,6 +2551,8 @@ class Model(models.AbstractModel):
         if view_id:
             # read the view with inherited views applied
             view = View.browse(view_id)
+            while view.mode != "primary":
+                view = view.inherit_id
             arch = view._get_combined_arch()
         else:
             # fallback on default views methods if no ir.ui.view could be found

@@ -3319,6 +3319,26 @@ Forbidden attribute used in arch (t-attf-data-tooltip-template)."""
 Forbidden use of `__comp__` in arch."""
         )
 
+    def test_get_view_with_inherited(self):
+        main = self.env["ir.ui.view"].create({
+            "name": "test",
+            "model": "res.partner",
+            "type": "tree",
+            "arch": """<tree><field name="display_name" /></tree>"""
+        })
+        inherit = self.env["ir.ui.view"].create({
+            "name": "test",
+            "mode": "extension",
+            "inherit_id": main.id,
+            "model": "res.partner",
+            "type": "tree",
+            "arch": """<xpath position="after" expr="//field[@name='display_name']">
+                <field name="function" />
+                </xpath>
+            """
+        })
+        result = self.env["res.partner"].get_view(inherit.id)
+        self.assertEqual(result["id"], main.id)
 
 @tagged('post_install', '-at_install')
 class TestDebugger(common.TransactionCase):
