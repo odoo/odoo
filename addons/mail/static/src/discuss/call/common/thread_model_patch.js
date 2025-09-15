@@ -85,7 +85,7 @@ const ThreadPatch = {
             },
         });
         this.focusStack = fields.Many("discuss.channel.rtc.session");
-        /** @type {import("@mail/discuss/call/common/call").CardData[]"} */
+        /** @type {import("@mail/discuss/call/common/call").CardData[]} */
         this.visibleCards = fields.Attr([], {
             compute() {
                 const raisingHandCards = [];
