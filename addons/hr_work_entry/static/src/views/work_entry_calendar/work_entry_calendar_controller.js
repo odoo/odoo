@@ -1,13 +1,10 @@
 import { WorkEntryCalendarMultiSelectionButtons } from "@hr_work_entry/views/work_entry_calendar/work_entry_multi_selection_buttons";
 import { useWorkEntry } from "@hr_work_entry/views/work_entry_hook";
-import { onWillRender } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
-import { user } from "@web/core/user";
 import { useService } from "@web/core/utils/hooks";
 import { CalendarController } from "@web/views/calendar/calendar_controller";
 import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
 
-const { DateTime } = luxon;
 
 export class WorkEntryCalendarController extends CalendarController {
     static components = {
@@ -24,32 +21,6 @@ export class WorkEntryCalendarController extends CalendarController {
         });
         this.onRegenerateWorkEntries = onRegenerateWorkEntries;
         this.dialogService = useService("dialog");
-
-        onWillRender(async () => {
-            const userFavoritesWorkEntriesIds = await this.orm.formattedReadGroup(
-                "hr.work.entry",
-                [
-                    ["create_uid", "=", user.userId],
-                    ["create_date", ">", DateTime.local().minus({ months: 3 }).toISODate()],
-                ],
-                ["work_entry_type_id", "create_date:day"],
-                [],
-                {
-                    order: "create_date:day desc",
-                    limit: 6,
-                }
-            );
-            this.userFavoritesWorkEntries = await this.orm.read(
-                "hr.work.entry.type",
-                userFavoritesWorkEntriesIds.map((r) => r.work_entry_type_id[0]),
-                ["display_name", "display_code", "color"]
-            );
-            this.userFavoritesWorkEntries = this.userFavoritesWorkEntries.sort((a, b) =>
-                a.display_code
-                    ? a.display_code.localeCompare(b.display_code)
-                    : a.display_name.localeCompare(b.display_name)
-            );
-        });
     }
 
     async splitRecord(record) {
@@ -117,7 +88,7 @@ export class WorkEntryCalendarController extends CalendarController {
      */
     prepareMultiSelectionButtonsReactive() {
         const result = super.prepareMultiSelectionButtonsReactive();
-        result.userFavoritesWorkEntries = this.userFavoritesWorkEntries || [];
+        result.userFavoritesWorkEntries = this.model.userFavoritesWorkEntries || [];
         result.onQuickReplace = (values) => this.onMultiReplace(values, this.selectedCells);
         result.onQuickReset = () => this.onResetWorkEntries(this.selectedCells);
         return result;
@@ -128,7 +99,7 @@ export class WorkEntryCalendarController extends CalendarController {
      */
     updateMultiSelection() {
         super.updateMultiSelection(...arguments);
-        this.multiSelectionButtonsReactive.userFavoritesWorkEntries = this.userFavoritesWorkEntries || [];
+        this.multiSelectionButtonsReactive.userFavoritesWorkEntries = this.model.userFavoritesWorkEntries || [];
     }
 
     getDatesWithoutValidatedWorkEntry(selectedCells, records) {
