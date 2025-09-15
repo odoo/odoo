@@ -96,8 +96,8 @@ registerWebsitePreviewTour('website_page_options', {
     },
     ...clickOnSave(),
     {
-        content: "Check that the header is hidden",
-        trigger: ":iframe #wrapwrap:has(header#top.d-none.o_snippet_invisible)",
+        content: "Check that the header is visible",
+        trigger: ":iframe #wrapwrap header#top:not(.d-none)",
     },
     {
         content: "Check that the footer is hidden",
