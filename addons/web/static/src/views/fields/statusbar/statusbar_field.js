@@ -1,5 +1,4 @@
 import { Component, onWillRender, useEffect, useExternalListener, useRef } from "@odoo/owl";
-import { browser } from "@web/core/browser/browser";
 import { useCommand } from "@web/core/commands/command_hook";
 import { Domain } from "@web/core/domain";
 import { Dropdown } from "@web/core/dropdown/dropdown";
@@ -72,7 +71,6 @@ export class StatusBarField extends Component {
             status = "adjusting";
             this.adjustVisibleItems();
             this.render();
-            browser.requestAnimationFrame(() => (status = "idle"));
         };
 
         useEffect(
@@ -84,6 +82,8 @@ export class StatusBarField extends Component {
             if (status !== "adjusting") {
                 Object.assign(this.items, this.getSortedItems());
                 status = "shouldAdjust";
+            } else {
+                status = "idle";
             }
         });
 
@@ -253,12 +253,21 @@ export class StatusBarField extends Component {
         const currentValue = record.data[name];
         if (this.field.type === "many2one") {
             // Many2one
-            return this.specialData.data.map((option) => ({
-                value: option.id,
-                label: option.display_name,
-                isFolded: option[foldField],
-                isSelected: Boolean(currentValue && option.id === currentValue.id),
-            }));
+            return (
+                this.specialData.data?.map((option) => ({
+                    value: option.id,
+                    label: option.display_name,
+                    isFolded: option[foldField],
+                    isSelected: Boolean(currentValue && option.id === currentValue.id),
+                })) || [
+                    {
+                        value: currentValue.id,
+                        label: currentValue.display_name,
+                        isFolded: false,
+                        isSelected: true,
+                    },
+                ]
+            );
         } else {
             // Selection
             let { selection } = this.field;

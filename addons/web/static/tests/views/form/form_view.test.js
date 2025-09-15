@@ -12322,12 +12322,15 @@ test(`field with special data`, async () => {
 test(`field with special data (with persistent Cache)`, async () => {
     class MyWidget extends Component {
         static props = ["*"];
-        static template = xml`<div class="my_widget">MyWidget <t t-esc="specialData.data.test"/></div>`;
+        static template = xml`<div class="my_widget">MyWidget <t t-esc="test"/></div>`;
         setup() {
             this.specialData = useSpecialData((orm, props) => {
                 const { record } = props;
                 return orm.call("my.model", "get_special_data", [record.data.int_field]);
             });
+        }
+        get test() {
+            return this.specialData.data?.test || "";
         }
     }
     widgetsRegistry.add("my_widget", { component: MyWidget });

@@ -36,7 +36,16 @@ export class Many2ManyCheckboxesField extends Component {
     }
 
     get items() {
-        return this.specialData.data;
+        if (this.specialData.data) {
+            return this.specialData.data;
+        }
+        if (this.props.record.data[this.props.name].currentIds.length) {
+            return this.props.record.data[this.props.name].records.map((r) => [
+                r.resId,
+                r.data.display_name,
+            ]);
+        }
+        return [];
     }
 
     isSelected(item) {
@@ -78,6 +87,7 @@ export const many2ManyCheckboxesField = {
     component: Many2ManyCheckboxesField,
     displayName: _t("Checkboxes"),
     supportedTypes: ["many2many"],
+    relatedFields: () => [{ name: "display_name", type: "char" }],
     isEmpty: () => false,
     extractProps(fieldInfo, dynamicInfo) {
         return {

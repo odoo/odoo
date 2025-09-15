@@ -177,14 +177,18 @@ export function useSpecialData(loadFn) {
     };
 
     /** @type {{ data: Record<string, T> }} */
-    const result = useState({ data: {} });
+    const result = useState({ data: undefined });
     useRecordObserver(async (record, props) => {
-        result.data = await loadFn(ormWithCache, { ...props, record });
+        loadFn(ormWithCache, { ...props, record }).then((res) => {
+            result.data = res;
+        });
     });
     onWillUpdateProps(async (props) => {
         // useRecordObserver callback is not called when the record doesn't change
         if (props.record.id === component.props.record.id) {
-            result.data = await loadFn(ormWithCache, props);
+            loadFn(ormWithCache, props).then((res) => {
+                result.data = res;
+            });
         }
     });
     return result;
@@ -465,7 +469,9 @@ export class Many2XAutocomplete extends Component {
     }
 
     addStartTypingSuggestion({ request, records }) {
-        return records !== null ? request.length === 0 && !this.activeActions.createEdit : !this.props.value;
+        return records !== null
+            ? request.length === 0 && !this.activeActions.createEdit
+            : !this.props.value;
     }
 
     buildCreateSuggestion(request) {

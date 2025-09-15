@@ -1,5 +1,5 @@
 import { expect, test } from "@odoo/hoot";
-import { queryAllTexts } from "@odoo/hoot-dom";
+import { animationFrame, Deferred, queryAllTexts } from "@odoo/hoot-dom";
 import { runAllTimers } from "@odoo/hoot-mock";
 import {
     clickSave,
@@ -75,6 +75,43 @@ test("Many2ManyCheckBoxesField", async () => {
     expect.verifySteps(["web_save", "web_save"]);
 });
 
+test("[Lazy] Many2ManyCheckBoxesField", async () => {
+    const def = new Deferred();
+    onRpc("name_search", async () => {
+        await def;
+    });
+    Partner._records[0].timmy = [12];
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        resId: 1,
+        arch: `
+            <form>
+                <group>
+                    <field name="timmy" widget="many2many_checkboxes" />
+                </group>
+            </form>`,
+    });
+
+    expect("div.o_field_widget div.form-check").toHaveCount(1);
+    expect(queryAllTexts("div.o_field_widget div.form-check")).toEqual(["gold"]);
+
+    expect("div.o_field_widget div.form-check input:eq(0)").toBeChecked();
+
+    expect("div.o_field_widget div.form-check input:disabled").toHaveCount(0);
+
+    def.resolve();
+    await animationFrame();
+
+    expect("div.o_field_widget div.form-check").toHaveCount(2);
+    expect(queryAllTexts("div.o_field_widget div.form-check")).toEqual(["gold", "silver"]);
+
+    expect("div.o_field_widget div.form-check input:eq(0)").toBeChecked();
+    expect("div.o_field_widget div.form-check input:eq(1)").not.toBeChecked();
+
+    expect("div.o_field_widget div.form-check input:disabled").toHaveCount(0);
+});
+
 test("Many2ManyCheckBoxesField (readonly)", async () => {
     Partner._records[0].timmy = [12];
     await mountView({
@@ -134,7 +171,13 @@ test("Many2ManyCheckBoxesField does not read added record", async () => {
     expect(queryAllTexts(".o_field_widget .form-check-label")).toEqual(["gold", "silver"]);
     expect("div.o_field_widget div.form-check input:checked").toHaveCount(1);
 
-    expect.verifySteps(["get_views", "web_read", "name_search", "web_save"]);
+    expect.verifySteps([
+        "get_views",
+        "web_read",
+        "name_search",
+        "web_read", // Read the "display_name" (the related field)
+        "web_save",
+    ]);
 });
 
 test("Many2ManyCheckBoxesField: start non empty, then remove twice", async () => {
@@ -414,7 +457,7 @@ test("Many2ManyCheckBoxesField batches successive changes", async () => {
     // but no onchanges has been fired yet
     expect.verifySteps(["get_views", "web_read", "name_search"]);
     await runAllTimers();
-    expect.verifySteps(["onchange"]);
+    expect.verifySteps(["web_read", "onchange"]);
 });
 
 test("Many2ManyCheckBoxesField sends batched changes on save", async () => {
@@ -452,7 +495,7 @@ test("Many2ManyCheckBoxesField sends batched changes on save", async () => {
     await runAllTimers();
     // save
     await clickSave();
-    expect.verifySteps(["onchange", "web_save"]);
+    expect.verifySteps(["web_read", "onchange", "web_save"]);
 });
 
 test("Many2ManyCheckBoxesField in a notebook tab", async () => {
@@ -492,5 +535,5 @@ test("Many2ManyCheckBoxesField in a notebook tab", async () => {
     expect("div.o_field_widget[name=int_field]").toHaveCount(1);
     // save
     await clickSave();
-    expect.verifySteps(["get_views", "web_read", "name_search", "web_save"]);
+    expect.verifySteps(["get_views", "web_read", "name_search", "web_read", "web_save"]);
 });

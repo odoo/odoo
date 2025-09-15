@@ -1,6 +1,7 @@
 import { expect, test } from "@odoo/hoot";
 import {
     click,
+    Deferred,
     edit,
     press,
     queryAll,
@@ -122,6 +123,46 @@ test("static statusbar widget on many2one field", async () => {
     });
     // search_read should only fetch field display_name
     expect.verifySteps(["display_name"]);
+    expect(".o_statusbar_status button:not(.dropdown-toggle)").toHaveCount(2);
+    expect(".o_statusbar_status button:disabled").toHaveCount(5);
+    expect('.o_statusbar_status button[data-value="4"]').toHaveClass("o_arrow_button_current");
+});
+
+test.tags("desktop");
+test("[lazy] static statusbar widget on many2one field", async () => {
+    const def = new Deferred();
+    Partner._fields.trululu = fields.Many2one({
+        relation: "partner",
+        domain: "[('bar', '=', True)]",
+    });
+    Partner._records[1].bar = false;
+
+    onRpc("search_read", async ({ kwargs }) => {
+        await def;
+        expect.step(kwargs.fields.toString());
+    });
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        resId: 1,
+        arch: /* xml */ `
+            <form>
+                <header>
+                    <field name="trululu" widget="statusbar" />
+                </header>
+            </form>
+        `,
+    });
+    expect(queryAllTexts(".o_form_statusbar")).toEqual(["aaa"]);
+    // search_read should only fetch field display_name
+    expect(".o_statusbar_status button:not(.dropdown-toggle)").toHaveCount(1);
+    expect(".o_statusbar_status button:disabled").toHaveCount(4);
+    expect('.o_statusbar_status button[data-value="4"]').toHaveClass("o_arrow_button_current");
+
+    def.resolve();
+    await animationFrame();
+    expect.verifySteps(["display_name"]);
+    expect(queryAllTexts(".o_form_statusbar")).toEqual(["aaa\nfirst record"]);
     expect(".o_statusbar_status button:not(.dropdown-toggle)").toHaveCount(2);
     expect(".o_statusbar_status button:disabled").toHaveCount(5);
     expect('.o_statusbar_status button[data-value="4"]').toHaveClass("o_arrow_button_current");

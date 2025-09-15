@@ -1,5 +1,5 @@
 import { expect, test } from "@odoo/hoot";
-import { check, click, queryRect } from "@odoo/hoot-dom";
+import { check, click, Deferred, queryRect } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
 import {
     clickSave,
@@ -67,6 +67,33 @@ test("radio field on a many2one in a new record", async () => {
     expect("input.o_radio_input").toHaveCount(2);
     expect(".o_field_radio:first").toHaveText("xphone\nxpad");
     expect("input.o_radio_input:checked").toHaveCount(0);
+});
+
+test("[lazy] radio field on a many2one", async () => {
+    Partner._records[0].product_id = 37;
+    const def = new Deferred();
+    onRpc("web_search_read", async () => {
+        await def;
+    });
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        resId: 1,
+        arch: /* xml */ `<form><field name="product_id" widget="radio"/></form>`,
+    });
+
+    expect("div.o_radio_item").toHaveCount(1);
+    expect("input.o_radio_input").toHaveCount(1);
+    expect(".o_field_radio:first").toHaveText("xphone");
+    expect("input.o_radio_input:checked").toHaveCount(1);
+
+    def.resolve();
+    await animationFrame();
+
+    expect("div.o_radio_item").toHaveCount(2);
+    expect("input.o_radio_input").toHaveCount(2);
+    expect(".o_field_radio:first").toHaveText("xphone\nxpad");
+    expect("input.o_radio_input:checked").toHaveCount(1);
 });
 
 test("required radio field on a many2one", async () => {

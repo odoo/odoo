@@ -1,5 +1,5 @@
 import { expect, test } from "@odoo/hoot";
-import { click, queryAllTexts, queryFirst, queryOne } from "@odoo/hoot-dom";
+import { click, Deferred, queryAllTexts, queryFirst, queryOne } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
 import {
     clickSave,
@@ -110,6 +110,35 @@ test("SelectionField, edition and on many2one field", async () => {
     await editSelectMenu(".o_field_widget[name='product_id'] input", { value: "xpad" });
     expect(".o_field_widget[name='color'] input").toHaveValue("Red");
     expect.verifySteps(["get_views", "web_read", "name_search", "name_search", "onchange"]);
+});
+
+test.tags("desktop");
+test("[lazy] SelectionField on many2one field", async () => {
+    const def = new Deferred();
+    onRpc("name_search", async () => {
+        await def;
+    });
+    Partner._onChanges.product_id = () => {};
+    Partner._records[0].product_id = 37;
+    Partner._records[0].trululu = false;
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        resId: 1,
+        arch: /* xml */ `
+            <form>
+                <field name="product_id" widget="selection" />
+            </form>`,
+    });
+    expect(".o_select_menu").toHaveCount(1);
+    await contains(".o_field_widget[name='product_id'] input").click();
+    expect(queryAllTexts(".o_select_menu_item")).toEqual(["xphone"]);
+    expect(".o_field_widget[name='product_id'] input").toHaveValue("xphone");
+
+    def.resolve();
+    await animationFrame();
+    expect(queryAllTexts(".o_select_menu_item")).toEqual(["xphone", "xpad"]);
+    expect(".o_field_widget[name='product_id'] input").toHaveValue("xphone");
 });
 
 test("unset selection field with 0 as key", async () => {

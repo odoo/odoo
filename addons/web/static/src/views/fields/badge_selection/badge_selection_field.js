@@ -32,7 +32,13 @@ export class BadgeSelectionField extends Component {
     get options() {
         switch (this.type) {
             case "many2one":
-                return this.specialData.data;
+                if (this.specialData.data) {
+                    return this.specialData.data;
+                }
+                if (this.props.record.data[this.props.name]) {
+                    return [Object.values(this.props.record.data[this.props.name])];
+                }
+                return [];
             case "selection":
                 return this.props.record.fields[this.props.name].selection;
             default:
