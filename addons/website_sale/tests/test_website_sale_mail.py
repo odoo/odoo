@@ -50,8 +50,11 @@ class TestWebsiteSaleMail(HttpCase):
                                                      ('body_html', 'ilike', 'https://my-test-domain.com')],
                                                     order='create_date DESC', limit=None)
             self.assertTrue(new_mail)
-            self.assertIn('Your', new_mail.body_html)
-            self.assertIn('order', new_mail.body_html)
+            # Check the sale order confirmation mail for the customer
+            self.assertIn('Your', new_mail[0].body_html)
+            self.assertIn('order', new_mail[0].body_html)
+            # Check the sale order assignment mail for the salesperson
+            self.assertIn('assigned', new_mail[1].body_html)
 
 
 @tagged('post_install', '-at_install', 'mail_thread')

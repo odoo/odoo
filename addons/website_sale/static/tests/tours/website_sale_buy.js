@@ -16,3 +16,16 @@ registry.category("web_tour.tours").add('shop_buy_product', {
         ...tourUtils.payWithTransfer({ redirect: true }),
     ]
 });
+
+registry.category("web_tour.tours").add('add_product_to_cart', {
+    url: '/shop',
+    steps: () => [
+        ...tourUtils.searchProduct("Storage Box", { select: true }),
+        {
+            content: "click on add to cart",
+            trigger: '#product_detail form #add_to_cart',
+            run: "click",
+        },
+        tourUtils.goToCart(),
+    ]
+});

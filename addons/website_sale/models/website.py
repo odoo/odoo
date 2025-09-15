@@ -340,6 +340,7 @@ class Website(models.Model):
 
             'team_id': self.salesteam_id.id,
             'website_id': self.id,
+            'user_id': self.salesperson_id.id,
         }
 
     def _get_and_cache_current_pricelist(self):

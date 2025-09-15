@@ -178,3 +178,30 @@ class TestSaleProcess(HttpCaseWithUserDemo, WebsiteSaleCommon, HttpCaseWithWebsi
             'is_published': True,
         })
         self.start_tour("/shop", 'update_billing_shipping_address', login="website_user")
+
+    def test_salesperson_set_on_sale_order(self):
+        """ Test that the salesperson of a SO is set according to the
+        salesperson of the website when the SO is created from the website.
+        """
+        # Create a salesperson
+        salesperson = self.env['res.users'].create({
+            'name': 'Mash',
+            'login': 'test_salesperson',
+            'password': 'test_salesperson',
+        })
+
+        # Apply config: set default salesman in settings
+        config = self.env['res.config.settings'].create({
+            'salesperson_id': salesperson.id,
+        })
+        config.execute()
+
+        self.start_tour("/", 'add_product_to_cart', login="admin")
+
+        # Fetch the latest quotation (SO created by tour)
+        order = self.env['sale.order'].search([], order='create_date DESC', limit=1)
+
+        self.assertEqual(
+            order.user_id, salesperson,
+            "Website-generated sale order should be assigned to the configured salesman_id",
+        )
