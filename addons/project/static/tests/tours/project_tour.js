@@ -15,6 +15,10 @@ registry.category("web_tour.tours").add('project_test_tour', {
         trigger: '.o-kanban-button-new',
         run: "click",
     }, {
+        isActive: ["body:has(.o-project-form-dropdown-menu)"],
+        trigger: ".dropdown-item:contains('New Project')",
+        run: "click",
+    }, {
         trigger: '.o_project_name input',
         run: 'edit New Project',
         id: 'project_creation',
