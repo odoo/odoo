@@ -3,16 +3,7 @@ import { CallActionList } from "@mail/discuss/call/common/call_action_list";
 import { CallParticipantCard } from "@mail/discuss/call/common/call_participant_card";
 import { PttAdBanner } from "@mail/discuss/call/common/ptt_ad_banner";
 
-import {
-    Component,
-    onMounted,
-    onPatched,
-    onWillUnmount,
-    toRaw,
-    useRef,
-    useState,
-    useSubEnv,
-} from "@odoo/owl";
+import { Component, onMounted, onPatched, onWillUnmount, toRaw, useRef, useState } from "@odoo/owl";
 
 import { browser } from "@web/core/browser/browser";
 import { isMobileOS } from "@web/core/browser/feature_detection";
@@ -22,6 +13,7 @@ import { isEventHandled, markEventHandled } from "@web/core/utils/misc";
 import { useCallActions } from "@mail/discuss/call/common/call_actions";
 import { ActionList } from "@mail/core/common/action_list";
 import { ACTION_TAGS } from "@mail/core/common/action";
+import { inDiscussCallViewProps, useInDiscussCallView } from "@mail/utils/common/hooks";
 
 /**
  * @typedef CardData
@@ -45,7 +37,7 @@ export class Call extends Component {
         CallParticipantCard,
         PttAdBanner,
     };
-    static props = ["thread?", "compact?", "isPip?", "hasOverlay?"];
+    static props = ["thread?", "compact?", "hasOverlay?", ...inDiscussCallViewProps];
     static defaultProps = { hasOverlay: true };
     static template = "discuss.Call";
 
@@ -82,14 +74,7 @@ export class Call extends Component {
         });
         useHotkey("shift+d", () => this.rtc.toggleDeafen());
         useHotkey("shift+m", () => this.rtc.toggleMicrophone());
-        const self = this;
-        useSubEnv({
-            inDiscussCallView: {
-                get isPip() {
-                    return self.props.isPip;
-                },
-            },
-        });
+        useInDiscussCallView();
     }
 
     get layoutActions() {
@@ -110,7 +95,7 @@ export class Call extends Component {
     }
 
     get minimized() {
-        if (this.rtc.state.isFullscreen || this.channel.activeRtcSession) {
+        if (this.rtc.state.isFullscreen || !this.channel || this.channel.activeRtcSession) {
             return false;
         }
         if (!this.isActiveCall || this.channel.videoCount === 0 || this.props.compact) {
