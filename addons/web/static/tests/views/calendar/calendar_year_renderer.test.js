@@ -1,7 +1,12 @@
 import { expect, test } from "@odoo/hoot";
-import { queryAllTexts } from "@odoo/hoot-dom";
-import { mockTimeZone } from "@odoo/hoot-mock";
-import { mockService, mountWithCleanup, preloadBundle } from "@web/../tests/web_test_helpers";
+import { queryAllTexts, resize } from "@odoo/hoot-dom";
+import { mockTimeZone, runAllTimers } from "@odoo/hoot-mock";
+import {
+    mockService,
+    mountWithCleanup,
+    preloadBundle,
+    patchWithCleanup,
+} from "@web/../tests/web_test_helpers";
 import { FAKE_MODEL, clickDate, selectDateRange } from "./calendar_test_helpers";
 
 import { CalendarYearRenderer } from "@web/views/calendar/calendar_year/calendar_year_renderer";
@@ -137,4 +142,17 @@ test(`display correct column header for days, independent of the timezone`, asyn
 test("remove row when no day of current month", async () => {
     await start();
     expect(".fc-day-other, .fc-day-disabled").toHaveCount(76);
+});
+
+test("resize callback is being called", async () => {
+    patchWithCleanup(CalendarYearRenderer.prototype, {
+        onWindowResize() {
+            expect.step("onWindowResize");
+        },
+    });
+    await start();
+    expect.verifySteps([]);
+    await resize({ height: 500 });
+    await runAllTimers();
+    expect.verifySteps(new Array(12).fill("onWindowResize")); // one for each FullCalendar instance
 });
