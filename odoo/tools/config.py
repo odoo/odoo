@@ -720,14 +720,15 @@ class configmanager:
                     "Empty %s, tests won't run", self.options_index['db_name'])
 
     def _warn_deprecated_options(self):
-        for map_ in self.options.maps:
-            if 'http_interface' in map_:
-                if map_ is self._file_options and map_['http_interface'] == '':  # noqa: PLC1901
-                    del map_['http_interface']
-                elif map_ is self._default_options:
-                    self._log(logging.WARNING, "missing %s, using 0.0.0.0 by default, will change to 127.0.0.1 in 20.0", self.options_index['http_interface'])
-                else:
-                    break
+        if self['http_enable'] and not self.http_socket_activation:
+            for map_ in self.options.maps:
+                if 'http_interface' in map_:
+                    if map_ is self._file_options and map_['http_interface'] == '':  # noqa: PLC1901
+                        del map_['http_interface']
+                    elif map_ is self._default_options:
+                        self._log(logging.WARNING, "missing %s, using 0.0.0.0 by default, will change to 127.0.0.1 in 20.0", self.options_index['http_interface'])
+                    else:
+                        break
 
         for old_option_name, new_option_name in self.aliases.items():
             for source_name, deprecated_value in self._get_sources(old_option_name).items():
@@ -1026,6 +1027,15 @@ class configmanager:
             if updated_hash:
                 self.options['admin_passwd'] = updated_hash
             return True
+        return False
+
+    @property
+    def http_socket_activation(self):
+        return (
+            self['http_enable']
+            and os.getenv('LISTEN_FDS') == '1'
+            and os.getenv('LISTEN_PID') == str(os.getpid())
+        )
 
     @classmethod
     def _normalize(cls, path):
