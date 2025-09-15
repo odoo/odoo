@@ -135,7 +135,7 @@ class TestExpenses(TestExpenseCommon):
             # own_account expense 2 move
             {'balance':   123.08, 'account_id': product_b_account_id,       'name': 'expense_employee: Employee PB 160 + 2*15%', 'date': date(2021, 10, 31), 'invoice_date': date(2021, 10, 31)},
             {'balance':    18.46, 'account_id': tax_account_id,             'name': '15%',                                       'date': date(2021, 10, 31), 'invoice_date': date(2021, 10, 31)},
-            {'balance':    18.46, 'account_id': tax_account_id,             'name': '15% (Copy)',                                'date': date(2021, 10, 31), 'invoice_date': date(2021, 10, 31)},
+            {'balance':    18.46, 'account_id': tax_account_id,             'name': '15% (copy)',                                'date': date(2021, 10, 31), 'invoice_date': date(2021, 10, 31)},
             {'balance':  -160.00, 'account_id': default_account_payable_id, 'name': False,                                       'date': date(2021, 10, 31), 'invoice_date': date(2021, 10, 31)},
 
             # company_account expense 1 move
@@ -146,7 +146,7 @@ class TestExpenses(TestExpenseCommon):
             # company_account expense 2 move
             {'balance':  123.08, 'account_id': product_b_account_id,        'name': 'expense_employee: Company PB 160 + 2*15%',  'date': date(2021, 10, 11), 'invoice_date': False},
             {'balance':   18.46, 'account_id': tax_account_id,              'name': '15%',                                       'date': date(2021, 10, 11), 'invoice_date': False},
-            {'balance':   18.46, 'account_id': tax_account_id,              'name': '15% (Copy)',                                'date': date(2021, 10, 11), 'invoice_date': False},
+            {'balance':   18.46, 'account_id': tax_account_id,              'name': '15% (copy)',                                'date': date(2021, 10, 11), 'invoice_date': False},
             {'balance': -160.00, 'account_id': company_payment_account_id,  'name': 'expense_employee: Company PB 160 + 2*15%',  'date': date(2021, 10, 11), 'invoice_date': False},
 
         ])
