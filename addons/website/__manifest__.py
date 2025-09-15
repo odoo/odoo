@@ -224,8 +224,8 @@
     'post_init_hook': 'post_init_hook',
     'uninstall_hook': 'uninstall_hook',
     'assets': {
-        "mail.assets_public": [
-            "website/static/src/**/common/**/*",
+        "mail.assets_core_common": [
+            "website/static/src/mail/core/common/**/*",
         ],
         'web.assets_frontend': [
             'html_builder/static/src/utils/scrolling.js',
@@ -327,8 +327,6 @@
             'website/static/src/components/autocomplete_with_pages/*',
             'website/static/src/xml/website.xml',
             'website/static/src/scss/website_controller_page_kanban.scss',
-            'website/static/src/**/common/**/*',
-
             'website/static/src/xml/website_form_editor.xml',
             # TODO Remove the module's form js - this is for testing.
             'website/static/src/js/send_mail_form.js',

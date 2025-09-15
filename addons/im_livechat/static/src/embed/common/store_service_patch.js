@@ -1,4 +1,4 @@
-import { expirableStorage } from "@im_livechat/core/common/expirable_storage";
+import { expirableStorage } from "@im_livechat/discuss/core/common/expirable_storage";
 import { Store } from "@mail/core/common/store_service";
 import { fields } from "@mail/model/export";
 

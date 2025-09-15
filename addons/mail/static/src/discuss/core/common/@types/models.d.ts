@@ -3,6 +3,9 @@ declare module "models" {
 
     export interface ChannelMember extends ChannelMemberClass {}
 
+    export interface MailGuest {
+        channelMembers: ChannelMember[];
+    }
     export interface Message {
         channelMemberHaveSeen: Readonly<ChannelMember[]>;
         hasEveryoneSeen: boolean|undefined;
@@ -13,12 +16,12 @@ declare module "models" {
         mentionedChannelPromises: Promise<Thread>[];
         threadAsFirstUnread: Thread;
     }
-    export interface Persona {
+    export interface ResPartner {
         channelMembers: ChannelMember[];
     }
     export interface Store {
-        channelIdsFetchingDeferred: Map<number, Deferred>;
         channel_types_with_seen_infos: string[];
+        channelIdsFetchingDeferred: Map<number, Deferred>;
         createGroupChat: (param0: { default_display_mode: string, partners_to: number[], name: string }) => Promise<Thread>;
         "discuss.channel.member": StaticMailRecord<ChannelMember, typeof ChannelMemberClass>;
         fetchChannel: (channelId: number) => Promise<void>;
@@ -32,8 +35,10 @@ declare module "models" {
         _computeOfflineMembers: () => ChannelMember[];
         areAllMembersLoaded: Readonly<boolean>;
         channel_member_ids: ChannelMember[];
+        channel_name_member_ids: ChannelMember[];
         computeCorrespondent: () => ChannelMember;
         correspondent: ChannelMember;
+        correspondentCountry: Country;
         correspondents: Readonly<ChannelMember[]>;
         default_display_mode: "video_full_screen"|undefined;
         fetchChannelInfoDeferred: Deferred<Thread|undefined>;
@@ -41,6 +46,7 @@ declare module "models" {
         fetchChannelMembers: () => Promise<void>;
         fetchMoreAttachments: (limit: number) => Promise<void>;
         firstUnreadMessage: Message;
+        group_ids: ResGroups[];
         hasMemberList: Readonly<boolean>;
         hasOtherMembersTyping: boolean;
         hasSeenFeature: boolean;
@@ -58,9 +64,11 @@ declare module "models" {
         name: string;
         offlineMembers: ChannelMember[];
         onlineMembers: ChannelMember[];
+        openChannel: () => boolean;
         otherTypingMembers: ChannelMember[];
         scrollUnread: boolean;
         self_member_id: ChannelMember;
+        showCorrespondentCountry: Readonly<boolean>;
         showUnreadBanner: Readonly<boolean>;
         toggleBusSubscription: boolean;
         typingMembers: ChannelMember[];

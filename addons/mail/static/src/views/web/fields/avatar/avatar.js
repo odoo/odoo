@@ -1,5 +1,5 @@
 import { usePopover } from "@web/core/popover/popover_hook";
-import { AvatarCardPopover } from "@mail/discuss/web/avatar_card/avatar_card_popover";
+import { AvatarCardPopover } from "@mail/core/web/avatar_card/avatar_card_popover";
 
 import { Component } from "@odoo/owl";
 
