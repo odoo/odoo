@@ -10,6 +10,22 @@ table.table {
         text-align: left;
         vertical-align: middle;
     }
+
+    .o_line_section, .o_line_subsection {
+        border-bottom: $border-width solid $o-gray-400;
+    }
+
+    .o_line_section {
+        td, td.o_price_total {
+            background-color: $gray-200;
+        }
+    }
+
+    .o_line_subsection {
+        td, td.o_price_total {
+            background-color: $gray-100;
+        }
+    }
 }
 
 div#total {
@@ -32,6 +48,10 @@ div#total {
 
         th:last-child, td:last-child {
             padding-right: 0;
+        }
+
+        .o_price_subtotal_section {
+            padding-right: map-get($spacers, 1);
         }
     }
 
@@ -74,8 +94,20 @@ div#total {
         }
 
         tbody tr {
-            &:first-child, &.o_line_section {
-                border-top: $border-width solid $gray-400;
+            &:first-child {
+                border-top: $border-width solid $gray-600;
+            }
+
+            &.o_line_section {
+                border-top: $border-width solid $gray-800;
+                & td {
+                    background-color: rgba($gray-800, 1) !important;
+                    color: $white;
+                }
+            }
+
+            &.o_line_subsection td {
+                background-color: $gray-300 !important;
             }
 
             &:last-child {
@@ -146,11 +178,8 @@ div#total {
                 border-bottom: $border-width solid $gray-700;
             }
 
-            &.o_line_section td {
-                background-color: rgba($gray-200, .5);
-            }
-
-            td.o_price_total, .o_taxes td {
+            tr:not(.o_line_section):not(.o_line_subsection) td.o_price_total,
+            .o_taxes td {
                 background-color: rgba($gray-200, .5);
             }
         }
