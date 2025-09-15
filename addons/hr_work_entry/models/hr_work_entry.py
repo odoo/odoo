@@ -26,7 +26,7 @@ class HrWorkEntry(models.Model):
     work_entry_source = fields.Selection(related='version_id.work_entry_source')
     date = fields.Date(required=True)
     duration = fields.Float(string="Duration", default=8)
-    work_entry_type_id = fields.Many2one('hr.work.entry.type', index=True, default=lambda self: self.env['hr.work.entry.type'].search([], limit=1), domain="['|', ('country_id', '=', False), ('country_id', '=', country_id)]")
+    work_entry_type_id = fields.Many2one('hr.work.entry.type', index=True, required=True, default=lambda self: self.env['hr.work.entry.type'].search([], limit=1), domain="['|', ('country_id', '=', False), ('country_id', '=', country_id)]")
     display_code = fields.Char(related='work_entry_type_id.display_code')
     code = fields.Char(related='work_entry_type_id.code')
     external_code = fields.Char(related='work_entry_type_id.external_code')

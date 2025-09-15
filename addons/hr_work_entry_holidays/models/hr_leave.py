@@ -9,7 +9,15 @@ from odoo import api, fields, models
 class HrLeaveType(models.Model):
     _inherit = 'hr.leave.type'
 
-    work_entry_type_id = fields.Many2one('hr.work.entry.type', string='Work Entry Type', index='btree_not_null')
+    def _get_defult_leave_work_entry_type(self):
+        default_leave_work_entry_type = self.env['hr.work.entry.type'].search([('is_leave', '=', True)], limit=1)
+        if default_leave_work_entry_type:
+            return default_leave_work_entry_type
+        else:
+            return self.env['hr.work.entry.type'].search([], limit=1)
+
+    work_entry_type_id = fields.Many2one('hr.work.entry.type', string='Work Entry Type',
+        index='btree_not_null', required=True, default=_get_defult_leave_work_entry_type)
 
 
 class HrLeave(models.Model):

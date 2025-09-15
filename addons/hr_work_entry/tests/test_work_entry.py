@@ -44,20 +44,6 @@ class TestWorkEntry(TestWorkEntryBase):
             ('date', '<=', self.end)])
         self.assertEqual(attendance_nb / 2, work_entry_nb, "One work_entry should be generated for each pair of calendar attendance per day")
 
-    def test_validate_undefined_work_entry(self):
-        work_entry1 = self.env['hr.work.entry'].create({
-            'name': '1',
-            'employee_id': self.richard_emp.id,
-            'version_id': self.richard_emp.version_id.id,
-            'date': self.start.date(),
-            'duration': 4,
-        })
-        work_entry1.work_entry_type_id = False
-        self.assertFalse(work_entry1.action_validate(), "It should not validate work_entries without a type")
-        self.assertEqual(work_entry1.state, 'conflict', "It should change to conflict state")
-        work_entry1.work_entry_type_id = self.work_entry_type
-        self.assertTrue(work_entry1.action_validate(), "It should validate work_entries")
-
     def test_outside_calendar(self):
         """ Test leave work entries outside schedule are conflicting """
         work_entry_1, work_entry_2 = self.create_work_entries([
