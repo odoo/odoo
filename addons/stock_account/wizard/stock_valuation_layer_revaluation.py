@@ -112,7 +112,7 @@ class StockValuationLayerRevaluation(models.TransientModel):
 
         # Update the stardard price in case of AVCO/FIFO
         if product_id.categ_id.property_cost_method in ['average', 'fifo']:
-            product_id.with_context(disable_auto_svl=True).standard_price += self.added_value / self.current_quantity_svl
+            product_id._update_valuation_layer_vacuum_values()
 
         # If the Inventory Valuation of the product category is automated, create related account move.
         if self.property_valuation != 'real_time':

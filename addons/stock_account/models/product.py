@@ -517,12 +517,24 @@ class ProductProduct(models.Model):
             product = product.with_company(company.id)
             if not svls_to_vacuum_by_product[product.id]:
                 continue
-            if product.cost_method in ['average', 'fifo'] and not float_is_zero(product.quantity_svl,
-                                                                      precision_rounding=product.uom_id.rounding):
-                product.sudo().with_context(disable_auto_svl=True).write({'standard_price': product.value_svl / product.quantity_svl})
+            if product.cost_method in ['average', 'fifo']:
+                product._update_valuation_layer_vacuum_values()
 
         vacuum_svls._validate_accounting_entries()
         self._create_fifo_vacuum_anglo_saxon_expense_entries(zip(vacuum_svls, real_time_svls_to_vacuum))
+
+    def _prepare_valuation_layer_vacuum_values(self):
+        self.ensure_one()
+        values = {}
+        if not float_is_zero(self.quantity_svl, precision_rounding=self.uom_id.rounding):
+            values["standard_price"] = self.value_svl / self.quantity_svl
+        return values
+
+    def _update_valuation_layer_vacuum_values(self):
+        for product in self:
+            values = product._prepare_valuation_layer_vacuum_values()
+            if values:
+                product.sudo().with_context(disable_auto_svl=True).write(values)
 
     @api.model
     def _create_fifo_vacuum_anglo_saxon_expense_entries(self, vacuum_pairs):

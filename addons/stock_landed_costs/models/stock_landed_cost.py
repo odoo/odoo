@@ -125,7 +125,7 @@ class StockLandedCost(models.Model):
                 'move_type': 'entry',
             }
             valuation_layer_ids = []
-            cost_to_add_byproduct = defaultdict(lambda: 0.0)
+            product_ids_to_update = set()
             for line in cost.valuation_adjustment_lines.filtered(lambda line: line.move_id):
                 remaining_qty = sum(line.move_id.stock_valuation_layer_ids.mapped('remaining_qty'))
                 linked_layer = line.move_id.stock_valuation_layer_ids[:1]
@@ -151,7 +151,7 @@ class StockLandedCost(models.Model):
                 # Update the AVCO/FIFO
                 product = line.move_id.product_id
                 if product.cost_method in ['average', 'fifo']:
-                    cost_to_add_byproduct[product] += cost_to_add
+                    product_ids_to_update.add(product.id)
                 # Products with manual inventory valuation are ignored because they do not need to create journal entries.
                 if product.valuation != "real_time":
                     continue
@@ -165,10 +165,8 @@ class StockLandedCost(models.Model):
                 move_vals['line_ids'] += line._create_accounting_entries(move, qty_out)
 
             # batch standard price computation avoid recompute quantity_svl at each iteration
-            products = self.env['product.product'].browse(p.id for p in cost_to_add_byproduct.keys()).with_company(cost.company_id)
-            for product in products:  # iterate on recordset to prefetch efficiently quantity_svl
-                if not float_is_zero(product.quantity_svl, precision_rounding=product.uom_id.rounding):
-                    product.sudo().with_context(disable_auto_svl=True).standard_price += cost_to_add_byproduct[product] / product.quantity_svl
+            products = self.env['product.product'].browse(list(product_ids_to_update)).with_company(cost.company_id)
+            products._update_valuation_layer_vacuum_values()
 
             move_vals['stock_valuation_layer_ids'] = [(6, None, valuation_layer_ids)]
             # We will only create the accounting entry when there are defined lines (the lines will be those linked to products of real_time valuation category).
