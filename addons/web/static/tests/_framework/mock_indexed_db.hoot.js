@@ -1,11 +1,20 @@
+import { afterEach } from "@odoo/hoot";
+
 export function mockIndexedDB(_name, { fn }) {
     return (requireModule, ...args) => {
         const indexedDBModule = fn(requireModule, ...args);
 
         const { IndexedDB } = indexedDBModule;
+        let dbs = {};
+        afterEach(() => {
+            dbs = {};
+        });
         class MockedIndexedDB {
-            constructor() {
-                this.mockIndexedDB = {};
+            constructor(name) {
+                if (!dbs[name]) {
+                    dbs[name] = {};
+                }
+                this.mockIndexedDB = dbs[name];
             }
 
             write(table, key, value) {
