@@ -97,10 +97,13 @@ class StockWarehouseOrderpoint(models.Model):
             default_bom = orderpoint._get_default_bom()
             orderpoint.bom_id_placeholder = default_bom.display_name if default_bom else ''
 
-    @api.depends('effective_route_id', 'bom_id', 'rule_ids', 'product_id.bom_ids')
+    @api.depends('effective_route_id', 'show_bom', 'bom_id', 'rule_ids', 'product_id.bom_ids')
     def _compute_effective_bom_id(self):
         for orderpoint in self:
-            orderpoint.effective_bom_id = orderpoint.bom_id if orderpoint.bom_id else orderpoint._get_default_bom()
+            if orderpoint.show_bom:
+                orderpoint.effective_bom_id = orderpoint.bom_id if orderpoint.bom_id else orderpoint.effective_route_id.rule_ids._get_matching_bom(self.product_id, self.company_id, {})
+            else:
+                orderpoint.effective_bom_id = False
 
     def _search_effective_bom_id(self, operator, value):
         boms = self.env['mrp.bom'].search([('id', operator, value)])
