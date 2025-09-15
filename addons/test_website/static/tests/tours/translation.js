@@ -7,64 +7,6 @@ import {
 import { stepUtils } from "@web_tour/tour_utils";
 import { translationIsReady } from "@web/core/l10n/translation";
 
-function installNetworkTrackerStep() {
-    return [{
-        content: "Install network tracker",
-        trigger: "body",
-        run() {
-            if (window.__netPatched) {
-                return;
-            }
-            window.__netPatched = true;
-            window.__inflight = 0;
-
-            const origFetch = window.fetch;
-            window.fetch = function (...args) {
-                window.__inflight++;
-                return origFetch.apply(this, args).finally(() => {
-                    window.__inflight = Math.max(0, window.__inflight - 1);
-                });
-            };
-
-            const OrigXHR = window.XMLHttpRequest;
-            window.XMLHttpRequest = function TrackedXHR() {
-                const xhr = new OrigXHR();
-                const dec = () => { window.__inflight = Math.max(0, window.__inflight - 1); };
-                xhr.addEventListener("loadstart", () => {
-                    window.__inflight++;
-                });
-                xhr.addEventListener("loadend", dec);
-                xhr.addEventListener("error", dec);
-                xhr.addEventListener("abort", dec);
-                return xhr;
-            };
-        },
-    }];
-}
-
-function waitNetworkIdleStep({ idleMs = 600, pollMs = 100 } = {}) {
-    return [{
-        content: "Wait for network idle",
-        trigger: "body",
-        run() {
-            return new Promise((resolve) => {
-                let stable = 0;
-                (function loop() {
-                    if ((window.__inflight || 0) === 0) {
-                        stable += pollMs;
-                        if (stable >= idleMs) {
-                            return resolve();
-                        }
-                    } else {
-                        stable = 0;
-                    }
-                    setTimeout(loop, pollMs);
-                })();
-            });
-        },
-    }];
-}
-
 function createNewPage() {
     return [
         {
@@ -360,7 +302,6 @@ function saveTranslation(timeout = 50000) {
 
 function multiLanguage(mainLanguage, secondLanguage) {
     return [
-        ...installNetworkTrackerStep(),
         {
             content: "Ensure multi language site",
             trigger: ":iframe body:has(.js_language_selector)",
@@ -506,7 +447,6 @@ function multiLanguage(mainLanguage, secondLanguage) {
             content: "Check new translation is displayed",
             trigger: ":iframe p:contains(Even more translated text)",
         },
-        ...waitNetworkIdleStep(),
     ];
 }
 
