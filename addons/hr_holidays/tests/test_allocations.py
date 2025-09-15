@@ -320,7 +320,7 @@ class TestAllocations(TestHrHolidaysCommon):
             'date_to': date(2024, 12, 31)
         })
         second_allocation.action_approve()
-        result = self.env['hr.leave.type'].with_context(
+        result = self.env['hr.leave.type'].sudo().with_context(
             employee_id=self.employee.id,
             default_date_from='2024-08-18 06:00:00',
             default_date_to='2024-08-18 15:00:00'
