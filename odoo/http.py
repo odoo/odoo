@@ -116,6 +116,7 @@ import functools
 import glob
 import hashlib
 import hmac
+import importlib.metadata
 import inspect
 import json
 import logging
@@ -179,7 +180,6 @@ from .tools import (config, consteq, date_utils, file_path, parse_version,
                     profiler, submap, unique, ustr,)
 from .tools.facade import Proxy, ProxyAttr, ProxyFunc
 from .tools.func import filter_kwargs, lazy_property
-from .tools.mimetypes import guess_mimetype
 from .tools.misc import pickle
 from .tools._vendor import sessions
 from .tools._vendor.useragents import UserAgent
@@ -277,7 +277,7 @@ ROUTING_KEYS = {
     'alias', 'host', 'methods',
 }
 
-if parse_version(werkzeug.__version__) >= parse_version('2.0.2'):
+if parse_version(importlib.metadata.version('werkzeug')) >= parse_version('2.0.2'):
     # Werkzeug 2.0.2 adds the websocket option. If a websocket request
     # (ws/wss) is trying to access an HTTP route, a WebsocketMismatch
     # exception is raised. On the other hand, Werkzeug 0.16 does not
@@ -1249,6 +1249,7 @@ class HTTPRequest:
         httprequest.parameter_storage_class = werkzeug.datastructures.ImmutableMultiDict
         httprequest.max_content_length = DEFAULT_MAX_CONTENT_LENGTH
         httprequest.max_form_memory_size = 10 * 1024 * 1024  # 10 MB
+        self._session_id__ = httprequest.cookies.get('session_id')
 
         self.__wrapped = httprequest
         self.__environ = self.__wrapped.environ
@@ -1488,10 +1489,31 @@ class Response(Proxy):
     flatten = ProxyFunc(None)
 
     def __init__(self, *args, **kwargs):
-        response = args[0] if len(args) == 1 and isinstance(args[0], _Response) else _Response(*args, **kwargs)
+        response = None
+        if len(args) == 1:
+            arg = args[0]
+            if isinstance(arg, Response):
+                response = arg._wrapped__
+            elif isinstance(arg, _Response):
+                response = arg
+            elif isinstance(arg, werkzeug.wrappers.Response):
+                response = _Response.load(arg)
+        if response is None:
+            response = _Response(*args, **kwargs)
+
         super().__init__(response)
         if 'set_cookie' in response.__dict__:
             self.__dict__['set_cookie'] = response.__dict__['set_cookie']
+
+
+__wz_get_response = HTTPException.get_response
+
+
+def get_response(self, environ=None, scope=None):
+    return Response(__wz_get_response(self, environ, scope))
+
+
+HTTPException.get_response = get_response
 
 
 werkzeug_abort = werkzeug.exceptions.abort
@@ -1553,7 +1575,7 @@ class Request:
         self._post_init = None
 
     def _get_session_and_dbname(self):
-        sid = self.httprequest.cookies.get('session_id')
+        sid = self.httprequest._session_id__
         if not sid or not root.session_store.is_valid_key(sid):
             session = root.session_store.new()
         else:

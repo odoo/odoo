@@ -1,4 +1,5 @@
 from lxml import etree
+import re
 from types import SimpleNamespace
 
 from odoo import models
@@ -27,9 +28,16 @@ class AccountEdiXmlUBL21JO(models.AbstractModel):
         return float_round(value, JO_MAX_DP)
 
     def _get_line_amount_before_discount_jod(self, line):
-        if line.discount < 100:
-            amount_after_discount = line.price_subtotal
-            return (amount_after_discount / (1 - line.discount / 100))
+        if line.discount < 100 and line.tax_ids:
+            taxes_res = line.tax_ids.with_context({'round_base': False}).compute_all(
+                line.price_unit,
+                quantity=line.quantity,
+                currency=line.currency_id,
+                product=line.product_id,
+                partner=line.partner_id,
+                is_refund=line.is_refund,
+            )
+            return taxes_res['total_excluded']
         else:
             # reported numbers won't matter if discount is 100%
             return line.price_unit * line.quantity
@@ -59,7 +67,8 @@ class AccountEdiXmlUBL21JO(models.AbstractModel):
         for invoice_line_id, invoice_line in enumerate(invoice_lines, 1):
             if line.product_id == invoice_line.product_id \
                     and line.name == invoice_line.name \
-                    and line.price_unit == invoice_line.price_unit:
+                    and line.price_unit == invoice_line.price_unit \
+                    and line.discount == invoice_line.discount:
                 line_id = invoice_line_id
                 break
         if line_id == -1:
@@ -96,6 +105,9 @@ class AccountEdiXmlUBL21JO(models.AbstractModel):
 
         vals['monetary_total_vals']['tax_inclusive_amount'] = vals['monetary_total_vals']['payable_amount'] = tax_inclusive_amount
         vals['monetary_total_vals']['tax_exclusive_amount'] = tax_exclusive_amount
+
+    def _sanitize_phone(self, raw):
+        return re.sub(r'[^0-9]', '', raw or '')[:15]
 
     ########################################################
     # overriding vals methods of account_edi_xml_ubl_20 file
@@ -398,7 +410,7 @@ class AccountEdiXmlUBL21JO(models.AbstractModel):
             'accounting_customer_party_vals': {
                 'party_vals': self._get_empty_party_vals() if is_refund else self._get_partner_party_vals(customer, role='customer'),
                 'accounting_contact': {
-                    'telephone': '' if is_refund else invoice.partner_id.phone or invoice.partner_id.mobile,
+                    'telephone': '' if is_refund else self._sanitize_phone(invoice.partner_id.phone or invoice.partner_id.mobile),
                 },
             },
             'seller_supplier_party_vals': {

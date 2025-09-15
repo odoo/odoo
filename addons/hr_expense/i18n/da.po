@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* hr_expense
-# 
+#
 # Translators:
 # Ejner Sønniksen <ejner@vkdata.dk>, 2023
 # Mads Søndergaard, 2023
@@ -11,19 +11,19 @@
 # Sanne Kristensen <sanne@vkdata.dk>, 2024
 # Wil Odoo, 2025
 # Kira Petersen, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-07 20:35+0000\n"
+"POT-Creation-Date: 2025-08-07 18:36+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Kira Petersen, 2025\n"
 "Language-Team: Danish (https://app.transifex.com/odoo/teams/41243/da/)\n"
+"Language: da\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: da\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: hr_expense
@@ -57,11 +57,9 @@ msgstr "%(date_from)s - %(date_to)s"
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
-msgid ""
-"%(user)s confirms this expense is not a duplicate with similar expense."
+msgid "%(user)s confirms this expense is not a duplicate with similar expense."
 msgstr ""
-"%(user)s bekræfter, at dette udlæg ikke er et duplikat af en lignende "
-"udgift."
+"%(user)s bekræfter, at dette udlæg ikke er et duplikat af en lignende udgift."
 
 #. module: hr_expense
 #. odoo-python
@@ -109,7 +107,8 @@ msgstr "2023-08-11"
 #: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_form_view
 msgid ""
 "<span class=\"d-inline-block\">\n"
-"                                        <i class=\"text-muted\">Use this reference as a subject prefix when submitting by email.</i>\n"
+"                                        <i class=\"text-muted\">Use this "
+"reference as a subject prefix when submitting by email.</i>\n"
 "                                    </span>"
 msgstr ""
 
@@ -231,7 +230,8 @@ msgstr "Alle Rapporter"
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense_sheet.py:0
 #, python-format
-msgid "All expenses in an expense report must have the same \"paid by\" criteria."
+msgid ""
+"All expenses in an expense report must have the same \"paid by\" criteria."
 msgstr ""
 
 #. module: hr_expense
@@ -404,8 +404,8 @@ msgid ""
 "Both price-included and price-excluded taxes will behave as price-included "
 "taxes for expenses."
 msgstr ""
-"Både skatter, der er inkluderet i prisen, og skatter, der ikke er inkluderet"
-" i prisen, betragtes som inkluderet i prisen under udgifter."
+"Både skatter, der er inkluderet i prisen, og skatter, der ikke er inkluderet "
+"i prisen, betragtes som inkluderet i prisen under udgifter."
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense_sheet
@@ -748,8 +748,7 @@ msgstr "Medarbejder udgifter"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
 msgid ""
-"Enable users to choose default category for automatically generated "
-"expenses."
+"Enable users to choose default category for automatically generated expenses."
 msgstr ""
 
 #. module: hr_expense
@@ -757,10 +756,8 @@ msgstr ""
 #: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
 #, python-format
 msgid ""
-"Enter a name then choose a category and configure the amount of your "
-"expense."
-msgstr ""
-"Indtast et navn, vælg en kategori, og konfigurér beløbet i din udgift."
+"Enter a name then choose a category and configure the amount of your expense."
+msgstr "Indtast et navn, vælg en kategori, og konfigurér beløbet i din udgift."
 
 #. module: hr_expense
 #: model:account.journal,name:hr_expense.hr_expense_account_journal
@@ -1214,7 +1211,6 @@ msgstr "Hvis der vælges et produkt med en kostpris større end nul"
 #. module: hr_expense
 #. odoo-javascript
 #: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
-#: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
 #, python-format
 msgid "It all begins here - let's go!"
 msgstr "Alt starter her – lad os komme i gang!"
@@ -1337,7 +1333,6 @@ msgstr ""
 
 #. module: hr_expense
 #. odoo-javascript
-#: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
 #: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
 #, python-format
 msgid "Managers can inspect all expenses from here."
@@ -1874,10 +1869,13 @@ msgstr "Scan denne QR kode for at hente Odoo app'en:"
 #: model:ir.model.fields,help:hr_expense.field_res_users__expense_manager_id
 msgid ""
 "Select the user responsible for approving \"Expenses\" of this employee.\n"
-"If empty, the approval is done by an Administrator or Approver (determined in settings/users)."
+"If empty, the approval is done by an Administrator or Approver (determined "
+"in settings/users)."
 msgstr ""
-"Vælg brugeren der er ansvarlig for at godkende \"Udgifter\" for denne medarbejder.\n"
-"Denne godkendelse udføres af en Administrator eller Godkender (angivet i indstillinger/brugere), hvis tom."
+"Vælg brugeren der er ansvarlig for at godkende \"Udgifter\" for denne "
+"medarbejder.\n"
+"Denne godkendelse udføres af en Administrator eller Godkender (angivet i "
+"indstillinger/brugere), hvis tom."
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__selectable_payment_method_line_ids
@@ -1893,8 +1891,8 @@ msgid ""
 "category will automatically be set. Type the expense amount in the mail "
 "subject to set it on the expense too."
 msgstr ""
-"Send en e-mail til dette e-mailalias, og vedhæft kvitteringen for at oprette"
-" en udgift med et klik. Hvis det første ord i emnefelt indeholder en "
+"Send en e-mail til dette e-mailalias, og vedhæft kvitteringen for at oprette "
+"en udgift med et klik. Hvis det første ord i emnefelt indeholder en "
 "kategoris interne reference eller samme kategorinavn, tildeles den "
 "tilsvarende kategori automatisk. Indtast udgiftens beløb i e-mailemnet, så "
 "det også angives på udgiften."
@@ -2088,10 +2086,17 @@ msgstr "Team godkender"
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_res_company__expense_journal_id
 #: model:ir.model.fields,help:hr_expense.field_res_config_settings__expense_journal_id
+msgid "The company's default journal used when an employee expense is created."
+msgstr "Virksomhedens standardjournal til registrering af medarbejderudgifter."
+
+#. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/hr_expense.py:0
+#, python-format
 msgid ""
-"The company's default journal used when an employee expense is created."
+"The current user has no related employee, or the related employee does not "
+"belong to this company."
 msgstr ""
-"Virksomhedens standardjournal til registrering af medarbejderudgifter."
 
 #. module: hr_expense
 #. odoo-python
@@ -2105,8 +2110,8 @@ msgstr ""
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register
 msgid ""
-"The first word of the email subject did not correspond to any category code."
-" You'll have to set the category manually on the expense."
+"The first word of the email subject did not correspond to any category code. "
+"You'll have to set the category manually on the expense."
 msgstr ""
 "Det første ord i e-mailens emnefelt matcher ingen kategorikode, så du skal "
 "tildele en kategori manuelt i udgiften."
@@ -2118,8 +2123,8 @@ msgid ""
 "than some expenses of this report. Please verify this report does not "
 "contain duplicates."
 msgstr ""
-"Følgende godkendte udgifter har samme medarbejder, beløb og kategori som dem"
-" i denne rapport. Kontrollér venligst for dubletter."
+"Følgende godkendte udgifter har samme medarbejder, beløb og kategori som dem "
+"i denne rapport. Kontrollér venligst for dubletter."
 
 #. module: hr_expense
 #: model:ir.model.constraint,message:hr_expense.constraint_hr_expense_sheet_journal_id_required_posted
@@ -2166,8 +2171,8 @@ msgid ""
 "category cost will change expense amounts. Make sure it is what you want to "
 "do."
 msgstr ""
-"Der er udgifter knyttet til denne kategori, som endnu ikke er indsendt. Hvis"
-" du opdaterer udgifterne i denne kategori, vil beløbene blive ændret. Sørg "
+"Der er udgifter knyttet til denne kategori, som endnu ikke er indsendt. Hvis "
+"du opdaterer udgifterne i denne kategori, vil beløbene blive ændret. Sørg "
 "for, at det er den ønskede handling."
 
 #. module: hr_expense
@@ -2179,8 +2184,7 @@ msgstr "Det var det – udgiftsstyring i en nøddeskal"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_form_view
-msgid ""
-"This note will be shown to users when they select this expense product."
+msgid "This note will be shown to users when they select this expense product."
 msgstr ""
 
 #. module: hr_expense
@@ -2325,7 +2329,6 @@ msgstr "Vis Rapport"
 #. module: hr_expense
 #. odoo-javascript
 #: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
-#: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
 #, python-format
 msgid "Wasting time recording your receipts? Let’s try a better way."
 msgstr ""
@@ -2347,13 +2350,14 @@ msgstr "Hjemmesidens kommunikations historik"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_form_view
 msgid ""
-"When the cost of an expense product is different than 0, then the user"
-"                                         using this product won't be able to"
-" change the amount of the expense,                                         "
-"only the quantity. Use a cost different than 0 for expense categories funded"
-" by                                         the company at fixed cost like "
-"allowances for mileage, per diem, accommodation"
-"                                         or meal."
+"When the cost of an expense product is different than 0, then the "
+"user                                         using this product won't be "
+"able to change the amount of the "
+"expense,                                         only the quantity. Use a "
+"cost different than 0 for expense categories funded "
+"by                                         the company at fixed cost like "
+"allowances for mileage, per diem, "
+"accommodation                                         or meal."
 msgstr ""
 
 #. module: hr_expense
@@ -2376,7 +2380,6 @@ msgstr "Du er ikke autoriseret til at redigere denne udgifts rapport."
 
 #. module: hr_expense
 #. odoo-python
-#: code:addons/hr_expense/models/hr_expense.py:0
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "You are not authorized to edit this expense."
@@ -2452,8 +2455,8 @@ msgstr "Du kan ikke slette en analysekonto anvendt i en udgift."
 #: code:addons/hr_expense/models/account_move.py:0
 #, python-format
 msgid ""
-"You cannot delete only some entries linked to an expense report. All entries"
-" must be deleted at the same time."
+"You cannot delete only some entries linked to an expense report. All entries "
+"must be deleted at the same time."
 msgstr ""
 
 #. module: hr_expense
@@ -2550,8 +2553,8 @@ msgstr "Du skal tilføje en manuel betalingsform til journalen (%s)"
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid ""
-"You need to have at least one category that can be expensed in your database"
-" to proceed!"
+"You need to have at least one category that can be expensed in your database "
+"to proceed!"
 msgstr ""
 "For at fortsætte skal du have mindst én kategori i din database, der kan "
 "bogføres som udgift!"

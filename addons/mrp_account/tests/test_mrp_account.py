@@ -199,8 +199,7 @@ class TestMrpAccount(TestMrpCommon):
         bom_form.product_id = self.dining_table
 
     def test_two_productions_unbuild_one_sell_other_fifo(self):
-        """ Unbuild orders, when supplied with a specific MO record, should restrict their SVL
-        consumption to layers linked to moves originating from that MO record.
+        """ Valuation of unbuild orders for products valuated via FIFO should adhere to FIFO
         """
         final_product = self.env['product.product'].create({
             'type': 'product',
@@ -254,7 +253,7 @@ class TestMrpAccount(TestMrpCommon):
             self.env['stock.valuation.layer'].search([('product_id', '=', (final_product.id))]),
             [
                 {'remaining_qty': 1.0, 'value': 1.0},
-                # MO_2 (new value to reflect change of component's `standard_price`
+                # MO_2 (new value to reflect change of component's `standard_price`)
                 {'remaining_qty': 1.0, 'value': 2.0},
             ]
         )
@@ -268,10 +267,10 @@ class TestMrpAccount(TestMrpCommon):
         self.assertRecordValues(
             self.env['stock.valuation.layer'].search([('product_id', '=', (final_product.id))]),
             [
-                {'remaining_qty': 1.0, 'value': 1.0},
-                {'remaining_qty': 0.0, 'value': 2.0},
-                # Unbuild SVL value is derived from MO_2, as precised on the unbuild form
-                {'remaining_qty': 0.0, 'value': -2.0, 'quantity': 1.0},
+                {'remaining_qty': 0.0, 'value': 1.0},
+                {'remaining_qty': 1.0, 'value': 2.0},
+                # Unbuild SVL value is derived from MO_1 according to FIFO
+                {'remaining_qty': 0.0, 'value': -1.0, 'quantity': 1.0},
             ]
         )
         out_move = self.env['stock.move'].create({
@@ -291,9 +290,9 @@ class TestMrpAccount(TestMrpCommon):
             [
                 {'remaining_qty': 0.0, 'value': 1.0},
                 {'remaining_qty': 0.0, 'value': 2.0},
-                {'remaining_qty': 0.0, 'value': -2.0},
-                # Out move SVL value is derived from MO_1, the only candidate origin with some `remaining_qty`
-                {'remaining_qty': 0.0, 'value': -1.0, 'quantity': 1.0},
+                {'remaining_qty': 0.0, 'value': -1.0},
+                # Out move SVL value is derived from MO_2
+                {'remaining_qty': 0.0, 'value': -2.0, 'quantity': 1.0},
             ]
         )
 

@@ -914,22 +914,23 @@ class HolidaysAllocation(models.Model):
                     count=allocation.number_of_days,
                     allocation_type=allocation.holiday_status_id.name
                 )
+                activity_type = self.env.ref('hr_holidays.mail_act_leave_allocation_approval')
                 if allocation.state == 'confirm':
                     if allocation.holiday_status_id.responsible_ids:
                         user_ids = allocation.sudo()._get_responsible_for_approval().ids
                         for user_id in user_ids:
                             activity_vals.append({
-                                'activity_type_id': self.env.ref('hr_holidays.mail_act_leave_allocation_approval').id,
+                                'activity_type_id': activity_type.id,
                                 'automated': True,
                                 'note': note,
                                 'user_id': user_id,
                                 'res_id': allocation.id,
-                                'res_model_id': self.env.ref('hr_holidays.model_hr_leave_allocation').id,
+                                'res_model_id': self.env['ir.model']._get_id('hr.leave.allocation'),
                             })
                 elif allocation.state == 'validate':
-                    to_do |= allocation
+                    to_do += allocation
                 elif allocation.state == 'refuse':
-                    to_clean |= allocation
+                    to_clean += allocation
         if activity_vals:
             self.env['mail.activity'].create(activity_vals)
         if to_clean:

@@ -12,6 +12,7 @@ fi
 
 echo "addons/point_of_sale/tools/posbox/overwrite_after_init/home/pi/odoo" >> .git/info/sparse-checkout
 echo "addons/iot_base" >> .git/info/sparse-checkout
+echo "addons/iot_drivers" >> .git/info/sparse-checkout
 
 git fetch "${localremote}" "${localbranch}" --depth=1
 git reset "${localremote}"/"${localbranch}" --hard
@@ -26,6 +27,11 @@ fi
 odoo_conf="addons/point_of_sale/tools/posbox/configuration/odoo.conf"
 if ! grep -q "server_wide_modules" $odoo_conf; then
     echo "server_wide_modules=hw_drivers,hw_escpos,hw_posbox_homepage,point_of_sale,web" >> $odoo_conf
+fi
+
+if [ -d /home/pi/odoo/addons/iot_drivers ]; then
+  # TODO: remove this when v18.0 is deprecated (hw_drivers/,hw_posbox_homepage/ -> iot_drivers/)
+  sed -i 's|hw_drivers.*hw_posbox_homepage|iot_drivers|g' /home/pi/odoo.conf
 fi
 
 sudo service led-status start

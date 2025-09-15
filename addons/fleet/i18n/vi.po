@@ -3,14 +3,14 @@
 # 	* fleet
 # 
 # Translators:
-# Wil Odoo, 2023
+# Wil Odoo, 2025
 # Thi Huong Nguyen, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2025-07-11 01:02+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Thi Huong Nguyen, 2025\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
@@ -118,6 +118,11 @@ msgstr "Hoạt động ngoại lệ"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__activity_state
 msgid "Activity State"
 msgstr "Trạng thái hoạt động"
+
+#. module: fleet
+#: model:ir.model,name:fleet.model_mail_activity_type
+msgid "Activity Type"
+msgstr "Loại hoạt động"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__activity_type_icon
@@ -827,7 +832,7 @@ msgid ""
 "            (reparation, insurances, periodic maintenance)."
 msgstr ""
 "Mỗi hợp đồng (ví dụ: cho thuê) có thể bao gồm một số dịch vụ \n"
-"               (sửa chữa, bảo hiểm, bảo trì định kỳ)."
+"               (sửa chữa, bảo hiểm, bảo dưỡng định kỳ)."
 
 #. module: fleet
 #: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_service_types_action
@@ -1701,7 +1706,7 @@ msgstr "Đã đặt"
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_33
 msgid "Other Maintenance"
-msgstr "Bảo trì khác"
+msgstr "Bảo dưỡng khác"
 
 #. module: fleet
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle__service_activity__overdue
@@ -1829,7 +1834,7 @@ msgstr "Thuê (Không gồm VAT)"
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_service_7
 msgid "Repair and maintenance"
-msgstr "Sửa chữa hoặc bảo trì"
+msgstr "Sửa chữa hoặc bảo dưỡng"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_contract_repairing
@@ -2183,7 +2188,7 @@ msgid ""
 "            Services can be of many types: occasional repair, fixed maintenance, etc."
 msgstr ""
 "Theo dõi tất cả các dịch vụ được thực hiện trên xe của bạn. \n"
-"Dịch vụ có thể có nhiều loại: sửa chữa thường xuyên, bảo trì cố định, v.v."
+"Dịch vụ có thể có nhiều loại: sửa chữa thường xuyên, bảo dưỡng cố định, v.v."
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__trailer_hook

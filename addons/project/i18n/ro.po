@@ -8,7 +8,6 @@
 # Foldi Robert <foldirobert@nexterp.ro>, 2024
 # Hongu Cosmin <cosmin513@gmail.com>, 2024
 # Martin Trigaux, 2024
-# Larisa_nexterp, 2024
 # Dorin Hongu <dhongu@gmail.com>, 2024
 # Cozmin Candea <office@terrabit.ro>, 2024
 # Maria Muntean, 2024
@@ -17,6 +16,7 @@
 # Corina Calin, 2024
 # Lyall Kindmurr, 2024
 # Wil Odoo, 2025
+# Larisa_nexterp, 2025
 # 
 msgid ""
 msgstr ""
@@ -24,7 +24,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-05-09 20:36+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Wil Odoo, 2025\n"
+"Last-Translator: Larisa_nexterp, 2025\n"
 "Language-Team: Romanian (https://app.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -767,7 +767,7 @@ msgstr "Timp Alocat"
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task_allocated_hours_template
 msgid "Allocated Time:"
-msgstr ""
+msgstr "Timp alocat:"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__allow_rating
@@ -1108,7 +1108,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 #, python-format
 msgid "Burndown Chart"
-msgstr ""
+msgstr "Grafic de ardere"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_milestone__can_be_marked_as_done
@@ -1137,7 +1137,7 @@ msgstr "Anulat(ă)"
 #: model:mail.message.subtype,name:project.mt_project_task_changes_requested
 #: model:mail.message.subtype,name:project.mt_task_changes_requested
 msgid "Changes Requested"
-msgstr ""
+msgstr "Modificări solicitate"
 
 #. module: project
 #. odoo-javascript
@@ -3588,7 +3588,7 @@ msgstr ""
 #. module: project
 #: model:ir.model,name:project.model_project_project_stage
 msgid "Project Stage"
-msgstr ""
+msgstr "Etapa proiectului"
 
 #. module: project
 #: model:mail.message.subtype,name:project.mt_project_stage_change
@@ -4517,7 +4517,7 @@ msgstr "Sarcină creată"
 #: model:ir.model.fields,field_description:project.field_project_task__allow_task_dependencies
 #: model:ir.model.fields,field_description:project.field_res_config_settings__group_project_task_dependencies
 msgid "Task Dependencies"
-msgstr ""
+msgstr "Dependențe sarcini"
 
 #. module: project
 #: model:mail.message.subtype,name:project.mt_project_task_done
@@ -4807,7 +4807,7 @@ msgstr ""
 #: code:addons/project/models/project_task.py:0
 #, python-format
 msgid "The search does not support the %s operator or %s value."
-msgstr ""
+msgstr "Căutarea nu suportă operatorul %s sau valoarea %s."
 
 #. module: project
 #. odoo-python
@@ -4983,7 +4983,7 @@ msgstr "Titlu"
 #: code:addons/project/static/src/components/project_right_side_panel/components/project_profitability.xml:0
 #, python-format
 msgid "To Bill"
-msgstr ""
+msgstr "De facturat"
 
 #. module: project
 #: model:project.project.stage,name:project.project_project_stage_0
@@ -5271,6 +5271,14 @@ msgid ""
 "\n"
 "        Make sure to use the right format and order e.g. Improve the configuration screen 5h #feature #v16 @Mitchell !"
 msgstr ""
+"Folosiți aceste cuvinte cheie în titlu pentru a seta sarcini noi:\n"
+"\n"
+"        30h Alocă 30 de ore sarcinii\n"
+"        #tags Setează etichete pe sarcină\n"
+"        @user Asignează sarcina unui utilizator\n"
+"        ! Setează sarcina cu prioritate mare\n"
+"\n"
+"        Asigurați-vă că folosiți formatul și ordinea corectă, ex: Îmbunătățește ecranul de configurare 5h #feature #v16 @Mitchell !"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_stage_personal__user_id
@@ -5635,7 +5643,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_quick_create_task_form
 #: model_terms:ir.ui.view,arch_db:project.quick_create_task_form
 msgid "e.g. Send Invitations"
-msgstr ""
+msgstr "ex: Trimite invitații"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -5833,7 +5841,7 @@ msgstr ""
 #: code:addons/project/static/src/views/project_task_list/project_task_list_renderer.js:0
 #, python-format
 msgid "👤 Unassigned"
-msgstr ""
+msgstr "👤 Nealocat"
 
 #. module: project
 #. odoo-javascript
@@ -5842,4 +5850,4 @@ msgstr ""
 #: code:addons/project/static/src/views/project_task_list/project_task_list_renderer.js:0
 #, python-format
 msgid "🔒 Private"
-msgstr ""
+msgstr "🔒 Privat"

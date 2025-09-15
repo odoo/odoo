@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* sale_stock
-# 
+#
 # Translators:
 # Manuela Silva <mmsrs@sky.com>, 2023
 # Wil Odoo, 2023
@@ -9,20 +9,21 @@
 # Peter Lawrence Romão <peterromao@yahoo.co.uk>, 2025
 # Nuno Silva <nuno.silva@arxi.pt>, 2025
 # Daniel Reis, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-13 10:28+0000\n"
+"POT-Creation-Date: 2025-08-15 00:51+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Daniel Reis, 2025\n"
 "Language-Team: Portuguese (https://app.transifex.com/odoo/teams/41243/pt/)\n"
+"Language: pt\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: pt\n"
-"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % "
+"1000000 == 0 ? 1 : 2;\n"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_picking
@@ -67,22 +68,26 @@ msgstr "<span class=\"o_stat_text\">Vendas</span>"
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
 msgid ""
 "<span class=\"small badge text-bg-success orders_label_text_align\">\n"
-"                                        <i class=\"fa fa-fw fa-truck\"/> Shipped\n"
+"                                        <i class=\"fa fa-fw fa-truck\"/> "
+"Shipped\n"
 "                                    </span>"
 msgstr ""
 "<span class=\"small badge text-bg-success orders_label_text_align\">\n"
-"                                        <i class=\"fa fa-fw fa-truck\"/> Enviado\n"
+"                                        <i class=\"fa fa-fw fa-truck\"/> "
+"Enviado\n"
 "                                    </span>"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_cancel_view_form_inherit
 msgid ""
 "<span invisible=\"not display_delivery_alert\">\n"
-"                    Some deliveries are already done. Returns can be created from the Delivery Orders.\n"
+"                    Some deliveries are already done. Returns can be created "
+"from the Delivery Orders.\n"
 "                </span>"
 msgstr ""
 "<span invisible=\"not display_delivery_alert\">\n"
-"                    Algumas entregas já foram realizadas. Devoluções podem ser criadas a partir das Ordens de Entrega.\n"
+"                    Algumas entregas já foram realizadas. Devoluções podem "
+"ser criadas a partir das Ordens de Entrega.\n"
 "                </span>"
 
 #. module: sale_stock
@@ -99,17 +104,24 @@ msgstr "<strong>Incoterm:</strong>"
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_order_line__qty_delivered_method
 msgid ""
-"According to product configuration, the delivered quantity can be automatically computed by mechanism:\n"
+"According to product configuration, the delivered quantity can be "
+"automatically computed by mechanism:\n"
 "  - Manual: the quantity is set manually on the line\n"
-"  - Analytic From expenses: the quantity is the quantity sum from posted expenses\n"
-"  - Timesheet: the quantity is the sum of hours recorded on tasks linked to this sale line\n"
+"  - Analytic From expenses: the quantity is the quantity sum from posted "
+"expenses\n"
+"  - Timesheet: the quantity is the sum of hours recorded on tasks linked to "
+"this sale line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
-"De acordo com a configuração do artigo, a quantidade entregue pode ser calculada automaticamente pelo mecanismo:\n"
+"De acordo com a configuração do artigo, a quantidade entregue pode ser "
+"calculada automaticamente pelo mecanismo:\n"
 "- Manual: a quantidade é definida manualmente na linha\n"
-"- Analítico das despesas: a quantidade é a soma da quantidade das despesas lançadas\n"
-"- Folha de horas: a quantidade é a soma das horas registadas nas tarefas vinculadas a essa linha de venda\n"
-"- Movimentações de stock: a quantidade vem de transferências de armazém  confirmadas\n"
+"- Analítico das despesas: a quantidade é a soma da quantidade das despesas "
+"lançadas\n"
+"- Folha de horas: a quantidade é a soma das horas registadas nas tarefas "
+"vinculadas a essa linha de venda\n"
+"- Movimentações de stock: a quantidade vem de transferências de armazém  "
+"confirmadas\n"
 
 #. module: sale_stock
 #. odoo-javascript
@@ -213,8 +225,8 @@ msgid ""
 "either use the minimum or maximum lead time of the order lines."
 msgstr ""
 "A data de entrega prometida ao cliente é calculada a partir do menor tempo "
-"de entrega nas linhas do pedido, no caso de produtos de serviços. No caso do"
-" envio de produtos, a política de envio do pedido será tida em conta para "
+"de entrega nas linhas do pedido, no caso de produtos de serviços. No caso do "
+"envio de produtos, a política de envio do pedido será tida em conta para "
 "usar o menor ou maior tempo de entrega das linhas do pedido."
 
 #. module: sale_stock
@@ -402,12 +414,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
 msgid ""
 "Margin of error for dates promised to customers. Products will be scheduled "
-"for procurement and delivery that many days earlier than the actual promised"
-" date, to cope with unexpected delays in the supply chain."
+"for procurement and delivery that many days earlier than the actual promised "
+"date, to cope with unexpected delays in the supply chain."
 msgstr ""
 "A margem de erro para as datas prometidas para os clientes. Os produtos "
-"serão agendadas para a aquisição e entrega que muitos dias anteriores à data"
-" prometida real, para lidar com atrasos inesperados na cadeia de "
+"serão agendadas para a aquisição e entrega que muitos dias anteriores à data "
+"prometida real, para lidar com atrasos inesperados na cadeia de "
 "abastecimento."
 
 #. module: sale_stock
@@ -662,6 +674,11 @@ msgid "Stock Rules report"
 msgstr ""
 
 #. module: sale_stock
+#: model:ir.model,name:sale_stock.model_stock_valuation_layer
+msgid "Stock Valuation Layer"
+msgstr ""
+
+#. module: sale_stock
 #: model:ir.model,name:sale_stock.model_report_stock_report_stock_rule
 msgid "Stock rule report"
 msgstr "Relatório de regra de inventariação"
@@ -679,8 +696,10 @@ msgstr "A entrega"
 #, python-format
 msgid ""
 "The delivery address has been changed on the Sales Order<br/>\n"
-"                        From <strong>\"%s\"</strong> To <strong>\"%s\"</strong>,\n"
-"                        You should probably update the partner on this document."
+"                        From <strong>\"%s\"</strong> To <strong>\"%s\"</"
+"strong>,\n"
+"                        You should probably update the partner on this "
+"document."
 msgstr ""
 
 #. module: sale_stock
@@ -688,8 +707,8 @@ msgstr ""
 #: code:addons/sale_stock/static/src/product_catalog/sale_order_line/sale_order_line.js:0
 #, python-format
 msgid ""
-"The ordered quantity cannot be decreased below the amount already delivered."
-" Instead, create a return in your inventory."
+"The ordered quantity cannot be decreased below the amount already delivered. "
+"Instead, create a return in your inventory."
 msgstr ""
 "A quantidade pedida não pode ser reduzida abaixo da quantidade já entregue. "
 "Em alternativa, crie uma devolução no seu inventário."

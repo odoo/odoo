@@ -6,6 +6,7 @@
 # Mads Søndergaard, 2023
 # Ejner Sønniksen <ejner@vkdata.dk>, 2023
 # Martin Trigaux, 2023
+# Kira Petersen, 2025
 # 
 msgid ""
 msgstr ""
@@ -13,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:55+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Martin Trigaux, 2023\n"
+"Last-Translator: Kira Petersen, 2025\n"
 "Language-Team: Danish (https://app.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -36,6 +37,15 @@ msgid ""
 "Contracts:\n"
 "%s"
 msgstr ""
+"Det er ikke muligt at fastlægge ferie for flere kontrakter, der har forskellige arbejdsplaner.\n"
+"\n"
+"Opret i stedet en fraværsanmodning for hver enkelt kontrakt.\n"
+"\n"
+"Fravær:\n"
+"%s\n"
+"\n"
+"Kontrakter:\n"
+"%s"
 
 #. module: hr_work_entry_holidays
 #: model:ir.model,name:hr_work_entry_holidays.model_hr_employee_base
@@ -53,6 +63,11 @@ msgid ""
 "required allocation for them. Please review these leaves and/or allocations "
 "before changing the contract."
 msgstr ""
+"Hvis du ændrer denne medarbejders kontrakt, vil arbejdstidsplanen blive "
+"ændret for en periode, hvor medarbejderen allerede har afholdt ferie. "
+"Ændringen kan påvirke feriens varighed, så medarbejderen ikke længere har "
+"tilstrækkelig feriesaldo. Kontrollér venligst den pågældende ferie og "
+"eventuelle ferieanmodninger, før du ændrer kontrakten."
 
 #. module: hr_work_entry_holidays
 #: model:ir.model,name:hr_work_entry_holidays.model_hr_contract

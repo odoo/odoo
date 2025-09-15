@@ -2,7 +2,6 @@ import logging
 import requests
 from datetime import datetime
 from json import JSONDecodeError
-from pprint import pformat
 
 from odoo.exceptions import UserError
 
@@ -47,7 +46,7 @@ class NilveraClient:
                 files=files,
             )
         except requests.exceptions.RequestException as e:
-            _logger.error("Network error during request: %s", e)
+            _logger.info("Network error during request: %s", e)
             raise UserError("Network connectivity issue. Please check your internet connection and try again.")
 
         end = datetime.utcnow()
@@ -59,15 +58,12 @@ class NilveraClient:
 
     def _log_request(self, method, start, end, url, params, json, response):
         _logger.info(
-            "%(method)s\nstart=%(start)s\nend=%(end)s\nurl=%(url)s\nparams=%(params)s\njson=%(json)s\nresponse=%(response)s",
+            '"%(method)s %(url)s" %(status)s %(duration).3f',
             {
-                "method": method,
-                "start": start,
-                "end": end,
-                "url": pformat(url),
-                "params": pformat(params),
-                "json": pformat(json),
-                "response": pformat(response),
+                'method': method,
+                'url': url,
+                'status': response.status_code,
+                'duration': (end - start).total_seconds(),
             },
         )
 

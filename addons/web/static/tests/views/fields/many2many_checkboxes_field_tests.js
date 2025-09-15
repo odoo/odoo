@@ -243,6 +243,32 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
+    QUnit.test(
+        "Many2ManyCheckBoxesField: many2many read, field context is properly sent",
+        async function (assert) {
+            await makeView({
+                type: "form",
+                resModel: "partner",
+                resId: 1,
+                serverData,
+                arch: `
+                    <form>
+                        <field name="timmy" widget="many2many_checkboxes" context="{ 'hello': 'world' }" />
+                    </form>`,
+                mockRPC(route, args) {
+                    if (args.method === "web_read" && args.model === "partner") {
+                        assert.step(`${args.method} ${args.model}`);
+                        assert.strictEqual(args.kwargs.specification.timmy.context.hello, "world");
+                    } else if (args.method === "name_search" && args.model === "partner_type") {
+                        assert.step(`${args.method} ${args.model}`);
+                        assert.strictEqual(args.kwargs.context.hello, "world");
+                    }
+                },
+            });
+            assert.verifySteps(["web_read partner", "name_search partner_type"]);
+        }
+    );
+
     QUnit.test("Many2ManyCheckBoxesField with 40+ values", async function (assert) {
         // 40 is the default limit for x2many fields. However, the many2many_checkboxes is a
         // special field that fetches its data through the fetchSpecialData mechanism, and it

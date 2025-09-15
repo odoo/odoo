@@ -374,6 +374,26 @@ class L10nMyEDITestFileGeneration(AccountTestInvoicingCommon):
         node = customer_root.xpath('cac:PartyIdentification/cbc:ID[count(@*)=0]', namespaces=NS_MAP)
         self.assertEqual(node, [])
 
+    def test_09_prepaid_amount_present(self):
+        """
+        Ensure the prepaid amount is present in the UBL XML under <cac:PrepaidPayment>.
+        """
+        basic_invoice = self.init_invoice('out_invoice', currency=self.currency_data['currency'], products=self.product_a)
+        basic_invoice.action_post()
+        vals = self.env['account.edi.xml.ubl_myinvois_my']._export_invoice_vals(
+            basic_invoice.with_context(lang=basic_invoice.partner_id.lang)
+        )
+        vals['vals']['prepaid_payment_vals'].update({
+            'amount': 2200.0,
+            'currency': self.currency_data['currency'],
+            'currency_dp': 2,
+        })
+        xml_content = self.env['ir.qweb']._render(vals['main_template'], vals)
+        file = etree.tostring(cleanup_xml_node(xml_content), xml_declaration=True, encoding='UTF-8')
+        root = etree.fromstring(file)
+        prepaid_node = root.xpath('cac:PrepaidPayment/cbc:PaidAmount', namespaces=NS_MAP)
+        self.assertEqual(prepaid_node[0].text, '2200.00')
+
     def _assert_node_values(self, root, node_path, text, attributes=None):
         node = root.xpath(node_path, namespaces=NS_MAP)
 

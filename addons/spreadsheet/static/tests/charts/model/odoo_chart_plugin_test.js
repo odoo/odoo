@@ -212,6 +212,48 @@ QUnit.module("spreadsheet > odoo chart plugin", {}, () => {
         );
     });
 
+    QUnit.test("Updating the domain keeps the global fitters domain", async (assert) => {
+        let lastReadGroupDomain = undefined;
+        const { model } = await createSpreadsheetWithChart({
+            type: "odoo_line",
+            mockRPC: async function (route, args) {
+                if (args.method === "web_read_group") {
+                    assert.step("web_read_group");
+                    lastReadGroupDomain = args.kwargs.domain;
+                }
+            },
+        });
+        const sheetId = model.getters.getActiveSheetId();
+        const chartId = model.getters.getChartIds(model.getters.getActiveSheetId())[0];
+        const definition = model.getters.getChartDefinition(chartId);
+        const filter = {
+            id: "42",
+            type: "relation",
+            label: "filter",
+            modelName: "product",
+            defaultValue: [41],
+        };
+        await addGlobalFilter(model, filter, {
+            chart: { [chartId]: { chain: "product", type: "many2one" } },
+        });
+
+        model.getters.getChartRuntime(chartId); // force runtime computation
+        await waitForDataSourcesLoaded(model);
+        assert.verifySteps(["web_read_group"], "it should have loaded the data");
+        assert.deepEqual(lastReadGroupDomain, [["product", "in", [41]]]);
+
+        const updatedDefinition = {
+            ...definition,
+            searchParams: { ...definition.searchParams, domain: [["1", "=", "1"]] },
+        };
+        model.dispatch("UPDATE_CHART", { definition: updatedDefinition, id: chartId, sheetId });
+
+        model.getters.getChartRuntime(chartId); // force runtime computation
+        await waitForDataSourcesLoaded(model);
+        assert.verifySteps(["web_read_group"], "it should have loaded the data with a new domain");
+        assert.deepEqual(lastReadGroupDomain, ["&", ["1", "=", "1"], ["product", "in", [41]]]);
+    });
+
     QUnit.test("Can import/export an Odoo chart", async (assert) => {
         const model = await createModelWithDataSource();
         insertChartInSpreadsheet(model, "odoo_line");

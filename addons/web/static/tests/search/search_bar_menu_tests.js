@@ -2170,5 +2170,38 @@ QUnit.module("Search", (hooks) => {
             ]);
             assert.deepEqual(getDomain(controlPanel), [["id", "in", values]]);
         });
+
+        QUnit.test(`Custom filter with "&"" as value`, async function (assert) {
+            serverData.models.foo.fields.active = {
+                type: "boolean",
+                string: "Active",
+                searchable: true,
+            };
+            patchWithCleanup(odoo, { debug: true });
+
+            const controlPanel = await makeWithSearch({
+                serverData,
+                resModel: "foo",
+                Component: SearchBar,
+                searchMenuTypes: ["filter"],
+                searchViewId: false,
+                searchViewArch: `<search />`,
+                mockRPC(route) {
+                    if (route === "/web/domain/validate") {
+                        return true;
+                    }
+                },
+            });
+            assert.deepEqual(getDomain(controlPanel), []);
+
+            await toggleSearchBarMenu(target);
+            await openAddCustomFilterDialog(target);
+
+            await editInput(target, dsHelpers.SELECTORS.debugArea, `[("foo", "ilike", "&")]`);
+            await click(target.querySelector(".modal footer button"));
+
+            assert.deepEqual(getFacetTexts(target), [`Foo contains &`]);
+            assert.deepEqual(getDomain(controlPanel), [["foo", "ilike", "&"]]);
+        });
     });
 });

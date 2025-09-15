@@ -44,6 +44,13 @@ class ResPartner(models.Model):
         return iap_data
 
     @api.model
+    def _iap_replace_industry_code(self, iap_data):
+        if industry_code := iap_data.pop('industry_code', False):
+            if industry := self.env.ref(f'base.res_partner_industry_{industry_code}', raise_if_not_found=False):
+                iap_data['industry_id'] = {'id': industry.id, 'display_name': industry.display_name}
+        return iap_data
+
+    @api.model
     def _iap_replace_language_codes(self, iap_data):
         if lang := iap_data.pop('preferred_language', False):
             if installed_lang := (
@@ -57,6 +64,7 @@ class ResPartner(models.Model):
     @api.model
     def _format_data_company(self, iap_data):
         self._iap_replace_location_codes(iap_data)
+        self._iap_replace_industry_code(iap_data)
         self._iap_replace_language_codes(iap_data)
         return iap_data
 

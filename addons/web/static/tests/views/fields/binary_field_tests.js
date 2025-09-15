@@ -598,4 +598,25 @@ QUnit.module("Fields", (hooks) => {
         );
         assert.containsOnce(target, ".o_error_dialog");
     });
+
+    QUnit.test("doesn't crash if value is not a string", async (assert) => {
+        serverData.models.partner.records = [
+            {
+                id: 1,
+                document: {},
+            },
+        ];
+
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            resId: 1,
+            serverData,
+            arch: `
+                <form>
+                    <field name="document"/>
+                </form>`,
+        });
+        assert.equal(target.querySelector(".o_field_binary input").value, "");
+    });
 });

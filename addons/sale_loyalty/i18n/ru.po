@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* sale_loyalty
-# 
+#
 # Translators:
 # Vasiliy Korobatov <korobatov@gmail.com>, 2023
 # Alena Vlasova, 2023
@@ -10,20 +10,22 @@
 # Константин Коровин <korovin74@gmail.com>, 2023
 # Сергей Шебанин <sergey@shebanin.ru>, 2023
 # Wil Odoo, 2024
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2025-09-12 02:57+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
+"Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ru\n"
-"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || "
+"(n%100>=11 && n%100<=14)? 2 : 3);\n"
 
 #. module: sale_loyalty
 #. odoo-python
@@ -158,13 +160,6 @@ msgid "Expired Date:"
 msgstr "Дата истечения срока действия:"
 
 #. module: sale_loyalty
-#. odoo-python
-#: code:addons/sale_loyalty/models/sale_order.py:0
-#, python-format
-msgid "Free Product - %(product)s"
-msgstr "Бесплатный продукт - %(product)s"
-
-#. module: sale_loyalty
 #: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_purchased_gift_card
 msgid "Gift #"
 msgstr "Подарок"
@@ -259,8 +254,8 @@ msgstr "Мультипродукт"
 #: code:addons/sale_loyalty/models/sale_order.py:0
 #, python-format
 msgid ""
-"No card found for this loyalty program and no points will be given with this"
-" order."
+"No card found for this loyalty program and no points will be given with this "
+"order."
 msgstr ""
 "Не найдено ни одной карты для этой программы лояльности, и баллы не будут "
 "начислены за этот заказ."
@@ -452,7 +447,6 @@ msgstr "Срок действия этого кода истек (%s)."
 #. module: sale_loyalty
 #. odoo-python
 #: code:addons/sale_loyalty/models/sale_order.py:0
-#: code:addons/sale_loyalty/models/sale_order.py:0
 #, python-format
 msgid "This code is invalid (%s)."
 msgstr "Этот код недействителен (%s)."
@@ -521,3 +515,7 @@ msgid ""
 msgstr ""
 "Ниже вы найдете код вашей подарочной карты. Он был отправлен по электронной "
 "почте. Вы можете использовать его прямо сейчас."
+
+#, python-format
+#~ msgid "Free Product - %(product)s"
+#~ msgstr "Бесплатный продукт - %(product)s"

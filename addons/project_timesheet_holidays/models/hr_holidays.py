@@ -56,7 +56,11 @@ class Holidays(models.Model):
     timesheet_ids = fields.One2many('account.analytic.line', 'holiday_id', string="Analytic Lines")
 
     def _validate_leave_request(self):
-        """ Timesheet will be generated on leave validation only if timesheet_generate is True
+        self._generate_timesheets()
+        return super()._validate_leave_request()
+
+    def _generate_timesheets(self):
+        """ Timesheet will be generated only if timesheet_generate is True
             If company is set, timesheet_project_id and timesheet_task_id from leave type are
             used as project_id and task_id.
             Else, internal_project_id and leave_timesheet_task_id are used.
@@ -64,6 +68,8 @@ class Holidays(models.Model):
         """
         vals_list = []
         leave_ids = []
+        calendar_leaves_data = self.env['resource.calendar.leaves']._read_group([('holiday_id', 'in', self.ids)], ['holiday_id'], ['id:array_agg'])
+        mapped_calendar_leaves = {leave: calendar_leave_ids[0] for leave, calendar_leave_ids in calendar_leaves_data}
         for leave in self:
             if leave.holiday_type != 'employee' or not leave.holiday_status_id.timesheet_generate:
                 continue
@@ -82,20 +88,19 @@ class Holidays(models.Model):
 
             work_hours_data = leave.employee_id.list_work_time_per_day(
                 leave.date_from,
-                leave.date_to)
+                leave.date_to,
+                domain=[('id', '!=', mapped_calendar_leaves[leave])] if leave in mapped_calendar_leaves else None)
 
             for index, (day_date, work_hours_count) in enumerate(work_hours_data):
                 vals_list.append(leave._timesheet_prepare_line_values(index, work_hours_data, day_date, work_hours_count, project, task))
 
-        # Unlink previous timesheets to avoid doublon (shouldn't happen on the interface but meh)
+        # Unlink previous timesheets to avoid doublon (shouldn't happen on the interface but meh). Necessary when the function is called to regenerate timesheets.
         old_timesheets = self.env["account.analytic.line"].sudo().search([('project_id', '!=', False), ('holiday_id', 'in', leave_ids)])
         if old_timesheets:
             old_timesheets.holiday_id = False
             old_timesheets.unlink()
 
         self.env['account.analytic.line'].sudo().create(vals_list)
-
-        return super()._validate_leave_request()
 
     def _timesheet_prepare_line_values(self, index, work_hours_data, day_date, work_hours_count, project, task):
         self.ensure_one()

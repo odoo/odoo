@@ -66,9 +66,14 @@ class StockValuationLayer(models.Model):
         ]).ids
         return [('id', 'in', layer_ids)]
 
+    # TODO: remove in master
     def _candidate_sort_key(self):
         self.ensure_one()
         return tuple()
+
+    def _get_related_product(self):
+        self.ensure_one()
+        return self.product_id
 
     def _validate_accounting_entries(self):
         am_vals = []
@@ -85,7 +90,7 @@ class StockValuationLayer(models.Model):
         if am_vals:
             account_moves = self.env['account.move'].sudo().create(am_vals)
             account_moves._post()
-        products_svl = groupby(self, lambda svl: (svl.product_id, svl.company_id.anglo_saxon_accounting))
+        products_svl = groupby(self, lambda svl: (svl._get_related_product(), svl.company_id.anglo_saxon_accounting))
         for (product, anglo_saxon_accounting), svls in products_svl:
             svls = self.browse(svl.id for svl in svls)
             moves = svls.stock_move_id
@@ -164,10 +169,10 @@ class StockValuationLayer(models.Model):
         if not self:
             return 0, 0
 
-        rounding = self.product_id.uom_id.rounding
         qty_to_take_on_candidates = qty_to_value
         tmp_value = 0  # to accumulate the value taken on the candidates
         for candidate in self:
+            rounding = candidate.product_id.uom_id.rounding
             if float_is_zero(candidate.quantity, precision_rounding=rounding):
                 continue
             candidate_quantity = abs(candidate.quantity)
@@ -200,13 +205,15 @@ class StockValuationLayer(models.Model):
         if not self:
             return 0, 0
 
-        rounding = self.product_id.uom_id.rounding
+        min_rounding = 1.0
         qty_total = -qty_valued
         value_total = -valued
         new_valued_qty = 0
         new_valuation = 0
 
         for svl in self:
+            rounding = svl.product_id.uom_id.rounding
+            min_rounding = min(min_rounding, rounding)
             if float_is_zero(svl.quantity, precision_rounding=rounding):
                 continue
             relevant_qty = abs(svl.quantity)
@@ -218,7 +225,7 @@ class StockValuationLayer(models.Model):
             qty_total += relevant_qty
             value_total += relevant_qty * ((svl.value + sum(svl.stock_valuation_layer_ids.mapped('value'))) / svl.quantity)
 
-        if float_compare(qty_total, 0, precision_rounding=rounding) > 0:
+        if float_compare(qty_total, 0, precision_rounding=min_rounding) > 0:
             unit_cost = value_total / qty_total
             new_valued_qty = min(qty_total, qty_to_value)
             new_valuation = unit_cost * new_valued_qty

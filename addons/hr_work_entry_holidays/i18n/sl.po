@@ -5,6 +5,7 @@
 # Translators:
 # Jasmina Macur <jasmina@hbs.si>, 2023
 # Matjaz Mozetic <m.mozetic@matmoz.si>, 2023
+# Aleš Pipan, 2025
 # 
 msgid ""
 msgstr ""
@@ -12,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:55+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Matjaz Mozetic <m.mozetic@matmoz.si>, 2023\n"
+"Last-Translator: Aleš Pipan, 2025\n"
 "Language-Team: Slovenian (https://app.transifex.com/odoo/teams/41243/sl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -35,11 +36,20 @@ msgid ""
 "Contracts:\n"
 "%s"
 msgstr ""
+"Dopusta ni mogoče določiti za več pogodb z različnimi delovnimi urniki.\n"
+"\n"
+"Prosimo, ustvarite en prost dan za vsako pogodbo.\n"
+"\n"
+"Prosti čas:\n"
+"%s\n"
+"\n"
+"Pogodbe:\n"
+"%s"
 
 #. module: hr_work_entry_holidays
 #: model:ir.model,name:hr_work_entry_holidays.model_hr_employee_base
 msgid "Basic Employee"
-msgstr ""
+msgstr "Osnovni zaposleni"
 
 #. module: hr_work_entry_holidays
 #. odoo-python
@@ -52,6 +62,10 @@ msgid ""
 "required allocation for them. Please review these leaves and/or allocations "
 "before changing the contract."
 msgstr ""
+"Sprememba pogodbe tega zaposlenega spremeni njegov delovni urnik v obdobju, "
+"ko je že izkoristil dopust. Sprememba tega delovnega urnika spremeni "
+"trajanje teh dopustov tako, da zaposleni nima več zahtevane dodelitve zanje."
+" Pred spremembo pogodbe preverite te dopuste in/ali dodelitve."
 
 #. module: hr_work_entry_holidays
 #: model:ir.model,name:hr_work_entry_holidays.model_hr_contract
@@ -61,12 +75,12 @@ msgstr "Kadrovska pogodba"
 #. module: hr_work_entry_holidays
 #: model:ir.model,name:hr_work_entry_holidays.model_hr_work_entry
 msgid "HR Work Entry"
-msgstr ""
+msgstr "Vnos dela v kadrovsko službo"
 
 #. module: hr_work_entry_holidays
 #: model:ir.model,name:hr_work_entry_holidays.model_hr_work_entry_type
 msgid "HR Work Entry Type"
-msgstr ""
+msgstr "Vrsta vnosa dela v kadrovsko službo"
 
 #. module: hr_work_entry_holidays
 #: model_terms:ir.ui.view,arch_db:hr_work_entry_holidays.work_entry_type_leave_form_inherit
@@ -86,6 +100,10 @@ msgid ""
 "The status is 'Refused', when time off request is refused by manager.\n"
 "The status is 'Approved', when time off request is approved by manager."
 msgstr ""
+"Status je nastavljen na »Za oddajo«, ko je ustvarjena zahteva za prosti čas.\n"
+"Status je »Za odobritev«, ko uporabnik potrdi zahtevo za prosti čas.\n"
+"Status je »Zavrnjeno«, ko vodja zavrne zahtevo za prosti čas.\n"
+"Status je »Odobreno«, ko vodja odobri zahtevo za prosti čas."
 
 #. module: hr_work_entry_holidays
 #. odoo-python
@@ -95,6 +113,8 @@ msgid ""
 "There is no employee set on the time off. Please make sure you're logged in "
 "the correct company."
 msgstr ""
+"Za prosti čas ni nastavljen noben zaposleni. Prepričajte se, da ste "
+"prijavljeni v pravilno podjetje."
 
 #. module: hr_work_entry_holidays
 #: model:ir.model,name:hr_work_entry_holidays.model_hr_leave
@@ -111,9 +131,9 @@ msgstr "Tip dopusta"
 #. module: hr_work_entry_holidays
 #: model:ir.model.fields,field_description:hr_work_entry_holidays.field_hr_leave_type__work_entry_type_id
 msgid "Work Entry Type"
-msgstr ""
+msgstr "Vrsta vnosa dela"
 
 #. module: hr_work_entry_holidays
 #: model:ir.model.fields,help:hr_work_entry_holidays.field_hr_work_entry_type__leave_type_ids
 msgid "Work entry used in the payslip."
-msgstr ""
+msgstr "Vnos dela, uporabljen v plačilni listi."

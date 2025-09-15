@@ -1,9 +1,6 @@
 from io import BytesIO
-import logging
 
 from odoo import _, api, fields, models
-
-_logger = logging.getLogger(__name__)
 
 
 class AccountMoveSend(models.TransientModel):
@@ -39,21 +36,72 @@ class AccountMoveSend(models.TransientModel):
 
     def _l10n_tr_nilvera_check_invoices(self):
         moves_to_check = self.move_ids.filtered(self._get_default_l10n_tr_nilvera_einvoice_enable_einvoice)
-        invalid_records = moves_to_check.partner_id.filtered(
-            lambda p: p.country_code != 'TR' or not p.city or not p.state_id or not p.street
-        )
-        if invalid_records:
-            return {
-                "partner_data_missing": {
-                    "message": _("The following partner(s) are either not Turkish or are missing one of those fields: city, state and street."),
-                    "action_text": _("View Partner(s)"),
-                    "action": invalid_records._get_records_action(
-                        name=_("Check data on Partner(s)"),
-                    ),
-                }
+        mandatory_category_codes = self.env["res.partner.category"]._get_l10n_tr_official_mandatory_categories()
+
+        warnings = {}
+
+        if tr_companies_missing_required_codes := moves_to_check.company_id.filtered(lambda c: not (c.partner_id.category_id.parent_id & mandatory_category_codes)):
+            warnings["tr_companies_missing_required_codes"] = {
+                "message": _("Please ensure that your company contact has either the 'MERSISNO' or 'TICARETSICILNO' tag with a value assigned."),
+                "action_text": _("View Company(s)"),
+                "action": tr_companies_missing_required_codes.partner_id._get_records_action(name=_("Check tags on company(s)")),
+                "critical": True,
             }
 
-        return {}
+        if invalid_records := moves_to_check.partner_id.filtered(
+            lambda p: p.country_code != "TR"
+            or not p.city
+            or not p.state_id
+            or not p.street
+        ):
+            warnings["partner_data_missing"] = {
+                "message": _(
+                    "The following partner(s) are either not Turkish or are missing one of the following fields: city, state, or street."
+                ),
+                "action_text": _("View Partner(s)"),
+                "action": invalid_records._get_records_action(
+                    name=_("Check data on Partner(s)")
+                ),
+            }
+
+        if critical_invalid_records := moves_to_check.partner_id.filtered(
+            lambda p: p.l10n_tr_nilvera_customer_status == "einvoice" and not p.ref
+        ):
+            warnings["critical_partner_data_missing"] = {
+                "message": _(
+                    "The following E-Invoice partner(s) must have the reference field set to the tax office name."
+                ),
+                "action_text": _("View Partner(s)"),
+                "action": critical_invalid_records._get_records_action(
+                    name=_("Check reference on Partner(s)")
+                ),
+                "critical": True,
+            }
+
+        if invalid_subscription_dates := moves_to_check.filtered(
+            lambda move: move._l10n_tr_nilvera_einvoice_check_invalid_subscription_dates()
+        ):
+            warnings["critical_invalid_subscription_dates"] = {
+                "message": _("The following invoice(s) need to have the same Start Date and End Date on all their respective Invoice Lines."),
+                "action_text": _("View Invoice(s)"),
+                "action": invalid_subscription_dates._get_records_action(
+                    name=_("Check data on Invoice(s)"),
+                ),
+                "critical": True,
+            }
+
+        if invalid_negative_lines := moves_to_check.filtered(
+            lambda move: move._l10n_tr_nilvera_einvoice_check_negative_lines(),
+        ):
+            warnings["critical_invalid_negative_lines"] = {
+                "message": _("Nilvera portal cannot process negative quantity nor negative price on invoice lines"),
+                "action_text": _("View Invoice(s)"),
+                "action": invalid_negative_lines._get_records_action(name=_("Check data on Invoice(s)")),
+                "critical": True,
+                "danger": True,
+            }
+
+        return warnings
 
     # -------------------------------------------------------------------------
     # COMPUTE METHODS

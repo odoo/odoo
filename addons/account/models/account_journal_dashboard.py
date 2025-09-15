@@ -76,6 +76,21 @@ class account_journal(models.Model):
 
         (self - bank_cash_journals - sale_purchase_journals).kanban_dashboard_graph = False
 
+    def _transform_activity_dict(self, activity_data):
+        name = activity_data['summary'] or activity_data['act_type_name']
+        if activity_data['activity_category'] == 'tax_report' and activity_data['res_model'] == 'account.move':
+            name = activity_data['ref']
+        return {
+            'id': activity_data['id'],
+            'res_id': activity_data['res_id'],
+            'res_model': activity_data['res_model'],
+            'status': activity_data['status'],
+            'name': name,
+            'activity_category': activity_data['activity_category'],
+            'act_type_id': activity_data['act_type_id'],
+            'date': odoo_format_date(self.env, activity_data['date_deadline'])
+        }
+
     def _get_json_activity_data(self):
         today = fields.Date.context_today(self)
         activities = defaultdict(list)
@@ -86,6 +101,7 @@ class account_journal(models.Model):
                    activity.res_id,
                    activity.res_model,
                    activity.summary,
+                   act_type.id as act_type_id,
                    CASE WHEN activity.date_deadline < %(today)s THEN 'late' ELSE 'future' END as status,
                    COALESCE(act_type.name->> %(lang)s, act_type.name->>'en_US') as act_type_name,
                    act_type.category as activity_category,
@@ -105,20 +121,9 @@ class account_journal(models.Model):
             'today': today,
             'lang': lang,
         })
-        for activity in self.env.cr.dictfetchall():
-            act = {
-                'id': activity['id'],
-                'res_id': activity['res_id'],
-                'res_model': activity['res_model'],
-                'status': activity['status'],
-                'name': activity['summary'] or activity['act_type_name'],
-                'activity_category': activity['activity_category'],
-                'date': odoo_format_date(self.env, activity['date_deadline'])
-            }
-            if activity['activity_category'] == 'tax_report' and activity['res_model'] == 'account.move':
-                act['name'] = activity['ref']
+        for activity_data in self.env.cr.dictfetchall():
+            activities[activity_data['journal_id']].append(self._transform_activity_dict(activity_data))
 
-            activities[activity['journal_id']].append(act)
         for journal in self:
             journal.json_activity_data = json.dumps({'activities': activities[journal.id]})
 
@@ -203,12 +208,11 @@ class account_journal(models.Model):
               JOIN account_move move ON move.id = st_line.move_id
              WHERE move.journal_id = ANY(%s)
                AND move.date > %s
-               AND move.date <= %s
                AND move.company_id = ANY(%s)
           GROUP BY move.date, move.journal_id
           ORDER BY move.date DESC
         """
-        self.env.cr.execute(query, (self.ids, last_month, today, self.env.companies.ids))
+        self.env.cr.execute(query, (self.ids, last_month, self.env.companies.ids))
         query_result = group_by_journal(self.env.cr.dictfetchall())
 
         result = {}
@@ -229,15 +233,16 @@ class account_journal(models.Model):
                     graph_key = _('Sample data')
             else:
                 last_balance = journal.current_statement_balance
-                data.append(build_graph_data(today, last_balance, currency))
+                # Make sure the last point in the graph is at least today or a future date
+                if not journal_result or journal_result[0]['date'] < today.date():
+                    data.append(build_graph_data(today, last_balance, currency))
                 date = today
                 amount = last_balance
                 #then we subtract the total amount of bank statement lines per day to get the previous points
                 #(graph is drawn backward)
                 for val in journal_result:
                     date = val['date']
-                    if date.strftime(DF) != today.strftime(DF):  # make sure the last point in the graph is today
-                        data[:0] = [build_graph_data(date, amount, currency)]
+                    data[:0] = [build_graph_data(date, amount, currency)]
                     amount -= val['amount']
 
                 # make sure the graph starts 1 month ago

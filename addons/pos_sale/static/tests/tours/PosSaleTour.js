@@ -367,3 +367,24 @@ registry.category("web_tour.tours").add("PoSDownPaymentFixedTax", {
             }),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("test_multiple_lots_sale_order", {
+    steps: () =>
+        [
+            ProductScreen.confirmOpeningPopup(),
+            ProductScreen.clickQuotationButton(),
+            ProductScreen.selectNthOrder(1, { loadSN: true }),
+            {
+                'content': 'Ensure first line has lot 1001',
+                'trigger': '.order-container .orderline:nth-child(1):contains(Product):contains(1001)',
+            },
+            {
+                'content': 'Ensure second line has lot 1002',
+                'trigger': '.order-container .orderline:nth-child(2):contains(Product):contains(1002)',
+            },
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.clickValidate(),
+            ReceiptScreen.isShown(),
+        ].flat(),
+});

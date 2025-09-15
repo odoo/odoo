@@ -131,7 +131,7 @@ class Website(models.Model):
     @api.depends('all_pricelist_ids', 'pricelist_id', 'company_id')
     def _compute_currency_id(self):
         for website in self:
-            website.currency_id = website.pricelist_id.currency_id or website.company_id.currency_id
+            website.currency_id = website.pricelist_id.currency_id or website.company_id.sudo().currency_id
 
     def _compute_enabled_delivery(self):
         for website in self:

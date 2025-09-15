@@ -53,6 +53,7 @@ registry.category("web_tour.tours").add('mass_mailing_code_view_tour', {
         }, {
             trigger: '[name="body_arch"] iframe #email_designer_default_body [name="Title"] .oe_snippet_thumbnail',
             content: 'Drag the "Title" snippet from the design panel and drop it in the editor',
+            extra_trigger: '[name="body_arch"] iframe body.editor_enable',
             run: function (actions) {
                 actions.drag_and_drop_native('[name="body_arch"] iframe .o_editable', this.$anchor);
             }

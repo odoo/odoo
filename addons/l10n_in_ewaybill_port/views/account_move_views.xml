@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="invoice_form_inherit_l10n_in_ewaybill_port" model="ir.ui.view">
+        <field name="name">account.move.form.inherit.l10n.in.ewaybill.port</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="l10n_in_edi_ewaybill.invoice_form_inherit_l10n_in_edi_ewaybill"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='transportation_group']" position="inside">
+                <field
+                    name="l10n_in_ewaybill_port_partner_id"
+                    placeholder="Port/CHA/Dock Address"
+                    invisible="l10n_in_gst_treatment != 'overseas'"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

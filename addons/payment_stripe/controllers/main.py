@@ -48,7 +48,8 @@ class StripeController(http.Controller):
                 payload={'expand[]': 'payment_method'},  # Expand all required objects.
                 method='GET',
             )
-            logged_intent = payment_intent - tx_sudo._get_specific_secret_keys()
+            secret_keys = tx_sudo._get_specific_secret_keys()
+            logged_intent = {k: v for k, v in payment_intent.items() if k not in secret_keys}
             _logger.info("Received payment_intents response:\n%s", pprint.pformat(logged_intent))
             self._include_payment_intent_in_notification_data(payment_intent, data)
         else:

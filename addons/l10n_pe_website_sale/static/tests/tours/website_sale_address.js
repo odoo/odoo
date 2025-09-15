@@ -74,6 +74,11 @@ registry.category("web_tour.tours").add('maintain_city_district_on_reload', {
             run: "text Lima",
         },
         {
+            content: "Set identification type to VAT",
+            trigger: 'select[name="l10n_latam_identification_type_id"]',
+            run: "text VAT",
+        },
+        {
             content: "Enter an invalid VAT value to trigger a potential reload",
             trigger: 'input[name="vat"]',
             run: 'text XAXX010101000',

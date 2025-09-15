@@ -88,6 +88,9 @@ class AccountMoveSend(models.TransientModel):
                     }
                     continue
 
+                if self._can_commit():
+                    self.env.cr.commit()
+
                 invoice._l10n_ro_edi_send_invoice(xml_data)
 
                 if self._can_commit():

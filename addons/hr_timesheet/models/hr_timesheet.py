@@ -74,7 +74,7 @@ class AccountAnalyticLine(models.Model):
         super(AccountAnalyticLine, self - analytic_line_with_project)._compute_display_name()
         for analytic_line in analytic_line_with_project:
             if analytic_line.task_id:
-                analytic_line.display_name = f"{analytic_line.project_id.display_name} - {analytic_line.task_id.display_name}"
+                analytic_line.display_name = f"{analytic_line.project_id.sudo().display_name} - {analytic_line.task_id.sudo().display_name}"
             else:
                 analytic_line.display_name = analytic_line.project_id.display_name
 
@@ -212,7 +212,7 @@ class AccountAnalyticLine(models.Model):
             employee_out_id = False
             if employee_per_company:
                 company_id = list(employee_per_company)[0] if len(employee_per_company) == 1\
-                        else vals.get('company_id', self.env.company.id)
+                        else vals.get('company_id') or self.env.company.id
                 employee_out_id = employee_per_company.get(company_id, False)
 
             if employee_out_id:

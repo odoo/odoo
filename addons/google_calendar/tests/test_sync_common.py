@@ -7,7 +7,8 @@ from odoo.addons.google_calendar.utils.google_calendar import GoogleCalendarServ
 from odoo.addons.google_account.models.google_service import GoogleService
 from odoo.addons.google_calendar.models.res_users import User
 from odoo.addons.google_calendar.models.google_sync import GoogleSync
-from odoo.tests.common import HttpCase, new_test_user
+from odoo.addons.mail.tests.common import mail_new_test_user
+from odoo.tests.common import HttpCase
 from freezegun import freeze_time
 from contextlib import contextmanager
 
@@ -27,8 +28,8 @@ class TestSyncGoogle(HttpCase):
         super().setUp()
         self.google_service = GoogleCalendarService(self.env['google.service'])
         self.env.user.sudo().unpause_google_synchronization()
-        self.organizer_user = new_test_user(self.env, login="organizer_user")
-        self.attendee_user = new_test_user(self.env, login='attendee_user')
+        self.organizer_user = mail_new_test_user(self.env, login="organizer_user")
+        self.attendee_user = mail_new_test_user(self.env, login='attendee_user')
 
     @contextmanager
     def mock_datetime_and_now(self, mock_dt):

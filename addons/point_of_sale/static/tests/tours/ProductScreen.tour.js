@@ -177,6 +177,17 @@ registry.category("web_tour.tours").add("CashClosingDetails", {
         ].flat(),
 });
 
+registry.category("web_tour.tours").add("CashClosingDecimals", {
+    test: true,
+    url: "/pos/ui",
+    steps: () =>
+        [
+            ProductScreen.enterOpeningAmount("558.49"),
+            ProductScreen.confirmOpeningPopup(),
+            ProductScreen.checkSecondCashClosingDetailsLineAmount("1.91", "-"),
+        ].flat(),
+});
+
 registry.category("web_tour.tours").add("ShowTaxExcludedTour", {
     test: true,
     url: "/pos/ui",
@@ -244,5 +255,21 @@ registry.category("web_tour.tours").add("test_add_multiple_serials_at_once", {
             ProductScreen.enterLotNumbers(["SN005", "SN006"]),
             ProductScreen.selectedOrderlineHas("Product A", "4.0"),
             Chrome.endTour(),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_table_stand_number_exported", {
+    test: true,
+    steps: () =>
+        [
+            ProductScreen.confirmOpeningPopup(),
+            Chrome.clickMenuButton(),
+            ProductScreen.clickOrderMenu(),
+            ProductScreen.doubleClickOrder("12345678901234"),
+            ProductScreen.clickDisplayedProduct("Whiteboard Pen"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Cash"),
+            PaymentScreen.clickValidate(),
+            ReceiptScreen.isShown(),
         ].flat(),
 });

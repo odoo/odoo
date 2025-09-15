@@ -722,8 +722,13 @@ class SaleOrder(models.Model):
 
     def onchange(self, values, field_names, fields_spec):
         self_with_context = self
-        if not field_names: # Some warnings should not be displayed for the first onchange
-            self_with_context = self.with_context(sale_onchange_first_call=True)
+        if not field_names:
+            self_with_context = self.with_context(
+                # Some warnings should not be displayed for the first onchange
+                sale_onchange_first_call=True,
+                # invoice & delivery address with higher `customer_rank` should take priority
+                res_partner_search_mode='customer',
+            )
         return super(SaleOrder, self_with_context).onchange(values, field_names, fields_spec)
 
     @api.onchange('commitment_date', 'expected_date')
@@ -958,6 +963,7 @@ class SaleOrder(models.Model):
         # We don't need it and it creates issues in the creation of linked records.
         context = self._context.copy()
         context.pop('default_name', None)
+        context.pop('default_user_id', None)
 
         self.with_context(context)._action_confirm()
 

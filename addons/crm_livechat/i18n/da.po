@@ -5,6 +5,7 @@
 # Translators:
 # Martin Trigaux, 2023
 # Sanne Kristensen <sanne@vkdata.dk>, 2024
+# Kira Petersen, 2025
 # 
 msgid ""
 msgstr ""
@@ -12,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-13 10:27+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Sanne Kristensen <sanne@vkdata.dk>, 2024\n"
+"Last-Translator: Kira Petersen, 2025\n"
 "Language-Team: Danish (https://app.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -40,7 +41,7 @@ msgstr "Chatbot Script Step"
 #. module: crm_livechat
 #: model:ir.model.fields.selection,name:crm_livechat.selection__chatbot_script_step__step_type__create_lead
 msgid "Create Lead"
-msgstr ""
+msgstr "Opret kundeemne"
 
 #. module: crm_livechat
 #. odoo-javascript
@@ -56,7 +57,7 @@ msgstr "Opret et nyt kundeemne (/titel på kundeemne)"
 #: code:addons/crm_livechat/models/discuss_channel.py:0
 #, python-format
 msgid "Created a new lead: %s"
-msgstr ""
+msgstr "Opret et nye kundeemne: %s"
 
 #. module: crm_livechat
 #: model:ir.model,name:crm_livechat.model_discuss_channel
@@ -66,22 +67,22 @@ msgstr "Diskussionskanal"
 #. module: crm_livechat
 #: model:ir.model.fields,field_description:crm_livechat.field_chatbot_script__lead_count
 msgid "Generated Lead Count"
-msgstr ""
+msgstr "Antal genererede kundeemner"
 
 #. module: crm_livechat
 #: model:chatbot.script.step,message:crm_livechat.chatbot_script_lead_generation_step_welcome
 msgid "Hi there, what brings you to our website today? 👋"
-msgstr ""
+msgstr "Hejsa! Hvad bringer dig forbi vores hjemmeside i dag? 👋"
 
 #. module: crm_livechat
 #: model:chatbot.script.step,message:crm_livechat.chatbot_script_lead_generation_step_noone_available
 msgid "Hu-ho, it looks like none of our operators are available 🙁"
-msgstr ""
+msgstr "Åh nej, det ser ud til, at alle operatører er optaget 🙁"
 
 #. module: crm_livechat
 #: model:chatbot.script,title:crm_livechat.chatbot_script_lead_generation_bot
 msgid "Lead Generation Bot"
-msgstr ""
+msgstr "Bot til generering af kundeemne"
 
 #. module: crm_livechat
 #: model_terms:ir.ui.view,arch_db:crm_livechat.chatbot_script_view_form
@@ -101,7 +102,7 @@ msgstr "Trin type"
 #. module: crm_livechat
 #: model:chatbot.script.step,message:crm_livechat.chatbot_script_welcome_step_just_looking
 msgid "Thank you, you should hear back from us very soon!"
-msgstr ""
+msgstr "Tak, du hører fra os snarest!"
 
 #. module: crm_livechat
 #: model:ir.model.fields,help:crm_livechat.field_chatbot_script_step__crm_team_id
@@ -109,9 +110,12 @@ msgid ""
 "Used in combination with 'create_lead' step type in order to automatically "
 "assign the created lead/opportunity to the defined team"
 msgstr ""
+"Anvendes i kombination med trin-typen 'create_lead' til automatisk tildeling"
+" af oprettede kundeemner/salgsmuligheder til det specifikke team"
 
 #. module: crm_livechat
 #: model:chatbot.script.step,message:crm_livechat.chatbot_script_welcome_step_pricing_email
 msgid ""
 "Would you mind leaving your email address so that we can reach you back?"
 msgstr ""
+"Har du noget imod at give os din e-mailadresse, så vi kan kontakte dig?"

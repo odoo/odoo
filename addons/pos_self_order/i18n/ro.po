@@ -11,14 +11,15 @@
 # Martin Trigaux, 2024
 # Betty Keresztesi, 2024
 # Lyall Kindmurr, 2024
+# Larisa_nexterp, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-10 10:34+0000\n"
+"POT-Creation-Date: 2025-05-30 18:36+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Lyall Kindmurr, 2024\n"
+"Last-Translator: Larisa_nexterp, 2025\n"
 "Language-Team: Romanian (https://app.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -201,6 +202,7 @@ msgstr "Înapoi"
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/order_widget/order_widget.js:0
+#: code:addons/pos_self_order/static/src/app/pages/cart_page/cart_page.xml:0
 #, python-format
 msgid "Cancel"
 msgstr "Anulează"
@@ -216,6 +218,7 @@ msgstr "Anulează comanda"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/order_widget/order_widget.js:0
 #: code:addons/pos_self_order/static/src/app/components/order_widget/order_widget.js:0
+#: code:addons/pos_self_order/static/src/app/pages/cart_page/cart_page.js:0
 #: code:addons/pos_self_order/static/src/app/pages/product_list_page/product_list_page.js:0
 #, python-format
 msgid "Cancel order"
@@ -865,7 +868,7 @@ msgstr "Zonă de ridicare"
 #: code:addons/pos_self_order/static/src/app/self_order_service.js:0
 #, python-format
 msgid "Please wait until the price is loaded"
-msgstr ""
+msgstr "Vă rugăm să așteptați până se încarcă prețul"
 
 #. module: pos_self_order
 #. odoo-python
@@ -1323,6 +1326,13 @@ msgid "Yes"
 msgstr "Da"
 
 #. module: pos_self_order
+#. odoo-python
+#: code:addons/pos_self_order/controllers/orders.py:0
+#, python-format
+msgid "You are not authorized to remove this order"
+msgstr "Nu sunteți autorizat să ștergeți această comandă"
+
+#. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/cart_page/cart_page.js:0
 #, python-format
@@ -1350,6 +1360,13 @@ msgstr "Comandă dvs"
 #, python-format
 msgid "Your Selection"
 msgstr "Selecția dumneavoastră"
+
+#. module: pos_self_order
+#. odoo-python
+#: code:addons/pos_self_order/controllers/orders.py:0
+#, python-format
+msgid "Your order does not exist or has been removed"
+msgstr "Comanda dvs. nu există sau a fost ștearsă"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -1383,13 +1400,6 @@ msgstr "Statusul comenzii dvs. a fost modificat"
 #: model_terms:ir.ui.view,arch_db:pos_self_order.custom_link_tree
 msgid "empty = all points of sale"
 msgstr "gol = toate punctele de vânzare"
-
-#. module: pos_self_order
-#. odoo-javascript
-#: code:addons/pos_self_order/static/src/app/components/popup_table/popup_table.xml:0
-#, python-format
-msgid "floor"
-msgstr ""
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.custom_link_tree

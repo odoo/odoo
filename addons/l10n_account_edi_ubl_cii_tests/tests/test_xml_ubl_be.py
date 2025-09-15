@@ -232,6 +232,193 @@ class TestUBLBE(TestUBLCommon, TestAccountMoveSendCommon):
         self.assertEqual(attachment.name[-12:], "ubl_bis3.xml")
         self._assert_imported_invoice_from_etree(refund, attachment)
 
+    def test_export_refund_with_early_discount(self):
+        early_discount_term = self.env['account.payment.term'].create({
+            'name': "early_payment_term",
+            'note': "10% discount if paid before 10 days",
+            'company_id': self.company_data['company'].id,
+            'discount_percentage': 10,
+            'discount_days': 10,
+            'early_discount': True,
+        })
+
+        refund = self._generate_move(
+            self.partner_1,
+            self.partner_2,
+            move_type='out_refund',
+            invoice_payment_term_id=early_discount_term.id,
+            invoice_line_ids=[
+                {
+                    'product_id': self.product_a.id,
+                    'quantity': 2.0,
+                    'product_uom_id': self.env.ref('uom.product_uom_dozen').id,
+                    'price_unit': 990.0,
+                    'discount': 10.0,
+                    'tax_ids': [(6, 0, self.tax_21.ids)],
+                },
+                {
+                    'product_id': self.product_b.id,
+                    'quantity': 10.0,
+                    'product_uom_id': self.env.ref('uom.product_uom_unit').id,
+                    'price_unit': 100.0,
+                    'tax_ids': [(6, 0, self.tax_12.ids)],
+                },
+                {
+                    'product_id': self.product_b.id,
+                    'quantity': -1.0,
+                    'product_uom_id': self.env.ref('uom.product_uom_unit').id,
+                    'price_unit': 100.0,
+                    'tax_ids': [(6, 0, self.tax_12.ids)],
+                },
+            ],
+        )
+        attachment = self._assert_invoice_attachment(
+            refund.ubl_cii_xml_id,
+            xpaths=f'''
+                <xpath expr="./*[local-name()='ID']" position="replace">
+                    <ID>___ignore___</ID>
+                </xpath>
+                <xpath expr="./*[local-name()='PaymentMeans']/*[local-name()='PaymentID']" position="replace">
+                    <PaymentID>___ignore___</PaymentID>
+                </xpath>
+                <xpath expr=".//*[local-name()='CreditNoteLine'][1]/*[local-name()='ID']" position="replace">
+                    <ID>___ignore___</ID>
+                </xpath>
+                <xpath expr=".//*[local-name()='CreditNoteLine'][2]/*[local-name()='ID']" position="replace">
+                    <ID>___ignore___</ID>
+                </xpath>
+                <xpath expr=".//*[local-name()='CreditNoteLine'][3]/*[local-name()='ID']" position="replace">
+                    <ID>___ignore___</ID>
+                </xpath>
+                <xpath expr=".//*[local-name()='AdditionalDocumentReference']/*[local-name()='Attachment']/*[local-name()='EmbeddedDocumentBinaryObject']" position="attributes">
+                    <attribute name="mimeCode">application/pdf</attribute>
+                    <attribute name="filename">{refund.invoice_pdf_report_id.name}</attribute>
+                </xpath>
+            ''',
+            expected_file_path='from_odoo/bis3_out_refund_early_discount.xml',
+        )
+        self.assertEqual(attachment.name[-12:], "ubl_bis3.xml")
+
+    def test_export_import_cash_rounding(self):
+        cash_rounding_line = self.env['account.cash.rounding'].create({
+            'name': '1.0 Line',
+            'rounding': 1.00,
+            'strategy': 'add_invoice_line',
+            'profit_account_id': self.company_data['default_account_revenue'].copy().id,
+            'loss_account_id': self.company_data['default_account_expense'].copy().id,
+            'rounding_method': 'HALF-UP',
+        })
+
+        cash_rounding_tax = self.env['account.cash.rounding'].create({
+            'name': '1.0 Tax',
+            'rounding': 1.00,
+            'strategy': 'biggest_tax',
+            'rounding_method': 'HALF-UP',
+        })
+
+        test_data = [
+            {
+                'invoice_cash_rounding_id': False,
+                'expected_xml_values': {
+                    '{*}TaxTotal/{*}TaxAmount': '14.70',
+                    '{*}LegalMonetaryTotal/{*}TaxExclusiveAmount': '70.00',
+                    '{*}LegalMonetaryTotal/{*}TaxInclusiveAmount': '84.70',
+                    '{*}LegalMonetaryTotal/{*}PrepaidAmount': '0.00',
+                    '{*}LegalMonetaryTotal/{*}PayableRoundingAmount': None,
+                    '{*}LegalMonetaryTotal/{*}PayableAmount': '84.70',
+                },
+                'expected_rounding_invoice_line_values': None,
+            },
+            {
+                'invoice_cash_rounding_id': cash_rounding_tax,
+                'expected_xml_values': {
+                    '{*}TaxTotal/{*}TaxAmount': '15.00',
+                    '{*}LegalMonetaryTotal/{*}TaxExclusiveAmount': '70.00',
+                    '{*}LegalMonetaryTotal/{*}TaxInclusiveAmount': '85.00',
+                    '{*}LegalMonetaryTotal/{*}PrepaidAmount': '0.00',
+                    '{*}LegalMonetaryTotal/{*}PayableRoundingAmount': None,
+                    '{*}LegalMonetaryTotal/{*}PayableAmount': '85.00',
+                },
+                'expected_rounding_invoice_line_values': None,
+            },
+            {
+                'invoice_cash_rounding_id': cash_rounding_line,
+                'expected_xml_values': {
+                    '{*}TaxTotal/{*}TaxAmount': '14.70',
+                    '{*}LegalMonetaryTotal/{*}TaxExclusiveAmount': '70.00',
+                    '{*}LegalMonetaryTotal/{*}TaxInclusiveAmount': '84.70',
+                    '{*}LegalMonetaryTotal/{*}PrepaidAmount': '0.00',
+                    '{*}LegalMonetaryTotal/{*}PayableRoundingAmount': '0.30',
+                    '{*}LegalMonetaryTotal/{*}PayableAmount': '85.00',
+                },
+                # We create an invoice line for the rounding amount.
+                # (This adjusts the base amount of the invoice.)
+                'expected_rounding_invoice_line_values': {
+                    'display_type': 'product',
+                    'name': 'Rounding',
+                    'quantity': 1,
+                    'product_id': False,
+                    'price_unit': 0.30,
+                    'balance': -0.15,
+                }
+            },
+        ]
+        for test in test_data:
+            cash_rounding_method = test['invoice_cash_rounding_id']
+            with self.subTest(sub_test_name=f"cash rounding method: {cash_rounding_method.name if cash_rounding_method else 'None'}"):
+                invoice = self._generate_move(
+                    seller=self.partner_1,
+                    buyer=self.partner_2,
+                    move_type='out_invoice',
+                    currency_id=self.currency_data['currency'].id,
+                    invoice_cash_rounding_id=cash_rounding_method.id if cash_rounding_method else False,
+                    invoice_line_ids=[
+                        {
+                            'product_id': self.product_a.id,
+                            'quantity': 1,
+                            'price_unit': 70.00,
+                            'tax_ids': [Command.set([self.tax_21.id])],
+                        },
+                    ],
+                )
+
+                attachment = invoice.ubl_cii_xml_id
+                self.assertTrue(attachment)
+
+                xml_content = base64.b64decode(attachment.with_context(bin_size=False).datas)
+                xml_etree = self.get_xml_tree_from_string(xml_content)
+
+                for path, text in test['expected_xml_values'].items():
+                    with self.subTest(sub_test_name=f"cash rounding method: {cash_rounding_method.name if cash_rounding_method else 'None'}", path=path):
+                        node = xml_etree.find(path)
+                        if text is None:
+                            self.assertTrue(node is None)
+                        else:
+                            self.assertEqual(node.text, text)
+
+                # Check that importing yields the expected results.
+
+                # For the 'add_invoice_line' strategy we create a dedicated invoice line for the cash rounding.
+                rounding_invoice_line_values = test['expected_rounding_invoice_line_values']
+                if rounding_invoice_line_values:
+                    invoice.button_draft()
+                    invoice.invoice_cash_rounding_id = False  # Do not round twice
+                    invoice.invoice_line_ids.create([{
+                        'company_id': invoice.company_id.id,
+                        'move_id': invoice.id,
+                        'partner_id': invoice.partner_id.id,
+                        **rounding_invoice_line_values,
+                    }])
+                    invoice.action_post()
+
+                self._assert_imported_invoice_from_etree(invoice, attachment)
+
+                # Check that importing a bill yields the expected results.
+
+                bill = self.company_data['default_journal_purchase']._create_document_from_attachment(attachment.ids)
+                self.assertTrue(bill)
+                self.assert_same_invoice(invoice, bill, partner_id=self.partner_1.id)
+
     def test_encoding_in_attachment_ubl(self):
         invoice = self._generate_move(
             seller=self.partner_1,

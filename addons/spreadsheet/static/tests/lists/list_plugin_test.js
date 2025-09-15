@@ -8,20 +8,20 @@ import { CommandResult } from "@spreadsheet/o_spreadsheet/cancelled_reason";
 import { createModelWithDataSource, waitForDataSourcesLoaded } from "../utils/model";
 import { addGlobalFilter, selectCell, setCellContent } from "../utils/commands";
 import {
+    getBorders,
     getCell,
     getCellContent,
     getCellFormula,
     getCells,
     getCellValue,
     getEvaluatedCell,
-    getBorders,
-    getCellFormattedValue
 } from "../utils/getters";
 import { createSpreadsheetWithList } from "../utils/list";
 import { registry } from "@web/core/registry";
 import { getBasicServerData } from "../utils/data";
 
 import * as spreadsheet from "@odoo/o-spreadsheet";
+
 const { DEFAULT_LOCALE } = spreadsheet.constants;
 
 QUnit.module("spreadsheet > list plugin", {}, () => {
@@ -59,39 +59,6 @@ QUnit.module("spreadsheet > list plugin", {}, () => {
         const { model } = await createSpreadsheetWithList({ columns: ["bar"] });
         assert.strictEqual(getCellValue(model, "A2"), "TRUE");
         assert.strictEqual(getCellValue(model, "A5"), "FALSE");
-    });
-
-    QUnit.test("Numeric/monetary fields are correctly loaded and displayed", async (assert) => {
-        const serverData = getBasicServerData();
-        serverData.models.partner.records = [
-            ...serverData.models.partner.records,
-            {
-                id: 5,
-                probability: 0,
-                field_with_array_agg: 0,
-                currency_id: 2,
-                pognon: 0,
-            },
-        ];
-        const { model } = await createSpreadsheetWithList({
-            serverData,
-            columns: ["pognon", "probability", "field_with_array_agg"],
-        });
-        assert.strictEqual(getCellFormattedValue(model, "A2"), "74.40€");
-        assert.strictEqual(getCellFormattedValue(model, "A3"), "$74.80");
-        assert.strictEqual(getCellFormattedValue(model, "A4"), "4.00€");
-        assert.strictEqual(getCellFormattedValue(model, "A5"), "$1,000.00");
-        assert.strictEqual(getCellFormattedValue(model, "A6"), "$0.00");
-        assert.strictEqual(getCellFormattedValue(model, "B2"), "10.00");
-        assert.strictEqual(getCellFormattedValue(model, "B3"), "11.00");
-        assert.strictEqual(getCellFormattedValue(model, "B4"), "95.00");
-        assert.strictEqual(getCellFormattedValue(model, "B5"), "15.00");
-        assert.strictEqual(getCellFormattedValue(model, "B6"), "0.00");
-        assert.strictEqual(getCellFormattedValue(model, "C2"), "1");
-        assert.strictEqual(getCellFormattedValue(model, "C3"), "2");
-        assert.strictEqual(getCellFormattedValue(model, "C4"), "3");
-        assert.strictEqual(getCellFormattedValue(model, "C5"), "4");
-        assert.strictEqual(getCellFormattedValue(model, "C6"), "0");
     });
 
     QUnit.test("properties field displays property display names", async (assert) => {

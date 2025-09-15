@@ -1282,7 +1282,8 @@ export const formatSelection = (editor, formatName, {applyStyle, formatProps} = 
 
     const selectedNodes = getSelectedNodes(editor.editable).filter(
         (n) =>
-            ((n.nodeType === Node.TEXT_NODE && (isVisibleTextNode(n) || isZWS(n))) ||
+            ((n.nodeType === Node.TEXT_NODE &&
+                (isVisibleTextNode(n) || isZWS(n) || (/^\n+$/.test(n.nodeValue) && !applyStyle))) ||
                 n.nodeName === "BR") &&
             closestElement(n).isContentEditable
     );
@@ -1665,8 +1666,12 @@ export function hasAnyFontSizeClass(node) {
  * @returns {boolean}
  */
 export function isSelectionFormat(editable, format) {
-    const selectedNodes = getTraversedNodes(editable)
-        .filter((n) => n.nodeType === Node.TEXT_NODE && n.nodeValue.replaceAll(ZWNBSP_CHAR, '').length);
+    const selectedNodes = getTraversedNodes(editable).filter(
+        (n) =>
+            n.nodeType === Node.TEXT_NODE &&
+            n.nodeValue.replaceAll(ZWNBSP_CHAR, "").length &&
+            (!/^\n+$/.test(n.nodeValue) || !isBlock(closestElement(n)))
+    );
     const isFormatted =
         format === "setFontSizeClassName" ? hasAnyFontSizeClass : formatsSpecs[format].isFormatted;
     return selectedNodes.length && selectedNodes.every(n => isFormatted(n, editable));
@@ -2201,7 +2206,7 @@ export function isEmptyBlock(blockEl) {
     for (const node of nodes) {
         // There is no text and no double BR, the only thing that could make
         // this visible is a "visible empty" node like an image.
-        if (node.nodeName != 'BR' && (isSelfClosingElement(node) || isFontAwesome(node))) {
+        if (node.nodeName != 'BR' && (isSelfClosingElement(node) || isFontAwesome(node) || isZWS(node))) {
             return false;
         }
     }
@@ -2479,6 +2484,15 @@ export function fillEmpty(el) {
         el.appendChild(zws);
         el.setAttribute("data-oe-zws-empty-inline", "");
         fillers.zws = zws;
+        // If the parent was filled with BR and we are filling the `el` here
+        // we should remove the parent `br` otherwise we fill the el twice.
+        // we do that only for visible el as in `cleanForSave` we remove the 
+        // non visible elements (with no classes if they are empty) so we should
+        // keep the br
+        if (el.classList.length && fillers.br) {
+            fillers.br.remove();
+            delete fillers.br;
+        }
         const previousSibling = el.previousSibling;
         if (previousSibling && previousSibling.nodeName === "BR") {
             previousSibling.remove();

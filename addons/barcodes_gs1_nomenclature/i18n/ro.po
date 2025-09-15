@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* barcodes_gs1_nomenclature
-# 
+#
 # Translators:
 # Cozmin Candea <office@terrabit.ro>, 2024
 # sharkutz <sharkutz4life@yahoo.com>, 2024
@@ -10,20 +10,30 @@
 # Dorin Hongu <dhongu@gmail.com>, 2024
 # Foldi Robert <foldirobert@nexterp.ro>, 2024
 # Claudia Baisan, 2024
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2025-08-07 18:36+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Claudia Baisan, 2024\n"
 "Language-Team: Romanian (https://app.transifex.com/odoo/teams/41243/ro/)\n"
+"Language: ro\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ro\n"
-"Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?2:1));\n"
+"Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?"
+"2:1));\n"
+
+#. module: barcodes_gs1_nomenclature
+#. odoo-python
+#: code:addons/barcodes_gs1_nomenclature/models/barcode_nomenclature.py:0
+#, python-format
+msgid ""
+"A GS1 barcode nomenclature pattern was matched. However, the barcode failed "
+"to be converted to a valid date: '%(error_message)'"
+msgstr ""
 
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields.selection,name:barcodes_gs1_nomenclature.selection__barcode_rule__gs1_content_type__alpha
@@ -109,8 +119,8 @@ msgstr "Rutare HTTP"
 msgid ""
 "If True, use the last digit of AI to determine where the first decimal is"
 msgstr ""
-"Dacă este adevărat, utilizați ultima cifră a AI pentru a determina unde este"
-" prima zecimală"
+"Dacă este adevărat, utilizați ultima cifră a AI pentru a determina unde este "
+"prima zecimală"
 
 #. module: barcodes_gs1_nomenclature
 #. odoo-javascript
@@ -188,8 +198,8 @@ msgid ""
 "UoM;        * Numeric Identifier: fixed length barcode following a specific "
 "encoding;        * Alpha-Numeric Name: variable length barcode."
 msgstr ""
-"Tipul conținutului GS1 definește ce fel de date va procesa regulile codul de"
-" bare ca* Dată: codul de bare va fi convertit într-o dată Odoo;* Măsurare: "
+"Tipul conținutului GS1 definește ce fel de date va procesa regulile codul de "
+"bare ca* Dată: codul de bare va fi convertit într-o dată Odoo;* Măsurare: "
 "valoarea codului de bare este legată de o anumită UM;* Identificator "
 "numeric: cod de bare cu lungime fixă care urmează un anumit codificare;* "
 "Nume alfanumeric: cod de bare cu lungime variabilă."
@@ -220,12 +230,17 @@ msgstr ""
 #, python-format
 msgid ""
 "There is something wrong with the barcode rule \"%s\" pattern.\n"
-"If this rule uses decimal, check it can't get sometime else than a digit as last char for the Application Identifier.\n"
-"Check also the possible matched values can only be digits, otherwise the value can't be casted as a measure."
+"If this rule uses decimal, check it can't get sometime else than a digit as "
+"last char for the Application Identifier.\n"
+"Check also the possible matched values can only be digits, otherwise the "
+"value can't be casted as a measure."
 msgstr ""
 "Există ceva greșit cu modelul regulii \"%s\".\n"
-"Dacă această regulă folosește zecimale, verificați dacă nu poate obține altceva decât un caracter ca ultimul caracter pentru Identificatorul Aplicației.\n"
-"Verificați și dacă valorile posibile pot fi doar cifre, altfel valoarea nu poate fi convertită într-o măsură."
+"Dacă această regulă folosește zecimale, verificați dacă nu poate obține "
+"altceva decât un caracter ca ultimul caracter pentru Identificatorul "
+"Aplicației.\n"
+"Verificați și dacă valorile posibile pot fi doar cifre, altfel valoarea nu "
+"poate fi convertită într-o măsură."
 
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields,help:barcodes_gs1_nomenclature.field_barcode_nomenclature__is_gs1_nomenclature
@@ -234,16 +249,15 @@ msgid ""
 "This Nomenclature use the GS1 specification, only GS1-128 encoding rules is "
 "accepted is this kind of nomenclature."
 msgstr ""
-"Această nomenclatură folosește specificația GS1, doar regulile de codificare"
-" GS1-128 sunt acceptate în acest tip de nomenclatură."
+"Această nomenclatură folosește specificația GS1, doar regulile de codificare "
+"GS1-128 sunt acceptate în acest tip de nomenclatură."
 
 #. module: barcodes_gs1_nomenclature
 #. odoo-javascript
 #: code:addons/barcodes_gs1_nomenclature/static/src/js/barcode_parser.js:0
 #, python-format
 msgid "This barcode can't be parsed by any barcode rules."
-msgstr ""
-"Acest cod de bare nu poate fi analizat de nicio regulă de cod de bare."
+msgstr "Acest cod de bare nu poate fi analizat de nicio regulă de cod de bare."
 
 #. module: barcodes_gs1_nomenclature
 #. odoo-javascript

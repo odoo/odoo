@@ -116,6 +116,7 @@ export async function loadSubViews(
 export class FormController extends Component {
     setup() {
         this.evaluateBooleanExpr = evaluateBooleanExpr;
+        this.actionService = useService("action");
         this.dialogService = useService("dialog");
         this.router = useService("router");
         this.orm = useService("orm");
@@ -333,6 +334,17 @@ export class FormController extends Component {
                     discard();
                     resolve(true);
                 },
+                onRedirect: async ({ action, additionalContext }) => {
+                    this.allowLeavingWithoutSaving = true;
+                    try {
+                        await this.actionService.doAction(action, {
+                            additionalContext,
+                        });
+                    } finally {
+                        this.allowLeavingWithoutSaving = false;
+                        resolve(false);
+                    }
+                },
                 onStayHere: () => resolve(false),
             });
         });
@@ -356,7 +368,7 @@ export class FormController extends Component {
     }
 
     async beforeLeave() {
-        if (this.model.root.dirty) {
+        if (this.model.root.dirty && !this.allowLeavingWithoutSaving) {
             return this.model.root.save({
                 reload: false,
                 onError: this.onSaveError.bind(this),
@@ -543,6 +555,9 @@ export class FormController extends Component {
     }
 
     saveButtonClicked(params = {}) {
+        if (!("onError" in params)) {
+            params.onError = this.onSaveError.bind(this);
+        }
         return executeButtonCallback(this.ui.activeElement, () => this.save(params));
     }
 

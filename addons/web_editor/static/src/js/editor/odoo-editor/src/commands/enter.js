@@ -57,10 +57,22 @@ HTMLElement.prototype.oEnter = function (offset, firstSplit = true) {
         restore = prepareUpdate(this, offset);
     }
 
+    let currentOffset = offset;
     // First split the node in two and move half the children in the clone.
     let splitEl = this.cloneNode(false);
-    while (offset < this.childNodes.length) {
-        splitEl.appendChild(this.childNodes[offset]);
+    while (currentOffset < this.childNodes.length) {
+        const child = this.childNodes[currentOffset];
+        // Handle browser line break behavior: When SHIFT+ENTER is pressed at the end of text
+        // (e.g., `<p>abc[]</p>`), the browser creates two consecutive <br> elements with the
+        // cursor positioned between them. The second <br> makes the line break visible and
+        // gets automatically removed when typing begins. To preserve this line break during
+        // node splitting, we keep the second <br> in the original element.
+        if (child.nodeName === "BR" && child.previousSibling?.nodeName === "BR") {
+            splitEl.appendChild(document.createElement("br"));
+            currentOffset++;
+        } else {
+            splitEl.appendChild(child);
+        }
     }
     if (isBlock(this) || splitEl.hasChildNodes()) {
         this.after(splitEl);

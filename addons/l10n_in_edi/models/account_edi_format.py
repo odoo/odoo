@@ -187,7 +187,7 @@ class AccountEdiFormat(models.Model):
                 return {invoice: {
                     "success": False,
                     "error": error_message,
-                    "blocking_level": ("404" in error_codes) and "warning" or "error",
+                    "blocking_level": "warning" if {'404', 'timeout'} & set(error_codes) else "error",
                 }}
         if not response.get("error"):
             json_dump = json.dumps(response.get("data"))
@@ -520,7 +520,7 @@ class AccountEdiFormat(models.Model):
                 "RegRev": tax_details_by_code.get("is_reverse_charge") and "Y" or "N",
                 "IgstOnIntra": is_intra_state and tax_details_by_code.get("igst_amount") and "Y" or "N"},
             "DocDtls": {
-                "Typ": invoice.move_type == "out_refund" and "CRN" or "INV",
+                "Typ": (invoice.move_type == "out_refund" and "CRN") or (invoice._get_debit_note_origin() and "DBN") or "INV",
                 "No": invoice.name,
                 "Dt": invoice.invoice_date.strftime("%d/%m/%Y")},
             "SellerDtls": self._get_l10n_in_edi_partner_details(saler_buyer.get("seller_details")),

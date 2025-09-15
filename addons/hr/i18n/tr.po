@@ -63,7 +63,7 @@ msgstr "&amp;nbsp;"
 #. module: hr
 #: model:ir.actions.report,print_report_name:hr.hr_employee_print_badge
 msgid "'Badge - %s' % (object.name).replace('/', '')"
-msgstr ""
+msgstr "'Rozet - %s' % (object.name).replace('/', '')"
 
 #. module: hr
 #: model_terms:hr.job,job_details:hr.job_ceo
@@ -395,6 +395,8 @@ msgid ""
 "Additional Information: \n"
 " %(description)s"
 msgstr ""
+"İlave Bilgi: \n"
+" %(description)s"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__additional_note
@@ -570,7 +572,7 @@ msgstr "Uygun"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.mail_activity_plan_view_form
 msgid "Available for all Departments"
-msgstr ""
+msgstr "Tüm Departmanlar için mevcuttur"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__avatar_1920
@@ -913,12 +915,12 @@ msgstr "Yeni bir departman oluştur"
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.hr_contract_type_action
 msgid "Create a new employment type"
-msgstr ""
+msgstr "Yeni bir istihdam türü oluşturun"
 
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.hr_work_location_action
 msgid "Create a new work location"
-msgstr ""
+msgstr "Yeni bir iş konumu oluşturun"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -1505,7 +1507,7 @@ msgstr "Oluştur"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_departure_wizard_view_form
 msgid "Give more details about the reason of archiving the employee."
-msgstr ""
+msgstr "Çalışanın arşivlenme nedeni hakkında daha fazla ayrıntı verin."
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -1558,7 +1560,7 @@ msgstr "İK Personeli: çalışma izni geçerliliğini kontrol et"
 #: code:addons/hr/static/src/components/hr_presence_status/hr_presence_status.js:0
 #, python-format
 msgid "HR Presence Status"
-msgstr ""
+msgstr "İK Mevcudiyet Durumu"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
@@ -1691,7 +1693,7 @@ msgstr ""
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__private_car_plate
 msgid "If you have more than one car, just separate the plates by a space."
-msgstr ""
+msgstr "Birden fazla arabanız varsa, plakalar arasında bir boşluk bırakın."
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__image_1920
@@ -1903,7 +1905,7 @@ msgstr "Konum Numarası"
 #. module: hr
 #: model:hr.department,name:hr.dep_rd_ltp
 msgid "Long Term Projects"
-msgstr ""
+msgstr "Uzun Vadeli Projeler"
 
 #. module: hr
 #: model_terms:hr.job,description:hr.job_hrm
@@ -2091,7 +2093,7 @@ msgstr "Görüşme ve sözleşme"
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_view_graph
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_view_pivot
 msgid "New Employees Over Time"
-msgstr ""
+msgstr "Yeni Çalışanların Zaman İçindeki İlerleyişi"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__newly_hired
@@ -2136,7 +2138,7 @@ msgstr "Olması Güzel"
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.open_view_categ_form
 msgid "No Tags found ! Let's create one"
-msgstr ""
+msgstr "Etiket bulunamadı! Bir tane oluşturalım."
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -2258,7 +2260,7 @@ msgstr "Ofis"
 #. module: hr
 #: model:res.groups,name:hr.group_hr_user
 msgid "Officer: Manage all employees"
-msgstr ""
+msgstr "Yetkili: Tüm çalışanları yönetmek"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.mail_activity_plan_action
@@ -2407,7 +2409,7 @@ msgstr "Kişisel Gelişim"
 #: code:addons/hr/models/res_users.py:0
 #, python-format
 msgid "Personal information update."
-msgstr ""
+msgstr "Kişisel bilgi güncelleme."
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
@@ -2443,6 +2445,8 @@ msgid ""
 "Plan activities %(template_names)s cannot use coach, manager or employee "
 "responsible as it is used only for employee plans."
 msgstr ""
+"Planlanan faaliyetler %(template_names)s yalnızca çalışan planları için "
+"kullanıldığından sorumlu olan koç, yönetici veya çalışanlardan faydalanamaz."
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_department_form
@@ -2483,7 +2487,7 @@ msgstr ""
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
 msgid "Presence Control"
-msgstr ""
+msgstr "Çalışan Mevcudiyet Kontrolü"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
@@ -2527,7 +2531,7 @@ msgstr "Kişisel Adres"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__private_car_plate
 msgid "Private Car Plate"
-msgstr ""
+msgstr "Özel Araba Plakası"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__private_city
@@ -2868,7 +2872,7 @@ msgstr "Sosyal Güvenlik Numarası"
 #: code:addons/hr/models/hr_employee_base.py:0
 #, python-format
 msgid "Some employee already have a work contact"
-msgstr ""
+msgstr "Bazı çalışanların zaten iş bağlantıları mevcut."
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -3075,7 +3079,7 @@ msgstr ""
 #: code:addons/hr/models/res_users.py:0
 #, python-format
 msgid "The following fields were modified by %s"
-msgstr ""
+msgstr "Aşağıdaki alanlar %s tarafından değiştirildi"
 
 #. module: hr
 #. odoo-python
@@ -3141,7 +3145,7 @@ msgstr ""
 #: code:addons/hr/models/mail_activity_plan_template.py:0
 #, python-format
 msgid "Those responsible types are limited to Employee plans."
-msgstr ""
+msgstr "Sorumlu türler, Çalışan planlarıyla sınırlıdır."
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__tz
@@ -3281,7 +3285,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_employee__visa_expire
 #: model:ir.model.fields,field_description:hr.field_res_users__visa_expire
 msgid "Visa Expiration Date"
-msgstr ""
+msgstr "Vize Son Geçerlilik Tarihi"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__visa_no
@@ -3300,7 +3304,7 @@ msgstr "Uyarı"
 #: model_terms:hr.job,description:hr.job_consultant
 msgid ""
 "We are currently looking for someone like that to join our Consultant team."
-msgstr ""
+msgstr "Şu anda Uzmanlar ekibimize katılacak böyle birini arıyoruz."
 
 #. module: hr
 #: model_terms:hr.job,description:hr.job_developer
@@ -3308,6 +3312,8 @@ msgid ""
 "We are currently looking for someone like that to join our Web team.\n"
 "                Someone who can snap out of coding and perform analysis or meet clients to explain the technical possibilities that can meet their needs."
 msgstr ""
+"Şu anda web ekibimize katılacak böyle birini arıyoruz.\n"
+"                Kodlamadan sıyrılıp analiz yapabilen veya müşterilerle görüşerek onların ihtiyaçlarını karşılayabilecek teknik olanakları açıklayabilen kişi."
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo

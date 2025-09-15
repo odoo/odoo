@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
+import re
 from datetime import datetime, timedelta
 from markupsafe import Markup
 
@@ -9,6 +9,7 @@ from odoo.addons.test_mail.tests.test_performance import BaseMailPerformance
 from odoo.tests.common import users, warmup
 from odoo.tests import tagged
 from odoo.tools import mute_logger
+from odoo.tools.mimetypes import magic
 
 
 @tagged('mail_performance', 'post_install', '-at_install')
@@ -247,6 +248,7 @@ class TestPortalFormatPerformance(FullBaseMailPerformance):
         self.assertEqual(len(res), len(messages_all))
         for format_res, message, record in zip(res, messages_all, self.messages_records):
             self.assertEqual(len(format_res['attachment_ids']), 2)
+            expected_mimetype = 'text/plain' if magic else 'application/octet-stream'
             self.assertEqual(
                 format_res['attachment_ids'],
                 [
@@ -255,7 +257,7 @@ class TestPortalFormatPerformance(FullBaseMailPerformance):
                         'checksum': message.attachment_ids[0].checksum,
                         'filename': 'Test file 1',
                         'id': message.attachment_ids[0].id,
-                        'mimetype': 'application/octet-stream',
+                        'mimetype': expected_mimetype,
                         'name': 'Test file 1',
                         'res_id': record.id,
                         'res_model': record._name,
@@ -264,7 +266,7 @@ class TestPortalFormatPerformance(FullBaseMailPerformance):
                         'checksum': message.attachment_ids[1].checksum,
                         'filename': 'Test file 0',
                         'id': message.attachment_ids[1].id,
-                        'mimetype': 'application/octet-stream',
+                        'mimetype': expected_mimetype,
                         'name': 'Test file 0',
                         'res_id': record.id,
                         'res_model': record._name,
@@ -274,7 +276,10 @@ class TestPortalFormatPerformance(FullBaseMailPerformance):
             self.assertEqual(format_res['author_id'], (record.customer_id.id, record.customer_id.display_name))
             self.assertEqual(format_res['author_avatar_url'], f'/web/image/mail.message/{message.id}/author_avatar/50x50')
             self.assertEqual(format_res['date'], datetime(2023, 5, 15, 10, 30, 5))
-            self.assertEqual(format_res['published_date_str'], 'May 15, 2023, 10:30:05 AM')
+            self.assertEqual(
+                re.sub(r'\s+', ' ', format_res['published_date_str']),
+                'May 15, 2023, 10:30:05 AM',
+            )
             self.assertEqual(format_res['id'], message.id)
             self.assertFalse(format_res['is_internal'])
             self.assertFalse(format_res['is_message_subtype_note'])
@@ -298,7 +303,10 @@ class TestPortalFormatPerformance(FullBaseMailPerformance):
             self.assertEqual(format_res['rating']['publisher_avatar'], f'/web/image/res.partner/{self.partner_admin.id}/avatar_128/50x50')
             self.assertEqual(format_res['rating']['publisher_comment'], 'Comment')
             self.assertEqual(format_res['rating']['publisher_id'], self.partner_admin.id)
-            self.assertEqual(format_res['rating']['publisher_datetime'], 'May 13, 2023, 10:30:05 AM')
+            self.assertEqual(
+                re.sub(r'\s+', ' ', format_res['rating']['publisher_datetime']),
+                'May 13, 2023, 10:30:05 AM',
+            )
             self.assertEqual(format_res['rating']['publisher_name'], self.partner_admin.display_name)
             self.assertDictEqual(
                 format_res['rating_stats'],

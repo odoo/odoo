@@ -738,7 +738,7 @@ class MrpProduction(models.Model):
             days_delay = production.bom_id.produce_delay
             date_finished = production.date_start + relativedelta(days=days_delay)
             if production._should_postpone_date_finished(date_finished):
-                workorder_expected_duration = sum(self.workorder_ids.mapped('duration_expected'))
+                workorder_expected_duration = sum(production.workorder_ids.mapped('duration_expected'))
                 date_finished = date_finished + relativedelta(minutes=workorder_expected_duration or 60)
             production.date_finished = date_finished
 
@@ -2546,6 +2546,8 @@ class MrpProduction(models.Model):
             byproduct_values.append(move_byproduct_vals)
         self.move_finished_ids += self.env['stock.move'].create(byproduct_values)
 
+        if self.warehouse_id.manufacture_steps in ('pbm', 'pbm_sam'):
+            moves_to_unlink.product_uom_qty = 0
         moves_to_unlink._action_cancel()
         moves_to_unlink.unlink()
         workorders_to_unlink.unlink()

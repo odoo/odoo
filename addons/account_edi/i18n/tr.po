@@ -12,6 +12,7 @@
 # Nadir Gazioglu <nadirgazioglu@gmail.com>, 2023
 # Ayhan Kızıltan, 2024
 # Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2024
+# Deniz Guvener_Odoo <degu@odoo.com>, 2025
 # 
 msgid ""
 msgstr ""
@@ -19,7 +20,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-13 10:27+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2024\n"
+"Last-Translator: Deniz Guvener_Odoo <degu@odoo.com>, 2025\n"
 "Language-Team: Turkish (https://app.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -73,6 +74,8 @@ msgid ""
 "Are you sure you want to cancel this invoice without waiting for the EDI "
 "document to be canceled?"
 msgstr ""
+"EDI belgesinin iptal edilmesini beklemeden bu faturayı iptal etmek "
+"istediğinizden emin misiniz?"
 
 #. module: account_edi
 #: model:ir.model,name:account_edi.model_ir_attachment
@@ -171,7 +174,7 @@ msgstr "Bu yevmiyedeki hareketleri destekleyen EDI formatı"
 #. module: account_edi
 #: model:ir.actions.server,name:account_edi.ir_cron_edi_network_ir_actions_server
 msgid "EDI: Perform web services operations"
-msgstr ""
+msgstr "EDI: Web servis işlemlerini gerçekleştir"
 
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_bank_statement_line__edi_blocking_level
@@ -230,7 +233,7 @@ msgstr "Edi Göster İptal Düğmesi"
 #: model:ir.model.fields,field_description:account_edi.field_account_move__edi_show_force_cancel_button
 #: model:ir.model.fields,field_description:account_edi.field_account_payment__edi_show_force_cancel_button
 msgid "Edi Show Force Cancel Button"
-msgstr ""
+msgstr "EDI Zorla İptal Et Düğmesini Göster"
 
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_bank_statement_line__edi_web_services_to_process
@@ -256,7 +259,7 @@ msgstr "Elektronik faturalama"
 #. module: account_edi
 #: model_terms:ir.ui.view,arch_db:account_edi.view_account_invoice_filter
 msgid "Electronic invoicing processing needed"
-msgstr ""
+msgstr "Elektronik fatura işleme gerekli"
 
 #. module: account_edi
 #: model_terms:ir.ui.view,arch_db:account_edi.view_account_invoice_filter
@@ -273,7 +276,7 @@ msgstr "Hata"
 #. module: account_edi
 #: model_terms:ir.ui.view,arch_db:account_edi.view_move_form_inherit
 msgid "Force Cancel"
-msgstr ""
+msgstr "Zorla İptal Et"
 
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_edi_document__edi_format_name
@@ -285,7 +288,7 @@ msgstr "Biçim Adı"
 #: model:ir.model.fields,help:account_edi.field_account_move__edi_error_count
 #: model:ir.model.fields,help:account_edi.field_account_payment__edi_error_count
 msgid "How many EDIs are in error for this move?"
-msgstr ""
+msgstr "Bu muhasebe hareketi için kaç adet EDI hatası var?"
 
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_edi_document__id
@@ -413,12 +416,12 @@ msgstr ""
 #, python-format
 msgid ""
 "The following documents have already been sent and cannot be resequenced: %s"
-msgstr ""
+msgstr "Aşağıdaki belgeler zaten gönderilmiş ve yeniden sıralanamaz: %s"
 
 #. module: account_edi
 #: model_terms:ir.ui.view,arch_db:account_edi.view_move_form_inherit
 msgid "The invoice will soon be sent to"
-msgstr ""
+msgstr "Fatura yakında şu adrese gönderilecektir:"
 
 #. module: account_edi
 #: model:ir.model.fields,help:account_edi.field_account_edi_document__error
@@ -447,6 +450,8 @@ msgid ""
 "This invoice was canceled while the EDIs %s still had a pending cancellation"
 " request."
 msgstr ""
+"Bu fatura iptal edildi ancak EDI belgeleri %s için hâlâ bekleyen bir iptal "
+"talebi var."
 
 #. module: account_edi
 #: model:ir.model.fields.selection,name:account_edi.selection__account_edi_document__state__to_cancel

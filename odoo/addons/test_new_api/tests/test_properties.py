@@ -1695,6 +1695,7 @@ class PropertiesCase(TestPropertiesMixin):
                 'value': 'red',
             }],
         })
+        email.invalidate_recordset()
 
         values = email.read(['attributes'])
         self.assertEqual(values[0]['attributes'][0]['value'], 'red')

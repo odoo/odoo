@@ -28,7 +28,7 @@ class AccountEdiFormat(models.Model):
             1. base on IRN, IRN is number created when we do E-invoice
             2. direct call, when E-invoice not aplicable or it"s credit not
         """
-        if move.move_type == "out_refund":
+        if move.move_type == "out_refund" or move._get_debit_note_origin():
             return "direct"
         einvoice_in_edi_format = move.journal_id.edi_format_ids.filtered(lambda f: f.code == "in_einvoice_1_03")
         return einvoice_in_edi_format and einvoice_in_edi_format._get_move_applicability(move) and "irn" or "direct"
@@ -134,7 +134,7 @@ class AccountEdiFormat(models.Model):
         cancel_json = {
             "ewbNo": ewaybill_response_json.get("ewayBillNo") or ewaybill_response_json.get("EwbNo"),
             "cancelRsnCode": int(invoices.l10n_in_edi_cancel_reason),
-            "CnlRem": invoices.l10n_in_edi_cancel_remarks,
+            "cancelRmrk": invoices.l10n_in_edi_cancel_remarks,
         }
         response = self._l10n_in_edi_ewaybill_cancel(invoices.company_id, cancel_json)
         if response.get("error"):

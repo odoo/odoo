@@ -1522,9 +1522,8 @@ class PosSession(models.Model):
         message = ""
         if difference:
             message = f"{state} difference: " \
-                      f"{self.currency_id.symbol + ' ' if self.currency_id.position == 'before' else ''}" \
-                      f"{self.currency_id.round(difference)} " \
-                      f"{self.currency_id.symbol if self.currency_id.position == 'after' else ''}" + Markup('<br/>')
+                      f"{self.currency_id.format(difference) }" \
+                          + Markup('<br/>')
         if notes:
             message += escape(notes).replace('\n', Markup('<br/>'))
         if message:
