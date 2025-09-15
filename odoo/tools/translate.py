@@ -80,6 +80,8 @@ TRANSLATED_ATTRS = {
 TRANSLATED_ATTRS.update({f't-attf-{attr}' for attr in TRANSLATED_ATTRS})
 
 def is_translatable_attrib(key):
+    if not key:
+        return False
     return key in TRANSLATED_ATTRS or key.endswith('.translate')
 
 def is_translatable_attrib_value(node):
