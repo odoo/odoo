@@ -97,7 +97,7 @@
 </t>
 
 <t t-name="mail.ChatWindow.memberTyping">
-    <div t-if="thread.hasOtherMembersTyping" class="d-flex bg-inherit position-relative">
+    <div t-if="thread.channel?.hasOtherMembersTyping" class="d-flex bg-inherit position-relative">
         <div class="o-mail-ChatWindow-typing d-flex px-3 position-absolute bottom-0 start-0 w-100 bg-inherit align-items-center">
             <Typing channel="thread" size="'medium'"/>
         </div>

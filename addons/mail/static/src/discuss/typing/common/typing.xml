@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="discuss.Typing">
-        <t t-if="props.member ? props.member.isTyping : props.channel.hasOtherMembersTyping">
+        <t t-if="props.member ? props.member.isTyping : props.channel.channel.hasOtherMembersTyping">
             <div class="o-discuss-Typing-icon d-flex align-items-center bg-inherit" t-attf-class="{{ className }}" t-att-title="text">
                 <span class="o-discuss-Typing-dot d-flex flex-shrink-0 rounded-pill" t-att-class="{
                     'o-sizeMedium': ['medium', 'md'].includes(props.size),

@@ -70,6 +70,7 @@ const threadPatch = {
                         channel_type: this.channel_type,
                         member_count: this.member_count,
                         self_member_id: this.self_member_id,
+                        typingMembers: this.typingMembers,
                     };
                 }
                 return undefined;
@@ -88,12 +89,6 @@ const threadPatch = {
         /** @type {"not_fetched"|"fetching"|"fetched"} */
         this.fetchChannelInfoState = "not_fetched";
         this.group_ids = fields.Many("res.groups");
-        this.hasOtherMembersTyping = fields.Attr(false, {
-            /** @this {import("models").Thread} */
-            compute() {
-                return this.otherTypingMembers.length > 0;
-            },
-        });
         this.hasSeenFeature = fields.Attr(false, {
             /** @this {import("models").Thread} */
             compute() {
@@ -189,12 +184,6 @@ const threadPatch = {
                 return this.channel?.channel_member_ids
                     .filter((member) => this.store.onlineMemberStatuses.includes(member.im_status))
                     .sort((m1, m2) => this.store.sortMembers(m1, m2)); // FIXME: sort are prone to infinite loop (see test "Display livechat custom name in typing status")
-            },
-        });
-        this.otherTypingMembers = fields.Many("discuss.channel.member", {
-            /** @this {import("models").Thread} */
-            compute() {
-                return this.typingMembers.filter((member) => !member.persona?.eq(this.store.self));
             },
         });
         this.self_member_id = fields.One("discuss.channel.member", {

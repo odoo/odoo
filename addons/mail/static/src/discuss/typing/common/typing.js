@@ -21,7 +21,7 @@ export class Typing extends Component {
     get text() {
         const typingMemberNames = this.props.member
             ? [this.props.member.name]
-            : this.props.channel.otherTypingMembers.map(({ name }) => name);
+            : this.props.channel.channel.otherTypingMembers.map(({ name }) => name);
         if (typingMemberNames.length === 1) {
             return _t("%s is typing...", typingMemberNames[0]);
         }

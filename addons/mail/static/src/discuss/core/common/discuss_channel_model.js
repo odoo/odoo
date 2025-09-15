@@ -17,6 +17,7 @@ export class DiscussChannel extends Record {
     self_member_id = fields.One("discuss.channel.member");
     /** @type {number|undefined} */
     member_count = undefined;
+    typingMembers = fields.Many("discuss.channel.member");
 
     correspondent = fields.One("discuss.channel.member", {
         /** @this {import("models").Thread} */
@@ -85,6 +86,18 @@ export class DiscussChannel extends Record {
     get hasMemberList() {
         return ["channel", "group"].includes(this.channel_type);
     }
+    otherTypingMembers = fields.Many("discuss.channel.member", {
+        /** @this {import("models").Thread} */
+        compute() {
+            return this.typingMembers.filter((member) => !member.persona?.eq(this.store.self));
+        },
+    });
+    hasOtherMembersTyping = fields.Attr(false, {
+        /** @this {import("models").Thread} */
+        compute() {
+            return this.otherTypingMembers.length > 0;
+        },
+    });
 }
 
 DiscussChannel.register();
