@@ -94,7 +94,7 @@ export class SaleOrderLineListRenderer extends ProductLabelSectionAndNoteListRen
         if (this.isCombo(record) || this.isComboItem(record)) {
             classNames = classNames.replace('o_row_draggable', '');
         }
-        return `${classNames} ${this.isCombo(record) ? 'o_is_line_section' : ''}`;
+        return `${classNames} ${this.isCombo(record) ? 'o_is_line_section o_is_line_section_no_indent' : ''}`;
     }
 
     isCellReadonly(column, record) {
