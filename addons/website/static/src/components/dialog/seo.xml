@@ -117,7 +117,7 @@
                 <t t-if="!seoContext.brokenLinks.filter(link => link.broken).length">
                     <p><i class="fa fa-check text-success me-2"></i>No broken link</p>
                 </t>
-                <t t-foreach="seoContext.brokenLinks" t-as="link" t-key="link.oldLink">
+                <t t-foreach="seoContext.brokenLinks" t-as="link" t-key="link_index">
                      <div t-if="!link.remove" class="row align-items-center mb-2">
                         <BrokenLink link="link"/>
                     </div>
