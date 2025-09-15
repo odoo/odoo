@@ -44,7 +44,7 @@ export class EmbeddedSyntaxHighlightingComponent extends Component {
 
     setup() {
         super.setup();
-        this.loadBundle("html_editor.assets_prism");
+        this.loadPrism();
         this.state = useState({
             isActive: false,
             host: this.props.host,
@@ -120,6 +120,14 @@ export class EmbeddedSyntaxHighlightingComponent extends Component {
         );
     }
 
+    /**
+     * Load the Prism library. This function exists only so it can be overridden
+     * in tests.
+     */
+    loadPrism() {
+        return loadBundle("html_editor.assets_prism");
+    }
+
     openCodeToolbar() {
         this.props.codeToolbar.open({
             target: this.state.host,
@@ -179,7 +187,7 @@ export class EmbeddedSyntaxHighlightingComponent extends Component {
      */
     async highlight(focus = this.document.activeElement === this.textarea) {
         if (!window.Prism) {
-            await this.loadBundle("html_editor.assets_prism");
+            await this.loadPrism();
             if (!window.Prism) {
                 console.error("The Prism library couldn't be found.");
                 return;
