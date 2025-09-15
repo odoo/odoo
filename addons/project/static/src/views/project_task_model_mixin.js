@@ -11,7 +11,7 @@ export const ProjectTaskModelMixin = (T) => class ProjectTaskModelMixin extends 
                 [['display_in_project', '=', true]],
             ]).toList({});
         }
-        if (this.env.searchModel.context?.render_templates) {
+        if (this.env.searchModel.context?.render_task_templates) {
             domain = Domain.and([
                 Domain.removeDomainLeaves(domain, ['has_template_ancestor']).toList(),
                 [['has_template_ancestor', '=', true]],
