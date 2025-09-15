@@ -1,9 +1,9 @@
 import { patch } from '@web/core/utils/patch';
 import { renderToElement } from '@web/core/utils/render';
 import { patchDynamicContent } from '@web/public/utils';
-import { WebsiteSale } from '@website_sale/interactions/website_sale';
+import { ProductPage } from '@website_sale/interactions/product_page';
 
-patch(WebsiteSale.prototype, {
+patch(ProductPage.prototype, {
     setup() {
         super.setup();
         patchDynamicContent(this.dynamicContent, {
@@ -46,5 +46,5 @@ patch(WebsiteSale.prototype, {
                 this.services['public.interactions'].startInteractions(messageEl);
             }
         }
-    }
+    },
 });
