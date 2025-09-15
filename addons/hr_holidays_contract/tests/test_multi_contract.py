@@ -309,3 +309,78 @@ class TestHolidaysMultiContract(TestHolidayContract):
 
         employee._compute_leave_status()
         self.assertEqual(employee.leave_date_to, date(2024, 3, 4))
+
+    @freeze_time('2025-08-10')
+    def test_recompute_leave_when_change_contracts(self):
+        calendar_full, calendar_partial = self.env['resource.calendar'].create([
+            {
+                'name': '100% schedule',
+                'full_time_required_hours': 40.0,
+                'hours_per_day': 8.0,
+                'flexible_hours': True,
+            },
+            {
+                'name': '50% Schedule',
+                'full_time_required_hours': 20.0,
+                'hours_per_day': 4.0,
+                'flexible_hours': True,
+            },
+        ])
+
+        employee = self.env['hr.employee'].create({
+            'name': 'Employee',
+            'resource_calendar_id': calendar_full.id,
+        })
+
+        full_contract, half_contract = self.env['hr.contract'].create([
+            {
+                'name': '100% contract',
+                'employee_id': employee.id,
+                'date_start': datetime.strptime('2025-07-01', '%Y-%m-%d').date(),
+                'resource_calendar_id': calendar_full.id,
+                'wage': 1000.0,
+                'state': 'open',
+            },
+            {
+                'name': '50% contract',
+                'employee_id': employee.id,
+                'date_start': datetime.strptime('2025-09-01', '%Y-%m-%d').date(),
+                'resource_calendar_id': calendar_partial.id,
+                'wage': 1000.0,
+                'state': 'draft',
+            },
+        ])
+
+        leave_type = self.env['hr.leave.type'].create({
+            'name': 'Leave Type',
+            'time_type': 'leave',
+            'requires_allocation': 'no',
+            'leave_validation_type': 'hr',
+            'request_unit': 'hour',
+        })
+
+        leave1 = self.env['hr.leave'].create({
+            'employee_id': employee.id,
+            'holiday_status_id': leave_type.id,
+            'request_date_from': '2025-08-03',
+            'request_date_to': '2025-08-09',
+        })
+
+        leave2 = self.env['hr.leave'].create({
+            'employee_id': employee.id,
+            'holiday_status_id': leave_type.id,
+            'request_date_from': '2025-09-07',
+            'request_date_to': '2025-09-13',
+        })
+
+        leave1.action_approve()
+        leave2.action_approve()
+
+        full_contract.write({
+            'state': 'close',
+        })
+        half_contract.write({
+            'state': 'open',
+        })
+
+        self.assertEqual(leave2.number_of_hours, calendar_partial.full_time_required_hours)
