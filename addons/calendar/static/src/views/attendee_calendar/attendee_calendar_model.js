@@ -103,6 +103,7 @@ export class AttendeeCalendarModel extends CalendarModel {
      */
     async updateAttendeeData(data) {
         const attendeeFilters = data.filterSections.partner_ids;
+        const resourceFilters = data.filterSections.resource_ids;
         let isEveryoneFilterActive = false;
         let attendeeIds = [];
         const eventIds = Object.keys(data.records).map((id) => Number.parseInt(id));
@@ -158,6 +159,24 @@ export class AttendeeCalendarModel extends CalendarModel {
                     record._recordId = recordId;
                     newRecords[recordId] = record;
                     duplicatedRecords++;
+                }
+                if (resourceFilters && !(event.id in newRecords)) {
+                    const activeResourceIds = new Set(
+                        resourceFilters.filters
+                            .filter((filter) => filter.type !== "all" && filter.value && filter.active)
+                            .map((filter) => filter.value)
+                    );
+                    const resources = eventData.resource_ids || [];
+                    for (const resource of resources) {
+                        if (!activeResourceIds.has(resource)) {
+                            continue;
+                        }
+                        const record = { ...event };
+                        record.colorIndex = resource;
+                        const recordId = record.id;
+                        record._recordId = recordId;
+                        newRecords[recordId] = record;
+                    }
                 }
             }
             data.records = newRecords;

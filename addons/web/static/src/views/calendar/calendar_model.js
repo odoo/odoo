@@ -19,6 +19,7 @@ import { Cache } from "@web/core/utils/cache";
 import { formatFloat } from "@web/core/utils/numbers";
 import { useDebounced } from "@web/core/utils/timing";
 import { computeAggregatedValue } from "@web/views/utils";
+import { Domain } from "@web/core/domain";
 
 export class CalendarModel extends Model {
     static DEBOUNCED_LOAD_DELAY = 600;
@@ -594,16 +595,33 @@ export class CalendarModel extends Model {
         }
 
         // Compute the domain
-        const domain = [];
-        for (const field in authorizedValues) {
-            domain.push([field, "in", authorizedValues[field]]);
-        }
-        for (const field in avoidValues) {
-            if (avoidValues[field].length > 0) {
-                domain.push([field, "not in", avoidValues[field]]);
+        const conditions = [];
+        const fields = new Set([
+            ...Object.keys(authorizedValues),
+            ...Object.keys(avoidValues),
+        ]);
+
+        for (const field of fields) {
+            const subConditions = [];
+            if (authorizedValues[field]?.length) {
+                subConditions.push([field, "in", authorizedValues[field]]);
+            }
+            if (avoidValues[field]?.length) {
+                subConditions.push([field, "not in", avoidValues[field]]);
+            }
+            if (subConditions.length > 1) {
+                const newDom = new Domain(...subConditions);
+                conditions.push(newDom);
+            } else if (subConditions.length === 1) {
+                conditions.push(new Domain(subConditions));
             }
         }
-        return domain;
+        if (conditions.length > 1) {
+            return Domain.or(conditions).toList();
+        } else if (conditions.length === 1) {
+            return conditions[0].toList();
+        }
+        return [];
     }
     /**
      * @protected
@@ -762,21 +780,18 @@ export class CalendarModel extends Model {
         const previousSections = data.filterSections;
         const sections = {};
         const dynamicFiltersInfo = {};
-        const proms = [];
         for (const [fieldName, filterInfo] of Object.entries(this.meta.filtersInfo)) {
             const previousSection = previousSections[fieldName];
             if (filterInfo.writeResModel) {
-                const prom = this.loadFilterSection(fieldName, filterInfo, previousSection).then(
-                    (result) => {
-                        sections[fieldName] = result;
-                    }
+                sections[fieldName] = await this.loadFilterSection(
+                    fieldName,
+                    filterInfo,
+                    previousSection
                 );
-                proms.push(prom);
             } else {
                 dynamicFiltersInfo[fieldName] = { filterInfo, previousSection };
             }
         }
-        await Promise.all(proms);
         return { sections, dynamicFiltersInfo };
     }
     /**
@@ -955,11 +970,11 @@ export class CalendarModel extends Model {
      * @protected
      */
     makeFilterRecord(filterInfo, previousFilter, rawRecord) {
-        const { colorFieldName, filterFieldName, writeFieldName } = filterInfo;
+        const { colorFieldName, filterFieldName, fieldName, writeFieldName } = filterInfo;
         const { fields, fieldMapping } = this.meta;
         const raw = rawRecord[writeFieldName];
         const value = Array.isArray(raw) ? raw[0] : raw;
-        const field = fields[writeFieldName];
+        const field = fields[fieldName];
         const isX2Many = ["many2many", "one2many"].includes(field.type);
         const formatter = registry.category("formatters").get(isX2Many ? "many2one" : field.type);
 
