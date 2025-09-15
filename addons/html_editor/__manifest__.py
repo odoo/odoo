@@ -110,6 +110,9 @@ This addon provides an extensible, maintainable editor.
         'web._assets_frontend_helpers': [
             ('prepend', 'html_editor/static/src/scss/bootstrap_overridden.scss'),
         ],
+        'html_editor.assets_prism': [
+            'web/static/lib/prismjs/prism.js',
+        ],
     },
     'license': 'LGPL-3'
 }
