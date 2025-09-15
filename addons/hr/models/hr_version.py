@@ -298,6 +298,11 @@ class HrVersion(models.Model):
 
         if self.env.context.get('sync_contract_dates') or ("contract_date_start" not in vals and "contract_date_end" not in vals):
             return super().write(vals)
+
+        for versions_by_employee in self.grouped('employee_id').values():
+            if len(versions_by_employee.grouped('contract_date_start').keys()) > 1:
+                raise ValidationError(self.env._("Cannot modify multiple versions contract dates with different contracts at once."))
+
         multiple_versions = self
         if vals.get("contract_date_start"):
             unique_versions = multiple_versions.filtered(lambda v: len(v.employee_id.version_ids) == 1)
@@ -308,35 +313,38 @@ class HrVersion(models.Model):
                     "date_version": vals["contract_date_start"]
                 })
 
-        contract_date_starts = list(filter(bool, multiple_versions.grouped("contract_date_start").keys()))
-        if not contract_date_starts:
-            return super().write(vals)
-        if len(contract_date_starts) > 1:
-            raise ValidationError(multiple_versions.env._("Cannot modify multiple records contract dates with different contracts at once."))
+        if not any(multiple_versions.mapped('contract_date_start')):
+            return super(HrVersion, multiple_versions).write(vals)
 
         new_vals = {
             f_name: f_value
             for f_name, f_value in vals.items()
             if (f_name != 'contract_date_start' or not f_value) and f_name != 'contract_date_end'
         }
-        dates_vals = {}
+        for employee, versions in multiple_versions.grouped('employee_id').items():
 
-        if "contract_date_start" in vals:
-            dates_vals["contract_date_start"] = fields.Date.to_date(vals.get('contract_date_start'))
-        else:
-            dates_vals["contract_date_start"] = multiple_versions[0].contract_date_start
-        if "contract_date_end" in vals:
-            dates_vals["contract_date_end"] = fields.Date.to_date(vals.get('contract_date_end'))
-        else:
-            dates_vals["contract_date_end"] = multiple_versions[0].contract_date_end
+            dates_vals = {}
 
-        versions_to_sync_per_employee = multiple_versions.employee_id._get_contract_versions(
-            date_start=multiple_versions[0].contract_date_start,
-            date_end=multiple_versions[0].contract_date_end,
-        )
-        for contract_versions in versions_to_sync_per_employee.values():
-            next(iter(contract_versions.values())).with_context(sync_contract_dates=True).write(dates_vals)
-        return multiple_versions.write(new_vals)
+            if "contract_date_start" in vals:
+                dates_vals["contract_date_start"] = fields.Date.to_date(vals.get('contract_date_start'))
+            else:
+                dates_vals["contract_date_start"] = versions[0].contract_date_start
+            if "contract_date_end" in vals:
+                dates_vals["contract_date_end"] = fields.Date.to_date(vals.get('contract_date_end'))
+            else:
+                dates_vals["contract_date_end"] = versions[0].contract_date_end
+
+            if versions[0].contract_date_start:
+                versions_to_sync = employee._get_contract_versions(
+                    date_start=versions[0].contract_date_start,
+                    date_end=versions[0].contract_date_end,
+                )
+                for contract_versions in versions_to_sync.values():
+                    next(iter(contract_versions.values())).with_context(sync_contract_dates=True).write(dates_vals)
+            else:
+                versions.with_context(sync_contract_dates=True).write(dates_vals)
+
+        return super(HrVersion, multiple_versions).write(new_vals)
 
     @api.depends_context('lang')
     @api.depends('date_version')
