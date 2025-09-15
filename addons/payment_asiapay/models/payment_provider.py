@@ -19,25 +19,29 @@ class PaymentProvider(models.Model):
         help="The brand associated to your AsiaPay account.",
         selection=[("paydollar", "PayDollar"), ("pesopay", "PesoPay"),
                     ("siampay", "SiamPay"), ("bimopay", "BimoPay")],
-        default='paydollar',
         required_if_provider='asiapay',
+        default='paydollar',
+        copy=False,
     )
     asiapay_merchant_id = fields.Char(
         string="AsiaPay Merchant ID",
         help="The Merchant ID solely used to identify your AsiaPay account.",
         required_if_provider='asiapay',
+        copy=False,
     )
     asiapay_secure_hash_secret = fields.Char(
         string="AsiaPay Secure Hash Secret",
         required_if_provider='asiapay',
+        copy=False,
         groups='base.group_system',
     )
     asiapay_secure_hash_function = fields.Selection(
         string="AsiaPay Secure Hash Function",
         help="The secure hash function associated to your AsiaPay account.",
         selection=[('sha1', "SHA1"), ('sha256', "SHA256"), ('sha512', 'SHA512')],
-        default='sha1',
         required_if_provider='asiapay',
+        default='sha1',
+        copy=False,
     )
 
     # ==== CONSTRAINT METHODS ===#
