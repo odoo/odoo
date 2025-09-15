@@ -63,7 +63,7 @@ async function waitForTrigger(trigger) {
     }
 }
 
-async function waitUntil(predicate) {
+export async function waitUntil(predicate) {
     const result = predicate();
     if (result) {
         return Promise.resolve(result);
