@@ -109,15 +109,56 @@
         <field name="inherit_id" ref="stock_picking_batch.stock_picking_batch_kanban"/>
         <field name="arch" type="xml">
             <data>
-                <xpath expr="//footer" position="replace">
-                    <footer class="pt-0">
-                        <field name="dock_id"/>
+                <xpath expr="//field[@name='company_id']" position="after">
+                    <field name="estimated_shipping_weight"/>
+                    <field name="estimated_shipping_volume"/>
+                    <field name="vehicle_id"/>
+                    <field name="vehicle_weight_capacity"/>
+                    <field name="vehicle_volume_capacity"/>
+                </xpath>
+                <xpath expr="//field[@name='scheduled_date']" position="after">
+                    <i class="fa fa-long-arrow-right mx-2" title="Arrow"/>
+                    <field name="end_date"/>
+                </xpath>
+                <xpath expr="//div[field[@name='scheduled_date']]" position="after">
+                    <t t-set="total_vehicle_weight_capacity" t-value="record.vehicle_weight_capacity.raw_value"/>
+                    <t t-set="total_vehicle_volume_capacity" t-value="record.vehicle_volume_capacity.raw_value"/>
+                    <div t-if="record.vehicle_id.raw_value" class="d-flex">
                         <div>
-                            <field name="state" widget="state_selection" class="float-start pt-1 me-1"/>
-                            <field name="scheduled_date" readonly="state in ['cancel', 'done']"/>
+                            <i class="fa fa-truck text-primary me-2" title="Vehicle"/>
                         </div>
-                        <field name="user_id" widget="many2one_avatar_user" readonly="state not in ['draft', 'in_progress']" class="ms-auto"/>
-                    </footer>
+                        <div>
+                            <t t-out="record.vehicle_id.value"/>
+                            <span class="text-muted text-nowrap" t-if="total_vehicle_weight_capacity or total_vehicle_volume_capacity">
+                                (<t t-if="total_vehicle_weight_capacity">
+                                    <t t-out="total_vehicle_weight_capacity"/> <field name="weight_uom_name"/>
+                                    <t t-if="total_vehicle_volume_capacity">, </t>
+                                </t>
+                                <t t-if="total_vehicle_volume_capacity">
+                                    <t t-out="total_vehicle_volume_capacity"/> <field name="volume_uom_name"/>
+                                </t>)
+                            </span>
+                        </div>
+                    </div>
+                    <div t-if="record.dock_id.raw_value" class="text-truncate" invisible="not allowed_dock_ids" groups="stock.group_stock_multi_locations">
+                        <i class="fa fa-cubes text-primary me-2" title="Location"/>
+                        <field name="dock_id"/>
+                    </div>
+                </xpath>
+                <xpath expr="//span[@name='transfer_count']" position="after">
+                    <t t-set="total_estimated_shipping_weight" t-value="record.estimated_shipping_weight.raw_value"/>
+                    <t t-set="total_estimated_shipping_volume" t-value="record.estimated_shipping_volume.raw_value"/>
+                    <t t-set="insufficient_capacity" t-value="total_estimated_shipping_weight > total_vehicle_weight_capacity or total_estimated_shipping_volume > total_vehicle_volume_capacity"/>
+                    <span t-if="total_estimated_shipping_weight or total_estimated_shipping_volume"
+                          t-att-class="record.vehicle_id.raw_value and (insufficient_capacity ? 'text-danger' : 'text-success')">
+                        (<t t-if="total_estimated_shipping_weight">
+                            <t t-out="total_estimated_shipping_weight"/> <field name="weight_uom_name"/>
+                            <t t-if="total_estimated_shipping_volume">, </t>
+                        </t>
+                        <t t-if="total_estimated_shipping_volume">
+                            <t t-out="total_estimated_shipping_volume"/> <field name="volume_uom_name"/>
+                        </t>)
+                    </span>
                 </xpath>
             </data>
         </field>
