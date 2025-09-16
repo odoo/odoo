@@ -441,3 +441,28 @@ class TestPurchaseOrderSuggest(PurchaseTestCommon):
         self.assertRecordValues(po_2.order_line, [
             {'product_id': self.product_1.id, 'product_qty': 10},
         ])
+
+    def test_purchase_order_suggest_access_error_non_admin(self):
+        """ Test that non-admin users can use the suggest feature without access errors """
+        today = fields.Datetime.now()
+        warehouse = self.delivery_type.warehouse_id
+        self.env = self.env(user=self.res_users_purchase_user)
+        self.env['stock.quant']._update_available_quantity(self.product_1, warehouse.lot_stock_id, 15)
+        self._create_and_process_delivery_at_date(
+            [(self.product_1, 10)], today - relativedelta(months=1), warehouse=warehouse
+        )
+        po = self.env['purchase.order'].create({
+            'partner_id': self.partner_1.id,
+        })
+        action = po.action_display_suggest()
+        context = {
+            **action['context'],
+            'default_product_ids': self.product_1.ids,
+        }
+        po_suggest = self.env['purchase.order.suggest'].with_context(context).create({
+            'number_of_days': 30,
+            'based_on': 'one_month',
+            'percent_factor': 100,
+        })
+        po_suggest.action_purchase_order_suggest()
+        self.assertEqual(po_suggest.estimated_price, 500, "estimated price should be equal to 500")
