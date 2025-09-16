@@ -107,6 +107,7 @@ class PosOrder(models.Model):
         edi_document = self.account_move.l10n_es_tbai_post_document_id or self.l10n_es_tbai_post_document_id
         if edi_document and edi_document.state == 'accepted':
             return edi_document._get_tbai_qr()
+        return ''
 
     # -------------------------------------------------------------------------
     # WEB SERVICE CALL
