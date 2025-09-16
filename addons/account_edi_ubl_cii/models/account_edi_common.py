@@ -377,6 +377,7 @@ class AccountEdiCommon(models.AbstractModel):
     # -------------------------------------------------------------------------
 
     def _import_invoice_ubl_cii(self, invoice, file_data, new=False):
+        invoice.ensure_one()
         if invoice.invoice_line_ids:
             return invoice._reason_cannot_decode_has_invoice_lines()
 
@@ -408,18 +409,7 @@ class AccountEdiCommon(models.AbstractModel):
         # Update the invoice.
         invoice.move_type = move_type
         with invoice._get_edi_creation() as invoice:
-            logs = self._import_fill_invoice(invoice, tree, qty_factor)
-
-        if invoice:
-            body = Markup("<strong>%s</strong>") % \
-                _("Format used to import the invoice: %s",
-                  self.env['ir.model']._get(self._name).name)
-
-            if logs:
-                body += Markup("<ul>%s</ul>") % \
-                    Markup().join(Markup("<li>%s</li>") % l for l in logs)
-
-            invoice.message_post(body=body)
+            fill_invoice_logs = self._import_fill_invoice(invoice, tree, qty_factor)
 
         # For UBL, we should override the computed tax amount if it is less than 0.05 different of the one in the xml.
         # In order to support use case where the tax total is adapted for rounding purpose.
@@ -427,9 +417,25 @@ class AccountEdiCommon(models.AbstractModel):
         with invoice._get_edi_creation() as invoice:
             self._correct_invoice_tax_amount(tree, invoice)
 
-        attachments = self._import_attachments(invoice, tree)
-        if attachments:
-            invoice.message_post(attachment_ids=attachments.ids)
+        source_attachment = file_data['attachment'] or self.env['ir.attachment']
+        attachments = source_attachment + self._import_attachments(invoice, tree)
+
+        self._log_import_invoice_ubl_cii(invoice, invoice_logs=fill_invoice_logs, attachments=attachments)
+
+    def _add_logs_import_invoice_ubl_cii(self, invoice, invoice_logs=None):
+        invoice.ensure_one()
+        if invoice_logs is None:
+            invoice_logs = []
+        format_log = self.env._("Format: %s", self.env['ir.model']._get(self._name).name)
+        return [format_log] + invoice_logs
+
+    def _log_import_invoice_ubl_cii(self, invoice, title_logs=None, invoice_logs=None, attachments=None):
+        invoice.ensure_one()
+        body = Markup("<strong>%s</strong>") % (title_logs or self.env._("Invoice imported"))
+        if invoice_logs := self._add_logs_import_invoice_ubl_cii(invoice, invoice_logs=invoice_logs):
+            body += Markup("<ul>%s</ul>") % \
+                    Markup().join(Markup("<li>%s</li>") % l for l in invoice_logs)
+        invoice.message_post(body=body, attachment_ids=attachments.ids if attachments else None)
 
     def _import_attachments(self, invoice, tree):
         # Import the embedded PDF in the xml if some are found
