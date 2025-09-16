@@ -1951,9 +1951,6 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
         with self.assertRaises(MissingError):
             deleted.categories
 
-        # special case: should not fail
-        Discussion.browse([None]).read(['categories'])
-
     def test_40_real_vs_new(self):
         """ test field access on new records vs real records. """
         Model = self.env['test_orm.category']

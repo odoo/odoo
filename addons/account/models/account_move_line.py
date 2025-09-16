@@ -1840,7 +1840,7 @@ class AccountMoveLine(models.Model):
             # Log changes to move lines on each move
             tracked_fields = [fname for fname, f in self._fields.items() if hasattr(f, 'tracking') and f.tracking and not (hasattr(f, 'related') and f.related)]
             ref_fields = self.env['account.move.line'].fields_get(tracked_fields)
-            empty_line = self.browse([False])  # all falsy fields but not failing `ensure_one` checks
+            empty_line = self.browse()  # all falsy fields
             for move_id, modified_lines in self.grouped('move_id').items():
                 if not move_id.posted_before:
                     continue

@@ -70,7 +70,7 @@ class ResPartner(models.Model):
             - calendar_model.js (calendar.CalendarModel)
         """
         attendees_details = []
-        meetings = self.env['calendar.event'].browse(meeting_ids)
+        meetings = self.env['calendar.event'].browse(filter(None, meeting_ids))
         for attendee in meetings.attendee_ids:
             if attendee.partner_id not in self:
                 continue

@@ -657,17 +657,6 @@ class TestAPI(SavepointCaseWithUserDemo):
             {'name': "james", 'function': "host"},
             {'name': "rhod", 'function': "guest"}
         ])
-        pn = self.env['res.partner'].new({'name': 'alex', 'function': "host"})
-
-        with self.subTest("Should work with mixes of db and new records"):
-            self.assertEqual(
-                (p0 | p1 | p2 | pn).grouped('function'),
-                {'guest': p0 | p2, 'host': p1 | pn}
-            )
-            self.assertEqual(
-                (p0 | p1 | p2 | pn).grouped(lambda r: len(r.name)),
-                {3: p0, 4: p2 | pn, 5: p1},
-            )
 
         with self.subTest("Should allow cross-group prefetching"):
             byfn = (p0 | p1 | p2).grouped('function')

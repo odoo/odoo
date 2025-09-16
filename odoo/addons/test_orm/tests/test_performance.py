@@ -172,9 +172,7 @@ class TestPerformance(SavepointCaseWithUserDemo):
         new_record_origin = records.new(origin=real_record)
         new_record_ref = records.new(ref='virtual_')
         new_record = records.new({'name': 'aaa'})
-        # Because the ORM "works" for records.browse([False]).name, fetch should "work" too.
-        false_record = records.browse([False])
-        records = real_record + new_record_origin + new_record_ref + new_record + false_record
+        records = real_record + new_record_origin + new_record_ref + new_record
         with self.assertQueryCount(1):
             records.fetch(['name'])
 

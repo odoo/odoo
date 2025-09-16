@@ -227,7 +227,7 @@ class TestMailRender(TestMailRenderCommon):
         partner = self.render_object.with_env(self.env)
         for res_ids in ([], (), [False], [''], [None], [False, partner.id]):  # various corner cases
             for fname, expected_obj, expected_void in zip(['subject', 'body_html'], self.base_rendered, self.base_rendered_void):
-                with self.subTest():
+                with self.subTest(res_ids=res_ids, fname=fname):
                     rendered_all = template._render_field(
                         fname,
                         res_ids,

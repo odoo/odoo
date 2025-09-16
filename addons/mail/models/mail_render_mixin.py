@@ -40,6 +40,19 @@ def format_time(env, time, tz=False, time_format='medium', lang_code=False):
         return time
 
 
+def render_res_ids(model, res_ids, results):
+    """Render for a list of ids where an id can be falsy.
+    For falsy ids, use an empty recordset.
+    """
+    res_ids, falsy_ids = tools.partition(lambda id_: id_ or isinstance(id_, api.NewId), res_ids)
+    yield from model.browse(res_ids)
+    if not falsy_ids:
+        return
+    yield model.browse()
+    for res_id in falsy_ids:
+        results[res_id] = results[False]
+
+
 class MailRenderMixin(models.AbstractModel):
     _name = 'mail.render.mixin'
     _description = 'Mail Render Mixin'
@@ -358,7 +371,7 @@ class MailRenderMixin(models.AbstractModel):
 
         is_restricted = not self._unrestricted_rendering and not self.env.is_admin() and not self.env.user.has_group('mail.group_mail_template_editor')
 
-        for record in self.env[model].browse(res_ids):
+        for record in render_res_ids(self.env[model], res_ids, results):
             variables['object'] = record
             options = options or {}
             if is_restricted:
@@ -394,9 +407,8 @@ class MailRenderMixin(models.AbstractModel):
 
         Supporting only QWeb allowed expressions, no custom variable in that mode.
         """
-        records = self.env[model].browse(res_ids)
         result = {}
-        for record in records:
+        for record in render_res_ids(self.env[model], res_ids, result):
             def replace(match):
                 tag = match.group(1)
                 expr = match.group(3)
@@ -460,7 +472,7 @@ class MailRenderMixin(models.AbstractModel):
             variables.update(**add_context)
 
         view_ref = view_ref.id if isinstance(view_ref, models.BaseModel) else view_ref
-        for record in self.env[model].browse(res_ids):
+        for record in render_res_ids(self.env[model], res_ids, results):
             variables['object'] = record
             try:
                 render_result = self.env['ir.qweb']._render(
@@ -524,7 +536,7 @@ class MailRenderMixin(models.AbstractModel):
         if add_context:
             variables.update(**add_context)
 
-        for record in self.env[model].browse(res_ids):
+        for record in render_res_ids(self.env[model], res_ids, results):
             variables['object'] = record
 
             try:
@@ -545,9 +557,8 @@ class MailRenderMixin(models.AbstractModel):
     def _render_template_inline_template_regex(self, template_txt, model, res_ids):
         """Render the inline template in static mode, without calling safe eval."""
         template = parse_inline_template(str(template_txt))
-        records = self.env[model].browse(res_ids)
         result = {}
-        for record in records:
+        for record in render_res_ids(self.env[model], res_ids, result):
             renderer = []
             for string, expression, default in template:
                 renderer.append(string)
@@ -573,7 +584,7 @@ class MailRenderMixin(models.AbstractModel):
         :returns: updated version of rendered per record ID;
         :rtype: dict
         """
-        res_ids = list(rendered.keys())
+        res_ids = list(filter(None, rendered.keys()))
         for res_id, rendered_html in rendered.items():
             base_url = None
             if model:
@@ -677,16 +688,13 @@ class MailRenderMixin(models.AbstractModel):
                 self.lang, self.render_model, res_ids, engine=engine)
         else:
             rendered_langs = dict.fromkeys(res_ids, "")
-            records = self.env[self.render_model].browse(res_ids)
+            records = self.env[self.render_model].browse(filter(None, res_ids))
             customers = records._mail_get_partners()
             for record in records:
                 partner = customers[record.id][0] if customers[record.id] else self.env['res.partner']
                 rendered_langs[record.id] = partner.lang
 
-        return dict(
-            (res_id, lang)
-            for res_id, lang in rendered_langs.items()
-        )
+        return dict(rendered_langs)
 
     def _classify_per_lang(self, res_ids, engine='inline_template'):
         """ Given some record ids, return for computed each lang a contextualized

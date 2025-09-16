@@ -322,10 +322,8 @@ class MailTemplate(models.Model):
         if render_results is None:
             render_results = {}
 
-        # generating reports is done on a per-record basis, better ensure cache
-        # is filled up to avoid rendering and browsing in a loop
-        if res_ids and 'report_template_ids' in render_fields and self.report_template_ids:
-            self.env[self.model].browse(res_ids)
+        # remove empty res_ids
+        res_ids = list(filter(None, res_ids))
 
         for res_id in res_ids:
             values = render_results.setdefault(res_id, {})
@@ -414,6 +412,7 @@ class MailTemplate(models.Model):
         self.ensure_one()
         if render_results is None:
             render_results = {}
+        res_ids = list(filter(None, res_ids))
         Model = self.env[self.model].with_prefetch(res_ids)
 
         # if using default recipients -> ``_message_get_default_recipients`` gives
@@ -632,10 +631,17 @@ class MailTemplate(models.Model):
             partner_to = partner_to.split(',')
         if not isinstance(partner_to, (list, tuple)):
             partner_to = [partner_to]
-        return [
-            int(pid.strip()) if isinstance(pid, str) else int(pid) for pid in partner_to
-            if (isinstance(pid, str) and pid.strip().isdigit()) or (pid and not isinstance(pid, str))
-        ]
+
+        def to_id(v):
+            if isinstance(v, str):
+                v = v.strip()
+            if not v:
+                return None
+            try:
+                return int(v)
+            except ValueError:
+                return None
+        return [pid for pto in partner_to if (pid := to_id(pto))]
 
     # ------------------------------------------------------------
     # EMAIL

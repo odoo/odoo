@@ -220,6 +220,8 @@ class Base(models.AbstractModel):
     def _mail_track(self, tracked_fields, initial_values):
         """ For a given record, fields to check (tuple column name, column info)
         and initial values, return a valid command to create tracking values.
+        The method accepts a single record or an empty one (where all field
+        values will be falsy).
 
         :param dict tracked_fields: fields_get of updated fields on which
           tracking is checked and performed;
@@ -234,7 +236,8 @@ class Base(models.AbstractModel):
 
         Override this method on a specific model to implement model-specific
         behavior. Also consider inheriting from ``mail.thread``. """
-        self.ensure_one()
+        if len(self) > 1:
+            raise ValueError(f"Expected empty or single record: {self}")
         updated = set()
         tracking_value_ids = []
 
