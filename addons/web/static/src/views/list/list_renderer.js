@@ -191,6 +191,7 @@ export class ListRenderer extends Component {
             this.debugOpenView = exprToBoolean(browser.localStorage.getItem(this.keyDebugOpenView));
             this.columns = this.getActiveColumns();
             this.withHandleColumn = this.columns.some((col) => col.widget === "handle");
+            this.aggregates = this.computeAggregates();
         });
         this.multiCurrencyPopover = usePopover(MultiCurrencyPopover, {
             position: "right",
@@ -675,7 +676,7 @@ export class ListRenderer extends Component {
         }
     }
 
-    get aggregates() {
+    computeAggregates() {
         let values;
         if (this.props.list.selection.length) {
             values = this.props.list.selection.map((r) => r.data);
