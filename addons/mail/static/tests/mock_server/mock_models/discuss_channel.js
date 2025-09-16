@@ -532,14 +532,6 @@ export class DiscussChannel extends models.ServerModel {
 
         const [channel] = this.browse(ids);
         this.write([channel.id], { name });
-        this.message_post(
-            channel.id,
-            makeKwArgs({
-                body: `<div data-oe-type="channel_rename" class="o_mail_notification">${name}</div>`,
-                message_type: "notification",
-                subtype_xmlid: "mail.mt_comment",
-            })
-        );
     }
 
     /**
@@ -930,6 +922,16 @@ export class DiscussChannel extends models.ServerModel {
             channels.map((channel) => [channel.id, this._channel_basic_info(channel.id)])
         );
         for (const channel of channels) {
+            if ("name" in values) {
+                this.message_post(
+                    channel.id,
+                    makeKwArgs({
+                        body: `<div data-oe-type="channel_rename" class="o_mail_notification">${values.name}</div>`,
+                        message_type: "notification",
+                        subtype_xmlid: "mail.mt_comment",
+                    })
+                );
+            }
             if ("image_128" in values) {
                 super.write(channel.id, {
                     avatar_cache_key: DateTime.utc().toFormat("yyyyMMddHHmmss"),
