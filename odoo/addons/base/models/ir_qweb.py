@@ -463,6 +463,10 @@ SPECIAL_DIRECTIVES = {'t-translation', 't-ignore', 't-title'}
 T_CALL_SLOT = '0'
 
 
+# Only allow a javascript scheme if it is followed by [ ][window.]history.back()
+MALICIOUS_SCHEMES = re.compile(r'javascript:(?!( ?)((window\.)?)history\.back\(\)$)', re.I).findall
+
+
 def indent_code(code, level):
     """Indent the code to respect the python syntax."""
     return textwrap.indent(textwrap.dedent(code).strip(), ' ' * 4 * level)
@@ -1308,7 +1312,7 @@ class IrQWeb(models.AbstractModel):
         """ Compile a purely static element into a list of string. """
         if not el.nsmap:
             unqualified_el_tag = el_tag = el.tag
-            attrib = self._post_processing_att(el.tag, el.attrib)
+            attrib = self._post_processing_att(el.tag, {**el.attrib, '__is_static_node': True})
         else:
             # Etree will remove the ns prefixes indirection by inlining the corresponding
             # nsmap definition into the tag attribute. Restore the tag and prefix here.
@@ -1338,7 +1342,7 @@ class IrQWeb(models.AbstractModel):
                 else:
                     attrib[key] = value
 
-            attrib = self._post_processing_att(el.tag, attrib)
+            attrib = self._post_processing_att(el.tag, {**attrib, '__is_static_node': True})
 
             # Update the dict of inherited namespaces before continuing the recursion. Note:
             # since `compile_context['nsmap']` is a dict (and therefore mutable) and we do **not**
@@ -2367,6 +2371,9 @@ class IrQWeb(models.AbstractModel):
 
             @returns dict
         """
+        href = atts.get('href')
+        if not atts.pop('__is_static_node', False) and href and MALICIOUS_SCHEMES(str(href)):
+            atts['href'] = ""
         return atts
 
     def _get_field(self, record, field_name, expression, tagName, field_options, values):
