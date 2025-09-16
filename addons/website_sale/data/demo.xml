@@ -99,7 +99,11 @@
                     <div class="container">
                         <div class="row align-items-center">
                             <div class="pt16 pb16 col-lg-6">
-                                <img src="/website_sale/static/src/img/carpentry.jpg" class="img img-fluid mx-auto rounded" alt=""/>
+                                <img
+                                    src="/website_sale/static/src/img/products_demo/carpentry.jpg"
+                                    class="img img-fluid mx-auto rounded"
+                                    alt=""
+                                />
                             </div>
                             <div class="pt16 pb16 col-lg-6">
                                 <h2 class="h3-fs">Locally handmade</h2>
@@ -181,8 +185,8 @@
         <record id="public_category_services" model="product.public.category">
           <field name="name">Services</field>
           <field name="sequence">55</field>
-          <field name="image_1920" type="base64" file="website_sale/static/src/img/warranty.jpg"/>
-          <field name="cover_image" type="base64" file="website_sale/static/src/img/warranty.jpg"/>
+          <field name="image_1920" type="base64" file="website_sale/static/src/img/products_demo/warranty.jpg"/>
+          <field name="cover_image" type="base64" file="website_sale/static/src/img/products_demo/warranty.jpg"/>
         </record>
         <record id="public_category_multimedia" model="product.public.category">
           <field name="name">Multimedia</field>
@@ -863,7 +867,7 @@
             <field name="categ_id" ref="product.product_category_services"/>
             <field name="invoice_policy">delivery</field>
             <field name="public_categ_ids" eval="[(6, 0, [ref('website_sale.public_category_services')])]"/>
-            <field name="image_1920" type="base64" file="website_sale/static/src/img/warranty.jpg"/>
+            <field name="image_1920" type="base64" file="website_sale/static/src/img/products_demo/warranty.jpg"/>
         </record>
 
         <record id="product_1_attribute_3_product_template_attribute_line" model="product.template.attribute.line">
