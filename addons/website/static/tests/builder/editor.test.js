@@ -1,4 +1,4 @@
-import { insertText } from "@html_editor/../tests/_helpers/user_actions";
+import { insertText, pasteHtml } from "@html_editor/../tests/_helpers/user_actions";
 import { expect, test, describe } from "@odoo/hoot";
 import { animationFrame } from "@odoo/hoot-mock";
 import { contains, patchWithCleanup } from "@web/../tests/web_test_helpers";
@@ -133,6 +133,19 @@ test("should preserve iframe in the toolbar's font size input", async () => {
     iframeEl = queryOne(".o-we-toolbar [name='font_size_selector'] iframe");
     newInputEl = iframeEl.contentWindow.document?.querySelector("input");
     expect(newInputEl).toBe(inputEl); // The input shouldn't have been changed.
+});
+
+test("should apply default table classes on paste", async () => {
+    const { getEditor } = await setupWebsiteBuilder(`<p><br></p>`);
+    const editor = getEditor();
+    const p = editor.document.querySelector("p");
+    editor.shared.selection.focusEditable();
+    editor.shared.selection.setSelection({
+        anchorNode: p,
+        anchorOffset: 0,
+    });
+    pasteHtml(editor, `<table><tr><td>1234</td></tr></table>`);
+    expect(editor.document.querySelector("table")).toHaveClass("table table-bordered");
 });
 
 describe("toolbar dropdowns", () => {
