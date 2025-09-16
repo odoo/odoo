@@ -75,7 +75,7 @@ test("double clicking on a figure doesn't open the side panel", async () => {
 
 test("can switch dashboard", async () => {
     await createSpreadsheetDashboard();
-    expect(".o_search_panel_summary").toHaveText("Dashboard CRM 1");
+    expect(".o_search_panel_current_selection").toHaveText("Dashboard CRM 1");
     await contains(".o_search_panel_current_selection").click();
     const dashboardElements = queryAll("section header.list-group-item", { root: document.body });
     expect(dashboardElements[0]).toHaveClass("active");
@@ -85,14 +85,14 @@ test("can switch dashboard", async () => {
         "Dashboard Accounting 1",
     ]);
     await contains(dashboardElements[1]).click();
-    expect(".o_search_panel_summary").toHaveText("Dashboard CRM 2");
+    expect(".o_search_panel_current_selection").toHaveText("Dashboard CRM 2");
 });
 
 test("can go back from dashboard selection", async () => {
     await createSpreadsheetDashboard();
     expect(".o_mobile_dashboard").toHaveCount(1);
-    expect(".o_search_panel_summary").toHaveText("Dashboard CRM 1");
+    expect(".o_search_panel_current_selection").toHaveText("Dashboard CRM 1");
     await contains(".o_search_panel_current_selection").click();
     await contains(document.querySelector(".o_mobile_search_button")).click();
-    expect(".o_search_panel_summary").toHaveText("Dashboard CRM 1");
+    expect(".o_search_panel_current_selection").toHaveText("Dashboard CRM 1");
 });
