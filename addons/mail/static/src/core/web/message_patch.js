@@ -79,6 +79,7 @@ patch(Message.prototype, {
     },
 
     openRecord() {
+        this.message.setDone();
         this.message.thread.open({ focus: true });
         this.message.thread.highlightMessage = this.message;
     },
