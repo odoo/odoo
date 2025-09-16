@@ -1280,8 +1280,12 @@ $-product-radius-map: (
     .o_wsale_product_details_content_section_attributes {
         display: none;
 
-        &:where(:has(li.variant_attribute:not(.d-none))) {
+        &:where(:has(li.variant_attribute:not(.d-none))), &:where(:has(li.o_variant_pills:not(.d-none))) {
             display: block;
+        }
+
+        .o_wsale_product_page_variants.d-none + .o_wsale_product_page_variants{
+            margin-top: 0 !important;
         }
     }
 }

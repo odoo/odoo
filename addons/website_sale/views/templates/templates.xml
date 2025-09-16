@@ -2129,7 +2129,7 @@
                                             t-att-value="product.type"
                                         />
                                         <div
-                                            t-attf-class="o_wsale_product_details_content_section o_wsale_product_details_content_section_attributes mb-4 {{not product.valid_product_template_attribute_line_ids and 'd-none' or ' '}}"
+                                            t-attf-class="o_wsale_product_details_content_section o_wsale_product_details_content_section_attributes mb-4 {{not (product.valid_product_template_attribute_line_ids or product._has_multiple_uoms()) and 'd-none' or ''}}"
                                         >
                                             <t t-call="website_sale.variants">
                                                 <t t-set="ul_class" t-valuef="flex-column" />
