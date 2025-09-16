@@ -1883,10 +1883,10 @@ class Base(models.AbstractModel):
                 # retrieve all line ids in commands
                 line_ids = OrderedSet(self[field_name].ids)
                 for cmd in values[field_name]:
-                    if cmd[0] in (Command.UPDATE, Command.LINK):
+                    if cmd[0] in (Command.UPDATE, Command.LINK) and isinstance(cmd[1], int):
                         line_ids.add(cmd[1])
                     elif cmd[0] == Command.SET:
-                        line_ids.update(cmd[2])
+                        line_ids.update(id_ for id_ in cmd[2] if isinstance(id_, int))
                 # prefetch stored fields on lines
                 lines = self[field_name].browse(line_ids)
                 lines.fetch(sub_fields_spec.keys())

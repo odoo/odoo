@@ -5779,14 +5779,14 @@ class BaseModel(metaclass=MetaModel):
                 # x2many fields should add self, while many2one fields should replace with self
                 for invf in self.pool.field_inverses[field]:
                     invf._update_inverse(inv_recs, self)
+
                     # If multiple X2many target the same field many2one, we need to patch
                     # the values of the sibling ones
-                    if invf.type == 'one2many':
+                    if invf.type != 'many2one':
                         continue
                     for invf_invf in self.pool.field_inverses[invf]:
                         if invf_invf == field:
                             continue
-                        # TODO: domain
                         for inv_rec in inv_recs:
                             invf_invf._update_inverse(self, inv_rec)
 
