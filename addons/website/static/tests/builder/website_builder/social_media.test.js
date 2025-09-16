@@ -7,7 +7,7 @@ import {
     waitForEndOfOperation,
 } from "../website_helpers";
 import { contains, onRpc } from "@web/../tests/web_test_helpers";
-import { click } from "@odoo/hoot-dom";
+import { click, queryOne } from "@odoo/hoot-dom";
 
 defineWebsiteModels();
 
@@ -193,4 +193,25 @@ test("Edit share icon", async () => {
     await dragAndDropSnippet("s_share");
     await contains(":iframe .s_share a i").dblclick();
     expect(".modal-content").toBeDisplayed();
+});
+
+test("social media snippet should not be user-selectable", async () => {
+    await setupWebsiteBuilder(
+        `<div class="s_social_media o_not_editable"><h4>Social Media</h4></div>`,
+        { loadIframeBundles: true }
+    );
+    expect(":iframe .s_social_media").toHaveStyle({ "user-select": "none" });
+});
+
+test("share snippet should not be editable (except title) nor user-selectable", async () => {
+    await setupWebsiteBuilder(
+        `<div class="s_share">
+            <h4 class="s_share_title">Share</h4>
+            <a href="#"><i class="fa fa-facebook"/></a>
+        </div>`,
+        { loadIframeBundles: true }
+    );
+    expect(queryOne(":iframe .s_share").isContentEditable).toBe(false);
+    expect(queryOne(":iframe .s_share_title").isContentEditable).toBe(true);
+    expect(":iframe .s_share").toHaveStyle({ "user-select": "none" });
 });
