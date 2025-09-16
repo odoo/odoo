@@ -1,6 +1,6 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* base
+# * base
 #
 # Translators:
 # B Dochev, 2023
@@ -20,20 +20,22 @@
 # Maria Boyadjieva <marabo2000@gmail.com>, 2023
 # Nikola Iliev, 2023
 # Rosen Vladimirov <vladimirov.rosen@gmail.com>, 2023
-#
+# "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-09-12 13:52+0000\n"
-"PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Rosen Vladimirov <vladimirov.rosen@gmail.com>, 2023\n"
-"Language-Team: Bulgarian (https://app.transifex.com/odoo/teams/41243/bg/)\n"
+"PO-Revision-Date: 2025-09-16 15:25+0000\n"
+"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
+"Language-Team: Bulgarian <https://translate.odoo.com/projects/odoo-19/base/"
+"bg/>\n"
 "Language: bg\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_at_reports
@@ -487,7 +489,7 @@ msgid ""
 "holds the VAT detail info of sales or purchases made in a period of time.\n"
 "* Add a VAT summary report that is used to analyze invoicing\n"
 "* Add Digital VAT Book functionality that let us generate TXT files to "
-"import in AFIP. The ones we implement are:\n"
+"import in ARCA. The ones we implement are:\n"
 "\n"
 "    * LIBRO_IVA_DIGITAL_VENTAS_CBTE\n"
 "    * LIBRO_IVA_DIGITAL_VENTAS_ALICUOTAS\n"
@@ -495,7 +497,7 @@ msgid ""
 "    * LIBRO_IVA_DIGITAL_COMPRAS_ALICUOTAS\n"
 "    * LIBRO_IVA_DIGITAL_IMPORTACION_BIENES_ALICUOTA\n"
 "\n"
-"Official Documentation AFIP\n"
+"Official Documentation ARCA\n"
 "\n"
 "* Digital VAT Book - record design https://www.afip.gob.ar/libro-iva-digital/"
 "documentos/libro-iva-digital-diseno-registros.pdf\n"
@@ -612,7 +614,7 @@ msgstr ""
 "============================================================\n"
 "\n"
 "Този модул задава подробности за стоки, търгувани между държавите от "
-"Европейския съюз. "
+"Европейския съюз."
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_tax_python
@@ -1784,7 +1786,7 @@ msgid ""
 "of identifications are defined by the government authorities that regulate "
 "the fiscal operations. For example:\n"
 "\n"
-"* AFIP in Argentina defines DNI, CUIT (vat for legal entities), CUIL (vat "
+"* ARCA in Argentina defines DNI, CUIT (vat for legal entities), CUIL (vat "
 "for natural person), and another 80 valid identification types.\n"
 "\n"
 "Each identification holds this information:\n"
@@ -4300,7 +4302,7 @@ msgid ""
 "----------\n"
 "\n"
 "Be able to create journals in Odoo to create electronic customer invoices "
-"and report then to AFIP (via webservices).\n"
+"and report then to ARCA (via webservices).\n"
 "The options available are:\n"
 "\n"
 "    * Electronic Invoice - Web Service\n"
@@ -4308,63 +4310,63 @@ msgid ""
 "    * Electronic Fiscal Bond - Web Service\n"
 "\n"
 "In the electronic journals if you validate an invoice this one will be "
-"validated in both Odoo and AFIP. This validation is\n"
+"validated in both Odoo and ARCA. This validation is\n"
 "made at the instant and we recieve and \"approved/approved with observation/"
-"rejected\" state from AFIP. If the invoice has\n"
-"been rejected by AFIP will not be post in the system and a pop up message "
+"rejected\" state from ARCA. If the invoice has\n"
+"been rejected by ARCA will not be post in the system and a pop up message "
 "will be shown with both the error detail (reject reasons)\n"
 "we recieve and a HINT about what the problem could be.\n"
 "\n"
 "For auditing and troubleshooting purposes we also add a menu \"Consulit "
-"Invoice in AFIP\" that let us to consult invoices previously\n"
-"sent to AFIP and last number used as support for any possible issues on the "
-"sequences synchronization between Odoo and AFIP.\n"
+"Invoice in ARCA\" that let us to consult invoices previously\n"
+"sent to ARCA and last number used as support for any possible issues on the "
+"sequences synchronization between Odoo and ARCA.\n"
 "\n"
 "    NOTE: From the Journal's form view we are able to force a sync between "
 "the odoo sequences to each of the document types in\n"
-"    with the last numbers registered in AFIP.\n"
+"    with the last numbers registered in ARCA.\n"
 "\n"
 "From vendor bills, we have added a functionality that can be configured in "
 "the accounting settings to be able to verify\n"
-"vendor bills in AFIP to check if the vendor bills are real (more information "
+"vendor bills in ARCA to check if the vendor bills are real (more information "
 "please review the setting description).\n"
 "\n"
 "Configuration:\n"
 "\n"
 "1. Go to the Accounting Settings > Argentinean Localization section\n"
 "\n"
-"    1.1. Configure the AFIP Web Services mode:\n"
+"    1.1. Configure the ARCA Web Services mode:\n"
 "\n"
 "    * Testing environment in order to use demo certificates that will be use "
 "to test the instance and to make NOT\n"
-"      real invoices to AFIP. is just for testing. For demo instaces is "
+"      real invoices to ARCA. is just for testing. For demo instaces is "
 "already pre-defined you will not need to configure\n"
-"      it (commonly named in AFIP as Homologation environment).\n"
+"      it (commonly named in ARCA as Homologation environment).\n"
 "    * Production environment in order to generate real certificates and "
-"legal invoices to AFIP,\n"
+"legal invoices to ARCA,\n"
 "\n"
-"    1.2. Configure your AFIP Certificate: If you are in a demo instance this "
+"    1.2. Configure your ARCA Certificate: If you are in a demo instance this "
 "one will be have been set by default. If you\n"
-"         are in production instance just need to go to upload your AFIP "
+"         are in production instance just need to go to upload your ARCA "
 "Certificate\n"
 "\n"
 "    1.3. Optionally you can define if you like to be eable to verify vendor "
-"bills in AFIP.\n"
+"bills in ARCA.\n"
 "\n"
-"2. Create Sales journals that will represent each one of your AFIP POS "
-"(Available in AFIP Portal) you want to use in Odoo.\n"
+"2. Create Sales journals that will represent each one of your ARCA POS "
+"(Available in ARCA Portal) you want to use in Odoo.\n"
 "\n"
 "    2.1. Use Documents field is set by default please dont change\n"
-"    2.2. Set AFIP POS System for one of the electronic ones.\n"
+"    2.2. Set ARCA POS System for one of the electronic ones.\n"
 "\n"
 "        * Electronic Invoice - Web Service'\n"
 "        * Electronic Fiscal Bond - Web Service'\n"
 "        * Export Voucher - Web Service'\n"
 "\n"
-"    2.3. Set the AFIP POS Number and AFIP POS Address taking into account "
-"what you have configured in your AFIP Portal.\n"
+"    2.3. Set the ARCA POS Number and ARCA POS Address taking into account "
+"what you have configured in your ARCA Portal.\n"
 "\n"
-"    NOTE: You can use the \"Check Available AFIP POS\" button in Journal's "
+"    NOTE: You can use the \"Check Available ARCA POS\" button in Journal's "
 "form to corroborate the to use to create the journals.\n"
 "\n"
 "For more information about Argentinean Electronic invoicing please go to "
@@ -4397,7 +4399,7 @@ msgid ""
 "In some Latinamerica countries, including Argentina and Chile, some "
 "accounting transactions like invoices and vendor bills are classified by a "
 "document types defined by the government fiscal authorities (In Argentina "
-"case AFIP, Chile case SII).\n"
+"case ARCA, Chile case SII).\n"
 "\n"
 "This module is intended to be extended by localizations in order to manage "
 "these document types and is an essential information that needs to be "
@@ -4430,20 +4432,20 @@ msgid ""
 "\n"
 "This module add accounting features for the Argentinean localization, which "
 "represent the minimal configuration needed for a company  to operate in "
-"Argentina and under the AFIP (Administración Federal de Ingresos Públicos) "
+"Argentina and under the ARCA (Administración Federal de Ingresos Públicos) "
 "regulations and guidelines.\n"
 "\n"
 "Follow the next configuration steps for Production:\n"
 "\n"
-"1. Go to your company and configure your VAT number and AFIP Responsibility "
+"1. Go to your company and configure your VAT number and ARCA Responsibility "
 "Type\n"
 "2. Go to Accounting / Settings and set the Chart of Account that you will "
 "like to use.\n"
-"3. Create your Sale journals taking into account AFIP POS info.\n"
+"3. Create your Sale journals taking into account ARCA POS info.\n"
 "\n"
 "Demo data for testing:\n"
 "\n"
-"* 3 companies were created, one for each AFIP responsibility type with the "
+"* 3 companies were created, one for each ARCA responsibility type with the "
 "respective Chart of Account installed. Choose the company that fix you in "
 "order to make tests:\n"
 "\n"
@@ -4467,7 +4469,7 @@ msgid ""
 "Highlights:\n"
 "\n"
 "* Chart of account will not be automatically installed, each CoA Template "
-"depends on the AFIP Responsibility of the company, you will need to install "
+"depends on the ARCA Responsibility of the company, you will need to install "
 "the CoA for your needs.\n"
 "* No sales journals will be generated when installing a CoA, you will need "
 "to configure your journals manually.\n"
@@ -4485,7 +4487,7 @@ msgid ""
 "\n"
 "Master Data:\n"
 "\n"
-"* Chart of Account: one for each AFIP responsibility that is related to a "
+"* Chart of Account: one for each ARCA responsibility that is related to a "
 "legal entity:\n"
 "\n"
 "  * Responsable Inscripto (RI)\n"
@@ -4494,15 +4496,15 @@ msgid ""
 "\n"
 "* Argentinean Taxes and Account Tax Groups (VAT taxes with the existing "
 "aliquots and other types)\n"
-"* AFIP Responsibility Types\n"
+"* ARCA Responsibility Types\n"
 "* Fiscal Positions (in order to map taxes)\n"
 "* Legal Documents Types in Argentina\n"
 "* Identification Types valid in Argentina.\n"
-"* Country AFIP codes and Country VAT codes for legal entities, natural "
+"* Country ARCA codes and Country VAT codes for legal entities, natural "
 "persons and others\n"
-"* Currency AFIP codes\n"
-"* Unit of measures AFIP codes\n"
-"* Partners: Consumidor Final and AFIP\n"
+"* Currency ARCA codes\n"
+"* Unit of measures ARCA codes\n"
+"* Partners: Consumidor Final and ARCA\n"
 msgstr ""
 
 #. module: base
@@ -5961,11 +5963,11 @@ msgid ""
 "configuration menu.\n"
 msgstr ""
 "\n"
-" Модул за въвеждане на банкови извлечения CODA.\n"
+"Модул за въвеждане на банкови извлечения CODA.\n"
 "======================================\n"
 "\n"
-"Поддържани са плоски файлове CODA във формат V2 от белгийски банкови "
-"сметки.\n"
+"Поддържани са плоски файлове CODA във формат V2 от белгийски банкови сметки."
+"\n"
 "----------------------------------------------------------------------\n"
 "    * Поддръжка CODA v1.\n"
 "    * Поддръжка CODA v2.2.\n"
@@ -16012,7 +16014,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_be_coda
 msgid "Belgium - Import Bank CODA Statements"
-msgstr "Белгия - въведете банкови извлечения CODA "
+msgstr "Белгия - въведете банкови извлечения CODA"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_be_soda
@@ -16776,7 +16778,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__base_language_export__format__csv
 msgid "CSV File"
-msgstr "Файл с разделени със запетая стойности - CSV "
+msgstr "Файл с разделени със запетая стойности - CSV"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.wizard_lang_export
@@ -18100,14 +18102,14 @@ msgstr "Config: Run Remaining Action Todo"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_config_view_base
 msgid "Configuration"
-msgstr "Конфигурация "
+msgstr "Конфигурация"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.act_ir_actions_todo_form
 #: model:ir.model,name:base.model_ir_actions_todo
 #: model:ir.ui.menu,name:base.menu_ir_actions_todo_form
 msgid "Configuration Wizards"
-msgstr "Конфигурационни помощници "
+msgstr "Конфигурационни помощници"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_partner_commission
@@ -23699,7 +23701,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_google_calendar
 msgid "Google Calendar"
-msgstr "Календар на Google "
+msgstr "Календар на Google"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_google_gmail
@@ -23714,7 +23716,7 @@ msgstr "Google Maps"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_google_account
 msgid "Google Users"
-msgstr "Потребители на Google "
+msgstr "Потребители на Google"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale_autocomplete
@@ -25004,7 +25006,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_module_upgrade
 msgid "Impacted Apps"
-msgstr "Засеганти приложения "
+msgstr "Засеганти приложения"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_module_uninstall__model_ids
@@ -27691,7 +27693,7 @@ msgstr ""
 #: model:ir.module.module,shortdesc:base.module_quality_mrp_workorder
 msgid "MRP features for Quality Control"
 msgstr ""
-"Функции на Планирането на материалните изисквания - MRP за качествен контрол "
+"Функции на Планирането на материалните изисквания - MRP за качествен контрол"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_quality_mrp_workorder_iot
@@ -30471,7 +30473,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_web_mobile
 msgid "Odoo Mobile Core module"
-msgstr "Мобилен модул за същността на Odoo "
+msgstr "Мобилен модул за същността на Odoo"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_mobile
@@ -31249,7 +31251,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_decimal_precision_name_uniq
 msgid "Only one value can be defined for each given usage!"
-msgstr "За дадена употреба може да се определи само една стойност "
+msgstr "За дадена употреба може да се определи само една стойност"
 
 #. module: base
 #. odoo-python
@@ -34917,7 +34919,7 @@ msgstr "Ресторант"
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_restaurant
 msgid "Restaurant extensions for the Point of Sale "
-msgstr "Разширения на ресторанти за центъра за продажби"
+msgstr "Разширения на ресторанти за центъра за продажби "
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.server_action_history_wizard_view
@@ -36748,7 +36750,7 @@ msgstr "Signup"
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_discount
 msgid "Simple Discounts in the Point of Sale "
-msgstr "Опростени отстъпки в център за продажби"
+msgstr "Опростени отстъпки в център за продажби "
 
 #. module: base
 #: model:res.currency,currency_subunit_label:base.MOP
@@ -37477,7 +37479,7 @@ msgstr "Област"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_country_state__code
 msgid "State Code"
-msgstr "Код на областта "
+msgstr "Код на областта"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_country_state__name
@@ -37957,7 +37959,7 @@ msgstr "System Properties"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_module_upgrade
 msgid "System Update"
-msgstr "Актуализация на системата "
+msgstr "Актуализация на системата"
 
 #. module: base
 #: model:res.country,name:base.st
@@ -38153,7 +38155,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_res_partner__vat
 #: model:ir.model.fields,field_description:base.field_res_users__vat
 msgid "Tax ID"
-msgstr "Данъчен ИН "
+msgstr "Данъчен ИН"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner__vat_label
@@ -38984,7 +38986,7 @@ msgstr "The model name must start with 'x_'."
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_fields__model_id
 msgid "The model this field belongs to"
-msgstr "Моделът, към който принадлежи това поле "
+msgstr "Моделът, към който принадлежи това поле"
 
 #. module: base
 #. odoo-python
@@ -40537,7 +40539,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_delivery_ups_rest
 msgid "UPS Shipping"
-msgstr "Шипинг чрез UPS "
+msgstr "Шипинг чрез UPS"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_delivery_ups
@@ -41396,7 +41398,7 @@ msgstr "Настройки по подразбиране, определени �
 #: model:ir.actions.act_window,name:base.actions_ir_filters_view
 #: model:ir.ui.menu,name:base.menu_ir_filters
 msgid "User-defined Filters"
-msgstr "Филтри, определени от потребителя "
+msgstr "Филтри, определени от потребителя"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_mail_server__smtp_user

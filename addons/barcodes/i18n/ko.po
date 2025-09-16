@@ -1,30 +1,33 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* barcodes
+# * barcodes
 #
 # Translators:
 # Martin Trigaux, 2022
 # Sarah Park, 2023
 #
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-16 13:49+0000\n"
-"PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Sarah Park, 2023\n"
-"Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
+"PO-Revision-Date: 2025-09-16 04:38+0000\n"
+"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"Language-Team: Korean <https://translate.odoo.com/projects/odoo-19/barcodes/"
+"ko/>\n"
 "Language: ko\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: barcodes
 #. odoo-python
 #: code:addons/barcodes/models/barcode_rule.py:0
 msgid " '*' is not a valid Regex Barcode Pattern. Did you mean '.*'?"
-msgstr ""
+msgstr " '*' 항목은 유효한 정규식 바코드 패턴이 아닙니다.  '.*' 항목을 찾으시나요?"
 
 #. module: barcodes
 #: model_terms:ir.ui.view,arch_db:barcodes.view_barcode_nomenclature_form
@@ -79,7 +82,7 @@ msgstr "또는"
 #. odoo-javascript
 #: code:addons/barcodes/static/src/components/barcode_scanner.xml:0
 msgid "Barcode"
-msgstr ""
+msgstr "바코드"
 
 #. module: barcodes
 #: model:ir.model,name:barcodes.model_barcodes_barcode_events_mixin
@@ -191,7 +194,7 @@ msgstr "최근 갱신 일자"
 #. module: barcodes
 #: model:ir.model.fields.selection,name:barcodes.selection__barcode_nomenclature__upc_ean_conv__none
 msgid "Never"
-msgstr "하지않음"
+msgstr "하지 않음"
 
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_res_company__nomenclature_id
@@ -208,12 +211,23 @@ msgid ""
 "                                the barcode field on the associated records <i>must</i> show these digits as\n"
 "                                zeroes."
 msgstr ""
+"패턴을 이용하여 또한 중량이나 가격과 같은 숫자 값을 바코드에 인코딩하는 "
+"방법도\n"
+"                                지정할 수 있습니다. 표시 방식은 <code>{NNN}</"
+"code>와 같으며 여기에서 N은\n"
+"                                숫자의 자릿수가 인코딩되는 위치를 "
+"나타냅니다. 변동값도 마찬가지로 지원되며\n"
+"                                D로 나타내는 십진수에서도, <code>{NNNDD}</"
+"code>와 같이 표시됩니다. 이러한 경우,\n"
+"                                연결된 레코드의 바코드 필드에 <i>반드시</i> "
+"해당 숫자가 0으로 표시되어야\n"
+"                                합니다."
 
 #. module: barcodes
 #. odoo-javascript
 #: code:addons/barcodes/static/src/components/barcode_scanner.js:0
 msgid "Please, Scan again!"
-msgstr ""
+msgstr "다시 스캔하세요!"
 
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule__name
@@ -239,7 +253,7 @@ msgstr "표"
 #. odoo-javascript
 #: code:addons/barcodes/static/src/components/barcode_scanner.xml:0
 msgid "Tap to scan"
-msgstr ""
+msgstr "탭하여 스캔"
 
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_rule__pattern
@@ -260,7 +274,8 @@ msgstr "일치하는 패턴이 이 바코드의 별칭이 됩니다."
 #. odoo-python
 #: code:addons/barcodes/models/barcode_rule.py:0
 msgid "There is a syntax error in the barcode pattern %(pattern)s: a rule can only contain one pair of braces."
-msgstr "바코드 패턴 %(pattern)s에 구문 오류가 있습니다: 괄호는 한 쌍만 포함할 수 있습니다. "
+msgstr "바코드 규칙 %(pattern)s에 구문 오류가 있습니다: 괄호는 한 쌍만 포함할 수 "
+"있습니다."
 
 #. module: barcodes
 #. odoo-python
@@ -297,7 +312,7 @@ msgstr "UPC-A"
 #. module: barcodes
 #: model:ir.model.fields.selection,name:barcodes.selection__barcode_nomenclature__upc_ean_conv__upc2ean
 msgid "UPC-A to EAN-13"
-msgstr "UPC-A에서 EAN-13 "
+msgstr "UPC-A에서 EAN-13"
 
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature__upc_ean_conv
@@ -307,7 +322,7 @@ msgstr "UPC/EAN 변환"
 #. module: barcodes
 #: model:ir.model.fields.selection,name:barcodes.selection__barcode_rule__type__product
 msgid "Unit Product"
-msgstr "단위 상품"
+msgstr "품목 단위"
 
 #. module: barcodes
 #. odoo-javascript

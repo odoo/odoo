@@ -1,29 +1,32 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* base_iban
+# * base_iban
 #
 # Translators:
 # Martin Trigaux, 2022
 #
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-09-11 13:54+0000\n"
-"PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
-"Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
+"PO-Revision-Date: 2025-09-16 02:35+0000\n"
+"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"Language-Team: Vietnamese <https://translate.odoo.com/projects/odoo-19/"
+"base_iban/vi/>\n"
 "Language: vi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: base_iban
 #. odoo-javascript
 #: code:addons/base_iban/static/src/components/iban_widget/iban_widget.xml:0
 msgid "Account isn't a valid IBAN"
-msgstr ""
+msgstr "Tài khoản không phải là một IBAN hợp lệ"
 
 #. module: base_iban
 #: model:ir.model,name:base_iban.model_res_partner_bank
@@ -34,12 +37,12 @@ msgstr "Tài khoản ngân hàng"
 #. odoo-python
 #: code:addons/base_iban/models/res_partner_bank.py:0
 msgid "Cannot compute the BBAN because the account number is not an IBAN."
-msgstr "Không thể tính toán BBAN bởi vì số tài khoản không phải là một IBAN."
+msgstr "Không thể tính toán BBAN vì số tài khoản không phải là một IBAN."
 
 #. module: base_iban
 #: model:ir.model.fields,field_description:base_iban.field_res_partner_bank__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Tên hiển thị"
 
 #. module: base_iban
 #. odoo-python
@@ -50,7 +53,7 @@ msgstr "IBAN"
 #. module: base_iban
 #: model:ir.model.fields,field_description:base_iban.field_res_partner_bank__id
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: base_iban
 #. odoo-python
@@ -61,9 +64,8 @@ msgid ""
 "Where B = National bank code, S = Branch code, C = Account No, k = Check "
 "digit"
 msgstr ""
-"Mã IBAN dường như không đúng. Bạn nên nhập gì đó theo định dạng này %s\n"
-"Trong đó B = National bank code, S = Branch code, C = Account No, k = Check "
-"digit"
+"Mã IBAN có vẻ chưa chính xác. Bạn nên nhập thông tin theo định dạng này %s\n"
+"Trong đó B = Mã ngân hàng, S = Mã chi nhánh, C = Số tài khoản, k = Số séc"
 
 #. module: base_iban
 #. odoo-python
@@ -81,4 +83,4 @@ msgstr "Đây không phải mã IBAN."
 #. odoo-python
 #: code:addons/base_iban/models/res_partner_bank.py:0
 msgid "This IBAN does not pass the validation check, please verify it."
-msgstr "IBAN này không qua được quá trình thẩm định, vui lòng xem xét lại."
+msgstr "IBAN này không vượt qua quá trình xác thực, vui lòng xác minh lại."

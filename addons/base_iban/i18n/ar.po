@@ -1,31 +1,33 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* base_iban
+# * base_iban
 #
 # Translators:
 # Martin Trigaux, 2022
 # Malaz Abuidris <msea@odoo.com>, 2023
-#
+# "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-09-11 13:54+0000\n"
-"PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2023\n"
-"Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
+"PO-Revision-Date: 2025-09-16 13:37+0000\n"
+"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
+"Language-Team: Arabic <https://translate.odoo.com/projects/odoo-19/base_iban/"
+"ar/>\n"
 "Language: ar\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
-"&& n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
+"&& n%100<=10 ? 3 : n%100>=11 ? 4 : 5;\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: base_iban
 #. odoo-javascript
 #: code:addons/base_iban/static/src/components/iban_widget/iban_widget.xml:0
 msgid "Account isn't a valid IBAN"
-msgstr "الحساب ليس IBAN صالحاً "
+msgstr "الحساب ليس IBAN صالحاً"
 
 #. module: base_iban
 #: model:ir.model,name:base_iban.model_res_partner_bank
@@ -41,7 +43,7 @@ msgstr "لا يمكن احتساب الـBBAN لأن الحساب لا يملك 
 #. module: base_iban
 #: model:ir.model.fields,field_description:base_iban.field_res_partner_bank__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "اسم العرض"
 
 #. module: base_iban
 #. odoo-python
@@ -52,7 +54,7 @@ msgstr "IBAN"
 #. module: base_iban
 #: model:ir.model.fields,field_description:base_iban.field_res_partner_bank__id
 msgid "ID"
-msgstr ""
+msgstr "المُعرف"
 
 #. module: base_iban
 #. odoo-python
@@ -64,13 +66,13 @@ msgid ""
 "digit"
 msgstr ""
 "يبدو أن رقم IBAN غير صحيح. كان عليك أن تدخل رقماً بهذه الصيغة %s\n"
-"حيث B = رمز البنك الوطني، S = رمز الفرع، C = رقم الحساب، k = رقم التحقق "
+"حيث B = رمز البنك الوطني، S = رمز الفرع، C = رقم الحساب، k = رقم التحقق"
 
 #. module: base_iban
 #. odoo-python
 #: code:addons/base_iban/models/res_partner_bank.py:0
 msgid "The IBAN is invalid, it should begin with the country code"
-msgstr "رقم IBAN غير صحيح، يجب أن يبدأ برمز الدولة "
+msgstr "رقم IBAN غير صحيح، يجب أن يبدأ برمز الدولة"
 
 #. module: base_iban
 #. odoo-python
@@ -82,4 +84,4 @@ msgstr "لا يوجد كود IBAN."
 #. odoo-python
 #: code:addons/base_iban/models/res_partner_bank.py:0
 msgid "This IBAN does not pass the validation check, please verify it."
-msgstr "لم يتخطّ رقم IBAN هذا اختبار التصديق، يرجى التحقق منه. "
+msgstr "لم يتخطّ رقم IBAN هذا اختبار التصديق، يرجى التحقق منه."

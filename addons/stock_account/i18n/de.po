@@ -1,25 +1,28 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* stock_account
+# * stock_account
 #
 # Translators:
 # Martin Trigaux, 2022
 # Friederike Fasterling-Nesselbosch, 2022
 # Larissa Manderfeld, 2023
 #
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-09-11 14:02+0000\n"
-"PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Larissa Manderfeld, 2023\n"
-"Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
+"PO-Revision-Date: 2025-09-16 02:32+0000\n"
+"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"Language-Team: German <https://translate.odoo.com/projects/odoo-19/"
+"stock_account/de/>\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: stock_account
 #. odoo-python
@@ -42,7 +45,7 @@ msgstr ""
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_account_report_invoice_document
 msgid "6.00"
-msgstr ""
+msgstr "6,00"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_account_report_invoice_document
@@ -57,7 +60,7 @@ msgstr "<span>Menge</span>"
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_account_report_invoice_document
 msgid "<span>SN/LN</span>"
-msgstr "<span>Chargen-/Seriennummer</span>"
+msgstr "<span>Los-/Seriennummer</span>"
 
 #. module: stock_account
 #: model:ir.actions.act_window,name:stock_account.stock_avco_report_action
@@ -101,7 +104,7 @@ msgstr ""
 msgid ""
 "Add additional cost (transport, customs, ...) in the value of the product."
 msgstr ""
-"Fügen Sie zusätzliche Kosten (Transport, Zoll, ...) zum Produktwert hinzu."
+"Fügen Sie zusätzliche Kosten (Transport, Zoll ...) zum Produktwert hinzu."
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_avco_report__quantity
@@ -118,7 +121,7 @@ msgstr "Mehrwert"
 #: model:ir.actions.server,name:stock_account.stock_move_action_adjust_valuation
 #: model_terms:ir.ui.view,arch_db:stock_account.product_value_form_view
 msgid "Adjust Valuation"
-msgstr ""
+msgstr "Bewertung anpassen"
 
 #. module: stock_account
 #. odoo-python
@@ -156,17 +159,17 @@ msgstr ""
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_account_analytic_account
 msgid "Analytic Account"
-msgstr ""
+msgstr "Kostenstelle"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__analytic_account_line_ids
 msgid "Analytic Account Line"
-msgstr "Analysekontozeile"
+msgstr "Kostenstellenbuchung"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_account_analytic_plan
 msgid "Analytic Plans"
-msgstr ""
+msgstr "Kostenstellenpläne"
 
 #. module: stock_account
 #. odoo-javascript
@@ -191,7 +194,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock_account.field_product_product__avg_cost
 #: model:ir.model.fields,field_description:stock_account.field_stock_lot__avg_cost
 msgid "Average Cost"
-msgstr "Durchschnittliche Kosten"
+msgstr "Durchschnittskosten"
 
 #. module: stock_account
 #: model:ir.model.fields.selection,name:stock_account.selection__product_category__property_cost_method__average
@@ -204,12 +207,12 @@ msgstr "Durchschnittskosten (AVCO)"
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_account_report_invoice_document
 msgid "BC46282798"
-msgstr ""
+msgstr "BC46282798"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_account_report_invoice_document
 msgid "Bacon"
-msgstr ""
+msgstr "Bacon"
 
 #. module: stock_account
 #. odoo-python
@@ -232,12 +235,12 @@ msgstr ""
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_account_move_line__cogs_origin_id
 msgid "Cogs Origin"
-msgstr ""
+msgstr "HKU-Ursprung"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_res_company
 msgid "Companies"
-msgstr ""
+msgstr "Unternehmen"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_value__company_id
@@ -271,7 +274,7 @@ msgstr "Konfigurationseinstellungen"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_lot__standard_price
 msgid "Cost"
-msgstr ""
+msgstr "Kosten"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_product__cost_method
@@ -279,7 +282,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock_account.field_res_company__cost_method
 #: model:ir.model.fields,field_description:stock_account.field_stock_quant__cost_method
 msgid "Cost Method"
-msgstr ""
+msgstr "Kalkulationsverfahren"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_category__property_cost_method
@@ -297,7 +300,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock_account.field_stock_picking__country_code
 #: model:ir.model.fields,field_description:stock_account.field_stock_picking_type__country_code
 msgid "Country Code"
-msgstr "Landescode"
+msgstr "Ländercode"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_value__create_uid
@@ -373,7 +376,7 @@ msgstr "Beschreibung"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_res_config_settings__group_lot_on_invoice
 msgid "Display Lots & Serial Numbers on Invoices"
-msgstr "Chargen- & Seriennummern in Rechnungen anzeigen"
+msgstr "Los- & Seriennummern auf Rechnungen anzeigen"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_account_account__display_name
@@ -406,7 +409,7 @@ msgstr "Anzeigename"
 #. module: stock_account
 #: model:res.groups,name:stock_account.group_lot_on_invoice
 msgid "Display Serial & Lot Number on Invoices"
-msgstr "Chargen- & Seriennummern in Rechnungen anzeigen"
+msgstr "Los- & Seriennummern auf Rechnungen anzeigen"
 
 #. module: stock_account
 #. odoo-python
@@ -486,6 +489,8 @@ msgstr ""
 #: model:ir.model.fields,help:stock_account.field_stock_lot__lot_valuated
 msgid "If checked, the valuation will be specific by Lot/Serial number."
 msgstr ""
+"Wenn diese Option aktiviert ist, erfolgt die Bewertung spezifisch nach Los-/"
+"Seriennummer."
 
 #. module: stock_account
 #. odoo-python
@@ -501,7 +506,7 @@ msgstr ""
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_location
 msgid "Inventory Locations"
-msgstr "Inventurlager"
+msgstr "Lagerorte"
 
 #. module: stock_account
 #. odoo-javascript
@@ -522,7 +527,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock_account.field_product_category__property_valuation
 #: model_terms:ir.ui.view,arch_db:stock_account.view_category_property_form_stock
 msgid "Inventory Valuation"
-msgstr "Inventur Bewertung"
+msgstr "Bestandsbewertung"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__is_dropship
@@ -557,7 +562,7 @@ msgstr ""
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_account_move
 msgid "Journal Entry"
-msgstr "Buchungssatz"
+msgstr "Journalbuchung"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_account_move_line
@@ -588,17 +593,17 @@ msgstr "Zuletzt aktualisiert am"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_value__lot_id
 msgid "Lot"
-msgstr ""
+msgstr "Los"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_lot
 msgid "Lot/Serial"
-msgstr ""
+msgstr "Los/Serie"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.res_config_settings_view_form
 msgid "Lots & Serial numbers will appear on the invoice"
-msgstr ""
+msgstr "Los- & Seriennummern werden auf der Rechnung angegeben"
 
 #. module: stock_account
 #: model:ir.model.fields.selection,name:stock_account.selection__res_company__inventory_period__manual
@@ -623,7 +628,8 @@ msgstr ""
 "automatisch erstellt.\n"
 "Automatisch: Eine Buchung wird automatisch erstellt, um den Lagerbestand zu "
 "bewerten, wenn ein Produkt im Unternehmen ankommt oder das Unternehmen "
-"verlässt."
+"verlässt.\n"
+"        "
 
 #. module: stock_account
 #: model:ir.model.fields.selection,name:stock_account.selection__res_company__inventory_period__monthly
@@ -663,7 +669,7 @@ msgstr ""
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_picking_type
 msgid "Picking Type"
-msgstr ""
+msgstr "Kommissionierart"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_category__property_price_difference_account_id
@@ -698,7 +704,7 @@ msgstr "Produktkategorie"
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_move_line
 msgid "Product Moves (Stock Move Line)"
-msgstr "Produktbewegungen (Lagerbewegung)"
+msgstr "Produktbewegungen (Lagerbuchung)"
 
 #. module: stock_account
 #. odoo-python
@@ -721,22 +727,22 @@ msgstr ""
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_product_product
 msgid "Product Variant"
-msgstr "Produktvarianten"
+msgstr "Produktvariante"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_res_company__account_production_wip_account_id
 msgid "Production WIP Account"
-msgstr ""
+msgstr "WIP-Konto für Produktion"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_res_company__account_production_wip_overhead_account_id
 msgid "Production WIP Overhead Account"
-msgstr ""
+msgstr "WIP-Festkostenkonto für Produktion"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_quant
 msgid "Quants"
-msgstr "Quants"
+msgstr "Quanten"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_avco_report__reference
@@ -761,7 +767,7 @@ msgstr ""
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_return_picking_line
 msgid "Return Picking Line"
-msgstr "Retourenkommissionierungslinie"
+msgstr "Rücksendungsposten"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_inventory_adjustment_name__should_show_accounting_date
@@ -788,13 +794,14 @@ msgid ""
 "that enter the company first will also leave it first.\n"
 "        "
 msgstr ""
-"Standardpreis: Die Produkte werden nach für das Produkt definierten Standard-"
-"Kosten berechnet.\n"
-" Durchschnittskosten (AVCO): Die Produkte werden zu gewichteten "
+"Standardpreis: Die Produkte werden nach für das Produkt definierten "
+"Standardkosten berechnet.\n"
+"        Durchschnittskosten (AVCO): Die Produkte werden zu gewichteten "
 "Durchschnittskosten berechnet.\n"
-" First In – First Out (FIFO): Die Produkte werden unter der Annahme "
+"        First In – First Out (FIFO): Die Produkte werden unter der Annahme "
 "bewertet, dass die Produkte, die zuerst im Unternehmen ankommen, auch zuerst "
 "das Unternehmen verlassen.\n"
+"        "
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_avco_report
@@ -821,7 +828,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock_account.field_product_category__property_stock_journal
 #: model:ir.model.fields,field_description:stock_account.field_res_company__account_stock_journal_id
 msgid "Stock Journal"
-msgstr "Lager Journal"
+msgstr "Bestandsjournal"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_move
@@ -849,7 +856,7 @@ msgstr "Bestandsbewertung"
 #: model:ir.model.fields,field_description:stock_account.field_res_company__account_stock_valuation_id
 #: model:ir.model.fields,field_description:stock_account.field_stock_location__valuation_account_id
 msgid "Stock Valuation Account"
-msgstr "Bestandskonto"
+msgstr "Bestandsbewertungskonto"
 
 #. module: stock_account
 #. odoo-python
@@ -889,6 +896,8 @@ msgid ""
 "This operation might lead in a loss of data. Valuation will be identical for "
 "all lots/SN. Do you want to proceed ? "
 msgstr ""
+"Dieser Vorgang kann zu Datenverlust führen. Die Bewertung ist für alle Lose/"
+"SN identisch. Möchten Sie fortfahren? "
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_avco_report__total_quantity
@@ -912,7 +921,7 @@ msgstr "Verbleibender Gesamtwert"
 #: model_terms:ir.ui.view,arch_db:stock_account.product_product_stock_tree_inherit_stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_stock_quant_tree_editable_inherit
 msgid "Total Value"
-msgstr "Gesamt Wert"
+msgstr "Gesamtwert"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_picking
@@ -927,19 +936,19 @@ msgid ""
 "Order/Purchase Order"
 msgstr ""
 "Auslösen einer Minderung der gelieferten/erhaltenen Menge im zugehörigen "
-"Verkaufsauftrag/Bestellung"
+"Verkaufsauftrag bzw. der zugehörigen Bestellung"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.product_product_stock_tree_inherit_stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_avco_report_view_list
 msgid "Unit Cost"
-msgstr "Stückpreis"
+msgstr "Einzelkosten"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__to_refund
 #: model:ir.model.fields,field_description:stock_account.field_stock_return_picking_line__to_refund
 msgid "Update quantities on SO/PO"
-msgstr "Mengen auf Kundenaufträgen/Bestellungen aktualisieren"
+msgstr "Mengen auf Verkaufsaufträgen/Bestellungen aktualisieren"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_category__anglo_saxon_accounting
@@ -976,7 +985,7 @@ msgstr "Bewertung"
 #: model:ir.model.fields,field_description:stock_account.field_product_product__company_currency_id
 #: model:ir.model.fields,field_description:stock_account.field_stock_lot__company_currency_id
 msgid "Valuation Currency"
-msgstr "Bewertung Währung"
+msgstr "Währung der Bewertung"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_product__lot_valuated
@@ -997,7 +1006,7 @@ msgstr "Wert"
 #. odoo-javascript
 #: code:addons/stock_account/static/src/stock_account_forecasted/forecasted_header.xml:0
 msgid "Value On Hand:"
-msgstr "Verfügbarer Wert:"
+msgstr "Vorrätiger Wert:"
 
 #. module: stock_account
 #. odoo-python
@@ -1013,6 +1022,10 @@ msgid ""
 "inventory adjustment).\n"
 "        Used to compute margins on sale orders."
 msgstr ""
+"Loswert (automatisch als Durchschnittskosten berechnet).\n"
+"        Wird verwendet, um das Produkt zu bewerten, wenn die Einkaufskosten "
+"nicht bekannt sind (z. B. Bestandsaufnahme).\n"
+"        Wird zur Berechnung der Margen bei Verkaufsaufträgen verwendet."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_move__standard_price
@@ -1043,9 +1056,9 @@ msgid ""
 "When doing automated inventory valuation, this is the Accounting Journal in "
 "which entries will be automatically posted when stock moves are processed."
 msgstr ""
-"Bei der automatischen Bestandsbewertung ist dies das Buchhaltungsjournal, in "
-"dem automatisch Buchungen vorgenommen werden, wenn Lagerbewegungen "
-"verarbeitet werden."
+"Bei der automatischen Bestandsbewertung ist dies das Buchungsjournal, in dem "
+"automatisch Buchungen vorgenommen werden, wenn Lagerbuchungen verarbeitet "
+"werden."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category__property_price_difference_account_id
@@ -1070,7 +1083,7 @@ msgstr ""
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_account_report_invoice_document
 msgid "units"
-msgstr ""
+msgstr "Einheiten"
 
 #~ msgid " Product cost updated from %(previous)s to %(new_cost)s."
 #~ msgstr " Produktkosten aktualisiert von %(previous)s zu %(new_cost)s."

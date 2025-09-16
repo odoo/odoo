@@ -1,6 +1,6 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* lunch
+# * lunch
 #
 # Translators:
 # Potsawat Manuthamathorn <firmpotsawat@hotmail.com>, 2022
@@ -9,20 +9,21 @@
 # Pornvibool Tippayawat <pornvibool.t@gmail.com>, 2022
 # Martin Trigaux, 2022
 # Wichanon Jamwutthipreecha, 2022
-#
+# "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-09-11 13:57+0000\n"
-"PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Wichanon Jamwutthipreecha, 2022\n"
-"Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
+"PO-Revision-Date: 2025-09-16 21:37+0000\n"
+"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
+"Language-Team: Thai <https://translate.odoo.com/projects/odoo-19/lunch/th/>\n"
 "Language: th\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: lunch
 #: model_terms:lunch.product,description:lunch.product_temaki
@@ -73,6 +74,8 @@ msgid ""
 "<i class=\"fa fa-envelope\" role=\"img\" aria-label=\"Send notification\" "
 "title=\"Send notification\"/>"
 msgstr ""
+"<i class=\"fa fa-envelope\" role=\"รูปภาพ\" aria-label=\"ส่งการแจ้งเตือน\" title="
+"\"ส่งการแจ้งเตือน\"/>"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.view_lunch_cashmove_kanban
@@ -96,6 +99,8 @@ msgid ""
 "<i class=\"fa fa-paper-plane\" role=\"img\" aria-label=\"Send button\" "
 "title=\"Send button\"/>"
 msgstr ""
+"<i class=\"fa fa-paper-plane\" role=\"รูปภาพ\" aria-label=\"ปุ่มส่ง\" title="
+"\"ปุ่มส่ง\"/>"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_kanban
@@ -298,6 +303,195 @@ msgid ""
 "</table>\n"
 "        "
 msgstr ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: "
+"16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; "
+"color: #454748; width: 100%; border-collapse:separate;\"><tr><td align=\""
+"center\">\n"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style="
+"\"padding: 16px; background-color: white; color: #454748; border-"
+"collapse:separate;\">\n"
+"<tbody>\n"
+"    <!-- ส่วนหัว -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width="
+"\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px "
+"0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"middle\">\n"
+"                    <span style=\"font-size: 10px;\""
+">การสั่งอาหารเที่ยง</span><br>\n"
+"                </td><td valign=\"middle\" align=\"right\" t-if="
+"\"not user.company_id.uses_default_logo\">\n"
+"                    <img t-attf-src="
+"\"/logo.png?company={{ user.company_id.id }}\" style="
+"\"padding: 0px; margin: 0px; height: auto; width: 80px;\" t-att-alt="
+"\"user.company_id.name\">\n"
+"                </td></tr>\n"
+"                <tr><td colspan=\"2\" style=\"text-align:center;\">\n"
+"                  <hr width=\"100%\" style=\"background-"
+"color:rgb(204,204,204);border:medium none;clear:both;display:block;font-"
+"size:0px;min-height:1px;line-height:0; margin:16px 0px 16px 0px;\">\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <!-- เนื้อหา -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width="
+"\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px "
+"0px 8px; border-collapse:separate;\">\n"
+"                <tr>\n"
+"                    <td valign=\"top\" style=\"font-size: 13px;\">\n"
+"    <div>\n"
+"        <t t-set=\"lines\" t-value=\"ctx.get('lines', [])\"></t>\n"
+"        <t t-set=\"order\" t-value=\"ctx.get('order')\"></t>\n"
+"        <t t-set=\"currency\" t-value="
+"\"user.env['res.currency'].browse(order.get('currency_id'))\"></t>\n"
+"        <p>\n"
+"        เรียน <t t-out=\"order.get('supplier_name', '')\">Laurie Poiret</t>\n"
+"        </p><p>\n"
+"        มาแล้ว! สำหรับการสั่งอาหารวันนี้ <t t-out=\"order.get('company_name', '')\""
+">LunchCompany</t>:\n"
+"        </p>\n"
+"\n"
+"        <t t-if=\"sites\">\n"
+"            <br>\n"
+"            <p>สถานที่</p>\n"
+"            <t t-foreach=\"site\" t-as=\"site\">\n"
+"                <p><t t-out=\"site['name'] or ''\"></t> : <t t-out="
+"\"site['address'] or ''\"></t></p>\n"
+"            </t>\n"
+"            <br>\n"
+"        </t>\n"
+"\n"
+"        <table>\n"
+"            <thead>\n"
+"                <tr style=\"background-color:rgb(233,232,233);\">\n"
+"                    <th style="
+"\"width: 100%; min-width: 96px; font-size: 13px;\"><strong>สินค้า</strong></th>"
+"\n"
+"                    <th style="
+"\"width: 100%; min-width: 96px; font-size: 13px;\""
+"><strong>ความคิดเห็น</strong></th>\n"
+"                    <th style="
+"\"width: 100%; min-width: 96px; font-size: 13px;\"><strong>บุคคล</strong></th>"
+"\n"
+"                    <th style="
+"\"width: 100%; min-width: 96px; font-size: 13px;\"><strong>ไซต์</strong></th>"
+"\n"
+"                    <th style="
+"\"width: 100%; min-width: 96px; font-size: 13px;\" align=\"center\""
+"><strong>จำนวน</strong></th>\n"
+"                    <th style="
+"\"width: 100%; min-width: 96px; font-size: 13px;\" align=\"center\""
+"><strong>ราคา</strong></th>\n"
+"                </tr>\n"
+"            </thead>\n"
+"            <tbody>\n"
+"                <tr t-foreach=\"lines\" t-as=\"line\">\n"
+"                    <td style=\"width: 100%; font-size: 13px;\" valign="
+"\"top\" t-out=\"line['product'] or ''\">ซูชิปลาแซลมอน</td>\n"
+"                    <td style=\"width: 100%; font-size: 13px;\" valign="
+"\"top\">\n"
+"                    <t t-if=\"line['toppings']\">\n"
+"                        <t t-out=\"line['toppings'] or ''\">ซอสถั่วเหลือง</t>\n"
+"                    </t>\n"
+"                    <t t-if=\"line['note']\">\n"
+"                        <div style=\"color: rgb(173,181,189);\" t-out="
+"\"line['note'] or ''\">พร้อมกับวาซาบิ</div>\n"
+"                    </t>\n"
+"                    </td>\n"
+"                    <td style=\"width: 100%; font-size: 13px;\" valign="
+"\"top\" t-out=\"line['username'] or ''\">รอบ</td>\n"
+"                    <td style=\"width: 100%; font-size: 13px;\" valign="
+"\"top\" t-out=\"line['site'] or ''\">สำนักงาน 1</td>\n"
+"                    <td style=\"width: 100%; font-size: 13px;\" valign="
+"\"top\" align=\"right\" t-out=\"line['quantity'] or ''\">10</td>\n"
+"                    <td style=\"width: 100%; font-size: 13px;\" valign="
+"\"top\" align=\"right\" t-out="
+"\"format_amount(line['price'], currency) or ''\">$ 1.00</td>\n"
+"                </tr>\n"
+"                <tr>\n"
+"                    <td></td>\n"
+"                    <td></td>\n"
+"                    <td></td>\n"
+"                    <td></td>\n"
+"                    <td style="
+"\"width: 100%; font-size: 13px; border-top: 1px solid black;\""
+"><strong>ทั้งหมด</strong></td>\n"
+"                    <td style="
+"\"width: 100%; font-size: 13px; border-top: 1px solid black;\" align="
+"\"right\"><strong t-out="
+"\"format_amount(order['amount_total'], currency) or ''\">$ "
+"10.00</strong></td>\n"
+"                </tr>\n"
+"            </tbody>\n"
+"        </table>\n"
+"\n"
+"        <p>โปรดติดต่อเราหากคุณมีคำถาม</p>\n"
+"    </div>\n"
+"                    </td>\n"
+"                </tr>\n"
+"                <tr>\n"
+"                    <td style=\"text-align:center;\">\n"
+"                        <hr width=\"100%\" style=\"background-"
+"color:rgb(204,204,204);border:medium none;clear:both;display:block;font-"
+"size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\">\n"
+"                    </td>\n"
+"                </tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <!-- ส่วนท้าย -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width="
+"\"590\" style=\"min-width: 590px; background-color: white; font-size: 11px; "
+"padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"middle\" align=\"left\">\n"
+"                    <t t-out=\"user.company_id.name or ''\">YourCompany</t>\n"
+"                </td></tr>\n"
+"                <tr><td valign=\"middle\" align=\"left\" style="
+"\"opacity: 0.7;\">\n"
+"                    <t t-out=\"user.company_id.phone or ''\">+1 "
+"650-123-4567</t>\n"
+"                    <t t-if=\"user.company_id.phone and ("
+"user.company_id.email or user.company_id.website)\">|</t>\n"
+"                    <t t-if=\"user.company_id.email\">\n"
+"                        <a t-attf-href="
+"\"'mailto:%s' % {{ user.company_id.email }}\" style=\"text-decoration:none; "
+"color: #454748;\" t-out=\"user.company_id.email or ''\""
+">info@yourcompany.com</a>\n"
+"                    </t>\n"
+"                    <t t-if="
+"\"user.company_id.email and user.company_id.website\">|</t>\n"
+"                    <t t-if=\"user.company_id.website\">\n"
+"                        <a t-attf-href="
+"\"'%s' % {{ user.company_id.website }}\" style=\"text-decoration:none; color:"
+" #454748;\" t-out=\"user.company_id.website or ''\""
+">http://www.example.com</a>\n"
+"                    </t>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"</tbody>\n"
+"</table>\n"
+"</td></tr>\n"
+"<!-- สนับสนุนโดย -->\n"
+"<tr><td align=\"center\" style=\"min-width: 590px;\">\n"
+"    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" "
+"style=\"min-width: 590px; background-color: #F1F1F1; color: #454748; padding:"
+" 8px; border-collapse:separate;\">\n"
+"      <tr><td style=\"text-align: center; font-size: 13px;\">\n"
+"        สนับสนุนโดย <a target=\"_blank\" href=\"https://www.odoo.com\" style="
+"\"color: #875A7B;\">Odoo</a>\n"
+"      </td></tr>\n"
+"    </table>\n"
+"</td></tr>\n"
+"</table>\n"
+"        "
 
 #. module: lunch
 #: model_terms:ir.actions.act_window,help:lunch.lunch_cashmove_report_action_control_accounts
@@ -397,7 +591,7 @@ msgstr "การเตือน"
 #. odoo-javascript
 #: code:addons/lunch/static/src/components/lunch_dashboard.xml:0
 msgid "Already Paid"
-msgstr ""
+msgstr "ชำระเงินแล้ว"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_cashmove__amount
@@ -447,7 +641,7 @@ msgstr ""
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order__available_on_date
 msgid "Available On Date"
-msgstr ""
+msgstr "มีจำหน่ายในวันที่"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_product_view_search
@@ -535,7 +729,7 @@ msgstr "ยกเลิก"
 #. odoo-python
 #: code:addons/lunch/models/lunch_supplier.py:0
 msgid "Cannot send an email to this supplier!"
-msgstr ""
+msgstr "ไม่สามารถส่งอีเมลไปยังซัพพลายเออร์รายนี้ได้!"
 
 #. module: lunch
 #: model:ir.actions.act_window,name:lunch.lunch_cashmove_action_payment
@@ -640,7 +834,7 @@ msgstr "โค้ก"
 #. module: lunch
 #: model:ir.model,name:lunch.model_res_company
 msgid "Companies"
-msgstr "หลายบริษัท"
+msgstr "บริษัท"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_location__company_id
@@ -650,7 +844,7 @@ msgstr "หลายบริษัท"
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__company_id
 #: model:ir.model.fields,field_description:lunch.field_lunch_topping__company_id
 msgid "Company"
-msgstr "บริษัทเดียว"
+msgstr "บริษัท"
 
 #. module: lunch
 #: model:ir.model,name:lunch.model_res_config_settings
@@ -676,7 +870,7 @@ msgstr "ยืนยัน"
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_tree
 msgid "Confirm Orders"
-msgstr ""
+msgstr "ยืนยันคำสั่งซื้อ"
 
 #. module: lunch
 #: model:ir.actions.act_window,name:lunch.lunch_cashmove_report_action_control_accounts
@@ -802,7 +996,7 @@ msgstr "แสดง"
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order__display_add_button
 msgid "Display Add Button"
-msgstr ""
+msgstr "แสดงปุ่มเพิ่ม"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert__display_name
@@ -1207,7 +1401,7 @@ msgstr "เกณฑ์ขั้นต่ำอาหารกลางวัน
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_res_company__lunch_notify_message
 msgid "Lunch Notify Message"
-msgstr ""
+msgstr "ข้อความแจ้งเตือนอาหารกลางวัน"
 
 #. module: lunch
 #: model:ir.model,name:lunch.model_lunch_order
@@ -1217,7 +1411,7 @@ msgstr "คำสั่งอาหารกลางวัน"
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.res_config_settings_view_form
 msgid "Lunch Overdraft"
-msgstr ""
+msgstr "เงินเบิกบัญชีอาหารกลางวัน"
 
 #. module: lunch
 #: model:ir.model,name:lunch.model_lunch_product
@@ -1248,12 +1442,12 @@ msgstr "มื้อกลางวัน เทมากิมิกซ์ 3 �
 #. odoo-python
 #: code:addons/lunch/models/lunch_order.py:0
 msgid "Lunch notification"
-msgstr ""
+msgstr "การแจ้งเตือนอาหารกลางวัน"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_res_config_settings__company_lunch_notify_message
 msgid "Lunch notification message"
-msgstr ""
+msgstr "ข้อความแจ้งเตือนอาหารกลางวัน"
 
 #. module: lunch
 #: model:ir.actions.server,name:lunch.lunch_order_action_cancel
@@ -1268,12 +1462,12 @@ msgstr "อาหารกลางวัน: รับอาหาร"
 #. module: lunch
 #: model:ir.actions.server,name:lunch.lunch_order_action_notify
 msgid "Lunch: Send notifications"
-msgstr ""
+msgstr "อาหารกลางวัน: ส่งการแจ้งเตือน"
 
 #. module: lunch
 #: model:mail.template,name:lunch.lunch_order_mail_supplier
 msgid "Lunch: Supplier Order"
-msgstr ""
+msgstr "อาหารกลางวัน: คำสั่งซื้อจากซัพพลายเออร์"
 
 #. module: lunch
 #: model:ir.actions.server,name:lunch.lunch_alert_cron_sa_230
@@ -1463,13 +1657,13 @@ msgstr "ยังไม่มีการเคลื่อนไหวของ
 #. odoo-javascript
 #: code:addons/lunch/static/src/views/no_content_helper.xml:0
 msgid "No location found"
-msgstr ""
+msgstr "ไม่พบตำแหน่งที่ตั้ง"
 
 #. module: lunch
 #. odoo-javascript
 #: code:addons/lunch/static/src/components/lunch_dashboard.xml:0
 msgid "No lunch location available."
-msgstr ""
+msgstr "ไม่มีสถานที่ให้บริการอาหารกลางวัน"
 
 #. module: lunch
 #: model_terms:ir.actions.act_window,help:lunch.lunch_order_action_control_suppliers
@@ -1527,7 +1721,7 @@ msgstr "เวลาแจ้งเตือนต้องอยู่ระห
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order__notified
 msgid "Notified"
-msgstr ""
+msgstr "แจ้งแล้ว"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__message_needaction_counter
@@ -1542,7 +1736,7 @@ msgstr "จํานวนข้อผิดพลาด"
 #. module: lunch
 #: model:ir.model.fields,help:lunch.field_lunch_supplier__message_needaction_counter
 msgid "Number of messages requiring action"
-msgstr ""
+msgstr "จำนวนข้อความที่ต้องดำเนินการ"
 
 #. module: lunch
 #: model:ir.model.fields,help:lunch.field_lunch_supplier__message_has_error_counter
@@ -1556,6 +1750,8 @@ msgid ""
 "Oh no! You don’t have enough money in your wallet to order your selected "
 "lunch! Contact your lunch manager to add some money to your wallet."
 msgstr ""
+"ขออภัย เงินในกระเป๋าไม่พอสั่งอาหารกลางวันที่เลือกไว้! "
+"ติดต่อผู้จัดการอาหารกลางวันของคุณเพื่อเพิ่มเงินในกระเป๋า"
 
 #. module: lunch
 #: model:ir.model.fields.selection,name:lunch.selection__lunch_supplier__topping_quantity_1__1_more
@@ -1586,7 +1782,7 @@ msgstr "วันที่สั่ง"
 #: model:ir.model.fields,field_description:lunch.field_lunch_order__order_deadline_passed
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__order_deadline_passed
 msgid "Order Deadline Passed"
-msgstr ""
+msgstr "หมดเขตการสั่งซื้อแล้ว"
 
 #. module: lunch
 #. odoo-javascript
@@ -1607,7 +1803,7 @@ msgstr "คำสั่งอาหารกลางวัน"
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_tree
 msgid "Order lines List"
-msgstr ""
+msgstr "รายการสั่งซื้อ"
 
 #. module: lunch
 #: model:ir.model.fields.selection,name:lunch.selection__lunch_order__state__ordered
@@ -1696,7 +1892,7 @@ msgstr "พิซซ่ามังสวิรัติ"
 #. odoo-javascript
 #: code:addons/lunch/static/src/views/no_content_helper.xml:0
 msgid "Please create a location to start ordering."
-msgstr ""
+msgstr "โปรดสร้างสถานที่เพื่อเริ่มสั่งซื้อ"
 
 #. module: lunch
 #: model_terms:lunch.alert,message:lunch.alert_office_3
@@ -1814,7 +2010,7 @@ msgstr "ได้รับ"
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.res_config_settings_view_form
 msgid "Reception notification"
-msgstr ""
+msgstr "การแจ้งเตือนการรับ"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert__recipients
@@ -1877,7 +2073,7 @@ msgstr "ส่ง"
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_kanban
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_tree
 msgid "Send Notification"
-msgstr ""
+msgstr "ส่งการแจ้งเตือน"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__send_by
@@ -1887,12 +2083,12 @@ msgstr "ส่งคำสั่งโดย"
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_tree
 msgid "Send Orders"
-msgstr ""
+msgstr "ส่งคำสั่งซื้อ"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.res_config_settings_view_form
 msgid "Send this message to your users when their order has been delivered."
-msgstr ""
+msgstr "ส่งข้อความนี้ถึงผู้ใช้ของคุณเมื่อมีการจัดส่งคำสั่งซื้อของพวกเขาแล้ว"
 
 #. module: lunch
 #: model:ir.model.fields.selection,name:lunch.selection__lunch_order__state__sent
@@ -1902,7 +2098,7 @@ msgstr "ส่งแล้ว"
 #. module: lunch
 #: model:mail.template,description:lunch.lunch_order_mail_supplier
 msgid "Sent to vendor with the order of the day"
-msgstr ""
+msgstr "ส่งไปยังผู้ขายตามคำสั่งซื้อประจำวัน"
 
 #. module: lunch
 #: model:ir.actions.act_window,name:lunch.lunch_config_settings_action
@@ -1913,12 +2109,12 @@ msgstr "การตั้งค่า"
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__show_confirm_button
 msgid "Show Confirm Button"
-msgstr ""
+msgstr "แสดงปุ่มยืนยัน"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__show_order_button
 msgid "Show Order Button"
-msgstr ""
+msgstr "แสดงปุ่มสั่งซื้อ"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert__until
@@ -2041,19 +2237,19 @@ msgstr "จำนวนสินค้าที่เกี่ยวข้อง
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_form
 msgid "The orders for this vendor have already been sent."
-msgstr ""
+msgstr "คำสั่งซื้อสำหรับผู้ขายรายนี้ได้ถูกส่งไปแล้ว"
 
 #. module: lunch
 #. odoo-python
 #: code:addons/lunch/models/lunch_supplier.py:0
 msgid "The orders have been confirmed!"
-msgstr ""
+msgstr "คำสั่งซื้อได้รับการยืนยันแล้ว!"
 
 #. module: lunch
 #. odoo-python
 #: code:addons/lunch/models/lunch_supplier.py:0
 msgid "The orders have been sent!"
-msgstr ""
+msgstr "คำสั่งซื้อถูกส่งไปแล้ว!"
 
 #. module: lunch
 #: model:ir.model.fields,help:lunch.field_lunch_supplier__responsible_id
@@ -2066,7 +2262,7 @@ msgstr "ผู้รับผิดชอบคือบุคคลที่จ
 #. odoo-python
 #: code:addons/lunch/models/lunch_order.py:0
 msgid "The vendor related to this order is not available at the selected date."
-msgstr ""
+msgstr "ผู้จำหน่ายที่เกี่ยวข้องกับคำสั่งซื้อนี้ไม่สามารถใช้ได้ในวันที่เลือก"
 
 #. module: lunch
 #. odoo-python
@@ -2090,7 +2286,7 @@ msgstr "วันนี้ไม่มีสินค้า"
 #. module: lunch
 #: model:ir.model.fields,help:lunch.field_lunch_supplier__recurrency_end_date
 msgid "This field is used in order to "
-msgstr "ฟิลด์นี้ใช้เพื่อ"
+msgstr "ฟิลด์นี้ใช้เพื่อ "
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order__available_today
@@ -2124,7 +2320,7 @@ msgstr "จำนวนคำสั่ง"
 #. odoo-javascript
 #: code:addons/lunch/static/src/components/lunch_dashboard.xml:0
 msgid "To Pay"
-msgstr ""
+msgstr "ที่จะจ่าย"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_payment_dialog
@@ -2260,7 +2456,7 @@ msgstr "ผู้ใช้"
 #. module: lunch
 #: model:res.groups,name:lunch.group_lunch_user
 msgid "User : Order your meal"
-msgstr ""
+msgstr "ผู้ใช้ : สั่งอาหารของคุณ"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order__supplier_id
@@ -2290,7 +2486,7 @@ msgstr "ผู้ขาย"
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_product_view_form
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_supplier_view_form
 msgid "Visible to all"
-msgstr ""
+msgstr "มองเห็นได้ทุกคน"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert__wed
@@ -2327,19 +2523,19 @@ msgstr "คุณควรสั่งอย่างน้อยหนึ่ง
 #. odoo-javascript
 #: code:addons/lunch/static/src/components/lunch_dashboard.xml:0
 msgid "Your Cart ("
-msgstr ""
+msgstr "ตะกร้าสินค้าของคุณ ("
 
 #. module: lunch
 #. odoo-python
 #: code:addons/lunch/models/lunch_alert.py:0
 msgid "Your Lunch Order"
-msgstr ""
+msgstr "การสั่งซื้ออาหารกลางวันของคุณ"
 
 #. module: lunch
 #. odoo-javascript
 #: code:addons/lunch/static/src/components/lunch_dashboard.xml:0
 msgid "Your Order"
-msgstr ""
+msgstr "คำสั่งของคุณ"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_form
@@ -2376,7 +2572,7 @@ msgstr "การเคลื่อนไหวของเงินจาก"
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_cashmove_report_view_tree_2
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_cashmove_view_tree
 msgid "cashmove list"
-msgstr ""
+msgstr "รายการย้ายเงินสด"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_alert_view_form

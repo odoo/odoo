@@ -1,28 +1,30 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* base
+# * base
 #
 # Translators:
 # Bohdan Lisnenko, 2022
 # Martin Trigaux, 2023
 # Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2023
-#
+# "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-09-12 13:52+0000\n"
-"PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2023\n"
-"Language-Team: Ukrainian (https://app.transifex.com/odoo/teams/41243/uk/)\n"
+"PO-Revision-Date: 2025-09-16 22:55+0000\n"
+"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
+"Language-Team: Ukrainian <https://translate.odoo.com/projects/odoo-19/base/"
+"uk/>\n"
 "Language: uk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != "
-"11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % "
-"100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || "
-"(n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 "
+"? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > "
+"14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % "
+"100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_at_reports
@@ -479,7 +481,7 @@ msgid ""
 "holds the VAT detail info of sales or purchases made in a period of time.\n"
 "* Add a VAT summary report that is used to analyze invoicing\n"
 "* Add Digital VAT Book functionality that let us generate TXT files to "
-"import in AFIP. The ones we implement are:\n"
+"import in ARCA. The ones we implement are:\n"
 "\n"
 "    * LIBRO_IVA_DIGITAL_VENTAS_CBTE\n"
 "    * LIBRO_IVA_DIGITAL_VENTAS_ALICUOTAS\n"
@@ -487,7 +489,7 @@ msgid ""
 "    * LIBRO_IVA_DIGITAL_COMPRAS_ALICUOTAS\n"
 "    * LIBRO_IVA_DIGITAL_IMPORTACION_BIENES_ALICUOTA\n"
 "\n"
-"Official Documentation AFIP\n"
+"Official Documentation ARCA\n"
 "\n"
 "* Digital VAT Book - record design https://www.afip.gob.ar/libro-iva-digital/"
 "documentos/libro-iva-digital-diseno-registros.pdf\n"
@@ -500,33 +502,6 @@ msgid ""
 "Especificaciones.doc\n"
 "\n"
 msgstr ""
-"\n"
-"* Додайте звіт про ПДВ, який є юридичною вимогою в Аргентині та містить "
-"детальну інформацію про ПДВ про продажі чи покупки, здійснені за певний "
-"період часу.\n"
-"* Додайте підсумковий звіт ПДВ, який використовується для аналізу "
-"виставлення рахунків\n"
-"* Додайте функцію Digital PAT Book, яка дозволить нам генерувати файли TXT "
-"для імпорту в AFIP. Ті, які ми реалізуємо:\n"
-"\n"
-"    * LIBRO_IVA_DIGITAL_VENTAS_CBTE\n"
-"    * LIBRO_IVA_DIGITAL_VENTAS_ALICUOTAS\n"
-"    * LIBRO_IVA_DIGITAL_COMPRAS_CBTE\n"
-"    * LIBRO_IVA_DIGITAL_COMPRAS_ALICUOTAS\n"
-"    * LIBRO_IVA_DIGITAL_IMPORTACION_BIENES_ALICUOTA\n"
-"\n"
-"Офіційна документація AFIP\n"
-"\n"
-"* Digital VAT Book - дизайн записуhttps://www.afip.gob.ar/libro-iva-digital/"
-"documentos/libro-iva-digital-diseno-registros.pdf\n"
-"* CITI - дизайн запису (same as the Digital VAT Book): https://"
-"www.afip.gob.ar/comprasyventas/documentos/"
-"RegimendeInformaciondeComprasyVentasDisenosdeRegistros1.xls\n"
-"* CITI - специфікація (надає додаткову інформацію про те, як форматувати "
-"числа та заповнення числових/буквенно-цифрових полів): https://"
-"www.afip.gob.ar/comprasyventas/documentos/Regimen-Informacion-Compras-Ventas-"
-"Especificaciones.doc\n"
-"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_ai_app
@@ -1924,7 +1899,7 @@ msgid ""
 "of identifications are defined by the government authorities that regulate "
 "the fiscal operations. For example:\n"
 "\n"
-"* AFIP in Argentina defines DNI, CUIT (vat for legal entities), CUIL (vat "
+"* ARCA in Argentina defines DNI, CUIT (vat for legal entities), CUIL (vat "
 "for natural person), and another 80 valid identification types.\n"
 "\n"
 "Each identification holds this information:\n"
@@ -4596,7 +4571,7 @@ msgid ""
 "----------\n"
 "\n"
 "Be able to create journals in Odoo to create electronic customer invoices "
-"and report then to AFIP (via webservices).\n"
+"and report then to ARCA (via webservices).\n"
 "The options available are:\n"
 "\n"
 "    * Electronic Invoice - Web Service\n"
@@ -4604,63 +4579,63 @@ msgid ""
 "    * Electronic Fiscal Bond - Web Service\n"
 "\n"
 "In the electronic journals if you validate an invoice this one will be "
-"validated in both Odoo and AFIP. This validation is\n"
+"validated in both Odoo and ARCA. This validation is\n"
 "made at the instant and we recieve and \"approved/approved with observation/"
-"rejected\" state from AFIP. If the invoice has\n"
-"been rejected by AFIP will not be post in the system and a pop up message "
+"rejected\" state from ARCA. If the invoice has\n"
+"been rejected by ARCA will not be post in the system and a pop up message "
 "will be shown with both the error detail (reject reasons)\n"
 "we recieve and a HINT about what the problem could be.\n"
 "\n"
 "For auditing and troubleshooting purposes we also add a menu \"Consulit "
-"Invoice in AFIP\" that let us to consult invoices previously\n"
-"sent to AFIP and last number used as support for any possible issues on the "
-"sequences synchronization between Odoo and AFIP.\n"
+"Invoice in ARCA\" that let us to consult invoices previously\n"
+"sent to ARCA and last number used as support for any possible issues on the "
+"sequences synchronization between Odoo and ARCA.\n"
 "\n"
 "    NOTE: From the Journal's form view we are able to force a sync between "
 "the odoo sequences to each of the document types in\n"
-"    with the last numbers registered in AFIP.\n"
+"    with the last numbers registered in ARCA.\n"
 "\n"
 "From vendor bills, we have added a functionality that can be configured in "
 "the accounting settings to be able to verify\n"
-"vendor bills in AFIP to check if the vendor bills are real (more information "
+"vendor bills in ARCA to check if the vendor bills are real (more information "
 "please review the setting description).\n"
 "\n"
 "Configuration:\n"
 "\n"
 "1. Go to the Accounting Settings > Argentinean Localization section\n"
 "\n"
-"    1.1. Configure the AFIP Web Services mode:\n"
+"    1.1. Configure the ARCA Web Services mode:\n"
 "\n"
 "    * Testing environment in order to use demo certificates that will be use "
 "to test the instance and to make NOT\n"
-"      real invoices to AFIP. is just for testing. For demo instaces is "
+"      real invoices to ARCA. is just for testing. For demo instaces is "
 "already pre-defined you will not need to configure\n"
-"      it (commonly named in AFIP as Homologation environment).\n"
+"      it (commonly named in ARCA as Homologation environment).\n"
 "    * Production environment in order to generate real certificates and "
-"legal invoices to AFIP,\n"
+"legal invoices to ARCA,\n"
 "\n"
-"    1.2. Configure your AFIP Certificate: If you are in a demo instance this "
+"    1.2. Configure your ARCA Certificate: If you are in a demo instance this "
 "one will be have been set by default. If you\n"
-"         are in production instance just need to go to upload your AFIP "
+"         are in production instance just need to go to upload your ARCA "
 "Certificate\n"
 "\n"
 "    1.3. Optionally you can define if you like to be eable to verify vendor "
-"bills in AFIP.\n"
+"bills in ARCA.\n"
 "\n"
-"2. Create Sales journals that will represent each one of your AFIP POS "
-"(Available in AFIP Portal) you want to use in Odoo.\n"
+"2. Create Sales journals that will represent each one of your ARCA POS "
+"(Available in ARCA Portal) you want to use in Odoo.\n"
 "\n"
 "    2.1. Use Documents field is set by default please dont change\n"
-"    2.2. Set AFIP POS System for one of the electronic ones.\n"
+"    2.2. Set ARCA POS System for one of the electronic ones.\n"
 "\n"
 "        * Electronic Invoice - Web Service'\n"
 "        * Electronic Fiscal Bond - Web Service'\n"
 "        * Export Voucher - Web Service'\n"
 "\n"
-"    2.3. Set the AFIP POS Number and AFIP POS Address taking into account "
-"what you have configured in your AFIP Portal.\n"
+"    2.3. Set the ARCA POS Number and ARCA POS Address taking into account "
+"what you have configured in your ARCA Portal.\n"
 "\n"
-"    NOTE: You can use the \"Check Available AFIP POS\" button in Journal's "
+"    NOTE: You can use the \"Check Available ARCA POS\" button in Journal's "
 "form to corroborate the to use to create the journals.\n"
 "\n"
 "For more information about Argentinean Electronic invoicing please go to "
@@ -4682,101 +4657,6 @@ msgid ""
 "WSBFEv1%20-%20Manual%20para%20el%20desarrollador.pdf\n"
 "\n"
 msgstr ""
-"\n"
-"Функціонал\n"
-"\n"
-"----------\n"
-"\n"
-"Може створювати журнали в Odoo, щоби створювати електронні рахунки клієнтів "
-"та звітувати потім в AFIP (через веб-сарвіси).\n"
-"Доступні опції:\n"
-"\n"
-"    * Електронний рахунок - Веб-послуга\n"
-"    * Експорт ваучера - Веб-послуга\n"
-"    * Електронна фіскальна облігація - Веб-послуга\n"
-"\n"
-"В електронних журналах, якщо ви підтверджуватимете рахунок, він буде "
-"валідуватися і в Odoo і в AFIP. Це підтвердження виконується\n"
-"миттєво і ми отримуємо область \"затверджено/затверджено із спостереженням/"
-"відхилено\" від AFIP. Якщо рахунок-фактура\n"
-"відхилений AFIP, його не буде опубліковано в системі, і з'явиться спливаюче "
-"повідомлення з обома деталями помилки (причини відхилення)\n"
-"ми отримуємо підказку щодо проблеми, яка може бути.\n"
-"\n"
-"Для цілей аудиту та усунення несправностей ми також додаємо меню \"Рахунок-"
-"фактура в AFIP\", яке дозволяє нам перевіряти рахунки,\n"
-" надіслані раніше AFIP, та останній номер, який використовується як "
-"підтримка будь-яких можливих питань синхронізації послідовностей\n"
-"Odoo та AFIP.\n"
-"\n"
-"    ЗАНОТУЙТЕ: З форми перегляду Журналу ми можемо запустити синхронізацію "
-"між послідовностями odoo та кожним типом документів\n"
-"    з останніми номерами, зареєстрованими в AFIP.\n"
-"\n"
-"З рахунків постачальників ми додали функціональність, яку можна налаштувати "
-"в налаштуваннях бухгалтерського обліку, щоби можна було\n"
-" перевірити рахунки постачальників в AFIP та перевірити, чи вони дійсні "
-"(більш детальну інформацію див. в описі\n"
-" налаштувань).\n"
-"\n"
-"Налаштування:\n"
-"\n"
-"1. Перейдіть до Налаштувань бухобліку > розділ Аргентинська локалізація\n"
-"\n"
-"    1.1. Налаштуйте режим Веб-послуг AFIP:\n"
-"\n"
-"    * Тестування середовища для використання демо-сертифікатів, які будуть "
-"використовуватися для тестування інстансу та НЕ для реальних\n"
-"      рахунків для AFIP. Лише для тестування. Для демо-інстансів вже "
-"заздалегідь визначено, вам не потрібно буде налаштовувати\n"
-"      їх (в AFIP називається, як середовище Гомологації).\n"
-"    * Робоче середовище для створення реальних сертифікатів та рахунків в "
-"AFIP,\n"
-"\n"
-"    1.2. Налаштуйте ваш Сертифікат AFIP: Якщо ви на демці, його буде "
-"встановлено автоматично. Якщо ви\n"
-"         на робочій базі даних, необхідно лише завантажити ваш сертифікат "
-"AFIP\n"
-"\n"
-"    1.3. Опціонально ви можете визначити, чи ви хочете підтверджувати "
-"рахунки постачальників у AFIP.\n"
-"\n"
-"2. Створіть журнали Продажів, що будуть відображати кожну вашу точку продажу "
-"AFIP (Доступно на порталі AFIP), яку ви хочете використовувати в Odoo.\n"
-"\n"
-"    2.1. Використовуйте поле Документів, що встановлено за замовчуванням, "
-"але не змінюйте його\n"
-"    2.2. Встановіть систему точки продажу AFIP для електронної точки "
-"продажу.\n"
-"\n"
-"        * Електронний рахунок - Веб-послуга'\n"
-"        * Електронна фінансова облігація - Веб-послуга'\n"
-"        * Експортний ваучер - Веб-послуга'\n"
-"\n"
-"    2.3. Встановіть номер точки продажу AFIP та адресу точки продажу AFIP, "
-"що береться у рахунок, який у вас є налаштований у вашому порталі AFIP.\n"
-"\n"
-"    ЗАНОТУЙТЕ: Ви можете використовувати кнопку \"Перевірити доступну точку "
-"продажу AFIP\" у формі Журналу для підтвердження використання для створення "
-"журналів.\n"
-"\n"
-"Для більшої інформації про аргентинське електронне виставлення рахунків "
-"Argentinian перейдіть на http://www.afip.gob.ar/fe/ayuda.asp\n"
-"\n"
-"Технічне\n"
-"---------\n"
-"\n"
-"Найпоширеніші встановлені веб-послуги:\n"
-"\n"
-"* wsfev1 - \"Factura Electrónica\" (Electronic Invoice)\n"
-"* wsbfev1 - \"Bono Fiscal Electrónico\" (Electronic Fiscal Bond)\n"
-"* wsfexv1 - \"Factura de Exportación Electrónica\" (Electronic Exportation "
-"Invoice - same as Export Voucher)\n"
-"* wscdc - \"Constatación de Comprobantes\" (Invoices Verification)\n"
-"\n"
-"Для інформації розробки перейдіть на http://www.afip.gob.ar/fe/documentos/"
-"WSBFEv1%20-%20Manual%20para%20el%20desarrollador.pdf\n"
-"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_latam_invoice_document
@@ -4788,7 +4668,7 @@ msgid ""
 "In some Latinamerica countries, including Argentina and Chile, some "
 "accounting transactions like invoices and vendor bills are classified by a "
 "document types defined by the government fiscal authorities (In Argentina "
-"case AFIP, Chile case SII).\n"
+"case ARCA, Chile case SII).\n"
 "\n"
 "This module is intended to be extended by localizations in order to manage "
 "these document types and is an essential information that needs to be "
@@ -4811,36 +4691,6 @@ msgid ""
 "country. The document type has a country field\n"
 "\n"
 msgstr ""
-"\n"
-"Функціонал\n"
-"----------\n"
-"\n"
-"У деяких латиноамериканських країнах, включаючи Аргентину та Чилі, деякі "
-"транзакції бухобліку, такі як рахунки-фактури та рахунки постачальників, "
-"класифіковані за типами документу, визначеними урядовими фінансовими "
-"органами (В Аргентині - AFIP, у Чилі - SII).\n"
-"\n"
-"Цей модуль призначений для розширення локалізації для управління цими типами "
-"документів і є важливою інформацією, яка повинна відображатися у друкованих "
-"звітах і яку необхідно легко ідентифікувати, як у межах набору рахунків, так "
-"і в ході рахунку.\n"
-"\n"
-"Для кожного типу документа є свої правила та номер послідовності, останній "
-"інтегрується з номером рахунків-фактур та послідовністю журналу, щоб легко "
-"було користувачеві з локалізації. Щоб підтримувати чи не підтримувати цей "
-"тип документів, у Журналі є нова опція, яка дозволяє використовувати "
-"документ чи ні.\n"
-"\n"
-"Технічне\n"
-"---------\n"
-"\n"
-"Якщо вашій локалізації потрібна ця логіка, потрібно буде додати цей модуль "
-"як залежність, а у вашому модулі локалізації розширити:\n"
-"\n"
-"* розширте метод company's _localization_use_documents().\n"
-"* створіть дані типів документу, які відповідають певним країнам. Тип "
-"документу має полу країни\n"
-"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ar
@@ -4851,20 +4701,20 @@ msgid ""
 "\n"
 "This module add accounting features for the Argentinean localization, which "
 "represent the minimal configuration needed for a company  to operate in "
-"Argentina and under the AFIP (Administración Federal de Ingresos Públicos) "
+"Argentina and under the ARCA (Administración Federal de Ingresos Públicos) "
 "regulations and guidelines.\n"
 "\n"
 "Follow the next configuration steps for Production:\n"
 "\n"
-"1. Go to your company and configure your VAT number and AFIP Responsibility "
+"1. Go to your company and configure your VAT number and ARCA Responsibility "
 "Type\n"
 "2. Go to Accounting / Settings and set the Chart of Account that you will "
 "like to use.\n"
-"3. Create your Sale journals taking into account AFIP POS info.\n"
+"3. Create your Sale journals taking into account ARCA POS info.\n"
 "\n"
 "Demo data for testing:\n"
 "\n"
-"* 3 companies were created, one for each AFIP responsibility type with the "
+"* 3 companies were created, one for each ARCA responsibility type with the "
 "respective Chart of Account installed. Choose the company that fix you in "
 "order to make tests:\n"
 "\n"
@@ -4888,7 +4738,7 @@ msgid ""
 "Highlights:\n"
 "\n"
 "* Chart of account will not be automatically installed, each CoA Template "
-"depends on the AFIP Responsibility of the company, you will need to install "
+"depends on the ARCA Responsibility of the company, you will need to install "
 "the CoA for your needs.\n"
 "* No sales journals will be generated when installing a CoA, you will need "
 "to configure your journals manually.\n"
@@ -4906,7 +4756,7 @@ msgid ""
 "\n"
 "Master Data:\n"
 "\n"
-"* Chart of Account: one for each AFIP responsibility that is related to a "
+"* Chart of Account: one for each ARCA responsibility that is related to a "
 "legal entity:\n"
 "\n"
 "  * Responsable Inscripto (RI)\n"
@@ -4915,15 +4765,15 @@ msgid ""
 "\n"
 "* Argentinean Taxes and Account Tax Groups (VAT taxes with the existing "
 "aliquots and other types)\n"
-"* AFIP Responsibility Types\n"
+"* ARCA Responsibility Types\n"
 "* Fiscal Positions (in order to map taxes)\n"
 "* Legal Documents Types in Argentina\n"
 "* Identification Types valid in Argentina.\n"
-"* Country AFIP codes and Country VAT codes for legal entities, natural "
+"* Country ARCA codes and Country VAT codes for legal entities, natural "
 "persons and others\n"
-"* Currency AFIP codes\n"
-"* Unit of measures AFIP codes\n"
-"* Partners: Consumidor Final and AFIP\n"
+"* Currency ARCA codes\n"
+"* Unit of measures ARCA codes\n"
+"* Partners: Consumidor Final and ARCA\n"
 msgstr ""
 
 #. module: base
@@ -7123,7 +6973,7 @@ msgstr ""
 "яка зберігає номери телефонів із чорного списку.\n"
 "\n"
 "Він додає міксін mail.thread.phone, який обробляє очищення та \n"
-"чорний список номерів записів."
+"чорний список номерів записів. "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_it
@@ -10017,7 +9867,7 @@ msgstr ""
 "Цей модуль призначений для тестування основних процесів crm Odoo, як "
 "інтерфейсу, так\n"
 " і серверу. Він, зокрема, включає модулі з'єднання IAP для перевірки їх "
-"впливу."
+"впливу. "
 
 #. module: base
 #: model:ir.module.module,description:base.module_ai_auto_install
@@ -10149,7 +9999,7 @@ msgstr ""
 "\n"
 "Цей модуль надає стандартні інструменти (модель рахунку, менеджер контексту "
 "та помічники) \n"
-"для підтримки покупок в середині модуля в Odoo."
+"для підтримки покупок в середині модуля в Odoo. "
 
 #. module: base
 #: model:ir.module.module,description:base.module_web_mobile
@@ -10172,7 +10022,7 @@ msgid ""
 "This module provides the link between quality steps and IoT devices. \n"
 msgstr ""
 "\n"
-"Цей модуль забезпечує зв'язок між етапами якості та пристроями IoT.\n"
+"Цей модуль забезпечує зв'язок між етапами якості та пристроями IoT. \n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_mobile
@@ -10763,7 +10613,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_delivery_mondialrelay
 msgid " Let's choose a Point Relais® as shipping address "
-msgstr "Оберіть Point Relais® як адресу доставки"
+msgstr " Оберіть Point Relais® як адресу доставки "
 
 #. module: base
 #. odoo-python
@@ -12161,7 +12011,7 @@ msgstr "API ключі"
 #. module: base
 #: model:ir.actions.act_window,name:base.action_apikeys_admin
 msgid "API Keys Listing"
-msgstr "Перелік API ключів "
+msgstr "Перелік API ключів"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_groups__api_key_duration
@@ -15140,7 +14990,7 @@ msgstr "Arch Blob"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_view__arch_fs
 msgid "Arch Filename"
-msgstr "Назва файлу Arch "
+msgstr "Назва файлу Arch"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_reset_view_arch_wizard__arch_to_compare
@@ -16915,7 +16765,7 @@ msgstr "Білорусь"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_be_intrastat
 msgid "Belgian Intrastat Declaration"
-msgstr "Бельгійська декларація Intrastat "
+msgstr "Бельгійська декларація Intrastat"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_be_pos_restaurant
@@ -16970,7 +16820,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_be_coda
 msgid "Belgium - Import Bank CODA Statements"
-msgstr "Бельгія - Імпорт банківських виписок CODA "
+msgstr "Бельгія - Імпорт банківських виписок CODA"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_be_soda
@@ -17532,7 +17382,8 @@ msgstr "Мостовий модуль для спливаючих сповіще
 #: model:ir.module.module,summary:base.module_website_event_track_live_quiz
 msgid "Bridge module to support quiz features during \"live\" tracks. "
 msgstr ""
-"Мостовий модуль для підтримки функцій вікторини під час \"живих\" відстежень."
+"Мостовий модуль для підтримки функцій вікторини під час \"живих\" "
+"відстежень. "
 
 #. module: base
 #: model:res.country,name:base.io
@@ -17716,12 +17567,12 @@ msgstr "Дедуплікація CRM"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_gamification_sale_crm
 msgid "CRM Gamification"
-msgstr "Геміфікація CRM "
+msgstr "Геміфікація CRM"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_crm_livechat
 msgid "CRM Livechat"
-msgstr "Живий чат CRM "
+msgstr "Живий чат CRM"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_crm_mail_plugin
@@ -19325,7 +19176,7 @@ msgstr "Потрібна назва для контактів"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.module_form
 msgid "Contains In-App Purchases"
-msgstr "Містить Купівлі в середині додатку "
+msgstr "Містить Купівлі в середині додатку"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_enterprise
@@ -20416,7 +20267,7 @@ msgstr "Переробка даних"
 #. module: base
 #: model:ir.module.module,description:base.module_test_convert
 msgid "Data for xml conversion tests"
-msgstr "Дані для перетворення тестів xml "
+msgstr "Дані для перетворення тестів xml"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_logging_search_view
@@ -21729,7 +21580,7 @@ msgstr "EU One Stop Shop (OSS)"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_eu_oss_reports
 msgid "EU One Stop Shop (OSS) Reports"
-msgstr "Звіти EU One Stop Shop (OSS) "
+msgstr "Звіти EU One Stop Shop (OSS)"
 
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_ir_model_obj_name_uniq
@@ -24440,12 +24291,12 @@ msgstr "Точка продажу GST"
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_in_sale
 msgid "GST Sale Report"
-msgstr "Звіт про продаж GST "
+msgstr "Звіт про продаж GST"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_in_stock
 msgid "GST Stock Report"
-msgstr "Звіт про склад GST "
+msgstr "Звіт про склад GST"
 
 #. module: base
 #: model:res.country,vat_label:base.ca
@@ -24664,7 +24515,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_website_sale_dashboard
 msgid "Get a new dashboard view in the Website App"
-msgstr "Отримайте новий перегляд панелі приладів у додатку Веб-сайт "
+msgstr "Отримайте новий перегляд панелі приладів у додатку Веб-сайт"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_social_demo
@@ -24790,7 +24641,7 @@ msgstr "Google Maps"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_google_account
 msgid "Google Users"
-msgstr "Користувачі Google "
+msgstr "Користувачі Google"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale_autocomplete
@@ -25764,7 +25615,7 @@ msgstr "ID"
 #: model:ir.model.fields,help:base.field_ir_actions_server__xml_id
 #: model:ir.model.fields,help:base.field_ir_cron__xml_id
 msgid "ID of the action if defined in a XML file"
-msgstr "ID дії, якщо зазначене у файлі XML "
+msgstr "ID дії, якщо зазначене у файлі XML"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_data__res_id
@@ -25774,7 +25625,7 @@ msgstr "ID цільового запису в базі даних"
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_ui_view__xml_id
 msgid "ID of the view defined in xml file"
-msgstr "ID перегляду у файлі XML "
+msgstr "ID перегляду у файлі XML"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_users__barcode
@@ -25981,7 +25832,8 @@ msgstr ""
 "Якщо цей перегляд успадковується,\n"
 "* якщо Правильно, то перегляд завжди розширює свій батьківський елемент\n"
 "* якщо Помилково, то в даний час перегляд не поширюється на його "
-"батьківський статус, але його можна активувати"
+"батьківський статус, але його можна активувати\n"
+"         "
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_rule_form
@@ -26220,12 +26072,12 @@ msgstr "Імпортуйте замовлення з Amazon та синхрон�
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_bank_statement_import_camt
 msgid "Import CAMT Bank Statement"
-msgstr "Імпорт банківської виписки CAMT "
+msgstr "Імпорт банківської виписки CAMT"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_bank_statement_import_csv
 msgid "Import CSV Bank Statement"
-msgstr "Імпорт банківської виписки CSV "
+msgstr "Імпорт банківської виписки CSV"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_account_winbooks_import
@@ -26240,7 +26092,7 @@ msgstr "Імпорт банківської виписки  OFX"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_bank_statement_import_qif
 msgid "Import QIF Bank Statement"
-msgstr "Імпорт банківської виписки QIF "
+msgstr "Імпорт банківської виписки QIF"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_shopee
@@ -27472,7 +27324,7 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.je
 msgid "Jersey"
-msgstr "Джерсі "
+msgstr "Джерсі"
 
 #. module: base
 #. odoo-python
@@ -27555,7 +27407,7 @@ msgstr "К - ФІНАНСОВА І СТРАХОВА ДІЯЛЬНІСТЬ"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_digest
 msgid "KPI Digests"
-msgstr "Огляд KPI "
+msgstr "Огляд KPI"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_act_window_view__view_mode__kanban
@@ -29470,7 +29322,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.view_model_relation_form
 #: model_terms:ir.ui.view,arch_db:base.view_model_relation_list
 msgid "ManyToMany Relations"
-msgstr "Відносини ManyToMany "
+msgstr "Відносини ManyToMany"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_web_map
@@ -31847,7 +31699,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_mx_reports
 msgid "Odoo Mexican Localization Reports"
-msgstr "Мексиканська локалізація звітів Odoo "
+msgstr "Мексиканська локалізація звітів Odoo"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_mx_xml_polizas
@@ -34896,7 +34748,7 @@ msgstr "Основний колір"
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_ca_check_printing
 msgid "Print CA Checks"
-msgstr "Друк чеків CA "
+msgstr "Друк чеків CA"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_do_check_printing
@@ -35849,7 +35701,7 @@ msgstr "Дата поля Qweb"
 #. module: base
 #: model:ir.model,name:base.model_ir_qweb_field_datetime
 msgid "Qweb Field Datetime"
-msgstr "Дата час поля Qweb "
+msgstr "Дата час поля Qweb"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_qweb_field_duration
@@ -35875,7 +35727,7 @@ msgstr "HTML поля Qweb"
 #: model:ir.model,name:base.model_ir_qweb_field_image
 #: model:ir.model,name:base.model_ir_qweb_field_image_url
 msgid "Qweb Field Image"
-msgstr "Зображення поля Qweb "
+msgstr "Зображення поля Qweb"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_qweb_field_integer
@@ -36454,7 +36306,7 @@ msgstr "Дилери"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_partner_commission
 msgid "Resellers Commissions For Subscription"
-msgstr "Дилерська комісія підписки "
+msgstr "Дилерська комісія підписки"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_reset_view_arch_wizard__reset_mode
@@ -36525,7 +36377,7 @@ msgstr "Ресторан"
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_restaurant
 msgid "Restaurant extensions for the Point of Sale "
-msgstr "Розширення ресторану для магазину"
+msgstr "Розширення ресторану для магазину "
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.server_action_history_wizard_view
@@ -36842,7 +36694,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_sepa_direct_debit
 msgid "SEPA Direct Debit"
-msgstr "Прямий дебет SEPA "
+msgstr "Прямий дебет SEPA"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_payroll_account_iso20022
@@ -36872,7 +36724,7 @@ msgstr "Тести SMS: виконання та тести відповідно 
 #. module: base
 #: model:ir.module.module,summary:base.module_sms
 msgid "SMS Text Messaging"
-msgstr "Текстове SMS повідомлення "
+msgstr "Текстове SMS повідомлення"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sms
@@ -37880,7 +37732,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_survey
 msgid "Send your surveys or share them live."
-msgstr "Відправте ваші опитування або поділіться ними. "
+msgstr "Відправте ваші опитування або поділіться ними."
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_delivery_sendcloud
@@ -38342,7 +38194,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_sign_itsme
 msgid "Sign documents with itsme® identification"
-msgstr "Підписуйте документи з ідентифікацією itsme® "
+msgstr "Підписуйте документи з ідентифікацією itsme®"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sign_emsigner
@@ -38367,7 +38219,7 @@ msgstr "Реєстрація"
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_discount
 msgid "Simple Discounts in the Point of Sale "
-msgstr "Прості знижки в точці продажу"
+msgstr "Прості знижки в точці продажу "
 
 #. module: base
 #: model:res.currency,currency_subunit_label:base.MOP
@@ -40814,7 +40666,7 @@ msgstr "Курс валюти до валюти з курсом 1"
 #. module: base
 #: model:ir.model.fields,help:base.field_res_currency_rate__inverse_company_rate
 msgid "The rate of the currency to the currency of rate 1 "
-msgstr "Курс валюти до валюти курсу 1"
+msgstr "Курс валюти до валюти курсу 1 "
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_currency__rate
@@ -41374,7 +41226,7 @@ msgstr ""
 "Цей модуль містить тести, пов’язані з масовою розсилкою. Вони\n"
 " присутні в окремому модулі для використання конкретних тестових моделей, "
 "визначених у\n"
-" test_mail."
+" test_mail. "
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_sale_purchase_edi_ubl
@@ -41421,7 +41273,7 @@ msgstr ""
 "Цей модуль містить тести, пов’язані з переглядом web gantt. Вони\n"
 " представлені в окремому модулі, оскільки він містить моделі, які "
 "використовуються лише для виконання\n"
-" тестів незалежно від функціональних аспектів інших моделей."
+" тестів незалежно від функціональних аспектів інших моделей. "
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_timer
@@ -41450,7 +41302,7 @@ msgstr ""
 "окремому модулі, оскільки він містить\n"
 " моделі, які використовуються лише для незалежного виконання тестів "
 "функціональних аспектів реальних\n"
-" додатків."
+" додатків. "
 
 #. module: base
 #: model:ir.module.module,description:base.module_social_test_full
@@ -41483,7 +41335,7 @@ msgstr ""
 " представлені в окремому модулі, оскільки він містить моделі, які "
 "використовуються\n"
 " лише для виконання тестів незалежно від функціональних аспектів інших "
-"моделей."
+"моделей. "
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_web_studio
@@ -42403,12 +42255,12 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_data_merge_utm
 msgid "UTM Deduplication"
-msgstr "Видалення UTM дублікатів "
+msgstr "Видалення UTM дублікатів"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_utm
 msgid "UTM Trackers"
-msgstr "Відстеження UTM "
+msgstr "Відстеження UTM"
 
 #. module: base
 #: model:ir.module.module,description:base.module_mass_mailing_crm
@@ -43062,7 +42914,7 @@ msgstr "Використовується для входу в систему"
 #. module: base
 #: model:ir.model.fields,help:base.field_res_company__sequence
 msgid "Used to order Companies in the company switcher"
-msgstr "Використовується для замовлення компаній у перемикачі компанії "
+msgstr "Використовується для замовлення компаній у перемикачі компанії"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_base_language_install__first_lang_id
@@ -43567,7 +43419,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_stock_account
 msgid "WMS Accounting"
-msgstr "Бухоблік WMS "
+msgstr "Бухоблік WMS"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_data_merge_stock_account
@@ -44827,7 +44679,7 @@ msgstr "boolean"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_delivery_bpost
 msgid "bpost Shipping"
-msgstr "доставка bpost "
+msgstr "доставка bpost"
 
 #. module: base
 #: model:res.currency,currency_subunit_label:base.COU
@@ -45522,6 +45374,315 @@ msgstr "Аландські острови"
 #: code:addons/base/models/ir_ui_view.py:0
 msgid "“%(attribute)s” value must be an integer (%(value)s)"
 msgstr ""
+
+#~ msgid ""
+#~ "\n"
+#~ "* Add VAT Book report which is a legal requirement in Argentina and that "
+#~ "holds the VAT detail info of sales or purchases made in a period of "
+#~ "time.\n"
+#~ "* Add a VAT summary report that is used to analyze invoicing\n"
+#~ "* Add Digital VAT Book functionality that let us generate TXT files to "
+#~ "import in AFIP. The ones we implement are:\n"
+#~ "\n"
+#~ "    * LIBRO_IVA_DIGITAL_VENTAS_CBTE\n"
+#~ "    * LIBRO_IVA_DIGITAL_VENTAS_ALICUOTAS\n"
+#~ "    * LIBRO_IVA_DIGITAL_COMPRAS_CBTE\n"
+#~ "    * LIBRO_IVA_DIGITAL_COMPRAS_ALICUOTAS\n"
+#~ "    * LIBRO_IVA_DIGITAL_IMPORTACION_BIENES_ALICUOTA\n"
+#~ "\n"
+#~ "Official Documentation AFIP\n"
+#~ "\n"
+#~ "* Digital VAT Book - record design https://www.afip.gob.ar/libro-iva-"
+#~ "digital/documentos/libro-iva-digital-diseno-registros.pdf\n"
+#~ "* CITI - record design (same as the Digital VAT Book): https://"
+#~ "www.afip.gob.ar/comprasyventas/documentos/"
+#~ "RegimendeInformaciondeComprasyVentasDisenosdeRegistros1.xls\n"
+#~ "* CITI - specification (provides more information on how to format the "
+#~ "numbers and the fillings of the numeric / alphanumeric fields): https://"
+#~ "www.afip.gob.ar/comprasyventas/documentos/Regimen-Informacion-Compras-"
+#~ "Ventas-Especificaciones.doc\n"
+#~ "\n"
+#~ msgstr ""
+#~ "\n"
+#~ "* Додайте звіт про ПДВ, який є юридичною вимогою в Аргентині та містить "
+#~ "детальну інформацію про ПДВ про продажі чи покупки, здійснені за певний "
+#~ "період часу.\n"
+#~ "* Додайте підсумковий звіт ПДВ, який використовується для аналізу "
+#~ "виставлення рахунків\n"
+#~ "* Додайте функцію Digital PAT Book, яка дозволить нам генерувати файли "
+#~ "TXT для імпорту в AFIP. Ті, які ми реалізуємо:\n"
+#~ "\n"
+#~ "    * LIBRO_IVA_DIGITAL_VENTAS_CBTE\n"
+#~ "    * LIBRO_IVA_DIGITAL_VENTAS_ALICUOTAS\n"
+#~ "    * LIBRO_IVA_DIGITAL_COMPRAS_CBTE\n"
+#~ "    * LIBRO_IVA_DIGITAL_COMPRAS_ALICUOTAS\n"
+#~ "    * LIBRO_IVA_DIGITAL_IMPORTACION_BIENES_ALICUOTA\n"
+#~ "\n"
+#~ "Офіційна документація AFIP\n"
+#~ "\n"
+#~ "* Digital VAT Book - дизайн записуhttps://www.afip.gob.ar/libro-iva-"
+#~ "digital/documentos/libro-iva-digital-diseno-registros.pdf\n"
+#~ "* CITI - дизайн запису (same as the Digital VAT Book): https://"
+#~ "www.afip.gob.ar/comprasyventas/documentos/"
+#~ "RegimendeInformaciondeComprasyVentasDisenosdeRegistros1.xls\n"
+#~ "* CITI - специфікація (надає додаткову інформацію про те, як форматувати "
+#~ "числа та заповнення числових/буквенно-цифрових полів): https://"
+#~ "www.afip.gob.ar/comprasyventas/documentos/Regimen-Informacion-Compras-"
+#~ "Ventas-Especificaciones.doc\n"
+#~ "\n"
+
+#~ msgid ""
+#~ "\n"
+#~ "Functional\n"
+#~ "----------\n"
+#~ "\n"
+#~ "Be able to create journals in Odoo to create electronic customer invoices "
+#~ "and report then to AFIP (via webservices).\n"
+#~ "The options available are:\n"
+#~ "\n"
+#~ "    * Electronic Invoice - Web Service\n"
+#~ "    * Export Voucher - Web Service\n"
+#~ "    * Electronic Fiscal Bond - Web Service\n"
+#~ "\n"
+#~ "In the electronic journals if you validate an invoice this one will be "
+#~ "validated in both Odoo and AFIP. This validation is\n"
+#~ "made at the instant and we recieve and \"approved/approved with "
+#~ "observation/rejected\" state from AFIP. If the invoice has\n"
+#~ "been rejected by AFIP will not be post in the system and a pop up message "
+#~ "will be shown with both the error detail (reject reasons)\n"
+#~ "we recieve and a HINT about what the problem could be.\n"
+#~ "\n"
+#~ "For auditing and troubleshooting purposes we also add a menu \"Consulit "
+#~ "Invoice in AFIP\" that let us to consult invoices previously\n"
+#~ "sent to AFIP and last number used as support for any possible issues on "
+#~ "the sequences synchronization between Odoo and AFIP.\n"
+#~ "\n"
+#~ "    NOTE: From the Journal's form view we are able to force a sync "
+#~ "between the odoo sequences to each of the document types in\n"
+#~ "    with the last numbers registered in AFIP.\n"
+#~ "\n"
+#~ "From vendor bills, we have added a functionality that can be configured "
+#~ "in the accounting settings to be able to verify\n"
+#~ "vendor bills in AFIP to check if the vendor bills are real (more "
+#~ "information please review the setting description).\n"
+#~ "\n"
+#~ "Configuration:\n"
+#~ "\n"
+#~ "1. Go to the Accounting Settings > Argentinean Localization section\n"
+#~ "\n"
+#~ "    1.1. Configure the AFIP Web Services mode:\n"
+#~ "\n"
+#~ "    * Testing environment in order to use demo certificates that will be "
+#~ "use to test the instance and to make NOT\n"
+#~ "      real invoices to AFIP. is just for testing. For demo instaces is "
+#~ "already pre-defined you will not need to configure\n"
+#~ "      it (commonly named in AFIP as Homologation environment).\n"
+#~ "    * Production environment in order to generate real certificates and "
+#~ "legal invoices to AFIP,\n"
+#~ "\n"
+#~ "    1.2. Configure your AFIP Certificate: If you are in a demo instance "
+#~ "this one will be have been set by default. If you\n"
+#~ "         are in production instance just need to go to upload your AFIP "
+#~ "Certificate\n"
+#~ "\n"
+#~ "    1.3. Optionally you can define if you like to be eable to verify "
+#~ "vendor bills in AFIP.\n"
+#~ "\n"
+#~ "2. Create Sales journals that will represent each one of your AFIP POS "
+#~ "(Available in AFIP Portal) you want to use in Odoo.\n"
+#~ "\n"
+#~ "    2.1. Use Documents field is set by default please dont change\n"
+#~ "    2.2. Set AFIP POS System for one of the electronic ones.\n"
+#~ "\n"
+#~ "        * Electronic Invoice - Web Service'\n"
+#~ "        * Electronic Fiscal Bond - Web Service'\n"
+#~ "        * Export Voucher - Web Service'\n"
+#~ "\n"
+#~ "    2.3. Set the AFIP POS Number and AFIP POS Address taking into account "
+#~ "what you have configured in your AFIP Portal.\n"
+#~ "\n"
+#~ "    NOTE: You can use the \"Check Available AFIP POS\" button in "
+#~ "Journal's form to corroborate the to use to create the journals.\n"
+#~ "\n"
+#~ "For more information about Argentinean Electronic invoicing please go to "
+#~ "http://www.afip.gob.ar/fe/ayuda.asp\n"
+#~ "\n"
+#~ "Technical\n"
+#~ "---------\n"
+#~ "\n"
+#~ "The web services that are implemented are the ones that are the most "
+#~ "common:\n"
+#~ "\n"
+#~ "* wsfev1 - \"Factura Electrónica\" (Electronic Invoice)\n"
+#~ "* wsbfev1 - \"Bono Fiscal Electrónico\" (Electronic Fiscal Bond)\n"
+#~ "* wsfexv1 - \"Factura de Exportación Electrónica\" (Electronic "
+#~ "Exportation Invoice - same as Export Voucher)\n"
+#~ "* wscdc - \"Constatación de Comprobantes\" (Invoices Verification)\n"
+#~ "\n"
+#~ "For Development information go to http://www.afip.gob.ar/fe/documentos/"
+#~ "WSBFEv1%20-%20Manual%20para%20el%20desarrollador.pdf\n"
+#~ "\n"
+#~ msgstr ""
+#~ "\n"
+#~ "Функціонал\n"
+#~ "\n"
+#~ "----------\n"
+#~ "\n"
+#~ "Може створювати журнали в Odoo, щоби створювати електронні рахунки "
+#~ "клієнтів та звітувати потім в AFIP (через веб-сарвіси).\n"
+#~ "Доступні опції:\n"
+#~ "\n"
+#~ "    * Електронний рахунок - Веб-послуга\n"
+#~ "    * Експорт ваучера - Веб-послуга\n"
+#~ "    * Електронна фіскальна облігація - Веб-послуга\n"
+#~ "\n"
+#~ "В електронних журналах, якщо ви підтверджуватимете рахунок, він буде "
+#~ "валідуватися і в Odoo і в AFIP. Це підтвердження виконується\n"
+#~ "миттєво і ми отримуємо область \"затверджено/затверджено із "
+#~ "спостереженням/відхилено\" від AFIP. Якщо рахунок-фактура\n"
+#~ "відхилений AFIP, його не буде опубліковано в системі, і з'явиться "
+#~ "спливаюче повідомлення з обома деталями помилки (причини відхилення)\n"
+#~ "ми отримуємо підказку щодо проблеми, яка може бути.\n"
+#~ "\n"
+#~ "Для цілей аудиту та усунення несправностей ми також додаємо меню "
+#~ "\"Рахунок-фактура в AFIP\", яке дозволяє нам перевіряти рахунки,\n"
+#~ " надіслані раніше AFIP, та останній номер, який використовується як "
+#~ "підтримка будь-яких можливих питань синхронізації послідовностей\n"
+#~ "Odoo та AFIP.\n"
+#~ "\n"
+#~ "    ЗАНОТУЙТЕ: З форми перегляду Журналу ми можемо запустити "
+#~ "синхронізацію між послідовностями odoo та кожним типом документів\n"
+#~ "    з останніми номерами, зареєстрованими в AFIP.\n"
+#~ "\n"
+#~ "З рахунків постачальників ми додали функціональність, яку можна "
+#~ "налаштувати в налаштуваннях бухгалтерського обліку, щоби можна було\n"
+#~ " перевірити рахунки постачальників в AFIP та перевірити, чи вони дійсні "
+#~ "(більш детальну інформацію див. в описі\n"
+#~ " налаштувань).\n"
+#~ "\n"
+#~ "Налаштування:\n"
+#~ "\n"
+#~ "1. Перейдіть до Налаштувань бухобліку > розділ Аргентинська локалізація\n"
+#~ "\n"
+#~ "    1.1. Налаштуйте режим Веб-послуг AFIP:\n"
+#~ "\n"
+#~ "    * Тестування середовища для використання демо-сертифікатів, які "
+#~ "будуть використовуватися для тестування інстансу та НЕ для реальних\n"
+#~ "      рахунків для AFIP. Лише для тестування. Для демо-інстансів вже "
+#~ "заздалегідь визначено, вам не потрібно буде налаштовувати\n"
+#~ "      їх (в AFIP називається, як середовище Гомологації).\n"
+#~ "    * Робоче середовище для створення реальних сертифікатів та рахунків в "
+#~ "AFIP,\n"
+#~ "\n"
+#~ "    1.2. Налаштуйте ваш Сертифікат AFIP: Якщо ви на демці, його буде "
+#~ "встановлено автоматично. Якщо ви\n"
+#~ "         на робочій базі даних, необхідно лише завантажити ваш сертифікат "
+#~ "AFIP\n"
+#~ "\n"
+#~ "    1.3. Опціонально ви можете визначити, чи ви хочете підтверджувати "
+#~ "рахунки постачальників у AFIP.\n"
+#~ "\n"
+#~ "2. Створіть журнали Продажів, що будуть відображати кожну вашу точку "
+#~ "продажу AFIP (Доступно на порталі AFIP), яку ви хочете використовувати в "
+#~ "Odoo.\n"
+#~ "\n"
+#~ "    2.1. Використовуйте поле Документів, що встановлено за замовчуванням, "
+#~ "але не змінюйте його\n"
+#~ "    2.2. Встановіть систему точки продажу AFIP для електронної точки "
+#~ "продажу.\n"
+#~ "\n"
+#~ "        * Електронний рахунок - Веб-послуга'\n"
+#~ "        * Електронна фінансова облігація - Веб-послуга'\n"
+#~ "        * Експортний ваучер - Веб-послуга'\n"
+#~ "\n"
+#~ "    2.3. Встановіть номер точки продажу AFIP та адресу точки продажу "
+#~ "AFIP, що береться у рахунок, який у вас є налаштований у вашому порталі "
+#~ "AFIP.\n"
+#~ "\n"
+#~ "    ЗАНОТУЙТЕ: Ви можете використовувати кнопку \"Перевірити доступну "
+#~ "точку продажу AFIP\" у формі Журналу для підтвердження використання для "
+#~ "створення журналів.\n"
+#~ "\n"
+#~ "Для більшої інформації про аргентинське електронне виставлення рахунків "
+#~ "Argentinian перейдіть на http://www.afip.gob.ar/fe/ayuda.asp\n"
+#~ "\n"
+#~ "Технічне\n"
+#~ "---------\n"
+#~ "\n"
+#~ "Найпоширеніші встановлені веб-послуги:\n"
+#~ "\n"
+#~ "* wsfev1 - \"Factura Electrónica\" (Electronic Invoice)\n"
+#~ "* wsbfev1 - \"Bono Fiscal Electrónico\" (Electronic Fiscal Bond)\n"
+#~ "* wsfexv1 - \"Factura de Exportación Electrónica\" (Electronic "
+#~ "Exportation Invoice - same as Export Voucher)\n"
+#~ "* wscdc - \"Constatación de Comprobantes\" (Invoices Verification)\n"
+#~ "\n"
+#~ "Для інформації розробки перейдіть на http://www.afip.gob.ar/fe/documentos/"
+#~ "WSBFEv1%20-%20Manual%20para%20el%20desarrollador.pdf\n"
+#~ "\n"
+
+#~ msgid ""
+#~ "\n"
+#~ "Functional\n"
+#~ "----------\n"
+#~ "\n"
+#~ "In some Latinamerica countries, including Argentina and Chile, some "
+#~ "accounting transactions like invoices and vendor bills are classified by "
+#~ "a document types defined by the government fiscal authorities (In "
+#~ "Argentina case AFIP, Chile case SII).\n"
+#~ "\n"
+#~ "This module is intended to be extended by localizations in order to "
+#~ "manage these document types and is an essential information that needs to "
+#~ "be displayed in the printed reports and that needs to be easily "
+#~ "identified, within the set of invoices as well of account moves.\n"
+#~ "\n"
+#~ "Each document type have their own rules and sequence number, this last "
+#~ "one is integrated with the invoice number and journal sequence in order "
+#~ "to be easy for the localization user. In order to support or not this "
+#~ "document types a Journal has a new option that lets to use document or "
+#~ "not.\n"
+#~ "\n"
+#~ "Technical\n"
+#~ "---------\n"
+#~ "\n"
+#~ "If your localization needs this logic will then need to add this module "
+#~ "as dependency and in your localization module extend:\n"
+#~ "\n"
+#~ "* extend company's _localization_use_documents() method.\n"
+#~ "* create the data of the document types that exists for the specific "
+#~ "country. The document type has a country field\n"
+#~ "\n"
+#~ msgstr ""
+#~ "\n"
+#~ "Функціонал\n"
+#~ "----------\n"
+#~ "\n"
+#~ "У деяких латиноамериканських країнах, включаючи Аргентину та Чилі, деякі "
+#~ "транзакції бухобліку, такі як рахунки-фактури та рахунки постачальників, "
+#~ "класифіковані за типами документу, визначеними урядовими фінансовими "
+#~ "органами (В Аргентині - AFIP, у Чилі - SII).\n"
+#~ "\n"
+#~ "Цей модуль призначений для розширення локалізації для управління цими "
+#~ "типами документів і є важливою інформацією, яка повинна відображатися у "
+#~ "друкованих звітах і яку необхідно легко ідентифікувати, як у межах набору "
+#~ "рахунків, так і в ході рахунку.\n"
+#~ "\n"
+#~ "Для кожного типу документа є свої правила та номер послідовності, "
+#~ "останній інтегрується з номером рахунків-фактур та послідовністю журналу, "
+#~ "щоб легко було користувачеві з локалізації. Щоб підтримувати чи не "
+#~ "підтримувати цей тип документів, у Журналі є нова опція, яка дозволяє "
+#~ "використовувати документ чи ні.\n"
+#~ "\n"
+#~ "Технічне\n"
+#~ "---------\n"
+#~ "\n"
+#~ "Якщо вашій локалізації потрібна ця логіка, потрібно буде додати цей "
+#~ "модуль як залежність, а у вашому модулі локалізації розширити:\n"
+#~ "\n"
+#~ "* розширте метод company's _localization_use_documents().\n"
+#~ "* створіть дані типів документу, які відповідають певним країнам. Тип "
+#~ "документу має полу країни\n"
+#~ "\n"
 
 #~ msgid ""
 #~ "\n"

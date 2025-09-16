@@ -1,29 +1,31 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* uom
+# * uom
 #
 # Translators:
 # Martin Trigaux, 2022
 # Larissa Manderfeld, 2023
 #
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-09-11 14:02+0000\n"
-"PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Larissa Manderfeld, 2023\n"
-"Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
+"PO-Revision-Date: 2025-09-16 04:43+0000\n"
+"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"Language-Team: German <https://translate.odoo.com/projects/odoo-19/uom/de/>\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__factor
 msgid "Absolute Quantity"
-msgstr ""
+msgstr "Absolute Menge"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__active
@@ -33,7 +35,7 @@ msgstr "Aktiv"
 #. module: uom
 #: model_terms:ir.actions.act_window,help:uom.product_uom_form_action
 msgid "Add a new unit of measure"
-msgstr "Eine neue Mengeneinheit hinzufügen"
+msgstr "Eine neue Maßeinheit hinzufügen"
 
 #. module: uom
 #: model_terms:ir.ui.view,arch_db:uom.uom_uom_view_search
@@ -43,7 +45,7 @@ msgstr "Archiviert"
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__relative_factor
 msgid "Contains"
-msgstr ""
+msgstr "Enthält"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__create_uid
@@ -68,7 +70,7 @@ msgstr "Anzeigename"
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_dozen
 msgid "Dozens"
-msgstr "Dutzend"
+msgstr "Dutzende"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_hour
@@ -81,6 +83,8 @@ msgid ""
 "How much bigger or smaller this unit is compared to the reference UoM for "
 "this unit"
 msgstr ""
+"Wie viel größer oder kleiner ist diese Einheit im Vergleich zur "
+"Referenzeinheit für diese Einheit"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__id
@@ -100,58 +104,58 @@ msgstr "Zuletzt aktualisiert am"
 #. module: uom
 #: model:res.groups,name:uom.group_uom
 msgid "Manage Multiple Units of Measure"
-msgstr "Multiple Mengeneinheiten verwalten"
+msgstr "Mehrere Maßeinheiten verwalten"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_pack_6
 msgid "Pack of 6"
-msgstr ""
+msgstr "6er-Pack"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__parent_path
 msgid "Parent Path"
-msgstr ""
+msgstr "Übergeordneter Pfad"
 
 #. module: uom
 #. odoo-javascript
 #: code:addons/uom/static/src/components/many2one_uom/many2one_uom_field.js:0
 #: code:addons/uom/static/src/components/many2x_uom_tags/many2x_uom_tags.js:0
 msgid "Product Field Name"
-msgstr ""
+msgstr "Name des Produktfelds"
 
 #. module: uom
 #: model:ir.model,name:uom.model_uom_uom
 msgid "Product Unit of Measure"
-msgstr "Produkteinheit"
+msgstr "Maßeinheit des Produkts"
 
 #. module: uom
 #: model_terms:ir.ui.view,arch_db:uom.product_uom_form_view
 msgid "Quantity"
-msgstr ""
+msgstr "Menge"
 
 #. module: uom
 #. odoo-javascript
 #: code:addons/uom/static/src/components/many2one_uom/many2one_uom_field.js:0
 #: code:addons/uom/static/src/components/many2x_uom_tags/many2x_uom_tags.js:0
 msgid "Quantity Field Name"
-msgstr ""
+msgstr "Name des Mengenfelds"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__relative_uom_id
 #: model_terms:ir.ui.view,arch_db:uom.product_uom_form_view
 msgid "Reference Unit"
-msgstr ""
+msgstr "Referenzeinheit"
 
 #. module: uom
 #. odoo-python
 #: code:addons/uom/models/uom_uom.py:0
 msgid "Reference unit of measure is missing."
-msgstr ""
+msgstr "Referenzmaßeinheit fehlt."
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__related_uom_ids
 msgid "Related UoMs"
-msgstr ""
+msgstr "Verbundene Maßeinheiten"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__rounding
@@ -180,11 +184,19 @@ msgid ""
 "Therefore, changing core units of measure in a running database is not "
 "recommended."
 msgstr ""
+"Einige wichtige Felder wurden am %s geändert.\n"
+"Beachten Sie, dass bestehende Daten durch diese Änderung NICHT aktualisiert "
+"werden.\n"
+"\n"
+"Da sich die Maßeinheiten auf das gesamte System auswirken, kann dies zu "
+"kritischen Problemen führen.\n"
+"Es ist daher nicht empfehlenswert, die Hauptmaßeinheiten in einer laufenden "
+"Datenbank zu ändern."
 
 #. module: uom
 #: model:ir.model.constraint,message:uom.constraint_uom_uom_factor_gt_zero
 msgid "The conversion ratio for a unit of measure cannot be 0!"
-msgstr "Der Umrechnungsfaktor einer Mengeneinheit kann nicht 0 sein!"
+msgstr "Der Umrechnungsfaktor einer Maßeinheit darf nicht 0 sein!"
 
 #. module: uom
 #. odoo-python
@@ -201,42 +213,42 @@ msgstr ""
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_ton
 msgid "Ton"
-msgstr ""
+msgstr "Tonne"
 
 #. module: uom
 #: model:ir.model.fields,help:uom.field_uom_uom__active
 msgid ""
 "Uncheck the active field to disable a unit of measure without deleting it."
 msgstr ""
-"Heben Sie die Markierung des aktiven Felds auf, um eine Mengeneinheit zu "
+"Heben Sie die Markierung des aktiven Felds auf, um eine Maßeinheit zu "
 "deaktivieren, ohne sie zu löschen."
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__name
 msgid "Unit Name"
-msgstr ""
+msgstr "Name der Einheit"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_unit
 msgid "Units"
-msgstr "Einheiten"
+msgstr "Einheit(en)"
 
 #. module: uom
 #: model:ir.actions.act_window,name:uom.product_uom_form_action
 #: model_terms:ir.ui.view,arch_db:uom.product_uom_tree_view
 msgid "Units & Packagings"
-msgstr ""
+msgstr "Einheiten & Verpackungen"
 
 #. module: uom
 #: model_terms:ir.ui.view,arch_db:uom.product_uom_form_view
 msgid "Units of Measure"
-msgstr "Mengeneinheiten"
+msgstr "Maßeinheiten"
 
 #. module: uom
 #. odoo-javascript
 #: code:addons/uom/static/src/components/many2one_uom/many2one_uom_field.js:0
 msgid "Unnamed"
-msgstr ""
+msgstr "Unbenannt"
 
 #. module: uom
 #. odoo-python
@@ -307,7 +319,7 @@ msgstr "mi"
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_milliliter
 msgid "ml"
-msgstr ""
+msgstr "ml"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_millimeter

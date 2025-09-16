@@ -1,23 +1,26 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* base_vat
+# * base_vat
 #
 # Translators:
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-09-11 13:55+0000\n"
-"PO-Revision-Date: 2024-01-30 15:14+0400\n"
-"Last-Translator: \n"
-"Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
+"PO-Revision-Date: 2025-09-16 02:32+0000\n"
+"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"Language-Team: Russian <https://translate.odoo.com/projects/odoo-19/base_vat/"
+"ru/>\n"
 "Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
-"n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || "
-"(n%100>=11 && n%100<=14)? 2 : 3);\n"
+"n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || ("
+"n%100>=11 && n%100<=14)? 2 : 3);\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: base_vat
 #. odoo-python
@@ -30,36 +33,38 @@ msgstr ""
 #: code:addons/base_vat/models/res_partner.py:0
 msgid "10XXXXXXXXY or 20XXXXXXXXY or 15XXXXXXXXY or 16XXXXXXXXY or 17XXXXXXXXY"
 msgstr ""
+"10XXXXXXXXY или 20XXXXXXXXY или 15XXXXXXXXY или 16XXXXXXXXY или 17XXXXXXXXY"
 
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 msgid "17291716060 (NIN) or 1729171602 (VKN)"
-msgstr ""
+msgstr "17291716060 (ИНН) или 1729171602 (КПП)"
 
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 msgid "1792060346001 or 1792060346"
-msgstr ""
+msgstr "1792060346001 или 1792060346"
 
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 msgid "310175397400003 [Fifteen digits, first and last digits should be \"3\"]"
 msgstr ""
+"310175397400003 [Пятнадцать цифр, первая и последняя цифры должны быть «3»]"
 
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 msgid "49-098-576 or 49098576"
-msgstr ""
+msgstr "49-098-576 или 49098576"
 
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 msgid "CHE-123.456.788 TVA or CHE-123.456.788 MWST or CHE-123.456.788 IVA"
-msgstr ""
+msgstr "CHE-123.456.788 TVA или CHE-123.456.788 MWST или CHE-123.456.788 IVA"
 
 #. module: base_vat
 #: model:ir.model,name:base_vat.model_res_company
@@ -102,7 +107,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 msgid "DE123456788 or 12/345/67890"
-msgstr ""
+msgstr "DE123456788 или 12/345/67890"
 
 #. module: base_vat
 #: model:ir.model.fields,field_description:base_vat.field_res_company__display_name
@@ -123,13 +128,13 @@ msgstr "Европейские номера НДС автоматически п
 #: code:addons/base_vat/models/res_partner.py:0
 msgid ""
 "Example: '219999830019' (format: 12 digits, all numbers, valid check digit)"
-msgstr ""
+msgstr "Пример: «219999830019» (12 цифр, только числа, с проверочной цифрой)"
 
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 msgid "GB123456782 or XI123456782"
-msgstr ""
+msgstr "GB123456782 или XI123456782"
 
 #. module: base_vat
 #. odoo-python
@@ -141,7 +146,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 msgid "HU12345676 or 12345678-1-11 or 8071592153"
-msgstr ""
+msgstr "HU12345676 или 12345678-1-11 или 8071592153"
 
 #. module: base_vat
 #: model:ir.model.fields,field_description:base_vat.field_res_country__has_foreign_fiscal_position
@@ -228,6 +233,8 @@ msgid ""
 "The request for VAT validation was not processed. VIES service has responded "
 "with the following error: %s"
 msgstr ""
+"Запрос на подтверждение НДС не был обработан. Служба VIES ответила следующей "
+"ошибкой: %s"
 
 #. module: base_vat
 #. odoo-python
@@ -257,12 +264,14 @@ msgstr "Проверка номера НДС, используя службу Eu
 #: code:addons/base_vat/models/res_partner.py:0
 msgid "XXXXXXXXX [9 digits] and it should respect the Luhn algorithm checksum"
 msgstr ""
+"XXXXXXXXX [9 цифр], должен соответствовать контрольной сумме по алгоритму "
+"Луна"
 
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 msgid "either 11 digits for CPF or 14 digits for CNPJ"
-msgstr ""
+msgstr "Либо 11 цифр для CPF, либо 14 цифр для CNPJ"
 
 #. module: base_vat
 #. odoo-python

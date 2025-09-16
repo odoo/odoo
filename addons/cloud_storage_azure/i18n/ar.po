@@ -1,69 +1,74 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* cloud_storage_azure
+# * cloud_storage_azure
 #
+# "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-09-26 08:55+0000\n"
-"PO-Revision-Date: 2024-09-26 08:55+0000\n"
-"Last-Translator: \n"
-"Language-Team: \n"
+"PO-Revision-Date: 2025-09-16 13:45+0000\n"
+"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
+"Language-Team: Arabic <https://translate.odoo.com/projects/odoo-19/"
+"cloud_storage_azure/ar/>\n"
+"Language: ar\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: \n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
+"&& n%100<=10 ? 3 : n%100>=11 ? 4 : 5;\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: cloud_storage_azure
 #: model:ir.model,name:cloud_storage_azure.model_ir_attachment
 msgid "Attachment"
-msgstr ""
+msgstr "مرفق"
 
 #. module: cloud_storage_azure
 #: model:ir.model.fields,field_description:cloud_storage_azure.field_res_config_settings__cloud_storage_azure_account_name
 msgid "Azure Account Name"
-msgstr ""
+msgstr "اسم حساب Azure"
 
 #. module: cloud_storage_azure
 #: model:ir.model.fields,field_description:cloud_storage_azure.field_res_config_settings__cloud_storage_azure_client_id
 msgid "Azure Client ID"
-msgstr ""
+msgstr "معرّف عميل Azure"
 
 #. module: cloud_storage_azure
 #: model:ir.model.fields,field_description:cloud_storage_azure.field_res_config_settings__cloud_storage_azure_client_secret
 msgid "Azure Client Secret"
-msgstr ""
+msgstr "سر عميل Azure"
 
 #. module: cloud_storage_azure
 #: model:ir.model.fields.selection,name:cloud_storage_azure.selection__res_config_settings__cloud_storage_provider__azure
 msgid "Azure Cloud Storage"
-msgstr ""
+msgstr "مساحة التخزين السحابية لدى Azure"
 
 #. module: cloud_storage_azure
 #: model:ir.model.fields,field_description:cloud_storage_azure.field_res_config_settings__cloud_storage_azure_container_name
 msgid "Azure Container Name"
-msgstr ""
+msgstr "اسم حاوية Azure"
 
 #. module: cloud_storage_azure
 #: model:ir.model.fields,field_description:cloud_storage_azure.field_res_config_settings__cloud_storage_azure_tenant_id
 msgid "Azure Tenant ID"
-msgstr ""
+msgstr "اسم المستأجر لـ Azure"
 
 #. module: cloud_storage_azure
 #: model:ir.model.fields,field_description:cloud_storage_azure.field_res_config_settings__cloud_storage_provider
 msgid "Cloud Storage Provider for new attachments"
-msgstr ""
+msgstr "مزود مساحة التخزين السحابية للمرفقات الجديدة"
 
 #. module: cloud_storage_azure
 #: model:ir.model,name:cloud_storage_azure.model_res_config_settings
 msgid "Config Settings"
-msgstr ""
+msgstr "تهيئة الإعدادات"
 
 #. module: cloud_storage_azure
 #: model:ir.model.fields,field_description:cloud_storage_azure.field_res_config_settings__cloud_storage_azure_invalidate_user_delegation_key
 msgid "Invalidate Cached Azure User Delegation Key"
-msgstr ""
+msgstr "إبطال مفتاح تفويض مستخدم Azure المُخزّن مؤقتاً"
 
 #. module: cloud_storage_azure
 #. odoo-python
@@ -72,6 +77,8 @@ msgid ""
 "Some Azure attachments are in use, please migrate their cloud storages "
 "before disable this module"
 msgstr ""
+"بعض مرفقات Azure قيد الاستخدام في الوقت الراهن. يٌرجى نقل مساحة التخزين "
+"السحابية الخاصة بها قبل تعطيل هذا التطبيق"
 
 #. module: cloud_storage_azure
 #. odoo-python
@@ -80,6 +87,8 @@ msgid ""
 "The connection string is not allowed to download blobs from the container.\n"
 "%s"
 msgstr ""
+"لا يُسمح لسلسلة الاتصال بتنزيل الكتل من الحاوية.\n"
+"%s"
 
 #. module: cloud_storage_azure
 #. odoo-python
@@ -88,3 +97,5 @@ msgid ""
 "The connection string is not allowed to upload blobs to the container.\n"
 "%s"
 msgstr ""
+"لا يُسمح لسلسلة الاتصال بتحميل الكتل إلى الحاوية.\n"
+"%s"
