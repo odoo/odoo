@@ -158,8 +158,9 @@ class StockRule(models.Model):
                     # Check if we need to advance the order date for the new line
                     order_date_planned = procurement.values['date_planned'] - relativedelta(
                         days=procurement.values['supplier'].delay)
-                    if fields.Date.to_date(order_date_planned) < fields.Date.to_date(po.date_order):
+                    if fields.Date.to_date(order_date_planned) < fields.Date.to_date(po.date_order) and partner.group_rfq != 'week':
                         po.date_order = order_date_planned
+
             self.env['purchase.order.line'].sudo().create(po_line_values)
 
     def _get_matching_supplier(self, product_id, product_qty, product_uom, company_id, values):
@@ -324,6 +325,10 @@ class StockRule(models.Model):
         partner = values['supplier'].partner_id
         currency = values['supplier'].currency_id
 
+        if partner.group_rfq == 'week' and partner.group_on != 'default':
+            delta_days = (7 + int(partner.group_on) - purchase_date.isoweekday()) % 7
+            purchase_date += relativedelta(days=delta_days)
+
         fpos = self.env['account.fiscal.position'].with_company(company_id)._get_fiscal_position(partner)
 
         return {
@@ -361,9 +366,17 @@ class StockRule(models.Model):
             end_dt = datetime.combine(date_planned, datetime.max.time())
             domain += (('date_planned', '>=', start_dt), ('date_planned', '<=', end_dt))
         if partner.group_rfq == 'week':
-            start_dt = datetime.combine(date_planned - relativedelta(days=date_planned.weekday()), datetime.min.time())
-            end_dt = datetime.combine(date_planned + relativedelta(days=6 - date_planned.weekday()), datetime.max.time())
-            domain += (('date_planned', '>=', start_dt), ('date_planned', '<=', end_dt))
+            if partner.group_on == 'default':
+                start_dt = datetime.combine(date_planned - relativedelta(days=date_planned.isoweekday()), datetime.min.time())
+                end_dt = datetime.combine(date_planned + relativedelta(days=6 - date_planned.isoweekday()), datetime.max.time())
+                domain += (('date_planned', '>=', start_dt), ('date_planned', '<=', end_dt))
+            else:
+                delta_days = (7 + int(partner.group_on) - date_planned.isoweekday()) % 7
+                date = date_planned + relativedelta(days=delta_days)
+                start_dt = datetime.combine(date, datetime.min.time())
+                end_dt = datetime.combine(date, datetime.max.time())
+                domain += (('date_planned', '>=', start_dt), ('date_planned', '<=', end_dt))
+
         return domain
 
     def _push_prepare_move_copy_values(self, move_to_copy, new_date):
