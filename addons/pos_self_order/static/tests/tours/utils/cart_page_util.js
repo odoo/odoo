@@ -145,3 +145,9 @@ export function removeLine(productName) {
         run: "click",
     };
 }
+
+export function isShown() {
+    return {
+        trigger: `.order-cart-content`,
+    };
+}
