@@ -1,5 +1,5 @@
-import { expect, test } from "@odoo/hoot";
-import { click, waitFor } from "@odoo/hoot-dom";
+import { expect, test, describe } from "@odoo/hoot";
+import { click, tick, waitFor } from "@odoo/hoot-dom";
 import { setupEditor } from "./_helpers/editor";
 import { animationFrame } from "@odoo/hoot-mock";
 import { getContent, setContent, setSelection } from "./_helpers/selection";
@@ -300,4 +300,28 @@ test("Should be able to undo after adding spin effect to an icon", async () => {
     expect(".btn-group[name='icon_spin']").not.toHaveClass("active");
     expect("span.fa-glass").toHaveCount(1);
     expect("span.fa-glass.fa-spin").toHaveCount(0);
+});
+
+describe("selection", () => {
+    test("selection inside icon gets expanded to its outer boundaries", async () => {
+        const { el } = await setupEditor(`<p>abc<span class="fa fa-glass"></span>def</p>`);
+        const icon = el.querySelector("span.fa-glass");
+        setSelection({ anchorNode: icon, anchorOffset: 0 });
+        await tick();
+        expect(getContent(el)).toBe(
+            `<p>abc\ufeff[<span class="fa fa-glass" contenteditable="false">\u200b</span>]\ufeffdef</p>`
+        );
+    });
+
+    test("selection inside icon gets expanded around it, but not around its contenteditable=false ancestor", async () => {
+        const { el } = await setupEditor(
+            `<p contenteditable="false">abc<span class="fa fa-glass"></span>def</p>`
+        );
+        const icon = el.querySelector("span.fa-glass");
+        setSelection({ anchorNode: icon, anchorOffset: 0 });
+        await tick();
+        expect(getContent(el)).toBe(
+            `<p contenteditable="false">abc[<span class="fa fa-glass" contenteditable="false">\u200b</span>]def</p>`
+        );
+    });
 });
