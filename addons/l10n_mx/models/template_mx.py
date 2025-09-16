@@ -10,10 +10,11 @@ class AccountChartTemplate(models.AbstractModel):
     def _get_mx_template_data(self):
         return {
             'code_digits': '9',
+            'account_parents': True,
             'display_invoice_amount_total_words': True,
-            'property_account_receivable_id': 'cuenta105_01',
-            'property_account_payable_id': 'cuenta201_01',
-            'property_stock_valuation_account_id': 'cuenta115_01',
+            'property_account_receivable_id': 'cuenta105_01_01',
+            'property_account_payable_id': 'cuenta201_01_01',
+            'property_stock_valuation_account_id': 'cuenta115_01_01',
             'property_cash_basis_base_account_id': 'cuenta801_01_99',
         }
 
@@ -26,21 +27,24 @@ class AccountChartTemplate(models.AbstractModel):
                 'bank_account_code_prefix': '102.01.0',
                 'cash_account_code_prefix': '101.01.0',
                 'transfer_account_code_prefix': '102.01.01',
-                'account_default_pos_receivable_account_id': 'cuenta105_02',
-                'income_currency_exchange_account_id': 'cuenta702_01',
-                'expense_currency_exchange_account_id': 'cuenta701_01',
-                'deferred_expense_account_id': 'cuenta173_01',
-                'account_journal_early_pay_discount_loss_account_id': 'cuenta402_01',
-                'account_journal_early_pay_discount_gain_account_id': 'cuenta503_01',
+                'account_default_pos_receivable_account_id': 'cuenta105_01_02',
+                'income_currency_exchange_account_id': 'cuenta702_01_01',
+                'expense_currency_exchange_account_id': 'cuenta701_01_01',
+                'deferred_expense_account_id': 'cuenta173_01_01',
+                'account_journal_early_pay_discount_loss_account_id': 'cuenta402_01_01',
+                'account_journal_early_pay_discount_gain_account_id': 'cuenta503_01_01',
                 'tax_cash_basis_journal_id': 'cbmx',
                 'account_sale_tax_id': 'tax12',
                 'account_purchase_tax_id': 'tax14',
-                'expense_account_id': 'cuenta601_84',
-                'income_account_id': 'cuenta401_01',
+                'expense_account_id': 'cuenta601_84_01',
+                'income_account_id': 'cuenta401_01_01',
                 'account_cash_basis_base_account_id': 'cuenta801_01_99',
-                'l10n_mx_income_return_discount_account_id': 'cuenta402_01',
-                'l10n_mx_income_re_invoicing_account_id': 'cuenta402_04',
-                'account_stock_valuation_id': 'cuenta115_01',
+                'default_cash_difference_income_account_id': 'cuenta403_01_01',
+                'default_cash_difference_expense_account_id': 'cuenta601_84_02',
+                'l10n_mx_income_return_discount_account_id': 'cuenta402_01_01',
+                'l10n_mx_income_re_invoicing_account_id': 'cuenta402_04_01',
+                'account_stock_valuation_id': 'cuenta115_01_01',
+                'auto_set_account_parent': True,
             },
         }
 
@@ -51,7 +55,7 @@ class AccountChartTemplate(models.AbstractModel):
                 'type': 'general',
                 'name': _('Effectively Paid'),
                 'code': 'CBMX',
-                'default_account_id': "cuenta118_01",
+                'default_account_id': "cuenta118_01_01",
                 'show_on_dashboard': True,
             },
             'cash': {
@@ -78,8 +82,8 @@ class AccountChartTemplate(models.AbstractModel):
     @template('mx', 'account.account')
     def _get_mx_account_account(self):
         return {
-            'cuenta115_01': {
-                'account_stock_expense_id': 'cuenta505_01',
-                'account_stock_variation_id': 'cuenta501_02',
+            'cuenta115_01_01': {
+                'account_stock_expense_id': 'cuenta505_01_01',
+                'account_stock_variation_id': 'cuenta501_01_02',
             },
         }
