@@ -1593,3 +1593,38 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
         self.assertEqual(picking.move_ids.move_line_ids[0].quantity, 1)
         self.assertEqual(picking.move_ids.move_line_ids[1].lot_id.name, '1002')
         self.assertEqual(picking.move_ids.move_line_ids[1].quantity, 2)
+
+    def test_selected_partner_quotation_loading(self):
+        """
+        Tests that when a partner is selected in the PoS, then a quotation for this partner is loaded
+        """
+        product_a = self.env['product.product'].create({
+            'name': 'Product A',
+            'available_in_pos': True,
+            'lst_price': 10.0,
+        })
+        product_b = self.env['product.product'].create({
+            'name': 'Product B',
+            'available_in_pos': True,
+            'lst_price': 5.0,
+        })
+        partner_1 = self.env['res.partner'].create({'name': 'A Test Partner 1'})
+        partner_2 = self.env['res.partner'].create({'name': 'A Test Partner 2'})
+        self.env['sale.order'].create({
+            'partner_id': partner_1.id,
+            'order_line': [(0, 0, {
+                'product_id': product_a.id,
+                'product_uom_qty': 1,
+                'price_unit': product_a.lst_price,
+            })]
+        })
+        self.env['sale.order'].create({
+            'partner_id': partner_2.id,
+            'order_line': [(0, 0, {
+                'product_id': product_b.id,
+                'product_uom_qty': 2,
+                'price_unit': product_b.lst_price,
+            })]
+        })
+        self.main_pos_config.open_ui()
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_selected_partner_quotation_loading', login="accountman")
