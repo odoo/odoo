@@ -125,7 +125,7 @@ class ProductProduct(models.Model):
         self.company_currency_id = company_id.currency_id
 
         for product in self:
-            at_date = product.env.context.get('to_date')
+            at_date = fields.Datetime.to_datetime(product.env.context.get('to_date'))
             qty_available = product.sudo(False).with_context(at_date=at_date).qty_available
             if product.lot_valuated:
                 product.total_value = product._get_value_from_lots()
@@ -178,6 +178,13 @@ class ProductProduct(models.Model):
             ('move_id', '=', False),
             ('lot_id', '=', False),
         ], limit=1, order="date DESC, id DESC")
+        if not product_value:
+            # If there is no history then get the first value
+            product_value = self.env['product.value'].search([
+                ('product_id', '=', self.id),
+                ('move_id', '=', False),
+                ('lot_id', '=', False),
+            ], limit=1, order="date, id")
         return product_value.value if product_value else self.standard_price
 
     def _get_value_from_lots(self):
