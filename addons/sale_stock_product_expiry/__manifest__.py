@@ -9,6 +9,9 @@
     'license': 'LGPL-3',
     'author': 'Odoo S.A.',
     'assets': {
+        'web.assets_tests': [
+            'sale_stock_product_expiry/static/tests/tours/*.js',
+        ],
         'web.assets_backend': [
             'sale_stock_product_expiry/static/src/**/*',
         ],
