@@ -733,12 +733,13 @@ test("single 'join' (without camera) button when last call was audio-only", asyn
             Command.create({ partner_id: alfredPartnerId }),
         ],
     });
+    const [alfredMemberId] = pyEnv["discuss.channel.member"].search([
+        ["partner_id", "=", alfredPartnerId],
+        ["channel_id", "=", channelId],
+    ]);
     pyEnv["discuss.channel.rtc.session"].create({
-        channel_member_id: pyEnv["discuss.channel.member"].create({
-            channel_id: channelId,
-            partner_id: alfredPartnerId,
-        }),
         channel_id: channelId,
+        channel_member_id: alfredMemberId,
     });
     await start();
     await openDiscuss(channelId);
@@ -759,12 +760,13 @@ test("single 'join' (with camera) button when last call had camera on", async ()
             Command.create({ partner_id: alfredPartnerId }),
         ],
     });
+    const [alfredMemberId] = pyEnv["discuss.channel.member"].search([
+        ["partner_id", "=", alfredPartnerId],
+        ["channel_id", "=", channelId],
+    ]);
     pyEnv["discuss.channel.rtc.session"].create({
-        channel_member_id: pyEnv["discuss.channel.member"].create({
-            channel_id: channelId,
-            partner_id: alfredPartnerId,
-        }),
         channel_id: channelId,
+        channel_member_id: alfredMemberId,
     });
     await start();
     await openDiscuss(channelId);

@@ -172,6 +172,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 'odoobot_state': 'disabled',
                 'password': self.password,
                 'signature': '--\nErnest',
+                'tz': 'Europe/Brussels',
             },
             {'name': 'test1', 'login': 'test1', 'password': self.password, 'email': 'test1@example.com', 'country_id': self.env.ref('base.in').id},
             {'name': 'test2', 'login': 'test2', 'email': 'test2@example.com'},
@@ -403,6 +404,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                     "is_company": False,
                     "main_user_id": self.user_root.id,
                     "name": "OdooBot",
+                    "tz": False,
                     "write_date": fields.Datetime.to_string(self.user_root.partner_id.write_date),
                 },
                 {
@@ -413,6 +415,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                     "im_status_access_token": self.users[0].partner_id._get_im_status_access_token(),
                     "main_user_id": self.users[0].id,
                     "name": "Ernest Employee",
+                    "tz": "Europe/Brussels",
                     "write_date": fields.Datetime.to_string(self.users[0].partner_id.write_date),
                 },
             ),
@@ -1615,6 +1618,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "main_user_id": user.id,
                 "mention_token": user.partner_id._get_mention_token(),
                 "name": "Ernest Employee",
+                "tz": "Europe/Brussels",
                 "write_date": fields.Datetime.to_string(user.partner_id.write_date),
             }
             if also_livechat:
@@ -1670,6 +1674,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "main_user_id": user.id,
                 "mention_token": user.partner_id._get_mention_token(),
                 "name": "test2",
+                "tz": False,
                 "write_date": fields.Datetime.to_string(user.partner_id.write_date),
             }
         if user == self.users[3]:
@@ -1684,6 +1689,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "main_user_id": user.id,
                 "mention_token": user.partner_id._get_mention_token(),
                 "name": "test3",
+                "tz": False,
                 "write_date": fields.Datetime.to_string(self.users[3].partner_id.write_date),
             }
         if user == self.users[12]:
@@ -1698,6 +1704,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "main_user_id": user.id,
                 "mention_token": user.partner_id._get_mention_token(),
                 "name": "test12",
+                "tz": False,
                 "write_date": fields.Datetime.to_string(user.partner_id.write_date),
             }
         if user == self.users[14]:
@@ -1712,6 +1719,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "main_user_id": user.id,
                 "mention_token": user.partner_id._get_mention_token(),
                 "name": "test14",
+                "tz": False,
                 "write_date": fields.Datetime.to_string(user.partner_id.write_date),
             }
         if user == self.users[15]:
@@ -1726,6 +1734,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "main_user_id": user.id,
                 "mention_token": user.partner_id._get_mention_token(),
                 "name": "test15",
+                "tz": False,
                 "write_date": fields.Datetime.to_string(user.partner_id.write_date),
             }
         if user == self.user_root:

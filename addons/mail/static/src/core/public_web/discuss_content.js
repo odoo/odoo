@@ -8,6 +8,7 @@ import { Thread } from "@mail/core/common/thread";
 import { ThreadIcon } from "@mail/core/common/thread_icon";
 import { Composer } from "@mail/core/common/composer";
 import { ImStatus } from "@mail/core/common/im_status";
+import { showRealtimeTzDiff } from "@mail/utils/common/dates";
 
 import { _t } from "@web/core/l10n/translation";
 import { FileUploader } from "@web/views/fields/file_handler";
@@ -37,7 +38,39 @@ export class DiscussContent extends Component {
         this.state = useState({ jumpThreadPresent: 0 });
         this.isDiscussContent = true;
         useEffect(
-            () => this.actionPanelAutoOpenFn(),
+            () => {
+                this.actionPanelAutoOpenFn();
+                if (!this.thread || this.thread.channel_type !== "chat") {
+                    return;
+                }
+                const correspondentPersonaTz = this.thread.correspondent.persona.tz;
+                const currentUserTz = this.store.self_partner?.tz;
+                if (
+                    correspondentPersonaTz &&
+                    currentUserTz &&
+                    correspondentPersonaTz !== currentUserTz
+                ) {
+                    this.state.showCorrespondentTime = true;
+                    this.state.correspondentPersonaTz = correspondentPersonaTz;
+                    const stopRealtimeTzDiff = showRealtimeTzDiff(
+                        currentUserTz,
+                        correspondentPersonaTz,
+                        ({ otherUserTime, otherUserDate }) => {
+                            this.state.correspondentTime = otherUserTime;
+                            this.state.correspondentDate = otherUserDate;
+                        }
+                    );
+                    return () => {
+                        stopRealtimeTzDiff();
+                        Object.assign(this.state, {
+                            showCorrespondentTime: false,
+                            correspondentTime: null,
+                            correspondentDate: null,
+                            correspondentPersonaTz: null,
+                        });
+                    };
+                }
+            },
             () => [this.thread]
         );
     }

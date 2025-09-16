@@ -275,7 +275,7 @@ class ResPartner(models.Model):
             *self._get_store_im_status_fields(),
         ]
         if target.is_internal(self.env):
-            fields.extend(["email", "phone"])
+            fields.extend(["email", "phone", "tz"])
         return fields
 
     def _to_store_defaults(self, target: Store.Target):
@@ -288,7 +288,7 @@ class ResPartner(models.Model):
             "name",
         ]
         if target.is_internal(self.env):
-            res.append("email")
+            res.extend(["email", "tz"])
         return res
 
     @api.readonly
