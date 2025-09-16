@@ -7,7 +7,7 @@ import {
 } from "@mail/utils/common/format";
 import { createDocumentFragmentFromContent } from "@mail/utils/common/html";
 
-import { toRaw } from "@odoo/owl";
+import { markup, toRaw } from "@odoo/owl";
 
 import { browser } from "@web/core/browser/browser";
 import { stateToUrl } from "@web/core/browser/router";
@@ -183,6 +183,7 @@ export class Message extends Record {
     /** @type {undefined|Boolean} */
     needaction;
     starred = false;
+    showTranslation = false;
 
     /**
      * True if the backend would technically allow edition
@@ -488,6 +489,18 @@ export class Message extends Record {
             rpc("/mail/link_preview", { message_id: this.id }, { silent: true });
         }
         return data;
+    }
+
+    async onClickToggleTranslation() {
+        if (!this.translationValue) {
+            const { error, lang_name, body } = await rpc("/mail/message/translate", {
+                message_id: this.id,
+            });
+            this.translationValue = body && markup(body);
+            this.translationSource = lang_name;
+            this.translationErrors = error;
+        }
+        this.showTranslation = !this.showTranslation && Boolean(this.translationValue);
     }
 
     async react(content) {

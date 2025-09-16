@@ -32,6 +32,27 @@ class CrmLead(models.Model):
             else:
                 lead.date_partner_assign = fields.Date.context_today(lead)
 
+    def _assert_portal_write_access(self):
+        if (
+            self.env.user._is_portal() and not self.env.su and
+            self != self.filtered_domain([('partner_assigned_id', 'child_of', self.env.user.commercial_partner_id.id)])
+        ):
+            raise AccessError(_('Only users with commercial partner which is a parent of the assigned partner can edit this lead.'))
+
+    def _get_partner_email_update(self, force_void=True):
+        self.ensure_one()
+        if self.env.user._is_portal() and self.partner_id.user_id:
+            return False
+        return super()._get_partner_email_update(force_void)
+
+    def write(self, vals):
+        if self.env.user._is_portal() and not self.env.su:
+            for fname, value in vals.items():
+                field = self._fields.get(fname)
+                if field and field.type == 'many2one':
+                    self.env[field.comodel_name].browse(value).check_access('read')
+        return super().write(vals)
+
     def _merge_get_fields(self):
         fields_list = super(CrmLead, self)._merge_get_fields()
         fields_list += ['partner_latitude', 'partner_longitude', 'partner_assigned_id', 'date_partner_assign']
@@ -188,14 +209,16 @@ class CrmLead(models.Model):
         return res_partner_ids
 
     def partner_interested(self, comment=False):
+        self._assert_portal_write_access()
         message = Markup('<p>%s</p>') % _('I am interested by this lead.')
         if comment:
             message += Markup('<p>%s</p>') % comment
         for lead in self:
-            lead.message_post(body=message)
+            lead.sudo().message_post(body=message)
             lead.sudo().convert_opportunity(lead.partner_id)  # sudo required to convert partner data
 
     def partner_desinterested(self, comment=False, contacted=False, spam=False):
+        self._assert_portal_write_access()
         if contacted:
             message = Markup('<p>%s</p>') % _('I am not interested by this lead. I contacted the lead.')
         else:
@@ -205,7 +228,7 @@ class CrmLead(models.Model):
         self.message_unsubscribe(partner_ids=partner_ids.ids)
         if comment:
             message += Markup('<p>%s</p>') % comment
-        self.message_post(body=message)
+        self.sudo().message_post(body=message)
         values = {
             'partner_assigned_id': False,
         }
@@ -219,7 +242,7 @@ class CrmLead(models.Model):
         self.sudo().write(values)
 
     def update_lead_portal(self, values):
-        self.browse().check_access('write')
+        self._assert_portal_write_access()
         for lead in self:
             lead_values = {
                 'expected_revenue': values['expected_revenue'],
@@ -251,7 +274,7 @@ class CrmLead(models.Model):
             lead.write(lead_values)
 
     def update_contact_details_from_portal(self, values):
-        self.browse().check_access('write')
+        self._assert_portal_write_access()
         fields = ['partner_name', 'phone', 'mobile', 'email_from', 'street', 'street2',
             'city', 'zip', 'state_id', 'country_id']
         if any([key not in fields for key in values]):
