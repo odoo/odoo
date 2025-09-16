@@ -1,6 +1,6 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* link_tracker
+# * link_tracker
 #
 # Translators:
 # Veikko Väätäjä <veikko.vaataja@gmail.com>, 2022
@@ -17,20 +17,22 @@
 # Kari Lindgren <kari.lindgren@emsystems.fi>, 2022
 # Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2022
 # Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023
-#
+# "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~14.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-09-11 13:57+0000\n"
-"PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023\n"
-"Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
+"PO-Revision-Date: 2025-09-16 15:24+0000\n"
+"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
+"Language-Team: Finnish <https://translate.odoo.com/projects/odoo-19/"
+"link_tracker/fi/>\n"
 "Language: fi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: link_tracker
 #: model_terms:ir.ui.view,arch_db:link_tracker.link_tracker_view_tree
@@ -42,11 +44,13 @@ msgstr ""
 msgid ""
 "<i class=\"fa fa-fw fa-mouse-pointer\" aria-label=\"Clicks\" role=\"img\"/>"
 msgstr ""
+"<i class=\"fa fa-fw fa-mouse-pointer\" aria-label=\"Klikkaukset\" role="
+"\"img\"/>"
 
 #. module: link_tracker
 #: model_terms:ir.ui.view,arch_db:link_tracker.link_tracker_view_form
 msgid "<span class=\"o_stat_text\">Visit Page</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Vieraile sivulla</span>"
 
 #. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker__absolute_url
@@ -97,6 +101,10 @@ msgid ""
 "The following combinations are already used: \n"
 "- %(error_lines)s"
 msgstr ""
+"Linkin seuranta-arvojen (URL, kampanja, mediatyyppi, lähde ja label) "
+"yhdistelmien on oltava yksilöllisiä.\n"
+"Seuraavat yhdistelmät ovat jo käytössä:\n"
+"- %(error_lines)s"
 
 #. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker_click__country_id
@@ -188,7 +196,7 @@ msgstr "Linkki"
 #. module: link_tracker
 #: model_terms:ir.ui.view,arch_db:link_tracker.link_tracker_click_view_form
 msgid "Link Click"
-msgstr "Linkin klikkaus"
+msgstr "Linkin klikkaukset"
 
 #. module: link_tracker
 #: model_terms:ir.ui.view,arch_db:link_tracker.link_tracker_click_view_graph
@@ -225,7 +233,7 @@ msgstr "Linkit"
 #. module: link_tracker
 #: model_terms:ir.ui.view,arch_db:link_tracker.link_tracker_click_view_tree
 msgid "Links Clicks"
-msgstr "Linkin klikkauksia"
+msgstr "Linkkien klikkaukset"
 
 #. module: link_tracker
 #: model:ir.model,name:link_tracker.model_mail_render_mixin
@@ -236,7 +244,7 @@ msgstr "Mail Render Mixin"
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker__medium_id
 #: model_terms:ir.ui.view,arch_db:link_tracker.link_tracker_view_search
 msgid "Medium"
-msgstr "Media"
+msgstr "Mediatyyppi"
 
 #. module: link_tracker
 #: model_terms:ir.actions.act_window,help:link_tracker.link_tracker_click_action_statistics
@@ -307,7 +315,7 @@ msgstr ""
 #. module: link_tracker
 #: model:ir.model.fields,help:link_tracker.field_link_tracker__medium_id
 msgid "This is the method of delivery, e.g. Postcard, Email, or Banner Ad"
-msgstr "Toimitustapa, esim. postitus, sähköposti tai mainosbanneri."
+msgstr "Toimitustapa, esim. postitus, sähköposti tai mainosbanneri"
 
 #. module: link_tracker
 #: model:ir.model.fields,help:link_tracker.field_link_tracker__source_id
@@ -364,6 +372,7 @@ msgstr "Verkkosivusto"
 #: code:addons/link_tracker/models/link_tracker.py:0
 msgid "“%s” is not a valid link, links cannot redirect to the current page."
 msgstr ""
+"\"%s\" ei ole kelvollinen linkki, linkit eivät voi ohjata nykyiselle sivulle."
 
 #~ msgid "Group By"
 #~ msgstr "Ryhmittely"

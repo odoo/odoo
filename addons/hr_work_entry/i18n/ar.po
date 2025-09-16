@@ -1,25 +1,27 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* hr_work_entry
+# * hr_work_entry
 #
 # Translators:
 # Malaz Abuidris <msea@odoo.com>, 2023
 # Martin Trigaux, 2023
-#
+# "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-09-11 13:57+0000\n"
-"PO-Revision-Date: 2022-09-22 05:52+0000\n"
-"Last-Translator: Martin Trigaux, 2023\n"
-"Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
+"PO-Revision-Date: 2025-09-16 13:39+0000\n"
+"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
+"Language-Team: Arabic <https://translate.odoo.com/projects/odoo-19/"
+"hr_work_entry/ar/>\n"
 "Language: ar\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
-"&& n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
+"&& n%100<=10 ? 3 : n%100>=11 ? 4 : 5;\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,help:hr_work_entry.field_hr_employee__work_entry_source
@@ -37,6 +39,15 @@ msgid ""
 "planning. (requires Planning app)\n"
 "    "
 msgstr ""
+"\n"
+"        يحدد المصدر لإنشاء قيود العمل\n"
+"\n"
+"        جدول العمل: سيتم إنشاء قيود العمل من ساعات العمل أدناه.\n"
+"        الحضور: سيتم إنشاء قيود العمل من سجل حضور الموظف. (يتطلب تطبيق "
+"الحضور)\n"
+"        التخطيط: سيتم إنشاء قيود العمل من تخطيط الموظف. (يتطلب تطبيق التخطيط)"
+"\n"
+"    "
 
 #. module: hr_work_entry
 #. odoo-python
@@ -56,7 +67,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/hr_work_entry/models/hr_employee.py:0
 msgid "%s work entries"
-msgstr "قيود عمل %s "
+msgstr "قيود عمل %s"
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_regeneration_wizard
@@ -68,7 +79,7 @@ msgstr ""
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_regeneration_wizard
 msgid "<i class=\"fa fa-info-circle me-1\" title=\"Hint\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-info-circle me-1\" title=\"تلميح \"/>"
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_employee_view_form
@@ -77,6 +88,9 @@ msgid ""
 "                            Work Entries\n"
 "                            </span>"
 msgstr ""
+"<span class=\"o_stat_text\">\n"
+"                            قيود العمل\n"
+"                            </span>"
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_regeneration_wizard
@@ -84,11 +98,13 @@ msgid ""
 "<span class=\"text-muted\">Warning: The work entry regeneration will delete "
 "all manual changes on the selected period.</span>"
 msgstr ""
+"<span class=\"text-muted\">نحذير: سيؤدي إعادة إنشاء قيد العمل إلى حذف كافة "
+"التغييرات اليدوية في الفترة المحددة.</span>"
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_form
 msgid "<span>Hours</span>"
-msgstr "<span>الساعات</span> "
+msgstr "<span>الساعات</span>"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_user_work_entry_employee__active
@@ -117,17 +133,17 @@ msgstr ""
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_additional_paid
 msgid "Additional Time (Paid)"
-msgstr ""
+msgstr "ساعات العمل الإضافية (مدفوعة)"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,help:hr_work_entry.field_hr_work_entry_type__is_leave
 msgid "Allow the work entry type to be linked with time off types."
-msgstr ""
+msgstr "السماح لنوع قيد العمل بأن يتم ربطه بأنواع الإجازات."
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_au_work_entry_type_defence
 msgid "Ancillary and Defence Leave"
-msgstr ""
+msgstr "الإجازة الإضافية والدفاعية"
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_form
@@ -139,22 +155,22 @@ msgstr "مؤرشف"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.work_entry_type_attendance
 msgid "Attendance"
-msgstr "الحاضرين "
+msgstr "الحاضرين"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_id_work_entry_type_bereavement_leave
 msgid "Bereavement Leave"
-msgstr ""
+msgstr "إجازة الفقد"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_breast_feeding
 msgid "Breastfeeding Break"
-msgstr ""
+msgstr "استراحة الرضاعة"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_small_unemployment_birth
 msgid "Brief Holiday (Birth)"
-msgstr ""
+msgstr "إجازة قصيرة (عيد ميلادك)"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.work_entry_type_compensatory
@@ -164,12 +180,12 @@ msgstr ""
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_regeneration_wizard
 msgid "Cancel"
-msgstr ""
+msgstr "إلغاء"
 
 #. module: hr_work_entry
 #: model:ir.model.fields.selection,name:hr_work_entry.selection__hr_work_entry__state__cancelled
 msgid "Cancelled"
-msgstr "ملغي"
+msgstr "تم الإلغاء"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,help:hr_work_entry.field_hr_work_entry__code
@@ -179,12 +195,12 @@ msgid ""
 "unwanted changes."
 msgstr ""
 "انتبه، الكود مستخدم في العديد من المراجع. قد يؤدي تغييره إلى حدوث تغييرات "
-"غير مرغوب بها. "
+"غير مرغوب بها."
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_au_work_entry_type_cash_out
 msgid "Cash Out of Leave in Service"
-msgstr ""
+msgstr "Cash Out of Leave in Service"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,help:hr_work_entry.field_hr_work_entry_type__is_extra_hours
@@ -202,48 +218,48 @@ msgstr "اللون"
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__company_id
 msgid "Company"
-msgstr "الشركة "
+msgstr "الشركة"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_hk_work_entry_type_compassionate_leave
 msgid "Compassionate Leave"
-msgstr ""
+msgstr "الإجازة العارضة"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.work_entry_type_compensatory
 msgid "Compensatory Time Off"
-msgstr ""
+msgstr "الإجازة التعويضية"
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_search
 msgid "Conflicting"
-msgstr "متعارض "
+msgstr "متعارض"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__conflict
 msgid "Conflicts"
-msgstr "التعارضات "
+msgstr "التعارضات"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_corona
 msgid "Corona Unemployment"
-msgstr ""
+msgstr "البطالة بسبب جائحة كورونا"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__country_id
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__country_id
 msgid "Country"
-msgstr ""
+msgstr "الدولة"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__country_code
 msgid "Country Code"
-msgstr ""
+msgstr "رمز الدولة"
 
 #. module: hr_work_entry
 #: model_terms:ir.actions.act_window,help:hr_work_entry.hr_work_entry_type_action
 msgid "Create a new work entry type"
-msgstr ""
+msgstr "قم بإنشاء نوع قيد عمل جديد"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_user_work_entry_employee__create_uid
@@ -264,7 +280,7 @@ msgstr "أنشئ في"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_credit_time
 msgid "Credit Time"
-msgstr ""
+msgstr "دوام جزئي"
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_search
@@ -299,7 +315,7 @@ msgstr "الوصف"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_mx_work_entry_type_disability_due_to_illness_imss
 msgid "Disability due to illness (IMSS)"
-msgstr ""
+msgstr "Disability due to illness (IMSS)"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__display_code
@@ -318,12 +334,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_work_entry.field_resource_calendar_attendance__display_name
 #: model:ir.model.fields,field_description:hr_work_entry.field_resource_calendar_leaves__display_name
 msgid "Display Name"
-msgstr "اسم العرض "
+msgstr "اسم العرض"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_us_work_entry_type_double
 msgid "Double Time Hours"
-msgstr ""
+msgstr "الساعات ذات الأجر المضاعف"
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_search
@@ -338,22 +354,22 @@ msgstr "المدة"
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_regeneration_wizard__earliest_available_date_message
 msgid "Earliest Available Date Message"
-msgstr ""
+msgstr "رسالة أقرب تاريخ ممكن"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_regeneration_wizard__earliest_available_date
 msgid "Earliest date"
-msgstr ""
+msgstr "أقرب تاريخ"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_economic_unemployment
 msgid "Economic Unemployment"
-msgstr ""
+msgstr "البطالة الاقتصادية"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_training_time_off
 msgid "Educational Time Off"
-msgstr ""
+msgstr "الإجازة التعليمية"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_sa_work_entry_type_emergency
@@ -371,7 +387,7 @@ msgstr "الموظف"
 #. module: hr_work_entry
 #: model:ir.model,name:hr_work_entry.model_hr_version
 msgid "Employee Contract"
-msgstr ""
+msgstr "عقد الموظف"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__version_id
@@ -381,38 +397,38 @@ msgstr ""
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_regeneration_wizard__employee_ids
 msgid "Employees"
-msgstr ""
+msgstr "الموظفون"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_european
 msgid "European Time Off"
-msgstr ""
+msgstr "الإجازة الأوروبية"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_hk_work_entry_type_examination_leave
 msgid "Examination Leave"
-msgstr ""
+msgstr "إجازة الاختبارات"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__external_code
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__external_code
 msgid "External Code"
-msgstr ""
+msgstr "كود خارجي"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.work_entry_type_extra_hours
 msgid "Extra Hours"
-msgstr ""
+msgstr "الساعات الإضافية"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_extra_legal
 msgid "Extra Legal Time Off"
-msgstr ""
+msgstr "أيام الإجازة القانونية الإضافية"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_flemish_training_time_off
 msgid "Flemish Educational Time Off"
-msgstr ""
+msgstr "Flemish Educational Time Off"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_regeneration_wizard__date_from
@@ -427,34 +443,34 @@ msgstr ""
 #. module: hr_work_entry
 #: model:ir.actions.server,name:hr_work_entry.ir_cron_generate_missing_work_entries_ir_actions_server
 msgid "Generate Missing Work Entries"
-msgstr ""
+msgstr "إنشاء قيود العمل المفقودة"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_employee__date_generated_from
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_version__date_generated_from
 msgid "Generated From"
-msgstr ""
+msgstr "منشأة من"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_employee__date_generated_to
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_version__date_generated_to
 msgid "Generated To"
-msgstr ""
+msgstr "منشأة إلى"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.work_entry_type_leave
 msgid "Generic Time Off"
-msgstr ""
+msgstr "إجازة عادية"
 
 #. module: hr_work_entry
 #: model:ir.model,name:hr_work_entry.model_hr_work_entry
 msgid "HR Work Entry"
-msgstr "قيد عمل الموارد البشرية "
+msgstr "قيد عمل الموارد البشرية"
 
 #. module: hr_work_entry
 #: model:ir.model,name:hr_work_entry.model_hr_work_entry_type
 msgid "HR Work Entry Type"
-msgstr "نوع قيد عمل الموارد البشرية "
+msgstr "نوع قيد عمل الموارد البشرية"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.work_entry_type_home_working
@@ -464,37 +480,37 @@ msgstr ""
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_employee__has_work_entries
 msgid "Has Work Entries"
-msgstr ""
+msgstr "يحتوي على قيود العمل"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.work_entry_type_home_working
 msgid "Home Working"
-msgstr ""
+msgstr "العمل من المنزل"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_ch_swissdec_hourly_wt
 msgid "Hourly Salary"
-msgstr ""
+msgstr "الأجر بالساعة"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_ch_swissdec_accident_wt_hourly
 msgid "Hourly Salary in case of Accident"
-msgstr ""
+msgstr "Hourly Salary in case of Accident"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_ch_swissdec_illness_wt_hourly
 msgid "Hourly Salary in case of Illness"
-msgstr ""
+msgstr "Hourly Salary in case of Illness"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_ch_swissdec_maternity_wt_hourly
 msgid "Hourly Salary in case of Maternity / Paternity Leave"
-msgstr ""
+msgstr "الأجر بالساعة في حال الذهاب في إجازة الوضع / إجازة الأبوة"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_ch_swissdec_military_wt_hourly
 msgid "Hourly Salary in case of Military Leave"
-msgstr ""
+msgstr "الأجر بالساعة في حال الذهاب في إجازة عسكرية"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_employee__id
@@ -513,7 +529,7 @@ msgstr "المُعرف"
 #: model:ir.model.fields,help:hr_work_entry.field_hr_work_entry_type__is_work
 msgid ""
 "If checked, the work entry is counted as work time in the working schedule"
-msgstr ""
+msgstr "إذا تم تحديده، يتم حساب قيد العمل كوقت عمل في جدول العمل"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,help:hr_work_entry.field_hr_work_entry_type__active
@@ -521,7 +537,7 @@ msgid ""
 "If the active field is set to false, it will allow you to hide the work "
 "entry type without removing it."
 msgstr ""
-"إذا تم تحويل قيمة الحقل النشط إلى خطأ، يمكنك إخفاء نوع قيد العمل دون إزالته. "
+"إذا تم تحويل قيمة الحقل النشط إلى خطأ، يمكنك إخفاء نوع قيد العمل دون إزالته."
 
 #. module: hr_work_entry
 #: model:ir.model.fields,help:hr_work_entry.field_hr_work_entry_type__amount_rate
@@ -549,7 +565,7 @@ msgstr ""
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_ch_swissdec_interruption_wt
 msgid "Interruption of Work"
-msgstr ""
+msgstr "مقاطعة العمل"
 
 #. module: hr_work_entry
 #. odoo-javascript
@@ -558,17 +574,19 @@ msgid ""
 "Invalid option: For fully flexible calendars, the work entry source cannot "
 "be 'Working Hours'."
 msgstr ""
+"خيار غير صالح: بالنسبة للتقويمات المرنة بالكامل، لا يمكن أن يكون مصدر قيد "
+"العمل هو 'ساعات العمل'."
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_user_work_entry_employee__is_checked
 msgid "Is Checked"
-msgstr ""
+msgstr "تم التحقق منه"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_employee__last_generation_date
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_version__last_generation_date
 msgid "Last Generation Date"
-msgstr ""
+msgstr "تاريخ آخر إنشاء"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_user_work_entry_employee__write_uid
@@ -589,65 +607,65 @@ msgstr "آخر تحديث في"
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_regeneration_wizard__latest_available_date_message
 msgid "Latest Available Date Message"
-msgstr ""
+msgstr "رسالة أبعد تاريخ ممكن"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_regeneration_wizard__latest_available_date
 msgid "Latest date"
-msgstr ""
+msgstr "أبعد تاريخ"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_ch_swissdec_lesson_wt
 msgid "Lesson Salary"
-msgstr ""
+msgstr "Lesson Salary"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_au_work_entry_type_long_service_leave
 msgid "Long Service Leave"
-msgstr ""
+msgstr "إجازة الخدمة الطويلة"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_long_sick
 msgid "Long Term Sick"
-msgstr ""
+msgstr "المرض لفترة طويلة"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.work_entry_type_long_leave
 msgid "Long Term Time Off"
-msgstr ""
+msgstr "الإجازة طويلة المدى"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_hk_work_entry_type_marriage_leave
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_id_work_entry_type_marriage_leave
 msgid "Marriage Leave"
-msgstr ""
+msgstr "إجازة الزواج"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_mx_work_entry_type_maternity_imss
 msgid "Maternity (IMSS)"
-msgstr ""
+msgstr "إجازة وضع (IMSS)"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_hk_work_entry_type_maternity_leave
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_id_work_entry_type_maternity_leave
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_sa_work_entry_type_maternity
 msgid "Maternity Leave"
-msgstr ""
+msgstr "إجازة وضع"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_hk_work_entry_type_maternity_leave_80
 msgid "Maternity Leave 80%"
-msgstr ""
+msgstr "Maternity Leave 80%"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_maternity
 msgid "Maternity Time Off"
-msgstr ""
+msgstr "إجازة وضع"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_sk_work_entry_type_maternity
 msgid "Maternity Time Off (Paid at 75%)"
-msgstr ""
+msgstr "Maternity Time Off (Paid at 75%)"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_user_work_entry_employee__user_id
@@ -657,7 +675,7 @@ msgstr "أنا"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_medical_assistance
 msgid "Medical Assistance"
-msgstr ""
+msgstr "المساعدة الطبية"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_mx_work_entry_type_care_children_with_cancer_imss
@@ -679,7 +697,7 @@ msgstr ""
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_ch_swissdec_monthly_wt
 msgid "Monthly Salary"
-msgstr ""
+msgstr "الراتب الشهري"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__name
@@ -695,7 +713,7 @@ msgstr ""
 #. module: hr_work_entry
 #: model_terms:ir.actions.act_window,help:hr_work_entry.hr_work_entry_action
 msgid "No data to display"
-msgstr ""
+msgstr "لا توجد بيانات لعرضها"
 
 #. module: hr_work_entry
 #. odoo-python
@@ -707,12 +725,12 @@ msgstr ""
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_form
 msgid "Note: Validated work entries cannot be modified."
-msgstr "ملاحظة: لا يمكن تعديل قيود العمل المصدقة. "
+msgstr "ملاحظة: لا يمكن تعديل قيود العمل المصدقة."
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_notice
 msgid "Notice (Unprovided)"
-msgstr ""
+msgstr "الإخطار (لم يتم تقديمها)"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.work_entry_type_overtime
@@ -727,27 +745,27 @@ msgstr ""
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_au_work_entry_type_other
 msgid "Other Paid Leave"
-msgstr ""
+msgstr "Other Paid Leave"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.hr_work_entry_type_out_of_contract
 msgid "Out of Contract"
-msgstr ""
+msgstr "خارج العقد"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_ch_swissdec_overtime_wt
 msgid "Overtime 100%"
-msgstr ""
+msgstr "الساعات الإضافية 100%"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_ch_swissdec_overtime_125_wt
 msgid "Overtime 125%"
-msgstr ""
+msgstr "الساعات الإضافية 125%"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.work_entry_type_overtime
 msgid "Overtime Hours"
-msgstr ""
+msgstr "الساعات الإضافية"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_us_work_entry_type_overtime
@@ -757,32 +775,32 @@ msgstr ""
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_au_work_entry_type_overtime_pto
 msgid "Overtime: Public Time Off"
-msgstr ""
+msgstr "Overtime: Public Time Off"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_au_work_entry_type_overtime_regular
 msgid "Overtime: Regular"
-msgstr ""
+msgstr "الساعات الإضافية: عادي"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_au_work_entry_type_overtime_saturday
 msgid "Overtime: Saturday"
-msgstr ""
+msgstr "الساعات الإضافية: السبت"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_au_work_entry_type_overtime_saturday_pto
 msgid "Overtime: Saturday & Public Time Off"
-msgstr ""
+msgstr "Overtime: Saturday & Public Time Off"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_au_work_entry_type_overtime_sunday
 msgid "Overtime: Sunday"
-msgstr ""
+msgstr "الساعات الإضافية: الأحد"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_au_work_entry_type_overtime_sunday_pto
 msgid "Overtime: Sunday & Public Time Off"
-msgstr ""
+msgstr "Overtime: Sunday & Public Time Off"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.work_entry_type_legal_leave
@@ -792,7 +810,7 @@ msgstr ""
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_au_work_entry_type_parental
 msgid "Paid Parental Leave"
-msgstr ""
+msgstr "Paid Parental Leave"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_eg_work_entry_type_paid_sick_leave
@@ -803,24 +821,24 @@ msgstr ""
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_au_work_entry_type_paid_time_off
 #: model:hr.work.entry.type,name:hr_work_entry.work_entry_type_legal_leave
 msgid "Paid Time Off"
-msgstr ""
+msgstr "أيام الإجازة المدفوعة"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_parental_time_off
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_sk_work_entry_type_parental_time_off
 msgid "Parental Time Off"
-msgstr ""
+msgstr "Parental Time Off"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_partial_incapacity
 msgid "Partial Incapacity (due to illness)"
-msgstr ""
+msgstr "Partial Incapacity (due to illness)"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_hk_work_entry_type_paternity_leave
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_id_work_entry_type_paternity_leave
 msgid "Paternity Leave"
-msgstr ""
+msgstr "إجازة الأبوة"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_hk_work_entry_type_paternity_leave_80
@@ -830,12 +848,12 @@ msgstr ""
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_paternity_legal
 msgid "Paternity Time Off (Legal)"
-msgstr ""
+msgstr "Paternity Time Off (Legal)"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_paternity_company
 msgid "Paternity Time Off (Paid by Company)"
-msgstr ""
+msgstr "Paternity Time Off (Paid by Company)"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__amount_rate
@@ -846,7 +864,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__code
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__code
 msgid "Payroll Code"
-msgstr ""
+msgstr "كود كشوف المرتبات"
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_regeneration_wizard
@@ -856,7 +874,7 @@ msgstr ""
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_au_work_entry_type_personal_leave
 msgid "Personal Leave"
-msgstr ""
+msgstr "إجازة شخصية"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_bank_holiday
@@ -865,12 +883,12 @@ msgstr ""
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_id_work_entry_type_public_holiday
 #: model:hr.work.entry.type,name:hr_work_entry.uae_public_holiday_entry_type
 msgid "Public Holiday"
-msgstr ""
+msgstr "إجازة رسمية"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_phc
 msgid "Public Holiday Compensation"
-msgstr ""
+msgstr "Public Holiday Compensation"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__amount_rate
@@ -880,23 +898,23 @@ msgstr ""
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_recovery_additional
 msgid "Recovery Additional Time"
-msgstr ""
+msgstr "Recovery Additional Time"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_recovery
 msgid "Recovery Bank Holiday"
-msgstr ""
+msgstr "Recovery Bank Holiday"
 
 #. module: hr_work_entry
 #: model:ir.model,name:hr_work_entry.model_hr_work_entry_regeneration_wizard
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_regeneration_wizard
 msgid "Regenerate Employee Work Entries"
-msgstr ""
+msgstr "إعادة إنشاء قيود عمل الموظفين"
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_regeneration_wizard
 msgid "Regenerate Work Entries"
-msgstr ""
+msgstr "إعادة إنشاء قيود العمل"
 
 #. module: hr_work_entry
 #. odoo-javascript
@@ -919,22 +937,22 @@ msgstr ""
 #. module: hr_work_entry
 #: model:ir.model,name:hr_work_entry.model_resource_calendar_leaves
 msgid "Resource Time Off Detail"
-msgstr "تفاصيل إجازة المَورد "
+msgstr "تفاصيل إجازة المَورد"
 
 #. module: hr_work_entry
 #: model:ir.model,name:hr_work_entry.model_resource_calendar
 msgid "Resource Working Time"
-msgstr ""
+msgstr "فترة عمل المَورِد"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_us_work_entry_type_retro_overtime
 msgid "Retro Overtime Hours"
-msgstr ""
+msgstr "Retro Overtime Hours"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_us_work_entry_type_retro_regular
 msgid "Retro Regular Pay Hours"
-msgstr ""
+msgstr "Retro Regular Pay Hours"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.work_entry_type_sick_leave
@@ -944,42 +962,42 @@ msgstr ""
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_ch_swissdec_accident_wt
 msgid "Salary in case of Accident"
-msgstr ""
+msgstr "Salary in case of Accident"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_ch_swissdec_illness_wt
 msgid "Salary in case of Illness"
-msgstr ""
+msgstr "Salary in case of Illness"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_ch_swissdec_maternity_wt
 msgid "Salary in case of Maternity / Paternity Leave"
-msgstr ""
+msgstr "الراتب في حال الذهاب في إجازة الوضع / إجازة الأبوة"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_ch_swissdec_military_wt
 msgid "Salary in case of Military Leave"
-msgstr ""
+msgstr "الراتب في حال الذهاب في إجازة عسكرية"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_regeneration_wizard__search_criteria_completed
 msgid "Search Criteria Completed"
-msgstr ""
+msgstr "البحث في الفئات المكتملة"
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_search
 msgid "Search Work Entry"
-msgstr "البحث عن قيد العمل "
+msgstr "البحث عن قيد العمل"
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_search
 msgid "Search Work Entry Type"
-msgstr "البحث عن نوع قيد العمل "
+msgstr "البحث عن نوع قيد العمل"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__sequence
 msgid "Sequence"
-msgstr "التسلسل "
+msgstr "تسلسل"
 
 #. module: hr_work_entry
 #. odoo-javascript
@@ -1006,22 +1024,22 @@ msgstr ""
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.uae_sick_leave_0_entry_type
 msgid "Sick Leave 0"
-msgstr ""
+msgstr "إجازة مرضية 0"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.uae_sick_leave_50_entry_type
 msgid "Sick Leave 50"
-msgstr ""
+msgstr "إجازة مرضية 50"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_hk_work_entry_type_sick_leave_80
 msgid "Sick Leave 80%"
-msgstr ""
+msgstr "Sick Leave 80%"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.work_entry_type_sick_leave
 msgid "Sick Time Off"
-msgstr ""
+msgstr "الإجازة المرضية"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_pl_work_entry_type_sick_leave
@@ -1031,22 +1049,22 @@ msgstr ""
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_part_sick
 msgid "Sick Time Off (Without Guaranteed Salary)"
-msgstr ""
+msgstr "الإجازات المرضية (بدون راتب مضمون)"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_sk_work_entry_type_sick_25
 msgid "Sick Time Off Day 1-3 (Paid at 25%)"
-msgstr ""
+msgstr "أيام الإجازة المرضية 1-3 (مدفوعة الأجر بنسبة 25%)"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_sk_work_entry_type_sick_55
 msgid "Sick Time Off Day 4-10 (Paid at 55%)"
-msgstr ""
+msgstr "أيام الإجازة المرضية 4-10 (مدفوعة الأجر بنسبة 55%)"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_sk_work_entry_type_sick_0
 msgid "Sick Time Off Day up to 52 weeks (Paid at 55% by social security)"
-msgstr ""
+msgstr "أيام الإجازة المرضية حتى 52 أسبوع (تدفع بنسبة 55% من الضمان الاجتماعي)"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_eg_work_entry_type_sick_leave_75
@@ -1061,28 +1079,28 @@ msgstr ""
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_simple_holiday_pay_variable_salary
 msgid "Simple Holiday Pay - Variable Salary"
-msgstr ""
+msgstr "مدفوعات الإجازات البسيطة - راتب متغير"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_lu_work_entry_type_situational_unemployment
 msgid "Situational Unemployment"
-msgstr ""
+msgstr "البطالة الظرفية"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_small_unemployment
 msgid "Small Unemployment (Brief Holiday)"
-msgstr ""
+msgstr "Small Unemployment (Brief Holiday)"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_solicitation_time_off
 msgid "Solicitation Time Off"
-msgstr ""
+msgstr "Solicitation Time Off"
 
 #. module: hr_work_entry
 #. odoo-javascript
 #: code:addons/hr_work_entry/static/src/xml/work_entry_templates.xml:0
 msgid "Solve conflicts first"
-msgstr "حل التعارض أولاً "
+msgstr "حل التعارض أولاً"
 
 #. module: hr_work_entry
 #. odoo-javascript
@@ -1107,17 +1125,17 @@ msgstr ""
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__state
 msgid "State"
-msgstr "الحالة "
+msgstr "الولاية"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_hk_work_entry_type_statutory_holiday
 msgid "Statutory Holiday"
-msgstr ""
+msgstr "إجازة قانونية"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_strike
 msgid "Strike"
-msgstr ""
+msgstr "شطب"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,help:hr_work_entry.field_hr_work_entry_type__country_code
@@ -1125,6 +1143,8 @@ msgid ""
 "The ISO country code in two chars. \n"
 "You can use this field for quick search."
 msgstr ""
+"كود الدولة حسب المعيار الدولي أيزو المكون من حرفين.\n"
+"يمكنك استخدام هذا الحقل لإجراء بحث سريع."
 
 #. module: hr_work_entry
 #. odoo-python
@@ -1134,12 +1154,15 @@ msgid ""
 "be <= '%(latest_available_date)s', which correspond to the generated work "
 "entries time interval."
 msgstr ""
+"يجب أن يكون تاريخ البدء >= '%(earliest_available_date)s' وتاريخ الانتهاء <= "
+"'%(latest_available_date)s'، والتي تتناسب مع الفترات الزمنية لقيود العمل "
+"المنشأة."
 
 #. module: hr_work_entry
 #. odoo-python
 #: code:addons/hr_work_entry/models/hr_work_entry_type.py:0
 msgid "The same code cannot be associated to multiple work entry types (%s)"
-msgstr ""
+msgstr "لا يمكن أن يكون الرمز ذاته مرتبطاً بعدة أنواع قيود عمل (%s)"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,help:hr_work_entry.field_hr_work_entry__display_code
@@ -1151,23 +1174,23 @@ msgstr ""
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_form
 msgid "This work entry cannot be validated. The work entry type is undefined."
-msgstr ""
+msgstr "تعذر تصديق قيد العمل هذا. نوع قيد العمل غير محدد."
 
 #. module: hr_work_entry
 #. odoo-python
 #: code:addons/hr_work_entry/models/hr_work_entry.py:0
 msgid "This work entry is validated. You can't delete it."
-msgstr ""
+msgstr "لقد تم تصديق قيد العمل هذا، ولذلك، لا يمكنك حذفه."
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__is_leave
 msgid "Time Off"
-msgstr ""
+msgstr "الإجازات"
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_form
 msgid "Time Off Options"
-msgstr "خيارات الإجازة "
+msgstr "خيارات الإجازة"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_regeneration_wizard__date_to
@@ -1177,7 +1200,7 @@ msgstr "إلى"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_training
 msgid "Training"
-msgstr ""
+msgstr "التدريب"
 
 #. module: hr_work_entry
 #: model_terms:ir.actions.act_window,help:hr_work_entry.hr_work_entry_action
@@ -1185,6 +1208,7 @@ msgid ""
 "Try to add some records, or make sure that there is no active filter in the "
 "search bar."
 msgstr ""
+"جرب إضافة بعض السجلات، أو تأكد من أنه لا يوجد عامل تصفية نشط في شريط البحث."
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_search
@@ -1206,58 +1230,58 @@ msgstr "غير محدد"
 #. odoo-python
 #: code:addons/hr_work_entry/models/hr_work_entry.py:0
 msgid "Undefined Type"
-msgstr "نوع غير محدد "
+msgstr "نوع غير محدد"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_unjustified_reason
 msgid "Unjustified Reason"
-msgstr ""
+msgstr "سبب غير موضح"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.work_entry_type_unpaid_leave
 msgid "Unpaid"
-msgstr ""
+msgstr "غير مدفوعة"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_ch_swissdec_unpaid_wt
 msgid "Unpaid Salary"
-msgstr ""
+msgstr "راتب غير مدفوع"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_unpredictable
 msgid "Unpredictable Reason"
-msgstr ""
+msgstr "سبب غير متوقع"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_au_work_entry_type_termination
 msgid "Unused Leave on Termination"
-msgstr ""
+msgstr "Unused Leave on Termination"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,help:hr_work_entry.field_hr_work_entry__external_code
 #: model:ir.model.fields,help:hr_work_entry.field_hr_work_entry_type__external_code
 msgid "Use this code to export your data to a third party"
-msgstr ""
+msgstr "استخدم هذا الكود لتصدير بياناتك إلى طرف خارجي"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_regeneration_wizard__valid
 msgid "Valid"
-msgstr ""
+msgstr "صالح"
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_search
 msgid "Validated"
-msgstr "تم التصديق "
+msgstr "تم التصديق"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_hk_work_entry_type_weekend
 msgid "Weekend"
-msgstr ""
+msgstr "نهاية الأسبوع"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_work_accident
 msgid "Work Accident"
-msgstr ""
+msgstr "حادثة عمل"
 
 #. module: hr_work_entry
 #: model:ir.model,name:hr_work_entry.model_resource_calendar_attendance
@@ -1267,12 +1291,12 @@ msgstr "تفاصيل العمل"
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_pivot
 msgid "Work Entries"
-msgstr "قيود العمل "
+msgstr "قيود العمل"
 
 #. module: hr_work_entry
 #: model:ir.model,name:hr_work_entry.model_hr_user_work_entry_employee
 msgid "Work Entries Employees"
-msgstr "موظفي قيود العمل "
+msgstr "موظفي قيود العمل"
 
 #. module: hr_work_entry
 #: model:ir.actions.act_window,name:hr_work_entry.hr_work_entry_action
@@ -1280,25 +1304,25 @@ msgstr "موظفي قيود العمل "
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_calendar
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_form
 msgid "Work Entry"
-msgstr "قيد العمل "
+msgstr "قيد العمل"
 
 #. module: hr_work_entry
 #: model:ir.actions.act_window,name:hr_work_entry.hr_work_entry_regeneration_wizard_action
 msgid "Work Entry Regeneration"
-msgstr ""
+msgstr "إعادة إنشاء قيد العمل"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_employee__work_entry_source
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_version__work_entry_source
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__work_entry_source
 msgid "Work Entry Source"
-msgstr ""
+msgstr "مصدر قيد العمل"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_employee__work_entry_source_calendar_invalid
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_version__work_entry_source_calendar_invalid
 msgid "Work Entry Source Calendar Invalid"
-msgstr ""
+msgstr "تقويم مصدر قيد العمل غير صالح"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__work_entry_type_id
@@ -1307,37 +1331,37 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_form
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.resource_calendar_leaves_view_search_inherit
 msgid "Work Entry Type"
-msgstr "نوع قيد العمل "
+msgstr "نوع قيد العمل"
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_form
 msgid "Work Entry Type Name"
-msgstr "اسم نوع قيد العمل "
+msgstr "اسم نوع قيد العمل"
 
 #. module: hr_work_entry
 #: model:ir.actions.act_window,name:hr_work_entry.hr_work_entry_type_action
 msgid "Work Entry Types"
-msgstr "أنواع قيد العمل "
+msgstr "أنواع قيد العمل"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_mx_work_entry_type_work_risk_imss
 msgid "Work risk (IMSS)"
-msgstr ""
+msgstr "مخاطر العمل (IMSS)"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_au_work_entry_type_compensation
 msgid "Workers Compensation"
-msgstr ""
+msgstr "تعويضات العمال"
 
 #. module: hr_work_entry
 #: model:ir.model.fields.selection,name:hr_work_entry.selection__hr_version__work_entry_source__calendar
 msgid "Working Schedule"
-msgstr ""
+msgstr "جدول العمل"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__is_work
 msgid "Working Time"
-msgstr ""
+msgstr "وقت العمل"
 
 #. module: hr_work_entry
 #. odoo-python
@@ -1346,12 +1370,14 @@ msgid ""
 "You can't change the Country of this work entry type cause it's currently "
 "used by the system. You need to delete related working entries first."
 msgstr ""
+"لا يمكنك تغيير الدولة لنوع قيد العمل هذا لأنه مستخدم حالياً من قِبَل النظام. "
+"عليك أولاً حذف قيود العمل ذات الصلة."
 
 #. module: hr_work_entry
 #. odoo-python
 #: code:addons/hr_work_entry/models/hr_work_entry_type.py:0
 msgid "You can't change the country of this specific work entry type."
-msgstr ""
+msgstr "لا يمكنك تغيير الدولة لنوع قيد العمل هذا بالتحديد."
 
 #. module: hr_work_entry
 #. odoo-python
@@ -1368,12 +1394,12 @@ msgstr ""
 #. module: hr_work_entry
 #: model:ir.model.constraint,message:hr_work_entry.constraint_hr_user_work_entry_employee_user_id_employee_id_unique
 msgid "You cannot have the same employee twice."
-msgstr "لا يمكن أن يكون لديك نفس الموظف مرتين "
+msgstr "لا يمكن أن يكون لديك نفس الموظف مرتين"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_youth_time_off
 msgid "Youth Time Off"
-msgstr ""
+msgstr "Youth Time Off"
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_calendar_multi_create_form

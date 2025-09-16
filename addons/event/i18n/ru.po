@@ -1,23 +1,26 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* event
+# * event
 #
 # Translators:
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-09-11 13:55+0000\n"
-"PO-Revision-Date: 2024-01-30 15:14+0400\n"
-"Last-Translator: \n"
-"Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
+"PO-Revision-Date: 2025-09-16 04:40+0000\n"
+"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"Language-Team: Russian <https://translate.odoo.com/projects/odoo-19/event/ru/"
+">\n"
 "Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
-"n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || "
-"(n%100>=11 && n%100<=14)? 2 : 3);\n"
+"n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || ("
+"n%100>=11 && n%100<=14)? 2 : 3);\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_question__event_count
@@ -108,13 +111,13 @@ msgid ""
 "'Badge - %s - %s' % ((object.event_id.name or 'Event').replace('/',''), "
 "(object.name or '').replace('/',''))"
 msgstr ""
-"'Бейдж - %s - %s' % ((object.event_id.name or 'Событие').replace('/',''), "
-"(object.name or '').replace('/',''))"
+"'Бейдж - %s - %s' % ((object.event_id.name or 'Event').replace('/',''), ("
+"object.name or '').replace('/',''))"
 
 #. module: event
 #: model:ir.actions.report,print_report_name:event.action_report_event_event_badge
 msgid "'Badge - %s' % (object.name or 'Event').replace('/','')"
-msgstr "'Badge - %s' % (object.name or 'Событие').replace('/','')"
+msgstr "'Бейдж - %s' % (object.name or 'Event').replace('/','')"
 
 #. module: event
 #: model:ir.actions.report,print_report_name:event.action_report_event_registration_full_page_ticket
@@ -123,12 +126,12 @@ msgid ""
 "'Event').replace('/',''), (object.name or '').replace('/',''))"
 msgstr ""
 "'Билет на всю страницу - %s - %s' % ((object.event_id.name or "
-"'Событие').replace('/',''), (object.name or '').replace('/',''))"
+"'Event').replace('/',''), (object.name or '').replace('/',''))"
 
 #. module: event
 #: model:ir.actions.report,print_report_name:event.action_report_event_event_full_page_ticket
 msgid "'Full Page Ticket - %s' % (object.name or 'Event').replace('/','')"
-msgstr "'Full Page Ticket - %s' % (object.name or 'Событие').replace('/','')"
+msgstr "'Билет на всю страницу - %s' % (object.name or 'Event').replace('/','')"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_report_full_page_ticket_layout
@@ -219,11 +222,11 @@ msgid ""
 "contribute, there is a free ticket, therefore, catering and access to "
 "evening events aren't included."
 msgstr ""
-"<b>Все мероприятия открыты для всех желающих!</b> <br>Попросим внести плату "
-"за участие в размере 49,50 € за 3 дня (кофе-брейки, кейтеринг, напитки и "
-"удивительный концерт и пивная вечеринка).<br> Для тех, кто не хочет вносить "
-"свой вклад, билет бесплатный, поэтому питание и доступ к вечерним "
-"мероприятиям не включены в стоимость."
+"<b>Мероприятие открыто для широкой публики!</b> <br>Мы просим взнос в "
+"размере 49,50 € за участие в мероприятии в течение трех дней (перерывы на "
+"кофе, питание, напитки, концерт-сюрприз и вечеринка с пивом).<br>  Также "
+"есть бесплатные билеты – однако питание и доступ к вечерним мероприятиям в "
+"них не включены."
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -236,6 +239,8 @@ msgid ""
 "<br/>\n"
 "                                            <span class=\"me-1\">from</span>"
 msgstr ""
+"<br/>\n"
+"                                            <span class=\"me-1\">с</span>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_report_template_full_page_ticket
@@ -243,6 +248,8 @@ msgid ""
 "<br/>\n"
 "                                            <span class=\"me-1\">to</span>"
 msgstr ""
+"<br/>\n"
+"                                            <span class=\"me-1\">до</span>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
@@ -320,7 +327,7 @@ msgstr "<i class=\"fa fa-ticket\" title=\"Ticket type\"/>"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_kanban
 msgid "<i class=\"oi oi-arrow-right me-2\" title=\"End date\"/>"
-msgstr ""
+msgstr "<i class=\"oi oi-arrow-right me-2\" title=\"Дата окончания\"/>"
 
 #. module: event
 #: model_terms:event.event,description:event.event_2
@@ -328,13 +335,13 @@ msgid ""
 "<span class=\"badge text-bg-secondary o_wevent_badge float-end\">SPEAKER</"
 "span>"
 msgstr ""
-"<span class=\"badge text-bg-secondary o_wevent_badge float-end\">SPEAKER</"
-"span>"
+"<span class=\"badge text-bg-secondary o_wevent_badge float-end\""
+">СПИКЕР</span>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_report_template_full_page_ticket
 msgid "<span class=\"me-1\">to</span>"
-msgstr ""
+msgstr "<span class=\"me-1\">по</span>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_report_template_badge_card
@@ -364,7 +371,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:event.event_report_template_badge_card
 #: model_terms:ir.ui.view,arch_db:event.event_report_template_full_page_ticket
 msgid "<span>John Doe</span>"
-msgstr "<span>Неизвестный</span>"
+msgstr "<span>Джон Доу</span>"
 
 #. module: event
 #: model:mail.template,body_html:event.event_registration_mail_template_badge
@@ -1776,7 +1783,7 @@ msgstr "Анонсировано"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_question_answer__name
 msgid "Answer"
-msgstr ""
+msgstr "Ответ"
 
 #. module: event
 #: model:ir.actions.act_window,name:event.action_event_registration_report
@@ -1786,7 +1793,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:event.event_registration_answer_view_tree
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 msgid "Answer Breakdown"
-msgstr ""
+msgstr "Разбивка ответов"
 
 #. module: event
 #. odoo-javascript
@@ -1828,7 +1835,7 @@ msgstr "Как команда, мы рады внести свой вклад в
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_question__once_per_order
 msgid "Ask once per order"
-msgstr ""
+msgstr "Спрашивайте один раз за заказ"
 
 #. module: event
 #: model_terms:event.event,description:event.event_2
@@ -1838,11 +1845,11 @@ msgid ""
 "founded TinyERP. This was the first phase of OpenERP which would later "
 "became Odoo, the most installed open-source business software worldwide."
 msgstr ""
-"Всего в 13 лет John DOE уже начал разрабатывать свои первые бизнес-"
-"приложения для клиентов. Освоив гражданское строительство, он основал "
-"компанию TinyERP. Это была первая фаза OpenERP, которая впоследствии стала "
-"Odoo, самым устанавливаемым бизнес-приложением с открытым исходным кодом во "
-"всем мире."
+"В возрасте всего 13 лет Джон Доу уже начал разрабатывать свои первые бизнес-"
+"приложения для клиентов. Получив образование в области гражданского "
+"строительства, он основал TinyERP. Это была первая фаза OpenERP, которая "
+"впоследствии стала Odoo, самым устанавливаемым в мире программным "
+"обеспечением для бизнеса с открытым исходным кодом."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__message_attachment_count
@@ -1883,7 +1890,7 @@ msgstr "Участник"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__registration_answer_ids
 msgid "Attendee Answers"
-msgstr ""
+msgstr "Ответы слушателей"
 
 #. module: event
 #: model:ir.actions.report,name:event.action_report_event_event_attendee_list
@@ -1899,7 +1906,7 @@ msgstr "Имя Участника"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__registration_answer_choice_ids
 msgid "Attendee Selection Answers"
-msgstr ""
+msgstr "Ответы по выбору участников"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.attendee_list
@@ -2075,7 +2082,7 @@ msgstr "Отменен"
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
 msgid "Cancelled registration"
-msgstr ""
+msgstr "Регистрация отменена"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_tag__category_id
@@ -2109,6 +2116,7 @@ msgid ""
 "Choose a template to auto-fill tickets, communications, descriptions and "
 "other fields."
 msgstr ""
+"Выберите шаблон для автозаполнения билетов, писем, описаний и других полей."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__color
@@ -2124,7 +2132,7 @@ msgstr "Цветовой индекс"
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.action_event_registration_report
 msgid "Come back once you have registrations to overview answers."
-msgstr ""
+msgstr "Приходите, как только зарегистрируетесь, чтобы посмотреть ответы."
 
 #. module: event
 #: model_terms:res.partner,website_description:event.res_partner_event_1
@@ -2204,7 +2212,7 @@ msgstr "Конфигурация"
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
 msgid "Confirm attendance?"
-msgstr ""
+msgstr "Подтвердить участие?"
 
 #. module: event
 #: model:ir.model,name:event.model_res_partner
@@ -2215,7 +2223,7 @@ msgstr "Контакты"
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
 msgid "Continue"
-msgstr ""
+msgstr "Продолжить"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__country_id
@@ -2270,7 +2278,7 @@ msgstr "Создайте шаблон события"
 #: model:ir.model.fields,field_description:event.field_event_type_mail__create_uid
 #: model:ir.model.fields,field_description:event.field_event_type_ticket__create_uid
 msgid "Created by"
-msgstr "Создано"
+msgstr "Создано:"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__create_date
@@ -2290,7 +2298,7 @@ msgstr "Создано"
 #: model:ir.model.fields,field_description:event.field_event_type_mail__create_date
 #: model:ir.model.fields,field_description:event.field_event_type_ticket__create_date
 msgid "Created on"
-msgstr "Создано"
+msgstr "Дата создания:"
 
 #. module: event
 #: model:event.tag,name:event.event_tag_category_2_tag_1
@@ -2307,7 +2315,7 @@ msgstr "Дата"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__event_date_range
 msgid "Date Range"
-msgstr ""
+msgstr "Диапазон дат"
 
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_mail__interval_unit__days
@@ -2391,7 +2399,7 @@ msgstr "Отображение спонсоров и участников на �
 #: model:ir.model.fields,field_description:event.field_event_event__date_tz
 #: model:ir.model.fields,field_description:event.field_event_slot__date_tz
 msgid "Display Timezone"
-msgstr ""
+msgstr "Отображать часовой пояс"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__sequence
@@ -2421,7 +2429,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
 msgid "Edit"
-msgstr ""
+msgstr "Редактировать"
 
 #. module: event
 #: model:event.question,title:event.event_question_email
@@ -2545,7 +2553,7 @@ msgstr "Планировщики почтового события"
 #. odoo-javascript
 #: code:addons/event/static/src/template_reference_field/field_event_mail_template_reference.js:0
 msgid "Event Mail Template Reference"
-msgstr ""
+msgstr "Ссылка на шаблон письма для мероприятия"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_event_view_activity
@@ -2567,12 +2575,12 @@ msgstr "Организатор мероприятия"
 #: model:ir.actions.act_window,name:event.event_question_action
 #: model:ir.model,name:event.model_event_question
 msgid "Event Question"
-msgstr ""
+msgstr "Вопрос о событии"
 
 #. module: event
 #: model:ir.model,name:event.model_event_question_answer
 msgid "Event Question Answer"
-msgstr ""
+msgstr "Событие Вопрос Ответ"
 
 #. module: event
 #: model:ir.ui.menu,name:event.event_question_menu
@@ -2590,13 +2598,13 @@ msgstr "Регистрация событий"
 #. module: event
 #: model:ir.model,name:event.model_event_registration_answer
 msgid "Event Registration Answer"
-msgstr ""
+msgstr "Регистрация мероприятия Ответ"
 
 #. module: event
 #. odoo-python
 #: code:addons/event/controllers/main.py:0
 msgid "Event Registrations"
-msgstr ""
+msgstr "Регистрация на мероприятия"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__event_user_id
@@ -2764,7 +2772,7 @@ msgstr "Планировщики почты событий"
 #: model_terms:ir.ui.view,arch_db:event.event_stage_view_form
 #: model_terms:ir.ui.view,arch_db:event.event_stage_view_tree
 msgid "Events Stage"
-msgstr "Сцена событий"
+msgstr "Этапы событий"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_stage__pipe_end
@@ -2790,12 +2798,12 @@ msgid ""
 "source the features of the new version!"
 msgstr ""
 "Каждый год мы приглашаем наше сообщество, партнеров и конечных пользователей "
-"прийти и встретиться с нами! Это идеальное мероприятие, чтобы собраться "
-"вместе и представить новые возможности, дорожную карту будущих версий, "
-"достижения программного обеспечения, семинары, тренинги и т.д..\n"
-"            Это мероприятие также дает возможность продемонстрировать "
-"примеры, методологию или разработки наших партнеров. Будьте там и узнайте о "
-"возможностях новой версии прямо из первоисточника!"
+"на встречу! Это идеальная возможность собраться вместе и представить новые "
+"функции, дорожную карту будущих версий, достижения в развитии продукта, "
+"провести мастер-классы и обучающие сессии и многое другое...\n"
+"            Также это шанс представить кейсы наших партнеров, их методологию "
+"и разработки. Присоединяйтесь и узнайте о возможностях новых функций "
+"напрямую от разработчиков!"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -2832,6 +2840,8 @@ msgid ""
 "Finished events. Odoo will automatically move them to this stage once their "
 "end date has passed."
 msgstr ""
+"Завершенные мероприятия. Odoo автоматически переместит их на этот этап после "
+"наступления даты окончания."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_stage__fold
@@ -2960,7 +2970,7 @@ msgstr "Общий вход"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__general_question_ids
 msgid "General Questions"
-msgstr ""
+msgstr "Общие вопросы"
 
 #. module: event
 #: model:event.event,subtitle:event.event_0
@@ -3007,7 +3017,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
 msgid "Guest #"
-msgstr ""
+msgstr "Гость #"
 
 #. module: event
 #: model_terms:res.partner,website_description:event.res_partner_event_1
@@ -3041,7 +3051,7 @@ msgstr "Хоккейный турнир"
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
 msgid "Home"
-msgstr ""
+msgstr "Главная"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_slot_form
@@ -3057,22 +3067,22 @@ msgstr "Часов"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_report_template_foldable_badge
 msgid "How to Fold (1)"
-msgstr ""
+msgstr "Как складывать (1)"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_report_template_foldable_badge
 msgid "How to Fold (2)"
-msgstr ""
+msgstr "Как складывать (2)"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_report_template_foldable_badge
 msgid "How to Fold (3)"
-msgstr ""
+msgstr "Как складывать (3)"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_report_template_foldable_badge
 msgid "How to Fold (4)"
-msgstr ""
+msgstr "Как складывать (4)"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__id
@@ -3186,6 +3196,8 @@ msgid ""
 "Indicates the timezone in which the event dates/times will be displayed on "
 "the website."
 msgstr ""
+"Указывает часовой пояс, в котором даты и время мероприятия будут "
+"отображаться на сайте."
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_mail__interval_type
@@ -3203,7 +3215,7 @@ msgstr "Вставка динамических карт Google в шаблон�
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_barcode.xml:0
 msgid "Install"
-msgstr ""
+msgstr "Установить"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__interval_nbr
@@ -3300,7 +3312,7 @@ msgstr "Джон ДОУ"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_report_template_foldable_badge
 msgid "John Doe"
-msgstr ""
+msgstr "Иван Иванов"
 
 #. module: event
 #: model_terms:event.event,description:event.event_2
@@ -3351,7 +3363,7 @@ msgstr "Последние 30 дней"
 #: model:ir.model.fields,field_description:event.field_event_mail__last_registration_id
 #: model:ir.model.fields,field_description:event.field_event_mail_slot__last_registration_id
 msgid "Last Attendee"
-msgstr ""
+msgstr "Последний участник"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__error_datetime
@@ -3376,7 +3388,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:event.field_event_type_mail__write_uid
 #: model:ir.model.fields,field_description:event.field_event_type_ticket__write_uid
 msgid "Last Updated by"
-msgstr "Последнее обновление"
+msgstr "Последнее обновление:"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__write_date
@@ -3396,7 +3408,7 @@ msgstr "Последнее обновление"
 #: model:ir.model.fields,field_description:event.field_event_type_mail__write_date
 #: model:ir.model.fields,field_description:event.field_event_type_ticket__write_date
 msgid "Last Updated on"
-msgstr "Последнее обновление"
+msgstr "Дата последнего обновления:"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_search
@@ -3509,12 +3521,12 @@ msgstr "Управление и публикация расписания с т�
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 #: model_terms:ir.ui.view,arch_db:event.view_event_type_form
 msgid "Mandatory"
-msgstr ""
+msgstr "Обязательное"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_question__is_mandatory_answer
 msgid "Mandatory Answer"
-msgstr ""
+msgstr "Обязательный ответ"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_report_full_page_ticket_layout
@@ -3569,7 +3581,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:event.field_event_registration__utm_medium_id
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
 msgid "Medium"
-msgstr "Средний"
+msgstr "Канал"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__message_has_error
@@ -3665,7 +3677,7 @@ msgstr "Следующий Тип Мероприятия"
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.action_event_registration_report
 msgid "No Answers yet!"
-msgstr ""
+msgstr "Ответов пока нет!"
 
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.event_registration_action
@@ -3793,7 +3805,7 @@ msgstr "И снова мы собрали самые легендарные гр
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 #: model_terms:ir.ui.view,arch_db:event.view_event_type_form
 msgid "Once per Order"
-msgstr ""
+msgstr "Один раз за заказ"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_question_view_search
@@ -3814,7 +3826,7 @@ msgstr "Онлайн"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_kanban
 msgid "Online Event"
-msgstr ""
+msgstr "Онлайн-мероприятие"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__event_url
@@ -3834,13 +3846,15 @@ msgstr "Онлайн-билет"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 msgid "Online if not set"
-msgstr ""
+msgstr "Онлайн, если не указано иное"
 
 #. module: event
 #. odoo-javascript
 #: code:addons/event/static/src/js/tours/event_tour.js:0
 msgid "Open date range picker.<br/>Pick a Start and End date for your event."
 msgstr ""
+"Откройте выбор диапазона дат.<br/>Укажите дату начала и окончания "
+"мероприятия."
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -3917,7 +3931,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_barcode.js:0
 msgid "Please, Scan again!"
-msgstr ""
+msgstr "Пожалуйста, просканируйте еще раз!"
 
 #. module: event
 #: model_terms:event.event,description:event.event_2
@@ -3966,13 +3980,13 @@ msgstr "QR Код"
 #: model_terms:ir.ui.view,arch_db:event.event_question_view_form
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 msgid "Question"
-msgstr ""
+msgstr "Вопрос"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_question__question_type
 #: model:ir.model.fields,field_description:event.field_event_registration_answer__question_type
 msgid "Question Type"
-msgstr ""
+msgstr "Тип вопроса"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__question_ids
@@ -3981,7 +3995,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:event.view_event_registration_form
 #: model_terms:ir.ui.view,arch_db:event.view_event_type_form
 msgid "Questions"
-msgstr ""
+msgstr "Вопросы"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings__module_website_event_track_quiz
@@ -4171,7 +4185,7 @@ msgstr "Ошибка доставки SMS"
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_barcode.xml:0
 msgid "Scan or Tap"
-msgstr ""
+msgstr "Отсканировать или приложить"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
@@ -4206,7 +4220,7 @@ msgstr "Запланированное время"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__mail_registration_ids
 msgid "Scheduler Emails"
-msgstr ""
+msgstr "Планировщик e-mail писем"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_question_view_search
@@ -4233,12 +4247,12 @@ msgstr "Выберите участника"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_registration_answer_view_tree
 msgid "Selected answer"
-msgstr ""
+msgstr "Выбранный ответ"
 
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_question__question_type__simple_choice
 msgid "Selection"
-msgstr ""
+msgstr "Выбор"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
@@ -4248,7 +4262,7 @@ msgstr "Продавайте билеты на своем сайте"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Sell tickets with Point of Sale"
-msgstr ""
+msgstr "Продавать билеты через POS"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
@@ -4387,7 +4401,7 @@ msgstr "Источник"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__specific_question_ids
 msgid "Specific Questions"
-msgstr ""
+msgstr "Конкретные вопросы"
 
 #. module: event
 #: model:event.tag,name:event.event_tag_category_2_tag_3
@@ -4456,7 +4470,7 @@ msgstr "Статическая карта Url является действит�
 #: model_terms:ir.ui.view,arch_db:event.event_question_view_list
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 msgid "Stats"
-msgstr ""
+msgstr "Статистика"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__state
@@ -4482,12 +4496,12 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
 msgid "Successfully registered!"
-msgstr ""
+msgstr "Вы успешно зарегистрированы!"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration_answer__value_answer_id
 msgid "Suggested answer"
-msgstr ""
+msgstr "Предлагаемый ответ"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_tag__color
@@ -4528,12 +4542,12 @@ msgstr "Шаблон"
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_question__question_type__text_box
 msgid "Text Input"
-msgstr ""
+msgstr "Ввод текста"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration_answer__value_text_box
 msgid "Text answer"
-msgstr ""
+msgstr "Текстовый ответ"
 
 #. module: event
 #: model:event.event,subtitle:event.event_1
@@ -4675,7 +4689,7 @@ msgstr ""
 #. module: event
 #: model:ir.model.constraint,message:event.constraint_event_registration_answer_value_check
 msgid "There must be a suggested value or a text value."
-msgstr ""
+msgstr "Должно быть предложенное значение или текстовое значение."
 
 #. module: event
 #. odoo-python
@@ -4760,7 +4774,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
 msgid "This ticket is for another event!"
-msgstr ""
+msgstr "Этот билет для другого мероприятия!"
 
 #. module: event
 #. odoo-javascript
@@ -4797,7 +4811,7 @@ msgstr "Тип заявки"
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
 msgid "Ticket already scanned!"
-msgstr ""
+msgstr "Билет уже отсканирован!"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.attendee_list
@@ -4837,12 +4851,12 @@ msgstr "Билеты можно распечатать или отсканиро
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings__module_pos_event
 msgid "Tickets with PoS"
-msgstr ""
+msgstr "Билеты через модуль POS"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings__module_event_sale
 msgid "Tickets with Sale"
-msgstr ""
+msgstr "Билеты через модуль Продажи"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_type__default_timezone
@@ -4854,7 +4868,7 @@ msgstr "Часовой пояс"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_question__title
 msgid "Title"
-msgstr ""
+msgstr "Заголовок"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_slot_tree
@@ -4970,7 +4984,7 @@ msgstr "Разберитесь в различных модулях;"
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
 msgid "Undo"
-msgstr ""
+msgstr "Отменить"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__interval_unit
@@ -5117,7 +5131,7 @@ msgstr "Что нового?"
 msgid ""
 "When the event is scheduled to take place (expressed in your local timezone "
 "on the form view)."
-msgstr ""
+msgstr "Когда должно пройти мероприятие (укажите в вашем часовом поясе)."
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__is_ongoing
@@ -5149,7 +5163,7 @@ msgstr "Вы действительно одни из лучших."
 #: code:addons/event/models/event_question.py:0
 msgid ""
 "You cannot change the question type of a question that already has answers!"
-msgstr ""
+msgstr "Вы не можете изменить тип вопроса, на который уже есть ответы!"
 
 #. module: event
 #. odoo-python
@@ -5170,7 +5184,7 @@ msgstr ""
 #: code:addons/event/models/event_question_answer.py:0
 msgid ""
 "You cannot delete an answer that has already been selected by attendees."
-msgstr ""
+msgstr "Вы не можете удалить ответ, который уже был выбран участниками."
 
 #. module: event
 #: model:mail.template,subject:event.event_registration_mail_template_badge
@@ -5200,7 +5214,7 @@ msgstr "например, \"Лазурный интерьер\""
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_question_view_form
 msgid "e.g. \"Do you have any diet restrictions?\""
-msgstr ""
+msgstr "например, \"Есть ли у вас ограничения в питании?\""
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_stage_view_form
@@ -5315,7 +5329,7 @@ msgstr "завтра"
 #. module: event
 #: model:mail.template,subject:event.event_reminder
 msgid "{{ object.event_id.name }}: {{ object.event_date_range }}"
-msgstr ""
+msgstr "{{ object.event_id.name }}: {{ object.event_date_range }}"
 
 #~ msgid "- \"%(event_name)s\": Missing %(nb_too_many)i seats."
 #~ msgstr "- \"%(event_name)s\": Пропавшие места %(nb_too_many)i."

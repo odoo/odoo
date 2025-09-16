@@ -1,6 +1,6 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* hr_work_entry
+# * hr_work_entry
 #
 # Translators:
 # Jaroslav Helemik Nemec <nemec@helemik.cz>, 2022
@@ -10,21 +10,23 @@
 # Jiří Podhorecký, 2022
 # Michal Veselý <michal@veselyberanek.net>, 2023
 # Martin Trigaux, 2023
-#
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-09-11 13:57+0000\n"
-"PO-Revision-Date: 2022-09-22 05:52+0000\n"
-"Last-Translator: Martin Trigaux, 2023\n"
-"Language-Team: Czech (https://app.transifex.com/odoo/teams/41243/cs/)\n"
+"PO-Revision-Date: 2025-09-16 10:04+0000\n"
+"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"Language-Team: Czech <https://translate.odoo.com/projects/odoo-19/"
+"hr_work_entry/cs/>\n"
 "Language: cs\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n "
 "<= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,help:hr_work_entry.field_hr_employee__work_entry_source
@@ -42,6 +44,16 @@ msgid ""
 "planning. (requires Planning app)\n"
 "    "
 msgstr ""
+"\n"
+"        Definuje zdroj pro generování pracovních záznamů\n"
+"\n"
+"        Pracovní plán: Pracovní záznamy budou generovány z pracovní doby "
+"níže.\n"
+"        Docházka: Pracovní záznamy budou generovány z  docházky zaměstnance. "
+"(vyžaduje aplikaci Docházka)\n"
+"        Plánování: Pracovní záznamy budou generovány z plánování "
+"zaměstnance. (vyžaduje aplikaci Plánování)\n"
+"    "
 
 #. module: hr_work_entry
 #. odoo-python
@@ -73,7 +85,7 @@ msgstr ""
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_regeneration_wizard
 msgid "<i class=\"fa fa-info-circle me-1\" title=\"Hint\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-info-circle me-1\" title=\"Nápověda\"/>"
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_employee_view_form
@@ -89,11 +101,13 @@ msgid ""
 "<span class=\"text-muted\">Warning: The work entry regeneration will delete "
 "all manual changes on the selected period.</span>"
 msgstr ""
+"<span class=\"text-muted\">Varování: Regenerace pracovního záznamu vymaže "
+"všechny ruční změny ve zvoleném období.</span>"
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_form
 msgid "<span>Hours</span>"
-msgstr ""
+msgstr "<span>Hodin</span>"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_user_work_entry_employee__active
@@ -127,7 +141,7 @@ msgstr ""
 #. module: hr_work_entry
 #: model:ir.model.fields,help:hr_work_entry.field_hr_work_entry_type__is_leave
 msgid "Allow the work entry type to be linked with time off types."
-msgstr ""
+msgstr "Povolit propojení typu pracovního záznamu s typy volna."
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_au_work_entry_type_defence
@@ -169,7 +183,7 @@ msgstr ""
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_regeneration_wizard
 msgid "Cancel"
-msgstr ""
+msgstr "Zrušit"
 
 #. module: hr_work_entry
 #: model:ir.model.fields.selection,name:hr_work_entry.selection__hr_work_entry__state__cancelled
@@ -183,6 +197,8 @@ msgid ""
 "Careful, the Code is used in many references, changing it could lead to "
 "unwanted changes."
 msgstr ""
+"Pozor, kód se používá v mnoha odkazech, jeho změna by mohla vést k nechtěným "
+"změnám."
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_au_work_entry_type_cash_out
@@ -205,7 +221,7 @@ msgstr "Barva"
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__company_id
 msgid "Company"
-msgstr "Firma"
+msgstr "Společnost"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_hk_work_entry_type_compassionate_leave
@@ -215,7 +231,7 @@ msgstr ""
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.work_entry_type_compensatory
 msgid "Compensatory Time Off"
-msgstr ""
+msgstr "Náhradní volno"
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_search
@@ -236,17 +252,17 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__country_id
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__country_id
 msgid "Country"
-msgstr ""
+msgstr "Země"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__country_code
 msgid "Country Code"
-msgstr ""
+msgstr "Kód země"
 
 #. module: hr_work_entry
 #: model_terms:ir.actions.act_window,help:hr_work_entry.hr_work_entry_type_action
 msgid "Create a new work entry type"
-msgstr ""
+msgstr "Vytvořit nový typ pracovního záznamu"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_user_work_entry_employee__create_uid
@@ -254,7 +270,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_regeneration_wizard__create_uid
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__create_uid
 msgid "Created by"
-msgstr "Vytvořeno od"
+msgstr "Vytvořeno uživatelem"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_user_work_entry_employee__create_date
@@ -262,7 +278,7 @@ msgstr "Vytvořeno od"
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_regeneration_wizard__create_date
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__create_date
 msgid "Created on"
-msgstr "Vytvořeno"
+msgstr "Vytvořeno dne"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_credit_time
@@ -321,7 +337,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_work_entry.field_resource_calendar_attendance__display_name
 #: model:ir.model.fields,field_description:hr_work_entry.field_resource_calendar_leaves__display_name
 msgid "Display Name"
-msgstr "Zobrazované jméno"
+msgstr "Zobrazovací název"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_us_work_entry_type_double
@@ -341,12 +357,12 @@ msgstr "Trvání"
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_regeneration_wizard__earliest_available_date_message
 msgid "Earliest Available Date Message"
-msgstr ""
+msgstr "Nejdříve dostupná zpráva o datu"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_regeneration_wizard__earliest_available_date
 msgid "Earliest date"
-msgstr ""
+msgstr "Nejbližší datum"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_economic_unemployment
@@ -374,7 +390,7 @@ msgstr "Zaměstnanec"
 #. module: hr_work_entry
 #: model:ir.model,name:hr_work_entry.model_hr_version
 msgid "Employee Contract"
-msgstr ""
+msgstr "Smlouva zaměstnance"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__version_id
@@ -384,7 +400,7 @@ msgstr ""
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_regeneration_wizard__employee_ids
 msgid "Employees"
-msgstr ""
+msgstr "Zaměstnanci"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_european
@@ -405,7 +421,7 @@ msgstr ""
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.work_entry_type_extra_hours
 msgid "Extra Hours"
-msgstr ""
+msgstr "Přesčasy"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_extra_legal
@@ -430,34 +446,34 @@ msgstr ""
 #. module: hr_work_entry
 #: model:ir.actions.server,name:hr_work_entry.ir_cron_generate_missing_work_entries_ir_actions_server
 msgid "Generate Missing Work Entries"
-msgstr ""
+msgstr "Generovat chybějící pracovní záznamy"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_employee__date_generated_from
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_version__date_generated_from
 msgid "Generated From"
-msgstr ""
+msgstr "Generováno z"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_employee__date_generated_to
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_version__date_generated_to
 msgid "Generated To"
-msgstr ""
+msgstr "Generováno do"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.work_entry_type_leave
 msgid "Generic Time Off"
-msgstr ""
+msgstr "Obecné volno"
 
 #. module: hr_work_entry
 #: model:ir.model,name:hr_work_entry.model_hr_work_entry
 msgid "HR Work Entry"
-msgstr "Vstup do práce HR"
+msgstr "HR pracovní záznam"
 
 #. module: hr_work_entry
 #: model:ir.model,name:hr_work_entry.model_hr_work_entry_type
 msgid "HR Work Entry Type"
-msgstr "Typ zadání HR práce"
+msgstr "HR typ pracovního záznamu"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.work_entry_type_home_working
@@ -472,7 +488,7 @@ msgstr ""
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.work_entry_type_home_working
 msgid "Home Working"
-msgstr ""
+msgstr "Domácí práce"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_ch_swissdec_hourly_wt
@@ -572,7 +588,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_employee__last_generation_date
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_version__last_generation_date
 msgid "Last Generation Date"
-msgstr ""
+msgstr "Datum posledního generování"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_user_work_entry_employee__write_uid
@@ -580,7 +596,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_regeneration_wizard__write_uid
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__write_uid
 msgid "Last Updated by"
-msgstr "Naposledy upraveno od"
+msgstr "Naposledy upraveno uživatelem"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_user_work_entry_employee__write_date
@@ -588,17 +604,17 @@ msgstr "Naposledy upraveno od"
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_regeneration_wizard__write_date
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__write_date
 msgid "Last Updated on"
-msgstr "Naposled upraveno"
+msgstr "Naposledy upraveno dne"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_regeneration_wizard__latest_available_date_message
 msgid "Latest Available Date Message"
-msgstr ""
+msgstr "Poslední dostupná zpráva o datu"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_regeneration_wizard__latest_available_date
 msgid "Latest date"
-msgstr ""
+msgstr "Poslední datum"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_ch_swissdec_lesson_wt
@@ -618,7 +634,7 @@ msgstr ""
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.work_entry_type_long_leave
 msgid "Long Term Time Off"
-msgstr ""
+msgstr "Dlouhodobé volno"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_hk_work_entry_type_marriage_leave
@@ -689,7 +705,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__name
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__name
 msgid "Name"
-msgstr "Jméno"
+msgstr "Název"
 
 #. module: hr_work_entry
 #: model:ir.model.fields.selection,name:hr_work_entry.selection__hr_work_entry__state__draft
@@ -699,7 +715,7 @@ msgstr ""
 #. module: hr_work_entry
 #: model_terms:ir.actions.act_window,help:hr_work_entry.hr_work_entry_action
 msgid "No data to display"
-msgstr ""
+msgstr "Žádná data k zobrazení"
 
 #. module: hr_work_entry
 #. odoo-python
@@ -736,7 +752,7 @@ msgstr ""
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.hr_work_entry_type_out_of_contract
 msgid "Out of Contract"
-msgstr ""
+msgstr "Mimo smlouvu"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_ch_swissdec_overtime_wt
@@ -807,7 +823,7 @@ msgstr ""
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_au_work_entry_type_paid_time_off
 #: model:hr.work.entry.type,name:hr_work_entry.work_entry_type_legal_leave
 msgid "Paid Time Off"
-msgstr ""
+msgstr "Placené volné dny"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_parental_time_off
@@ -850,7 +866,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__code
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__code
 msgid "Payroll Code"
-msgstr ""
+msgstr "Mzdový kód"
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_regeneration_wizard
@@ -869,7 +885,7 @@ msgstr ""
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_id_work_entry_type_public_holiday
 #: model:hr.work.entry.type,name:hr_work_entry.uae_public_holiday_entry_type
 msgid "Public Holiday"
-msgstr ""
+msgstr "Státní svátek"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_phc
@@ -895,12 +911,12 @@ msgstr ""
 #: model:ir.model,name:hr_work_entry.model_hr_work_entry_regeneration_wizard
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_regeneration_wizard
 msgid "Regenerate Employee Work Entries"
-msgstr ""
+msgstr "Regenerace pracovních záznamů zaměstnanců"
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_regeneration_wizard
 msgid "Regenerate Work Entries"
-msgstr ""
+msgstr "Obnovte pracovní záznamy"
 
 #. module: hr_work_entry
 #. odoo-javascript
@@ -923,12 +939,12 @@ msgstr ""
 #. module: hr_work_entry
 #: model:ir.model,name:hr_work_entry.model_resource_calendar_leaves
 msgid "Resource Time Off Detail"
-msgstr "Zdroj podrobnosti volných dní"
+msgstr "Podrobnosti o volnu zdroje"
 
 #. module: hr_work_entry
 #: model:ir.model,name:hr_work_entry.model_resource_calendar
 msgid "Resource Working Time"
-msgstr ""
+msgstr "Pracovní doba zdroje"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_us_work_entry_type_retro_overtime
@@ -968,7 +984,7 @@ msgstr ""
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_regeneration_wizard__search_criteria_completed
 msgid "Search Criteria Completed"
-msgstr ""
+msgstr "Kritéria vyhledávání dokončena"
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_search
@@ -983,7 +999,7 @@ msgstr "Vyhledat typ záznamu práce"
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__sequence
 msgid "Sequence"
-msgstr "Číselná řada"
+msgstr "Sekvence"
 
 #. module: hr_work_entry
 #. odoo-javascript
@@ -1025,7 +1041,7 @@ msgstr ""
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.work_entry_type_sick_leave
 msgid "Sick Time Off"
-msgstr ""
+msgstr "Volné dny z důvodu nevolnosti"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_pl_work_entry_type_sick_leave
@@ -1129,6 +1145,7 @@ msgid ""
 "The ISO country code in two chars. \n"
 "You can use this field for quick search."
 msgstr ""
+"ISO kód země ve dvou znacích. Toto pole můžete použít pro rychlé vyhledávání."
 
 #. module: hr_work_entry
 #. odoo-python
@@ -1138,6 +1155,9 @@ msgid ""
 "be <= '%(latest_available_date)s', which correspond to the generated work "
 "entries time interval."
 msgstr ""
+"Datum od musí být >= '%(earliest_available_date)s' a datum do musí být <= "
+"'%(latest_available_date)s', které odpovídají časovému intervalu "
+"generovaných pracovních záznamů."
 
 #. module: hr_work_entry
 #. odoo-python
@@ -1155,7 +1175,7 @@ msgstr ""
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_form
 msgid "This work entry cannot be validated. The work entry type is undefined."
-msgstr ""
+msgstr "Tuto pracovní položku nelze ověřit. Typ záznamu práce není definován."
 
 #. module: hr_work_entry
 #. odoo-python
@@ -1166,22 +1186,22 @@ msgstr ""
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__is_leave
 msgid "Time Off"
-msgstr ""
+msgstr "Volno"
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_form
 msgid "Time Off Options"
-msgstr ""
+msgstr "Možnosti volna"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_regeneration_wizard__date_to
 msgid "To"
-msgstr "Do"
+msgstr "Na"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_training
 msgid "Training"
-msgstr ""
+msgstr "Tréning"
 
 #. module: hr_work_entry
 #: model_terms:ir.actions.act_window,help:hr_work_entry.hr_work_entry_action
@@ -1189,6 +1209,8 @@ msgid ""
 "Try to add some records, or make sure that there is no active filter in the "
 "search bar."
 msgstr ""
+"Zkuste přidat nějaké záznamy, nebo se ujistěte, že není žádný aktivní filtr "
+"ve vyhledávací liště."
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_search
@@ -1210,7 +1232,7 @@ msgstr "Nedefinováno"
 #. odoo-python
 #: code:addons/hr_work_entry/models/hr_work_entry.py:0
 msgid "Undefined Type"
-msgstr ""
+msgstr "Nedefinovaný typ"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_unjustified_reason
@@ -1220,7 +1242,7 @@ msgstr ""
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.work_entry_type_unpaid_leave
 msgid "Unpaid"
-msgstr ""
+msgstr "Nezaplacené"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_ch_swissdec_unpaid_wt
@@ -1246,12 +1268,12 @@ msgstr ""
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_regeneration_wizard__valid
 msgid "Valid"
-msgstr ""
+msgstr "Platný"
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_search
 msgid "Validated"
-msgstr "Ověřeno"
+msgstr "Potvrzeno"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_hk_work_entry_type_weekend
@@ -1276,7 +1298,7 @@ msgstr "Pracovní záznamy"
 #. module: hr_work_entry
 #: model:ir.model,name:hr_work_entry.model_hr_user_work_entry_employee
 msgid "Work Entries Employees"
-msgstr "Zaměstnanci a zaměstnanci"
+msgstr "Pracovní záznamy zaměstnanců"
 
 #. module: hr_work_entry
 #: model:ir.actions.act_window,name:hr_work_entry.hr_work_entry_action
@@ -1284,19 +1306,19 @@ msgstr "Zaměstnanci a zaměstnanci"
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_calendar
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_form
 msgid "Work Entry"
-msgstr "Vstup do práce"
+msgstr "Pracovní záznam"
 
 #. module: hr_work_entry
 #: model:ir.actions.act_window,name:hr_work_entry.hr_work_entry_regeneration_wizard_action
 msgid "Work Entry Regeneration"
-msgstr ""
+msgstr "Regenerace vstupu do práce"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_employee__work_entry_source
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_version__work_entry_source
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__work_entry_source
 msgid "Work Entry Source"
-msgstr ""
+msgstr "Zdroj pracovní položky"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_employee__work_entry_source_calendar_invalid
@@ -1336,12 +1358,12 @@ msgstr ""
 #. module: hr_work_entry
 #: model:ir.model.fields.selection,name:hr_work_entry.selection__hr_version__work_entry_source__calendar
 msgid "Working Schedule"
-msgstr ""
+msgstr "Pracovní plán"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__is_work
 msgid "Working Time"
-msgstr ""
+msgstr "Pracovní čas"
 
 #. module: hr_work_entry
 #. odoo-python

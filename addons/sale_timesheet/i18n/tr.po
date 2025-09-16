@@ -1,6 +1,6 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* sale_timesheet
+# * sale_timesheet
 #
 # Translators:
 # Levent Karakaş <levent@mektup.at>, 2022
@@ -15,20 +15,22 @@
 # Ediz Duman <neps1192@gmail.com>, 2022
 # Umur Akın <umura@projetgrup.com>, 2023
 # Tugay Hatıl <tugayh@projetgrup.com>, 2023
-#
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-09-11 14:01+0000\n"
-"PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Tugay Hatıl <tugayh@projetgrup.com>, 2023\n"
-"Language-Team: Turkish (https://app.transifex.com/odoo/teams/41243/tr/)\n"
+"PO-Revision-Date: 2025-09-16 04:43+0000\n"
+"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"Language-Team: Turkish <https://translate.odoo.com/projects/odoo-19/"
+"sale_timesheet/tr/>\n"
 "Language: tr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: sale_timesheet
 #. odoo-python
@@ -80,6 +82,8 @@ msgid ""
 "distribution of the sale order item '%(so_line_name)s' linked to the "
 "timesheet."
 msgstr ""
+"'%(missing_plan_names)s' çalışma çizelgesine bağlı satış siparişi öğesinin "
+"'%(so_line_name)s' analitik dağılımı için gerekli analitik plan(lar)."
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_sale_page
@@ -91,35 +95,35 @@ msgstr ""
 #: model_terms:hr.job,job_details:sale_timesheet.job_interior_designer
 #: model_terms:hr.job,job_details:sale_timesheet.job_labour
 msgid "1 Onsite Interview"
-msgstr ""
+msgstr "1 Yerinde Röportaj"
 
 #. module: sale_timesheet
 #: model_terms:hr.job,job_details:sale_timesheet.job_engineer
 #: model_terms:hr.job,job_details:sale_timesheet.job_interior_designer
 #: model_terms:hr.job,job_details:sale_timesheet.job_labour
 msgid "1 Phone Call"
-msgstr ""
+msgstr "1 Telefon Görüşmesi"
 
 #. module: sale_timesheet
 #: model_terms:hr.job,website_description:sale_timesheet.job_engineer
 #: model_terms:hr.job,website_description:sale_timesheet.job_interior_designer
 #: model_terms:hr.job,website_description:sale_timesheet.job_labour
 msgid "12 days / year, including <br>6 of your choice."
-msgstr ""
+msgstr "6'sı sizin seçeceğiniz dahil<br>yılda 12 gün / yıl."
 
 #. module: sale_timesheet
 #: model_terms:hr.job,job_details:sale_timesheet.job_engineer
 #: model_terms:hr.job,job_details:sale_timesheet.job_interior_designer
 #: model_terms:hr.job,job_details:sale_timesheet.job_labour
 msgid "2 open days"
-msgstr ""
+msgstr "2 açık gün"
 
 #. module: sale_timesheet
 #: model_terms:hr.job,job_details:sale_timesheet.job_engineer
 #: model_terms:hr.job,job_details:sale_timesheet.job_interior_designer
 #: model_terms:hr.job,job_details:sale_timesheet.job_labour
 msgid "4 Days after Interview"
-msgstr ""
+msgstr "Mülakattan 4 Gün Sonra"
 
 #. module: sale_timesheet
 #: model_terms:hr.job,website_description:sale_timesheet.job_engineer
@@ -159,11 +163,14 @@ msgid ""
 "order associated with this timesheet entry has been cancelled.\" "
 "invisible=\"sale_order_state != 'cancel'\"/>"
 msgstr ""
+"<span class=\"fa fa-exclamation-triangle text-warning\" title="
+"\"Bu çalışma çizelgesi kaydıyla ilişkili satış siparişi iptal edilmiştir.\" "
+"invisible=\"sale_order_state != 'cancel'\"/>"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.hr_timesheet_line_form_inherit
 msgid "<span class=\"o_stat_text\">Invoice</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Fatura</span>"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.account_invoice_view_form_inherit_sale_timesheet
@@ -174,28 +181,28 @@ msgstr "<span class=\"o_stat_text\">Kaydedilmiş</span>"
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.hr_timesheet_line_form_inherit
 msgid "<span class=\"o_stat_text\">Sales Order</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Satış Siparişi</span>"
 
 #. module: sale_timesheet
 #: model_terms:hr.job,job_details:sale_timesheet.job_engineer
 #: model_terms:hr.job,job_details:sale_timesheet.job_interior_designer
 #: model_terms:hr.job,job_details:sale_timesheet.job_labour
 msgid "<span class=\"text-muted small\">Days to get an Offer</span>"
-msgstr ""
+msgstr "<span class=\"text-muted small\">Teklif almak için Günler</span>"
 
 #. module: sale_timesheet
 #: model_terms:hr.job,job_details:sale_timesheet.job_engineer
 #: model_terms:hr.job,job_details:sale_timesheet.job_interior_designer
 #: model_terms:hr.job,job_details:sale_timesheet.job_labour
 msgid "<span class=\"text-muted small\">Process</span>"
-msgstr ""
+msgstr "<span class=\"text-muted small\">İşlem</span>"
 
 #. module: sale_timesheet
 #: model_terms:hr.job,job_details:sale_timesheet.job_engineer
 #: model_terms:hr.job,job_details:sale_timesheet.job_interior_designer
 #: model_terms:hr.job,job_details:sale_timesheet.job_labour
 msgid "<span class=\"text-muted small\">Time to Answer</span>"
-msgstr ""
+msgstr "<span class=\"text-muted small\">Cevap Verme Zamanı</span>"
 
 #. module: sale_timesheet
 #: model_terms:hr.job,website_description:sale_timesheet.job_engineer
@@ -262,7 +269,7 @@ msgstr ""
 #: model_terms:hr.job,website_description:sale_timesheet.job_interior_designer
 #: model_terms:hr.job,website_description:sale_timesheet.job_labour
 msgid "A full-time position <br>Attractive salary package."
-msgstr ""
+msgstr "Tam zamanlı bir pozisyon <br> Cazip maaş paketi."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_sale_order_line__qty_delivered_method
@@ -282,14 +289,14 @@ msgstr ""
 #: model_terms:hr.job,website_description:sale_timesheet.job_interior_designer
 #: model_terms:hr.job,website_description:sale_timesheet.job_labour
 msgid "Achieve monthly sales objectives"
-msgstr ""
+msgstr "Aylık satış hedeflerini başarmak"
 
 #. module: sale_timesheet
 #: model_terms:hr.job,website_description:sale_timesheet.job_engineer
 #: model_terms:hr.job,website_description:sale_timesheet.job_interior_designer
 #: model_terms:hr.job,website_description:sale_timesheet.job_labour
 msgid "Additional languages"
-msgstr ""
+msgstr "Ek diller"
 
 #. module: sale_timesheet
 #: model:account.analytic.account,name:sale_timesheet.account_analytic_account_project_support
@@ -300,7 +307,7 @@ msgstr "Satış Sonrası Servisi"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_project__allocated_hours
 msgid "Allocated Time"
-msgstr ""
+msgstr "Ayrılan Zaman"
 
 #. module: sale_timesheet
 #: model:ir.model.constraint,message:sale_timesheet.constraint_project_sale_line_employee_map_uniqueness_employee
@@ -342,13 +349,29 @@ msgid ""
 "                        spirit. To be successful, you will have solid "
 "solving problem skills."
 msgstr ""
+"Şirketimizin bir çalışanı olarak <b>ezber bozan ürünler yaratmak ve dağıtmak "
+"için \n"
+"                        her departmanla işbirliği yapacaksınız.</b> Gelin, "
+"size ilerleme ve başarılı \n"
+"                        liderlerden öğrenme fırsatı ile harika yan faydalar "
+"sağlayan, büyümekte olan  \n"
+"                        bir şirketin çalışanı olun. Deneyimli ve seçkin bir "
+"çalışan arıyoruz.\n"
+"                        \n"
+"                       <br><br> \n"
+"                        Bu pozisyon doğası gereği <b>hem yaratıcılık hem de "
+"titizlik ister</b>,  kalıpların dışında \n"
+"                        düşünmeniz gerekir. Adayın proaktif olmasını ve “bir "
+"yolunu bulurum” ruhuna sahip \n"
+"                        olmasını bekliyoruz. Başarılı olmak için sağlam "
+"problem çözme becerilerine sahip olmalısınız."
 
 #. module: sale_timesheet
 #: model_terms:hr.job,website_description:sale_timesheet.job_engineer
 #: model_terms:hr.job,website_description:sale_timesheet.job_interior_designer
 #: model_terms:hr.job,website_description:sale_timesheet.job_labour
 msgid "Bachelor Degree or Higher"
-msgstr ""
+msgstr "Lisans Derecesi ya da Üstü"
 
 #. module: sale_timesheet
 #. odoo-python
@@ -364,7 +387,7 @@ msgstr "Faturalanabilir"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_timesheets_analysis_report__billable_time
 msgid "Billable Time"
-msgstr ""
+msgstr "Faturalanabilir Zaman"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_account_analytic_line__timesheet_invoice_type
@@ -450,22 +473,22 @@ msgstr ""
 #: model_terms:hr.job,website_description:sale_timesheet.job_interior_designer
 #: model_terms:hr.job,website_description:sale_timesheet.job_labour
 msgid "Create content that will help our users on a daily basis"
-msgstr ""
+msgstr "Kullanıcılarımıza günlük bazda yardımcı olacak içerikler oluşturun"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_sale_line_employee_map__create_uid
 msgid "Created by"
-msgstr "Oluşturan"
+msgstr "Tarafından oluşturuldu"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_sale_line_employee_map__create_date
 msgid "Created on"
-msgstr "Oluşturulma"
+msgstr "Oluşturuldu"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_sale_line_employee_map__currency_id
 msgid "Currency"
-msgstr "Para Birimi"
+msgstr "Kur"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_project__partner_id
@@ -497,7 +520,7 @@ msgstr "Kalan günler)"
 #: model_terms:hr.job,website_description:sale_timesheet.job_interior_designer
 #: model_terms:hr.job,website_description:sale_timesheet.job_labour
 msgid "Discover our products."
-msgstr ""
+msgstr "Ürünlerimizi keşfedin."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_account_analytic_line__display_name
@@ -516,7 +539,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_line__display_name
 #: model:ir.model.fields,field_description:sale_timesheet.field_timesheets_analysis_report__display_name
 msgid "Display Name"
-msgstr "Görünüm Adı"
+msgstr "İsim Göster"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_sale_page
@@ -542,13 +565,21 @@ msgid ""
 "                    sports sessions, team building events, monthly drink, "
 "and much more"
 msgstr ""
+"Her bir çalışan, çalışmasının sonuçlarını ve yarattığı etkiyi görebilir.\n"
+"                    Şirketin başarısına somut bir biçimde katkı "
+"sunabilirsiniz.\n"
+"                    <br> \n"
+"                    Yıl boyunca haftalık spor seansları, ekibin bağlarını "
+"kuvvetlendirme\n"
+"                    etkinlikleri, aylık içki partileri gibi çeşitli "
+"etkinlikler düzenlenmektedir"
 
 #. module: sale_timesheet
 #: model_terms:hr.job,website_description:sale_timesheet.job_engineer
 #: model_terms:hr.job,website_description:sale_timesheet.job_interior_designer
 #: model_terms:hr.job,website_description:sale_timesheet.job_labour
 msgid "Eat &amp; Drink"
-msgstr ""
+msgstr "Yeme &amp; İçme"
 
 #. module: sale_timesheet
 #: model:product.template,name:sale_timesheet.product_product_elevator_installation_product_template
@@ -559,7 +590,7 @@ msgstr ""
 #: model:ir.model,name:sale_timesheet.model_hr_employee
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_sale_line_employee_map__employee_id
 msgid "Employee"
-msgstr "Personel"
+msgstr "Çalışan"
 
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__project_project__pricing_type__employee_rate
@@ -576,14 +607,14 @@ msgstr "Bitiş Tarihi"
 #: model_terms:hr.job,website_description:sale_timesheet.job_interior_designer
 #: model_terms:hr.job,website_description:sale_timesheet.job_labour
 msgid "Expand your knowledge of various business industries"
-msgstr ""
+msgstr "Çeşitli iş sektörleri hakkında bilginizi genişletin"
 
 #. module: sale_timesheet
 #: model_terms:hr.job,website_description:sale_timesheet.job_engineer
 #: model_terms:hr.job,website_description:sale_timesheet.job_interior_designer
 #: model_terms:hr.job,website_description:sale_timesheet.job_labour
 msgid "Experience in writing online content"
-msgstr ""
+msgstr "Online içerik yazma tecrübesi"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.product_template_view_search_sale_timesheet
@@ -595,7 +626,7 @@ msgstr "Sabit fiyatlı hizmetler"
 #: model_terms:hr.job,website_description:sale_timesheet.job_interior_designer
 #: model_terms:hr.job,website_description:sale_timesheet.job_labour
 msgid "Fruit, coffee and <br>snacks provided."
-msgstr ""
+msgstr "Meyve, kahve ve <br> atıştırmalıklar sağlanır."
 
 #. module: sale_timesheet
 #: model:product.template,name:sale_timesheet.product_service_deliver_manual_product_template
@@ -607,7 +638,7 @@ msgstr "Mobilya Teslimatı (Manuel)"
 #: model_terms:hr.job,website_description:sale_timesheet.job_interior_designer
 #: model_terms:hr.job,website_description:sale_timesheet.job_labour
 msgid "Google Adwords experience"
-msgstr ""
+msgstr "Google Adwords tecrübesi"
 
 #. module: sale_timesheet
 #: model_terms:hr.job,website_description:sale_timesheet.job_engineer
@@ -615,11 +646,13 @@ msgstr ""
 #: model_terms:hr.job,website_description:sale_timesheet.job_labour
 msgid "Great team of smart people, in a friendly and open culture"
 msgstr ""
+"Arkadaş canlısı ve açık bir kültürde akıllı insanlardan oluşan harika bir "
+"takım"
 
 #. module: sale_timesheet
 #: model:hr.job,name:sale_timesheet.job_labour
 msgid "Handyman"
-msgstr ""
+msgstr "Tamirci"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_task__has_multi_sol
@@ -631,7 +664,7 @@ msgstr "Has Multi Sol"
 #: model_terms:hr.job,website_description:sale_timesheet.job_interior_designer
 #: model_terms:hr.job,website_description:sale_timesheet.job_labour
 msgid "Highly creative and autonomous"
-msgstr ""
+msgstr "Son derece yaratıcı ve özerk"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_sale_line_employee_map__display_cost
@@ -670,7 +703,7 @@ msgstr "ID"
 #. module: sale_timesheet
 #: model:hr.job,name:sale_timesheet.job_interior_designer
 msgid "Interior Designer"
-msgstr ""
+msgstr "İç Mimar"
 
 #. module: sale_timesheet
 #: model:product.template,name:sale_timesheet.product_product_interior_designing_product_template
@@ -725,7 +758,7 @@ msgstr "Proje haritası boş mu?"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_account_analytic_line__is_so_line_edited
 msgid "Is Sales Order Item Manually Edited"
-msgstr "Satış Siparişi Kalemi Manuel Olarak Düzenleniyor mu"
+msgstr "Satış Siparişi Kalemi Manuel olarak Düzenleniyor"
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_account_move
@@ -767,7 +800,7 @@ msgstr "Son Güncelleme"
 #: model_terms:hr.job,website_description:sale_timesheet.job_interior_designer
 #: model_terms:hr.job,website_description:sale_timesheet.job_labour
 msgid "Lead the entire sales cycle"
-msgstr ""
+msgstr "Tüm satış döngüsünü yönet"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_product_product__service_type
@@ -780,8 +813,8 @@ msgid ""
 "Create a task and track hours: Create a task on the sales order validation "
 "and track the work hours."
 msgstr ""
-"Siparişte Miktarları Elle Belirle: Faturayı oluştururken, analitik hesap "
-"oluşturmadan, elle belirlenmiş miktarları kullan\n"
+"Siparişte miktarları manuel olarak belirle: Faturayı oluştururken, analitik "
+"hesap oluşturmadan, manuel olarak belirlenmiş miktarları kullan\n"
 "Sözleşmelerde Çalışma Çizelgesi: Çalışma çizelgesine girilmiş olan saatlere "
 "göre faturalandırma yap.\n"
 "Görev oluştur ve süreyi izle: Müşteri siparişi doğrulaması hakkında bir "
@@ -797,7 +830,7 @@ msgstr "Marj"
 #: model_terms:hr.job,website_description:sale_timesheet.job_interior_designer
 #: model_terms:hr.job,website_description:sale_timesheet.job_labour
 msgid "Master demos of our software"
-msgstr ""
+msgstr "Yazılımımızın ana demosu"
 
 #. module: sale_timesheet
 #. odoo-python
@@ -820,21 +853,21 @@ msgstr "Kilometre taşı hizmetler"
 #: model_terms:hr.job,website_description:sale_timesheet.job_interior_designer
 #: model_terms:hr.job,website_description:sale_timesheet.job_labour
 msgid "Must Have"
-msgstr ""
+msgstr "Olmalı"
 
 #. module: sale_timesheet
 #: model_terms:hr.job,website_description:sale_timesheet.job_engineer
 #: model_terms:hr.job,website_description:sale_timesheet.job_interior_designer
 #: model_terms:hr.job,website_description:sale_timesheet.job_labour
 msgid "Negotiate and contract"
-msgstr ""
+msgstr "Görüşme ve sözleşme"
 
 #. module: sale_timesheet
 #: model_terms:hr.job,website_description:sale_timesheet.job_engineer
 #: model_terms:hr.job,website_description:sale_timesheet.job_interior_designer
 #: model_terms:hr.job,website_description:sale_timesheet.job_labour
 msgid "Nice to have"
-msgstr ""
+msgstr "Olması Güzel"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_my_timesheets_inherit
@@ -861,7 +894,7 @@ msgstr "Henüz veri yok!"
 #: model_terms:hr.job,website_description:sale_timesheet.job_interior_designer
 #: model_terms:hr.job,website_description:sale_timesheet.job_labour
 msgid "No dumb managers, no stupid tools to use, no rigid working hours"
-msgstr ""
+msgstr "Kötü yöneticiler, kullanılacak kötü araçlar, katı çalışma saatleri yok"
 
 #. module: sale_timesheet
 #: model_terms:hr.job,website_description:sale_timesheet.job_engineer
@@ -870,6 +903,7 @@ msgstr ""
 msgid ""
 "No waste of time in enterprise processes, real responsibilities and autonomy"
 msgstr ""
+"Kurumsal süreçlerde, gerçek sorumluluklarda ve özerklikte zaman kaybı yok"
 
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__account_analytic_line__timesheet_invoice_type__non_billable
@@ -888,7 +922,7 @@ msgstr "Faturalandırılamaz"
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheets_analysis_report_list_inherited
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.view_calendar_account_analytic_line_multi_create
 msgid "Non-billable"
-msgstr ""
+msgstr "Faturalanamaz"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_timesheets_analysis_report__non_billable_time
@@ -952,14 +986,14 @@ msgstr ""
 #: model_terms:hr.job,website_description:sale_timesheet.job_interior_designer
 #: model_terms:hr.job,website_description:sale_timesheet.job_labour
 msgid "Our Product"
-msgstr ""
+msgstr "Ürünümüz"
 
 #. module: sale_timesheet
 #: model_terms:hr.job,website_description:sale_timesheet.job_engineer
 #: model_terms:hr.job,website_description:sale_timesheet.job_interior_designer
 #: model_terms:hr.job,website_description:sale_timesheet.job_labour
 msgid "Passion for software products"
-msgstr ""
+msgstr "Yazılım ürünlerine karşı tutku"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_product_product__service_upsell_threshold
@@ -968,29 +1002,29 @@ msgid ""
 "Percentage of time delivered compared to the prepaid amount that must be "
 "reached for the upselling opportunity activity to be triggered."
 msgstr ""
-"Yukarı yönlü satış fırsatı aktivitesinin tetiklenmesi için ulaşılması "
-"gereken ön ödeme tutarına kıyasla teslim edilen sürenin oranı."
+"'Yukarı satış fırsatı' eyleminin tetiklenmesi için ulaşılması gereken ön "
+"ödemeli tutara kıyasla teslim edilen sürenin yüzdesi."
 
 #. module: sale_timesheet
 #: model_terms:hr.job,website_description:sale_timesheet.job_engineer
 #: model_terms:hr.job,website_description:sale_timesheet.job_interior_designer
 #: model_terms:hr.job,website_description:sale_timesheet.job_labour
 msgid "Perfect written English"
-msgstr ""
+msgstr "Mükemmel yazılı İngilizce"
 
 #. module: sale_timesheet
 #: model_terms:hr.job,website_description:sale_timesheet.job_engineer
 #: model_terms:hr.job,website_description:sale_timesheet.job_interior_designer
 #: model_terms:hr.job,website_description:sale_timesheet.job_labour
 msgid "Perks"
-msgstr ""
+msgstr "Avantajlar"
 
 #. module: sale_timesheet
 #: model_terms:hr.job,website_description:sale_timesheet.job_engineer
 #: model_terms:hr.job,website_description:sale_timesheet.job_interior_designer
 #: model_terms:hr.job,website_description:sale_timesheet.job_labour
 msgid "Play any sport with colleagues, <br>the bill is covered."
-msgstr ""
+msgstr "İş arkadaşlarınızla herhangi bir sporu yapın, <br>faturası karşılanır."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_project__pricing_type
@@ -1037,7 +1071,7 @@ msgstr "proje oranı"
 #: model_terms:hr.job,website_description:sale_timesheet.job_interior_designer
 #: model_terms:hr.job,website_description:sale_timesheet.job_labour
 msgid "Qualify the customer needs"
-msgstr ""
+msgstr "Müşteri ihtiyaçlarını değerlendir"
 
 #. module: sale_timesheet
 #. odoo-python
@@ -1050,7 +1084,7 @@ msgstr "Teklif"
 #: model_terms:hr.job,website_description:sale_timesheet.job_interior_designer
 #: model_terms:hr.job,website_description:sale_timesheet.job_labour
 msgid "Real responsibilities and challenges in a fast evolving company"
-msgstr ""
+msgstr "Hızla gelişen bir şirkette gerçek sorumluluklar ve meydan okumalar"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_task__remaining_hours_available
@@ -1063,7 +1097,7 @@ msgstr "Kalan Uygun Saatler"
 #: model_terms:hr.job,website_description:sale_timesheet.job_interior_designer
 #: model_terms:hr.job,website_description:sale_timesheet.job_labour
 msgid "Responsibilities"
-msgstr ""
+msgstr "Sorumluluklar"
 
 #. module: sale_timesheet
 #: model_terms:ir.actions.act_window,help:sale_timesheet.timesheet_action_billing_report
@@ -1111,7 +1145,7 @@ msgstr "Satış Siparişi"
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.report_timesheet_sale_order
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_view_search
 msgid "Sales Order Item"
-msgstr "Satış Siparişi Öğesi"
+msgstr "Satış Sipariş Satırı"
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_sale_order_line
@@ -1138,17 +1172,17 @@ msgid ""
 "timesheets on this project specifically. It will bypass the timesheet cost "
 "set on the employee."
 msgstr ""
-"İlgili çalışanın çalışma çizelgelerinde varsayılan olarak seçilecek olan "
-"satış siparişi kalemi. Projede ve görevde tanımlanan satış siparişi kalemini "
-"atlar ve gerekirse her çalışma çizelgesi girişinde değiştirilebilir. Başka "
-"bir deyişle, bir çalışanın zamanının örneğin uzmanlık, beceri veya "
-"deneyimlerine göre faturalandırılma oranını tanımlar.\n"
-"Aynı hizmeti farklı bir ücret üzerinden faturalandırmak isterseniz, her bir "
-"satış siparişi kalemi aynı anda yalnızca tek bir birim fiyata sahip "
-"olabileceğinden, iki ayrı satış siparişi kalemi oluşturmanız gerekir.\n"
-"Ayrıca bu projeye özel olarak çalışanlarınızın çalışma çizelgeleri için "
-"saatlik şirket maliyetlerini tanımlayabilirsiniz. Çalışanda ayarlanan "
-"çalışma çizelgesi maliyetini atlayacaktır."
+"İlgili çalışanın zaman çizelgelerinde varsayılan olarak seçilecek satış "
+"siparişi kalemidir. Proje veya görev üzerinde tanımlı olan satış siparişi "
+"kalemini geçersiz kılar ve gerekirse her zaman çizelgesi girişinde "
+"değiştirilebilir. Başka bir deyişle, bir çalışanın uzmanlığına, becerilerine "
+"veya deneyimine göre zamanının hangi oranla faturalandırılacağını belirler.\n"
+"Aynı hizmeti farklı bir ücretle faturalandırmak istiyorsanız, iki ayrı satış "
+"siparişi kalemi oluşturmanız gerekir; çünkü her satış siparişi kaleminin "
+"aynı anda yalnızca tek bir birim fiyatı olabilir.\n"
+"Ayrıca, bu projeye özel olarak çalışanlarınızın zaman çizelgeleri için "
+"saatlik şirket maliyetini tanımlayabilirsiniz. Bu değer, çalışanın kartında "
+"tanımlı olan zaman çizelgesi maliyetini geçersiz kılar."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_account_analytic_line__so_line
@@ -1220,7 +1254,7 @@ msgstr "Hizmetler"
 #. module: sale_timesheet
 #: model:hr.job,name:sale_timesheet.job_engineer
 msgid "Site Manager"
-msgstr ""
+msgstr "Şantiye Yöneticisi"
 
 #. module: sale_timesheet
 #: model:product.template,name:sale_timesheet.product_product_solar_installation_product_template
@@ -1232,7 +1266,7 @@ msgstr ""
 #: model_terms:hr.job,website_description:sale_timesheet.job_interior_designer
 #: model_terms:hr.job,website_description:sale_timesheet.job_labour
 msgid "Sport Activity"
-msgstr ""
+msgstr "Spor Etkinliği"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_advance_payment_inv__date_start_invoice_timesheet
@@ -1242,14 +1276,14 @@ msgstr "Başlama Tarihi"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_account_analytic_line__sale_order_state
 msgid "Status"
-msgstr ""
+msgstr "Durumu"
 
 #. module: sale_timesheet
 #: model_terms:hr.job,website_description:sale_timesheet.job_engineer
 #: model_terms:hr.job,website_description:sale_timesheet.job_interior_designer
 #: model_terms:hr.job,website_description:sale_timesheet.job_labour
 msgid "Strong analytical skills"
-msgstr ""
+msgstr "Güçlü analitik beceriler"
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_project_task
@@ -1264,7 +1298,7 @@ msgstr "Görev oranı"
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_report_project_task_user
 msgid "Tasks Analysis"
-msgstr ""
+msgstr "Görev Analizi"
 
 #. module: sale_timesheet
 #. odoo-python
@@ -1293,13 +1327,13 @@ msgid ""
 "senior consultants would deliver the same service (= consultancy), but at a "
 "different rate because of their level of seniority."
 msgstr ""
-"Farklı hizmetleri farklı müşterilere farklı oranlarda faturalandırmak "
-"istiyorsanız, görev oranı mükemmeldir. Bir hizmeti, onu yapan çalışandan "
-"bağımsız olarak çalışılan saat veya gün başına sabit bir ücret üzerinden "
-"faturalandırırsanız, sabit ücret mükemmeldir. Çalışanlarınız aynı hizmeti "
-"farklı bir oranda veriyorsa, çalışan oranı tercih edilir. Örneğin, ast ve "
-"kıdemli danışmanlar aynı hizmeti (= danışmanlık) sunacaklardır, ancak kıdem "
-"seviyeleri nedeniyle farklı bir oranda gerçekleşecektir."
+"Görev bazlı oran, farklı müşterilere farklı hizmetleri farklı oranlarla "
+"faturalandırmak istediğinizde idealdir. Sabit oran, hizmeti gerçekleştiren "
+"çalışandan bağımsız olarak saatlik veya günlük sabit bir ücretle "
+"faturalandırmak için uygundur. Çalışan bazlı oran ise aynı hizmeti farklı "
+"çalışanların farklı ücretlerle sunması durumunda tercih edilir. Örneğin, "
+"kıdemli ve kıdemsiz danışmanlar aynı danışmanlık hizmetini sunsalar da kıdem "
+"seviyeleri nedeniyle farklı oranlardan ücretlendirilirler."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_sale_line_employee_map__cost
@@ -1325,20 +1359,20 @@ msgstr "Eşik"
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.res_config_settings_view_form
 msgid "Time Billing"
-msgstr ""
+msgstr "Saat Faturalaması"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_task__remaining_hours_so
 #: model:ir.model.fields,field_description:sale_timesheet.field_report_project_task_user__remaining_hours_so
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_line__remaining_hours
 msgid "Time Remaining on SO"
-msgstr ""
+msgstr "Satış siparişinde kalan süre"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.view_hr_timesheet_line_graph_employee_per_date
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.view_hr_timesheet_line_pivot_billing_rate
 msgid "Time Spent"
-msgstr ""
+msgstr "Harcanan Zaman"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.product_template_view_search_sale_timesheet
@@ -1355,7 +1389,7 @@ msgstr "Çalışma Çizelgesi"
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_project_view_form
 msgid "Timesheet Activities"
-msgstr ""
+msgstr "Çalışma Çizelgesi Aktiviteleri"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheets_analysis_report_graph_invoice_type
@@ -1374,7 +1408,7 @@ msgstr "Çalışma Çizelgesi Ürünü"
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.hr_timesheet_report_search_sale_timesheet
 msgid "Timesheet Report"
-msgstr ""
+msgstr "Çalışma Çizelgesi Raporu"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_timesheets_analysis_report__timesheet_revenues
@@ -1446,7 +1480,7 @@ msgstr "Çalışma Çizelgeleri Analiz Raporu"
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.sale_advance_payment_inv_timesheet_view_form
 msgid "Timesheets Period"
-msgstr ""
+msgstr "Çalışma Çizelge Dönemi"
 
 #. module: sale_timesheet
 #: model:ir.actions.act_window,name:sale_timesheet.timesheet_action_billing_report
@@ -1462,7 +1496,7 @@ msgstr "için çalışma çizelgeleri"
 #. odoo-python
 #: code:addons/sale_timesheet/models/project_project.py:0
 msgid "Timesheets of %s"
-msgstr " %s çalışma çizelgesi"
+msgstr "%s çalışma çizelgesi"
 
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__product_template__service_type__timesheet
@@ -1498,7 +1532,7 @@ msgstr ""
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheets_analysis_report_list_inherited
 msgid "Total"
-msgstr ""
+msgstr "Toplam"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_account_bank_statement_line__timesheet_total_duration
@@ -1514,7 +1548,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale_timesheet.field_product_product__service_type
 #: model:ir.model.fields,field_description:sale_timesheet.field_product_template__service_type
 msgid "Track Service"
-msgstr "Servis Rotası  "
+msgstr "Servis Rotası"
 
 #. module: sale_timesheet
 #: model_terms:ir.actions.act_window,help:sale_timesheet.action_timesheet_from_invoice
@@ -1531,7 +1565,7 @@ msgstr ""
 #: model_terms:hr.job,website_description:sale_timesheet.job_interior_designer
 #: model_terms:hr.job,website_description:sale_timesheet.job_labour
 msgid "Trainings"
-msgstr ""
+msgstr "Eğitimler"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_sale_line_employee_map__price_unit
@@ -1559,7 +1593,7 @@ msgstr ""
 #: model_terms:hr.job,website_description:sale_timesheet.job_interior_designer
 #: model_terms:hr.job,website_description:sale_timesheet.job_labour
 msgid "Valid work permit for Belgium"
-msgstr ""
+msgstr "Belçika için geçerli çalışma izni"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_invoice_page_inherit
@@ -1582,14 +1616,14 @@ msgstr "Yapılan iş aşıldığında satış görevlisini bir ek satış için 
 #: model_terms:hr.job,website_description:sale_timesheet.job_interior_designer
 #: model_terms:hr.job,website_description:sale_timesheet.job_labour
 msgid "What We Offer"
-msgstr ""
+msgstr "Ne Sunuyoruz"
 
 #. module: sale_timesheet
 #: model_terms:hr.job,website_description:sale_timesheet.job_engineer
 #: model_terms:hr.job,website_description:sale_timesheet.job_interior_designer
 #: model_terms:hr.job,website_description:sale_timesheet.job_labour
 msgid "What's great in the job?"
-msgstr ""
+msgstr "İşte harika olan nedir?"
 
 #. module: sale_timesheet
 #. odoo-python
@@ -1654,7 +1688,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/sale_timesheet/models/sale_order_line.py:0
 msgid "remaining"
-msgstr ""
+msgstr "kalan"
 
 #~ msgid " Candidate Orders"
 #~ msgstr "Aday Siparişleri"

@@ -1,43 +1,45 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* mrp_subcontracting
+# * mrp_subcontracting
 #
 # Translators:
 # fanha99 <fanha99@hotmail.com>, 2022
 # Martin Trigaux, 2022
 # Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2022
 # Thi Huong Nguyen, 2023
-#
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-09-11 13:58+0000\n"
-"PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Thi Huong Nguyen, 2023\n"
-"Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
+"PO-Revision-Date: 2025-09-16 02:31+0000\n"
+"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"Language-Team: Vietnamese <https://translate.odoo.com/projects/odoo-19/"
+"mrp_subcontracting/vi/>\n"
 "Language: vi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: mrp_subcontracting
 #. odoo-python
 #: code:addons/mrp_subcontracting/models/stock_warehouse.py:0
 msgid "%(name)s Sequence Resupply Subcontractor"
-msgstr ""
+msgstr "%(name)s Trình tự Tái cung ứng cho đơn vị gia công"
 
 #. module: mrp_subcontracting
 #. odoo-python
 #: code:addons/mrp_subcontracting/models/stock_warehouse.py:0
 msgid "%(name)s Sequence subcontracting"
-msgstr ""
+msgstr "%(name)s Trình tự gia công"
 
 #. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.subcontracting_portal
 msgid "/my/productions"
-msgstr ""
+msgstr "/my/productions"
 
 #. module: mrp_subcontracting
 #. odoo-python
@@ -53,28 +55,28 @@ msgstr ""
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_report_mrp_report_bom_structure
 msgid "BOM Overview Report"
-msgstr "Báo cáo tổng quan ĐMNL"
+msgstr "Báo cáo tổng quan BoM"
 
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_mrp_bom
 msgid "Bill of Material"
-msgstr "Định mức nguyên liệu"
+msgstr "Danh mục vật tư"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_mrp_bom__type
 msgid "BoM Type"
-msgstr "Loại ĐMNL"
+msgstr "Loại BoM"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_res_partner__bom_ids
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_res_users__bom_ids
 msgid "BoMs for which the Partner is one of the subcontractors"
-msgstr "ĐMNL mà Đối tác là một trong những nhà thầu phụ"
+msgstr "BoM mà đối tác là một trong những đơn vị gia công"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_mrp_production__bom_product_ids
 msgid "Bom Product"
-msgstr "Sản phẩm ĐMNL"
+msgstr "Sản phẩm BoM"
 
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_change_production_qty
@@ -92,8 +94,8 @@ msgstr ""
 msgid ""
 "Choose a vendor of type subcontractor if you want to subcontract the product"
 msgstr ""
-"Chọn một nhà cung cấp thuộc loại nhà thầu phụ nếu bạn muốn thầu phụ sản phẩm "
-"này"
+"Chọn một nhà cung cấp thuộc loại đơn vị gia công nếu bạn muốn gia công sản "
+"phẩm này"
 
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_res_company
@@ -119,12 +121,12 @@ msgstr ""
 #. module: mrp_subcontracting
 #: model:ir.model,website_form_label:mrp_subcontracting.model_res_partner
 msgid "Create a Customer"
-msgstr ""
+msgstr "Tạo một khách hàng"
 
 #. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.portal_my_productions
 msgid "Deadline Date"
-msgstr "Ngày hạn chót"
+msgstr "Thời hạn"
 
 #. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.subcontracting_portal_production_form_view
@@ -139,7 +141,7 @@ msgstr "Mô tả"
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_mrp_production__move_line_raw_ids
 msgid "Detail Component"
-msgstr "Nguyên liệu chi tiết"
+msgstr "Chi tiết thành phần"
 
 #. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.subcontracting_portal_production_form_view
@@ -166,7 +168,7 @@ msgstr "Chi tiết"
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_rule__display_name
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_warehouse__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Tên hiển thị"
 
 #. module: mrp_subcontracting
 #. odoo-python
@@ -178,7 +180,7 @@ msgstr "Hoàn tất"
 #. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.portal_my_home_productions
 msgid "Follow manufacturing orders you have to fulfill"
-msgstr ""
+msgstr "Tiến hành theo các lệnh sản xuất mà bạn phải thực hiện"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_mrp_production__subcontracting_has_been_recorded
@@ -205,7 +207,7 @@ msgstr "Đã được ghi nhận?"
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_rule__id
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_warehouse__id
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: mrp_subcontracting
 #. odoo-python
@@ -214,11 +216,13 @@ msgid ""
 "In order to manage stock accurately, subcontracting locations must be type "
 "Internal, linked to the appropriate company."
 msgstr ""
+"Để quản lý tồn kho một cách chính xác, các vị trí gia công phải thuộc loại "
+"nội bộ, được liên kết với công ty phù hợp."
 
 #. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.mrp_production_subcontracting_filter
 msgid "Incoming transfer"
-msgstr "Điều chuyển nhập hàng"
+msgstr "Lệnh chuyển hàng vào"
 
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_stock_location
@@ -228,7 +232,7 @@ msgstr "Vị trí kiểm kho"
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_quant__is_subcontract
 msgid "Is Subcontract"
-msgstr "Là thầu phụ"
+msgstr "Là gia công"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,help:mrp_subcontracting.field_mrp_production__bom_product_ids
@@ -236,14 +240,14 @@ msgid ""
 "List of Products used in the BoM, used to filter the list of products in the "
 "subcontracting portal view"
 msgstr ""
-"Danh sách sản phẩm được sử dụng trong ĐMNL, dùng để lọc danh sách sản phẩm "
-"trong chế độ xem cổng thông tin thầu phụ"
+"Danh sách sản phẩm được sử dụng trong BoM, dùng để lọc danh sách sản phẩm "
+"trong chế độ xem cổng thông tin gia công"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_res_partner__production_ids
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_res_users__production_ids
 msgid "MRP Productions for which the Partner is the subcontractor"
-msgstr "Sản xuất mà Đối tác là nhà thầu phụ"
+msgstr "Hoạt động sản xuất mà đối tác là đơn vị gia công"
 
 #. module: mrp_subcontracting
 #. odoo-python
@@ -252,13 +256,13 @@ msgid ""
 "Make sure you validate or adapt the related resupply picking to your "
 "subcontractor in order to avoid inconsistencies in your stock."
 msgstr ""
-"Đảm bảo rằng bạn xác thực hoặc điều chỉnh phiếu kho tái cung ứng liên quan "
-"cho nhà thầu phụ của mình để tránh sự không nhất quán trong tồn kho."
+"Đảm bảo rằng bạn xác thực hoặc điều chỉnh phiếu xuất kho tái cung ứng liên "
+"quan cho đơn vị gia công của mình để tránh sự không nhất quán trong tồn kho."
 
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_mrp_production
 msgid "Manufacturing Order"
-msgstr ""
+msgstr "Lệnh sản xuất"
 
 #. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.portal_my_home_productions
@@ -307,13 +311,13 @@ msgid ""
 "Portal users cannot create a stock move with a state 'Done' or change the "
 "current state to 'Done'."
 msgstr ""
-"Người dùng cổng thông tin không thể tạo dịch chuyển tồn kho với trạng thái "
+"Người dùng cổng thông tin không thể tạo điều chuyển tồn kho với trạng thái "
 "'Hoàn tất' hoặc thay đổi trạng thái hiện tại thành 'Hoàn tất'."
 
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_stock_move_line
 msgid "Product Moves (Stock Move Line)"
-msgstr "Dịch chuyển sản phẩm (Mục dịch chuyển tồn kho)"
+msgstr "Điều chuyển sản phẩm (Dòng điều chuyển tồn kho)"
 
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_product_product
@@ -324,7 +328,7 @@ msgstr "Biến thể sản phẩm"
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.portal_my_home_menu_production
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.portal_my_productions
 msgid "Productions"
-msgstr "Sản xuất"
+msgstr "Hoạt động sản xuất"
 
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_stock_quant
@@ -345,57 +349,57 @@ msgstr ""
 #. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.subcontracting_portal_production_form_view
 msgid "Register components for subcontracted product"
-msgstr "Ghi nhận nguyên liệu cho sản phẩm thầu phụ"
+msgstr "Ghi nhận thành phần cho sản phẩm gia công"
 
 #. module: mrp_subcontracting
 #. odoo-python
 #: code:addons/mrp_subcontracting/models/stock_warehouse.py:0
 msgid "Replenish on Order (MTO)"
-msgstr ""
+msgstr "Bổ sung theo đơn đặt hàng (MTO)"
 
 #. module: mrp_subcontracting
 #. odoo-python
 #: code:addons/mrp_subcontracting/models/stock_warehouse.py:0
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_warehouse__subcontracting_route_id
 msgid "Resupply Subcontractor"
-msgstr "Nhà thầu phụ tái cung ứng"
+msgstr "Tái cung ứng cho đơn vị gia công"
 
 #. module: mrp_subcontracting
 #. odoo-python
 #: code:addons/mrp_subcontracting/models/stock_warehouse.py:0
 #: model:stock.route,name:mrp_subcontracting.route_resupply_subcontractor_mto
 msgid "Resupply Subcontractor on Order"
-msgstr "Nhà thầu phụ tái cung ứng theo đơn hàng"
+msgstr "Tái cung ứng cho đơn vị gia công theo đơn hàng"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_warehouse__subcontracting_to_resupply
 msgid "Resupply Subcontractors"
-msgstr "Nhà thầu phụ tái cung ứng"
+msgstr "Tái cung ứng cho đơn vị gia công"
 
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_stock_return_picking
 msgid "Return Picking"
-msgstr "Phiếu trả hàng"
+msgstr "Phiếu xuất kho trả hàng"
 
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_stock_return_picking_line
 msgid "Return Picking Line"
-msgstr ""
+msgstr "Dòng phiếu trả hàng"
 
 #. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.portal_my_productions
 msgid "Scheduled Date"
-msgstr "Ngày theo kế hoạch"
+msgstr "Ngày đã lên lịch"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_move__show_subcontracting_details_visible
 msgid "Show Subcontracting Details Visible"
-msgstr "Hiển thị chi tiết hợp đồng phụ"
+msgstr "Hiển thị chi tiết gia công"
 
 #. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.portal_my_productions
 msgid "Source Document"
-msgstr "Tài liệu gốc"
+msgstr "Chứng từ gốc"
 
 #. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.portal_my_productions
@@ -405,13 +409,13 @@ msgstr "Trạng thái"
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_stock_move
 msgid "Stock Move"
-msgstr "Dịch chuyển tồn kho"
+msgstr "Điều chuyển tồn kho"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_res_partner__picking_ids
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_res_users__picking_ids
 msgid "Stock Pickings for which the Partner is the subcontractor"
-msgstr "Phiếu kho mà Đối tác là nhà thầu phụ"
+msgstr "Phiếu xuất kho mà đối tác là đơn vị gia công"
 
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_stock_rule
@@ -421,13 +425,13 @@ msgstr "Quy tắc tồn kho"
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_product_supplierinfo__is_subcontractor
 msgid "Subcontracted"
-msgstr "Được thầu phụ"
+msgstr "Được gia công"
 
 #. module: mrp_subcontracting
 #. odoo-python
 #: code:addons/mrp_subcontracting/models/mrp_production.py:0
 msgid "Subcontracted manufacturing orders cannot be merged."
-msgstr "Không thể gộp lệnh sản xuất được thầu phụ."
+msgstr "Không thể gộp lệnh sản xuất được gia công."
 
 #. module: mrp_subcontracting
 #. odoo-python
@@ -435,17 +439,17 @@ msgstr "Không thể gộp lệnh sản xuất được thầu phụ."
 #: code:addons/mrp_subcontracting/models/stock_warehouse.py:0
 #: model:ir.model.fields.selection,name:mrp_subcontracting.selection__mrp_bom__type__subcontract
 msgid "Subcontracting"
-msgstr "Thầu phụ"
+msgstr "Gia công"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_res_company__subcontracting_location_id
 msgid "Subcontracting Location"
-msgstr "Địa điểm thầu phụ"
+msgstr "Vị trí gia công"
 
 #. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.quant_subcontracting_search_view
 msgid "Subcontracting Locations"
-msgstr "Địa điểm thầu phụ"
+msgstr "Vị trí gia công"
 
 #. module: mrp_subcontracting
 #. odoo-python
@@ -456,39 +460,39 @@ msgstr ""
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_warehouse__subcontracting_mto_pull_id
 msgid "Subcontracting MTO Rule"
-msgstr "Thầu phụ theo qui tắc MTO"
+msgstr "Gia công theo quy tắc MTO"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_warehouse__subcontracting_pull_id
 msgid "Subcontracting MTS Rule"
-msgstr "Thầu phụ theo qui tắc MTS"
+msgstr "Gia công theo quy tắc MTS"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_warehouse__subcontracting_type_id
 msgid "Subcontracting Operation Type"
-msgstr "Loại hoạt động thầu phụ"
+msgstr "Loại hoạt động gia công"
 
 #. module: mrp_subcontracting
 #: model:ir.actions.act_window,name:mrp_subcontracting.subcontracting_portal_view_production_action
 msgid "Subcontracting Portal"
-msgstr "Cổng thông tin thầu phụ"
+msgstr "Cổng thông tin gia công"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_warehouse__subcontracting_resupply_type_id
 msgid "Subcontracting Resupply Operation Type"
-msgstr "Loại hoạt động tái cung ứng thầu phụ"
+msgstr "Loại hoạt động tái cung ứng gia công"
 
 #. module: mrp_subcontracting
 #. odoo-javascript
 #: code:addons/mrp_subcontracting/static/src/components/bom_overview_special_line/mrp_bom_overview_special_line.xml:0
 msgid "Subcontracting:"
-msgstr "Thầu phụ:"
+msgstr "Gia công:"
 
 #. module: mrp_subcontracting
 #. odoo-python
 #: code:addons/mrp_subcontracting/report/mrp_report_bom_structure.py:0
 msgid "Subcontracting: %s"
-msgstr "Thầu phụ: %s"
+msgstr "Gia công: %s"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_mrp_production__subcontractor_id
@@ -496,19 +500,19 @@ msgstr "Thầu phụ: %s"
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_res_users__is_subcontractor
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_location__subcontractor_ids
 msgid "Subcontractor"
-msgstr "Nhà thầu phụ"
+msgstr "Đơn vị gia công"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_res_partner__property_stock_subcontractor
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_res_users__property_stock_subcontractor
 msgid "Subcontractor Location"
-msgstr "Địa điểm thầu phụ"
+msgstr "Vị trí gia công"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_mrp_bom__subcontractor_ids
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.view_partner_mrp_subcontracting_filter
 msgid "Subcontractors"
-msgstr "Nhà thầu phụ"
+msgstr "Đơn vị gia công"
 
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_product_supplierinfo
@@ -518,7 +522,7 @@ msgstr "Bảng giá nhà cung cấp"
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_move__is_subcontract
 msgid "The move is a subcontract receipt"
-msgstr "Dịch chuyển là một phiếu nhập kho thầu phụ"
+msgstr "Điều chuyển là một phiếu nhập kho gia công"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,help:mrp_subcontracting.field_res_partner__property_stock_subcontractor
@@ -528,29 +532,29 @@ msgid ""
 "to this contact during a subcontracting process."
 msgstr ""
 "Vị trí tồn kho được sử dụng làm điểm nguồn và đích khi gửi hàng cho liên hệ "
-"này trong quá trình thầu phụ."
+"này trong quá trình gia công."
 
 #. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.portal_my_productions
 msgid "There are currently no productions for your account."
-msgstr "Hiện không có sản xuất nào cho tài khoản của bạn."
+msgstr "Hiện không có hoạt động sản xuất nào cho tài khoản của bạn."
 
 #. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.mrp_subcontracting_move_form_view
 msgid "Total Consumed"
-msgstr "Tổng được sử dụng"
+msgstr "Tổng đã sử dụng"
 
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_stock_picking
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_mrp_production__incoming_picking
 msgid "Transfer"
-msgstr "Điều chuyển"
+msgstr "Lệnh chuyển hàng"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,help:mrp_subcontracting.field_mrp_production__subcontractor_id
 msgid "Used to restrict access to the portal user through Record Rules"
 msgstr ""
-"Được sử dụng để hạn chế quyền truy cập cho người dùng cổng thông qua Quy tắc "
+"Được sử dụng để hạn chế quyền truy cập cho người dùng cổng thông qua quy tắc "
 "ghi nhận"
 
 #. module: mrp_subcontracting
@@ -565,14 +569,14 @@ msgid ""
 "You can not set a Bill of Material with operations or by-product line as "
 "subcontracting."
 msgstr ""
-"Bạn không thể thiết lập định mức nguyên liệu với hoạt động hoặc mục phụ phẩm "
-"được thầu phụ."
+"Bạn không thể thiết lập danh mục vật tư với hoạt động hoặc dòng phụ phẩm "
+"được gia công."
 
 #. module: mrp_subcontracting
 #. odoo-python
 #: code:addons/mrp_subcontracting/models/stock_location.py:0
 msgid "You cannot alter the company's subcontracting location"
-msgstr "Bạn không thể thay đổi địa điểm thầu phụ của công ty"
+msgstr "Bạn không thể thay đổi vị trí gia công của công ty"
 
 #. module: mrp_subcontracting
 #. odoo-python
@@ -589,7 +593,7 @@ msgstr "VD: PO0032"
 #. odoo-python
 #: code:addons/mrp_subcontracting/controllers/portal.py:0
 msgid "state"
-msgstr ""
+msgstr "trạng thái"
 
 #~ msgid "Can be Subcontracted"
 #~ msgstr "Có thể thầu phụ"

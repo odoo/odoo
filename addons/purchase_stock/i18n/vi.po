@@ -1,24 +1,27 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* purchase_stock
+# * purchase_stock
 #
 # Translators:
 # Martin Trigaux, 2022
 # Thi Huong Nguyen, 2023
 #
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-09-11 14:00+0000\n"
-"PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Thi Huong Nguyen, 2023\n"
-"Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
+"PO-Revision-Date: 2025-09-16 02:32+0000\n"
+"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"Language-Team: Vietnamese <https://translate.odoo.com/projects/odoo-19/"
+"purchase_stock/vi/>\n"
 "Language: vi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_view_form_inherit
@@ -29,7 +32,7 @@ msgstr "% Giao hàng đúng hạn"
 #. odoo-python
 #: code:addons/purchase_stock/models/purchase_order.py:0
 msgid "%(otd)s %%"
-msgstr ""
+msgstr "%(otd)s %%"
 
 #. module: purchase_stock
 #. odoo-python
@@ -81,23 +84,23 @@ msgstr ""
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_view_form_inherit
 msgid "<span invisible=\"on_time_rate &gt;= 0\">No data yet</span>"
-msgstr ""
+msgstr "<span invisible=\"on_time_rate &gt;= 0\">Chưa có dữ liệu</span>"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.product_view_kanban_catalog_purchase_only
 msgid "<span> / </span>"
-msgstr ""
+msgstr "<span>/</span>"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_stock
 msgid "<span> days</span>"
-msgstr ""
+msgstr "<span> ngày</span>"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.report_purchaseorder_document
 #: model_terms:ir.ui.view,arch_db:purchase_stock.report_purchasequotation_document
 msgid "<strong class=\"d-block mt-3\">Shipping address</strong>"
-msgstr ""
+msgstr "<strong class=\"d-block mt-3\">Địa chỉ giao hàng</strong>"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.report_purchaseorder_document
@@ -108,12 +111,12 @@ msgstr "<strong>Incoterm:</strong>"
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.report_purchasequotation_document
 msgid "<strong>Requested Ship Date:</strong>"
-msgstr ""
+msgstr "<strong>Ngày vận chuyển yêu cầu:</strong>"
 
 #. module: purchase_stock
 #: model:ir.model.fields,help:purchase_stock.field_purchase_order_line__is_storable
 msgid "A storable product is a product for which you manage stock."
-msgstr ""
+msgstr "Sản phẩm lưu kho là sản phẩm mà bạn quản lý tồn kho."
 
 #. module: purchase_stock
 #: model:ir.model.fields,help:purchase_stock.field_purchase_order_line__qty_received_method
@@ -123,11 +126,15 @@ msgid ""
 "  - Manual: the quantity is set manually on the line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
+"Theo cấu hình sản phẩm, số lượng đã nhận được có thể được tính toán tự động "
+"theo cơ chế:\n"
+"  - Thủ công: số lượng được điền thủ công vào dòng\n"
+"  - Điều chuyển tồn kho: số lượng đến từ các phiếu xuất kho đã xác nhận\n"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_rule__action
 msgid "Action"
-msgstr "Hành động"
+msgstr "Tác vụ"
 
 #. module: purchase_stock
 #. odoo-javascript
@@ -147,6 +154,8 @@ msgid ""
 "Allow Make to Order, or automate PO, when a product is sold and get direct "
 "links between documents."
 msgstr ""
+"Cho phép Sản xuất theo đơn đặt hàng hoặc tự động tạo PO khi sản phẩm được "
+"bán và thiết lập liên kết trực tiếp giữa các tài liệu."
 
 #. module: purchase_stock
 #: model:ir.model.fields.selection,name:purchase_stock.selection__res_partner__group_rfq__all
@@ -172,7 +181,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/purchase_stock/static/src/product_catalog/search/search_panel.xml:0
 msgid "Based on"
-msgstr ""
+msgstr "Dựa trên"
 
 #. module: purchase_stock
 #. odoo-python
@@ -201,7 +210,7 @@ msgstr "Công ty"
 #. module: purchase_stock
 #: model:ir.model.fields,help:purchase_stock.field_purchase_order__effective_date
 msgid "Completion date of the first receipt order."
-msgstr "Ngày hoàn thành đơn hàng đã nhận đầu tiên."
+msgstr "Ngày hoàn thành phiếu nhập kho đầu tiên."
 
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_res_config_settings
@@ -217,17 +226,17 @@ msgstr "Liên hệ"
 #. odoo-python
 #: code:addons/purchase_stock/models/purchase_order.py:0
 msgid "Corresponding receipt not found."
-msgstr "Không tìm thấy biên lai tương ứng."
+msgstr "Không tìm thấy phiếu nhập kho tương ứng."
 
 #. module: purchase_stock
 #: model:ir.model,website_form_label:purchase_stock.model_res_partner
 msgid "Create a Customer"
-msgstr ""
+msgstr "Tạo một khách hàng"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_move__created_purchase_line_ids
 msgid "Created Purchase Order Lines"
-msgstr ""
+msgstr "Dòng đơn mua hàng đã tạo"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order_line__product_description_variants
@@ -242,7 +251,7 @@ msgstr ""
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_picking__days_to_arrive
 msgid "Days To Arrive"
-msgstr ""
+msgstr "Ngày để đến nơi"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_stock
@@ -263,7 +272,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:purchase_stock.field_res_company__days_to_purchase
 #: model:ir.model.fields,field_description:purchase_stock.field_res_config_settings__days_to_purchase
 msgid "Days to Purchase"
-msgstr "Số ngày mua hàng"
+msgstr "Ngày để mua hàng"
 
 #. module: purchase_stock
 #: model:ir.model.fields,help:purchase_stock.field_res_partner__group_rfq
@@ -282,7 +291,7 @@ msgstr ""
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_picking__delay_pass
 msgid "Delay Pass"
-msgstr ""
+msgstr "Giới hạn mức độ chậm trễ"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__picking_type_id
@@ -297,7 +306,7 @@ msgstr ""
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__default_location_dest_id_usage
 msgid "Destination Location Type"
-msgstr "Loại địa điểm đích"
+msgstr "Loại vị trí đích"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_account_move__display_name
@@ -333,17 +342,17 @@ msgstr "Tên hiển thị"
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order_line__move_dest_ids
 msgid "Downstream moves alt"
-msgstr ""
+msgstr "Điều chuyển đầu ra alt"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__dest_address_id
 msgid "Dropship Address"
-msgstr "Địa chỉ bán hàng trung gian"
+msgstr "Địa chỉ dropship"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_res_config_settings__module_stock_dropshipping
 msgid "Dropshipping"
-msgstr "Bán hàng trung gian"
+msgstr "Dropship"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_report__effective_date
@@ -359,7 +368,7 @@ msgstr "Ngày có hiệu lực năm trước"
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_report__days_to_arrival
 msgid "Effective Days To Arrival"
-msgstr ""
+msgstr "Ngày hiệu lực để đến nơi"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_warehouse_orderpoint__effective_vendor_id
@@ -376,7 +385,7 @@ msgstr ""
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.exception_on_po
 msgid "Exception(s) occurred on the purchase order(s):"
-msgstr "(Các) ngoại lệ xảy ra trên (các) đơn mua hàng:"
+msgstr "(Các) ngoại lệ đã xảy ra trên (các) đơn mua hàng:"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.exception_on_po
@@ -418,7 +427,7 @@ msgstr "Đã nhận hết"
 #. odoo-javascript
 #: code:addons/purchase_stock/static/src/js/tours/purchase_stock.js:0
 msgid "Generate the draft vendor bill."
-msgstr "Tạo hóa đơn nhà cung cấp nháp."
+msgstr "Tạo hóa đơn mua hàng nháp."
 
 #. module: purchase_stock
 #. odoo-javascript
@@ -435,7 +444,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/purchase_stock/static/src/js/tours/purchase_stock.js:0
 msgid "Go back to the purchase order to generate the vendor bill."
-msgstr "Quay lại đơn mua hàng để tạo hóa đơn nhà cung cấp."
+msgstr "Quay lại đơn mua hàng để tạo hóa đơn mua hàng."
 
 #. module: purchase_stock
 #. odoo-javascript
@@ -483,32 +492,32 @@ msgstr "ID"
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__incoming_picking_count
 msgid "Incoming Shipment count"
-msgstr "Số lượng lô hàng đang về"
+msgstr "Số lượng lô hàng đang nhập"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_view_form_inherit
 msgid "Incoming Shipments"
-msgstr "Lô hàng đang về"
+msgstr "Lô hàng đang nhập"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__incoterm_location
 msgid "Incoterm Location"
-msgstr "Vị trí Incoterm"
+msgstr "Địa điểm Incoterm"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__is_shipped
 msgid "Is Shipped"
-msgstr "Đã giao"
+msgstr "Đã vận chuyển"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_res_config_settings__is_installed_sale
 msgid "Is the Sale Module Installed"
-msgstr "Là module Bán hàng đã cài đặt"
+msgstr "Là phân hệ Bán hàng đã cài đặt"
 
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_account_move
 msgid "Journal Entry"
-msgstr "Bút toán "
+msgstr "Bút toán"
 
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_account_move_line
@@ -523,7 +532,7 @@ msgstr "Lần mua hàng cuối cùng"
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order_line__location_final_id
 msgid "Location from procurement"
-msgstr ""
+msgstr "Vị trí từ đơn mua sắm"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_purchase
@@ -533,7 +542,7 @@ msgstr "Logistics"
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_stock_lot
 msgid "Lot/Serial"
-msgstr "Số lô/sê-ri"
+msgstr "Lô/sê-ri"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.exception_on_po
@@ -553,34 +562,34 @@ msgstr ""
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_product_product__monthly_demand
 msgid "Monthly Demand"
-msgstr ""
+msgstr "Nhu cầu hàng tháng"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.exception_on_po
 msgid "Next transfer(s) impacted:"
-msgstr "(Các) điều chuyển tiếp theo bị ảnh hưởng:"
+msgstr "(Các) lệnh chuyển hàng tiếp theo bị ảnh hưởng:"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_help_message_template
 msgid "No receipt yet! Automate them with purchase orders."
-msgstr ""
+msgstr "Chưa có phiếu nhập kho! Tự động hóa chúng với các đơn mua hàng."
 
 #. module: purchase_stock
 #. odoo-python
 #: code:addons/purchase_stock/models/stock_rule.py:0
 msgid "No supplier has been found to replenish"
-msgstr ""
+msgstr "Không tìm thấy nhà cung cấp nào để bổ sung hàng"
 
 #. module: purchase_stock
 #: model:ir.model.fields.selection,name:purchase_stock.selection__purchase_order__receipt_status__pending
 msgid "Not Received"
-msgstr "Chưa nhận được"
+msgstr "Chưa nhận"
 
 #. module: purchase_stock
 #. odoo-javascript
 #: code:addons/purchase_stock/static/src/purchase_dashboard/purchase_dashboard.xml:0
 msgid "OTD"
-msgstr ""
+msgstr "Giao hàng đúng hạn"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_partner_view_purchase_buttons_inherit
@@ -641,6 +650,9 @@ msgid ""
 "number of ordered products.x is either the System Parameter "
 "purchase_stock.on_time_delivery_days or the default 365"
 msgstr ""
+"Trong x ngày qua; số lượng sản phẩm đã nhận đúng hạn chia cho số lượng sản "
+"phẩm đã đặt. x là tham số hệ thống purchase_stock.on_time_delivery_days hoặc "
+"365 theo mặc định"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_product_product__purchase_order_line_ids
@@ -672,12 +684,12 @@ msgstr "Danh mục sản phẩm"
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_product_replenish
 msgid "Product Replenish"
-msgstr ""
+msgstr "Bổ sung sản phẩm"
 
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_stock_replenish_mixin
 msgid "Product Replenish Mixin"
-msgstr ""
+msgstr "Mixin bổ sung sản phẩm"
 
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_product_product
@@ -704,7 +716,7 @@ msgstr "Đơn mua hàng"
 #: model:ir.model,name:purchase_stock.model_purchase_order_line
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_move__purchase_line_id
 msgid "Purchase Order Line"
-msgstr "Mục đơn mua hàng"
+msgstr "Dòng đơn mua hàng"
 
 #. module: purchase_stock
 #. odoo-javascript
@@ -738,7 +750,7 @@ msgid ""
 "customer. Otherwise, keep empty to deliver to your own company."
 msgstr ""
 "Nhập một địa chỉ nếu bạn muốn giao hàng trực tiếp từ nhà cung cấp đến khách "
-"hàng. Ngược lại, hãy để trống để giao hàng về công ty bạn."
+"hàng. Nếu không, hãy để trống để giao hàng về công ty bạn."
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_view_form_inherit
@@ -754,12 +766,12 @@ msgstr ""
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__receipt_status
 msgid "Receipt Status"
-msgstr "Trạng thái biên lai"
+msgstr "Trạng thái phiếu nhập kho"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_view_form_inherit
 msgid "Receive"
-msgstr ""
+msgstr "Nhận"
 
 #. module: purchase_stock
 #. odoo-javascript
@@ -784,6 +796,9 @@ msgid ""
 "            Orange: To process today\n"
 "            Green: On time"
 msgstr ""
+"Đỏ: Trễ\n"
+"            Cam: Cần xử lý hôm nay\n"
+"            Xanh: Đúng thời gian"
 
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_stock_reference
@@ -799,7 +814,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/purchase_stock/static/src/product_catalog/search/search_panel.xml:0
 msgid "Replenish for"
-msgstr ""
+msgstr "Bổ sung hàng cho"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_purchase
@@ -820,7 +835,7 @@ msgstr "Dự trữ"
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_stock_return_picking
 msgid "Return Picking"
-msgstr "Phiếu trả hàng"
+msgstr "Phiếu xuất kho trả hàng"
 
 #. module: purchase_stock
 #: model:ir.model.fields.selection,name:purchase_stock.selection__res_partner__group_on__6
@@ -841,7 +856,7 @@ msgstr "Hiển thị nút đặt nhà cung cấp"
 #: model:ir.model.fields,field_description:purchase_stock.field_product_replenish__show_vendor
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_replenish_mixin__show_vendor
 msgid "Show Vendor"
-msgstr ""
+msgstr "Hiển thị nhà cung cấp"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_replenishment_info__show_vendor_tab
@@ -856,13 +871,13 @@ msgstr "Hiển thị cột nhà cung cấp"
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_stock_move
 msgid "Stock Move"
-msgstr "Dịch chuyển tồn kho"
+msgstr "Điều chuyển tồn kho"
 
 #. module: purchase_stock
 #: model:ir.model.fields.selection,name:purchase_stock.selection__purchase_order_line__qty_received_method__stock_moves
 #: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_line_view_form_inherit
 msgid "Stock Moves"
-msgstr "Dịch chuyển tồn kho"
+msgstr "Điều chuyển tồn kho"
 
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_stock_forecasted_product_product
@@ -892,7 +907,7 @@ msgstr "Thông tin bổ sung nhà cung cấp tồn kho"
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_stock_replenishment_option
 msgid "Stock warehouse replenishment option"
-msgstr ""
+msgstr "Tuỳ chọn bổ sung kho hàng"
 
 #. module: purchase_stock
 #. odoo-javascript
@@ -951,7 +966,7 @@ msgstr "Thông tin nhà cung cấp"
 #. module: purchase_stock
 #: model:ir.model.fields,help:purchase_stock.field_purchase_order__default_location_dest_id_usage
 msgid "Technical field used to display the Drop Ship Address"
-msgstr "Trường kỹ thuật được sử dụng để hiển thị Địa chỉ bán hàng trung gian"
+msgstr "Trường kỹ thuật được sử dụng để hiển thị Địa chỉ dropship"
 
 #. module: purchase_stock
 #. odoo-python
@@ -965,7 +980,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/purchase_stock/models/stock.py:0
 msgid "The following replenishment order has been generated"
-msgstr "Đơn đặt hàng bổ sung sau đây đã được tạo"
+msgstr "Đơn bổ sung hàng sau đây đã được tạo"
 
 #. module: purchase_stock
 #. odoo-python
@@ -991,6 +1006,9 @@ msgid ""
 "location (%(location)s) of reordering rule (%(reordering_rule)s) for product "
 "%(product)s. Change the operation type or cancel the request for quotation."
 msgstr ""
+"Kho thuộc loại hoạt động (%(operation_type)s) không nhất quán với vị trí "
+"(%(location)s) của quy tắc tái sắp xếp (%(reordering_rule)s) cho sản phẩm "
+"%(product)s. Thay đổi loại hoạt động hoặc hủy yêu cầu báo giá."
 
 #. module: purchase_stock
 #. odoo-python
@@ -1000,9 +1018,9 @@ msgid ""
 "%s (no vendor defined, minimum quantity not reached, dates not valid, ...). "
 "Go on the product form and complete the list of vendors."
 msgstr ""
-"Không có giá nhà cung cấp phù hợp để tạo đơn mua hàng cho sản phẩm %s (không "
-"xác định nhà cung cấp, không đáp ứng số lượng tối thiểu, ngày không hợp "
-"lệ, ...). Đi đến biểu mẫu sản phẩm và bổ sung danh sách các nhà cung cấp."
+"Không có giá nhập hàng phù hợp để tạo đơn mua hàng cho sản phẩm %s (không "
+"xác định nhà cung cấp, không đáp ứng số lượng tối thiểu, ngày không hợp lệ, "
+"...). Đi đến biểu mẫu sản phẩm và hoàn thiện danh sách nhà cung cấp."
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_purchase
@@ -1013,6 +1031,11 @@ msgid ""
 "manufacturing orders, etc. are triggered based on what way to replenish is "
 "set on the product (Buy or Manufacture route)."
 msgstr ""
+"Điều này sẽ thêm tuyến Bổ sung theo đơn đặt hàng (MTO) để áp dụng cho sản "
+"phẩm nhằm tạo ra đơn bổ sung hàng theo nhu cầu, được liên kết trực tiếp với, "
+"ví dụ như, các đơn bán hàng ngay khi chúng được xác nhận. Các đơn mua hàng, "
+"lệnh sản xuất,... sẽ được kích hoạt tùy thuộc vào phương thức bổ sung hàng "
+"được thiết lập trên sản phẩm (theo tuyến Mua hoặc Sản xuất)."
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_purchase
@@ -1023,16 +1046,16 @@ msgid ""
 "demand flow. The requested delivery address will be the customer delivery "
 "address and not your warehouse."
 msgstr ""
-"Một tuyến bán hàng trung gian được bổ sung để áp dụng cho sản phẩm với mục "
-"đích yêu cầu nhà cung cấp giao hàng cho khách hàng của bạn. Một sản phẩm để "
-"bán trung gian sẽ tạo ra một yêu cầu báo giá khi đơn bán hàng được xác nhận. "
-"Đây là một quy trình theo yêu cầu. Địa chỉ giao hàng được yêu cầu sẽ là địa "
-"chỉ giao hàng của khách hàng, không phải là kho hàng của bạn."
+"Một tuyến dropship được bổ sung để áp dụng cho sản phẩm với mục đích yêu cầu "
+"nhà cung cấp giao hàng cho khách hàng của bạn. Một sản phẩm để dropship sẽ "
+"tạo ra một yêu cầu báo giá khi đơn bán hàng được xác nhận. Đây là một quy "
+"trình theo yêu cầu. Địa chỉ giao hàng được yêu cầu sẽ là địa chỉ giao hàng "
+"của khách hàng, không phải là kho hàng của bạn."
 
 #. module: purchase_stock
 #: model:ir.model.fields,help:purchase_stock.field_purchase_order__picking_type_id
 msgid "This will determine operation type of incoming shipment"
-msgstr "Điều này sẽ xác định loại hoạt động của lô hàng về"
+msgstr "Điều này sẽ xác định loại hoạt động của lô hàng đang nhập"
 
 #. module: purchase_stock
 #. odoo-python
@@ -1040,13 +1063,15 @@ msgstr "Điều này sẽ xác định loại hoạt động của lô hàng v�
 msgid ""
 "Those dates couldn’t be modified accordingly on the receipt %s which had "
 "already been validated."
-msgstr "Không thể điều chỉnh những ngày đó theo biên lai %s đã được xác nhận."
+msgstr ""
+"Không thể điều chỉnh tương ứng những ngày đó trên phiếu nhập kho %s đã được "
+"xác nhận."
 
 #. module: purchase_stock
 #. odoo-python
 #: code:addons/purchase_stock/models/purchase_order.py:0
 msgid "Those dates have been updated accordingly on the receipt %s."
-msgstr "Đã cập nhật những ngày đó theo biên lai %s."
+msgstr "Đã cập nhật tương ứng những ngày đó trên phiếu nhập kho %s."
 
 #. module: purchase_stock
 #: model:ir.model.fields.selection,name:purchase_stock.selection__res_partner__group_on__4
@@ -1062,7 +1087,7 @@ msgstr ""
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.product_view_search_catalog
 msgid "To Order"
-msgstr ""
+msgstr "Cần đặt hàng"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_vendor_delay_report__qty_total
@@ -1072,12 +1097,12 @@ msgstr "Tổng số lượng"
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order_line__is_storable
 msgid "Track Inventory"
-msgstr ""
+msgstr "Theo dõi hàng tồn kho"
 
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_stock_picking
 msgid "Transfer"
-msgstr "Điều chuyển"
+msgstr "Lệnh chuyển hàng"
 
 #. module: purchase_stock
 #: model:ir.model.fields.selection,name:purchase_stock.selection__res_partner__group_on__2
@@ -1108,7 +1133,7 @@ msgstr "Báo cáo mức độ chậm trễ của nhà cung cấp"
 #. odoo-python
 #: code:addons/purchase_stock/models/stock_rule.py:0
 msgid "Vendor Lead Time"
-msgstr "Thời gian giao hàng của nhà cung cấp"
+msgstr "Thời gian hoàn thành của nhà cung cấp"
 
 #. module: purchase_stock
 #: model_terms:ir.actions.act_window,help:purchase_stock.action_purchase_vendor_delay_report
@@ -1119,7 +1144,7 @@ msgstr "Phân tích giao hàng đúng hạn của nhà cung cấp"
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_replenishment_info__supplierinfo_id
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_warehouse_orderpoint__supplier_id
 msgid "Vendor Pricelist"
-msgstr ""
+msgstr "Bảng giá nhập hàng"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_warehouse_orderpoint__vendor_ids
@@ -1164,13 +1189,13 @@ msgid ""
 msgstr ""
 "Khi cần sản phẩm trong <b>%s</b>, <br/> một yêu cầu báo giá sẽ được tạo để "
 "đáp ứng nhu cầu. <br/>Lưu ý: Quy tắc này sẽ được sử dụng cùng với những quy "
-"tắc <br/>về (các) tuyến biên nhận."
+"tắc <br/>về (các) tuyến nhập kho."
 
 #. module: purchase_stock
 #. odoo-python
 #: code:addons/purchase_stock/models/purchase_order.py:0
 msgid "You must set a Vendor Location for this partner %s"
-msgstr "Bạn phải thiết lập Địa điểm nhà cung cấp cho đối tác này %s"
+msgstr "Bạn phải thiết lập Vị trí nhà cung cấp cho đối tác này %s"
 
 #. module: purchase_stock
 #. odoo-javascript
@@ -1192,7 +1217,7 @@ msgstr "đã đặt thay vì"
 #. odoo-python
 #: code:addons/purchase_stock/models/stock_rule.py:0
 msgid "this product should be manually replenished."
-msgstr ""
+msgstr "sản phẩm này phải được bổ sung thủ công."
 
 #~ msgid ""
 #~ "<span attrs=\"{'invisible': [('on_time_rate', '&gt;=', 0)]}\">No On-time "

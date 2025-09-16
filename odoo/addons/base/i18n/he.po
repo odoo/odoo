@@ -1,6 +1,6 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* base
+# * base
 #
 # Translators:
 # Adi Sharashov <Adi@laylinetech.com>, 2022
@@ -27,21 +27,23 @@
 # Yihya Hugirat <hugirat@gmail.com>, 2023
 # דודי מלכה <Dudimalka6@gmail.com>, 2023
 # Roy Sayag, 2023
-#
+# "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-09-12 13:52+0000\n"
-"PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Roy Sayag, 2023\n"
-"Language-Team: Hebrew (https://app.transifex.com/odoo/teams/41243/he/)\n"
+"PO-Revision-Date: 2025-09-16 17:05+0000\n"
+"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
+"Language-Team: Hebrew <https://translate.odoo.com/projects/odoo-19/base/he/>"
+"\n"
 "Language: he\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n == 2 && n % "
-"1 == 0) ? 1: (n % 10 == 0 && n % 1 == 0 && n > 10) ? 2 : 3;\n"
+"Plural-Forms: nplurals=4; plural=(n == 1) ? 0 : ((n == 2) ? 1 : ((n > 10 && "
+"n % 10 == 0) ? 2 : 3));\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_at_reports
@@ -375,6 +377,7 @@ msgstr ""
 "- הדפסת חשבונות: מאפשרת להדפיס קבלה לפני תשלום ההזמנה\n"
 "- פיצול חשבונות: מאפשר לך לפצל הזמנה להזמנות שונות\n"
 "- הדפסת הזמנות במטבח: מאפשרת להדפיס עדכוני הזמנות למדפסות מטבח או בר\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_discount
@@ -491,7 +494,7 @@ msgid ""
 "holds the VAT detail info of sales or purchases made in a period of time.\n"
 "* Add a VAT summary report that is used to analyze invoicing\n"
 "* Add Digital VAT Book functionality that let us generate TXT files to "
-"import in AFIP. The ones we implement are:\n"
+"import in ARCA. The ones we implement are:\n"
 "\n"
 "    * LIBRO_IVA_DIGITAL_VENTAS_CBTE\n"
 "    * LIBRO_IVA_DIGITAL_VENTAS_ALICUOTAS\n"
@@ -499,7 +502,7 @@ msgid ""
 "    * LIBRO_IVA_DIGITAL_COMPRAS_ALICUOTAS\n"
 "    * LIBRO_IVA_DIGITAL_IMPORTACION_BIENES_ALICUOTA\n"
 "\n"
-"Official Documentation AFIP\n"
+"Official Documentation ARCA\n"
 "\n"
 "* Digital VAT Book - record design https://www.afip.gob.ar/libro-iva-digital/"
 "documentos/libro-iva-digital-diseno-registros.pdf\n"
@@ -1787,7 +1790,7 @@ msgid ""
 "of identifications are defined by the government authorities that regulate "
 "the fiscal operations. For example:\n"
 "\n"
-"* AFIP in Argentina defines DNI, CUIT (vat for legal entities), CUIL (vat "
+"* ARCA in Argentina defines DNI, CUIT (vat for legal entities), CUIL (vat "
 "for natural person), and another 80 valid identification types.\n"
 "\n"
 "Each identification holds this information:\n"
@@ -2053,7 +2056,7 @@ msgid ""
 msgstr ""
 "\n"
 "תכונות מתקדמות עבור ה-PoS כמו תצוגות טובות יותר\n"
-"עבור תצורת IoT Box. \n"
+"עבור תצורת IoT Box.   \n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_pine_labs
@@ -2145,6 +2148,7 @@ msgstr ""
 "\n"
 "אפשר ליצור לידים מפגישות מתוזמנות דרך האתר שלך\n"
 "-----------------------------------------------------------------------\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_sale_collect_wishlist
@@ -4328,7 +4332,7 @@ msgid ""
 "----------\n"
 "\n"
 "Be able to create journals in Odoo to create electronic customer invoices "
-"and report then to AFIP (via webservices).\n"
+"and report then to ARCA (via webservices).\n"
 "The options available are:\n"
 "\n"
 "    * Electronic Invoice - Web Service\n"
@@ -4336,63 +4340,63 @@ msgid ""
 "    * Electronic Fiscal Bond - Web Service\n"
 "\n"
 "In the electronic journals if you validate an invoice this one will be "
-"validated in both Odoo and AFIP. This validation is\n"
+"validated in both Odoo and ARCA. This validation is\n"
 "made at the instant and we recieve and \"approved/approved with observation/"
-"rejected\" state from AFIP. If the invoice has\n"
-"been rejected by AFIP will not be post in the system and a pop up message "
+"rejected\" state from ARCA. If the invoice has\n"
+"been rejected by ARCA will not be post in the system and a pop up message "
 "will be shown with both the error detail (reject reasons)\n"
 "we recieve and a HINT about what the problem could be.\n"
 "\n"
 "For auditing and troubleshooting purposes we also add a menu \"Consulit "
-"Invoice in AFIP\" that let us to consult invoices previously\n"
-"sent to AFIP and last number used as support for any possible issues on the "
-"sequences synchronization between Odoo and AFIP.\n"
+"Invoice in ARCA\" that let us to consult invoices previously\n"
+"sent to ARCA and last number used as support for any possible issues on the "
+"sequences synchronization between Odoo and ARCA.\n"
 "\n"
 "    NOTE: From the Journal's form view we are able to force a sync between "
 "the odoo sequences to each of the document types in\n"
-"    with the last numbers registered in AFIP.\n"
+"    with the last numbers registered in ARCA.\n"
 "\n"
 "From vendor bills, we have added a functionality that can be configured in "
 "the accounting settings to be able to verify\n"
-"vendor bills in AFIP to check if the vendor bills are real (more information "
+"vendor bills in ARCA to check if the vendor bills are real (more information "
 "please review the setting description).\n"
 "\n"
 "Configuration:\n"
 "\n"
 "1. Go to the Accounting Settings > Argentinean Localization section\n"
 "\n"
-"    1.1. Configure the AFIP Web Services mode:\n"
+"    1.1. Configure the ARCA Web Services mode:\n"
 "\n"
 "    * Testing environment in order to use demo certificates that will be use "
 "to test the instance and to make NOT\n"
-"      real invoices to AFIP. is just for testing. For demo instaces is "
+"      real invoices to ARCA. is just for testing. For demo instaces is "
 "already pre-defined you will not need to configure\n"
-"      it (commonly named in AFIP as Homologation environment).\n"
+"      it (commonly named in ARCA as Homologation environment).\n"
 "    * Production environment in order to generate real certificates and "
-"legal invoices to AFIP,\n"
+"legal invoices to ARCA,\n"
 "\n"
-"    1.2. Configure your AFIP Certificate: If you are in a demo instance this "
+"    1.2. Configure your ARCA Certificate: If you are in a demo instance this "
 "one will be have been set by default. If you\n"
-"         are in production instance just need to go to upload your AFIP "
+"         are in production instance just need to go to upload your ARCA "
 "Certificate\n"
 "\n"
 "    1.3. Optionally you can define if you like to be eable to verify vendor "
-"bills in AFIP.\n"
+"bills in ARCA.\n"
 "\n"
-"2. Create Sales journals that will represent each one of your AFIP POS "
-"(Available in AFIP Portal) you want to use in Odoo.\n"
+"2. Create Sales journals that will represent each one of your ARCA POS "
+"(Available in ARCA Portal) you want to use in Odoo.\n"
 "\n"
 "    2.1. Use Documents field is set by default please dont change\n"
-"    2.2. Set AFIP POS System for one of the electronic ones.\n"
+"    2.2. Set ARCA POS System for one of the electronic ones.\n"
 "\n"
 "        * Electronic Invoice - Web Service'\n"
 "        * Electronic Fiscal Bond - Web Service'\n"
 "        * Export Voucher - Web Service'\n"
 "\n"
-"    2.3. Set the AFIP POS Number and AFIP POS Address taking into account "
-"what you have configured in your AFIP Portal.\n"
+"    2.3. Set the ARCA POS Number and ARCA POS Address taking into account "
+"what you have configured in your ARCA Portal.\n"
 "\n"
-"    NOTE: You can use the \"Check Available AFIP POS\" button in Journal's "
+"    NOTE: You can use the \"Check Available ARCA POS\" button in Journal's "
 "form to corroborate the to use to create the journals.\n"
 "\n"
 "For more information about Argentinean Electronic invoicing please go to "
@@ -4425,7 +4429,7 @@ msgid ""
 "In some Latinamerica countries, including Argentina and Chile, some "
 "accounting transactions like invoices and vendor bills are classified by a "
 "document types defined by the government fiscal authorities (In Argentina "
-"case AFIP, Chile case SII).\n"
+"case ARCA, Chile case SII).\n"
 "\n"
 "This module is intended to be extended by localizations in order to manage "
 "these document types and is an essential information that needs to be "
@@ -4458,20 +4462,20 @@ msgid ""
 "\n"
 "This module add accounting features for the Argentinean localization, which "
 "represent the minimal configuration needed for a company  to operate in "
-"Argentina and under the AFIP (Administración Federal de Ingresos Públicos) "
+"Argentina and under the ARCA (Administración Federal de Ingresos Públicos) "
 "regulations and guidelines.\n"
 "\n"
 "Follow the next configuration steps for Production:\n"
 "\n"
-"1. Go to your company and configure your VAT number and AFIP Responsibility "
+"1. Go to your company and configure your VAT number and ARCA Responsibility "
 "Type\n"
 "2. Go to Accounting / Settings and set the Chart of Account that you will "
 "like to use.\n"
-"3. Create your Sale journals taking into account AFIP POS info.\n"
+"3. Create your Sale journals taking into account ARCA POS info.\n"
 "\n"
 "Demo data for testing:\n"
 "\n"
-"* 3 companies were created, one for each AFIP responsibility type with the "
+"* 3 companies were created, one for each ARCA responsibility type with the "
 "respective Chart of Account installed. Choose the company that fix you in "
 "order to make tests:\n"
 "\n"
@@ -4495,7 +4499,7 @@ msgid ""
 "Highlights:\n"
 "\n"
 "* Chart of account will not be automatically installed, each CoA Template "
-"depends on the AFIP Responsibility of the company, you will need to install "
+"depends on the ARCA Responsibility of the company, you will need to install "
 "the CoA for your needs.\n"
 "* No sales journals will be generated when installing a CoA, you will need "
 "to configure your journals manually.\n"
@@ -4513,7 +4517,7 @@ msgid ""
 "\n"
 "Master Data:\n"
 "\n"
-"* Chart of Account: one for each AFIP responsibility that is related to a "
+"* Chart of Account: one for each ARCA responsibility that is related to a "
 "legal entity:\n"
 "\n"
 "  * Responsable Inscripto (RI)\n"
@@ -4522,15 +4526,15 @@ msgid ""
 "\n"
 "* Argentinean Taxes and Account Tax Groups (VAT taxes with the existing "
 "aliquots and other types)\n"
-"* AFIP Responsibility Types\n"
+"* ARCA Responsibility Types\n"
 "* Fiscal Positions (in order to map taxes)\n"
 "* Legal Documents Types in Argentina\n"
 "* Identification Types valid in Argentina.\n"
-"* Country AFIP codes and Country VAT codes for legal entities, natural "
+"* Country ARCA codes and Country VAT codes for legal entities, natural "
 "persons and others\n"
-"* Currency AFIP codes\n"
-"* Unit of measures AFIP codes\n"
-"* Partners: Consumidor Final and AFIP\n"
+"* Currency ARCA codes\n"
+"* Unit of measures ARCA codes\n"
+"* Partners: Consumidor Final and ARCA\n"
 msgstr ""
 
 #. module: base
@@ -6220,7 +6224,7 @@ msgid ""
 "\n"
 msgstr ""
 "\n"
-" Odoo סיורי אינטרנט\n"
+"Odoo סיורי אינטרנט\n"
 "========================\n"
 "\n"
 
@@ -9272,7 +9276,7 @@ msgid ""
 msgstr ""
 "\n"
 "מודול זה מספק כלים סטנדרטיים (מודל חשבון, מנהל הקשר ועוזרים)\n"
-"כדי לתמוך ברכישות בתוך האפליקציה בתוך Odoo."
+"כדי לתמוך ברכישות בתוך האפליקציה בתוך Odoo. "
 
 #. module: base
 #: model:ir.module.module,description:base.module_web_mobile
@@ -9848,7 +9852,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_delivery_mondialrelay
 msgid " Let's choose a Point Relais® as shipping address "
-msgstr "בואו לבחור Point Relais® ככתובת למשלוח"
+msgstr " בואו לבחור Point Relais® ככתובת למשלוח "
 
 #. module: base
 #. odoo-python
@@ -10152,7 +10156,7 @@ msgstr "חודש אחד"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_us_1099
 msgid "1099 Reporting"
-msgstr "דו\"ח 1099 "
+msgstr "דו\"ח 1099"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_lang__time_format__%h:%m:%s
@@ -11377,7 +11381,7 @@ msgstr "בעל החשבון"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_bank__acc_holder_name
 msgid "Account Holder Name"
-msgstr "שם בעל החשבון "
+msgstr "שם בעל החשבון"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_invoice_extract
@@ -13938,7 +13942,7 @@ msgstr "החל שדרוג לוח זמנים"
 #. module: base
 #: model:ir.ui.menu,name:base.menu_view_base_module_upgrade
 msgid "Apply Scheduled Upgrades"
-msgstr "החל שדרוגים מתוכננים "
+msgstr "החל שדרוגים מתוכננים"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_services_appointment
@@ -14846,7 +14850,7 @@ msgstr "הוסף מסמך חדש"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_attachment_form
 msgid "Attached To"
-msgstr "מצורף "
+msgstr "מצורף"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_attachment
@@ -15788,7 +15792,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_asset__directive__before
 msgid "Before"
-msgstr "לפני "
+msgstr "לפני"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_country__name_position__before
@@ -15863,7 +15867,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_be_coda
 msgid "Belgium - Import Bank CODA Statements"
-msgstr "בלגיה - ייבוא הצהרות בנק CODA "
+msgstr "בלגיה - ייבוא הצהרות בנק CODA"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_be_soda
@@ -16087,7 +16091,7 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.bq
 msgid "Bonaire, Sint Eustatius and Saba"
-msgstr "סנט אוסטטיוס "
+msgstr "סנט אוסטטיוס"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_booking_engine
@@ -16214,7 +16218,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_br
 msgid "Brazilian - Accounting"
-msgstr "ברזיל - הנהלת חשבונות "
+msgstr "ברזיל - הנהלת חשבונות"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_br_edi
@@ -16406,7 +16410,7 @@ msgstr "מודול גשר לדחיפת הודעות למשתתפים באירו�
 #. module: base
 #: model:ir.module.module,summary:base.module_website_event_track_live_quiz
 msgid "Bridge module to support quiz features during \"live\" tracks. "
-msgstr "מודול גשר לתמיכה בתכונות חידון במהלך רשימות השמעה \"חיות\" (לייב)."
+msgstr "מודול גשר לתמיכה בתכונות חידון במהלך רשימות השמעה \"חיות\" (לייב). "
 
 #. module: base
 #: model:res.country,name:base.io
@@ -16438,7 +16442,7 @@ msgstr "ניהול תקציב"
 #. module: base
 #: model:ir.module.module,summary:base.module_marketing_automation
 msgid "Build automated mailing campaigns"
-msgstr "בנה קמפיינים דיוור אוטומטים "
+msgstr "בנה קמפיינים דיוור אוטומטים"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_pdf_quote_builder
@@ -16595,7 +16599,7 @@ msgstr "גמפיקצית מערכת ניהול לקוחות"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_crm_livechat
 msgid "CRM Livechat"
-msgstr "מערכת ניהול לקוחות צ'אט חי (לייב צ'אט) "
+msgstr "מערכת ניהול לקוחות צ'אט חי (לייב צ'אט)"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_crm_mail_plugin
@@ -17759,7 +17763,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company__logo
 msgid "Company Logo"
-msgstr "לוגו חברה "
+msgstr "לוגו חברה"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company__name
@@ -17772,7 +17776,7 @@ msgstr "שם החברה"
 #: model:ir.model.fields,field_description:base.field_res_partner__commercial_company_name
 #: model:ir.model.fields,field_description:base.field_res_users__commercial_company_name
 msgid "Company Name Entity"
-msgstr "שם יישות החברה "
+msgstr "שם יישות החברה"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
@@ -17818,7 +17822,7 @@ msgid ""
 "the user company"
 msgstr ""
 "החברה משתמשת במטבע מקורי (משמש רק עבור t-esc). כברירת מחדל השתמש בבשם המשתמש "
-"של החברה "
+"של החברה"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_reset_view_arch_wizard__compare_view_id
@@ -17963,7 +17967,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_timesheet_enterprise
 msgid "Configure timesheet invoicing"
-msgstr "הגדר חשבונית עבור גיליון שעות "
+msgstr "הגדר חשבונית עבור גיליון שעות"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_module_upgrade
@@ -19154,7 +19158,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_delivery_dhl_rest
 msgid "DHL Express Shipping"
-msgstr "DHL משלוח אקספרס "
+msgstr "DHL משלוח אקספרס"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_delivery_dhl
@@ -19863,7 +19867,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_lang_tree
 msgid "Disable"
-msgstr "השבת "
+msgstr "השבת"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_report_paperformat__disable_shrinking
@@ -20550,7 +20554,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_eu_oss
 msgid "EU One Stop Shop (OSS)"
-msgstr "European Union One Stop Shop (OSS) "
+msgstr "European Union One Stop Shop (OSS)"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_eu_oss_reports
@@ -21856,7 +21860,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.base_partner_merge_automatic_wizard_form
 msgid "Exclude contacts having"
-msgstr "הוצא איש קשר אשר "
+msgstr "הוצא איש קשר אשר"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_timesheet_enterprise_holidays
@@ -24407,7 +24411,7 @@ msgstr "IAP / אימייל"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_base_iban
 msgid "IBAN Bank Accounts"
-msgstr "IBAN חשבונות בנק "
+msgstr "IBAN חשבונות בנק"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field__unknown__id
@@ -24736,7 +24740,8 @@ msgid ""
 msgstr ""
 "אם התצוגה הזו עוברת בירושה,\n"
 "* אם נכון, התצוגה תמיד מרחיבה את ההורה שלה\n"
-"* אם שקר, התצוגה כרגע לא מרחיבה את ההורה שלה אבל אפשר להפעיל אותה"
+"* אם שקר, התצוגה כרגע לא מרחיבה את ההורה שלה אבל אפשר להפעיל אותה\n"
+"         "
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_rule_form
@@ -24942,7 +24947,7 @@ msgstr "ייבוא \\ ייצוא"
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_fr_fec_import
 msgid "Import Accounting Data from FEC files"
-msgstr "ייבוא ​​נתונים חשבונאיים מקובצי FEC"
+msgstr "ייבוא נתונים חשבונאיים מקובצי FEC"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_account_saft_import
@@ -24980,7 +24985,7 @@ msgstr "ייבוא הצהרת בנק  CSV"
 #. module: base
 #: model:ir.module.module,summary:base.module_account_winbooks_import
 msgid "Import Data From Winbooks"
-msgstr "ייבוא ​​נתונים מ-Winbooks"
+msgstr "ייבוא נתונים מ-Winbooks"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_bank_statement_import_ofx
@@ -25071,7 +25076,7 @@ msgid ""
 "registered office within 8 days of the delivery of the goods or the "
 "provision of the services."
 msgstr ""
-"על מנת שיהיה קביל, יש להודיע ​​ל (שם החברה)(מיקום החברה) על כל תביעה באמצעות "
+"על מנת שיהיה קביל, יש להודיע ל (שם החברה)(מיקום החברה) על כל תביעה באמצעות "
 "מכתב שנשלח במסירה מוקלטת למשרדה הרשום תוך 8 ימים ממועד מסירת הסחורה או מתן "
 "השירותים."
 
@@ -25514,7 +25519,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_adyen
 msgid "Integrate your POS with an Adyen payment terminal"
-msgstr "שלב את הקופה שלך עם מסוף תשלום של Adyen "
+msgstr "שלב את הקופה שלך עם מסוף תשלום של Adyen"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_iot_ingenico
@@ -25865,7 +25870,7 @@ msgstr "מלאי, לוגיסטיקה, הערכה, חשבונאות"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_currency_rate__inverse_company_rate
 msgid "Inverse Company Rate"
-msgstr "הפוך שיעור חברה "
+msgstr "הפוך שיעור חברה"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_currency__inverse_rate
@@ -26031,7 +26036,7 @@ msgstr "ציבורי"
 #: model:ir.model.fields,field_description:base.field_res_partner__is_company
 #: model:ir.model.fields,field_description:base.field_res_users__is_company
 msgid "Is a Company"
-msgstr "מוגדר כחברה "
+msgstr "מוגדר כחברה"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_attachment__public
@@ -26549,7 +26554,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_latam_invoice_document
 msgid "LATAM Document"
-msgstr "מסמך LATAM "
+msgstr "מסמך LATAM"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_latam_invoice_document
@@ -27138,7 +27143,7 @@ msgstr "שורות"
 #: model:ir.model.fields,field_description:base.field_ir_actions_server__link_field_id
 #: model:ir.model.fields,field_description:base.field_ir_cron__link_field_id
 msgid "Link Field"
-msgstr "קישור שדה "
+msgstr "קישור שדה"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_project_stock
@@ -27332,7 +27337,7 @@ msgstr ""
 #: model:ir.module.category,name:base.module_category_website_live_chat
 #: model:ir.module.module,shortdesc:base.module_im_livechat
 msgid "Live Chat"
-msgstr " צ'אט חי"
+msgstr "צ'אט חי"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_currency_rate_live
@@ -28039,7 +28044,7 @@ msgstr ""
 #: model:ir.module.module,description:base.module_social_youtube
 #: model:ir.module.module,summary:base.module_social_youtube
 msgid "Manage your YouTube videos and schedule video uploads"
-msgstr "נהל את סרטוני היוטיוב שלך ​​ותזמן העלאות סרטונים"
+msgstr "נהל את סרטוני היוטיוב שלך ותזמן העלאות סרטונים"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_sign
@@ -28122,7 +28127,7 @@ msgstr "תפוגת ייצור"
 #. module: base
 #: model:ir.module.module,summary:base.module_mrp
 msgid "Manufacturing Orders & BOMs"
-msgstr "הוראות ייצור ועצי מוצר "
+msgstr "הוראות ייצור ועצי מוצר"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_server__update_m2m_operation
@@ -28209,7 +28214,7 @@ msgstr "מרטיניק"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_mass_mailing
 msgid "Mass Mail Tests"
-msgstr "בדיקות דואר המוני "
+msgstr "בדיקות דואר המוני"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_test_mass_mailing
@@ -29143,7 +29148,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_us_payment_nacha
 msgid "NACHA Payments"
-msgstr "תשלומי NACHA "
+msgstr "תשלומי NACHA"
 
 #. module: base
 #: model:res.country,vat_label:base.co model:res.country,vat_label:base.gt
@@ -29613,7 +29618,7 @@ msgstr "האי נורפולק"
 #. odoo-python
 #: code:addons/base/models/res_bank.py:0
 msgid "Normal"
-msgstr "נורמלי "
+msgstr "נורמלי"
 
 #. module: base
 #: model:res.country,name:base.kp
@@ -32907,7 +32912,7 @@ msgid ""
 "Please configure an email on the current user to simulate sending an email "
 "message via this outgoing server"
 msgstr ""
-"הגדר דוא\"ל למשתמש הנוכחי כדי לדמות שליחת הודעת דואר אלקטרוני דרך שרת זה "
+"הגדר דוא\"ל למשתמש הנוכחי כדי לדמות שליחת הודעת דואר אלקטרוני דרך שרת זה"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.demo_force_install_form
@@ -33180,7 +33185,7 @@ msgstr "הכנה מראש"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_report_layout__image
 msgid "Preview image src"
-msgstr "תצוגה מקדימה של src image "
+msgstr "תצוגה מקדימה של src image"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_report_layout__pdf
@@ -33436,7 +33441,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_project_account_asset
 msgid "Project Accounting Assets"
-msgstr "נכסי פרויקטי הנהלת חשבונות "
+msgstr "נכסי פרויקטי הנהלת חשבונות"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_project_account_budget
@@ -34525,7 +34530,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.category,name:base.module_category_supply_chain_repair
 msgid "Repair"
-msgstr "תיקון "
+msgstr "תיקון"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_repair
@@ -34744,7 +34749,7 @@ msgstr "מסעדה"
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_restaurant
 msgid "Restaurant extensions for the Point of Sale "
-msgstr "הרחבות מסעדה עבור קופה"
+msgstr "הרחבות מסעדה עבור קופה "
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.server_action_history_wizard_view
@@ -35732,7 +35737,7 @@ msgstr "חיפוש קטגוריית איש קשר"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_partner_industry_view_search
 msgid "Search Partner Industry"
-msgstr "חיפוש סוג תעשיה של אנשי קשר "
+msgstr "חיפוש סוג תעשיה של אנשי קשר"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_act_window__search_view_id
@@ -36569,7 +36574,7 @@ msgstr "הירשם"
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_discount
 msgid "Simple Discounts in the Point of Sale "
-msgstr "הנחה פשוטה בקופה"
+msgstr "הנחה פשוטה בקופה "
 
 #. module: base
 #: model:res.currency,currency_subunit_label:base.MOP
@@ -38165,7 +38170,7 @@ msgstr "בדיקת החיבור"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_data_cleaning
 msgid "Test Data Cleaning"
-msgstr "בדיקת ניקוי נתונים "
+msgstr "בדיקת ניקוי נתונים"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_discuss_full
@@ -38307,7 +38312,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,description:base.module_test_search_panel
 msgid "Tests for the search panel python methods"
-msgstr "בדיקות עבור פאנל החיפוש של מתודות הפייתון  "
+msgstr "בדיקות עבור פאנל החיפוש של מתודות הפייתון"
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_converter
@@ -38623,8 +38628,7 @@ msgstr ""
 "                                                לחשב את הערך של השדה על סדרה "
 "של רשומות. הערך של\n"
 "                                               יש להקצות את השדה לכל רשומה "
-"עם הקצאה מילונית.\n"
-"                                                "
+"עם הקצאה מילונית."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_model_fields_form
@@ -39487,7 +39491,7 @@ msgid ""
 msgstr ""
 "מודול זה מכיל מבחנים הקשורים לדואר המוני. הוא\n"
 "נמצא במודול נפרד לשימוש בדגמי בדיקה ספציפיים המוגדרים בו\n"
-"בtest_mail."
+"בtest_mail. "
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_sale_purchase_edi_ubl
@@ -39541,7 +39545,7 @@ msgid ""
 msgstr ""
 "מודול זה מכיל מבחנים הקשורים לטיימר. אלה הם\n"
 "קיים במודול נפרד מכיוון שהוא מכיל דגמים המשמשים רק לביצוע\n"
-"בדיקות עצמאיות להיבטים תפקודיים של דגמים אחרים."
+"בדיקות עצמאיות להיבטים תפקודיים של דגמים אחרים. "
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_mail_full
@@ -39556,7 +39560,7 @@ msgstr ""
 "מודול זה מכיל בדיקות הקשורות לתכונות דואר שונות\n"
 "ותתי מודולים הקשורים לדואר. בדיקות אלה נמצאות במודול נפרד כפי שהוא\n"
 "מכיל מודלים המשמשים רק לביצוע בדיקות באופן עצמאי להיבטים תפקודיים של\n"
-"יישומים אמיתיים."
+"יישומים אמיתיים. "
 
 #. module: base
 #: model:ir.module.module,description:base.module_social_test_full
@@ -39587,7 +39591,7 @@ msgid ""
 msgstr ""
 "מודול זה מכיל בדיקות הקשורות לweb cohort. אלה \n"
 "קיימות במודול נפרד מכיוון שהוא מכיל דגמים המשמשים רק לביצוע \n"
-"בדיקות עצמאיות להיבטים תפקודיים של דגמים אחרים."
+"בדיקות עצמאיות להיבטים תפקודיים של דגמים אחרים. "
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_web_studio
@@ -39879,7 +39883,7 @@ msgstr "ל"
 #: model:ir.model.fields.selection,name:base.selection__res_users_deletion__state__todo
 #: model_terms:ir.ui.view,arch_db:base.config_wizard_step_view_search
 msgid "To Do"
-msgstr " לביצוע"
+msgstr "לביצוע"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_module_module__state__to_install
@@ -39924,7 +39928,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_actions_todo_tree
 msgid "Todo"
-msgstr " לביצוע"
+msgstr "לביצוע"
 
 #. module: base
 #: model:res.currency,currency_subunit_label:base.PGK
@@ -40290,7 +40294,7 @@ msgstr "סוג:"
 #. module: base
 #: model:res.country,name:base.tr
 msgid "Türkiye"
-msgstr "טורקיה "
+msgstr "טורקיה"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_tr
@@ -40916,7 +40920,7 @@ msgstr "שדרג"
 #. module: base
 #: model:ir.model,name:base.model_base_module_upgrade
 msgid "Upgrade Module"
-msgstr " שדרג מודול"
+msgstr "שדרג מודול"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.module_form
@@ -41134,7 +41138,7 @@ msgstr "משמש כדי להיכנס למערכת"
 #. module: base
 #: model:ir.model.fields,help:base.field_res_company__sequence
 msgid "Used to order Companies in the company switcher"
-msgstr "משמש להזמין חברות ב מתג סויץ' "
+msgstr "משמש להזמין חברות ב מתג סויץ'"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_base_language_install__first_lang_id
@@ -41357,7 +41361,7 @@ msgstr "אימות מספר מע\"מ"
 #. module: base
 #: model:ir.module.module,summary:base.module_phone_validation
 msgid "Validate and format phone numbers"
-msgstr "אמת ועדכן מספרי טלפון "
+msgstr "אמת ועדכן מספרי טלפון"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_industry_fsm_stock
@@ -41489,7 +41493,7 @@ msgstr "תצוגה"
 #. odoo-python
 #: code:addons/base/models/ir_ui_view.py:0
 msgid "View '%(name)s' accessible only to groups %(groups)s "
-msgstr "ראה '%(name)s' נגיש רק לקבוצות%(groups)s"
+msgstr "ראה '%(name)s' נגיש רק לקבוצות%(groups)s "
 
 #. module: base
 #. odoo-python
@@ -41884,7 +41888,7 @@ msgstr "קבוצת דואר אתר אינטרנט"
 #. module: base
 #: model:ir.module.module,summary:base.module_website_mail
 msgid "Website Module for Mail"
-msgstr "מודול אתר עבור דוא\"ל "
+msgstr "מודול אתר עבור דוא\"ל"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_website_modules
@@ -41919,7 +41923,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_helpdesk_slides
 msgid "Website Slides Helpdesk"
-msgstr " שקופיות אתר מרכז תמיכת"
+msgstr "שקופיות אתר מרכז תמיכת"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_studio
@@ -42851,7 +42855,7 @@ msgstr "בוליאני"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_delivery_bpost
 msgid "bpost Shipping"
-msgstr "משלוח bpost "
+msgstr "משלוח bpost"
 
 #. module: base
 #: model:res.currency,currency_subunit_label:base.COU

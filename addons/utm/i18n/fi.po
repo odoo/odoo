@@ -1,6 +1,6 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* utm
+# * utm
 #
 # Translators:
 # Jussi Lehto <jussi@gulfeo.com>, 2022
@@ -16,20 +16,22 @@
 # Martin Trigaux, 2022
 # Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2022
 # Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023
-#
+# "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-09-11 14:02+0000\n"
-"PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023\n"
-"Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
+"PO-Revision-Date: 2025-09-16 15:30+0000\n"
+"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
+"Language-Team: Finnish <https://translate.odoo.com/projects/odoo-19/utm/fi/>"
+"\n"
 "Language: fi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: utm
 #. odoo-python
@@ -63,7 +65,7 @@ msgstr "Hyväksytty"
 #. module: utm
 #: model_terms:ir.ui.view,arch_db:utm.utm_campaign_view_kanban
 msgid "Archive"
-msgstr ""
+msgstr "Arkistoi"
 
 #. module: utm
 #: model_terms:ir.ui.view,arch_db:utm.utm_campaign_view_form
@@ -137,7 +139,7 @@ msgstr ""
 #. module: utm
 #: model_terms:ir.ui.view,arch_db:utm.view_utm_campaign_view_search
 msgid "Campaigns that are assigned to me"
-msgstr ""
+msgstr "Minulle osoitetut kampanjat"
 
 #. module: utm
 #: model:utm.campaign,title:utm.utm_campaign_christmas_special
@@ -166,7 +168,7 @@ msgstr "Haamukirjoitus"
 #. module: utm
 #: model_terms:ir.actions.act_window,help:utm.utm_medium_action
 msgid "Create a Medium"
-msgstr "Luo media"
+msgstr "Luo mediatyyppi"
 
 #. module: utm
 #: model_terms:ir.actions.act_window,help:utm.action_view_utm_tag
@@ -353,24 +355,24 @@ msgstr "Markkinointi"
 #: model:ir.model.fields,field_description:utm.field_utm_mixin__medium_id
 #: model_terms:ir.ui.view,arch_db:utm.utm_medium_view_form
 msgid "Medium"
-msgstr "Media"
+msgstr "Mediatyyppi"
 
 #. module: utm
 #: model:ir.model.fields,field_description:utm.field_utm_medium__name
 msgid "Medium Name"
-msgstr "Median Nimi"
+msgstr "Mediatyypin nimi"
 
 #. module: utm
 #: model:ir.actions.act_window,name:utm.utm_medium_action
 #: model:ir.ui.menu,name:utm.menu_utm_medium
 #: model_terms:ir.ui.view,arch_db:utm.utm_medium_view_tree
 msgid "Mediums"
-msgstr "Mediat"
+msgstr "Mediatyypit"
 
 #. module: utm
 #: model_terms:ir.ui.view,arch_db:utm.view_utm_campaign_view_search
 msgid "My Campaigns"
-msgstr ""
+msgstr "Omat kampanjani"
 
 #. module: utm
 #: model:ir.model.fields,field_description:utm.field_utm_source_mixin__name
@@ -397,6 +399,8 @@ msgid ""
 "Oops, you can't delete the Medium '%s'.\n"
 "Doing so would be like tearing down a load-bearing wall — not the best idea."
 msgstr ""
+"Et voi poistaa mediatyyppiä '%s'.\n"
+"Se on oleellinen rakenteellisen eheyden kannalta."
 
 #. module: utm
 #. odoo-javascript
@@ -435,7 +439,7 @@ msgstr "Vastuuhenkilö"
 #. module: utm
 #: model_terms:ir.ui.view,arch_db:utm.utm_campaign_view_kanban
 msgid "Restore"
-msgstr ""
+msgstr "Palauta"
 
 #. module: utm
 #. odoo-javascript
@@ -462,7 +466,7 @@ msgstr "Aikatauluta"
 #. module: utm
 #: model_terms:ir.ui.view,arch_db:utm.utm_medium_view_search
 msgid "Search UTM Medium"
-msgstr "Hae UTM-media"
+msgstr "Hae UTM-mediatyyppi"
 
 #. module: utm
 #. odoo-javascript
@@ -532,6 +536,8 @@ msgid ""
 "Stages allow you to organize your workflow  (e.g. plan, design, in progress, "
 "done, …)."
 msgstr ""
+"Vaiheiden avulla voit järjestää työnkulun (esim. suunnitelma, suunnittelu, "
+"käynnissä, valmis, ...)."
 
 #. module: utm
 #: model:ir.model.fields,help:utm.field_utm_tag__color
@@ -545,7 +551,7 @@ msgstr ""
 #. module: utm
 #: model:ir.model.constraint,message:utm.constraint_utm_tag_name_uniq
 msgid "Tag name already exists!"
-msgstr ""
+msgstr "Tunniste on jo olemassa!"
 
 #. module: utm
 #: model:ir.model.fields,field_description:utm.field_utm_campaign__tag_ids
@@ -584,15 +590,14 @@ msgstr ""
 #. module: utm
 #: model:ir.model.fields,help:utm.field_utm_mixin__medium_id
 msgid "This is the method of delivery, e.g. Postcard, Email, or Banner Ad"
-msgstr "Toimitustapa, esim. postitus, sähköposti tai mainosbanneri."
+msgstr "Toimitustapa, esim. postitus, sähköposti tai mainosbanneri"
 
 #. module: utm
 #: model:ir.model.fields,help:utm.field_utm_mixin__source_id
 msgid ""
 "This is the source of the link, e.g. Search Engine, another domain, or name "
 "of email list"
-msgstr ""
-"Linkin lähde, esim. hakukone, toinen verkkotunnus tai sähköpostilistan nimi"
+msgstr "Linkin lähde, esim. hakukone, toinen domain tai sähköpostilistan nimi"
 
 #. module: utm
 #. odoo-javascript
@@ -607,6 +612,8 @@ msgid ""
 "Track incoming events (e.g. Christmas, Black Friday, ...) and publish timely "
 "content."
 msgstr ""
+"Seuraa tulevia tapahtumia (esim. joulu, musta perjantai, ...) ja julkaise "
+"oikea-aikaista sisältöä."
 
 #. module: utm
 #: model:ir.model,name:utm.model_utm_campaign
@@ -623,7 +630,7 @@ msgstr "UTM-kampanjat"
 #. module: utm
 #: model:ir.model,name:utm.model_utm_medium
 msgid "UTM Medium"
-msgstr "UTM-media"
+msgstr "UTM-mediatyyppi"
 
 #. module: utm
 #: model_terms:ir.actions.act_window,help:utm.utm_medium_action
@@ -631,6 +638,8 @@ msgid ""
 "UTM Mediums track the mean that was used to attract traffic (e.g. "
 "\"Website\", \"X\", ...)."
 msgstr ""
+"UTM-mediatyypit seuraavat liikenteen houkuttelun keinoja ja kanavia (esim. "
+"\"Verkkosivusto\", \"X\", ...)."
 
 #. module: utm
 #: model:ir.model,name:utm.model_utm_mixin
@@ -681,7 +690,7 @@ msgstr "Käytä tätä kampanjoihini"
 #. odoo-python
 #: code:addons/utm/models/utm_source.py:0
 msgid "You cannot delete the 'Referral' UTM source record."
-msgstr ""
+msgstr "Et voi poistaa 'Suositus'-UTM-lähdetietuetta."
 
 #. module: utm
 #. odoo-python
@@ -690,21 +699,22 @@ msgid ""
 "You cannot update multiple records with the same name. The name should be "
 "unique!"
 msgstr ""
+"Et voi päivittää useita samannimisiä tietueita. Nimen on oltava yksilöllinen!"
 
 #. module: utm
 #: model_terms:ir.ui.view,arch_db:utm.utm_stage_view_form
 msgid "e.g. \"Brainstorming\""
-msgstr ""
+msgstr "esim. \"Aivoriihi\""
 
 #. module: utm
 #: model_terms:ir.ui.view,arch_db:utm.utm_source_view_tree
 msgid "e.g. \"Christmas Mailing\""
-msgstr ""
+msgstr "esim. \"Joulupostitus\""
 
 #. module: utm
 #: model_terms:ir.ui.view,arch_db:utm.utm_medium_view_tree
 msgid "e.g. \"Email\""
-msgstr ""
+msgstr "esim. \"Sähköposti\""
 
 #. module: utm
 #: model_terms:ir.ui.view,arch_db:utm.utm_campaign_view_form

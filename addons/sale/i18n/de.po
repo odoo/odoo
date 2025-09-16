@@ -1,6 +1,6 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* sale
+# * sale
 #
 # Translators:
 # Friederike Fasterling-Nesselbosch, 2022
@@ -10,20 +10,22 @@
 # Martin Trigaux, 2023
 # Stefan Reisich <nafex@gmx.net>, 2023
 # Larissa Manderfeld, 2023
-#
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-09-11 14:01+0000\n"
-"PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Larissa Manderfeld, 2023\n"
-"Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
+"PO-Revision-Date: 2025-09-16 02:33+0000\n"
+"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"Language-Team: German <https://translate.odoo.com/projects/odoo-19/sale/de/>"
+"\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: sale
 #. odoo-javascript
@@ -42,29 +44,29 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_crm_team__sale_order_count
 msgid "# Sale Orders"
-msgstr "# Kundenaufträge"
+msgstr "# Verkaufsaufträge"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__nbr
 msgid "# of Lines"
-msgstr "Positionen"
+msgstr "# Positionen"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_payment_transaction__sale_order_ids_nbr
 msgid "# of Sales Orders"
-msgstr "Verkaufsaufträge"
+msgstr "# der Verkaufsaufträge"
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/sale_order_line.py:0
 msgid "%(attribute)s: %(values)s"
-msgstr ""
+msgstr "%(attribute)s: %(values)s"
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:0
 msgid "%s has been created"
-msgstr ""
+msgstr "%s wurde erstellt"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_orders
@@ -91,11 +93,13 @@ msgid ""
 ", it's 100% free! You'll save time creating beautiful quotations and track "
 "sales."
 msgstr ""
+", es ist 100 % kostenlos! Sie werden Zeit bei der Erstellung wunderschöner "
+"Angebote sparen und Verkäufe verfolgen."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "2023-12-31"
-msgstr ""
+msgstr "2023-12-31"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -106,7 +110,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "27.00"
-msgstr ""
+msgstr "27,00"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -116,7 +120,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "31.05"
-msgstr ""
+msgstr "31,05"
 
 #. module: sale
 #. odoo-javascript
@@ -188,6 +192,63 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 12px;\">\n"
+"        <t t-set=\"transaction_sudo\" t-value="
+"\"object.get_portal_last_transaction()\"/>\n"
+"        Hallo,\n"
+"        <br/><br/>\n"
+"        Eine Zahlung mit der Referenz\n"
+"        <span style=\"font-weight:bold;\" t-out=\"transaction_sudo.reference "
+"or ''\">SOOO49</span>\n"
+"        in Höhe von\n"
+"        <span style=\"font-weight:bold;\" t-out=\"format_amount("
+"transaction_sudo.amount, object.currency_id) or ''\">10,00 €</span>\n"
+"        für Ihren Auftrag\n"
+"        <span style=\"font-weight:bold;\" t-out=\"object.name or ''\""
+">S00049</span>\n"
+"        <t t-if=\"transaction_sudo and transaction_sudo.state == 'pending'\">"
+"\n"
+"            ist noch offen.\n"
+"            <br/>\n"
+"            <t t-if=\"object.currency_id.compare_amounts(object.amount_paid +"
+" transaction_sudo.amount, object.amount_total) &gt;= 0 and object.state in ("
+"'draft', 'sent')\">\n"
+"                Ihr Auftrag wird bestätigt, sobald die Zahlung bestätigt "
+"wird.\n"
+"            </t>\n"
+"            <t t-else=\"\">\n"
+"                Nach der Bestätigung müssen noch\n"
+"                <span style=\"font-weight:bold;\" t-out=\"format_amount("
+"object.amount_total - object.amount_paid - transaction_sudo.amount, "
+"object.currency_id) or ''\">10,00 €</span>\n"
+"                bezahlt werden.\n"
+"            </t>\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            wurde bestätigt.\n"
+"            <t t-if=\"object.currency_id.compare_amounts(object.amount_paid, "
+"object.amount_total) &lt; 0\">\n"
+"                <br/>\n"
+"                <span style=\"font-weight:bold;\" t-out=\"format_amount("
+"object.amount_total - object.amount_paid, object.currency_id) or ''\">10,00 "
+"€</span>\n"
+"                müssen noch bezahlt werden.\n"
+"            </t>\n"
+"        </t>\n"
+"        <br/><br/>\n"
+"        Vielen Dank für Ihr Vertrauen!\n"
+"        <br/>\n"
+"        Bei Fragen stehen wir Ihnen gerne zur Verfügung.\n"
+"        <t t-if=\"not is_html_empty(object.user_id.signature)\" data-o-mail-"
+"quote-container=\"1\">\n"
+"            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t "
+"t-out=\"object.user_id.signature or ''\" data-o-mail-quote=\"1\">Mitchell "
+"Admin</t></div>\n"
+"        </t>\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: sale
 #: model:mail.template,body_html:sale.mail_template_sale_confirmation
@@ -597,12 +658,39 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        <t t-set=\"doc_name\" t-value="
+"\"'Angebot' if object.state in ('draft', 'sent') else 'Auftrag'\"/>\n"
+"        Hallo,\n"
+"        <br/><br/>\n"
+"        Ihre Pro-Forma-Rechnung für das <t t-out=\"doc_name or ''\">Angebot</"
+"t> <span style=\"font-weight: bold;\" t-out=\"object.name or ''\""
+">S00052</span>\n"
+"        <t t-if=\"object.origin\">\n"
+"            (mit Referenz: <t t-out=\"object.origin or ''\"/> )\n"
+"        </t>\n"
+"        in Höhe von <span style=\"font-weight: bold;\" t-out=\"format_amount("
+"object.amount_total, object.currency_id) or ''\">10,00 €</span> ist "
+"verfügbar.\n"
+"        <br/><br/>\n"
+"        Bei Rückfragen stehen wir gerne zur Verfügung.\n"
+"        <t t-if=\"not is_html_empty(object.user_id.signature)\" data-o-mail-"
+"quote-container=\"1\">\n"
+"            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t "
+"t-out=\"object.user_id.signature or ''\" data-o-mail-quote=\"1\">Mitchell "
+"Admin</t></div>\n"
+"        </t>\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<i class=\"fa fa-comment\"/> Contact us to get a new quotation."
 msgstr ""
-"<i class=\"fa fa-comment\"/> Kontaktieren Sie uns um ein Angebot zu erhalten."
+"<i class=\"fa fa-comment\"/> Kontaktieren Sie uns, um ein Angebot zu "
+"erhalten."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -612,17 +700,17 @@ msgstr "<i class=\"fa fa-comment\"/> Feedback"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "<i class=\"fa fa-fw fa-check\"/> Authorized"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-check\"/> Autorisiert"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "<i class=\"fa fa-fw fa-check\"/> Paid"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-check\"/> Bezahlt"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "<i class=\"fa fa-fw fa-check\"/> Reversed"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-check\"/> Storniert"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_quotations
@@ -632,13 +720,14 @@ msgstr "<i class=\"fa fa-fw fa-clock-o\"/>Abgelaufen"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "<i class=\"fa fa-fw fa-clock-o\"/> Waiting Payment"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-clock-o\"/> Ausstehende Zahlung"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.utm_campaign_view_kanban
 msgid ""
 "<i class=\"fa fa-fw fa-money me-1\" aria-label=\"Quotations\" role=\"img\"/>"
 msgstr ""
+"<i class=\"fa fa-fw fa-money me-1\" aria-label=\"Angebote\" role=\"img\"/>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_quotations
@@ -651,11 +740,13 @@ msgid ""
 "<i class=\"fa fa-lock\"/>\n"
 "                    Locked"
 msgstr ""
+"<i class=\"fa fa-lock\"/>\n"
+"                    Gesperrt"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<i class=\"fa fa-print me-1\"/>View Details"
-msgstr ""
+msgstr "<i class=\"fa fa-print me-1\"/>Details ansehen"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -665,7 +756,7 @@ msgstr "<i class=\"fa fa-times\"/> Ablehnen"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<small class=\"text-muted\">Your contact</small>"
-msgstr ""
+msgstr "<small class=\"text-muted\">Ihr Kontakt</small>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -678,7 +769,7 @@ msgid ""
 "<span class=\"d-none d-md-inline\">Sales Order #</span>\n"
 "                            <span class=\"d-block d-md-none\">Ref.</span>"
 msgstr ""
-"<span class=\"d-none d-md-inline\">Verkaufsauftragsnummer</span>\n"
+"<span class=\"d-none d-md-inline\">Verkaufsauftrag #</span>\n"
 "                          <span class=\"d-block d-md-none\">Ref.</span>"
 
 #. module: sale
@@ -688,6 +779,9 @@ msgid ""
 "product is archived\" invisible=\"state not in ['draft', 'sent'] or not "
 "is_product_archived\"/>"
 msgstr ""
+"<span class=\"fa fa-exclamation-triangle text-warning me-1\" title="
+"\"This product is archived\" invisible="
+"\"state not in ['draft', 'sent'] or not is_product_archived\"/>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -695,6 +789,9 @@ msgid ""
 "<span class=\"fa fa-lg fa-building-o p-2\" title=\"Values set here are "
 "company-specific.\" groups=\"base.group_multi_company\"/>"
 msgstr ""
+"<span class=\"fa fa-lg fa-building-o p-2\" title="
+"\"Values set here are company-specific.\" groups=\"base.group_multi_company\""
+"/>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.crm_team_salesteams_view_form
@@ -704,7 +801,7 @@ msgstr "<span class=\"flex-grow-1\">/ Monat</span>"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "<span class=\"mx-3\" invisible=\"not require_payment\">of</span>"
-msgstr ""
+msgstr "<span class=\"mx-3\" invisible=\"not require_payment\">von</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_form_view_sale_order_button
@@ -715,7 +812,7 @@ msgstr "<span class=\"o_stat_text\">Verkauft</span>"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_pay_modal
 msgid "<span id=\"o_sale_portal_use_amount_total\">By paying,</span>"
-msgstr ""
+msgstr "<span id=\"o_sale_portal_use_amount_total\">Durch die Zahlung,</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
@@ -723,6 +820,8 @@ msgid ""
 "<span invisible=\"advance_payment_method != 'percentage'\" "
 "class=\"oe_inline\">% </span>"
 msgstr ""
+"<span invisible=\"advance_payment_method != 'percentage'\" class="
+"\"oe_inline\">% </span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -737,12 +836,15 @@ msgid ""
 "email to validate the quote.\n"
 "        </span>"
 msgstr ""
+"<span><b>Herzlichen Glückwunsch</b>, Ihr erstes Verkaufsangebot wurde "
+"versandt!<br>Prüfen Sie Ihre E-Mail, um das Angebot zu bestätigen.\n"
+"        </span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "<span>Amount</span>"
-msgstr ""
+msgstr "<span>Betrag</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -753,7 +855,7 @@ msgstr "<span>Rabatt %</span>"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_document_kanban
 msgid "<span>Sales visibility</span>"
-msgstr ""
+msgstr "<span>Verkaufssichtbarkeit</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -764,17 +866,17 @@ msgstr "<span>Steuern</span>"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "<span>Warning: This quote contains archived product(s)</span>"
-msgstr ""
+msgstr "<span>Warnung: Dieses Angebot enthält archivierte Produkte</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "<span>Warning: this order might be a duplicate of</span>"
-msgstr ""
+msgstr "<span>Warnung: Dieser Auftrag könnte ein Duplikat sein von</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong class=\"d-block mt-3\">Shipping Address</strong>"
-msgstr ""
+msgstr "<strong class=\"d-block mt-3\">Versandadresse</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -784,17 +886,17 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Expiration</strong>"
-msgstr ""
+msgstr "<strong>Gültigkeit</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Fiscal Position Remark:</strong>"
-msgstr "<strong>Steuerzuordnung:</strong>"
+msgstr "<strong>Anmerkung zur Steuerposition:</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Salesperson</strong>"
-msgstr ""
+msgstr "<strong>Ansprechpartner</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -814,22 +916,24 @@ msgstr "<strong>Dieses Angebot ist abgelaufen!</strong>"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<strong>This quotation has been cancelled.</strong>"
-msgstr ""
+msgstr "<strong>Dieses Angebot wurde storniert.</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Your Reference</strong>"
-msgstr ""
+msgstr "<strong>Ihre Referenz</strong>"
 
 #. module: sale
 #: model:ir.model.constraint,message:sale.constraint_sale_order_date_order_conditional_required
 msgid "A confirmed sales order requires a confirmation date."
-msgstr "Ein Auftrag benötigt ein Auftragsdatum."
+msgstr "Ein bestätigter Verkaufsauftrag benötigt ein Bestätigungsdatum."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "A note, whose content usually applies to the section or product above."
 msgstr ""
+"Eine Notiz, deren Inhalt gewöhnlich auf den obigen Abschnitt oder das obige "
+"Produkt angewendet wird."
 
 #. module: sale
 #. odoo-python
@@ -838,17 +942,21 @@ msgid ""
 "A sale order line's combo item must be among its linked line's available "
 "combo items."
 msgstr ""
+"Der Kombi-Artikel einer Auftragszeile muss unter den verfügbaren Kombi-"
+"Artikeln der mit ihr verbundenen Zeile sein."
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/sale_order_line.py:0
 msgid "A sale order line's product must match its combo item's product."
 msgstr ""
+"Das Produkt einer Auftragszeile muss mit dem Produkt der zugehörigen "
+"Kombizeile übereinstimmen."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "A section title"
-msgstr ""
+msgstr "Ein Abschnittstitel"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv__advance_payment_method
@@ -857,9 +965,9 @@ msgid ""
 "invoicing,according to their invoicing policy (based on ordered or delivered "
 "quantity)."
 msgstr ""
-"Es wird eine Standardrechnung mit allen rechnungsfertigen Auftragszeilen "
-"gemäß ihrer Rechnungspolitik (basierend auf der bestellten oder gelieferten "
-"Menge) erstellt."
+"Es wird eine Standardrechnung mit allen rechnungsfertigen Auftragspositionen "
+"gemäß ihrer Abrechnungspolitik (basierend auf der bestellten oder "
+"gelieferten Menge) erstellt."
 
 #. module: sale
 #: model:res.groups,name:sale.group_warning_sale
@@ -872,13 +980,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 msgid "Accept & Pay Quotation"
-msgstr "Angebot annehmen & bezahlen"
+msgstr "Angebot akzeptieren & bezahlen"
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 msgid "Accept & Sign Quotation"
-msgstr "Angebot annehmen & unterzeichnen"
+msgstr "Angebot anzeigen & unterzeichnen"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -888,7 +996,7 @@ msgstr "Akzeptieren &amp; Bezahlen"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Accept &amp; Sign"
-msgstr "Akzeptieren und signieren"
+msgstr "Akzeptieren und unterzeichnen"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__access_warning
@@ -907,11 +1015,19 @@ msgid ""
 "this sale line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
+"Je nach Produktkonfiguration kann die gelieferte Menge automatisch durch "
+"einen Mechanismus berechnet werden:\n"
+"  - Manuell: Die Menge wird manuell auf der Position eingestellt\n"
+"  - Kostenrechnung aus Auslagen: Die Menge ist die Mengensumme aus gebuchten "
+"Auslagen\n"
+"  - Zeiterfassung: Die Menge ist die Summe der Stunden, die für Aufgaben "
+"erfasst wurden, die mit dieser Verkaufsposition verbunden sind.\n"
+"  - Lagerbuchungen: Die Menge stammt aus bestätigten Kommissionierungen\n"
 
 #. module: sale
 #: model:ir.model,name:sale.model_account_chart_template
 msgid "Account Chart Template"
-msgstr ""
+msgstr "Kontenplanvorlage"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_accrued_revenue_entry
@@ -942,17 +1058,17 @@ msgstr "Aktivitäten"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
 msgid "Activities of"
-msgstr ""
+msgstr "Aktivitäten von"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__activity_exception_decoration
 msgid "Activity Exception Decoration"
-msgstr "Aktivität Ausnahme Dekoration"
+msgstr "Aktivitätsausnahme-Dekoration"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.sale_menu_config_activity_plan
 msgid "Activity Plans"
-msgstr ""
+msgstr "Aktivitätspläne"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__activity_state
@@ -962,7 +1078,7 @@ msgstr "Status der Aktivität"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__activity_type_icon
 msgid "Activity Type Icon"
-msgstr "Aktivitäts-Typ-Icon"
+msgstr "Symbol des Aktivitätstyps"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.mail_activity_type_action_config_sale
@@ -977,17 +1093,21 @@ msgid ""
 "                (e.g. \"Delivery scheduling\", \"Order Payment Follow-"
 "up\", ...)"
 msgstr ""
+"Aktivitätspläne werden verwendet, um eine Liste von Aktivitäten mit nur "
+"wenigen Klicks zuzuweisen\n"
+"                    (z. B. „Lieferplanung“, „Zahlungserinnerung für "
+"Auftrag“...)"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
 msgid "Activity type"
-msgstr ""
+msgstr "Aktivitätstyp"
 
 #. module: sale
 #. odoo-javascript
 #: code:addons/sale/static/src/js/product/product.xml:0
 msgid "Add"
-msgstr ""
+msgstr "Hinzufügen"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -1007,29 +1127,29 @@ msgstr "Abschnitt hinzufügen"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Add note"
-msgstr ""
+msgstr "Notiz hinzufügen"
 
 #. module: sale
 #. odoo-javascript
 #: code:addons/sale/static/src/js/quantity_buttons/quantity_buttons.xml:0
 msgid "Add one"
-msgstr ""
+msgstr "Hinzufügen"
 
 #. module: sale
 #. odoo-javascript
 #: code:addons/sale/static/src/js/product_list/product_list.js:0
 msgid "Add optional products"
-msgstr ""
+msgstr "Optionale Produkte hinzufügen"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Add product"
-msgstr ""
+msgstr "Produkt hinzufügen"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Add section"
-msgstr ""
+msgstr "Abschnitt hinzufügen"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1047,22 +1167,22 @@ msgstr ""
 #. module: sale
 #: model:ir.actions.act_window,name:sale.mail_followers_edit_action_from_sale
 msgid "Add/Remove Followers"
-msgstr ""
+msgstr "Follower hinzufügen/entfernen"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__allowed_uom_ids
 msgid "Allowed Uom"
-msgstr ""
+msgstr "Zulässige Maßeinheit"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Allows you to send Pro-Forma Invoice to your customers"
-msgstr "Ermöglicht es Ihnen, eine Proformarechnung an Ihre Kunden zu senden"
+msgstr "Ermöglicht es Ihnen, eine Pro-forma-Rechnung an Ihre Kunden zu senden"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_res_config_settings__group_proforma_sales
 msgid "Allows you to send pro-forma invoice."
-msgstr "Ermöglicht es Ihnen, eine Proformarechnung zu versenden."
+msgstr "Ermöglicht es Ihnen, eine Pro-forma-Rechnung zu versenden."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_product_document__attached_on_sale
@@ -1080,44 +1200,59 @@ msgid ""
 "Inside quote: The document will be included in the pdf of the quotation and "
 "sale order between the header pages and the quote table. "
 msgstr ""
+"Ermöglicht es Ihnen, das Dokument mit Ihren Kunden im Rahmen eines Verkaufs "
+"zu teilen.\n"
+"Lassen Sie das Feld leer, wenn Sie dieses Dokument nicht mit dem Kunden "
+"teilen möchten.\n"
+"Bei Angebot: Das Dokument wird an Kunden gesendet und ist für diese "
+"jederzeit zugänglich.\n"
+"Diese Option kann z. B. nützlich sein, um Produktbeschreibungsdateien "
+"weiterzugeben.\n"
+"Bei Auftragsbestätigung: Das Dokument wird an den Kunden gesendet und ist "
+"für ihn zugänglich.\n"
+"Diese Option kann z. B. nützlich sein, um Benutzerhandbücher oder digitale "
+"Inhalte, die im E-Commerce gekauft wurden, weiterzugeben. \n"
+"Innerhalb des Angebots-PDF: Das Dokument wird in die PDF-Datei des Angebots\n"
+"und des Verkaufsauftrags zwischen den Kopfseiten und der Angebotstabelle "
+"eingefügt. "
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_payment_link_wizard__amount_paid
 msgid "Already Paid"
-msgstr ""
+msgstr "Bereits bezahlt"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__amount_invoiced
 #: model:ir.model.fields,field_description:sale.field_sale_order__amount_invoiced
 msgid "Already invoiced"
-msgstr ""
+msgstr "Bereits abgerechnet"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_sale_amazon
 msgid "Amazon Sync"
-msgstr "Amazon Schnittstelle"
+msgstr "Amazon-Sychronisation"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_discount__discount_amount
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_line_view_form_readonly
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Amount"
-msgstr ""
+msgstr "Betrag"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__amount_undiscounted
 msgid "Amount Before Discount"
-msgstr "Betrag ohne Rabatt"
+msgstr "Betrag vor Rabatt"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Amount paid:"
-msgstr ""
+msgstr "Gezahlter Betrag:"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_pay_modal
 msgid "Amount:"
-msgstr ""
+msgstr "Betrag:"
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_orders_upselling
@@ -1128,43 +1263,43 @@ msgid ""
 msgstr ""
 "Ein Auftrag ist ein Upsell, wenn die gelieferten Mengen über den "
 "ursprünglich\n"
-"            bestellten Mengen liegen, und die Abrechnungspolitik basiert auf "
-"den bestellten Mengen."
+"            bestellten Mengen liegen und die Abrechnungspolitik auf den "
+"bestellten Mengen basiert."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__analytic_distribution
 msgid "Analytic Distribution"
-msgstr ""
+msgstr "Kostenverteilung"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order_line__qty_delivered_method__analytic
 msgid "Analytic From Expenses"
-msgstr "Analyse der Ausgaben"
+msgstr "Kostenrechnung aus Auslagen"
 
 #. module: sale
 #: model:ir.model,name:sale.model_account_analytic_line
 msgid "Analytic Line"
-msgstr "Kostenstellen-Buchungen"
+msgstr "Kostenstellenbuchung"
 
 #. module: sale
 #: model:ir.model,name:sale.model_account_analytic_applicability
 msgid "Analytic Plan's Applicabilities"
-msgstr "Anwendbarkeit des Analyseplans"
+msgstr "Anwendbarkeit des Kostenstellenplans"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__analytic_precision
 msgid "Analytic Precision"
-msgstr "Analysegenauigkeit"
+msgstr "Kostengenauigkeit"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__analytic_line_ids
 msgid "Analytic lines"
-msgstr "Kostenstellen-Buchungen"
+msgstr "Kostenstellenbuchungen"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_line_wizard_form
 msgid "Apply"
-msgstr ""
+msgstr "Anwenden"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1172,13 +1307,13 @@ msgid ""
 "Apply manual discounts on sales order lines or display discounts computed "
 "from pricelists (option to activate in the pricelist configuration)."
 msgstr ""
-"Manuelle Rabatte auf Angebotslinien oder durch Preislisten kalkulierte "
-"Rabatte (Option die auf Preislisten aktiviert werden kann)."
+"Manuelle Rabatte auf Verkaufsauftragszeilen oder durch Preislisten "
+"kalkulierte Rabatte (Option, die auf Preislisten aktiviert werden kann)."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.mass_cancel_orders_view_form
 msgid "Are you sure you want to cancel the selected item?"
-msgstr ""
+msgstr "Sind Sie sicher, dass Sie die ausgewählte Position stornieren möchten?"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -1186,6 +1321,8 @@ msgid ""
 "Are you sure you want to cancel this order? This may affect related "
 "documents or processes."
 msgstr ""
+"Möchten Sie diesen Auftrag wirklich stornieren? Dies kann sich auf "
+"zugehörige Dokumente oder Prozesse auswirken."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -1215,6 +1352,10 @@ msgid ""
 "been used for this product, the change of unit of measure can not be done.If "
 "you want to change it, please archive the product and create a new one."
 msgstr ""
+"Da für dieses Produkt bereits andere Maßeinheiten als %(uom)s (z. B.: "
+"%(problem_uom)s) verwendet wurden, kann die Änderung der Maßeinheit nicht "
+"vorgenommen werden. Wenn Sie sie ändern möchten, archivieren Sie das Produkt "
+"und erstellen Sie ein neues."
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_template__expense_policy__cost
@@ -1224,12 +1365,12 @@ msgstr "Nach Aufwand"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_attachment_count
 msgid "Attachment Count"
-msgstr "# Anhänge"
+msgstr "Anzahl Anhänge"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__product_template_attribute_value_ids
 msgid "Attribute Values"
-msgstr ""
+msgstr "Attributwerte"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_product_attribute_action
@@ -1250,17 +1391,17 @@ msgstr "Automatische Rechnung"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_report_view_tree
 msgid "Average"
-msgstr ""
+msgstr "Durchschnitt"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Bacon Burger"
-msgstr ""
+msgstr "Bacon Burger"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__payment_provider__so_reference_type__partner
 msgid "Based on Customer ID"
-msgstr "Basierend auf der Kundennummer"
+msgstr "Basierend auf Kunden-ID"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__payment_provider__so_reference_type__so_name
@@ -1271,7 +1412,7 @@ msgstr "Basierend auf der Dokumentenreferenz"
 #: model_terms:ir.actions.act_window,help:sale.action_quotations
 #: model_terms:ir.actions.act_window,help:sale.action_quotations_with_onboarding
 msgid "Beat competitors with stunning quotations!"
-msgstr ""
+msgstr "Schlagen Sie Konkurrenten mit atemberaubenden Angeboten!"
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_quotations
@@ -1280,6 +1421,8 @@ msgid ""
 "Boost sales with online payments or signatures, upsells, and a great "
 "customer portal."
 msgstr ""
+"Steigern Sie den Umsatz mit Online-Zahlungen oder Unterschriften, Upsells "
+"und einem tollen Kundenportal."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1299,22 +1442,22 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/sale/static/src/js/tours/sale.js:0
 msgid "Build your first quotation right here!"
-msgstr ""
+msgstr "Erstellen Sie hier Ihr erstes Angebot!"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_pay_modal
 msgid "By paying a <u>down payment</u> of"
-msgstr ""
+msgstr "Durch Zahlung einer <u>Anzahlung</u> von"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_pay_modal
 msgid "By paying,"
-msgstr ""
+msgstr "Durch die Zahlung"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_sign_modal
 msgid "By signing, you confirm acceptance on behalf of"
-msgstr ""
+msgstr "Mit Ihrer Unterschrift bestätigen Sie die Annahme im Namen von"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_account_bank_statement_line__campaign_id
@@ -1339,23 +1482,23 @@ msgstr "Kann Produkt bearbeiten"
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 #: model_terms:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
 msgid "Cancel"
-msgstr "Abbrechen"
+msgstr "Stornieren"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_mass_cancel_orders
 msgid "Cancel multiple quotations"
-msgstr ""
+msgstr "Mehrere Angebote stornieren"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.mass_cancel_orders_view_form
 msgid "Cancel quotations"
-msgstr ""
+msgstr "Angebote stornieren"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order__state__cancel
 #: model:ir.model.fields.selection,name:sale.selection__sale_report__state__cancel
 msgid "Cancelled"
-msgstr "Abgebrochen"
+msgstr "Storniert"
 
 #. module: sale
 #. odoo-python
@@ -1374,6 +1517,20 @@ msgid ""
 "   • For services (and other products), change the 'Invoicing Policy' to "
 "'Prepaid/Fixed Price'.\n"
 msgstr ""
+"Rechnung konnte nicht erstellt werden. Es sind keine Artikel in der Rechnung "
+"verfügbar.\n"
+"\n"
+"Um dieses Problem zu lösen, stellen Sie bitte Folgendes sicher:\n"
+"   • Die Produkte wurden geliefert, bevor Sie versuchen, sie in Rechnung zu "
+"stellen.\n"
+"   • Die Abrechnungspolitik des Produkts ist korrekt konfiguriert.\n"
+"\n"
+"Wenn Sie stattdessen auf Basis der bestellten Mengen abrechnen möchten:\n"
+"   • Bei Verbrauchsgütern oder lagerfähigen Produkten öffnen Sie das "
+"Produkt, gehen Sie zum Reiter „Allgemeine Informationen“ und ändern Sie die "
+"'„Abrechnungspolitik“ von „Gelieferte Mengen“ in „Bestellte Mengen“.\n"
+"   • Ändern Sie bei Dienstleistungen (und anderen Produkten) die "
+"„Abrechnungspolitik“ auf „Vorkasse/Festpreis“.\n"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -1383,17 +1540,17 @@ msgstr "Transaktion erfassen"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Catalog"
-msgstr ""
+msgstr "Katalog"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_product_categories
 msgid "Categories"
-msgstr ""
+msgstr "Kategorien"
 
 #. module: sale
 #: model:product.template,name:sale.product_product_1_product_template
 msgid "Chair floor protection"
-msgstr ""
+msgstr "Stuhlbodenschutz"
 
 #. module: sale
 #. odoo-python
@@ -1403,12 +1560,15 @@ msgid ""
 "adjustments in the details of the lines. You might consider updating the "
 "prices."
 msgstr ""
+"Wenn Sie das Unternehmen eines bestehenden Angebots ändern, müssen Sie "
+"möglicherweise einige manuelle Anpassungen an den Details der Positionen "
+"vornehmen. Sie können auch die Preise aktualisieren."
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_quotations
 #: model_terms:ir.actions.act_window,help:sale.action_quotations_with_onboarding
 msgid "Check a sample. It's clean!"
-msgstr ""
+msgstr "Testen Sie ein Beispielangebot. Es ist so übersichtlich!"
 
 #. module: sale
 #. odoo-javascript
@@ -1428,14 +1588,14 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/sale/static/src/xml/sales_team_progress_bar_template.xml:0
 msgid "Click to define an invoicing target"
-msgstr "Klicken Sie hier, um ein Fakturierungsziel zu definieren."
+msgstr "Klicken Sie hier, um ein Abrechnungsziel zu definieren."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_pay_modal
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_sign_modal
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Close"
-msgstr "Schließen"
+msgstr "Abschließen"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__collapse_composition
@@ -1450,12 +1610,12 @@ msgstr ""
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_product_combos
 msgid "Combo Choices"
-msgstr ""
+msgstr "Kombi-Möglichkeiten"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__combo_item_id
 msgid "Combo Item"
-msgstr ""
+msgstr "Kombi-Artikel"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -1466,7 +1626,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_sale_commission
 msgid "Commissions"
-msgstr ""
+msgstr "Provisionen"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_payment_provider__so_reference_type
@@ -1476,7 +1636,7 @@ msgstr "Kommunikation"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Communication history"
-msgstr ""
+msgstr "Kommunikationsverlauf"
 
 #. module: sale
 #: model:ir.model,name:sale.model_res_company
@@ -1497,7 +1657,7 @@ msgstr "Unternehmen"
 #. module: sale
 #: model:ir.model,name:sale.model_base_document_layout
 msgid "Company Document Layout"
-msgstr ""
+msgstr "Dokumentenlayout des Unternehmens"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1506,16 +1666,19 @@ msgid ""
 "                                    <strong>(please go to Home&gt;Apps to "
 "install)</strong>"
 msgstr ""
+"Berechnen Sie die Versandkosten und versenden Sie mit DHL<br/>\n"
+"                                    <strong>(gehen Sie zur Installation zu "
+"Start&gt;Apps)</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Compute shipping costs and ship with Easypost"
-msgstr "Versandkosten berechnen und mit Easypost versenden"
+msgstr "Versandkosten für Easypost berechnen und versenden"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Compute shipping costs and ship with Envia.com"
-msgstr ""
+msgstr "Versandkosten für Envia.com berechnen und versenden"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1524,6 +1687,9 @@ msgid ""
 "                                    <strong>(please go to Home&gt;Apps to "
 "install)</strong>"
 msgstr ""
+"Berechnen Sie die Versandkosten und versenden Sie mit FedEx<br/>\n"
+"                                    <strong>(gehen Sie zur Installation zu "
+"Start&gt;Apps)</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1533,12 +1699,12 @@ msgstr "Versandkosten für Sendcloud berechnen und versenden"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Compute shipping costs and ship with Shiprocket"
-msgstr ""
+msgstr "Versandkosten für Shiprocket berechnen und versenden"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Compute shipping costs and ship with Starshipit"
-msgstr ""
+msgstr "Versandkosten für Starshipit berechnen und versenden"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1547,6 +1713,9 @@ msgid ""
 "                                    <strong>(please go to Home&gt;Apps to "
 "install)</strong>"
 msgstr ""
+"Berechnen Sie die Versandkosten und versenden Sie mit UPS<br/>\n"
+"                                    <strong>(gehen Sie zur Installation zu "
+"Start&gt;Apps)</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1555,6 +1724,9 @@ msgid ""
 "                                    <strong>(please go to Home&gt;Apps to "
 "install)</strong>"
 msgstr ""
+"Berechnen Sie die Versandkosten und versenden Sie mit USPS<br/>\n"
+"                                    <strong>(gehen Sie zur Installation zu "
+"Start&gt;Apps)</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1585,7 +1757,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/sale/static/src/js/product_configurator_dialog/product_configurator_dialog.js:0
 msgid "Configure your product"
-msgstr ""
+msgstr "Ihr Produkt konfigurieren"
 
 #. module: sale
 #. odoo-javascript
@@ -1597,17 +1769,17 @@ msgstr "Bestätigen"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_payment_link_wizard__confirmation_message
 msgid "Confirmation Message"
-msgstr ""
+msgstr "Bestätigungsnachricht"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Connect with your software!"
-msgstr ""
+msgstr "Mit Ihrer Software verknüpfen"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Connect your software"
-msgstr ""
+msgstr "Verknüpfen Sie Ihre Software!"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1617,7 +1789,7 @@ msgstr "Konnektoren"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__consolidated_billing
 msgid "Consolidated Billing"
-msgstr ""
+msgstr "Konsolidierte Abrechnung"
 
 #. module: sale
 #: model:ir.model,name:sale.model_res_partner
@@ -1627,7 +1799,7 @@ msgstr "Kontakt"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Copy"
-msgstr ""
+msgstr "Kopieren"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__country_code
@@ -1637,7 +1809,7 @@ msgstr "Ländercode"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_sale_loyalty
 msgid "Coupons & Loyalty"
-msgstr "Coupons & Treue"
+msgstr "Gutscheine & Treue"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_quotation
@@ -1647,7 +1819,7 @@ msgstr "Erstellt am"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
 msgid "Create Draft"
-msgstr ""
+msgstr "Entwurf erstellen"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__advance_payment_method
@@ -1658,22 +1830,22 @@ msgstr "Rechnung erstellen"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_tree
 msgid "Create Invoices"
-msgstr ""
+msgstr "Rechnungen erstellen"
 
 #. module: sale
 #: model:ir.model,website_form_label:sale.model_res_partner
 msgid "Create a Customer"
-msgstr ""
+msgstr "Kunden erstellen"
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.mail_activity_plan_action_sale_order
 msgid "Create a Sale Order Activity Plan"
-msgstr ""
+msgstr "Einen Aktivitätsplan für Verkaufsaufträge erstellen"
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_invoice_salesteams
 msgid "Create a customer invoice"
-msgstr "Kundenrechnung erstellen."
+msgstr "Kundenrechnung erstellen"
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.product_template_action
@@ -1692,7 +1864,7 @@ msgstr ""
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_view_sale_advance_payment_inv
 msgid "Create invoice(s)"
-msgstr ""
+msgstr "Rechnung(en) erstellen"
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_invoice_salesteams
@@ -1700,13 +1872,13 @@ msgid ""
 "Create invoices, register payments and keep track of the discussions with "
 "your customers."
 msgstr ""
-"Erstellen Sie Ausgangsrechnungen, registrieren Sie Zahlungen und verfolgen "
-"Sie die Diskussionen mit Ihren Kunden."
+"Erstellen Sie Rechnungen, registrieren Sie Zahlungen und verfolgen Sie die "
+"Gespräche mit Ihren Kunden."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__service_tracking
 msgid "Create on Order"
-msgstr ""
+msgstr "Bei Auftrag erstellen"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv__consolidated_billing
@@ -1714,6 +1886,8 @@ msgid ""
 "Create one invoice for all orders related to same customer, same invoicing "
 "address and same delivery address."
 msgstr ""
+"Erstellen Sie eine Rechnung für alle Aufträge, die denselben Kunden, "
+"dieselbe Rechnungsadresse sowie dieselbe Versandadresse betreffen."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__create_uid
@@ -1736,7 +1910,7 @@ msgstr "Erstellt am"
 #: model:ir.model.fields,field_description:sale.field_sale_order__create_date
 #: model_terms:ir.ui.view,arch_db:sale.view_quotation_tree
 msgid "Creation Date"
-msgstr "Erzeugt am"
+msgstr "Erstellungsdatum"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__date_order
@@ -1744,8 +1918,8 @@ msgid ""
 "Creation date of draft/sent orders,\n"
 "Confirmation date of confirmed orders."
 msgstr ""
-"Anlagedatum von Angeboten (auch versendeten),\n"
-"Bestätigungsdatum von Aufträgen."
+"Erstellungsdatum von Auftragsentwürfen/gesendeten Aufträgen,\n"
+"Bestätigungsdatum von bestätigten Aufträgen."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__currency_id
@@ -1765,7 +1939,7 @@ msgstr "Wechselkurs"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__product_custom_attribute_value_ids
 msgid "Custom Values"
-msgstr "Benutzerdefiniert"
+msgstr "Benutzerdefinierte Werte"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__partner_id
@@ -1791,7 +1965,7 @@ msgstr "Kundeneinheit"
 #: model:ir.model.fields,field_description:sale.field_sale_report__industry_id
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
 msgid "Customer Industry"
-msgstr "Kundenindustrie"
+msgstr "Kundenbranche"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__access_url
@@ -1811,12 +1985,12 @@ msgstr "Kundenunterschrift"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__state_id
 msgid "Customer State"
-msgstr ""
+msgstr "Bundesland des Kunden"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__partner_zip
 msgid "Customer ZIP"
-msgstr ""
+msgstr "PLZ des Kunden"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_reporting_customer
@@ -1827,12 +2001,12 @@ msgstr "Kunden"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "DHL Connector"
-msgstr ""
+msgstr "DHL-Konnektor"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_dhl
 msgid "DHL Express Connector"
-msgstr "DHL Express Konnektor"
+msgstr "DHL-Express-Konnektor"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
@@ -1852,23 +2026,25 @@ msgid ""
 "Days between quotation proposal and expiration. 0 days means automatic "
 "expiration is disabled"
 msgstr ""
+"Tage zwischen Angebotsvorschlag und Verfall. 0 Tage bedeutet, dass der "
+"automatische Verfall deaktiviert ist."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__deduct_down_payments
 msgid "Deduct down payments"
-msgstr "Abzug von Anzahlungen"
+msgstr "Anzahlung abziehen"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company__quotation_validity_days
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__quotation_validity_days
 msgid "Default Quotation Validity"
-msgstr "Gültigkeit des Standardangebots"
+msgstr "Standardgültigkeit für Angebot"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__company_price_include
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__company_price_include
 msgid "Default Sales Price Include"
-msgstr ""
+msgstr "Standardverkaufspreis inkl."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__company_price_include
@@ -1877,6 +2053,8 @@ msgid ""
 "Default on whether the sales price used on the product and invoices with "
 "this Company includes its taxes."
 msgstr ""
+"Standard, wenn der auf den Produkten und Rechnungen dieses Unternehmens "
+"verwendete Verkaufspreis die Steuern enthält."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1884,11 +2062,14 @@ msgid ""
 "Default period during which the quote is valid and can still be accepted by "
 "the customer. The default can be changed per order or template."
 msgstr ""
+"Standardzeitraum, in dem das Angebot gültig ist und vom Kunden noch "
+"akzeptiert werden kann. Der Standardwert kann pro Auftrag oder Vorlage "
+"geändert werden."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_res_company__sale_discount_product_id
 msgid "Default product used for discounts"
-msgstr ""
+msgstr "Standardprodukt, das für Rabatte verwendet wird"
 
 #. module: sale
 #. odoo-javascript
@@ -1899,12 +2080,12 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Deliver Content by Email"
-msgstr "Liefern Sie Inhalte per E-Mail"
+msgstr "Inhalte per E-Mail senden"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Delivered"
-msgstr "Ausgeliefert"
+msgstr "Geliefert"
 
 #. module: sale
 #. odoo-python
@@ -1915,7 +2096,7 @@ msgstr "Gelieferte Menge: %s"
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_template__invoice_policy__delivery
 msgid "Delivered quantities"
-msgstr "Rechnung bei Lieferung"
+msgstr "Gelieferte Mengen"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__partner_shipping_id
@@ -1936,7 +2117,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery
 msgid "Delivery Methods"
-msgstr "Auslieferungsmethoden"
+msgstr "Liefermethoden"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__qty_delivered
@@ -1952,9 +2133,10 @@ msgid ""
 "either use the minimum or maximum lead time of the order lines."
 msgstr ""
 "Liefertermin, den Sie dem Kunden zusagen können, errechnet sich bei "
-"Serviceprodukten aus der minimalen Vorlaufzeit der Bestellzeilen. Bei "
-"Versand wird die Versandpolitik der Bestellung berücksichtigt, um entweder "
-"die minimale oder maximale Vorlaufzeit der Bestellzeilen zu verwenden."
+"Dienstleistungsprodukten aus der minimalen Vorlaufzeit der "
+"Auftragspositionen. Bei Versand wird die Versandbedingung des Auftrags "
+"berücksichtigt, um entweder die minimale oder maximale Vorlaufzeit der "
+"Auftragspositionen zu verwenden."
 
 #. module: sale
 #: model:product.template,name:sale.advance_product_0_product_template
@@ -1986,7 +2168,7 @@ msgstr "Verwerfen"
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_line_wizard_form
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Discount"
-msgstr ""
+msgstr "Rabatt"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__discount
@@ -1997,13 +2179,13 @@ msgstr "Rabatt %"
 #. odoo-python
 #: code:addons/sale/wizard/sale_order_discount.py:0
 msgid "Discount %(percent)s%%"
-msgstr ""
+msgstr "Rabatt: %(percent)s%%"
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/wizard/sale_order_discount.py:0
 msgid "Discount %(percent)s%%- On products with the following taxes %(taxes)s"
-msgstr ""
+msgstr "Rabatt: %(percent)s%% - Auf Produkte mit folgenden Steuern %(taxes)s"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__discount
@@ -2018,44 +2200,44 @@ msgstr "Rabattbetrag"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company__sale_discount_product_id
 msgid "Discount Product"
-msgstr ""
+msgstr "Rabattprodukt"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_discount__discount_type
 msgid "Discount Type"
-msgstr ""
+msgstr "Rabattart"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_order_discount
 msgid "Discount Wizard"
-msgstr ""
+msgstr "Rabattassistent"
 
 #. module: sale
 #: model:res.groups,name:sale.group_discount_per_so_line
 msgid "Discount on lines"
-msgstr ""
+msgstr "Rabatt auf Auftragspositionen"
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/wizard/sale_order_discount.py:0
 msgid "Discount- On products with the following taxes %(taxes)s"
-msgstr ""
+msgstr "Rabatt - Auf Produkte mit den folgenden Steuern: %(taxes)s"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Discount:"
-msgstr ""
+msgstr "Rabatt:"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__group_discount_per_so_line
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Discounts"
-msgstr ""
+msgstr "Rabatte"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__display_draft_invoice_warning
 msgid "Display Draft Invoice Warning"
-msgstr ""
+msgstr "Warnung für Entwurfsrechnung anzeigen"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_account_analytic_applicability__display_name
@@ -2092,12 +2274,12 @@ msgstr "Anzeigename"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__display_type
 msgid "Display Type"
-msgstr "Display-Typ"
+msgstr "Anzeigetyp"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__distribution_analytic_account_ids
 msgid "Distribution Analytic Account"
-msgstr ""
+msgstr "Verteilung der Kostenstellen"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -2107,12 +2289,12 @@ msgstr "Dokumentation"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "Documents"
-msgstr ""
+msgstr "Dokumente"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_account_analytic_applicability__business_domain
 msgid "Domain"
-msgstr "Domain"
+msgstr "Bereich"
 
 #. module: sale
 #. odoo-python
@@ -2126,13 +2308,13 @@ msgstr "Anzahlung"
 #. odoo-python
 #: code:addons/sale/models/sale_order_line.py:0
 msgid "Down Payment (Cancelled)"
-msgstr ""
+msgstr "Anzahlung (storniert)"
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/sale_order_line.py:0
 msgid "Down Payment (ref: %(reference)s on %(date)s)"
-msgstr ""
+msgstr "Anzahlung (Ref: %(reference)s am %(date)s)"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__fixed_amount
@@ -2143,7 +2325,7 @@ msgstr "Anzahlungsbetrag (fest)"
 #. odoo-python
 #: code:addons/sale/models/sale_order_line.py:0
 msgid "Down Payment: %(date)s (Draft)"
-msgstr ""
+msgstr "Anzahlung: %(date)s (Entwurf)"
 
 #. module: sale
 #. odoo-python
@@ -2160,7 +2342,7 @@ msgstr "Anzahlung"
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_advance_payment_inv__advance_payment_method__fixed
 msgid "Down payment (fixed amount)"
-msgstr "Anzahlung (Fester Betrag)"
+msgstr "Anzahlung (fester Betrag)"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_advance_payment_inv__advance_payment_method__percentage
@@ -2170,19 +2352,19 @@ msgstr "Anzahlung (Prozent)"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_pay_modal_amount_selector
 msgid "Down payment <br/>"
-msgstr ""
+msgstr "Anzahlung <br/>"
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:0
 msgid "Down payment invoice"
-msgstr ""
+msgstr "Abschlagsrechnung"
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:0
 msgid "Down payment of %s%%"
-msgstr "Anzahlung von %s%%"
+msgstr "Anzahlung von %s %%"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_line__is_downpayment
@@ -2192,20 +2374,20 @@ msgid ""
 msgstr ""
 "Anzahlungen werden bei der Erstellung von Rechnungen aus einem "
 "Verkaufsauftrag geleistet. Diese werden nicht kopiert, wenn Sie einen "
-"Verkaufsauftrag vervielfältigen."
+"Verkaufsauftrag duplizieren."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company__downpayment_account_id
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__downpayment_account_id
 msgid "Downpayment Account"
-msgstr ""
+msgstr "Anzahlungskonto"
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:0
 #: model_terms:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
 msgid "Draft Invoices"
-msgstr ""
+msgstr "Rechnungsentwürfe"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -2213,21 +2395,23 @@ msgid ""
 "Drag and drop the request for quotation PDF file into your list of "
 "quotations in Odoo. Enjoy the automation!"
 msgstr ""
+"Ziehen Sie die PDF-Datei mit der Angebotsanfrage per Drag-and-drop in Ihre "
+"Angebotsliste in Odoo. Genießen Sie die Automatisierung!"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Duplicated Documents"
-msgstr ""
+msgstr "Duplizierte Dokumente"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__duplicated_order_ids
 msgid "Duplicated Order"
-msgstr ""
+msgstr "Duplizierter Auftrag"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_easypost
 msgid "Easypost Connector"
-msgstr "Easypost Konnektor"
+msgstr "Easypost-Konnektor"
 
 #. module: sale
 #. odoo-javascript
@@ -2243,24 +2427,23 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,help:sale.field_res_config_settings__invoice_mail_template_id
 msgid "Email sent to the customer once the invoice is available."
-msgstr ""
-"E-Mail, die an den Kunden gesendet wird, sobald die Rechnung verfügbar ist."
+msgstr "E-Mail, die verschickt wird, sobald die Rechnung verfügbar ist."
 
 #. module: sale
 #. odoo-javascript
 #: code:addons/sale/static/src/js/product_template_attribute_line/product_template_attribute_line.js:0
 msgid "Enter a customized value"
-msgstr ""
+msgstr "Einen benutzerdefinierten Wert eingeben"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_envia
 msgid "Envia.com Connector"
-msgstr ""
+msgstr "Envia.com-Konnektor"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__expected_date
 msgid "Expected Date"
-msgstr "Voraussichtliche Lieferung"
+msgstr "Erwartetes Datum"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -2270,27 +2453,27 @@ msgstr "Erwartet:"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_template_form_view
 msgid "Expense"
-msgstr ""
+msgstr "Ausgabe"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__validity_date
 msgid "Expiration"
-msgstr "Ablauf"
+msgstr "Gültigkeit"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "Expiration Date:"
-msgstr ""
+msgstr "Ablaufdatum:"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__extra_tax_data
 msgid "Extra Tax Data"
-msgstr ""
+msgstr "Zusätzliche Steuerdaten"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__product_no_variant_attribute_value_ids
 msgid "Extra Values"
-msgstr "Extra Werte"
+msgstr "Extra-Werte"
 
 #. module: sale
 #. odoo-python
@@ -2302,12 +2485,12 @@ msgstr "Extra Zeile mit %s"
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_fedex_rest
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "FedEx Connector"
-msgstr "FedEx Konektor"
+msgstr "FedEx-Konnektor"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__fiscal_position_id
 msgid "Fiscal Position"
-msgstr "Steuerzuordnung"
+msgstr "Steuerposition"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__fiscal_position_id
@@ -2315,34 +2498,34 @@ msgid ""
 "Fiscal positions are used to adapt taxes and accounts for particular "
 "customers or sales orders/invoices.The default value comes from the customer."
 msgstr ""
-"Steuerliche Positionen werden verwendet, um Steuern und Konten für bestimmte "
-"Kunden oder Kundenaufträge/Rechnungen anzupassen.Der Vorschlagswert kommt "
+"Steuerpositionen werden verwendet, um Steuern und Konten für bestimmte "
+"Kunden oder Verkaufsaufträge/Rechnungen anzupassen. Der Standardwert kommt "
 "vom Kunden."
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order_discount__discount_type__amount
 msgid "Fixed Amount"
-msgstr ""
+msgstr "Fester Betrag"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_home_sale
 msgid "Follow, view or pay your orders"
-msgstr ""
+msgstr "Ihre Aufträge verfolgen, ansehen oder bezahlen"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_follower_ids
 msgid "Followers"
-msgstr "Abonnenten"
+msgstr "Follower"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_partner_ids
 msgid "Followers (Partners)"
-msgstr "Abonnenten (Partner)"
+msgstr "Follower (Partner)"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__activity_type_icon
 msgid "Font awesome icon e.g. fa-tasks"
-msgstr "FontAwesome Icon, z.B. fa-tasks"
+msgstr "FontAwesome-Icon, z. B. fa-tasks"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_pricelist_item_form
@@ -2354,7 +2537,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.constraint,message:sale.constraint_sale_order_line_non_accountable_null_fields
 msgid "Forbidden values on non-accountable sale order line"
-msgstr "Verbotene Werte auf der nicht kontoführenden Verkaufsauftragszeile"
+msgstr "Verbotenen Werte in nicht buchungspflichtigen Verkaufsauftragszeilen"
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_account_invoice_report_salesteam
@@ -2364,13 +2547,13 @@ msgid ""
 "reports and so, match this analysis to your needs."
 msgstr ""
 "Durch diesen Bericht erhalten Sie einen Überblick über die Abrechnungen "
-"Ihrer Kunden. Das Suche + Filter Tool kann zur weiteren, auf Ihre "
-"Bedürfnisse angepassten, Analyse angepasst werden."
+"Ihrer Kunden. Das Suchwerkzeug kann zur weiteren, auf Ihre Bedürfnisse "
+"angepassten Analyse personalisiert werden."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_pay_modal_amount_selector
 msgid "Full amount <br/>"
-msgstr ""
+msgstr "Gesamter Betrag <br/>"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order__invoice_status__invoiced
@@ -2389,17 +2572,17 @@ msgstr "Anstehende Aktivitäten"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_sale_gelato
 msgid "Gelato"
-msgstr ""
+msgstr "Gelato"
 
 #. module: sale
 #: model:ir.model,name:sale.model_payment_link_wizard
 msgid "Generate Sales Payment Link"
-msgstr "Zahlungslink für den Auftrag erzeugen"
+msgstr "Zahlungslink für den Auftrag generieren"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_sale_order_generate_link
 msgid "Generate a Payment Link"
-msgstr "Ein Zahlungslink erstellen"
+msgstr "Einen Zahlungslink generieren"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -2412,23 +2595,23 @@ msgstr ""
 #. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 msgid "Generated Orders"
-msgstr ""
+msgstr "Generierte Aufträge"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Get warnings in orders for products or customers"
-msgstr "Warnungen bei Bestellungen von Produkten oder Kunden erhalten"
+msgstr "Erhalten Sie Warnungen bei Aufträgen für Produkte oder Kunden"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order_discount__discount_type__so_discount
 msgid "Global Discount"
-msgstr ""
+msgstr "Gesamtrabatt"
 
 #. module: sale
 #. odoo-javascript
 #: code:addons/sale/static/src/js/tours/sale.js:0
 msgid "Go ahead and send the quotation."
-msgstr ""
+msgstr "Los geht's! Versenden Sie das Angebot!"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_line__product_type
@@ -2436,11 +2619,13 @@ msgid ""
 "Goods are tangible materials and merchandise you provide.\n"
 "A service is a non-material product you provide."
 msgstr ""
+"Waren sind materielle Güter und Handelswaren, die Sie bereitstellen.\n"
+"Eine Dienstleistung ist ein immaterielles Produkt, das Sie bereitstellen."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Grant discounts on sales order lines"
-msgstr "Gewährung von Rabatten auf Kundenauftragszeilen"
+msgstr "Gewähren Sie Rabatten auf Verkaufsauftragszeilen"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__weight
@@ -2450,12 +2635,12 @@ msgstr "Bruttogewicht"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__has_active_pricelist
 msgid "Has Active Pricelist"
-msgstr ""
+msgstr "Hat aktive Preisliste"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__has_archived_products
 msgid "Has Archived Products"
-msgstr ""
+msgstr "Hat archivierte Produkte"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__has_authorized_transaction_ids
@@ -2465,7 +2650,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_mass_cancel_orders__has_confirmed_order
 msgid "Has Confirmed Order"
-msgstr ""
+msgstr "Hat bestätigten Auftrag"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__show_update_fpos
@@ -2480,7 +2665,7 @@ msgstr "Hat eine Nachricht"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__show_update_pricelist
 msgid "Has Pricelist Changed"
-msgstr "Hat sich die Preisliste geändert"
+msgstr "Hat geänderte Preisliste"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__has_down_payments
@@ -2490,7 +2675,7 @@ msgstr "Hat Anzahlungen"
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_document__attached_on_sale__hidden
 msgid "Hidden"
-msgstr ""
+msgstr "Verborgen"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_account_analytic_applicability__id
@@ -2532,18 +2717,18 @@ msgstr "Icon"
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__activity_exception_icon
 msgid "Icon to indicate an exception activity."
-msgstr "Symbol, um eine Ausnahmeaktivität anzuzeigen."
+msgstr "Icon, um eine Ausnahmeaktivität anzuzeigen."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__message_needaction
 msgid "If checked, new messages require your attention."
-msgstr "Falls markiert, benötigen neue Nachrichten Ihre Kenntnisnahme."
+msgstr "Falls markiert, erfordern neue Nachrichten Ihre Aufmerksamkeit."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__message_has_error
 #: model:ir.model.fields,help:sale.field_sale_order__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
-msgstr "Wenn gewählt, ist das Senden einiger Nachrichten fehlgeschlagen."
+msgstr "Falls markiert, weisen einige Nachrichten einen Zustellungsfehler auf."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__journal_id
@@ -2551,6 +2736,9 @@ msgid ""
 "If set, the SO will invoice in this journal; otherwise the sales journal "
 "with the lowest sequence is used."
 msgstr ""
+"Falls festgelegt, wir der Verkaufsauftrag in diesem Journal in Rechnung "
+"gestellt. Andernfalls wird das Verkaufsjournal mit der niedrigsten Sequenz "
+"verwendet."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -2572,23 +2760,23 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Immediate"
-msgstr ""
+msgstr "Sofort"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Import Amazon orders and sync deliveries"
-msgstr "Bestellungen von Amazon importieren und Lieferungen synchronisieren"
+msgstr "Importieren Sie Amazon-Bestellungen und synchronisieren Sie Lieferungen"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Import Shopee orders and sync deliveries"
-msgstr ""
+msgstr "Importieren Sie Shopee-Bestellungen und synchronisieren Sie Lieferungen"
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/product_template.py:0
 msgid "Import Template for Products"
-msgstr "Importier-Vorlage für Produkte "
+msgstr "Importvorlage für Produkte"
 
 #. module: sale
 #. odoo-python
@@ -2609,11 +2797,14 @@ msgid ""
 "In sale order line original price is unit price and discount is in\n"
 "                                discount column."
 msgstr ""
+"In der Verkaufsauftragszeile ist der ursprüngliche Preis der Stückpreis und "
+"der Rabatt wird\n"
+"                                 in der Rabatt-Spalte angegeben."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_view_search_catalog
 msgid "In the Order"
-msgstr ""
+msgstr "Im Auftrag"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -2632,18 +2823,19 @@ msgstr ""
 #: model:ir.model.fields,help:sale.field_sale_order__sale_warning_text
 msgid "Internal warning for the partner or the products as set by the user."
 msgstr ""
+"Interne Warnung für den Partner oder die vom Benutzer eingestellten Produkte."
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/wizard/sale_order_discount.py:0
 msgid "Invalid discount amount"
-msgstr ""
+msgstr "Ungültiger Rabattbetrag"
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/controllers/portal.py:0
 msgid "Invalid order."
-msgstr "Ungültige Bestellung."
+msgstr "Ungültiger Auftrag."
 
 #. module: sale
 #. odoo-python
@@ -2685,7 +2877,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
 msgid "Invoice Sales Order"
-msgstr "Erzeuge Rechnung"
+msgstr "Verkaufsauftrag abrechnen"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__invoice_status
@@ -2707,6 +2899,8 @@ msgstr ""
 #: code:addons/sale/models/product_template.py:0
 msgid "Invoice ordered quantities as soon as this service is sold."
 msgstr ""
+"Stellen Sie die bestellten Mengen in Rechnung, sobald diese Dienstleistung "
+"verkauft ist."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_crm_team__invoiced
@@ -2715,20 +2909,19 @@ msgid ""
 "has invoiced this month. It is used to compute the progression ratio of the "
 "current and target revenue on the kanban view."
 msgstr ""
-"Rechnungsumsatz für den aktuellen Monat. Diesen Betrag hat der "
-"Vertriebskanal diesen Monat berechnet. Dies wird zur Ermittlung der "
-"Progression vom aktuellen und geplanten Umsatz in der Kanban-Ansicht "
-"verwendet."
+"Rechnungsumsatz für den aktuellen Monat. Diesen Betrag hat der Verkaufskanal "
+"diesen Monat berechnet. Er wird zur Berechnung des Verhältnisses zwischen "
+"dem aktuellen und dem Zielumsatz in der Kanban-Ansicht verwendet."
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__res_config_settings__default_invoice_policy__delivery
 msgid "Invoice what is delivered"
-msgstr "Rechne geliefertes ab"
+msgstr "Gelieferte Menge abrechnen"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__res_config_settings__default_invoice_policy__order
 msgid "Invoice what is ordered"
-msgstr "Rechne bestelltes ab"
+msgstr "Bestellte Menge abrechnen"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -2738,7 +2931,7 @@ msgstr "Abgerechnet"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__amount_invoiced
 msgid "Invoiced Amount"
-msgstr ""
+msgstr "Abgerechneter Betrag"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__qty_invoiced
@@ -2748,13 +2941,13 @@ msgstr "Abgerechnete Menge"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__qty_invoiced_posted
 msgid "Invoiced Quantity (posted)"
-msgstr ""
+msgstr "Abgerechnete Menge (gebucht)"
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/sale_order_line.py:0
 msgid "Invoiced Quantity: %s"
-msgstr "In Rechnung gestellte Menge: %s"
+msgstr "Abgerechnete Menge: %s"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_crm_team__invoiced
@@ -2772,67 +2965,67 @@ msgstr "Rechnungen"
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_account_invoice_report_salesteam
 msgid "Invoices Analysis"
-msgstr "Statistik Rechnungen"
+msgstr "Analyse der Rechnungen"
 
 #. module: sale
 #: model:ir.model,name:sale.model_account_invoice_report
 msgid "Invoices Statistics"
-msgstr "Statistik Rechnungen"
+msgstr "Rechnungsstatistiken"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Invoicing"
-msgstr "Abrechnung"
+msgstr "Rechnungsstellung"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "Invoicing Address"
-msgstr ""
+msgstr "Rechnungsadresse"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__journal_id
 msgid "Invoicing Journal"
-msgstr ""
+msgstr "Rechnungsjournal"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_product__invoice_policy
 #: model:ir.model.fields,field_description:sale.field_product_template__invoice_policy
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__default_invoice_policy
 msgid "Invoicing Policy"
-msgstr "Fakturierungsregel"
+msgstr "Abrechnungspolitik"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_crm_team__invoiced_target
 msgid "Invoicing Target"
-msgstr "Rechnungsabschlussziel"
+msgstr "Abrechnungsziel"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "Invoicing and Shipping Address"
-msgstr ""
+msgstr "Rechnungs- und Lieferadresse:"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_account_move_line__is_downpayment
 msgid "Is Downpayment"
-msgstr "Ist eine Anzahlung"
+msgstr "Ist Anzahlung"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__is_expired
 msgid "Is Expired"
-msgstr "ist abgelaufen"
+msgstr "Ist abgelaufen"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_is_follower
 msgid "Is Follower"
-msgstr "Ist ein Abonnent"
+msgstr "Ist Follower"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__is_product_archived
 msgid "Is Product Archived"
-msgstr ""
+msgstr "Ist Produkt archiviert"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__is_downpayment
@@ -2847,19 +3040,19 @@ msgstr "Ist Aufwand"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__is_configurable_product
 msgid "Is the product configurable?"
-msgstr ""
+msgstr "Ist das Produkt konfigurierbar?"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_line__is_expense
 msgid "Is true if the sales order line comes from an expense or a vendor bills"
 msgstr ""
-"Ist wahr, wenn die Kundenauftragszeile aus einer Ausgabe oder einer "
+"Ist Wahr, wenn die Verkaufsauftragszeile aus einer Ausgabe oder einer "
 "Lieferantenrechnung stammt."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Issued Date"
-msgstr ""
+msgstr "Ausstellungsdatu"
 
 #. module: sale
 #. odoo-python
@@ -2875,7 +3068,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model,name:sale.model_account_move
 msgid "Journal Entry"
-msgstr "Buchungssatz"
+msgstr "Journalbuchung"
 
 #. module: sale
 #: model:ir.model,name:sale.model_account_move_line
@@ -2885,7 +3078,7 @@ msgstr "Buchungszeile"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "Last Invoices"
-msgstr ""
+msgstr "Letzte Rechnungen"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__write_uid
@@ -2918,39 +3111,39 @@ msgstr "Vorlaufzeit"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Let your customers log in to see their documents"
-msgstr "Kunden können sich einloggen, um ihre Dokumente zu sehen"
+msgstr "Kunden können sich anmelden, um ihre Dokumente zu sehen"
 
 #. module: sale
 #. odoo-javascript
 #: code:addons/sale/static/src/js/tours/sale.js:0
 msgid "Let’s create a beautiful quotation in a few clicks ."
-msgstr ""
+msgstr "Erstellen Sie ein beeindruckendes Angebot in ein paar Klicks."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__linked_line_id
 msgid "Linked Order Line"
-msgstr ""
+msgstr "Verknüpfte Auftragsposition"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__linked_line_ids
 msgid "Linked Order Lines"
-msgstr ""
+msgstr "Verknüpfte Auftragszeilen"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__linked_virtual_id
 msgid "Linked Virtual"
-msgstr ""
+msgstr "Virtuell verknüpft"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Lock"
-msgstr "Sperre"
+msgstr "Sperren"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__group_auto_done_setting
 #: model:res.groups,name:sale.group_auto_done_setting
 msgid "Lock Confirmed Sales"
-msgstr "Sperren von bestätigten Umsätzen"
+msgstr "Bestätigte Verkäufe sperren"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__locked
@@ -2960,7 +3153,7 @@ msgstr "Gesperrt"
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__locked
 msgid "Locked orders cannot be modified."
-msgstr ""
+msgstr "Gesperrte Aufträge können nicht bearbeitet werden."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -2968,16 +3161,20 @@ msgid ""
 "Make your quote attractive by adding header pages, product descriptions and "
 "footer pages to your quote."
 msgstr ""
+"Gestalten Sie Ihr Angebot attraktiv, indem Sie Kopfseiten, "
+"Produktbeschreibungen und Fußseiten zu Ihrem Angebot hinzufügen."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Manage Promotions, Coupons, Loyalty cards, Gift cards & eWallet"
 msgstr ""
+"Verwalten Sie Werbeaktionen, Gutscheine, Treuekarten, Geschenkkarten &amp; "
+"E-Geldbörsen"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Manage Sales & teams targets and commissions"
-msgstr ""
+msgstr "Verwalten Sie Verkäufe & Teamziele und Provisionen"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order_line__qty_delivered_method__manual
@@ -3005,11 +3202,11 @@ msgid ""
 "Create a task and track hours: Create a task on the sales order validation "
 "and track the work hours."
 msgstr ""
-"Mengen für den Auftrag manuell festlegen: Die Rechnung basierend auf der "
-"manuell eingegebenen Menge, ohne eine Kostenstelle zu erstellen.\n"
-" Stundenzettel auf dem Vertrag: Rechnung basierend auf den aufgezeichneten "
-"Stunden auf dem dazugehörigen Stundenzettel.\n"
-" Eine Aufgabe erstellen und Stunden aufzeichnen: Eine Aufgabe bei der "
+"Mengen für den Auftrag manuell festlegen: Basierend auf der manuell "
+"eingegebenen Menge abrechnen, ohne eine Kostenstelle zu erstellen.\n"
+"Zeiterfassungen auf dem Vertrag: Basierend auf den aufgezeichneten Stunden "
+"auf dem dazugehörigen Zeiterfassungsbogen berechnen.\n"
+"Eine Aufgabe erstellen und Stunden aufzeichnen: Eine Aufgabe bei der "
 "Verkaufsauftragsvalidierung erstellen und Arbeitsstunden aufzeichnen."
 
 #. module: sale
@@ -3020,7 +3217,7 @@ msgstr "Margen"
 #. module: sale
 #: model:ir.actions.server,name:sale.model_sale_order_action_quotation_sent
 msgid "Mark Quotation as Sent"
-msgstr "Markieren der Offerte als gesendet"
+msgstr "Angebot als gesendet markieren"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.account_invoice_form
@@ -3038,13 +3235,13 @@ msgstr "Medium"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_has_error
 msgid "Message Delivery error"
-msgstr "Fehler beim Senden der Nachricht"
+msgstr "Nachricht mit Zustellungsfehler"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_partner__sale_warn_msg
 #: model:ir.model.fields,field_description:sale.field_res_users__sale_warn_msg
 msgid "Message for Sales Order"
-msgstr "Mitteilung für Auftrag"
+msgstr "Mitteilung für Verkaufsauftrag"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_ids
@@ -3059,7 +3256,7 @@ msgstr "Methode zum Aktualisieren der gelieferten Menge"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_pricelist_item_form
 msgid "Min Qty"
-msgstr ""
+msgstr "Min. Menge"
 
 #. module: sale
 #: model:ir.model.constraint,message:sale.constraint_sale_order_line_accountable_required_fields
@@ -3069,7 +3266,7 @@ msgstr "Fehlende Pflichtfelder in der abzurechnenden Verkaufsauftragszeile."
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Mitchell Admin"
-msgstr ""
+msgstr "Mitchell Admin"
 
 #. module: sale
 #. odoo-javascript
@@ -3086,17 +3283,17 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
 msgid "My Activities"
-msgstr ""
+msgstr "Meine Aktivitäten"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__my_activity_date_deadline
 msgid "My Activity Deadline"
-msgstr "Deadline für meine Aktivitäten"
+msgstr "Frist für meine Aktivitäten"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
 msgid "My Orders"
-msgstr "Meine Bestellungen"
+msgstr "Meine Aufträge"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_quotation
@@ -3106,7 +3303,7 @@ msgstr "Meine Angebote"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_line_filter
 msgid "My Sales Order Lines"
-msgstr "Meine Verkaufsauftragspositionen"
+msgstr "Meine Verkaufsauftragszeilen"
 
 #. module: sale
 #. odoo-python
@@ -3132,7 +3329,7 @@ msgstr "Nächste Aktivitätsfrist"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__activity_summary
 msgid "Next Activity Summary"
-msgstr "Zusammenfassung nächste Aktion"
+msgstr "Zusammenfassung der nächsten Aktivität"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__activity_type_id
@@ -3148,22 +3345,22 @@ msgstr "Nein"
 #. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 msgid "No attachment was provided"
-msgstr ""
+msgstr "Es wurde kein Anhang bereitgestellt"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "No further requirements for this payment"
-msgstr ""
+msgstr "Keine weiteren Anforderungen für diese Zahlung"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "No longer edit orders once confirmed"
-msgstr "Nach Bestätigung Bestellungen nicht mehr bearbeiten"
+msgstr "Bearbeiten Sie keine Aufträge mehr nach Bestätigung"
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_orders_to_invoice
 msgid "No orders to invoice found"
-msgstr "Keine Bestellungen zur Rechnung gefunden"
+msgstr "Keine abzurechnenden Aufträge gefunden"
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_orders_upselling
@@ -3173,7 +3370,7 @@ msgstr "Keine Aufträge zum Upselling gefunden."
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Not using Odoo?"
-msgstr ""
+msgstr "Sie verwenden nicht Odoo?"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order_line__display_type__line_note
@@ -3204,7 +3401,8 @@ msgstr "Anzahl der Aktionen"
 msgid ""
 "Number of days between the order confirmation and the shipping of the "
 "products to the customer"
-msgstr "Anzahl der Tage zwischen Auftragserteilung und Auslieferung zum Kunden"
+msgstr ""
+"Anzahl der Tage zwischen Auftragsbestätigung und Auslieferung an den Kunden"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_has_error_counter
@@ -3214,17 +3412,17 @@ msgstr "Anzahl der Fehler"
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__message_needaction_counter
 msgid "Number of messages requiring action"
-msgstr ""
+msgstr "Anzahl der Nachrichten, die eine Aktion erfordern"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr "Anzahl der Nachrichten mit einem Fehler beim Senden."
+msgstr "Anzahl der Nachrichten mit Zustellungsfehler."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Odoo"
-msgstr ""
+msgstr "Odoo"
 
 #. module: sale
 #: model:product.template,description_sale:sale.product_product_1_product_template
@@ -3234,17 +3432,17 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order_discount__discount_type__sol_discount
 msgid "On All Order Lines"
-msgstr ""
+msgstr "Auf alle Auftragszeilen"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_document__attached_on_sale__sale_order
 msgid "On confirmed order"
-msgstr ""
+msgstr "Bei Auftragsbestätigung"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_document__attached_on_sale__quotation
 msgid "On quote"
-msgstr ""
+msgstr "Bei Angebot"
 
 #. module: sale
 #. odoo-python
@@ -3254,6 +3452,10 @@ msgid ""
 "to track if something gets invoiced or delivered).\n"
 "                Set the quantity to 0 instead."
 msgstr ""
+"Sobald ein Verkaufsauftrag bestätigt ist, können Sie keine seiner Zeilen "
+"mehr entfernen (wir müssen verfolgen, ob etwas in Rechnung gestellt oder "
+"geliefert wird).\n"
+"                Setzen Sie die Menge stattdessen auf 0."
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.act_res_partner_2_sale_order
@@ -3264,7 +3466,7 @@ msgid ""
 "<br> You will be able to create an invoice and collect the payment."
 msgstr ""
 "Sobald das Angebot vom Kunden bestätigt wurde, wird es zu einem "
-"Kundenauftrag.<br> Sie können eine Rechnung erstellen und die Zahlung "
+"Verkaufsauftrag.<br> Sie können eine Rechnung erstellen und die Zahlung "
 "einziehen."
 
 #. module: sale
@@ -3273,7 +3475,7 @@ msgid ""
 "Once the quotation is confirmed, it becomes a sales order.<br> You will be "
 "able to create an invoice and collect the payment."
 msgstr ""
-"Sobald das Angebot bestätigt ist, wird es zu einem Kundenauftrag.<br> Sie "
+"Sobald das Angebot bestätigt ist, wird es zu einem Verkaufsauftrag.<br> Sie "
 "können eine Rechnung erstellen und die Zahlung einziehen."
 
 #. module: sale
@@ -3285,28 +3487,28 @@ msgstr "Online-Zahlung"
 #. module: sale
 #: model:ir.ui.menu,name:sale.payment_menu
 msgid "Online Payments"
-msgstr ""
+msgstr "Online-Zahlungen"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company__portal_confirmation_sign
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__portal_confirmation_sign
 msgid "Online Signature"
-msgstr "Online-Unterschrift"
+msgstr "Online-Signatur"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__require_payment
 msgid "Online payment"
-msgstr ""
+msgstr "Online-Zahlung"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__require_signature
 msgid "Online signature"
-msgstr ""
+msgstr "Online-Signatur"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv__amount_invoiced
 msgid "Only confirmed down payments are considered."
-msgstr ""
+msgstr "Nur bestätigt, wenn Anzahlungen berücksichtigt werden."
 
 #. module: sale
 #. odoo-python
@@ -3319,20 +3521,20 @@ msgstr "Nur Entwurfsaufträge können als direkt gesendet markiert werden."
 msgid ""
 "Only one Custom Value is allowed per Attribute Value per Sales Order Line."
 msgstr ""
-"Es ist nur ein benutzerdefinierter Wert pro Merkmalswert pro "
-"Auftragsposition zulässig."
+"Es ist nur ein benutzerdefinierter Wert pro Attributwert pro "
+"Verkaufsauftragszeile zulässig."
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/sale_order_line.py:0
 msgid "Option for: %s"
-msgstr ""
+msgstr "Option für: %s"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_product__optional_product_ids
 #: model:ir.model.fields,field_description:sale.field_product_template__optional_product_ids
 msgid "Optional Products"
-msgstr ""
+msgstr "Optionale Produkte"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_product_product__optional_product_ids
@@ -3341,6 +3543,9 @@ msgid ""
 "Optional Products are suggested whenever the customer hits *Add to Cart* "
 "(cross-sell strategy, e.g. for computers: warranty, software, etc.)."
 msgstr ""
+"Optionale Produkte werden vorgeschlagen, wenn der Kunde auf „In den "
+"Warenkorb“ klickt (Cross-Selling-Strategie, z. B. für Computer: Garantie, "
+"Software usw.)."
 
 #. module: sale
 #. odoo-python
@@ -3359,7 +3564,7 @@ msgstr "Auftrag #"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__count
 msgid "Order Count"
-msgstr "Anzahl der Aufträge"
+msgstr "Anzahl Aufträge"
 
 #. module: sale
 #. odoo-python
@@ -3373,7 +3578,7 @@ msgstr "Anzahl der Aufträge"
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
 msgid "Order Date"
-msgstr "Bestelldatum"
+msgstr "Auftragsdatum"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
@@ -3388,13 +3593,13 @@ msgstr "Auftragsdatum: letzte 365 Tage"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__invoice_status
 msgid "Order Invoice Status"
-msgstr ""
+msgstr "Rechnungsstatus des Auftrags"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__order_line
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Order Lines"
-msgstr "Auftragszeilen"
+msgstr "Auftragspositionen"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__name
@@ -3427,13 +3632,13 @@ msgid ""
 "Ordered Quantity: Invoice quantities ordered by the customer.\n"
 "Delivered Quantity: Invoice quantities delivered to the customer."
 msgstr ""
-"Bestellmenge: Vom Kunden bestellte Rechnungsmengen.\n"
-"Gelieferte Menge: Rechnungsmengen, die an den Kunden geliefert werden."
+"Bestellte Menge: Vom Kunden bestellte Mengen abrechnen.\n"
+"Gelieferte Menge: An den Kunden gelieferte Mengen abrechnen."
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_template__invoice_policy__order
 msgid "Ordered quantities"
-msgstr "Rechnung bei Auftrag"
+msgstr "Bestellte Mengen"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_sale_order
@@ -3445,7 +3650,7 @@ msgstr "Aufträge"
 #: model:ir.actions.act_window,name:sale.action_orders_to_invoice
 #: model:ir.ui.menu,name:sale.menu_sale_order_invoice
 msgid "Orders to Invoice"
-msgstr "Aufträge zur Abrechnung"
+msgstr "Abzurechnende Aufträge"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_orders_upselling
@@ -3456,7 +3661,7 @@ msgstr "Aufträge für Upselling"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Oscar Morgan"
-msgstr ""
+msgstr "Oscar Morgan"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -3466,18 +3671,18 @@ msgstr "Weitere Informationen"
 #. module: sale
 #: model:ir.actions.report,name:sale.action_report_saleorder
 msgid "PDF Quote"
-msgstr ""
+msgstr "PDF-Angebot"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "PDF Quote builder"
-msgstr ""
+msgstr "PDF-Angebotsbauer"
 
 #. module: sale
 #: model:ir.actions.report,name:sale.action_report_pro_forma_invoice
 msgid "PRO-FORMA Invoice"
-msgstr "Proformarechnung"
+msgstr "PRO-FORMA-Rechnung"
 
 #. module: sale
 #. odoo-javascript
@@ -3493,7 +3698,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__partner_credit_warning
 msgid "Partner Credit Warning"
-msgstr "Partnerkredit-Warnung"
+msgstr "Warnung für Kundenkreditlimit"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -3503,7 +3708,7 @@ msgstr "Jetzt bezahlen"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_pay_modal
 msgid "Pay Order"
-msgstr ""
+msgstr "Zahlungsauftrag"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__res_company__sale_onboarding_payment_method__other
@@ -3518,7 +3723,7 @@ msgstr "PayPal"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Payment"
-msgstr ""
+msgstr "Zahlung"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__preferred_payment_method_line_id
@@ -3529,7 +3734,7 @@ msgstr "Zahlungsmethode"
 #. module: sale
 #: model:ir.ui.menu,name:sale.payment_method_menu
 msgid "Payment Methods"
-msgstr ""
+msgstr "Zahlungsmethoden"
 
 #. module: sale
 #: model:ir.model,name:sale.model_payment_provider
@@ -3544,7 +3749,7 @@ msgstr "Zahlungsanbieter"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__reference
 msgid "Payment Ref."
-msgstr "Zahlungsreferenz"
+msgstr "Zahlungsref."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__payment_term_id
@@ -3554,7 +3759,7 @@ msgstr "Zahlungsbedingungen"
 #. module: sale
 #: model:ir.ui.menu,name:sale.payment_token_menu
 msgid "Payment Tokens"
-msgstr ""
+msgstr "Zahlungstoken"
 
 #. module: sale
 #: model:ir.model,name:sale.model_payment_transaction
@@ -3564,12 +3769,12 @@ msgstr "Zahlungstransaktion"
 #. module: sale
 #: model:ir.ui.menu,name:sale.payment_transaction_menu
 msgid "Payment Transactions"
-msgstr ""
+msgstr "Zahlungstransaktionen"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__amount_paid
 msgid "Payment Transactions Amount"
-msgstr ""
+msgstr "Betrag der Zahlungstransaktionen"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
@@ -3579,17 +3784,17 @@ msgstr "Zahlungsbedingungen"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__pending_email_template_id
 msgid "Pending Email Template"
-msgstr ""
+msgstr "Ausstehende E-Mail-Vorlage"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_discount__discount_percentage
 msgid "Percentage"
-msgstr ""
+msgstr "Prozentsatz"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Place orders through Gelato's print-on-demand service"
-msgstr ""
+msgstr "Bestellungen über Gelatos Dienst „Druck nach Bedarf“ aufgeben"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__access_url
@@ -3599,31 +3804,31 @@ msgstr "Portalzugriffs-URL"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_payment_link_wizard__prepayment_amount
 msgid "Prepayment Amount"
-msgstr ""
+msgstr "Vorauszahlungsbetrag"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company__prepayment_percent
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__prepayment_percent
 #: model:ir.model.fields,field_description:sale.field_sale_order__prepayment_percent
 msgid "Prepayment percentage"
-msgstr ""
+msgstr "Vorauszahlungsprozentsatz"
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/res_company.py:0
 #: code:addons/sale/models/sale_order.py:0
 msgid "Prepayment percentage must be a valid percentage."
-msgstr ""
+msgstr "Der Vorauszahlungsprozentsatz muss ein gültiger Prozentsatz sein."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Preview"
-msgstr ""
+msgstr "Vorschau"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__price_reduce_taxexcl
 msgid "Price Reduce Tax excl"
-msgstr "Reduzierter Preis zzgl. MwSt"
+msgstr "Preisminderung exkl. Steuern"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__price_reduce_taxinc
@@ -3639,12 +3844,12 @@ msgstr "Preisliste"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__pricelist_item_id
 msgid "Pricelist Item"
-msgstr "Preisliste Einzelposition"
+msgstr "Preislistenposition"
 
 #. module: sale
 #: model:ir.model,name:sale.model_product_pricelist_item
 msgid "Pricelist Rule"
-msgstr ""
+msgstr "Preislistenregel"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_product_pricelist_main
@@ -3665,17 +3870,17 @@ msgstr "Drucken"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__group_proforma_sales
 msgid "Pro-Forma Invoice"
-msgstr "Proformarechnung"
+msgstr "Pro-forma-Rechnung"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Pro-Forma Invoice #"
-msgstr "Proformarechnung #"
+msgstr "Pro-forma-Rechnung #"
 
 #. module: sale
 #: model:res.groups,name:sale.group_proforma_sales
 msgid "Pro-forma Invoices"
-msgstr "Proformarechnungen"
+msgstr "Pro-forma-Rechnungen"
 
 #. module: sale
 #. odoo-javascript
@@ -3694,7 +3899,7 @@ msgstr "Produkt"
 #. module: sale
 #: model:ir.model,name:sale.model_product_attribute_custom_value
 msgid "Product Attribute Custom Value"
-msgstr "Produktmerkmal Benutzerdefiniert"
+msgstr "Produktattribut Benutzerdefiniert"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -3704,7 +3909,7 @@ msgstr "Produktkatalog"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_product__product_catalog_product_is_in_sale_order
 msgid "Product Catalog Product Is In Sale Order"
-msgstr ""
+msgstr "Produkt Katalogprodukt ist in Verkaufsauftrag"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__categ_id
@@ -3715,7 +3920,7 @@ msgstr "Produktkategorie"
 #. module: sale
 #: model:ir.model,name:sale.model_product_document
 msgid "Product Document"
-msgstr ""
+msgstr "Produktdokument"
 
 #. module: sale
 #. odoo-javascript
@@ -3723,12 +3928,12 @@ msgstr ""
 #: code:addons/sale/static/src/js/product/product.xml:0
 #: code:addons/sale/static/src/js/product_card/product_card.xml:0
 msgid "Product Image"
-msgstr ""
+msgstr "Produktbild"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_product_tags
 msgid "Product Tags"
-msgstr ""
+msgstr "Produkt-Stichwörter"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__product_template_id
@@ -3743,7 +3948,7 @@ msgstr "Produktart"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__product_uom_readonly
 msgid "Product Uom Readonly"
-msgstr "Produkt Uom Readonly"
+msgstr "Produkt-Maßeinheit Schreibgeschützt"
 
 #. module: sale
 #: model:ir.model,name:sale.model_product_product
@@ -3751,7 +3956,7 @@ msgstr "Produkt Uom Readonly"
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
 msgid "Product Variant"
-msgstr "Produktvarianten"
+msgstr "Produktvariante"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_products
@@ -3768,7 +3973,7 @@ msgstr "Die Produktpreise wurden gemäß der Preisliste %s neu berechnet."
 #. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 msgid "Product prices have been recomputed."
-msgstr ""
+msgstr "Produktpreise wurden berechnet."
 
 #. module: sale
 #. odoo-python
@@ -3790,7 +3995,7 @@ msgstr "Produkte"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Promotions, Loyalty & Gift Card"
-msgstr ""
+msgstr "Werbeaktionen, Treue & Geschenkkarten"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_line_tree
@@ -3800,17 +4005,17 @@ msgstr "Menge"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__qty_delivered
 msgid "Qty Delivered"
-msgstr "Liefermenge"
+msgstr "Gelieferte Menge"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__qty_invoiced
 msgid "Qty Invoiced"
-msgstr "Rechnungsmenge"
+msgstr "Abgerechnete Menge"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__product_uom_qty
 msgid "Qty Ordered"
-msgstr "Bestelle Menge"
+msgstr "Bestellte Menge"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__qty_to_deliver
@@ -3820,12 +4025,12 @@ msgstr "Zu liefernde Menge"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__qty_to_invoice
 msgid "Qty To Invoice"
-msgstr "Abzurechnene Menge"
+msgstr "Abzurechnende Menge"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Quantities to invoice from sales orders"
-msgstr "Fakturierbare Mengen aus Verkaufsaufträgen"
+msgstr "Abrechenbare Mengen aus Verkaufsaufträgen"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__product_uom_qty
@@ -3838,7 +4043,7 @@ msgstr "Menge"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__qty_to_invoice
 msgid "Quantity To Invoice"
-msgstr "Abzurechnene Menge"
+msgstr "Abzurechnende Menge"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -3863,7 +4068,7 @@ msgstr "Angebot #"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_utm_campaign__quotation_count
 msgid "Quotation Count"
-msgstr "Angebotszähler"
+msgstr "Anzahl Angebote"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_quotations
@@ -3883,17 +4088,19 @@ msgstr "Angebot gesendet"
 #: code:addons/sale/wizard/res_config_settings.py:0
 msgid "Quotation Validity is required and must be greater or equal to 0."
 msgstr ""
+"Die Gültigkeit des Angebots ist erforderlich und muss größer oder gleich 0 "
+"sein."
 
 #. module: sale
 #: model:mail.message.subtype,name:sale.mt_order_viewed
 #: model:mail.message.subtype,name:sale.mt_salesteam_order_viewed
 msgid "Quotation Viewed"
-msgstr ""
+msgstr "Angebot angesehen"
 
 #. module: sale
 #: model:mail.message.subtype,description:sale.mt_order_confirmed
 msgid "Quotation confirmed"
-msgstr "Auftrag bestätigt"
+msgstr "Angebot bestätigt"
 
 #. module: sale
 #: model:mail.message.subtype,description:sale.mt_order_sent
@@ -3906,7 +4113,7 @@ msgstr "Angebot gesendet"
 #. odoo-python
 #: code:addons/sale/controllers/portal.py:0
 msgid "Quotation viewed by customer %s"
-msgstr "Offerte vom Kunden eingesehen %s"
+msgstr "Angebot vom Kunden eingesehen %s"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_quotations
@@ -3926,7 +4133,7 @@ msgstr "Angebote"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Quotations & Orders"
-msgstr ""
+msgstr "Angebote & Aufträge"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_report_quotation_salesteam
@@ -3941,34 +4148,34 @@ msgstr "Angebote und Verkäufe"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_home_sale
 msgid "Quotations to review"
-msgstr ""
+msgstr "Zu prüfende Angebote"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__rating_ids
 msgid "Ratings"
-msgstr ""
+msgstr "Bewertungen"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_product__expense_policy
 #: model:ir.model.fields,field_description:sale.field_product_template__expense_policy
 msgid "Re-Invoice Costs"
-msgstr ""
+msgstr "Kosten weiterberechnen"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_product__visible_expense_policy
 #: model:ir.model.fields,field_description:sale.field_product_template__visible_expense_policy
 msgid "Re-Invoice Policy visible"
-msgstr "Re-Invoice Richtlinie sichtbar"
+msgstr "Weiterberechnungsrichtlinie sichtbar"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Read the documentation"
-msgstr ""
+msgstr "Mehr Informationen in der Dokumentation"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_template_view_form
 msgid "Recommend when 'Adding to Cart' or quotation"
-msgstr ""
+msgstr "Empfohlen bei „In den Warenkorb“ oder Angebot"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -4000,18 +4207,18 @@ msgstr "Dieses Angebot ablehnen"
 #. odoo-javascript
 #: code:addons/sale/static/src/js/product/product.xml:0
 msgid "Remove"
-msgstr ""
+msgstr "Entfernen"
 
 #. module: sale
 #. odoo-javascript
 #: code:addons/sale/static/src/js/quantity_buttons/quantity_buttons.xml:0
 msgid "Remove one"
-msgstr ""
+msgstr "Eins entfernen"
 
 #. module: sale
 #: model:ir.model,name:sale.model_ir_actions_report
 msgid "Report Action"
-msgstr ""
+msgstr "Berichtsaktion"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_sale_report
@@ -4022,11 +4229,14 @@ msgstr "Berichtswesen"
 #: model:ir.model.fields,help:sale.field_sale_order__require_payment
 msgid "Request a online payment from the customer to confirm the order."
 msgstr ""
+"Bitten Sie den Kunden um eine Online-Zahlung zur Bestätigung des Auftrags."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__require_signature
 msgid "Request a online signature from the customer to confirm the order."
 msgstr ""
+"Bitten Sie den Kunden um eine Online-Unterschrift zur Bestätigung des "
+"Auftrags."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -4034,6 +4244,8 @@ msgid ""
 "Request a payment to confirm orders, in full (100%) or partial. The default "
 "can be changed per order or template."
 msgstr ""
+"Fordern Sie eine Zahlung zur Bestätigung von Aufträgen an, ganz (100 %) oder "
+"teilweise. Der Standardwert kann pro Auftrag oder Vorlage geändert werden."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -4041,22 +4253,25 @@ msgid ""
 "Request customers to sign quotations to validate orders. The default can be "
 "changed per order or template."
 msgstr ""
+"Fordern Sie Kunden auf, Angebote zu unterschreiben, um Aufträge zu "
+"bestätigen. Der Standardwert kann pro Auftrag oder Vorlage geändert werden."
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 msgid "Requested date is too soon."
-msgstr "Der angefragte Termin ist zu früh."
+msgstr "Das angefragte Datum ist zu früh."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__activity_user_id
 msgid "Responsible User"
-msgstr "Manager Veranstaltung"
+msgstr "Verantwortlicher Benutzer"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_crm_team__invoiced_target
 msgid "Revenue Target for the current month (untaxed total of paid invoices)."
 msgstr ""
+"Umsatzziel für den aktuellen Monat (Nettosumme der bezahlten Rechnungen)."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.utm_campaign_view_form
@@ -4072,28 +4287,28 @@ msgstr "Durch die Kampagne generierte Umsätze"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_has_sms_error
 msgid "SMS Delivery error"
-msgstr "SMS Zustellungsfehler"
+msgstr "SMS-Zustellungsfehler"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "SO0000"
-msgstr ""
+msgstr "SO0000"
 
 #. module: sale
 #. odoo-javascript
 #: code:addons/sale/static/src/js/sale_action_helper/sale_action_helper_dialog.xml:0
 msgid "Sale"
-msgstr ""
+msgstr "Sale"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_document__attached_on_sale
 msgid "Sale : Visible at"
-msgstr ""
+msgstr "Verkauf: sichtbar bei"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "Sale Information"
-msgstr ""
+msgstr "Verkaufsinformationen"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__sale_order_ids
@@ -4108,12 +4323,12 @@ msgstr "Verkaufsauftrag"
 #: model:ir.model.fields,field_description:sale.field_res_partner__sale_order_count
 #: model:ir.model.fields,field_description:sale.field_res_users__sale_order_count
 msgid "Sale Order Count"
-msgstr "Verkaufsauftragsanzahl"
+msgstr "Anzahl Verkaufsaufträge"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.mail_activity_plan_action_sale_order
 msgid "Sale Order Plans"
-msgstr ""
+msgstr "Verkaufsauftragspläne"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__group_warning_sale
@@ -4125,19 +4340,19 @@ msgstr "Warnungen zu Verkaufsaufträgen"
 #: code:addons/sale/models/res_partner.py:0
 #: model_terms:ir.ui.view,arch_db:sale.account_invoice_form
 msgid "Sale Orders"
-msgstr "Aufträge"
+msgstr "Verkaufsaufträge"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_mass_cancel_orders__sale_orders_count
 msgid "Sale Orders Count"
-msgstr ""
+msgstr "Anzahl Verkaufsaufträge"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_account_bank_statement_line__sale_warning_text
 #: model:ir.model.fields,field_description:sale.field_account_move__sale_warning_text
 #: model:ir.model.fields,field_description:sale.field_sale_order__sale_warning_text
 msgid "Sale Warning"
-msgstr ""
+msgstr "Verkaufswarnung"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -4147,12 +4362,12 @@ msgstr "Verkaufswarnungen"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company__sale_onboarding_payment_method
 msgid "Sale onboarding selected payment method"
-msgstr "Verkauf onboarding ausgewählte Zahlungsmethode"
+msgstr "Verkaufseinführung ausgewählte Zahlungsmethode"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_mass_cancel_orders__sale_order_ids
 msgid "Sale orders to cancel"
-msgstr ""
+msgstr "Zu stornierende Verkaufsaufträge"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_reporting_sales
@@ -4168,7 +4383,7 @@ msgstr "Verkauf"
 #. module: sale
 #: model:ir.model,name:sale.model_sale_advance_payment_inv
 msgid "Sales Advance Payment Invoice"
-msgstr "Anzahlungsrechnung"
+msgstr "Vorauszahlungsrechnung"
 
 #. module: sale
 #. odoo-python
@@ -4181,22 +4396,22 @@ msgstr "Anzahlungsrechnung"
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_pivot
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
 msgid "Sales Analysis"
-msgstr "Statistik Verkaufsaufträge"
+msgstr "Verkaufsanalyse"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_report_customers
 msgid "Sales Analysis By Customers"
-msgstr ""
+msgstr "Verkaufsanalyse nach Kunden"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_report_products
 msgid "Sales Analysis By Products"
-msgstr ""
+msgstr "Verkaufsanalyse nach Produkten"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_report_salesperson
 msgid "Sales Analysis By Salespersons"
-msgstr ""
+msgstr "Verkaufsanalyse nach Vertriebsmitarbeiter"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_report
@@ -4206,7 +4421,7 @@ msgstr "Verkaufsanalysebericht"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_sale_product_matrix
 msgid "Sales Grid Entry"
-msgstr ""
+msgstr "Eintrag in Verkaufsraster"
 
 #. module: sale
 #. odoo-python
@@ -4221,13 +4436,13 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_view_activity
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Sales Order"
-msgstr "Verkaufsauftrag "
+msgstr "Verkaufsauftrag"
 
 #. module: sale
 #: model:mail.message.subtype,name:sale.mt_order_confirmed
 #: model:mail.message.subtype,name:sale.mt_salesteam_order_confirmed
 msgid "Sales Order Confirmed"
-msgstr "Auftrag wurde bestätigt"
+msgstr "Verkaufsauftrag bestätigt"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_account_analytic_line__so_line
@@ -4239,7 +4454,7 @@ msgstr "Auftragsposition"
 #: model:ir.model,name:sale.model_sale_order_line
 #: model:ir.model.fields,field_description:sale.field_product_attribute_custom_value__sale_order_line_id
 msgid "Sales Order Line"
-msgstr "Kundenauftragszeile"
+msgstr "Verkaufsauftragszeile"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_account_move_line__sale_line_warn_msg
@@ -4254,24 +4469,24 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 #: model_terms:ir.ui.view,arch_db:sale.view_order_line_tree
 msgid "Sales Order Lines"
-msgstr "Verkaufsauftragpositionen"
+msgstr "Verkaufsauftragszeilen"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_line_filter
 msgid "Sales Order Lines ready to be invoiced"
-msgstr "Abzurechnende Auftragsposition"
+msgstr "Abzurechnende Verkaufsauftragszeile"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_line_filter
 msgid "Sales Order Lines related to a Sales Order of mine"
-msgstr "Auftragspositionen meiner Verkaufsaufträge"
+msgstr "Verkaufsauftragszeilen meiner Verkaufsaufträge"
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/payment_transaction.py:0
 #: model_terms:ir.ui.view,arch_db:sale.transaction_form_inherit_sale
 msgid "Sales Order(s)"
-msgstr "Verkaufsauftrag (e)"
+msgstr "Verkaufsaufträge"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_orders
@@ -4332,17 +4547,17 @@ msgstr "Verkaufspreis"
 #. module: sale
 #: model:mail.template,name:sale.mail_template_sale_confirmation
 msgid "Sales: Order Confirmation"
-msgstr "Verkauf: Auftragsbestätitgung"
+msgstr "Verkauf: Auftragsbestätigung"
 
 #. module: sale
 #: model:mail.template,name:sale.mail_template_sale_payment_executed
 msgid "Sales: Payment Done"
-msgstr ""
+msgstr "Verkauf: Zahlung erledigt"
 
 #. module: sale
 #: model:mail.template,name:sale.email_template_proforma
 msgid "Sales: Send Proforma"
-msgstr ""
+msgstr "Verkauf: Pro-Forma-Rechnung senden"
 
 #. module: sale
 #: model:mail.template,name:sale.email_template_edi_sale
@@ -4352,7 +4567,7 @@ msgstr "Verkauf: Angebot senden"
 #. module: sale
 #: model:ir.actions.server,name:sale.send_pending_emails_cron_ir_actions_server
 msgid "Sales: Send pending emails"
-msgstr ""
+msgstr "Verkauf: ausstehende E-Mails versenden"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__user_id
@@ -4367,29 +4582,31 @@ msgstr "Vertriebsmitarbeiter"
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_reporting_salespeople
 msgid "Salespersons"
-msgstr ""
+msgstr "Vertriebsmitarbeiter"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_line_filter
 msgid "Search Sales Order"
-msgstr "Suche Verkaufsauftrag"
+msgstr "Verkaufsauftrag suchen"
 
 #. module: sale
 #. odoo-javascript
 #: code:addons/sale/static/src/js/tours/sale.js:0
 msgid "Search a customer name, or create one on the fly."
 msgstr ""
+"Suchen Sie nach dem Namen eines Kunden oder erstellen Sie spontan einen "
+"neuen."
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order_line__display_type__line_section
 msgid "Section"
-msgstr "Sektion"
+msgstr "Abschnitt"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Section Name (eg. Products, Services)"
-msgstr "Abschnittsname (z.B. Produkte, Dienstleistungen)"
+msgstr "Abschnittsbezeichnung (z. B. Produkte, Dienstleistungen)"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -4400,7 +4617,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__access_token
 msgid "Security Token"
-msgstr "Security Token"
+msgstr "Security-Token"
 
 #. module: sale
 #. odoo-javascript
@@ -4411,30 +4628,32 @@ msgstr "Wählen Sie ein Produkt aus oder erstellen Sie spontan ein neues."
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__selected_combo_items
 msgid "Selected Combo Items"
-msgstr ""
+msgstr "Ausgewählte Kombi-Artikel"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Sell and purchase products in different units of measure or packagings"
 msgstr ""
+"Verkaufen und kaufen Sie Produkte in verschiedenen Maßeinheiten oder "
+"Verpackungen"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Sell variants of a product using attributes (size, color, etc.)"
 msgstr ""
-"Verkaufen Sie Produktvarianten basierend auf Attributen (Größe, Farbe, etc.)"
+"Verkaufen Sie Produktvarianten mithilfe von Attributen (Größe, Farbe etc.)"
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Send"
-msgstr ""
+msgstr "Senden"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Send PRO-FORMA Invoice"
-msgstr "Proformarechnung senden"
+msgstr "Pro-forma-Rechnung senden"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -4445,7 +4664,7 @@ msgstr ""
 #. module: sale
 #: model:ir.actions.server,name:sale.model_sale_order_send_mail
 msgid "Send an email"
-msgstr ""
+msgstr "E-Mail senden"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_sendcloud
@@ -4459,6 +4678,10 @@ msgid ""
 "content about a product (instructions, rules, links, media, etc.). Create "
 "and set the email template from the product detail form (in Accounting tab)."
 msgstr ""
+"Das Senden einer E-Mail ist praktisch, wenn Sie bestimmte Informationen oder "
+"Inhalte über ein Produkt teilen möchten (Anweisungen, Regeln, Links, Medien "
+"usw.). Erstellen und legen Sie die E-Mail-Vorlage aus dem "
+"Produktdetailformular fest (im Buchhaltungsreiter)."
 
 #. module: sale
 #: model:mail.template,description:sale.mail_template_sale_confirmation
@@ -4471,6 +4694,8 @@ msgid ""
 "Sent to customers when a payment is received but doesn't immediately confirm "
 "their order"
 msgstr ""
+"Versand an Kunden, wenn eine Zahlung eingegangen ist, der Auftrag aber nicht "
+"sofort bestätigt ist"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__sequence
@@ -4480,12 +4705,12 @@ msgstr "Sequenz"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Set multiple prices per product, automated discounts, etc."
-msgstr "Setzen Sie mehrere Preise pro Produkt, automatische Rabatte, etc."
+msgstr "Setzen Sie mehrere Preise pro Produkt, automatische Rabatte etc."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Set to Quotation"
-msgstr "Setze auf Angebot"
+msgstr "Auf Angebot setzen"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_sale_config_settings
@@ -4507,27 +4732,29 @@ msgstr "Versand"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "Shipping Address"
-msgstr ""
+msgstr "Lieferadresse"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_shiprocket
 msgid "Shiprocket Connector"
-msgstr ""
+msgstr "Shiprocket-Konnektor"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_sale_shopee
 msgid "Shopee Sync"
-msgstr ""
+msgstr "Shopee-Synchronisierung"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
 msgid "Show all records whose next activity date is past"
 msgstr ""
+"Zeigen Sie alle Datensätze aus, deren nächstes Aktivitätsdatum in der "
+"Vergangenheit liegt"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Show margins on orders"
-msgstr "Zeige Margen in Aufträgen"
+msgstr "Zeigen Sie Margen von Aufträgen an"
 
 #. module: sale
 #. odoo-python
@@ -4538,7 +4765,7 @@ msgstr "Angebot unterzeichnen & bezahlen"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Sign &amp; Pay"
-msgstr "Unterschreiben &amp; Bezahlen"
+msgstr "Unterzeichnen &amp; Bezahlen"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__res_company__sale_onboarding_payment_method__digital_signature
@@ -4570,7 +4797,7 @@ msgstr "Unterzeichnet am"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.mass_cancel_orders_view_form
 msgid "So, are you sure you want to cancel these"
-msgstr ""
+msgstr "Sind Sie sicher, dass Sie diese"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_product__sales_count
@@ -4590,6 +4817,9 @@ msgid ""
 "Some confirmed orders are selected. Their related documents might be\n"
 "                        affected by the cancellation."
 msgstr ""
+"Einige bestätigte Aufträge wurden ausgewählt. Die zugehörigen Dokumente "
+"könnten\n"
+"                        von der Stornierung betroffen sein."
 
 #. module: sale
 #. odoo-python
@@ -4598,12 +4828,16 @@ msgid ""
 "Some order lines are missing a product, you need to correct them before "
 "going further."
 msgstr ""
+"In einigen Bestellzeilen fehlt ein Produkt. Korrigieren Sie diese, bevor Sie "
+"fortfahren."
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 msgid "Some orders are not in a state requiring confirmation."
 msgstr ""
+"Einige Aufträge befinden sich in keinem Status, der eine Bestätigung "
+"erfordert."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_account_bank_statement_line__source_id
@@ -4611,7 +4845,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale.field_sale_order__source_id
 #: model:ir.model.fields,field_description:sale.field_sale_report__source_id
 msgid "Source"
-msgstr "Herkunft"
+msgstr "Quelle"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__origin
@@ -4626,12 +4860,12 @@ msgstr "Bestimmte E-Mail-Adresse"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_starshipit
 msgid "Starshipit Connector"
-msgstr ""
+msgstr "Starshipit-Konnektor"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Start on Odoo"
-msgstr ""
+msgstr "Mit Odoo starten"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__state
@@ -4650,7 +4884,7 @@ msgid ""
 msgstr ""
 "Status basierend auf Aktivitäten\n"
 "Überfällig: Fälligkeitsdatum bereits überschritten\n"
-"Heute: Aktivität besitzt heutiges Datum\n"
+"Heute: Aktivitätsdatum ist heute\n"
 "Geplant: anstehende Aktivitäten."
 
 #. module: sale
@@ -4683,7 +4917,7 @@ msgstr "Zwischensumme"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_report_view_tree
 msgid "Sum of Quantity"
-msgstr ""
+msgstr "Gesamtmenge"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_report_view_tree
@@ -4693,7 +4927,7 @@ msgstr "Gesamtsumme"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_report_view_tree
 msgid "Sum of Untaxed Total"
-msgstr "Unversteuerte Summe"
+msgstr "Gesamte Nettosumme"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__amount_paid
@@ -4701,11 +4935,14 @@ msgid ""
 "Sum of transactions made in through the online payment form that are in the "
 "state 'done' or 'authorized' and linked to this order."
 msgstr ""
+"Summe der über das Online-Zahlungsformular getätigten Transaktionen, die "
+"sich im Status „erledigt“ oder „autorisiert“ befinden und mit dieser "
+"Bestellung verknüpft sind."
 
 #. module: sale
 #: model:ir.model,name:sale.model_ir_config_parameter
 msgid "System Parameter"
-msgstr ""
+msgstr "Systemparameter"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__tag_ids
@@ -4717,12 +4954,12 @@ msgstr "Stichwörter"
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "Tax 15%"
-msgstr ""
+msgstr "Steuer 15 %"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__tax_calculation_rounding_method
 msgid "Tax Calculation Rounding Method"
-msgstr ""
+msgstr "Steuerliches Rundungsverfahren"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__tax_country_id
@@ -4733,22 +4970,22 @@ msgstr "Steuerland"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Tax Excl."
-msgstr ""
+msgstr "exkl. Steuern"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Tax ID"
-msgstr ""
+msgstr "USt-IdNr."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Tax Incl."
-msgstr ""
+msgstr "inkl. Steuern"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_tree
 msgid "Tax Total"
-msgstr "Total Steuern"
+msgstr "Steuern insgesamt"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__tax_totals
@@ -4758,7 +4995,7 @@ msgstr "Steuern insgesamt"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__tax_calculation_rounding_method
 msgid "Tax calculation rounding method"
-msgstr ""
+msgstr "Steuerliches Rundungsverfahren"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__amount_tax
@@ -4773,11 +5010,13 @@ msgid ""
 "Team %(team_name)s has %(sale_order_count)s active sale orders. Consider "
 "cancelling them or archiving the team instead."
 msgstr ""
+"Team %(team_name)s hat %(sale_order_count)s aktive Verkaufsaufträge. Sie "
+"können diese stornieren oder stattdessen das Team archivieren."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__technical_price_unit
 msgid "Technical Price Unit"
-msgstr ""
+msgstr "Technische Preiseinheit"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -4791,7 +5030,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__terms_type
 msgid "Terms & Conditions format"
-msgstr "Format Allgemeine Geschäftsbedingungen"
+msgstr "Format der Allgemeinen Geschäftsbedingungen"
 
 #. module: sale
 #. odoo-python
@@ -4812,7 +5051,7 @@ msgstr "Allgemeine Geschäftsbedingungen"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Terms and conditions..."
-msgstr "Bedingungen und Konditionen"
+msgstr "Bedingungen und Konditionen ..."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__country_code
@@ -4830,6 +5069,8 @@ msgid ""
 "The Sales Order %(order)s to be reinvoiced is cancelled. You cannot register "
 "an expense on a cancelled Sales Order."
 msgstr ""
+"Der weiterzuberechnende Verkaufsauftrag %(order)s wurde storniert. Sie "
+"können keinen Aufwand für einen stornierten Verkaufsauftrag erfassen."
 
 #. module: sale
 #. odoo-python
@@ -4838,6 +5079,8 @@ msgid ""
 "The Sales Order %(order)s to be reinvoiced is currently locked. You cannot "
 "register an expense on a locked Sales Order."
 msgstr ""
+"Der weiterzuberechnende Verkaufsauftrag %(order)s wurde derzeit gesperrt. "
+"Sie können keinen Aufwand für einen gesperrten Verkaufsauftrag erfassen."
 
 #. module: sale
 #. odoo-python
@@ -4846,24 +5089,26 @@ msgid ""
 "The Sales Order %(order)s to be reinvoiced must be validated before "
 "registering expenses."
 msgstr ""
+"Der weiterzuberechnende Verkaufsauftrag %(order)s muss vor der Registrierung "
+"von Ausgaben validiert werden."
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/controllers/portal.py:0
 msgid "The access token is invalid."
-msgstr "Das Zugangs-Token ist ungültig."
+msgstr "Das Zugriffstoken ist ungültig."
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/controllers/portal.py:0
 msgid "The amount is lower than the prepayment amount."
-msgstr ""
+msgstr "Der Betrag ist niedriger als der Vorauszahlungsbetrag."
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/wizard/payment_link_wizard.py:0
 msgid "The amount must be greater than the prepayment amount."
-msgstr ""
+msgstr "Der Betrag muss höher sein als der Vorauszahlungsbetrag."
 
 #. module: sale
 #. odoo-python
@@ -4872,6 +5117,8 @@ msgid ""
 "The company is required, please select one before making any other changes "
 "to the sale order."
 msgstr ""
+"Das Unternehmen ist erforderlich, bitte wählen Sie eins aus, bevor Sie "
+"andere Änderungen am Verkaufsauftrag vornehmen."
 
 #. module: sale
 #. odoo-python
@@ -4880,13 +5127,13 @@ msgid ""
 "The delivery date is sooner than the expected date. You may be unable to "
 "honor the delivery date."
 msgstr ""
-"Das Lieferdatum liegt vor dem erwarteten Datum, den Sie möglicherweise nicht "
+"Das Lieferdatum liegt vor dem erwarteten Datum, das Sie möglicherweise nicht "
 "einhalten können."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv__fixed_amount
 msgid "The fixed amount to be invoiced in advance."
-msgstr ""
+msgstr "Der im Voraus zu berechnende Festbetrag."
 
 #. module: sale
 #. odoo-python
@@ -4899,6 +5146,13 @@ msgid ""
 "You can archive these products and recreate them with your company "
 "restriction instead, or leave them as shared product."
 msgstr ""
+"Die folgenden Produkte können nicht auf das Unternehmen %(company)s "
+"beschränkt werden, da sie bereits in Angeboten oder Verkaufsaufträgen in "
+"einem anderen Unternehmen verwendet wurden:\n"
+"%(used_products)s\n"
+"Sie können diese Produkte archivieren und sie stattdessen mit Ihrer "
+"Unternehmensbeschränkung neu erstellen oder sie als gemeinsames Produkt "
+"belassen."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_res_config_settings__automatic_invoice
@@ -4915,7 +5169,7 @@ msgstr ""
 "Die Rechnung wird als bezahlt markiert und die Zahlung im Zahlungsjournal "
 "registriert, das in der Konfiguration des Zahlungsanbieters definiert ist.\n"
 "Dieser Modus wird empfohlen, wenn Sie die endgültige Rechnung bei der "
-"Bestellung und nicht nach der Lieferung ausstellen."
+"Auftragsstellung und nicht nach der Lieferung ausstellen."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -4923,13 +5177,15 @@ msgid ""
 "The margin is computed as the sum of product sales prices minus the cost set "
 "in their detail form."
 msgstr ""
-"Die Marge wurde aus der Summe des Verkaufpreises abzüglich der Kosten aus "
-"dem Produktmaske berechnet."
+"Die Marge wird aus der Summe des Verkaufspreises abzüglich der auf der "
+"Produktmaske angegebenen Kosten berechnet."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
 msgid "The new invoice will deduct draft invoices linked to this sale order."
 msgstr ""
+"Die neue Rechnung zieht Rechnungsentwürfe ab, die mit diesem Verkaufsauftrag "
+"verbunden sind."
 
 #. module: sale
 #. odoo-python
@@ -4938,19 +5194,23 @@ msgid ""
 "The number of selected combo items must match the number of available combo "
 "choices."
 msgstr ""
+"Die Anzahl der ausgewählten Kombi-Artikel muss mit der Anzahl der "
+"verfügbaren Kombimöglichkeiten übereinstimmen."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_pay_modal
 msgid "The order is not in a state requiring customer payment."
 msgstr ""
+"Der Auftrag befindet sich nicht in einem Status, der eine Zahlung des Kunden "
+"erfordert."
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/controllers/portal.py:0
 msgid "The order is not in a state requiring customer signature."
 msgstr ""
-"Die Bestellung befindet sich nicht in einem Status, der eine Unterschrift "
-"des Kunden erfordert."
+"Der Auftrag befindet sich nicht in einem Status, der eine Unterschrift des "
+"Kunden erfordert."
 
 #. module: sale
 #. odoo-python
@@ -4966,12 +5226,12 @@ msgstr "Die Zahlungsmitteilung dieses Verkaufsauftrags."
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "The payment should also be transmitted with love"
-msgstr ""
+msgstr "Die Zahlung sollte auch mit Liebe getätigt werden"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv__amount
 msgid "The percentage of amount to be invoiced in advance."
-msgstr ""
+msgstr "Der Prozentsatz des im Voraus zu berechnenden Betrags."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__prepayment_percent
@@ -4979,18 +5239,22 @@ msgid ""
 "The percentage of the amount needed that must be paid by the customer to "
 "confirm the order."
 msgstr ""
+"Der Prozentsatz des benötigten Betrags, der vom Kunden zur Bestätigung des "
+"Auftrags gezahlt werden muss."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_res_company__prepayment_percent
 #: model:ir.model.fields,help:sale.field_res_config_settings__prepayment_percent
 msgid "The percentage of the amount needed to be paid to confirm quotations."
 msgstr ""
+"Der Prozentsatz des Betrags, der zur Bestätigung von Angeboten gezahlt "
+"werden muss."
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/product_template.py:0
 msgid "The product (%(product)s) has incompatible values: %(value_list)s"
-msgstr ""
+msgstr "Das Produkt (%(product)s) hat inkompatible Werte: %(value_list)s"
 
 #. module: sale
 #. odoo-python
@@ -5001,17 +5265,17 @@ msgstr "Der Betrag der Anzahlung muss positiv sein."
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_quotations
 msgid "There are currently no quotations for your account."
-msgstr "Sie haben noch keine Angebote."
+msgstr "Sie haben noch keine Angebote für Ihr Konto."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_orders
 msgid "There are currently no sales orders for your account."
-msgstr ""
+msgstr "Aktuell gibt es keine Verkaufsaufträge für Ihr Konto."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
 msgid "There are existing"
-msgstr ""
+msgstr "Es gibt"
 
 #. module: sale
 #. odoo-python
@@ -5021,12 +5285,15 @@ msgid ""
 "yet. You can either use a per-line discount, or ask an administrator to "
 "grant the discount the first time."
 msgstr ""
+"Es scheint noch kein Rabattprodukt für dieses Unternehmen konfiguriert zu "
+"sein. Sie können entweder einen Rabatt pro Zeile verwenden oder einen "
+"Administrator bitten, den Rabatt beim ersten Mal zu gewähren."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_res_company__downpayment_account_id
 #: model:ir.model.fields,help:sale.field_res_config_settings__downpayment_account_id
 msgid "This account will be used on Downpayment invoices."
-msgstr ""
+msgstr "Dieses Konto wird für die Anzahlungsrechnungen verwendet."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -5055,8 +5322,8 @@ msgid ""
 "order will be scheduled based on this date rather than product lead times."
 msgstr ""
 "Dies ist der dem Kunden zugesagte Liefertermin. Wenn gesetzt, wird der "
-"Lieferauftrag nicht auf der Grundlage der Produktdurchlaufzeiten, sondern "
-"auf der Grundlage dieses Datums terminiert."
+"Lieferauftrag nicht auf der Grundlage der Produktvorlaufzeiten, sondern auf "
+"der Grundlage dieses Datums terminiert."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_account_bank_statement_line__medium_id
@@ -5082,13 +5349,13 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/sale/static/src/js/product/product.xml:0
 msgid "This option or combination of options is not available"
-msgstr ""
+msgstr "Diese Option oder Kombination von Optionen ist nicht verfügbar"
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/wizard/payment_link_wizard.py:0
 msgid "This payment will confirm the quotation."
-msgstr ""
+msgstr "Mit dieser Zahlung wird das Angebot bestätigt."
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_order_report_all
@@ -5102,12 +5369,12 @@ msgid ""
 "having invoiced yet. If you want to analyse your turnover, you should use "
 "the Invoice Analysis report in the Accounting application."
 msgstr ""
-"Diese Auswertung analysiert Ihre Angebote und Verkaufsaufträge. Hierbei "
-"werden Ihre Verkaufsumsätze  ausgewertet und nach verschiedenen Kriterien "
-"gruppiert (Verkäufer, Partner, Produkt, etc). Benutzen Sie diese Auswertung "
+"Dieser Bericht analysiert Ihre Angebote und Verkaufsaufträge. Hierbei werden "
+"Ihre Verkaufsumsätze ausgewertet und nach verschiedenen Kriterien gruppiert ("
+"Vertriebsmitarbeiter, Kunde, Produkt etc). Benutzen Sie diesen Bericht "
 "außerdem, um noch nicht in Rechnung gestellte Verkaufsaufträge zu "
 "analysieren. Wenn Sie Ihren Umsatz analysieren möchten, nutzen Sie bitte die "
-"Statistik für die Umsatzerlöse in der Finanzbuchhaltung."
+"Statistik für die Umsatzerlöse in der Buchhaltungsapp."
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_order_report_quotation_salesteam
@@ -5118,12 +5385,12 @@ msgid ""
 "invoiced yet. If you want to analyse your turnover, you should use the "
 "Invoice Analysis report in the Accounting application."
 msgstr ""
-"Diese Auswertung präsentiert Ihnen Ihre Auftragsstatistik. Aus verschiedenen "
-"Perspektiven (Verkäufer, Kunde, Produkt etc.) können Sie gruppieren und "
-"sortieren. Benutzen Sie diese Auswertung auch zur Analyse der noch nicht "
-"abgerechneten Verkäufe. \r\n"
-"Wenn Sie Ihren Umsatz auswerten wollen, sollten Sie die Auswertung der "
-"Ausgangsrechnungen in der Buchhaltung verwenden."
+"Dieser Bericht analysiert Ihre Angebote. Hierbei werden Ihre Verkaufsumsätze "
+"ausgewertet und nach verschiedenen Kriterien gruppiert ("
+"Vertriebsmitarbeiter, Kunde, Produkt etc). Benutzen Sie diesen Bericht "
+"außerdem, um noch nicht in Rechnung gestellte Verkaufsaufträge zu "
+"analysieren. Wenn Sie Ihren Umsatz analysieren möchten, nutzen Sie bitte die "
+"Statistik für die Umsatzerlöse in der Buchhaltungsapp."
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_order_report_so_salesteam
@@ -5134,11 +5401,12 @@ msgid ""
 "invoiced yet. If you want to analyse your turnover, you should use the "
 "Invoice Analysis report in the Accounting application."
 msgstr ""
-"Diese Auswertung präsentiert Ihnen Ihre Auftragsstatistik. Aus verschiedenen "
-"Perspektiven (Verkäufer, Kunde, Produkt etc.) können Sie gruppieren und "
-"sortieren. Benutzen Sie diese Auswertung auch zur Analyse der noch nicht "
-"abgerechneten Verkäufe. Wenn Sie Ihren Umsatz auswerten wollen, sollten Sie "
-"die Auswertung der Ausgangsrechnungen in der Buchhaltung verwenden."
+"Dieser Bericht analysiert Ihre Verkaufsaufträge. Hierbei werden Ihre "
+"Verkaufsumsätze ausgewertet und nach verschiedenen Kriterien gruppiert ("
+"Vertriebsmitarbeiter, Kunde, Produkt etc). Benutzen Sie diesen Bericht "
+"außerdem, um noch nicht in Rechnung gestellte Verkaufsaufträge zu "
+"analysieren. Wenn Sie Ihren Umsatz analysieren möchten, nutzen Sie bitte die "
+"Statistik für die Umsatzerlöse in der Buchhaltungsapp."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -5153,6 +5421,8 @@ msgstr ""
 msgid ""
 "This will update the unit price of all products based on the new pricelist."
 msgstr ""
+"Dadurch wird der Einzelpreis aller Produkte auf Grundlage der neuen "
+"Preisliste aktualisiert."
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order__invoice_status__to_invoice
@@ -5169,7 +5439,7 @@ msgstr "Abzurechnen"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_sale
 msgid "To Upsell"
-msgstr "Zum Upsell"
+msgstr "Upselling"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -5179,8 +5449,8 @@ msgid ""
 "menu *Action*."
 msgstr ""
 "Um Einladungen im B2B-Modus zu versenden, öffnen Sie einen Kontakt oder "
-"wählen Sie in der Listenansicht mehrere aus und klicken Sie im Dropdown-Menü "
-"* Aktion * auf die Option 'Portal Access Management'."
+"wählen Sie in der Listenansicht mehrere aus und klicken Sie im Drop-down-"
+"Menü *Aktion* auf die Option „Portal-Zugriffsverwaltung“."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
@@ -5205,25 +5475,25 @@ msgstr "Gesamtsteuer"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_tree
 msgid "Total Tax Excluded"
-msgstr "Total exkl. MwSt"
+msgstr "Gesamt exkl. Steuern"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_tree
 msgid "Total Tax Included"
-msgstr "Gesamtbetrag"
+msgstr "Gesamt inkl. Steuern"
 
 #. module: sale
 #. odoo-javascript
 #: code:addons/sale/static/src/js/combo_configurator_dialog/combo_configurator_dialog.js:0
 #: code:addons/sale/static/src/js/product_configurator_dialog/product_configurator_dialog.js:0
 msgid "Total: %s"
-msgstr ""
+msgstr "Gesamt: %s"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_product__service_type
 #: model:ir.model.fields,field_description:sale.field_product_template__service_type
 msgid "Track Service"
-msgstr "Dienstleistungsverfolgung"
+msgstr "Dienstleistung verfolgen"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -5238,12 +5508,12 @@ msgstr "Transaktionen"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__translated_product_name
 msgid "Translated Product Name"
-msgstr ""
+msgstr "Übersetzer Produktname"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__type_name
 msgid "Type Name"
-msgstr "Typ Name"
+msgstr "Name des Typs"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__activity_exception_decoration
@@ -5253,24 +5523,24 @@ msgstr "Typ der Ausnahmeaktivität im Datensatz."
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Type to find a customer..."
-msgstr ""
+msgstr "Tippen Sie, um einen Kunden zu finden ..."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Type to find a product..."
-msgstr ""
+msgstr "Tippen Sie, um ein Produkt zu finden ..."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_ups_rest
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "UPS Connector"
-msgstr "UPS Schnittstelle"
+msgstr "UPS-Konnektor"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_usps_rest
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "USPS Connector"
-msgstr "USPS Schnittstelle"
+msgstr "USPS-Konnektor"
 
 #. module: sale
 #: model:ir.model,name:sale.model_utm_campaign
@@ -5281,13 +5551,13 @@ msgstr "UTM-Kampagne"
 #: model:ir.model.fields,field_description:sale.field_sale_order__amount_to_invoice
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__amount_to_invoice
 msgid "Un-invoiced Balance"
-msgstr ""
+msgstr "Nicht abgerechnetes Saldo"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__product_uom_id
 #: model:ir.model.fields,field_description:sale.field_sale_report__product_uom_id
 msgid "Unit"
-msgstr ""
+msgstr "Einheit"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__price_unit
@@ -5295,18 +5565,18 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "Unit Price"
-msgstr "Stückpreis"
+msgstr "Einzelpreis"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Unit Price:"
-msgstr "Stückpreis:"
+msgstr "Einzelpreis:"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_product_uom_form_action
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Units & Packagings"
-msgstr ""
+msgstr "Einheiten & Verpackungen"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -5321,23 +5591,23 @@ msgstr "Nettobetrag"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__untaxed_amount_invoiced
 msgid "Untaxed Amount Invoiced"
-msgstr "Unbesteuerter Rechnungsbetrag"
+msgstr "Abgerechneter Nettobetrag"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__untaxed_amount_to_invoice
 #: model:ir.model.fields,field_description:sale.field_sale_report__untaxed_amount_to_invoice
 msgid "Untaxed Amount To Invoice"
-msgstr "Unbesteuerter zum Rechnungsbetrag"
+msgstr "Abzurechnender Nettobetrag"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__untaxed_amount_invoiced
 msgid "Untaxed Invoiced Amount"
-msgstr "Unversteuerter Rechnungsbetrag"
+msgstr "Abgerechneter Nettobetrag"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__price_subtotal
 msgid "Untaxed Total"
-msgstr "Nettobetrag"
+msgstr "Gesamter Nettobetrag"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -5359,7 +5629,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 msgid "Upsell %(order)s for customer %(customer)s"
-msgstr "Upselling von %(order)s for Kunden %(customer)s"
+msgstr "Upselling von %(order)s für den Kunden %(customer)s"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order__invoice_status__upselling
@@ -5367,7 +5637,7 @@ msgstr "Upselling von %(order)s for Kunden %(customer)s"
 #: model:ir.model.fields.selection,name:sale.selection__sale_report__invoice_status__upselling
 #: model:ir.model.fields.selection,name:sale.selection__sale_report__line_invoice_status__upselling
 msgid "Upselling Opportunity"
-msgstr "Zusatzverkaufschance"
+msgstr "Upselling-Verkaufschance"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -5375,11 +5645,15 @@ msgid ""
 "Use the above REST URL to get structured data of the purchase order in UBL "
 "format."
 msgstr ""
+"Verwenden Sie die obige REST-URL, um strukturierte Daten der Bestellung im "
+"UBL-Format zu erhalten."
 
 #. module: sale
 #: model:mail.template,description:sale.email_template_proforma
 msgid "Used by salespeople when they send proforma to prospects"
 msgstr ""
+"Verwendet von Vertriebsmitarbeiter, wenn sie Pro-Forma-Rechnungen an "
+"Interessenten senden"
 
 #. module: sale
 #: model:mail.template,description:sale.email_template_edi_sale
@@ -5396,7 +5670,7 @@ msgstr "Gültig bis"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_sign_modal
 msgid "Validate Order"
-msgstr "Bestätige Bestellung"
+msgstr "Auftrag validieren"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_product_product__expense_policy
@@ -5405,11 +5679,14 @@ msgid ""
 "Validated expenses, vendor bills, or stock pickings (set up to track costs) "
 "can be invoiced to the customer at either cost or sales price."
 msgstr ""
+"Validierte Spesen, Lieferantenrechnungen oder Bestandskommissionierungen ("
+"Einrichtung auf „Kosten verfolgen“) können zu ihren Kosten oder "
+"Verkaufspreisen an den Kunden weiterberechnet werden."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_pricelist_item_form
 msgid "Validity Period"
-msgstr ""
+msgstr "Gültigkeitsdauer"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__validity_date
@@ -5417,11 +5694,13 @@ msgid ""
 "Validity of the order, after that you will not able to sign & pay the "
 "quotation."
 msgstr ""
+"Gültigkeit des Auftrags, danach können Sie das Angebot nicht mehr "
+"unterzeichnen oder bezahlen."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Variant Grid Entry"
-msgstr "Varianten-Matrix"
+msgstr "Rastereintrag für Varianten"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -5431,7 +5710,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "View Details"
-msgstr ""
+msgstr "Details anzeigen"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -5442,17 +5721,17 @@ msgstr ""
 #. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 msgid "View Quotation"
-msgstr "Offerte anzeigen"
+msgstr "Angebot anzeigen"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__virtual_id
 msgid "Virtual"
-msgstr ""
+msgstr "Virtuell"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Void Transaction"
-msgstr "Nichtige Transaktion"
+msgstr "Transaktion stornieren"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__volume
@@ -5462,7 +5741,7 @@ msgstr "Volumen"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Want to import this document in Odoo?"
-msgstr ""
+msgstr "Möchten Sie dieses Dokument in Odoo importieren?"
 
 #. module: sale
 #. odoo-python
@@ -5476,17 +5755,17 @@ msgstr "Warnung"
 #. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 msgid "Warning for the change of your quotation's company"
-msgstr ""
+msgstr "Warnung für die Änderung des Unternehmens Ihres Angebots"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_template_form_view
 msgid "Warning on Sales Orders"
-msgstr ""
+msgstr "Warnung auf Verkaufsaufträgen"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_partner_view_buttons
 msgid "Warning on Sales Orders and Invoices"
-msgstr ""
+msgstr "Warnung auf Verkaufsaufträgen und Rechnungen"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__website_message_ids
@@ -5496,7 +5775,7 @@ msgstr "Website-Nachrichten"
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__website_message_ids
 msgid "Website communication history"
-msgstr "Website-Kommunikationshistorie"
+msgstr "Website-Kommunikationsverlauf"
 
 #. module: sale
 #. odoo-python
@@ -5505,8 +5784,8 @@ msgid ""
 "You can not delete a sent quotation or a confirmed sales order. You must "
 "first cancel it."
 msgstr ""
-"Sie können ein gesendetes Angebot oder einen bestätigten Kundenauftrag nicht "
-"löschen. Sie müssen es zuerst abbrechen."
+"Sie können ein gesendetes Angebot oder einen bestätigten Verkaufsauftrag "
+"nicht löschen. Sie müssen es/ihn zuerst stornieren."
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_orders_to_invoice
@@ -5515,7 +5794,7 @@ msgid ""
 "            or check every order and invoice them one by one."
 msgstr ""
 "Sie können alle Aufträge auswählen und im Stapel in Rechnung stellen,<br>\n"
-"                oder jede Bestellung prüfen und einzeln in Rechnung stellen."
+"                oder jeden Auftrag prüfen und einzeln in Rechnung stellen."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_payment_provider__so_reference_type
@@ -5524,7 +5803,7 @@ msgid ""
 "communication will be given to the customer when they choose the payment "
 "method."
 msgstr ""
-"Sie können hier die Kommunikationsart einstellen, die auf Kundenaufträgen "
+"Sie können hier die Kommunikationsart einstellen, die auf Verkaufsaufträgen "
 "angezeigt wird, die dem Kunden bei der Auswahl der Zahlungsmethode "
 "mitgeteilt wird."
 
@@ -5533,12 +5812,14 @@ msgstr ""
 #: code:addons/sale/models/sale_order.py:0
 msgid "You cannot cancel a locked order. Please unlock it first."
 msgstr ""
+"Sie können einen gesperrten Auftrag nicht abbrechen. Bitte entsperren Sie "
+"ihn zuerst."
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 msgid "You cannot change the pricelist of a confirmed order !"
-msgstr ""
+msgstr "Sie können die Preisliste eines bestätigten Auftrags nicht ändern!"
 
 #. module: sale
 #. odoo-python
@@ -5549,7 +5830,7 @@ msgid ""
 "orders."
 msgstr ""
 "Sie können den Typ des Produkts nicht ändern, weil er sich bereits in "
-"Aufträgen befindet."
+"Verkaufsaufträgen befindet."
 
 #. module: sale
 #. odoo-python
@@ -5558,15 +5839,15 @@ msgid ""
 "You cannot change the type of a sale order line. Instead you should delete "
 "the current line and create a new line of the proper type."
 msgstr ""
-"Sie können den Typ einer Verkaufsauftragszeile nicht ändern. Stattdessen "
-"sollten Sie die aktuelle Zeile löschen und eine neue Zeile mit dem richtigen "
-"Typ erstellen."
+"Sie können die Art einer Verkaufsauftragszeile nicht ändern. Stattdessen "
+"sollten Sie die aktuelle Position löschen und eine neue Position mit der "
+"richtigen Art erstellen."
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/sale_order_line.py:0
 msgid "You cannot modify the product of this order line."
-msgstr ""
+msgstr "Sie können das Produkt dieser Bestellzeile nicht bearbeiten."
 
 #. module: sale
 #: model:ir.model.constraint,message:sale.constraint_res_company_check_quotation_validity_days
@@ -5574,11 +5855,14 @@ msgid ""
 "You cannot set a negative number for the default quotation validity. Leave "
 "empty (or 0) to disable the automatic expiration of quotations."
 msgstr ""
+"Sie können keine negative Zahl für die Standardgültigkeit von Angeboten "
+"festlegen. Lassen Sie die Zahl leer (oder 0), um das automatische Auslaufen "
+"von Angeboten zu deaktivieren."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "You don't use a good CRM software?"
-msgstr ""
+msgstr "Sie verwenden keine gute CRM-Software?"
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.product_template_action
@@ -5586,56 +5870,54 @@ msgid ""
 "You must define a product for everything you sell or purchase,\n"
 "                whether it's a storable product, a consumable or a service."
 msgstr ""
-"Sie müssen ein Produkt für alles, was Sie verkaufen oder kaufen, "
-"definieren,\n"
-"                ob es sich nun um ein Lagerprodukt, ein Verbrauchsmaterial "
-"oder eine Dienstleistung handelt."
+"Sie müssen ein Produkt definieren für alles, was Sie verkaufen oder kaufen,\n"
+"                ob es sich nun um ein lagerfähiges Produkt, ein "
+"Verbrauchsartikel oder eine Dienstleistung handelt."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_home_sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_orders
 msgid "Your Orders"
-msgstr ""
+msgstr "Ihre Aufträge"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "Your Reference:"
-msgstr ""
+msgstr "Ihre Referenz:"
 
 #. module: sale
 #. odoo-javascript
 #: code:addons/sale/static/src/js/sale_action_helper/sale_action_helper_dialog.xml:0
 msgid "Your browser does not support iframe."
-msgstr ""
+msgstr "iframe wird von Ihrem Browser nicht unterstützt."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Your feedback..."
-msgstr "Ihre Rückmeldung..."
+msgstr "Ihre Rückmeldung ..."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Your order has been confirmed."
-msgstr "Ihre Bestellung wurde bestätigt."
+msgstr "Ihr Auftrag wurde bestätigt."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Your order has been signed but still needs to be paid to be confirmed."
 msgstr ""
-"Ihre Bestellung wurde unterschrieben, muss aber noch bezahlt werden, um "
+"Ihr Auftrag wurde unterschrieben, muss aber noch bezahlt werden, um "
 "bestätigt zu werden."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Your order has been signed."
-msgstr "Ihre Bestellung wurde unterschrieben."
+msgstr "Ihr Auftrag wurde unterschrieben."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Your order is not in a state to be rejected."
 msgstr ""
-"Ihre Bestellung befindet sich nicht in einem Zustand, der abgelehnt werden "
-"kann."
+"Ihr Auftrag befindet sich nicht in einem Zustand, der abgelehnt werden kann."
 
 #. module: sale
 #. odoo-python
@@ -5646,16 +5928,16 @@ msgid ""
 " Please change the company of your quotation or remove the products from "
 "other companies (%(bad_products)s)."
 msgstr ""
-"Ihr Angebot enthält Produkte der Firma %(product_company)s, während Ihr "
-"Angebot zur Firma %(quote_company)s gehört\n"
-" Bitte ändern Sie die Firma Ihres Angebots oder entfernen Sie die Produkte "
-"von anderen Firmen (%(bad_products)s)."
+"Ihr Angebot enthält Produkte des Unternehmens %(product_company)s, während "
+"Ihr Angebot zum Unternehmen %(quote_company)s gehört.\n"
+" Bitte ändern Sie das Unternehmen Ihres Angebots oder entfernen Sie die "
+"Produkte anderer Unternehmen (%(bad_products)s)."
 
 #. module: sale
 #. odoo-javascript
 #: code:addons/sale/static/src/js/tours/sale.js:0
 msgid "add the price of your product."
-msgstr ""
+msgstr "Fügen Sie den Preis Ihres Produkts hinzu."
 
 #. module: sale
 #: model:ir.actions.server,name:sale.send_invoice_cron_ir_actions_server
@@ -5665,7 +5947,7 @@ msgstr "automatische Rechnungsstellung: fertige Rechnungen versenden"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_bpost
 msgid "bpost Connector"
-msgstr "bpost Konnektor"
+msgstr "bpost-Konnektor"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -5682,39 +5964,40 @@ msgstr "Tage"
 #: model_terms:ir.ui.view,arch_db:sale.res_partner_view_buttons
 msgid "e.g. This customer has reported recurring issues with previous orders."
 msgstr ""
+"z. B. Der Kunde hat wiederholte Probleme mit früheren Aufträgen gemeldet."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_template_form_view
 msgid "e.g. This product is defective."
-msgstr ""
+msgstr "z. B. Dieses Produkt ist defekt."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_pay_modal
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_sign_modal
 msgid "for the"
-msgstr ""
+msgstr "des Angebots in Höhe von"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
 msgid "for this Sale Order."
-msgstr ""
+msgstr "für diesen Verkaufsauftrag."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.mass_cancel_orders_view_form
 msgid "items?"
-msgstr ""
+msgstr "Artikel stornieren möchten?"
 
 #. module: sale
 #. odoo-javascript
 #: code:addons/sale/static/src/js/tours/sale.js:0
 msgid "let's continue"
-msgstr ""
+msgstr "Weiter geht's!"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_pay_modal
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_sign_modal
 msgid "quote."
-msgstr ""
+msgstr "."
 
 #. module: sale
 #. odoo-python
@@ -5725,27 +6008,27 @@ msgstr "Verkaufsauftrag"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "to create quotes automatically."
-msgstr ""
+msgstr ", um Angebote automatisch zu erstellen"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "to learn all the ways to connect your software with"
-msgstr ""
+msgstr "und entdecken Sie alle Möglichkeiten zur Verkmüpfung Ihrer Software mit"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "units"
-msgstr ""
+msgstr "Einheiten"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "with"
-msgstr ""
+msgstr "mit"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_pay_modal
 msgid "you confirm acceptance on behalf of"
-msgstr ""
+msgstr "bestätigen Sie die Annahme im Namen von"
 
 #. module: sale
 #: model:mail.template,subject:sale.mail_template_sale_confirmation
@@ -5756,8 +6039,8 @@ msgid ""
 "a' }})"
 msgstr ""
 "{{ object.company_id.name }} {{ (object.get_portal_last_transaction().state "
-"== 'pending') and 'Pending Order' or 'Order' }} (Ref {{ object.name or 'n/"
-"a' }})"
+"== 'pending') and 'Ausstehender Auftrag' or 'Auftrag' }} (Ref {{ object.name "
+"or 'k. A.' }})"
 
 #. module: sale
 #: model:mail.template,subject:sale.email_template_proforma
@@ -5765,6 +6048,8 @@ msgid ""
 "{{ object.company_id.name }} {{ object.state in ('draft', 'sent') and "
 "'Proforma' or 'Order'}} (Ref {{ object.name or 'n/a' }})"
 msgstr ""
+"{{ object.company_id.name }} {{ object.state in ('draft', 'sent') and 'Pro-"
+"Forma' or 'Auftrag'}} (Ref {{ object.name or 'k. A.' }})"
 
 #. module: sale
 #: model:mail.template,subject:sale.email_template_edi_sale
@@ -5772,6 +6057,8 @@ msgid ""
 "{{ object.company_id.name }} {{ object.state in ('draft', 'sent') and "
 "'Quotation' or 'Order' }} (Ref {{ object.name or 'n/a' }})"
 msgstr ""
+"{{ object.company_id.name }} {{ object.state in ('draft', 'sent') and "
+"'Angebot' or 'Auftrag' }} (Ref {{ object.name or 'k. A.' }})"
 
 #~ msgid " Data Fetched"
 #~ msgstr " Abgerufene Daten"

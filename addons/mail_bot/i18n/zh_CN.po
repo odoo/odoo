@@ -1,26 +1,27 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* mail_bot
+# * mail_bot
 #
 # Translators:
 # Martin Trigaux, 2022
 # Raymond Yu <cl_yu@hotmail.com>, 2022
 # Jeffery CHEN <jeffery9@gmail.com>, 2022
-#
+# "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-09-11 13:57+0000\n"
-"PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Jeffery CHEN <jeffery9@gmail.com>, 2022\n"
-"Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/"
-"zh_CN/)\n"
+"PO-Revision-Date: 2025-09-16 15:25+0000\n"
+"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
+"Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
+"projects/odoo-19/mail_bot/zh_Hans/>\n"
 "Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: mail_bot
 #. odoo-python
@@ -33,7 +34,7 @@ msgstr "自动化、人性化、高效率、专业化"
 #. module: mail_bot
 #: model:ir.model.fields.selection,name:mail_bot.selection__res_users__odoobot_state__disabled
 msgid "Disabled"
-msgstr "禁用"
+msgstr "已禁用"
 
 #. module: mail_bot
 #: model:ir.model,name:mail_bot.model_discuss_channel
@@ -45,7 +46,7 @@ msgstr "讨论频道"
 #: model:ir.model.fields,field_description:mail_bot.field_mail_bot__display_name
 #: model:ir.model.fields,field_description:mail_bot.field_res_users__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "显示名称"
 
 #. module: mail_bot
 #. odoo-python
@@ -63,12 +64,14 @@ msgid ""
 "sentence with%(bold_end)s %(command_start)s/%(command_end)s. Try getting "
 "help."
 msgstr ""
+"太棒了！👍%(new_line)s要访问特殊命令，%(bold_start)s请以%(bold_end)s%(command"
+"_start)s/%(command_end)s开头。尝试获得帮助。"
 
 #. module: mail_bot
 #. odoo-python
 #: code:addons/mail_bot/models/res_users.py:0
 msgid "Hello,"
-msgstr ""
+msgstr "你好,"
 
 #. module: mail_bot
 #. odoo-python
@@ -88,14 +91,15 @@ msgstr "抱歉我还不能理解."
 msgid ""
 "I'm not smart enough to answer your question.%(new_line)sTo follow my guide, "
 "ask: %(command_start)sstart the tour%(command_end)s."
-msgstr ""
+msgstr "我不够聪明，无法回答你的问题。%(new_line)s按指引去做：%(command_start)s开始导"
+"览%(command_end)s。"
 
 #. module: mail_bot
 #: model:ir.model.fields,field_description:mail_bot.field_discuss_channel__id
 #: model:ir.model.fields,field_description:mail_bot.field_mail_bot__id
 #: model:ir.model.fields,field_description:mail_bot.field_res_users__id
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: mail_bot
 #: model:ir.model.fields.selection,name:mail_bot.selection__res_users__odoobot_state__idle
@@ -114,6 +118,8 @@ msgid ""
 "Not exactly. To continue the tour, send an emoji: %(bold_start)stype%"
 "(bold_end)s%(command_start)s :)%(command_end)s and press enter."
 msgstr ""
+"不完全是。要继续导览，请发送一个表情符号：%(bold_start)s类型%(bold_end)s%(com"
+"mand_start)s:)%(command_end)s并按Enter键。"
 
 #. module: mail_bot
 #: model:ir.model.fields.selection,name:mail_bot.selection__res_users__odoobot_state__not_initialized
@@ -128,6 +134,8 @@ msgid ""
 "and wait for the propositions. Select %(command_start)shelp%(command_end)s "
 "and press enter."
 msgstr ""
+"不确定做什么。请输入 %(command_start)s/%(command_end)s 并等待提示。选择 "
+"“帮助%(command_end)s”，然后按输入键。"
 
 #. module: mail_bot
 #. odoo-python
@@ -135,7 +143,8 @@ msgstr ""
 msgid ""
 "Not sure what you are doing. Please, type %(command_start)s:%(command_end)s "
 "and wait for the propositions. Select one of them and press enter."
-msgstr ""
+msgstr "不确定做什么。请输入 %(command_start)s/%(command_end)s "
+"并等待提示。选择一个然后按Enter键。"
 
 #. module: mail_bot
 #. odoo-python
@@ -143,7 +152,7 @@ msgstr ""
 msgid ""
 "Odoo's chat helps employees collaborate efficiently. I'm here to help you "
 "discover its features."
-msgstr ""
+msgstr "Odoo 的聊天功能可帮助员工高效协作。我将在这里帮助您了解它的功能。"
 
 #. module: mail_bot
 #: model:ir.model.fields,field_description:mail_bot.field_res_users__odoobot_state
@@ -163,7 +172,7 @@ msgstr "入门教程 - 附件"
 #. module: mail_bot
 #: model:ir.model.fields.selection,name:mail_bot.selection__res_users__odoobot_state__onboarding_canned
 msgid "Onboarding canned"
-msgstr ""
+msgstr "Onboarding 录制"
 
 #. module: mail_bot
 #: model:ir.model.fields.selection,name:mail_bot.selection__res_users__odoobot_state__onboarding_command
@@ -188,6 +197,8 @@ msgid ""
 "human language...%(new_line)sI can show you features if you write: %"
 "(command_start)sstart the tour%(command_end)s."
 msgstr ""
+"对不起，我困了。欧不！也许我只是想掩饰我对人类语言的一窍不通...%(new_line)s如"
+"果您写：%(command_start)s开始导览，%(command_end)s我可以向您展示功能。"
 
 #. module: mail_bot
 #. odoo-python
@@ -197,18 +208,20 @@ msgid ""
 "him%(bold_end)s. Write %(command_start)s@OdooBot%(command_end)s and select "
 "me."
 msgstr ""
+"对不起，我没在听。要引起某人的注意，%(bold_start)s直接联系他%(bold_end)s。写"
+"：%(command_start)s@OdooBot%(command_end)s并选择我。"
 
 #. module: mail_bot
 #. odoo-python
 #: code:addons/mail_bot/models/mail_bot.py:0
 msgid "Thanks"
-msgstr ""
+msgstr "谢谢"
 
 #. module: mail_bot
 #. odoo-python
 #: code:addons/mail_bot/models/mail_bot.py:0
 msgid "Thanks for your feedback. Goodbye!"
-msgstr ""
+msgstr "感谢您的反馈。再见！"
 
 #. module: mail_bot
 #. odoo-python
@@ -229,7 +242,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/mail_bot/models/mail_bot.py:0
 msgid "This is a temporary canned response to see how canned responses work."
-msgstr ""
+msgstr "这是一个临时的预制回复，了解预制回复的工作原理。"
 
 #. module: mail_bot
 #. odoo-python
@@ -237,7 +250,8 @@ msgstr ""
 msgid ""
 "To %(bold_start)ssend an attachment%(bold_end)s, click on the %"
 "(paperclip_icon)s icon and select a file."
-msgstr ""
+msgstr "要%(bold_start)s发送附件，%(bold_end)s点击%(paperclip_icon)s图标并选择一个文"
+"件。"
 
 #. module: mail_bot
 #. odoo-python
@@ -249,7 +263,7 @@ msgstr "开始，请尝试给我我发一个笑脸 :)"
 #. odoo-python
 #: code:addons/mail_bot/models/res_users.py:0
 msgid "Try to send me an emoji"
-msgstr ""
+msgstr "试试给我发送一个表情符号"
 
 #. module: mail_bot
 #. odoo-python
@@ -260,6 +274,9 @@ msgid ""
 "documentation%(document_link_end)s or %(slides_link_start)sour videos%"
 "(slides_link_end)s."
 msgstr ""
+"可惜，我只是一个机器人😞，我不明白！如果您在了解产品时需要帮助，请查看%(docum"
+"ent_link_start)s我们的文档%(document_link_end)s 或 "
+"%(slides_link_start)s视频%(slides_link_end)s。"
 
 #. module: mail_bot
 #: model:ir.model,name:mail_bot.model_res_users
@@ -273,6 +290,8 @@ msgid ""
 "Wonderful! 😇%(new_line)sTry typing %(command_start)s::%(command_end)s to "
 "use canned responses. I've created a temporary one for you."
 msgstr ""
+"太棒了！😇%(new_line)s试试输入%(command_start)s "
+"::%(command_end)s使用预设回复。我已为您自动创建了一个预设恢复，作临时使用。"
 
 #. module: mail_bot
 #. odoo-python
@@ -282,6 +301,9 @@ msgid ""
 "attention. %(bold_start)sTry to ping me using%(bold_end)s %"
 "(command_start)s@OdooBot%(command_end)s in a sentence."
 msgstr ""
+"哇，您真是个天才！%(new_line)s艾特 @username "
+"一下用户以引起他们的注意。%(bold_start)s试试在一个句子中%(bold_end)s "
+"%(command_start)s使用@OdooBot%(command_end)s联系我。"
 
 #. module: mail_bot
 #. odoo-python
@@ -289,7 +311,8 @@ msgstr ""
 msgid ""
 "Yep, I am here! 🎉 %(new_line)sNow, try %(bold_start)ssending an attachment%"
 "(bold_end)s, like a picture of your cute dog..."
-msgstr ""
+msgstr "没错，我来了！🎉 %(new_line)s现在，尝试 "
+"%(bold_start)s发送附件%(bold_end)s，例如您的可爱小狗的照片"
 
 #. module: mail_bot
 #. odoo-python

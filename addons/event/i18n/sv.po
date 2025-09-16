@@ -1,6 +1,6 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* event
+# * event
 #
 # Translators:
 # Robert Frykelius <robert.frykelius@linserv.se>, 2022
@@ -22,20 +22,22 @@
 # 03992e16f8df6e39b9d1cc0ff635887e, 2022
 # Frida E, 2022
 # Mikael Åkerberg <mikael.akerberg@mariaakerberg.com>, 2023
-#
+# "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-09-11 13:55+0000\n"
-"PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Mikael Åkerberg <mikael.akerberg@mariaakerberg.com>, 2023\n"
-"Language-Team: Swedish (https://app.transifex.com/odoo/teams/41243/sv/)\n"
+"PO-Revision-Date: 2025-09-16 21:35+0000\n"
+"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
+"Language-Team: Swedish <https://translate.odoo.com/projects/odoo-19/event/sv/"
+">\n"
 "Language: sv\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_question__event_count
@@ -48,43 +50,43 @@ msgstr "# Evenemang"
 #: model:ir.model.fields,field_description:event.field_event_mail__mail_count_done
 #: model:ir.model.fields,field_description:event.field_event_mail_slot__mail_count_done
 msgid "# Sent"
-msgstr ""
+msgstr "# Skickat"
 
 #. module: event
 #. odoo-python
 #: code:addons/event/models/event_event.py:0
 msgid "%(event_name)s (%(count)s seats remaining)"
-msgstr ""
+msgstr "%(event_name)s (%(count)s stolar kvar)"
 
 #. module: event
 #. odoo-python
 #: code:addons/event/models/event_event.py:0
 msgid "%(event_name)s (Sold out)"
-msgstr ""
+msgstr "%(event_name)s (Utsålt)"
 
 #. module: event
 #. odoo-python
 #: code:addons/event/models/event_registration.py:0
 msgid "%(event_name)s - Registration #%(registration_id)s"
-msgstr ""
+msgstr "%(event_name)s - Registrering #%(registration_id)s"
 
 #. module: event
 #. odoo-python
 #: code:addons/event/models/event_registration.py:0
 msgid "%(event_name)s - Registration for %(attendee_name)s"
-msgstr ""
+msgstr "%(event_name)s - Registrering för %(attendee_name)s"
 
 #. module: event
 #. odoo-python
 #: code:addons/event/models/event_slot.py:0
 msgid "%(slot_name)s (%(count)s seats remaining)"
-msgstr ""
+msgstr "%(slot_name)s (%(count)s stolar kvar)"
 
 #. module: event
 #. odoo-python
 #: code:addons/event/models/event_slot.py:0
 msgid "%(slot_name)s (Sold out)"
-msgstr ""
+msgstr "%(slot_name)s (Utsålt)"
 
 #. module: event
 #. odoo-python
@@ -96,13 +98,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/event/models/event_ticket.py:0
 msgid "%(ticket_name)s (%(count)s seats remaining)"
-msgstr ""
+msgstr "%(ticket_name)s (%(count)s stolar kvar)"
 
 #. module: event
 #. odoo-python
 #: code:addons/event/models/event_ticket.py:0
 msgid "%(ticket_name)s (Sold out)"
-msgstr ""
+msgstr "%(ticket_name)s (Utsålt)"
 
 #. module: event
 #. odoo-python
@@ -113,12 +115,12 @@ msgstr "%s (kopia)"
 #. module: event
 #: model:ir.actions.report,print_report_name:event.action_report_event_event_attendee_list
 msgid "'Attendee List - %s' % (object.name)"
-msgstr ""
+msgstr "'Deltagarlista - %s' % (object.name)"
 
 #. module: event
 #: model:ir.actions.report,print_report_name:event.action_report_event_registration_attendee_list
 msgid "'Attendee List'"
-msgstr ""
+msgstr "'Deltagarlista'"
 
 #. module: event
 #: model:ir.actions.report,print_report_name:event.action_report_event_registration_badge
@@ -126,11 +128,13 @@ msgid ""
 "'Badge - %s - %s' % ((object.event_id.name or 'Event').replace('/',''), "
 "(object.name or '').replace('/',''))"
 msgstr ""
+"'Badge - %s - %s' % ((object.event_id.name eller 'Event').replace('/',''), ("
+"object.name eller '').replace('/',''))"
 
 #. module: event
 #: model:ir.actions.report,print_report_name:event.action_report_event_event_badge
 msgid "'Badge - %s' % (object.name or 'Event').replace('/','')"
-msgstr ""
+msgstr "\"Badge - %s\" % (object.name or 'Event').replace('/','')"
 
 #. module: event
 #: model:ir.actions.report,print_report_name:event.action_report_event_registration_full_page_ticket
@@ -138,16 +142,19 @@ msgid ""
 "'Full Page Ticket - %s - %s' % ((object.event_id.name or "
 "'Event').replace('/',''), (object.name or '').replace('/',''))"
 msgstr ""
+"'Komplett Biljett - %s - %s' % ((object.event_id.name or "
+"'Event').replace('/',''), (object.name or '').replace('/',''))"
 
 #. module: event
 #: model:ir.actions.report,print_report_name:event.action_report_event_event_full_page_ticket
 msgid "'Full Page Ticket - %s' % (object.name or 'Event').replace('/','')"
 msgstr ""
+"\"Biljett till hela sidan - %s\" % (object.name or 'Event').replace('/','')"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_report_full_page_ticket_layout
 msgid "+123456789"
-msgstr ""
+msgstr "+123456789"
 
 #. module: event
 #: model:event.tag,name:event.event_tag_category_1_tag_2
@@ -157,7 +164,7 @@ msgstr "10-14"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_report_template_formatted_event_address
 msgid "1000 Brussels"
-msgstr ""
+msgstr "1000 Bryssel"
 
 #. module: event
 #: model:event.tag,name:event.event_tag_category_1_tag_3
@@ -172,7 +179,7 @@ msgstr "18+"
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_event__badge_format__four_per_sheet
 msgid "4 per sheet"
-msgstr ""
+msgstr "4 per ark"
 
 #. module: event
 #: model:event.tag,name:event.event_tag_category_1_tag_1
@@ -201,8 +208,8 @@ msgid ""
 "<b>Technical Rooms</b> - One dedicated to advanced Odoo developers, one for "
 "new developers."
 msgstr ""
-"<b>Teknikrummet</b> - Rum för avancerade Odoo-utvecklare och rum för nya "
-"utvecklare"
+"<b>Teknikrummet</b> - Ett för avancerade Odoo-utvecklare och ett för nya "
+"utvecklare."
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -210,6 +217,8 @@ msgid ""
 "<b>The Design Fair is preceded by 2 days of Training Sessions for experts!</"
 "b><br> We propose 3 different training sessions, 2 days each."
 msgstr ""
+"<b>Designmässan föregås av två dagars utbildningar för experter!</b><br> Vi "
+"föreslår tre olika utbildningar, två dagar vardera."
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -218,6 +227,9 @@ msgid ""
 "more time for thematical meetings, conferences, workshops and tutorial "
 "sessions in the afternoon."
 msgstr ""
+"<b>Plenarsessionerna på förmiddagen kommer att vara kortare</b> och vi "
+"kommer att ge mer tid för tematiska möten, konferenser, workshops och "
+"handledningssessioner på eftermiddagen."
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -228,6 +240,11 @@ msgid ""
 "contribute, there is a free ticket, therefore, catering and access to "
 "evening events aren't included."
 msgstr ""
+"<b>Hela evenemanget är öppet för allmänheten!</b> <br>Vi begär en "
+"deltagaravgift på 49,50 € för kostnaderna för de 3 dagarna (kaffepauser, "
+"catering, drycker och en överraskande konsert och ölfest).<br> För dem som "
+"inte vill bidra finns det en gratisbiljett, därför ingår inte catering och "
+"tillgång till kvällsevenemang."
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -240,6 +257,8 @@ msgid ""
 "<br/>\n"
 "                                            <span class=\"me-1\">from</span>"
 msgstr ""
+"<br /> <br/>\n"
+"                                            <span class=\"me-1\">från</span>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_report_template_full_page_ticket
@@ -247,6 +266,8 @@ msgid ""
 "<br/>\n"
 "                                            <span class=\"me-1\">to</span>"
 msgstr ""
+"<br /> <br/>\n"
+"                                            <span class=\"me-1\">till</span>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
@@ -255,6 +276,9 @@ msgid ""
 "                                        <span class=\"text-muted\">Air your "
 "tracks online through a Youtube integration</span>"
 msgstr ""
+"<br/>\n"
+"                                        <span class=\"text-muted\">Sprid "
+"dina låtar online genom en Youtube-integration</span>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
@@ -263,6 +287,9 @@ msgid ""
 "                                        <span class=\"text-muted\">Share a "
 "quiz to your attendees once a track is over</span>"
 msgstr ""
+"<br/>\n"
+"                                        <span class=\"text-muted\">Dela en "
+"frågesport till dina deltagare när ett spår är över</span>"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -282,7 +309,7 @@ msgstr ""
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
 msgid "<i class=\"fa fa-building\" title=\"Attendee Company\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-building\" title=\"Deltagarens företag\"/>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
@@ -292,7 +319,7 @@ msgstr ""
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_kanban
 msgid "<i class=\"fa fa-group mt-1 me-2 text-center\" title=\"Attendees\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-group mt-1 me-2 text-center\" title=\"Deltagare\"/>"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -300,22 +327,25 @@ msgid ""
 "<i class=\"fa fa-info-circle me-2\"></i>This event and all the conferences "
 "are in <b>English</b>!"
 msgstr ""
+"<i class=\"fa fa-info-circle me-2\"></i>Detta eventet och hela konferensen "
+"är på <b>engelska</b>!"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_kanban
 msgid ""
 "<i class=\"fa fa-map-marker mt-1 me-2 text-center ps-1\" title=\"Location\"/>"
 msgstr ""
+"<i class=\"fa fa-map-marker mt-1 me-2 text-center ps-1\" title=\"Plats\"/>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
 msgid "<i class=\"fa fa-ticket\" title=\"Ticket type\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-ticket\" title=\"Typ av biljett\"/>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_kanban
 msgid "<i class=\"oi oi-arrow-right me-2\" title=\"End date\"/>"
-msgstr ""
+msgstr "<i class=\"oi oi-pil-höger me-2\" title=\"Slutdatum\"/>"
 
 #. module: event
 #: model_terms:event.event,description:event.event_2
@@ -323,16 +353,18 @@ msgid ""
 "<span class=\"badge text-bg-secondary o_wevent_badge float-end\">SPEAKER</"
 "span>"
 msgstr ""
+"<span class=\"badge text-bg-secondary o_wevent_badge float-end\""
+">TALARE</span>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_report_template_full_page_ticket
 msgid "<span class=\"me-1\">to</span>"
-msgstr ""
+msgstr "<span class=\"me-1\">till</span>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_report_template_badge_card
 msgid "<span class=\"o_event_badge_font_faded\">My Placeholder Company</span>"
-msgstr ""
+msgstr "<span class=\"o_event_badge_font_faded\">Mitt platshållarföretag</span>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_question_view_form
@@ -349,12 +381,15 @@ msgid ""
 "                                    Registration\n"
 "                                </span>"
 msgstr ""
+"<span class=\"o_stat_text\">\n"
+"                                    Registrering\n"
+"                                </span>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_report_template_badge_card
 #: model_terms:ir.ui.view,arch_db:event.event_report_template_full_page_ticket
 msgid "<span>John Doe</span>"
-msgstr ""
+msgstr "<span>John Doe</span>"
 
 #. module: event
 #: model:mail.template,body_html:event.event_registration_mail_template_badge
@@ -1558,7 +1593,7 @@ msgstr ""
 #: model:ir.model.fields,help:event.field_event_type_ticket__description
 msgid ""
 "A description of the ticket that you want to communicate to your customers."
-msgstr ""
+msgstr "En beskrivning av den biljett som du vill kommunicera till dina kunder."
 
 #. module: event
 #. odoo-python
@@ -1587,18 +1622,18 @@ msgstr ""
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_event__badge_format__a4_french_fold
 msgid "A4 foldable"
-msgstr ""
+msgstr "A4 hopfällbar"
 
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_event__badge_format__a6
 msgid "A6"
-msgstr ""
+msgstr "A6"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__message_needaction
 #: model:ir.model.fields,field_description:event.field_event_registration__message_needaction
 msgid "Action Needed"
-msgstr "Åtgärd krävs"
+msgstr "Åtgärd Krävs"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__active
@@ -1621,13 +1656,13 @@ msgstr ""
 #. module: event
 #: model:event.tag.category,name:event.event_tag_category_2
 msgid "Activity"
-msgstr "Aktivitet"
+msgstr "Verksamhet"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__activity_exception_decoration
 #: model:ir.model.fields,field_description:event.field_event_registration__activity_exception_decoration
 msgid "Activity Exception Decoration"
-msgstr "Dekoration för aktivitetsundantag"
+msgstr "Aktivitet undantaget dekoration"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__activity_state
@@ -1644,7 +1679,7 @@ msgstr "Ikon för aktivitetstyp"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_search
 msgid "Activity type"
-msgstr ""
+msgstr "Aktivitetstyp"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_stage_view_form
@@ -1654,7 +1689,7 @@ msgstr ""
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_stage_view_form
 msgid "Add a description..."
-msgstr "Lägg till beskrivning..."
+msgstr "Lägg till en beskrivning..."
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
@@ -1662,12 +1697,14 @@ msgid ""
 "Add a navigation menu to your event web pages with schedule, tracks, a track "
 "proposal form, etc."
 msgstr ""
+"Lägg till en navigeringsmeny på dina evenemangssidor med schema, banor, ett "
+"formulär för banförslag etc."
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 #: model_terms:ir.ui.view,arch_db:event.view_event_type_form
 msgid "Add some internal notes (to do lists, contact info, ...)"
-msgstr ""
+msgstr "Lägg till egna anteckningar (att-göra lista, kontaktinformation, ...)"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__address_search
@@ -1682,7 +1719,7 @@ msgstr "Administratör"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings__module_website_event_exhibitor
 msgid "Advanced Sponsors"
-msgstr ""
+msgstr "Framstående sponsorer"
 
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_mail__interval_type__after_sub
@@ -1711,7 +1748,7 @@ msgstr "Ålder"
 #: model_terms:ir.ui.view,arch_db:event.event_event_ticket_form_view
 #: model_terms:ir.ui.view,arch_db:event.view_event_mail_form
 msgid "All Events"
-msgstr ""
+msgstr "Alla evenemang"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__lang
@@ -1719,6 +1756,8 @@ msgid ""
 "All the communication emails sent to attendees will be translated in this "
 "language."
 msgstr ""
+"Alla e-postmeddelanden som skickas till deltagarna kommer att översättas "
+"till detta språk."
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__is_multi_slots
@@ -1749,6 +1788,10 @@ msgid ""
 "        Special discount codes will be handed out during the various "
 "streams, make sure to be there on time."
 msgstr ""
+"Och den här gången går vi helt ONLINE! Träffa oss i våra liveströmmar från "
+"bekvämligheten av ditt hus.<br>\n"
+"        Speciella rabattkoder kommer att delas ut under de olika strömmarna, "
+"se till att vara där i tid."
 
 #. module: event
 #: model:event.stage,name:event.event_stage_announced
@@ -1758,7 +1801,7 @@ msgstr "Aviserad"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_question_answer__name
 msgid "Answer"
-msgstr ""
+msgstr "Svar"
 
 #. module: event
 #: model:ir.actions.act_window,name:event.action_event_registration_report
@@ -1768,7 +1811,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:event.event_registration_answer_view_tree
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 msgid "Answer Breakdown"
-msgstr ""
+msgstr "Fördelning av svar"
 
 #. module: event
 #. odoo-javascript
@@ -1776,7 +1819,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:event.field_event_question__answer_ids
 #: model_terms:ir.ui.view,arch_db:event.event_question_view_form
 msgid "Answers"
-msgstr ""
+msgstr "Svar"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_question_view_search
@@ -1789,7 +1832,7 @@ msgstr "Arkiverad"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__is_launched
 msgid "Are sales launched"
-msgstr ""
+msgstr "Har försäljningen påbörjats"
 
 #. module: event
 #: model_terms:event.event,description:event.event_1
@@ -1797,6 +1840,8 @@ msgid ""
 "Around one hundred ballons will simultaneously take flight and turn the sky "
 "into a beautiful canvas of colours."
 msgstr ""
+"Omkring hundra ballonger kommer samtidigt att flyga och förvandla himlen "
+"till ett vackert kollage av färger."
 
 #. module: event
 #: model_terms:res.partner,website_description:event.res_partner_event_1
@@ -1808,7 +1853,7 @@ msgstr "Som team är vi glada att kunna bidra till detta evenemang."
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_question__once_per_order
 msgid "Ask once per order"
-msgstr ""
+msgstr "Fråga en gång per beställning"
 
 #. module: event
 #: model_terms:event.event,description:event.event_2
@@ -1818,7 +1863,7 @@ msgid ""
 "founded TinyERP. This was the first phase of OpenERP which would later "
 "became Odoo, the most installed open-source business software worldwide."
 msgstr ""
-"Redan vid 13 års ålder började John DOE utveckla sina första "
+"Redan vid 13 års ålder började John Doe utveckla sina första "
 "affärsapplikationer för kunder. Efter att ha blivit civilingenjör grundade "
 "han TinyERP. Detta var den första fasen av OpenERP som senare skulle bli "
 "Odoo, den mest installerade affärsmjukvaran med öppen källkod i världen."
@@ -1839,7 +1884,7 @@ msgstr "Närvaro"
 #: model_terms:ir.ui.view,arch_db:event.view_event_registration_form
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
 msgid "Attended"
-msgstr "Deltog"
+msgstr "Närvarade"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__date_closed
@@ -1862,13 +1907,13 @@ msgstr "Deltagare"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__registration_answer_ids
 msgid "Attendee Answers"
-msgstr ""
+msgstr "Svar från deltagarna"
 
 #. module: event
 #: model:ir.actions.report,name:event.action_report_event_event_attendee_list
 #: model:ir.actions.report,name:event.action_report_event_registration_attendee_list
 msgid "Attendee List"
-msgstr ""
+msgstr "Deltagarlista"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__name
@@ -1878,12 +1923,12 @@ msgstr "Deltagarnamn"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__registration_answer_choice_ids
 msgid "Attendee Selection Answers"
-msgstr ""
+msgstr "Svar på frågor om urval av deltagare"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.attendee_list
 msgid "Attendee list"
-msgstr ""
+msgstr "Deltagarlista"
 
 #. module: event
 #: model:ir.actions.act_window,name:event.act_event_registration_from_event
@@ -1917,28 +1962,28 @@ msgstr "Tillgängliga platser"
 #. module: event
 #: model:ir.actions.report,name:event.action_report_event_registration_badge
 msgid "Badge"
-msgstr ""
+msgstr "Utmärkelse"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__badge_image
 msgid "Badge Background"
-msgstr ""
+msgstr "Bakgrund till märke"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__badge_format
 msgid "Badge Dimension"
-msgstr ""
+msgstr "Märkesdimension"
 
 #. module: event
 #: model:ir.actions.report,name:event.action_report_event_event_badge
 msgid "Badge Example"
-msgstr ""
+msgstr "Exempel på badge"
 
 #. module: event
 #. odoo-python
 #: code:addons/event/controllers/main.py:0
 msgid "Badges"
-msgstr ""
+msgstr "Utmärkelser"
 
 #. module: event
 #: model_terms:event.event,description:event.event_3
@@ -1946,6 +1991,8 @@ msgid ""
 "Bands like Bar Fighters, Led Slippers and Link Floyd will offer you the show "
 "of the century during our three day event."
 msgstr ""
+"Band som Bar Fighters, Led Slippers och Link Floyd kommer att bjuda dig på "
+"århundradets show under vårt tre dagar långa evenemang."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__barcode
@@ -1956,17 +2003,17 @@ msgstr "Streckkod"
 #. module: event
 #: model:ir.actions.client,name:event.event_barcode_action_main_view
 msgid "Barcode Interface"
-msgstr ""
+msgstr "Gränssnitt för streckkoder"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Barcode Nomenclature"
-msgstr ""
+msgstr "Streckkodsnomenklatur"
 
 #. module: event
 #: model:ir.model.constraint,message:event.constraint_event_registration_barcode_event_uniq
 msgid "Barcode should be unique"
-msgstr ""
+msgstr "Streckkoden ska vara unik"
 
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_mail__interval_type__before_event_end
@@ -1991,6 +2038,8 @@ msgid ""
 "Bloem brings honesty and seriousness to wood industry while helping "
 "customers deal with trees, flowers and fungi."
 msgstr ""
+"Bloem tillför ärlighet och seriositet till träindustrin och hjälper kunderna "
+"att hantera träd, blommor och svampar."
 
 #. module: event
 #: model:event.stage,name:event.event_stage_booked
@@ -2007,7 +2056,7 @@ msgstr "Bokad av"
 #: model:ir.model.fields,field_description:event.field_res_config_settings__module_event_booth
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Booth Management"
-msgstr ""
+msgstr "Booth Management"
 
 #. module: event
 #: model:event.event,subtitle:event.event_5
@@ -2015,11 +2064,13 @@ msgid ""
 "Bring your outdoor field hockey season to the next level by taking the field "
 "at this 9th annual Field Hockey tournament."
 msgstr ""
+"Ta din landhockeysäsong till nästa nivå genom att spela på planen i den 9:e "
+"årliga landhockeyturneringen."
 
 #. module: event
 #: model:event.event,name:event.event_4
 msgid "Business workshops"
-msgstr ""
+msgstr "Business workshops"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__utm_campaign_id
@@ -2048,7 +2099,7 @@ msgstr "Annullerad"
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
 msgid "Cancelled registration"
-msgstr ""
+msgstr "Avbeställd registrering"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_tag__category_id
@@ -2058,7 +2109,7 @@ msgstr "Kategori"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_tag__category_sequence
 msgid "Category Sequence"
-msgstr ""
+msgstr "Kategorisekvens"
 
 #. module: event
 #: model_terms:event.event,description:event.event_2
@@ -2066,6 +2117,8 @@ msgid ""
 "Chamber Works reserves the right to cancel, re-name or re-locate the event "
 "or change the dates on which it is held."
 msgstr ""
+"Chamber Works förbehåller sig rätten att ställa in, byta namn på eller "
+"flytta evenemanget eller ändra de datum då det hålls."
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_question__once_per_order
@@ -2080,12 +2133,14 @@ msgid ""
 "Choose a template to auto-fill tickets, communications, descriptions and "
 "other fields."
 msgstr ""
+"Välj en mall för att automatiskt fylla i ärenden, meddelanden, beskrivningar "
+"och andra fält."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__color
 #: model:ir.model.fields,field_description:event.field_event_slot__color
 msgid "Color"
-msgstr ""
+msgstr "Färg"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_tag__color
@@ -2095,14 +2150,14 @@ msgstr "Färgindex"
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.action_event_registration_report
 msgid "Come back once you have registrations to overview answers."
-msgstr ""
+msgstr "Kom tillbaka när du har registreringar för att överblicka svaren."
 
 #. module: event
 #: model_terms:res.partner,website_description:event.res_partner_event_1
 #: model_terms:res.partner,website_description:event.res_partner_event_3
 #: model_terms:res.partner,website_description:event.res_partner_event_4
 msgid "Come see us live, we hope to meet you!"
-msgstr ""
+msgstr "Kom och se oss live, vi hoppas att få träffa dig!"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
@@ -2120,7 +2175,7 @@ msgstr ""
 #. module: event
 #: model:ir.model.fields,help:event.field_event_mail__mail_registration_ids
 msgid "Communication related to event registrations"
-msgstr ""
+msgstr "Kommunikation relaterad till evenemangsregistreringen"
 
 #. module: event
 #. odoo-javascript
@@ -2137,7 +2192,7 @@ msgstr "Bolag"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__company_name
 msgid "Company Name"
-msgstr ""
+msgstr "Företagsnamn"
 
 #. module: event
 #. odoo-python
@@ -2154,12 +2209,12 @@ msgstr "Konferens"
 #: model:event.event,name:event.event_2
 #: model_terms:event.event,description:event.event_2
 msgid "Conference for Architects"
-msgstr ""
+msgstr "Konferens för arkitekter"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
 msgid "Conferences, workshops and trainings will be organized in 6 rooms:"
-msgstr ""
+msgstr "Konferenser, workshops och utbildningar kommer att anordnas i 6 rum:"
 
 #. module: event
 #: model:ir.model,name:event.model_res_config_settings
@@ -2175,7 +2230,7 @@ msgstr "Konfiguration"
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
 msgid "Confirm attendance?"
-msgstr ""
+msgstr "Bekräfta närvaro?"
 
 #. module: event
 #: model:ir.model,name:event.model_res_partner
@@ -2186,7 +2241,7 @@ msgstr "Kontakt"
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
 msgid "Continue"
-msgstr ""
+msgstr "Fortsätt"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__country_id
@@ -2196,7 +2251,7 @@ msgstr "Land"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Create Booths and manage their reservations"
-msgstr ""
+msgstr "Skapa marknadsstånd och hantera deras reservationer"
 
 #. module: event
 #: model:ir.model,website_form_label:event.model_res_partner
@@ -2206,22 +2261,22 @@ msgstr ""
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.action_event_view
 msgid "Create an Event"
-msgstr ""
+msgstr "Skapa ett evenemang"
 
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.event_stage_action
 msgid "Create an Event Stage"
-msgstr ""
+msgstr "Skapa ett händelsescenario"
 
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.event_tag_category_action_tree
 msgid "Create an Event Tag Category"
-msgstr ""
+msgstr "Skapa en händelsekategori"
 
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.action_event_type
 msgid "Create an Event Template"
-msgstr ""
+msgstr "Skapa en evenemangsmall"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__create_uid
@@ -2261,7 +2316,7 @@ msgstr "Skapad av"
 #: model:ir.model.fields,field_description:event.field_event_type_mail__create_date
 #: model:ir.model.fields,field_description:event.field_event_type_ticket__create_date
 msgid "Created on"
-msgstr "Skapad"
+msgstr "Skapad den"
 
 #. module: event
 #: model:event.tag,name:event.event_tag_category_2_tag_1
@@ -2278,7 +2333,7 @@ msgstr "Datum"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__event_date_range
 msgid "Date Range"
-msgstr ""
+msgstr "Datumintervall"
 
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_mail__interval_unit__days
@@ -2304,6 +2359,9 @@ msgid ""
 "you will not be able to sell tickets anymore. Set 0 to ignore this rule set "
 "as unlimited."
 msgstr ""
+"Definiera antalet tillgängliga biljetter. Om du har för många anmälningar "
+"kommer du inte att kunna sälja biljetter längre. Välj 0 för att kunna sälja "
+"obegränsat antal biljetter."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__description
@@ -2315,12 +2373,12 @@ msgstr "Beskrivning"
 #. module: event
 #: model:event.event,name:event.event_0
 msgid "Design Fair Los Angeles"
-msgstr ""
+msgstr "Designmässan Los Angeles"
 
 #. module: event
 #: model:event.event,subtitle:event.event_4
 msgid "Discover how to grow a sustainable business with our experts."
-msgstr ""
+msgstr "Upptäck hur du utvecklar ett hållbart företag med våra experter."
 
 #. module: event
 #: model_terms:res.partner,website_description:event.res_partner_event_1
@@ -2353,7 +2411,7 @@ msgstr "Visningsnamn"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Display Sponsors and Exhibitors on your event pages"
-msgstr ""
+msgstr "Visa sponsorer och utställare på dina evenemangssidor"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__date_tz
@@ -2364,7 +2422,7 @@ msgstr ""
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__sequence
 msgid "Display order"
-msgstr "Visa order"
+msgstr "Visningsföljd"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_report_template_full_page_ticket
@@ -2374,7 +2432,7 @@ msgstr ""
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_report_template_full_page_ticket
 msgid "Download Tickets <i class=\"ms-1 fa fa-download\"/>"
-msgstr ""
+msgstr "Ladda ner biljetter <i class=\"ms-1 fa fa-download\"/>"
 
 #. module: event
 #: model_terms:event.event,description:event.event_2
@@ -2389,7 +2447,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
 msgid "Edit"
-msgstr ""
+msgstr "Redigera"
 
 #. module: event
 #: model:event.question,title:event.event_question_email
@@ -2406,12 +2464,12 @@ msgstr "E-postmallar"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Enable barcode scanning"
-msgstr ""
+msgstr "Aktivera streckkodsläsning"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_res_config_settings__use_event_barcode
 msgid "Enable or Disable Event Barcode functionality."
-msgstr ""
+msgstr "Aktivera eller inaktivera streckkodsfunktionen för händelser."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__date_end
@@ -2446,7 +2504,7 @@ msgstr "Förbättra din arkitektverksamhet och dina yrkeskompetenser."
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_mail__mail_state__error
 msgid "Error"
-msgstr ""
+msgstr "Fel"
 
 #. module: event
 #. odoo-javascript
@@ -2463,12 +2521,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:event.view_event_search
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
 msgid "Event"
-msgstr "Event"
+msgstr "Evenemang"
 
 #. module: event
 #: model:ir.model,name:event.model_event_mail
 msgid "Event Automated Mailing"
-msgstr "Event automatiska utskick"
+msgstr "Automatiska evenemangsutskick"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__event_type_id
@@ -2482,7 +2540,7 @@ msgstr "Evenemangskategori"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_tag_view_form
 msgid "Event Category Tag"
-msgstr "Etikett evenemangskategori"
+msgstr "Evenemangskategoritagg"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__event_end_date
@@ -2502,18 +2560,18 @@ msgstr "Evenemangsinformation"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_mail_form
 msgid "Event Mail Scheduler"
-msgstr ""
+msgstr "Evenemangsutskickskalender"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_mail_tree
 msgid "Event Mail Schedulers"
-msgstr ""
+msgstr "Evenemangsutskickskalendrar"
 
 #. module: event
 #. odoo-javascript
 #: code:addons/event/static/src/template_reference_field/field_event_mail_template_reference.js:0
 msgid "Event Mail Template Reference"
-msgstr ""
+msgstr "Händelse Mail Mall Referens"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_event_view_activity
@@ -2529,18 +2587,18 @@ msgstr "Evenemangsorganisation"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__event_organizer_id
 msgid "Event Organizer"
-msgstr ""
+msgstr "Arrangören"
 
 #. module: event
 #: model:ir.actions.act_window,name:event.event_question_action
 #: model:ir.model,name:event.model_event_question
 msgid "Event Question"
-msgstr ""
+msgstr "Fråga om evenemang"
 
 #. module: event
 #: model:ir.model,name:event.model_event_question_answer
 msgid "Event Question Answer"
-msgstr ""
+msgstr "Evenemang Fråga Svar"
 
 #. module: event
 #: model:ir.ui.menu,name:event.event_question_menu
@@ -2558,18 +2616,18 @@ msgstr "Anmälan"
 #. module: event
 #: model:ir.model,name:event.model_event_registration_answer
 msgid "Event Registration Answer"
-msgstr ""
+msgstr "Svar på registrering av evenemang"
 
 #. module: event
 #. odoo-python
 #: code:addons/event/controllers/main.py:0
 msgid "Event Registrations"
-msgstr ""
+msgstr "Registrering av evenemang"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__event_user_id
 msgid "Event Responsible"
-msgstr ""
+msgstr "Evenemangsansvarig"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__event_share_url
@@ -2613,7 +2671,7 @@ msgstr "Kategori för evenemang tagg"
 #: model:ir.ui.menu,name:event.menu_event_category
 #: model_terms:ir.ui.view,arch_db:event.event_tag_view_tree
 msgid "Event Tags Categories"
-msgstr "Kategorier för Evenemang Taggar"
+msgstr "Kategorier för evenemangsetiketter"
 
 #. module: event
 #: model:ir.model,name:event.model_event_type
@@ -2621,18 +2679,18 @@ msgstr "Kategorier för Evenemang Taggar"
 #: model_terms:ir.ui.view,arch_db:event.view_event_type_form
 #: model_terms:ir.ui.view,arch_db:event.view_event_type_tree
 msgid "Event Template"
-msgstr "Mall för evenemang"
+msgstr "Evenemangsmall"
 
 #. module: event
 #: model:ir.model,name:event.model_event_type_ticket
 #: model_terms:ir.ui.view,arch_db:event.event_type_ticket_view_form_from_type
 msgid "Event Template Ticket"
-msgstr "Mall för biljett"
+msgstr "Evenemangsmallsbiljett"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_type_ticket_view_tree_from_type
 msgid "Event Template Tickets"
-msgstr "Mall för evenemangsbiljetter"
+msgstr "Evenemangsmallsbiljetter"
 
 #. module: event
 #: model:ir.actions.act_window,name:event.action_event_type
@@ -2649,6 +2707,10 @@ msgid ""
 "\"Workshop\",\n"
 "                \"Roadshow\", \"Online Webinar\", etc)."
 msgstr ""
+"Evenemangsmallar kombinerar inställningar du ofta använder och är\n"
+"                vanligtvis baserade på de typer av evenemang som du "
+"arrangerar (t.ex. \"Workshop\",\n"
+"                \"Roadshow\", \"Online Webinar\", etc)."
 
 #. module: event
 #: model:ir.model,name:event.model_event_event_ticket
@@ -2677,6 +2739,8 @@ msgid ""
 "Event stages are used to track the progress of an Event from its origin "
 "until its conclusion."
 msgstr ""
+"Händelsesteg används för att följa utvecklingen av en händelse från dess "
+"början till dess slut."
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_event_ticket_form_view
@@ -2691,12 +2755,12 @@ msgstr "Evenemang: e-post-planering"
 #. module: event
 #: model:mail.template,name:event.event_registration_mail_template_badge
 msgid "Event: Registration Badge"
-msgstr ""
+msgstr "Evenemang: Registreringsbricka"
 
 #. module: event
 #: model:mail.template,name:event.event_subscription
 msgid "Event: Registration Confirmation"
-msgstr ""
+msgstr "Evenemang: Bekräftelse av registrering"
 
 #. module: event
 #: model:mail.template,name:event.event_reminder
@@ -2715,12 +2779,12 @@ msgstr "Event: påminnelse"
 #: model_terms:ir.ui.view,arch_db:event.view_event_search
 #: model_terms:ir.ui.view,arch_db:event.view_event_tree
 msgid "Events"
-msgstr "Event"
+msgstr "Evenemang"
 
 #. module: event
 #: model:ir.actions.act_window,name:event.action_event_mail
 msgid "Events Mail Schedulers"
-msgstr "Evenemang-epost-planering"
+msgstr "Evenemang e-post-planering"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_stage_view_form
@@ -2734,6 +2798,9 @@ msgid ""
 "Events will automatically be moved into this stage when they are finished. "
 "The event moved into this stage will automatically be set as green."
 msgstr ""
+"Händelser flyttas automatiskt till detta skede när de är klara. Det "
+"evenemang som flyttas till detta skede kommer automatiskt att sättas som "
+"grönt."
 
 #. module: event
 #: model_terms:event.event,description:event.event_4
@@ -2748,6 +2815,13 @@ msgid ""
 "studies, methodology or developments. Be there and see directly from the "
 "source the features of the new version!"
 msgstr ""
+"Varje år bjuder vi in vår community, partners och slutanvändare att komma "
+"och träffa oss! Det är det perfekta tillfället att träffas och presentera "
+"nya funktioner, färdplaner för framtida versioner, programvarans "
+"prestationer, workshops, utbildningstillfällen etc...\n"
+"            Detta evenemang är också en möjlighet att visa upp våra partners "
+"fallstudier, metodik eller utveckling. Var där och se funktionerna i den nya "
+"versionen direkt från källan!"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -2757,6 +2831,10 @@ msgid ""
 "of future versions, achievements of the software, workshops, training "
 "sessions, etc...."
 msgstr ""
+"Varje år bjuder vi in vår community, partners och slutanvändare att komma "
+"och träffa oss! Det är det perfekta tillfället att träffas och presentera "
+"nya funktioner, färdplaner för framtida versioner, programvarans "
+"prestationer, workshops, utbildningstillfällen etc. ...."
 
 #. module: event
 #: model:event.type,name:event.event_type_0
@@ -2766,7 +2844,7 @@ msgstr "Utställning"
 #. module: event
 #: model:event.event,subtitle:event.event_3
 msgid "Experience live music, local food and beverages."
-msgstr ""
+msgstr "Upplev levande musik, lokal mat och dryck."
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_slot__end_hour
@@ -2780,11 +2858,13 @@ msgid ""
 "Finished events. Odoo will automatically move them to this stage once their "
 "end date has passed."
 msgstr ""
+"Avslutade händelser. Odoo kommer automatiskt att flytta dem till detta steg "
+"när deras slutdatum har passerat."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_stage__fold
 msgid "Folded in Kanban"
-msgstr "Hoplagd i kanban"
+msgstr "Ihopfälld i kanban"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__message_follower_ids
@@ -2796,7 +2876,7 @@ msgstr "Följare"
 #: model:ir.model.fields,field_description:event.field_event_event__message_partner_ids
 #: model:ir.model.fields,field_description:event.field_event_registration__message_partner_ids
 msgid "Followers (Partners)"
-msgstr "Följare (partners)"
+msgstr "Följare (kontakter)"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__activity_type_icon
@@ -2847,7 +2927,7 @@ msgstr ""
 #. module: event
 #: model:event.event.ticket,description:event.event_0_ticket_1
 msgid "For only 10, you gain access to catering. Yum yum."
-msgstr ""
+msgstr "För endast 10 euro får ni tillgång till catering. Mums mums."
 
 #. module: event
 #: model:event.event.ticket,name:event.event_0_ticket_0
@@ -2857,17 +2937,17 @@ msgstr "Gratis"
 #. module: event
 #: model:event.event.ticket,description:event.event_0_ticket_0
 msgid "Free entrance, no food!"
-msgstr ""
+msgstr "Fri entré, ingen mat!"
 
 #. module: event
 #: model:event.stage,description:event.event_stage_new
 msgid "Freshly created"
-msgstr ""
+msgstr "Nyligen skapad"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_slot_tree
 msgid "From"
-msgstr ""
+msgstr "Från"
 
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.action_registration
@@ -2876,16 +2956,18 @@ msgid ""
 "From this dashboard you can report, analyze and detect trends regarding your "
 "event registrations."
 msgstr ""
+"Från denna instrumentpanel kan du rapportera, analysera och upptäcka trender "
+"avseende dina evenemangsregistreringar."
 
 #. module: event
 #: model:ir.actions.report,name:event.action_report_event_registration_full_page_ticket
 msgid "Full Page Ticket"
-msgstr ""
+msgstr "Full Page Ticket"
 
 #. module: event
 #: model:ir.actions.report,name:event.action_report_event_event_full_page_ticket
 msgid "Full Page Ticket Example"
-msgstr ""
+msgstr "Exempel på fullsidiga biljetter"
 
 #. module: event
 #: model_terms:event.event,description:event.event_2
@@ -2896,63 +2978,63 @@ msgstr "Beskrivning av flödet i de viktiga applikationerna;"
 #: model_terms:ir.ui.view,arch_db:event.view_event_search
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
 msgid "Future Activities"
-msgstr "Kommande aktiviteter"
+msgstr "Framtida aktiviteter"
 
 #. module: event
 #: model:event.event.ticket,name:event.event_4_ticket_0
 msgid "General Admission"
-msgstr ""
+msgstr "Allmän entré"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__general_question_ids
 msgid "General Questions"
-msgstr ""
+msgstr "Allmänna frågor"
 
 #. module: event
 #: model:event.event,subtitle:event.event_0
 msgid "Get Inspired • Stay Connected • Have Fun"
-msgstr ""
+msgstr "Bli inspirerad • Var uppkopplad • Ha kul"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__mail_state
 msgid "Global communication Status"
-msgstr ""
+msgstr "Global kommunikationsstatus"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Google Maps"
-msgstr ""
+msgstr "Google Maps"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings__google_maps_static_api_key
 msgid "Google Maps API key"
-msgstr ""
+msgstr "API-nyckel för Google Maps"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings__google_maps_static_api_secret
 msgid "Google Maps API secret"
-msgstr ""
+msgstr "Google Maps API-hemlighet"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings__use_google_maps_static_api
 msgid "Google Maps static API"
-msgstr ""
+msgstr "Google Maps statiska API"
 
 #. module: event
 #: model:event.event,name:event.event_1
 msgid "Great Reno Ballon Race"
-msgstr ""
+msgstr "Great Reno Ballon Race"
 
 #. module: event
 #: model_terms:web_tour.tour,rainbow_man_message:event.event_tour
 msgid "Great! Now all you have to do is wait for your attendees to show up!"
-msgstr ""
+msgstr "Jättebra! Nu behöver du bara vänta på att dina deltagare ska dyka upp!"
 
 #. module: event
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
 msgid "Guest #"
-msgstr ""
+msgstr "Gäst #"
 
 #. module: event
 #: model_terms:res.partner,website_description:event.res_partner_event_1
@@ -2976,18 +3058,18 @@ msgstr ""
 #. module: event
 #: model_terms:event.event,description:event.event_3
 msgid "Here it is, the 12th edition of our Live Musical Festival!"
-msgstr ""
+msgstr "Här är den, den 12:e upplagan av vår Live Musical Festival!"
 
 #. module: event
 #: model:event.event,name:event.event_5
 msgid "Hockey Tournament"
-msgstr ""
+msgstr "Ishockeymästerskap"
 
 #. module: event
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
 msgid "Home"
-msgstr ""
+msgstr "Hem"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_slot_form
@@ -3003,22 +3085,22 @@ msgstr "Timmar"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_report_template_foldable_badge
 msgid "How to Fold (1)"
-msgstr ""
+msgstr "Hur man viker (1)"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_report_template_foldable_badge
 msgid "How to Fold (2)"
-msgstr ""
+msgstr "Hur man viker (2)"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_report_template_foldable_badge
 msgid "How to Fold (3)"
-msgstr ""
+msgstr "Hur man viker (3)"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_report_template_foldable_badge
 msgid "How to Fold (4)"
-msgstr ""
+msgstr "Hur man viker (4)"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__id
@@ -3053,7 +3135,7 @@ msgstr "Ikon"
 #. odoo-javascript
 #: code:addons/event/static/src/icon_selection_field/icon_selection_field.js:0
 msgid "Icon Selection"
-msgstr ""
+msgstr "Ikonval"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__activity_exception_icon
@@ -3073,18 +3155,20 @@ msgstr "Om markerad så finns det meddelanden som kräver din uppmärksamhet."
 #: model:ir.model.fields,help:event.field_event_registration__message_has_error
 #: model:ir.model.fields,help:event.field_event_registration__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
-msgstr "Om markerad har det uppstått leveransfel för vissa meddelanden."
+msgstr "Om markerad, en del meddelanden har leveransfel."
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__start_sale_datetime
 msgid ""
 "If ticketing is used, contains the earliest starting sale date of tickets."
 msgstr ""
+"Om biljetten är använd, innehåller det tidigare datumet för säljstart för "
+"biljetter."
 
 #. module: event
 #: model_terms:event.event,ticket_instructions:event.event_0
 msgid "If you don't have this ticket, you will <b>not</b> be allowed entry!"
-msgstr ""
+msgstr "Om du inte har denna biljetten ska du <b>inte </b> få komma in!"
 
 #. module: event
 #: model_terms:event.event,description:event.event_5
@@ -3095,6 +3179,11 @@ msgid ""
 "                to chat with experienced players and trainers once the "
 "tournament is over!"
 msgstr ""
+"Om du inte vet något om hockey är detta en bra introduktion till denna "
+"underbara sport eftersom du kommer att kunna se några träningsprocesser och "
+"också ha lite tid\n"
+"                att prata med erfarna spelare och tränare när turneringen är "
+"över!"
 
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_mail__interval_unit__now
@@ -3105,7 +3194,7 @@ msgstr "Omedelbart"
 #. module: event
 #: model_terms:event.event,ticket_instructions:event.event_0
 msgid "Important ticket information"
-msgstr ""
+msgstr "Viktig biljettinformation"
 
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_event__kanban_state__normal
@@ -3135,13 +3224,13 @@ msgstr ""
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Insert dynamic Google Maps in your email templates"
-msgstr ""
+msgstr "Infoga dynamiska Google Maps i dina e-postmallar"
 
 #. module: event
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_barcode.xml:0
 msgid "Install"
-msgstr ""
+msgstr "Installera"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__interval_nbr
@@ -3170,7 +3259,7 @@ msgstr "Felaktigt evenemangs- / biljett-val"
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_barcode.js:0
 msgid "Invalid ticket"
-msgstr ""
+msgstr "Ogiltig biljett"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__sale_available
@@ -3190,13 +3279,13 @@ msgstr "Är utgången"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__is_finished
 msgid "Is Finished"
-msgstr ""
+msgstr "Är Avslutad"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__message_is_follower
 #: model:ir.model.fields,field_description:event.field_event_registration__message_is_follower
 msgid "Is Follower"
-msgstr "Är följare"
+msgstr "Är Följare"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__is_multi_slots
@@ -3227,17 +3316,17 @@ msgstr ""
 #. module: event
 #: model:ir.model.fields,help:event.field_event_type__seats_max
 msgid "It will select this default maximum value when you choose this event"
-msgstr "Detta standardvärde för maximum väljes när du använder detta evenemang"
+msgstr "Detta maximala standardvärde blir valt när du väljer detta evenemang"
 
 #. module: event
 #: model_terms:event.event,description:event.event_2
 msgid "John DOE"
-msgstr "John DOE"
+msgstr "John Doe"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_report_template_foldable_badge
 msgid "John Doe"
-msgstr ""
+msgstr "John Doe"
 
 #. module: event
 #: model_terms:event.event,description:event.event_2
@@ -3247,45 +3336,45 @@ msgstr ""
 #. module: event
 #: model_terms:event.event,description:event.event_1
 msgid "Join us for the greatest ballon race of all times!"
-msgstr ""
+msgstr "Följ med oss på tidernas största ballonglopp!"
 
 #. module: event
 #: model_terms:event.event,description:event.event_4
 #: model_terms:event.event,description:event.event_6
 #: model_terms:ir.ui.view,arch_db:event.event_default_descripton
 msgid "Join us for this 24 hours Event"
-msgstr ""
+msgstr "Följ oss för detta dygnsevenemang"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
 msgid "Join us for this 3-day Event"
-msgstr ""
+msgstr "Följ oss för detta tre-dagars evenemang"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__kanban_state
 msgid "Kanban State"
-msgstr "Kanbanstatus"
+msgstr "Kanbanetapp"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Key"
-msgstr ""
+msgstr "Nyckel"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__lang
 msgid "Language"
-msgstr ""
+msgstr "Språk"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
 msgid "Last 30 days"
-msgstr "Senaste 30 dagar"
+msgstr "Senaste 30 dagarna"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__last_registration_id
 #: model:ir.model.fields,field_description:event.field_event_mail_slot__last_registration_id
 msgid "Last Attendee"
-msgstr ""
+msgstr "Sista deltagaren"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__error_datetime
@@ -3330,26 +3419,26 @@ msgstr "Senast uppdaterad av"
 #: model:ir.model.fields,field_description:event.field_event_type_mail__write_date
 #: model:ir.model.fields,field_description:event.field_event_type_ticket__write_date
 msgid "Last Updated on"
-msgstr "Senast uppdaterad på"
+msgstr "Senast uppdaterad den"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_search
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
 msgid "Late Activities"
-msgstr "Försenade aktiviteter"
+msgstr "Sena aktiviteter"
 
 #. module: event
 #. odoo-javascript
 #: code:addons/event/static/src/js/tours/event_tour.js:0
 msgid "Let's create your first <b>event</b>."
-msgstr ""
+msgstr "Låt oss skapa ditt första <b>evenemang</b>."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__seats_limited
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__seats_limited
 #: model:ir.model.fields,field_description:event.field_event_type_ticket__seats_limited
 msgid "Limit Attendees"
-msgstr ""
+msgstr "Begränsat antal deltagare"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
@@ -3375,17 +3464,17 @@ msgstr ""
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Live Broadcast"
-msgstr ""
+msgstr "Direktsändning"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings__module_website_event_track_live
 msgid "Live Mode"
-msgstr ""
+msgstr "Visningsläge"
 
 #. module: event
 #: model:event.event,name:event.event_3
 msgid "Live Music Festival"
-msgstr ""
+msgstr "Livemusikfestival"
 
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_mail__notification_type__mail
@@ -3393,7 +3482,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:event.selection__event_type_mail__notification_type__mail
 #: model:ir.model.fields.selection,name:event.selection__event_type_mail__template_ref__mail_template
 msgid "Mail"
-msgstr "Epost"
+msgstr "E-post"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__mail_registration_ids
@@ -3435,7 +3524,7 @@ msgstr ""
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Manage & publish a schedule with tracks"
-msgstr ""
+msgstr "Hantera och publicera ett schema med spår"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_question_view_list
@@ -3443,22 +3532,22 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 #: model_terms:ir.ui.view,arch_db:event.view_event_type_form
 msgid "Mandatory"
-msgstr ""
+msgstr "Obligatoriskt"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_question__is_mandatory_answer
 msgid "Mandatory Answer"
-msgstr ""
+msgstr "Obligatoriskt svar"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_report_full_page_ticket_layout
 msgid "Marc Demo"
-msgstr ""
+msgstr "Marc Demo"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_registration_tree
 msgid "Mark as Attending"
-msgstr "Bekräfta närvaro"
+msgstr "Markera som närvarande"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_registration_form
@@ -3468,7 +3557,7 @@ msgstr "Marknadsföring"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_event_ticket_view_tree_from_event
 msgid "Maximum"
-msgstr ""
+msgstr "Max"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__seats_max
@@ -3480,12 +3569,12 @@ msgstr "Max antal delatagare"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_type__seats_max
 msgid "Maximum Registrations"
-msgstr "Maximum Registrerade"
+msgstr "Max anmälda"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_tree
 msgid "Maximum Seats"
-msgstr ""
+msgstr "Max antal stolar"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event_ticket__limit_max_per_order
@@ -3509,7 +3598,7 @@ msgstr "Medium"
 #: model:ir.model.fields,field_description:event.field_event_event__message_has_error
 #: model:ir.model.fields,field_description:event.field_event_registration__message_has_error
 msgid "Message Delivery error"
-msgstr "Fel vid leverans av meddelande"
+msgstr "Fel vid leverans meddelande"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__message_ids
@@ -3531,19 +3620,19 @@ msgstr ""
 #. module: event
 #: model:event.tag,name:event.event_tag_category_2_tag_2
 msgid "Music"
-msgstr ""
+msgstr "Musik"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_search
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
 msgid "My Activities"
-msgstr ""
+msgstr "Mina aktivieteter"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__my_activity_date_deadline
 #: model:ir.model.fields,field_description:event.field_event_registration__my_activity_date_deadline
 msgid "My Activity Deadline"
-msgstr "Mina aktiviteters deadline"
+msgstr "Mina aktiviteters sluttid"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_search
@@ -3576,7 +3665,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:event.field_event_event__activity_calendar_event_id
 #: model:ir.model.fields,field_description:event.field_event_registration__activity_calendar_event_id
 msgid "Next Activity Calendar Event"
-msgstr "Nästa kalenderhändelse för aktivitet"
+msgstr "Nästa Kalenderhändelse för Aktivitet"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__activity_date_deadline
@@ -3588,7 +3677,7 @@ msgstr "Nästa slutdatum för aktivitet"
 #: model:ir.model.fields,field_description:event.field_event_event__activity_summary
 #: model:ir.model.fields,field_description:event.field_event_registration__activity_summary
 msgid "Next Activity Summary"
-msgstr "Nästa aktivitetssummering"
+msgstr "Nästa aktivitetssammanställning"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__activity_type_id
@@ -3599,12 +3688,12 @@ msgstr "Nästa aktivitetstyp"
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.action_event_registration_report
 msgid "No Answers yet!"
-msgstr ""
+msgstr "Inga svar ännu!"
 
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.event_registration_action
 msgid "No Attendees expected yet!"
-msgstr ""
+msgstr "Inga deltagare förväntas nu!"
 
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.act_event_registration_from_event
@@ -3612,7 +3701,7 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:event.event_registration_action_kanban
 #: model_terms:ir.actions.act_window,help:event.event_registration_action_stats_from_event
 msgid "No Attendees yet!"
-msgstr ""
+msgstr "Inga deltagare nu!"
 
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.event_question_action
@@ -3622,7 +3711,7 @@ msgstr ""
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings__barcode_nomenclature_id
 msgid "Nomenclature"
-msgstr ""
+msgstr "Nomenklatur"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_question_view_search
@@ -3655,13 +3744,15 @@ msgstr ""
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.action_event_mail
 msgid "Nothing Scheduled yet!"
-msgstr ""
+msgstr "Inget planerat ännu!"
 
 #. module: event
 #. odoo-javascript
 #: code:addons/event/static/src/js/tours/event_tour.js:0
 msgid "Now that your event is ready, click here to move it to another stage."
 msgstr ""
+"Nu när ditt evenemang är färdigt, klicka här för att flytta det till nästa "
+"steg."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__message_needaction_counter
@@ -3673,19 +3764,19 @@ msgstr "Antal åtgärder"
 #: model:ir.model.fields,field_description:event.field_event_event__seats_used
 #: model:ir.model.fields,field_description:event.field_event_slot__seats_used
 msgid "Number of Attendees"
-msgstr ""
+msgstr "Antalet deltagare"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__seats_reserved
 #: model:ir.model.fields,field_description:event.field_event_slot__seats_reserved
 msgid "Number of Registrations"
-msgstr ""
+msgstr "Antalet anmälda"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__seats_taken
 #: model:ir.model.fields,field_description:event.field_event_slot__seats_taken
 msgid "Number of Taken Seats"
-msgstr ""
+msgstr "Antal intagna platser"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__message_has_error_counter
@@ -3697,7 +3788,7 @@ msgstr "Antal fel"
 #: model:ir.model.fields,help:event.field_event_event__message_needaction_counter
 #: model:ir.model.fields,help:event.field_event_registration__message_needaction_counter
 msgid "Number of messages requiring action"
-msgstr ""
+msgstr "Antal meddelanden som kräver åtgärd"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__message_has_error_counter
@@ -3713,19 +3804,19 @@ msgstr "Mål"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_report_full_page_ticket_layout
 msgid "Odoo Community Days"
-msgstr ""
+msgstr "Odoo gemenskapsdagar"
 
 #. module: event
 #: model_terms:event.event,description:event.event_3
 msgid "Once again we assembled the most legendary bands in Rock history."
-msgstr ""
+msgstr "Än en gång har vi samlat de mest legendariska banden i rockhistorien."
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_question_view_list
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 #: model_terms:ir.ui.view,arch_db:event.view_event_type_form
 msgid "Once per Order"
-msgstr ""
+msgstr "En gång per order"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_question_view_search
@@ -3746,7 +3837,7 @@ msgstr "Uppkopplad"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_kanban
 msgid "Online Event"
-msgstr ""
+msgstr "Evenemang online"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__event_url
@@ -3766,13 +3857,15 @@ msgstr "Uppkopplad Biljettförsäljning"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 msgid "Online if not set"
-msgstr ""
+msgstr "Online om inte inställd"
 
 #. module: event
 #. odoo-javascript
 #: code:addons/event/static/src/js/tours/event_tour.js:0
 msgid "Open date range picker.<br/>Pick a Start and End date for your event."
 msgstr ""
+"Öppna datumintervallväljaren.<br/>Välj ett start- och slutdatum för ditt "
+"evenemang."
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -3780,11 +3873,13 @@ msgid ""
 "OpenElec Applications reserves the right to cancel, re-name or re-locate the "
 "event or change the dates on which it is held."
 msgstr ""
+"OpenElec Applications förbehåller sig rätten att ställa in, byta namn på "
+"eller flytta evenemanget eller ändra de datum då det hålls."
 
 #. module: event
 #: model:event.event,name:event.event_7
 msgid "OpenWood Collection Online Reveal"
-msgstr "OpenWood-samlingen avtäckts (uppkopplat)"
+msgstr "OpenWood Collection Online Reveal"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__organizer_id
@@ -3798,6 +3893,8 @@ msgid ""
 "Our newest collection will be revealed online! Interact with us on our live "
 "streams!"
 msgstr ""
+"Vår senaste kollektion kommer att visas upp online! Interagera med oss på "
+"våra liveströmmar!"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
@@ -3819,19 +3916,20 @@ msgstr "Telefon"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.attendee_list
 msgid "Phone number"
-msgstr ""
+msgstr "Telefon"
 
 #. module: event
 #: model_terms:event.event,ticket_instructions:event.event_0
 msgid ""
 "Please come <b>at least</b> 30 minutes before the beginning of the event."
 msgstr ""
+"Vänligen kom  <b> minst </b> 30 minuter före starttiden för evenemanget."
 
 #. module: event
 #. odoo-python
 #: code:addons/event/models/res_config_settings.py:0
 msgid "Please enter a valid base64 secret"
-msgstr ""
+msgstr "Ange en giltig base64-hemlighet"
 
 #. module: event
 #. odoo-python
@@ -3843,18 +3941,18 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_barcode.js:0
 msgid "Please, Scan again!"
-msgstr ""
+msgstr "Snälla, skanna igen!"
 
 #. module: event
 #: model_terms:event.event,description:event.event_2
 msgid "Point of Sale (POS), Introduction to report customization."
-msgstr ""
+msgstr "Point of Sale (POS), Introduktion till anpassning av rapporten."
 
 #. module: event
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
 msgid "Print"
-msgstr ""
+msgstr "Skriv ut"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -3865,18 +3963,18 @@ msgstr "Program"
 #. module: event
 #: model_terms:event.event,description:event.event_2
 msgid "Project management, Human resources, Contract management."
-msgstr ""
+msgstr "Projektledning, personalfrågor, kontraktsförvaltning."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__registration_properties
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
 msgid "Properties"
-msgstr ""
+msgstr "Egenskaper"
 
 #. module: event
 #: model_terms:event.event,description:event.event_2
 msgid "Purchase, Sales &amp; Purchase management, Financial accounting."
-msgstr ""
+msgstr "Inköp, försäljning och inköpshantering, finansiell redovisning."
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.attendee_list
@@ -3884,7 +3982,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:event.event_report_template_foldable_badge
 #: model_terms:ir.ui.view,arch_db:event.event_report_template_full_page_ticket
 msgid "QR Code"
-msgstr ""
+msgstr "QR-kod"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_question_answer__question_id
@@ -3892,13 +3990,13 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:event.event_question_view_form
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 msgid "Question"
-msgstr ""
+msgstr "Fråga"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_question__question_type
 #: model:ir.model.fields,field_description:event.field_event_registration_answer__question_type
 msgid "Question Type"
-msgstr ""
+msgstr "Typ av fråga"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__question_ids
@@ -3907,18 +4005,18 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:event.view_event_registration_form
 #: model_terms:ir.ui.view,arch_db:event.view_event_type_form
 msgid "Questions"
-msgstr ""
+msgstr "Frågor och svar"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings__module_website_event_track_quiz
 msgid "Quiz on Tracks"
-msgstr ""
+msgstr "Frågesport om spår"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__rating_ids
 #: model:ir.model.fields,field_description:event.field_event_registration__rating_ids
 msgid "Ratings"
-msgstr ""
+msgstr "Betyg"
 
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_event__kanban_state__done
@@ -3930,6 +4028,8 @@ msgstr "Klar för nästa etapp"
 #: code:addons/event/static/src/js/tours/event_tour.js:0
 msgid "Ready to <b>organize events</b> in a few minutes? Let's get started!"
 msgstr ""
+"Är du redo att <b>organisera evenemang</b> på några minuter? Låt oss komma "
+"igång!"
 
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_registration__state__open
@@ -3937,7 +4037,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:event.view_event_registration_tree
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
 msgid "Registered"
-msgstr ""
+msgstr "Registrerad"
 
 #. module: event
 #. odoo-python
@@ -3958,14 +4058,14 @@ msgstr "Anmälan"
 #: model_terms:ir.ui.view,arch_db:event.view_event_registration_tree
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
 msgid "Registration Date"
-msgstr "Registreringsdatum"
+msgstr "Anmälningsdatum"
 
 #. module: event
 #: model:ir.ui.menu,name:event.menu_event_registration_desk
 #: model:res.groups,name:event.group_event_registration_desk
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 msgid "Registration Desk"
-msgstr ""
+msgstr "Reception"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__end_sale_datetime
@@ -3990,7 +4090,7 @@ msgstr "Anmälningsbrev"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__registration_properties_definition
 msgid "Registration Properties"
-msgstr ""
+msgstr "Egenskaper för registrering"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__start_sale_datetime
@@ -4016,7 +4116,7 @@ msgstr "Anmälan öppen"
 #. module: event
 #: model:ir.actions.act_window,name:event.event_registration_action_stats_from_event
 msgid "Registration statistics"
-msgstr ""
+msgstr "Anmälningsstatistik"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__registration_ids
@@ -4035,7 +4135,7 @@ msgstr ""
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__event_registrations_started
 msgid "Registrations started"
-msgstr ""
+msgstr "Anmälningsstart"
 
 #. module: event
 #. odoo-python
@@ -4069,7 +4169,7 @@ msgstr "Ansvarig användare"
 #. module: event
 #: model:ir.actions.report,name:event.action_report_event_registration_responsive_html_ticket
 msgid "Responsive Html Full Page Ticket"
-msgstr ""
+msgstr "Responsiv Html Full Page Ticket"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_question_view_search
@@ -4079,7 +4179,7 @@ msgstr ""
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_report_template_formatted_event_address
 msgid "Rue de la Paix 123"
-msgstr ""
+msgstr "Rue de la Paix 123"
 
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_mail__mail_state__running
@@ -4096,7 +4196,7 @@ msgstr "SMS leveransfel"
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_barcode.xml:0
 msgid "Scan or Tap"
-msgstr ""
+msgstr "Skanna eller tryck på"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
@@ -4115,6 +4215,8 @@ msgid ""
 "Schedule and organize your events: handle registrations, send automated "
 "confirmation emails, sell tickets, etc."
 msgstr ""
+"Planera och organisera dina evenemang: hantera registreringar, skicka "
+"automatiska bekräftelsemeddelanden, sälj biljetter osv."
 
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_mail__mail_state__scheduled
@@ -4124,7 +4226,7 @@ msgstr "Planerad"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail_registration__scheduled_date
 msgid "Scheduled Time"
-msgstr ""
+msgstr "Schemalagd tid"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__mail_registration_ids
@@ -4140,42 +4242,43 @@ msgstr ""
 #: model_terms:event.event,description:event.event_5
 msgid "Seasoned Hockey Fans and curious people, this tournament is for you!"
 msgstr ""
+"Erfarna hockeyfans och nyfikna människor, den här turneringen är för dig!"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Secret"
-msgstr ""
+msgstr "Hemlighet"
 
 #. module: event
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_barcode.xml:0
 msgid "Select Attendee"
-msgstr ""
+msgstr "Välj deltagare"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_registration_answer_view_tree
 msgid "Selected answer"
-msgstr ""
+msgstr "Valt svar"
 
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_question__question_type__simple_choice
 msgid "Selection"
-msgstr ""
+msgstr "Urval"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Sell tickets on your website"
-msgstr "Sälj biljetter på din Webbplats"
+msgstr "Sälj biljetter på din webbplats"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Sell tickets with Point of Sale"
-msgstr ""
+msgstr "Sälj biljetter med Point of Sale"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Sell tickets with sales orders"
-msgstr "Sälj biljetter på kundordrar"
+msgstr "Sälj biljetter med kundordrar"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__notification_type
@@ -4201,16 +4304,20 @@ msgstr "Skickat"
 msgid ""
 "Sent automatically to attendees if there is a reminder defined on the event"
 msgstr ""
+"Skickas automatiskt till deltagarna om det finns en påminnelse definierad i "
+"evenemanget"
 
 #. module: event
 #: model:mail.template,description:event.event_registration_mail_template_badge
 msgid "Sent automatically to someone after they registered to an event"
 msgstr ""
+"Skickas automatiskt till någon efter att de registrerat sig till ett "
+"evenemang"
 
 #. module: event
 #: model:mail.template,description:event.event_subscription
 msgid "Sent to attendees after registering to an event"
-msgstr ""
+msgstr "Skickas till deltagare efter registrering till ett evenemang"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__sequence
@@ -4236,6 +4343,9 @@ msgid ""
 "Shangai Pterocarpus Furniture brings honesty and seriousness to wood "
 "industry while helping customers deal with trees, flowers and fungi."
 msgstr ""
+"Shangai Pterocarpus Furniture tillför ärlighet och seriositet till "
+"träindustrin samtidigt som de hjälper kunderna att hantera träd, blommor och "
+"svampar."
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_search
@@ -4304,7 +4414,7 @@ msgstr "Källa"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__specific_question_ids
 msgid "Specific Questions"
-msgstr ""
+msgstr "Specifika frågor"
 
 #. module: event
 #: model:event.tag,name:event.event_tag_category_2_tag_3
@@ -4316,7 +4426,7 @@ msgstr "Sport"
 #: model:ir.model.fields,field_description:event.field_event_event__stage_id
 #: model_terms:ir.ui.view,arch_db:event.view_event_search
 msgid "Stage"
-msgstr "Etapp"
+msgstr "Läge"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_stage__name
@@ -4326,7 +4436,7 @@ msgstr "Namn på etapp"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_stage__description
 msgid "Stage description"
-msgstr "Etappbeskrivning"
+msgstr "Lägebeskrivning"
 
 #. module: event
 #: model:event.event.ticket,name:event.event_0_ticket_1
@@ -4361,19 +4471,19 @@ msgstr ""
 #: model:ir.model.fields,field_description:event.field_res_partner__static_map_url
 #: model:ir.model.fields,field_description:event.field_res_users__static_map_url
 msgid "Static Map Url"
-msgstr ""
+msgstr "Url för statisk karta"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_partner__static_map_url_is_valid
 #: model:ir.model.fields,field_description:event.field_res_users__static_map_url_is_valid
 msgid "Static Map Url Is Valid"
-msgstr ""
+msgstr "Url för statisk karta är giltig"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_question_view_list
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 msgid "Stats"
-msgstr ""
+msgstr "Statistik"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__state
@@ -4399,12 +4509,12 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
 msgid "Successfully registered!"
-msgstr ""
+msgstr "Framgångsrikt registrerad!"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration_answer__value_answer_id
 msgid "Suggested answer"
-msgstr ""
+msgstr "Föreslaget svar"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_tag__color
@@ -4412,6 +4522,8 @@ msgid ""
 "Tag color. No color means no display in kanban or front-end, to distinguish "
 "internal tags from public categorization tags."
 msgstr ""
+"Färg på tagg. Ingen färg innebär ingen visning i kanban eller front-end, för "
+"att skilja interna taggar från offentliga kategoriseringstaggar."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__tag_ids
@@ -4424,12 +4536,12 @@ msgstr "Etiketter"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
 msgid "Taken"
-msgstr ""
+msgstr "Valda"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__seats_taken
 msgid "Taken Seats"
-msgstr ""
+msgstr "Upptagna platser"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__event_type_id
@@ -4443,12 +4555,12 @@ msgstr "Mall"
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_question__question_type__text_box
 msgid "Text Input"
-msgstr ""
+msgstr "Textinmatning"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration_answer__value_text_box
 msgid "Text answer"
-msgstr ""
+msgstr "Text svar"
 
 #. module: event
 #: model:event.event,subtitle:event.event_1
@@ -4456,6 +4568,8 @@ msgid ""
 "The Great Reno Balloon Race is the world's largest free hot-air ballooning "
 "event."
 msgstr ""
+"Great Reno Balloon Race är världens största gratis evenemang för "
+"varmluftsballongflygningar."
 
 #. module: event
 #: model_terms:event.event,description:event.event_5
@@ -4463,6 +4577,8 @@ msgid ""
 "The best Hockey teams of the country will compete for the national Hockey "
 "trophy."
 msgstr ""
+"De bästa hockeylagen i landet kommer att tävla om den nationella "
+"hockeytrofén."
 
 #. module: event
 #: model_terms:event.event,description:event.event_1
@@ -4470,12 +4586,14 @@ msgid ""
 "The best aeronauts of the world will gather on this event to offer you the "
 "most spectacular show."
 msgstr ""
+"Världens bästa aeronauter kommer att samlas för att bjuda dig på den mest "
+"spektakulära showen."
 
 #. module: event
 #. odoo-python
 #: code:addons/event/models/event_event.py:0
 msgid "The closing date cannot be earlier than the beginning date."
-msgstr ""
+msgstr "Slutdatumet kan inte vara tidigare än startdatumet."
 
 #. module: event
 #: model:event.stage,description:event.event_stage_announced
@@ -4488,6 +4606,9 @@ msgid ""
 "The event is sold out if no more seats are available on event. If ticketing "
 "is used and all tickets are sold out, the event will be sold out."
 msgstr ""
+"Evenemanget är slutsålt om inga fler platser finns tillgängliga på "
+"evenemanget. Om biljettförsäljning används och alla biljetter är slutsålda, "
+"kommer evenemanget att vara slutsålt."
 
 #. module: event
 #: model_terms:event.event,description:event.event_7
@@ -4495,6 +4616,7 @@ msgid ""
 "The finest OpenWood furnitures are coming to your house in a brand new "
 "collection"
 msgstr ""
+"De finaste OpenWood-möblerna kommer hem till dig i en helt ny kollektion"
 
 #. module: event
 #. odoo-python
@@ -4513,6 +4635,9 @@ msgid ""
 "registrations linked to them:\n"
 "- %s"
 msgstr ""
+"Följande biljetter kan inte raderas så länge de har en eller flera "
+"registreringar kopplade till sig:\n"
+"- %s"
 
 #. module: event
 #. odoo-python
@@ -4540,7 +4665,7 @@ msgstr ""
 #. module: event
 #: model_terms:event.event,description:event.event_1
 msgid "The safety of our attendees and our aeronauts comes first!"
-msgstr ""
+msgstr "Säkerheten för våra deltagare och våra flygförare kommer i första hand!"
 
 #. module: event
 #. odoo-python
@@ -4549,6 +4674,8 @@ msgid ""
 "The stop date cannot be earlier than the start date. Please check ticket %"
 "(ticket_name)s"
 msgstr ""
+"Stoppdatumet kan inte vara tidigare än startdatumet. Vänligen kontrollera "
+"biljett %(ticket_name)s"
 
 #. module: event
 #. odoo-python
@@ -4577,7 +4704,7 @@ msgstr ""
 #. module: event
 #: model:ir.model.constraint,message:event.constraint_event_registration_answer_value_check
 msgid "There must be a suggested value or a text value."
-msgstr ""
+msgstr "Det måste finnas ett föreslaget värde eller ett textvärde."
 
 #. module: event
 #. odoo-python
@@ -4594,6 +4721,9 @@ msgid ""
 "methodology or developments. Be there and see directly from the source the "
 "features of the version 12!"
 msgstr ""
+"Detta evenemang är också ett tillfälle att visa upp våra partners "
+"fallstudier, metodik eller utveckling. Var där och se funktionerna i version "
+"12 direkt från källan!"
 
 #. module: event
 #: model_terms:event.event,description:event.event_7
@@ -4603,12 +4733,16 @@ msgid ""
 "        It will require a good Internet connection to get the best video "
 "quality."
 msgstr ""
+"Detta evenemang är helt online och GRATIS, om du har betalat för biljetter, "
+"bör du få en återbetalning.<br>\n"
+"        Det kommer att krävas en bra internetanslutning för att få bästa "
+"videokvalitet."
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__ticket_instructions
 #: model:ir.model.fields,help:event.field_event_type__ticket_instructions
 msgid "This information will be printed on your tickets."
-msgstr ""
+msgstr "Denna information kommer att tryckas på dina biljetter."
 
 #. module: event
 #. odoo-python
@@ -4628,6 +4762,9 @@ msgid ""
 "This is the perfect place for spending a nice day with your family, we "
 "guarantee you will be leaving with beautiful everlasting memories!"
 msgstr ""
+"Detta är den perfekta platsen för att tillbringa en trevlig dag med "
+"familjen, vi garanterar att ni kommer att åka härifrån med vackra minnen som "
+"varar för evigt!"
 
 #. module: event
 #: model_terms:event.event,description:event.event_3
@@ -4635,6 +4772,9 @@ msgid ""
 "This is the perfect place for spending a nice time with your friends while "
 "listening to some of the most iconic rock songs of all times!"
 msgstr ""
+"Detta är den perfekta platsen för att tillbringa en trevlig stund med dina "
+"vänner medan du lyssnar på några av de mest ikoniska rocklåtarna genom "
+"tiderna!"
 
 #. module: event
 #. odoo-python
@@ -4651,13 +4791,13 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
 msgid "This ticket is for another event!"
-msgstr ""
+msgstr "Denna biljett gäller för ett annat evenemang!"
 
 #. module: event
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
 msgid "This ticket is not for an ongoing event"
-msgstr ""
+msgstr "Denna biljett är inte för ett pågående evenemang"
 
 #. module: event
 #. odoo-python
@@ -4665,7 +4805,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:event.event_event_ticket_view_form_from_event
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
 msgid "Ticket"
-msgstr "Ärende"
+msgstr "Biljett"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__ticket_instructions
@@ -4673,7 +4813,7 @@ msgstr "Ärende"
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 #: model_terms:ir.ui.view,arch_db:event.view_event_type_form
 msgid "Ticket Instructions"
-msgstr ""
+msgstr "Biljettinstruktioner"
 
 #. module: event
 #. odoo-javascript
@@ -4682,18 +4822,18 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:event.event_event_ticket_form_view
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
 msgid "Ticket Type"
-msgstr "Ärendetyp"
+msgstr "Biljettyp"
 
 #. module: event
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
 msgid "Ticket already scanned!"
-msgstr ""
+msgstr "Biljetten är redan skannad!"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.attendee_list
 msgid "Ticket type"
-msgstr ""
+msgstr "Ticket type"
 
 #. module: event
 #. odoo-javascript
@@ -4702,6 +4842,7 @@ msgid ""
 "Ticket types allow you to distinguish your attendees. Let's <b>create</b> a "
 "new one."
 msgstr ""
+"Med biljettyper kan du särskilja dina deltagare. Låt oss <b>skapa</b> en ny."
 
 #. module: event
 #. odoo-javascript
@@ -4717,39 +4858,39 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 #: model_terms:ir.ui.view,arch_db:event.view_event_type_form
 msgid "Tickets"
-msgstr "Ärenden"
+msgstr "Biljetter"
 
 #. module: event
 #: model_terms:event.event,ticket_instructions:event.event_0
 msgid "Tickets can be printed or scanned directly from your phone."
-msgstr ""
+msgstr "Biljetter kan skrivas ut eller skannas direkt från din telefon."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings__module_pos_event
 msgid "Tickets with PoS"
-msgstr ""
+msgstr "Biljetter med PoS"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings__module_event_sale
 msgid "Tickets with Sale"
-msgstr ""
+msgstr "Biljetter till försäljning"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_type__default_timezone
 #: model_terms:ir.ui.view,arch_db:event.view_event_slot_form
 #: model_terms:ir.ui.view,arch_db:event.view_event_slot_multi_create_form
 msgid "Timezone"
-msgstr "Tidzon"
+msgstr "Tidszon"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_question__title
 msgid "Title"
-msgstr ""
+msgstr "Titel"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_slot_tree
 msgid "To"
-msgstr ""
+msgstr "Till"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_search
@@ -4766,7 +4907,7 @@ msgstr "Totalt"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_tree
 msgid "Total Attendees"
-msgstr ""
+msgstr "Totalt antal deltagare"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_event_ticket_view_tree_from_event
@@ -4781,7 +4922,7 @@ msgstr "Totalt antal anmälningar för detta evenemang"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings__module_website_event_track
 msgid "Tracks and Agenda"
-msgstr "Spår och program"
+msgstr "Spår och kalender"
 
 #. module: event
 #: model:event.type,name:event.event_type_1
@@ -4794,16 +4935,18 @@ msgid ""
 "Tree Dealers brings honesty and seriousness to wood industry while helping "
 "customers deal with trees, flowers and fungi."
 msgstr ""
+"Tree Dealers ger träindustrin ärlighet och seriositet samtidigt som de "
+"hjälper kunderna att hantera träd, blommor och svampar."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_type_mail__interval_type
 msgid "Trigger"
-msgstr "Trigger"
+msgstr "Utlösare"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__interval_type
 msgid "Trigger "
-msgstr "Utlösare"
+msgstr "Utlösare "
 
 #. module: event
 #: model:event.tag.category,name:event.event_tag_category_3
@@ -4817,7 +4960,7 @@ msgstr "Typ"
 #: model:ir.model.fields,help:event.field_event_event__activity_exception_decoration
 #: model:ir.model.fields,help:event.field_event_registration__activity_exception_decoration
 msgid "Type of the exception activity on record."
-msgstr "Typ av undantagsaktivitet i posten."
+msgstr "Typ av undantagsaktivitet som har registrerats."
 
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_registration__state__draft
@@ -4834,6 +4977,11 @@ msgid ""
 "Attended: registrations for which the attendee attended the event\n"
 "Cancelled: registrations cancelled manually"
 msgstr ""
+"Obekräftade: registreringar i vänteläge som väntar på en åtgärd ("
+"specialfall, särskilt med försäljningsstatus)\n"
+"Registrerade: registreringar som anses ha tagits av en kund\n"
+"Närvarade: registreringar för vilka deltagaren närvarade vid evenemanget\n"
+"Avbokade: registreringar som avbokats manuellt"
 
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.action_event_mail
@@ -4841,17 +4989,19 @@ msgid ""
 "Under this technical menu you will find all scheduled communication related "
 "to your events."
 msgstr ""
+"Under denna tekniska meny hittar du all planerad kommunikation som rör dina "
+"evenemang."
 
 #. module: event
 #: model_terms:event.event,description:event.event_2
 msgid "Understand the various modules;"
-msgstr "Förstå den enskilda modulerna"
+msgstr "Förstå de enskilda modulerna;"
 
 #. module: event
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
 msgid "Undo"
-msgstr ""
+msgstr "Ångra"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__interval_unit
@@ -4862,7 +5012,7 @@ msgstr "Enhet"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_slot_tree
 msgid "Until"
-msgstr ""
+msgstr "Till"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_search
@@ -4883,28 +5033,30 @@ msgstr ""
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__use_barcode
 msgid "Use Barcode"
-msgstr ""
+msgstr "Använd streckkod"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings__use_event_barcode
 msgid "Use Event Barcode"
-msgstr ""
+msgstr "Använd streckkod för evenemang"
 
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.event_tag_category_action_tree
 msgid "Use Event Tag Categories to classify and organize your event tags."
 msgstr ""
+"Använd kategorier för händelsetaggar för att klassificera och organisera "
+"dina händelsetaggar."
 
 #. module: event
 #. odoo-javascript
 #: code:addons/event/static/src/js/tours/event_tour.js:0
 msgid "Use the <b>breadcrumbs</b> to go back to your kanban overview."
-msgstr ""
+msgstr "Använd <b>brödsmulor</b> för att gå tillbaka till din Kanban-översikt."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__seats_used
 msgid "Used Seats"
-msgstr "Sålda platser"
+msgstr "Använda sittplatser"
 
 #. module: event
 #: model:res.groups,name:event.group_event_user
@@ -4923,17 +5075,17 @@ msgstr "VIP"
 #: model:ir.model.fields,field_description:event.field_event_event__address_id
 #: model_terms:ir.ui.view,arch_db:event.view_event_search
 msgid "Venue"
-msgstr "Plats"
+msgstr "Mötesplats"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__address_inline
 msgid "Venue (formatted for one line uses)"
-msgstr ""
+msgstr "Mötesplats (formaterad för användning på en rad)"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 msgid "Visible to all"
-msgstr ""
+msgstr "Synlig för alla"
 
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.act_event_registration_from_event
@@ -4943,17 +5095,19 @@ msgid ""
 "Wait until Attendees register to your Event or create their registrations "
 "manually."
 msgstr ""
+"Vänta tills deltagarna registrerar sig för ditt evenemang eller skapa deras "
+"registreringar manuellt."
 
 #. module: event
 #: model_terms:event.event,description:event.event_2
 msgid "Warehouse management, Manufacturing (MRP) &amp; Sales, Import/Export."
-msgstr ""
+msgstr "Lagerhantering, tillverkning (MRP) &amp; försäljning, import/export."
 
 #. module: event
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_barcode.js:0
 msgid "Warning"
-msgstr ""
+msgstr "Varning"
 
 #. module: event
 #: model_terms:event.event,description:event.event_1
@@ -4963,6 +5117,8 @@ msgid ""
 "We reserve the right to cancel, re-name or re-locate the event or change the "
 "dates on which it is held in case the weather fails us."
 msgstr ""
+"Vi förbehåller oss rätten att ställa in, byta namn på eller flytta "
+"evenemanget eller ändra de datum då det hålls om vädret inte tillåter det."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__website_message_ids
@@ -5002,12 +5158,12 @@ msgstr "Om evenemanget har börjat"
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event_ticket__sale_available
 msgid "Whether it is possible to sell these tickets"
-msgstr ""
+msgstr "Om det är möjligt att sälja dessa biljetter"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event_ticket__is_sold_out
 msgid "Whether seats are not available for this ticket."
-msgstr ""
+msgstr "Inga platser är tillgängliga för denna biljett."
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_slot__is_sold_out
@@ -5017,14 +5173,14 @@ msgstr ""
 #. module: event
 #: model:event.event.ticket,description:event.event_0_ticket_2
 msgid "You are truly among the best."
-msgstr ""
+msgstr "Du är verkligen bland de bästa."
 
 #. module: event
 #. odoo-python
 #: code:addons/event/models/event_question.py:0
 msgid ""
 "You cannot change the question type of a question that already has answers!"
-msgstr ""
+msgstr "Du kan inte ändra frågetyp för en fråga som redan har svar!"
 
 #. module: event
 #. odoo-python
@@ -5045,42 +5201,42 @@ msgstr ""
 #: code:addons/event/models/event_question_answer.py:0
 msgid ""
 "You cannot delete an answer that has already been selected by attendees."
-msgstr ""
+msgstr "Du kan inte ta bort ett svar som redan har valts av deltagarna."
 
 #. module: event
 #: model:mail.template,subject:event.event_registration_mail_template_badge
 msgid "Your badge for {{ object.event_id.name }}"
-msgstr ""
+msgstr "Din bricka för {{ object.event_id.name }}"
 
 #. module: event
 #: model:mail.template,subject:event.event_subscription
 msgid "Your registration at {{ object.event_id.name }}"
-msgstr ""
+msgstr "Din registrering på {{ object.event_id.name }}"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_tag_category_view_form
 msgid "e.g. \"12-16 years old\""
-msgstr ""
+msgstr "t.ex. \"12-16 år gammal\""
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_tag_category_view_form
 msgid "e.g. \"Age Category\""
-msgstr ""
+msgstr "t.ex. \"Ålderskategori\""
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_registration_form
 msgid "e.g. \"Azure Interior\""
-msgstr ""
+msgstr "t.ex. \"Azure interiör\""
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_question_view_form
 msgid "e.g. \"Do you have any diet restrictions?\""
-msgstr ""
+msgstr "t.ex. \"Har du några dietrestriktioner?\""
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_stage_view_form
 msgid "e.g. \"Promoting\""
-msgstr ""
+msgstr "t.ex. \"främjande\""
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
@@ -5091,23 +5247,23 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:event.event_event_view_form_quick_create
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 msgid "e.g. Conference for Architects"
-msgstr "e.g. konferens för arkitekter"
+msgstr "t.ex. konferens för arkitekter"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 #: model_terms:ir.ui.view,arch_db:event.view_event_type_form
 msgid "e.g. How to get to your event, door closing time, ..."
-msgstr ""
+msgstr "t.ex. hur man tar sig till evenemanget, tid för att stänga dörren, ..."
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_type_form
 msgid "e.g. Online Conferences"
-msgstr ""
+msgstr "t.ex. onlinekonferenser"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_event_ticket_form_view
 msgid "e.g. VIP Ticket"
-msgstr ""
+msgstr "t.ex. VIP-biljett"
 
 #. module: event
 #. odoo-python
@@ -5123,7 +5279,7 @@ msgstr ""
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_report_full_page_ticket_layout
 msgid "https://www.example.com"
-msgstr ""
+msgstr "https://www.example.com"
 
 #. module: event
 #. odoo-python
@@ -5152,7 +5308,7 @@ msgstr "på %(date)s"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_report_full_page_ticket_layout
 msgid "organizer@email.com"
-msgstr ""
+msgstr "organizer@email.com"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__event_registrations_started
@@ -5160,11 +5316,13 @@ msgid ""
 "registrations have started if the current datetime is after the earliest "
 "starting date of tickets."
 msgstr ""
+"registreringar har startat om den aktuella datumen är efter det tidigaste "
+"startdatumet för biljetter."
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_event_ticket_view_kanban_from_event
 msgid "reserved"
-msgstr ""
+msgstr "reserverad"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
@@ -5187,7 +5345,7 @@ msgstr "imorgon"
 #. module: event
 #: model:mail.template,subject:event.event_reminder
 msgid "{{ object.event_id.name }}: {{ object.event_date_range }}"
-msgstr ""
+msgstr "{{ object.event_id.name }}: {{ object.event_date_range }}"
 
 #~ msgid ""
 #~ "<i class=\"fa fa-check fa-3x\" role=\"img\" aria-label=\"Confirm button\" "

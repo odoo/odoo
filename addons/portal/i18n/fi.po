@@ -1,6 +1,6 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* portal
+# * portal
 #
 # Translators:
 # Tommi Rintala <tommi.rintala@gmail.com>, 2022
@@ -24,20 +24,22 @@
 # Konsta Aavaranta, 2023
 # Jesse Järvi <me@jessejarvi.net>, 2023
 # Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023
-#
+# "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-09-11 13:59+0000\n"
-"PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023\n"
-"Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
+"PO-Revision-Date: 2025-09-16 15:27+0000\n"
+"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
+"Language-Team: Finnish <https://translate.odoo.com/projects/odoo-19/portal/"
+"fi/>\n"
 "Language: fi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
@@ -48,7 +50,7 @@ msgstr "\" vahvistamaan toimintasi."
 #. odoo-javascript
 #: code:addons/portal/static/src/interactions/sidebar.js:0
 msgid "%s days overdue"
-msgstr ""
+msgstr "%s päivää yli määräajan"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
@@ -71,32 +73,37 @@ msgid ""
 "<i class=\"fa fa-fw fa-id-card-o me-1 small text-primary-emphasis\"/> My "
 "Account"
 msgstr ""
+"<i class=\"fa fa-fw fa-id-card-o me-1 small text-primary-emphasis\"/> Oma "
+"tilini"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.user_dropdown
 msgid ""
 "<i class=\"fa fa-fw fa-sign-out me-1 small text-primary-emphasis\"/> Logout"
 msgstr ""
+"<i class=\"fa fa-fw fa-sign-out me-1 small text-primary-emphasis\"/> "
+"Kirjaudu ulos"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.user_dropdown
 msgid "<i class=\"fa fa-fw fa-th me-1 small text-primary-emphasis\"/> Apps"
 msgstr ""
+"<i class=\"fa fa-fw fa-th me-1 small text-primary-emphasis\"/> Sovellukset"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.side_content
 msgid "<i class=\"fa fa-pencil\"/> Edit information"
-msgstr ""
+msgstr "<i class=\"fa fa-pencil\"/> Muokkaa tietoja"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_footer
 msgid "<i class=\"fw-light fa fa-angle-left me-2\"/>Discard"
-msgstr ""
+msgstr "<i class=\"fw-light fa fa-angle-left me-2\"/>Peruuta"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_back_in_edit_mode
 msgid "<i class=\"oi oi-arrow-right me-1\"/>Back to edit mode"
-msgstr ""
+msgstr "<i class=\"oi oi-arrow-right me-1\"/>Takaisin muokkaustilaan"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.record_pager
@@ -104,6 +111,8 @@ msgid ""
 "<i class=\"oi oi-chevron-left\" role=\"img\" aria-label=\"Previous\" "
 "title=\"Previous\"/>"
 msgstr ""
+"<i class=\"oi oi-chevron-left\" role=\"img\" aria-label=\"Edellinen\" title="
+"\"Edellinen\"/>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.record_pager
@@ -111,6 +120,8 @@ msgid ""
 "<i class=\"oi oi-chevron-right\" role=\"img\" aria-label=\"Next\" "
 "title=\"Next\"/>"
 msgstr ""
+"<i class=\"oi oi-chevron-right\" role=\"img\" aria-label=\"Seuraava\" title="
+"\"Seuraava\"/>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.my_addresses
@@ -127,12 +138,12 @@ msgstr ""
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_form_fields
 msgid "<option value=\"\">Country...</option>"
-msgstr ""
+msgstr "<option value=\"\">Maa...</option>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_form_fields
 msgid "<option value=\"\">State / Province...</option>"
-msgstr ""
+msgstr "<option value=\"\">Osavaltio / maakunta...</option>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_form_fields
@@ -145,6 +156,13 @@ msgid ""
 "                            operation.\n"
 "                        </small>"
 msgstr ""
+"<small class=\"form-text text-muted\">\n"
+"                            ALV-numeron muuttaminen ei ole sallittua sen "
+"jälkeen, kun\n"
+"                            tilillesi on jaettu asiakirjoja. Ota meihin "
+"suoraan yhteyttä tämän\n"
+"                            muutoksen tekemiseksi.\n"
+"                        </small>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_form_fields
@@ -154,6 +172,10 @@ msgid ""
 "company account.\n"
 "                        </small>"
 msgstr ""
+"<small class=\"form-text text-muted\">\n"
+"                            ALV-numero voidaan päivittää vain yritystilin "
+"asetuksissa.\n"
+"                        </small>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_form_fields
@@ -165,6 +187,12 @@ msgid ""
 "                    operation.\n"
 "                </small>"
 msgstr ""
+"<small class=\"form-text text-muted\">\n"
+"                    Maan vaihtaminen ei ole sallittua sen jälkeen, kun\n"
+"                    tilillesi on jaettu asiakirjoja. Ota meihin suoraan "
+"yhteyttä tämän muutoksen\n"
+"                    tekemiseksi.\n"
+"                </small>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.pager
@@ -172,6 +200,8 @@ msgid ""
 "<span class=\"oi oi-chevron-left\" role=\"img\" aria-label=\"Previous\" "
 "title=\"Previous\"/>"
 msgstr ""
+"<span class=\"oi oi-chevron-left\" role=\"img\" aria-label=\"Previous\" "
+"title=\"Previous\"/>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.pager
@@ -179,11 +209,13 @@ msgid ""
 "<span class=\"oi oi-chevron-right\" role=\"img\" aria-label=\"Next\" "
 "title=\"Next\"/>"
 msgstr ""
+"<span class=\"oi oi-chevron-right\" role=\"img\" aria-label=\"Next\" title="
+"\"Next\"/>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_footer
 msgid "<span class=\"px-3\">or</span>"
-msgstr ""
+msgstr "<span class=\"px-3\">tai</span>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_searchbar
@@ -263,7 +295,7 @@ msgstr "Lisää sisältöä joka näytetään sähköpostissa"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_home
 msgid "Add, remove or modify your addresses"
-msgstr ""
+msgstr "Lisää, poista tai muuta osoitteita"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
@@ -273,23 +305,23 @@ msgstr "Lisätty"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_management
 msgid "Address Management"
-msgstr ""
+msgstr "Osoitteiden hallinta"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_breadcrumbs
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_home
 msgid "Addresses"
-msgstr ""
+msgstr "Osoitteet"
 
 #. module: portal
 #: model:ir.model.fields.selection,name:portal.selection__portal_wizard_user__email_state__exist
 msgid "Already Registered"
-msgstr "on jo rekisteröitynyt"
+msgstr "On jo rekisteröitynyt"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_form_fields
 msgid "Apartment, suite, etc."
-msgstr ""
+msgstr "Kerrostaloasunto, huoneisto, jne."
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
@@ -305,13 +337,13 @@ msgstr "Avatar"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_card
 msgid "Billing Address"
-msgstr ""
+msgstr "Laskutusosoite"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_management
 #: model_terms:ir.ui.view,arch_db:portal.my_addresses
 msgid "Billing address"
-msgstr ""
+msgstr "Laskutusosoite"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
@@ -341,6 +373,8 @@ msgid ""
 "Changing your country is not allowed once document(s) have been issued for "
 "your account. Please contact us directly for this operation."
 msgstr ""
+"Maan vaihtaminen ei ole sallittua sen jälkeen, kun tilillesi on jaettu "
+"asiakirjoja. Ota meihin suoraan yhteyttä tämän muutoksen tekemiseksi."
 
 #. module: portal
 #. odoo-javascript
@@ -381,7 +415,7 @@ msgstr "Asetukset"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_home
 msgid "Configure your connection parameters"
-msgstr ""
+msgstr "Määrittele, miten haluat kirjautua"
 
 #. module: portal
 #. odoo-javascript
@@ -399,7 +433,7 @@ msgstr "Vahvista salasana"
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_home
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 msgid "Connection &amp; Security"
-msgstr ""
+msgstr "Yhteys &amp; Turvallisuus"
 
 #. module: portal
 #: model:ir.model,name:portal.model_res_partner
@@ -408,7 +442,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_contact
 #: model_terms:ir.ui.view,arch_db:portal.side_content
 msgid "Contact"
-msgstr "Kontakti"
+msgstr "Yhteystiedot"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details
@@ -434,7 +468,7 @@ msgstr "Maa"
 #. module: portal
 #: model:ir.model,website_form_label:portal.model_res_partner
 msgid "Create a Customer"
-msgstr ""
+msgstr "Luo asiakas"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_share__create_uid
@@ -463,7 +497,7 @@ msgstr "Asiakasportaalin osoite"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.res_config_settings_view_form
 msgid "Customers can generate API Keys"
-msgstr ""
+msgstr "Asiakkaat voivat luoda API-avaimia"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_share_template
@@ -484,13 +518,13 @@ msgstr "Poista käyttäjätunnus"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_card
 msgid "Delivery Address"
-msgstr ""
+msgstr "Toimitusosoite"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_management
 #: model_terms:ir.ui.view,arch_db:portal.my_addresses
 msgid "Delivery address"
-msgstr ""
+msgstr "Toimitusosoite"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
@@ -545,7 +579,7 @@ msgstr "Näyttönimi"
 #. odoo-javascript
 #: code:addons/portal/static/src/interactions/sidebar.js:0
 msgid "Due in %s days"
-msgstr ""
+msgstr "Erääntyy %s päivässä"
 
 #. module: portal
 #. odoo-javascript
@@ -556,7 +590,7 @@ msgstr "Eräpäivä tänään"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_card
 msgid "Edit this address"
-msgstr ""
+msgstr "Muokkaa osoitetta"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__email
@@ -583,7 +617,7 @@ msgstr "Kirjoita avaimen kuvaus ja tarkoitus."
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 msgid "Expiration Date"
-msgstr ""
+msgstr "Viim. voimassaolo"
 
 #. module: portal
 #. odoo-javascript
@@ -595,12 +629,12 @@ msgstr "Unohtuiko salasana?"
 #. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_security.xml:0
 msgid "Give a duration for the key's validity"
-msgstr ""
+msgstr "Anna avaimen voimassaoloaika"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 msgid "Go Back"
-msgstr ""
+msgstr "Takaisin"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
@@ -631,14 +665,14 @@ msgid ""
 "                Your login is still necessary for interactive usage."
 msgstr ""
 "Tässä on uusi API-avaimesi, käytä sitä salasanan sijasta RPC-yhteyttä "
-"varten.\n"
-"                Sisäänkirjautuminen on edelleen tarpeen interaktiiviseen "
+"muodostaessa.\n"
+"                Sisäänkirjautuminen vaaditaan edelleen interaktiiviseen "
 "käyttöön."
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_breadcrumbs
 msgid "Home"
-msgstr "Etusivu"
+msgstr "Aloitussivu"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_ir_http__id
@@ -664,11 +698,14 @@ msgid ""
 "backend. If you wish to change your name or email address, please do so in "
 "the account settings or contact your administrator."
 msgstr ""
+"Jos teet tilauksen ulkopuoliselle henkilölle, tee tilaus taustajärjestelmän "
+"kautta. Jos haluat muuttaa nimeäsi tai sähköpostiosoitettasi, tee se tilin "
+"asetuksissa tai ota yhteyttä ylläpitäjääsi."
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_form_fields
 msgid "If you want to modify it, update"
-msgstr ""
+msgstr "Jos haluat muokata sitä, päivitä"
 
 #. module: portal
 #. odoo-javascript
@@ -712,7 +749,7 @@ msgstr "Kutsuviesti"
 #. odoo-python
 #: code:addons/portal/wizard/portal_share.py:0
 msgid "Invitation to access %s"
-msgstr ""
+msgstr "Kutsu pääsylle %s"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__is_internal
@@ -767,7 +804,7 @@ msgstr "Linkki"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 msgid "Log out from all devices"
-msgstr ""
+msgstr "Kirjaudu ulos kaikista laitteista"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_card
@@ -786,8 +823,8 @@ msgid ""
 "Model %(model_name)s does not support token signature, as it does not have %"
 "(field_name)s field."
 msgstr ""
-"Malli %(model_name)s ei tue tunnuksen allekirjoitusta, sillä sillä ei ole %"
-"(field_name)s kenttää."
+"Malli %(model_name)s ei tue tunnuksella allekirjoittamista, koska sillä ei "
+"ole %(field_name)s -kenttää."
 
 #. module: portal
 #. odoo-python
@@ -798,12 +835,12 @@ msgstr "Usean yrityksen raportteja ei tueta."
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_layout
 msgid "My account"
-msgstr ""
+msgstr "Oma tilini"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.my_addresses
 msgid "My addresses"
-msgstr ""
+msgstr "Omat osoitteeni"
 
 #. module: portal
 #. odoo-javascript
@@ -843,8 +880,7 @@ msgstr "Odoo Logo"
 #. odoo-python
 #: code:addons/portal/models/res_users_apikeys_description.py:0
 msgid "Only internal and portal users can create API keys"
-msgstr ""
-"Vain sisäiset käyttäjät ja portaalin käyttäjät voivat luoda API-avaimia"
+msgstr "Vain sisäiset käyttäjät ja portaalikäyttäjät voivat luoda API-avaimia"
 
 #. module: portal
 #. odoo-javascript
@@ -903,12 +939,12 @@ msgstr "Portal Mixin"
 #. module: portal
 #: model:ir.model,name:portal.model_portal_share
 msgid "Portal Sharing"
-msgstr "Jako portaalissa"
+msgstr "Jakaminen portaalissa"
 
 #. module: portal
 #: model:ir.model,name:portal.model_portal_wizard_user
 msgid "Portal User Config"
-msgstr "Porttaalikäyttäjän konfigurointi"
+msgstr "Portaalin käyttäjän määritykset"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_record_sidebar
@@ -972,17 +1008,17 @@ msgstr "Evää pääsy"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 msgid "Revoke All Sessions"
-msgstr ""
+msgstr "Peruuta kaikki istunnot"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.my_addresses
 msgid "Same as delivery address"
-msgstr ""
+msgstr "Sama kuin toimitusosoite"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_footer
 msgid "Save Address"
-msgstr ""
+msgstr "Tallenna osoite"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
@@ -1036,7 +1072,7 @@ msgstr "Lähetä"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_contact
 msgid "Send message"
-msgstr ""
+msgstr "Lähetä viesti"
 
 #. module: portal
 #: model:ir.actions.act_window,name:portal.portal_share_action
@@ -1057,7 +1093,7 @@ msgstr "Kirjaudu sisään"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.frontend_layout
 msgid "Skip to Content"
-msgstr ""
+msgstr "Siirry sisältöön"
 
 #. module: portal
 #. odoo-javascript
@@ -1072,7 +1108,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/portal/controllers/portal.py:0
 msgid "Some required fields are empty."
-msgstr "Täytä kaikki vaaditut kentät. Kiitos!"
+msgstr "Täytä kaikki vaaditut kentät."
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_form_fields
@@ -1087,7 +1123,7 @@ msgstr "Tila"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_form_fields
 msgid "Street and Number"
-msgstr ""
+msgstr "Katu ja numero"
 
 #. module: portal
 #. odoo-javascript
@@ -1099,13 +1135,13 @@ msgstr "Kiitos!"
 #. odoo-python
 #: code:addons/portal/controllers/portal.py:0
 msgid "The %(field_name)s is managed on your company account."
-msgstr ""
+msgstr "Kenttää %(field_name)s hallitaan yritystililläsi."
 
 #. module: portal
 #. odoo-python
 #: code:addons/portal/controllers/portal.py:0
 msgid "The %(field_name)s is managed on your main account address."
-msgstr ""
+msgstr "Kenttää %(field_name)s hallitaan pääosoitteessasi."
 
 #. module: portal
 #. odoo-python
@@ -1125,13 +1161,13 @@ msgstr "Liitettä %s ei voi poistaa, koska se ei ole odottavassa tilassa."
 #: code:addons/portal/controllers/portal.py:0
 msgid ""
 "The attachment does not exist or you do not have the rights to access it."
-msgstr "Liitettä ei ole olemassa, tai sinulla ei ole oikeuksia nähdä sitä"
+msgstr "Liitettä ei ole olemassa, tai sinulla ei ole oikeuksia nähdä sitä."
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_form_fields
 msgid ""
 "The company name and VAT number can only be updated on your main account."
-msgstr ""
+msgstr "Yrityksen nimi ja ALV-numero voidaan päivittää vain päätilillä."
 
 #. module: portal
 #. odoo-python
@@ -1157,7 +1193,7 @@ msgstr "Avainta ei voi hakea myöhemmin, ja se tarjoaa"
 #. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_security.xml:0
 msgid "The key will be deleted once this period has elapsed."
-msgstr ""
+msgstr "Avain poistetaan, kun tämä aika on kulunut."
 
 #. module: portal
 #. odoo-python
@@ -1251,7 +1287,7 @@ msgstr "Käyttäjät"
 #. odoo-python
 #: code:addons/portal/controllers/portal.py:0
 msgid "VAT"
-msgstr ""
+msgstr "ALV"
 
 #. module: portal
 #: model:ir.model.fields.selection,name:portal.selection__portal_wizard_user__email_state__ok
@@ -1370,7 +1406,7 @@ msgstr "Kirjoita viesti..."
 #. odoo-javascript
 #: code:addons/portal/static/src/chatter/core/composer_patch.js:0
 msgid "Write a message…"
-msgstr ""
+msgstr "Kirjoita viesti.."
 
 #. module: portal
 #. odoo-javascript
@@ -1387,7 +1423,7 @@ msgstr "Väärä salasana."
 #. odoo-python
 #: code:addons/portal/controllers/portal.py:0
 msgid "You cannot archive your main address"
-msgstr ""
+msgstr "Et voi arkistoida pääosoitettasi"
 
 #. module: portal
 #. odoo-python
@@ -1420,23 +1456,23 @@ msgstr "Kontaktinne"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_form_fields
 msgid "Your name"
-msgstr ""
+msgstr "Nimesi"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_form_fields
 msgid "Zip Code"
-msgstr ""
+msgstr "Postinumero"
 
 #. module: portal
 #. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_security.xml:0
 msgid "full access"
-msgstr "Täydet oikeudet"
+msgstr "täydet oikeudet"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_share_template
 msgid "has invited you to access the following"
-msgstr ""
+msgstr "on kutsunut sinut tutustumaan seuraaviin"
 
 #. module: portal
 #. odoo-javascript
@@ -1479,7 +1515,7 @@ msgstr "käyttäjätilillesi, on erittäin tärkeää säilyttää se turvallise
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_form_fields
 msgid "your account details"
-msgstr ""
+msgstr "tilisi tiedot"
 
 #~ msgid ""
 #~ "<i class=\"fa fa-fw fa-id-card-o me-1 small text-muted\"/> My Account"

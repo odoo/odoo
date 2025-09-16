@@ -1,6 +1,6 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* website_sale_stock
+# * website_sale_stock
 #
 # Translators:
 # Veikko Väätäjä <veikko.vaataja@gmail.com>, 2022
@@ -10,25 +10,27 @@
 # Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2022
 # Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2022
 # Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023
-#
+# "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:56+0000\n"
-"PO-Revision-Date: 2022-09-22 05:57+0000\n"
-"Last-Translator: Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023\n"
-"Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
+"PO-Revision-Date: 2025-09-16 15:33+0000\n"
+"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
+"Language-Team: Finnish <https://translate.odoo.com/projects/odoo-19/"
+"website_sale_stock/fi/>\n"
 "Language: fi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
 msgid "<span invisible=\"not show_availability\">Units</span>"
-msgstr ""
+msgstr "<span invisible=\"not show_availability\">Yksikköä</span>"
 
 #. module: website_sale_stock
 #: model:ir.model.fields,field_description:website_sale_stock.field_product_product__stock_notification_partner_ids
@@ -44,14 +46,14 @@ msgstr "Asetukset"
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.product_template_form_view_inherit_website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
 msgid "Continue Selling"
-msgstr "Jatka myyntiä"
+msgstr "Jatka myymistä"
 
 #. module: website_sale_stock
 #: model:ir.model.fields,field_description:website_sale_stock.field_product_product__allow_out_of_stock_order
 #: model:ir.model.fields,field_description:website_sale_stock.field_product_template__allow_out_of_stock_order
 #: model:ir.model.fields,field_description:website_sale_stock.field_res_config_settings__allow_out_of_stock_order
 msgid "Continue selling when out-of-stock"
-msgstr "Jatka myyntiä tuotteen loputtuakin"
+msgstr "Jatka myymistä tuotteen loputtuakin"
 
 #. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.availability_email_body
@@ -70,18 +72,18 @@ msgstr ""
 #. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
 msgid "Default visibility for custom messages."
-msgstr "Mukautettujen viestien oletusnäkyvyys."
+msgstr "Tulliviestien oletusnäkyvyys."
 
 #. module: website_sale_stock
 #. odoo-javascript
 #: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
 msgid "Get notified when back in stock"
-msgstr "Saat ilmoituksen kun tuotetta on jälleen varastossa"
+msgstr "Saat ilmoituksen, kun tuotetta on jälleen varastossa"
 
 #. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
 msgid "How to display products having low quantities (on hand - reserved)"
-msgstr "Miten näytetään tuotteet, joita on vähän (käsillä - varattu)?"
+msgstr "Miten näytetään tuotteet, joita on vähän (saatavilla heti - varattu)?"
 
 #. module: website_sale_stock
 #. odoo-python
@@ -115,19 +117,19 @@ msgstr "Tilaa nyt"
 #. odoo-javascript
 #: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
 msgid "Out of Stock"
-msgstr "Tuote loppu"
+msgstr "Loppu varastosta"
 
 #. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.product_template_form_view_inherit_website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
 msgid "Out-of-Stock"
-msgstr "Tuote loppu"
+msgstr "Loppu varastosta"
 
 #. module: website_sale_stock
 #: model:ir.model.fields,field_description:website_sale_stock.field_product_product__out_of_stock_message
 #: model:ir.model.fields,field_description:website_sale_stock.field_product_template__out_of_stock_message
 msgid "Out-of-Stock Message"
-msgstr "Tuote loppu -viesti"
+msgstr "Loppu varastosta -viesti"
 
 #. module: website_sale_stock
 #. odoo-python
@@ -139,7 +141,7 @@ msgstr "Tuote"
 #. module: website_sale_stock
 #: model:ir.model,name:website_sale_stock.model_product_product
 msgid "Product Variant"
-msgstr "Tuotevariaatio"
+msgstr "Tuotevariantti"
 
 #. module: website_sale_stock
 #: model:ir.actions.server,name:website_sale_stock.ir_cron_send_availability_email_ir_actions_server
@@ -188,8 +190,8 @@ msgid ""
 "Some products became unavailable and your cart has been updated. We're sorry "
 "for the inconvenience."
 msgstr ""
-"Osaa ostoskorissasi olleista tuotteista ei ole enää saatavilla ja siksi "
-"ostoskoriasi on päivitetty. Pahoittelut mahdollisesta haitasta!"
+"Joitakin ostoskorissasi olleista tuotteista ei ole enää saatavilla, jonka "
+"johdosta ostoskoriasi on päivitetty. Pahoittelut mahdollisesta haitasta."
 
 #. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.availability_email_body
@@ -200,13 +202,13 @@ msgstr "Tuotetta on nyt saatavilla."
 #. odoo-python
 #: code:addons/website_sale_stock/models/sale_order.py:0
 msgid "The item has not been added to your cart since it is not available."
-msgstr ""
+msgstr "Tuotetta ei ole lisätty ostoskoriin, koska sitä ei ole saatavilla."
 
 #. module: website_sale_stock
 #. odoo-python
 #: code:addons/website_sale_stock/models/product_product.py:0
 msgid "The product '%(product_name)s' is now available"
-msgstr "Tuote '%(product_name)s' on nyt saatavana"
+msgstr "Tuote '%(product_name)s' on nyt saatavilla"
 
 #. module: website_sale_stock
 #. odoo-javascript
@@ -222,7 +224,7 @@ msgstr "Siirto"
 #. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.product_template_form_view_inherit_website_sale_stock
 msgid "Units"
-msgstr "kpl"
+msgstr "Kpl"
 
 #. module: website_sale_stock
 #: model:ir.model.fields,field_description:website_sale_stock.field_res_config_settings__website_warehouse_id
@@ -246,7 +248,7 @@ msgstr "Verkkosivu"
 #. module: website_sale_stock
 #: model:ir.model.fields,help:website_sale_stock.field_stock_picking__website_id
 msgid "Website where this order has been placed, for eCommerce orders."
-msgstr "Verkkokaupan tilausten osalta verkkosivusto, josta tilaus on tehty."
+msgstr "Verkkokauppa, josta tilaus on tehty, verkkokauppatilauksille."
 
 #. module: website_sale_stock
 #. odoo-javascript
@@ -295,10 +297,10 @@ msgstr "jäljellä varastossa."
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.product_template_form_view_inherit_website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
 msgid "only if below"
-msgstr "vain jos alle"
+msgstr "vain, jos alle"
 
 #. module: website_sale_stock
 #. odoo-javascript
 #: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
 msgid "youremail@gmail.com"
-msgstr "sinunsähköpostisi@gmail.com"
+msgstr "youremail@gmail.com"

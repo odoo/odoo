@@ -1,31 +1,38 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* website_sale
+# * website_sale
 #
 # Translators:
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-02-12 10:36+0000\n"
-"PO-Revision-Date: 2024-01-30 15:14+0400\n"
-"Last-Translator: \n"
-"Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
+"PO-Revision-Date: 2025-09-16 02:32+0000\n"
+"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"Language-Team: Russian <https://translate.odoo.com/projects/odoo-19/"
+"website_sale/ru/>\n"
 "Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || ("
+"n%100>=11 && n%100<=14)? 2 : 3);\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
 msgid "\" category."
-msgstr "\" категория."
+msgstr "»."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "\"Optional\" allows guests to register from the order confirmation email to track their order."
-msgstr "\"Дополнительно\" позволяет гостям зарегистрироваться в электронном письме с подтверждением заказа, чтобы отследить свой заказ."
+msgstr ""
+"«Необязательно» – позволяет покупателям зарегистрироваться по ссылке в "
+"письме с подтверждением заказа, чтобы отслеживать статус."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product
@@ -102,7 +109,7 @@ msgstr "<b>Категории</b>"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.payment_confirmation_status
 msgid "<b>Communication: </b>"
-msgstr "<b>Коммуникация:</b>"
+msgstr "<b>Метка:</b>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.filter_products_price
@@ -238,8 +245,11 @@ msgid ""
 "                    "
 msgstr ""
 "<p class=\"o_view_nocontent_smiling_face\">\n"
-"                        Здесь можно найти все брошенные корзины, т.е. корзины, сформированные посетителями вашего сайта более часа назад и еще не подтвержденные.</p>\n"
-"                        <p>Вам следует отправить покупателям электронное письмо, чтобы поощрить их!</p>\n"
+"                        Здесь отображаются все брошенные корзины – то есть "
+"те, которые были сформированы посетителями сайта более часа назад, но не "
+"были оформлены.</p>\n"
+"                        <p>Рекомендуем отправить клиентам напоминание по e-"
+"mail, чтобы побудить их к покупке!</p>\n"
 "                    "
 
 #. module: website_sale
@@ -496,17 +506,21 @@ msgstr "<u>Условия и положения</u>"
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_delivery_carrier__website_description
 msgid "A description of the Product that you want to communicate to your customers. This description will be copied to every Sales Order, Delivery Order and Customer Invoice/Credit Note"
-msgstr "Описание продукта, который вы хотите сообщить своим клиентам. Это описание будет скопировано на каждый заказ клиента, заказ на поставку и счет-фактуру клиента / кредитную заметку"
+msgstr ""
+"Описание товара, которое будет автоматически добавлено в заказ на продажу, "
+"заказ на доставку, счет клиента или кредитную ноту"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product
 msgid "A detailed, formatted description to promote your product on this page. Use '/' to discover more features."
-msgstr "Подробное, отформатированное описание для продвижения вашего продукта на этой странице. Используйте '/' для раскрытия дополнительных возможностей."
+msgstr ""
+"Подробное, отформатированное описание для продвижения товара на странице. "
+"Используйте '/' для дополнительных функций."
 
 #. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.product_template_action_website
 msgid "A product can be either a physical product or a service that you sell to your customers."
-msgstr "Продуктом может быть как физический товар, так и услуга, которую вы продаете своим клиентам."
+msgstr "Товар может быть физическим или услугой, которую вы продаете клиентам."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product
@@ -695,7 +709,9 @@ msgstr "Позволяйте покупателям сравнивать тов�
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Allow signed-in users to save product in a wishlist"
-msgstr "Разрешите авторизованным пользователям сохранять продукт в списке желаний"
+msgstr ""
+"Предоставьте авторизованным пользователям возможность сохранять товар в "
+"избранное"
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_pricelist__selectable
@@ -713,7 +729,7 @@ msgstr "Позволяйте покупателю добавлять в корз
 #: model:ir.model.fields,field_description:website_sale.field_product_template__alternative_product_ids
 #: model:website.snippet.filter,name:website_sale.dynamic_filter_cross_selling_alternative_products
 msgid "Alternative Products"
-msgstr "Альтернативные продукты"
+msgstr "Альтернативные товары"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_crm_team__abandoned_carts_amount
@@ -864,7 +880,10 @@ msgstr "Контейнеры"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Boost your sales with multiple kinds of programs: Coupons, Promotions, Gift Card, Loyalty. Specific conditions can be set (products, customers, minimum purchase amount, period). Rewards can be discounts (% or amount) or free products."
-msgstr "Повышайте продажи с помощью различных видов программ: Купоны, Акции, Подарочные карты, Лояльность. Можно задать конкретные условия (продукты, клиенты, минимальная сумма покупки, период). В качестве вознаграждения могут выступать скидки (% or сумма) или бесплатные товары."
+msgstr ""
+"Увеличьте продажи с помощью купонов, акций, подарочных сертификатов и "
+"программ лояльности. Можно задать условия (товары, клиенты, сумма, срок). В "
+"качестве вознаграждения могут выступать скидки или бесплатные товары."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -895,7 +914,7 @@ msgstr "Бренд"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__website_sale_contact_us_button_url
 msgid "Button Url"
-msgstr ""
+msgstr "URL кнопки"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -998,8 +1017,8 @@ msgid ""
 "Categories are used to browse your products through the\n"
 "                touchscreen interface."
 msgstr ""
-"Категории используются для просмотра товаров через\n"
-"                 сенсорный интерфейс."
+"Категории используются для навигации по товарам через \n"
+"                сенсорный интерфейс."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_category_extra_link
@@ -1088,7 +1107,8 @@ msgstr "Очистить фильтры"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
 msgid "Click <i>'New'</i> in the top-right corner to create your first product."
-msgstr "Нажмите кнопку <i>'Новый'</i> в правом верхнем углу, чтобы создать свой первый продукт."
+msgstr ""
+"Нажмите <i>«Новый»</i> в правом верхнем углу, чтобы добавить первый товар."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart
@@ -1105,7 +1125,7 @@ msgstr "Нажмите здесь, чтобы открыть меню отчет
 #. odoo-javascript
 #: code:addons/website_sale/static/src/js/tours/website_sale_shop.js:0
 msgid "Click on <em>Save</em> to create the product."
-msgstr "Нажмите на кнопку <em>Сохранить</em>, чтобы создать продукт."
+msgstr "Нажмите «Сохранить», чтобы создать товар."
 
 #. module: website_sale
 #. odoo-javascript
@@ -1138,7 +1158,8 @@ msgstr "Колонки"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.s_dynamic_snippet_products_template_options
 msgid "Comma-separated list of parts of product names, barcodes or internal reference"
-msgstr "Список частей названий продуктов, штрихкодов или внутренних ссылок, разделенных запятыми"
+msgstr ""
+"Список через запятую: части названий, штрихкодов или внутренних кодов товара"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_res_company
@@ -1233,7 +1254,7 @@ msgstr "Подтвердить заказ"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce
 msgid "Confirmed"
-msgstr "Подтверждено"
+msgstr "Подтверждена"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sale_report_view_search_website
@@ -1253,7 +1274,7 @@ msgstr "Свяжитесь с нами"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website__contact_us_button_url
 msgid "Contact Us Button URL"
-msgstr "URL-адрес кнопки \"Связаться с нами"
+msgstr "URL кнопки «Связаться с нами»"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -1301,7 +1322,7 @@ msgstr "Создать"
 #. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.product_template_action_website
 msgid "Create a new product"
-msgstr "Создайте новый продукт"
+msgstr "Создать новый товар"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_image__create_uid
@@ -1310,7 +1331,7 @@ msgstr "Создайте новый продукт"
 #: model:ir.model.fields,field_description:website_sale.field_website_base_unit__create_uid
 #: model:ir.model.fields,field_description:website_sale.field_website_sale_extra_field__create_uid
 msgid "Created by"
-msgstr "Создано"
+msgstr "Создано:"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_image__create_date
@@ -1319,7 +1340,7 @@ msgstr "Создано"
 #: model:ir.model.fields,field_description:website_sale.field_website_base_unit__create_date
 #: model:ir.model.fields,field_description:website_sale.field_website_sale_extra_field__create_date
 msgid "Created on"
-msgstr "Создано"
+msgstr "Дата создания:"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce_abondand
@@ -1424,7 +1445,7 @@ msgstr "Способы доставки DHL"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product
 msgid "DROP BUILDING BLOCKS HERE TO MAKE THEM AVAILABLE ACROSS ALL PRODUCTS"
-msgstr "ВЫКЛАДЫВАЙТЕ СТРОИТЕЛЬНЫЕ БЛОКИ ЗДЕСЬ, ЧТОБЫ ОНИ БЫЛИ ДОСТУПНЫ ВО ВСЕХ ПРОДУКТАХ"
+msgstr "ПЕРЕТАЩИТЕ БЛОКИ СЮДА, ЧТОБЫ ОНИ БЫЛИ ДОСТУПНЫ В КАРТОЧКАХ ВСЕХ ТОВАРОВ"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -1456,7 +1477,7 @@ msgstr "Сортировка по умолчанию"
 #: model:ir.model.fields,help:website_sale.field_product_template__base_unit_id
 #: model:ir.model.fields,help:website_sale.field_website_base_unit__name
 msgid "Define a custom unit to display in the price per unit of measure field."
-msgstr "Определите пользовательскую единицу измерения, которая будет отображаться в поле \"Цена за единицу измерения\"."
+msgstr "Укажите единицу измерения для отображения цены за единицу."
 
 #. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.product_public_category_action
@@ -1501,7 +1522,7 @@ msgstr "Описание отображается на eCommerce и онлайн
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_delivery_carrier__website_description
 msgid "Description for Online Quotations"
-msgstr "Описание для онлайн-котировок"
+msgstr "Описание для Онлайн-предложения"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_product__website_description
@@ -1545,7 +1566,7 @@ msgstr "Код скидки..."
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Discounts, Loyalty & Gift Card"
-msgstr "Скидки, лояльность и подарочные карты"
+msgstr "Скидки, карты лояльности и подарочные карты"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_image__display_name
@@ -1570,7 +1591,7 @@ msgstr "Тип отображения"
 #: model:ir.model.fields,help:website_sale.field_product_product__base_unit_count
 #: model:ir.model.fields,help:website_sale.field_product_template__base_unit_count
 msgid "Display base unit price on your eCommerce pages. Set to 0 to hide it for this product."
-msgstr "Отображение базовой цены единицы товара на страницах электронной коммерции. Установите значение 0, чтобы скрыть его для этого продукта."
+msgstr "Отображать цену за единицу на сайте. Установите 0, чтобы скрыть."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_template_form_view
@@ -1581,7 +1602,9 @@ msgstr "Отображается в нижней части страниц то�
 #: model:ir.model.fields,help:website_sale.field_product_product__base_unit_name
 #: model:ir.model.fields,help:website_sale.field_product_template__base_unit_name
 msgid "Displays the custom unit for the products if defined or the selected unit of measure otherwise."
-msgstr "Отображает пользовательскую единицу измерения для продуктов, если она определена, или выбранную единицу измерения в противном случае."
+msgstr ""
+"Отображает пользовательскую единицу измерения для товаров, если она задана, "
+"или выбранную из доступных единиц."
 
 #. module: website_sale
 #. odoo-python
@@ -1599,13 +1622,15 @@ msgstr "Вы хотите очистить корзину перед добав�
 #. odoo-python
 #: code:addons/website_sale/models/product_document.py:0
 msgid "Documents shown on product page cannot be restricted to a specific variant"
-msgstr "Документы, представленные на странице продукта, не могут быть ограничены конкретным вариантом"
+msgstr ""
+"Документы, представленные на странице товара, не могут быть ограничены "
+"конкретным вариантом"
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/js/tours/website_sale_shop.js:0
 msgid "Double click here to set an image describing your product."
-msgstr "Дважды щелкните здесь, чтобы установить изображение, описывающее ваш продукт."
+msgstr "Дважды кликните, чтобы установить изображение товара."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
@@ -1679,7 +1704,7 @@ msgstr "Редактировать"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/js/tours/website_sale_shop.js:0
 msgid "Edit the price of this product by clicking on the amount."
-msgstr "Отредактируйте цену этого продукта, нажав на сумму."
+msgstr "Отредактируйте цену этого товара, нажав на сумму."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address_kanban
@@ -1705,7 +1730,7 @@ msgstr "Включить доставку"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/js/tours/website_sale_shop.js:0
 msgid "Enter a name for your new product"
-msgstr "Введите название нового продукта"
+msgstr "Введите название нового товара"
 
 #. module: website_sale
 #. odoo-python
@@ -1729,7 +1754,7 @@ msgstr "Дополнительная информация"
 #: model:ir.model.fields,field_description:website_sale.field_product_template__product_template_image_ids
 #: model_terms:ir.ui.view,arch_db:website_sale.product_template_form_view
 msgid "Extra Product Media"
-msgstr "Дополнительные носители информации о продукте"
+msgstr "Дополнительные медиа-материалы"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -1836,7 +1861,7 @@ msgstr "Фурнитуры"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Generate the invoice automatically when the online payment is confirmed"
-msgstr "Автоматически генерируйте счет-фактуру после подтверждения онлайн-оплаты"
+msgstr "Создавать счет автоматически при получении онлайн-платежа"
 
 #. module: website_sale
 #. odoo-javascript
@@ -1923,7 +1948,8 @@ msgstr "Если отмечено, некоторые сообщения име�
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "If product price equals 0, replace 'Add to Cart' by 'Contact us'."
-msgstr "Если цена товара равна 0, замените \"Добавить в корзину\" на \"Свяжитесь с нами\"."
+msgstr ""
+"Если цена товара равняется 0, заменить «В корзину» на «Связаться с нами»"
 
 #. module: website_sale
 #: model:mail.template,description:website_sale.mail_template_sale_cart_recovery
@@ -2042,7 +2068,7 @@ msgstr "Опубликовано"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Issue invoices to customers"
-msgstr "Выставление счетов-фактур клиентам"
+msgstr "Выставление счетов клиентам"
 
 #. module: website_sale
 #. odoo-python
@@ -2114,7 +2140,7 @@ msgstr "Последний онлайн-заказ на продажу"
 #: model:ir.model.fields,field_description:website_sale.field_website_base_unit__write_uid
 #: model:ir.model.fields,field_description:website_sale.field_website_sale_extra_field__write_uid
 msgid "Last Updated by"
-msgstr "Последнее обновление"
+msgstr "Последнее обновление:"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_image__write_date
@@ -2123,7 +2149,7 @@ msgstr "Последнее обновление"
 #: model:ir.model.fields,field_description:website_sale.field_website_base_unit__write_date
 #: model:ir.model.fields,field_description:website_sale.field_website_sale_extra_field__write_date
 msgid "Last Updated on"
-msgstr "Последнее обновление"
+msgstr "Дата последнего обновления:"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sale_report_view_search_website
@@ -2163,7 +2189,7 @@ msgstr "Позвольте клиенту выбрать пункт отправ
 #. odoo-javascript
 #: code:addons/website_sale/static/src/js/tours/website_sale_shop.js:0
 msgid "Let's create your first product."
-msgstr "Давайте создадим ваш первый продукт."
+msgstr "Давайте создадим ваш первый товар."
 
 #. module: website_sale
 #. odoo-javascript
@@ -2228,7 +2254,7 @@ msgstr "Обязательно (без гостевого выезда)"
 #. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__website__product_page_image_spacing__medium
 msgid "Medium"
-msgstr "Средний"
+msgstr "Канал"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_template__message_has_error
@@ -2352,12 +2378,12 @@ msgstr "Для данного адреса доставки нет пункта 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
 msgid "No product defined"
-msgstr "Продукт не определен"
+msgstr "Товар не задан"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
 msgid "No product defined in this category."
-msgstr "В этой категории не определено ни одного продукта."
+msgstr "Товаров в категории нет."
 
 #. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.website_sale_visitor_product_action
@@ -2372,7 +2398,7 @@ msgstr "Нет результатов"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
 msgid "No results for \""
-msgstr "Нет результатов для \""
+msgstr "Нет результатов по запросу «"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
@@ -2452,7 +2478,7 @@ msgstr "На колесах"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/js/tours/website_sale_shop.js:0
 msgid "Once you click on <b>Save</b>, your product is updated."
-msgstr "Как только вы нажмете <b>Сохранить</b>, ваш продукт обновится."
+msgstr "После <b>сохранения</b> товар будет обновлен"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -2481,8 +2507,8 @@ msgid ""
 "Only the company's websites are allowed.\n"
 "Leave the Company field empty or select a website from that company."
 msgstr ""
-"Разрешены только веб-сайты компании.\n"
-"Оставьте поле \"Компания\" пустым или выберите сайт этой компании."
+"Можно использовать только сайты, принадлежащие компании.\n"
+"Очистите поле или выберите сайт этой компании."
 
 #. module: website_sale
 #. odoo-python
@@ -2544,7 +2570,7 @@ msgstr "Дата заказа"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_sale_order__website_order_line
 msgid "Order Lines displayed on Website"
-msgstr "Строки заказов отображаются на сайте"
+msgstr "Позиции заказов отображаются на сайте"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart
@@ -2561,7 +2587,7 @@ msgstr "Заказы"
 #. module: website_sale
 #: model:ir.actions.act_window,name:website_sale.sale_order_action_to_invoice
 msgid "Orders To Invoice"
-msgstr "Заказы в счет-фактуру"
+msgstr "Заказы для выставления счета"
 
 #. module: website_sale
 #: model:product.ribbon,html:website_sale.out_of_stock_ribbon
@@ -2670,7 +2696,7 @@ msgstr "Портрет (4/5)"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Position"
-msgstr "Позиция"
+msgstr "Финансовое положение"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__website_sale_prevent_zero_price_sale
@@ -2766,17 +2792,17 @@ msgstr "Товар"
 #. module: website_sale
 #: model:ir.actions.server,name:website_sale.dynamic_snippet_accessories_action
 msgid "Product Accessories"
-msgstr "Аксессуары для продуктов"
+msgstr "Аксессуары"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_product_attribute
 msgid "Product Attribute"
-msgstr "Атрибут продукта"
+msgstr "Характеристики товара"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.shop_product_carousel
 msgid "Product Carousel"
-msgstr "Карусель продукта"
+msgstr "Карусель"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sale_report_view_search_website
@@ -2787,7 +2813,7 @@ msgstr "Категория товара"
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__module_website_sale_comparison
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Product Comparison Tool"
-msgstr "Инструмент сравнения продуктов"
+msgstr "Инструмент для сравнения товаров"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_product_document
@@ -2819,42 +2845,42 @@ msgstr "Страница товара"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_website_sale_website_form
 msgid "Product Page Extra Fields"
-msgstr "Дополнительные поля страницы продукта"
+msgstr "Дополнительные поля на странице товара"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website__product_page_grid_columns
 msgid "Product Page Grid Columns"
-msgstr "Колонки сетки страницы продукта"
+msgstr "Столбцы сетки на странице товара"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website__product_page_image_layout
 msgid "Product Page Image Layout"
-msgstr "Макет изображения на странице продукта"
+msgstr "Расположение изображения на странице товара"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website__product_page_image_spacing
 msgid "Product Page Image Spacing"
-msgstr "Расстояние между изображениями на странице продукта"
+msgstr "Расстояние между изображениями на странице товара"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website__product_page_image_width
 msgid "Product Page Image Width"
-msgstr "Ширина изображения на странице продукта"
+msgstr "Ширина изображения на странице товара"
 
 #. module: website_sale
 #: model:ir.actions.act_window,name:website_sale.action_product_pages_list
 msgid "Product Pages"
-msgstr "Страницы продукта"
+msgstr "Страницы товаров"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_public_category_tree_view
 msgid "Product Public Categories"
-msgstr "Продукт публичных категорий"
+msgstr "Категории товара, отображаемые на сайте"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Product Reference Price"
-msgstr "Справочная цена продукта"
+msgstr "Справочная цена на товар"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_product_tag
@@ -2870,38 +2896,38 @@ msgstr "Метки товара"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Product Tags Filter"
-msgstr "Теги продукта Фильтр"
+msgstr "Фильтр по тегам товара"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_image__product_tmpl_id
 msgid "Product Template"
-msgstr "Шаблон Продукта"
+msgstr "Шаблон товара"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_product_template_attribute_line
 msgid "Product Template Attribute Line"
-msgstr "Позиция атрибута шаблона продукта"
+msgstr "Строка атрибутов шаблона товара"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_product_template_attribute_value
 msgid "Product Template Attribute Value"
-msgstr "Значение атрибута шаблона продукта"
+msgstr "Значение атрибутов шаблона товара"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__product_tmpl_ids
 msgid "Product Tmpl"
-msgstr "Шаблон Продукта"
+msgstr "Шаблон товара"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_product_product
 #: model:ir.model.fields,field_description:website_sale.field_product_image__product_variant_id
 msgid "Product Variant"
-msgstr "Вариант продукта"
+msgstr "Вариация товара"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Product Variants"
-msgstr "Варианты продуктов"
+msgstr "Варианты товаров"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_visitor__visitor_product_count
@@ -2912,7 +2938,7 @@ msgstr "Виды продукции"
 #. module: website_sale
 #: model:ir.actions.act_window,name:website_sale.website_sale_visitor_product_action
 msgid "Product Views History"
-msgstr "История просмотров продукта"
+msgstr "История просмотров товара"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.s_dynamic_snippet_products_template_options
@@ -2928,7 +2954,7 @@ msgstr "Товар не найден"
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_product_ribbon
 msgid "Product ribbon"
-msgstr "Метка-лента для продукта"
+msgstr "Лента товара"
 
 #. module: website_sale
 #: model:ir.actions.act_window,name:website_sale.product_template_action_website
@@ -2957,12 +2983,12 @@ msgstr "Страница товаров"
 #. module: website_sale
 #: model:ir.actions.server,name:website_sale.dynamic_snippet_recently_sold_with_action
 msgid "Products Recently Sold With"
-msgstr "Продукты, недавно проданные с"
+msgstr "Товары, часто покупаемые вместе с"
 
 #. module: website_sale
 #: model:website.snippet.filter,name:website_sale.dynamic_filter_cross_selling_recently_sold_with
 msgid "Products Recently Sold With Product"
-msgstr "Продукты, недавно проданные с продуктом"
+msgstr "Товары, часто покупаемые вместе с товаром"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_ribbon_view_tree
@@ -3304,7 +3330,7 @@ msgstr "Выбрать"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/js/tours/website_sale_shop.js:0
 msgid "Select <b>New Product</b> to create it and manage its properties to boost your sales."
-msgstr "Выберите <b>Новый продукт</b> создание и управление его свойствами для увеличения продаж."
+msgstr "Создайте <b>новый товар</b> и настройте его, чтобы увеличить продажи."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -3429,7 +3455,7 @@ msgstr "Магазин - Подтверждено"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Shop - Products"
-msgstr "Магазин - Продукты"
+msgstr "Магазин – товары"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.payment
@@ -3567,7 +3593,7 @@ msgstr "Статус"
 #. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__website__add_to_cart_action__stay
 msgid "Stay on Product Page"
-msgstr "Оставаться на странице продукта"
+msgstr "Остаться на странице товара"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
@@ -3593,7 +3619,9 @@ msgstr "Промежуточный итог"
 #: model:ir.model.fields,help:website_sale.field_product_product__alternative_product_ids
 #: model:ir.model.fields,help:website_sale.field_product_template__alternative_product_ids
 msgid "Suggest alternatives to your customer (upsell strategy). Those products show up on the product page."
-msgstr "Предложите покупателю альтернативные варианты (стратегия upsell). Эти продукты отображаются на странице товара."
+msgstr ""
+"Предлагайте альтернативные товары (стратегия допродаж) – они будут "
+"отображаться на странице товара."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -3663,7 +3691,7 @@ msgstr "Спасибо за ваш заказ."
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.brand_promotion
 msgid "The #1"
-msgstr "1 секунда"
+msgstr "Номер один"
 
 #. module: website_sale
 #. odoo-python
@@ -3717,19 +3745,24 @@ msgstr "У данного товара нет цены, поэтому он не
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "The mode selected here applies as invoicing policy of any new product created but not of products already existing."
-msgstr "Выбранный здесь режим применяется в качестве политики выставления счетов для любого нового созданного продукта, но не для уже существующих продуктов."
+msgstr ""
+"Выбранный режим применяется здесь как политика выставления счетов любого "
+"нового товара, но не существующего."
 
 #. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/controllers/payment.py:0
 msgid "The order has been cancelled."
-msgstr ""
+msgstr "Заказ отменен."
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_product__public_categ_ids
 #: model:ir.model.fields,help:website_sale.field_product_template__public_categ_ids
 msgid "The product will be available in each mentioned eCommerce category. Go to Shop > Edit Click on the page and enable 'Categories' to view all eCommerce categories."
-msgstr "Продукт будет доступен в каждой из указанных категорий электронной коммерции. Перейдите в раздел Магазин > Редактировать, нажмите на страницу и включите \"Категории\", чтобы просмотреть все категории электронной коммерции."
+msgstr ""
+"Товар будет виден в указанных категориях. Перейдите в Магазин > "
+"Редактировать, а затем активируйте «Категории», чтобы просмотреть все "
+"категории электронной коммерции."
 
 #. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.action_view_abandoned_tree
@@ -3740,7 +3773,9 @@ msgstr "Время, в течение которого корзина будет
 #. odoo-python
 #: code:addons/website_sale/models/product_product.py:0
 msgid "The value of Base Unit Count must be greater than 0. Use 0 to hide the price per unit on this product."
-msgstr "Значение Base Unit Count должно быть больше 0. Используйте 0, чтобы скрыть цену за единицу для этого продукта."
+msgstr ""
+"Базовое количество единиц должно быть больше 0. Используйте 0, чтобы скрыть "
+"цену за единицу для этого товара."
 
 #. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.action_orders_ecommerce
@@ -3778,23 +3813,23 @@ msgstr "Этого товара не существует, поэтому он �
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product
 msgid "This product has no valid combination."
-msgstr "Этот продукт не имеет действующей комбинации."
+msgstr "У товара нет действующей комбинации."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product
 msgid "This product is no longer available."
-msgstr "Этот продукт больше не доступен."
+msgstr "Этот товар больше не доступен."
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/js/website_sale_reorder.js:0
 msgid "This product is not available for purchase."
-msgstr "Этот продукт недоступен для покупки."
+msgstr "Этот товар больше не продается."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products_item
 msgid "This product is unpublished."
-msgstr "Этот продукт не опубликован."
+msgstr "Этот товар не опубликован."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.coupon_form
@@ -3809,7 +3844,9 @@ msgstr "Миниатюры"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "To send invitations in B2B mode, open a contact or select several ones in list view and click on 'Portal Access Management' option in the dropdown menu *Action*."
-msgstr "Чтобы отправить приглашения в режиме B2B, откройте контакт или выберите несколько контактов в режиме просмотра списка и нажмите на опцию \"Управление доступом к порталу\" в выпадающем меню *Действие*."
+msgstr ""
+"Для B2B-приглашений выберите контакт(ы) и нажмите «Управление доступом в "
+"портал» в выпадающем меню «Действия»."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -3830,12 +3867,12 @@ msgstr "Всего"
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_website_visitor__product_count
 msgid "Total number of product viewed"
-msgstr "Общее количество просмотренных продуктов"
+msgstr "Общее количество просмотренных товаров"
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_website_visitor__visitor_product_count
 msgid "Total number of views on products"
-msgstr "Общее количество просмотров продуктов"
+msgstr "Общее количество просмотров товаров"
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_website_snippet_filter__product_cross_selling
@@ -3855,7 +3892,7 @@ msgstr "UPS"
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_image__video_url
 msgid "URL of a video for showcasing your product."
-msgstr "URL-адрес видеоролика для демонстрации вашего продукта."
+msgstr "Ссылка на видео для презентации товара."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -3994,17 +4031,17 @@ msgstr "Посещенные страницы"
 #: model:ir.model.fields,field_description:website_sale.field_website_visitor__product_ids
 #: model_terms:ir.ui.view,arch_db:website_sale.website_sale_visitor_view_kanban
 msgid "Visited Products"
-msgstr "Посещаемые продукты"
+msgstr "Просмотренные товары"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.website_sale_visitor_page_view_graph
 msgid "Visitor Product Views"
-msgstr "Мнения посетителей о продукте"
+msgstr "История просмотров"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.website_sale_visitor_page_view_tree
 msgid "Visitor Product Views History"
-msgstr "История просмотров продукта"
+msgstr "История просмотров товаров"
 
 #. module: website_sale
 #. odoo-javascript
@@ -4055,7 +4092,7 @@ msgstr "Веб-сайт сообщения"
 #: model:ir.model.fields,field_description:website_sale.field_product_product__public_categ_ids
 #: model:ir.model.fields,field_description:website_sale.field_product_template__public_categ_ids
 msgid "Website Product Category"
-msgstr "Веб-сайт Категория продукта"
+msgstr "Категория товара на сайте"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_public_category_form_view
@@ -4139,7 +4176,7 @@ msgstr "Сайты"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "What should be done on \"Add to Cart\"?"
-msgstr "Что нужно сделать при нажатии кнопки \"Добавить в корзину\"?"
+msgstr "Что делать при нажатии на «В корзину»?"
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_tag__visible_on_ecommerce
@@ -4192,7 +4229,7 @@ msgstr "У вас нет заказа с сайта"
 #. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.sale_order_action_to_invoice
 msgid "You don't have any order to invoice from the website"
-msgstr "У вас нет заказа, чтобы выставить счет на сайте"
+msgstr "У вас нет ни одного заказа для выставления счета с сайта"
 
 #. module: website_sale
 #: model:mail.template,subject:website_sale.mail_template_sale_cart_recovery
@@ -4244,7 +4281,7 @@ msgstr "Ваша корзина не готова к оплате, пожалу�
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.payment_confirmation_status
 msgid "Your payment has been authorized."
-msgstr "Ваш платеж был авторизован."
+msgstr "Ваш платеж успешно авторизован."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart
@@ -4335,7 +4372,7 @@ msgstr "если вы хотите восстановить предыдущую
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
 msgid "in category \""
-msgstr "в категории \""
+msgstr "в категории «"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address

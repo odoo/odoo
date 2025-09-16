@@ -1,29 +1,32 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* event_crm
+# * event_crm
 #
 # Translators:
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-09-11 13:56+0000\n"
-"PO-Revision-Date: 2024-01-30 15:14+0400\n"
-"Last-Translator: \n"
-"Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
+"PO-Revision-Date: 2025-09-16 02:33+0000\n"
+"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"Language-Team: Russian <https://translate.odoo.com/projects/odoo-19/"
+"event_crm/ru/>\n"
 "Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
-"n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || "
-"(n%100>=11 && n%100<=14)? 2 : 3);\n"
+"n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || ("
+"n%100>=11 && n%100<=14)? 2 : 3);\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: event_crm
 #: model:ir.model.fields,field_description:event_crm.field_event_event__lead_count
 #: model:ir.model.fields,field_description:event_crm.field_event_registration__lead_count
 msgid "# Leads"
-msgstr "# Свинцы"
+msgstr "# Лиды"
 
 #. module: event_crm
 #: model:ir.model.fields,field_description:event_crm.field_crm_lead__registration_count
@@ -90,7 +93,7 @@ msgstr "Присутствовали"
 #. module: event_crm
 #: model:ir.model.fields,help:event_crm.field_event_lead_rule__lead_tag_ids
 msgid "Automatically add these tags to the created leads."
-msgstr "Автоматически добавляйте эти теги к созданным зацепкам."
+msgstr "Автоматически добавляйте эти теги к созданным Лидам"
 
 #. module: event_crm
 #: model:ir.model.fields,help:event_crm.field_event_lead_rule__lead_sales_team_id
@@ -107,6 +110,8 @@ msgstr "Автоматически назначайте созданные ли�
 #: code:addons/event_crm/models/event_event.py:0
 msgid "Aww! No Leads created, check your Lead Generation Rules and try again."
 msgstr ""
+"Упс! Лиды не были созданы. Проверьте правила лидогенерации и попробуйте "
+"снова."
 
 #. module: event_crm
 #: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__company_id
@@ -141,12 +146,12 @@ msgstr "Созданные лиды"
 #. module: event_crm
 #: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__create_uid
 msgid "Created by"
-msgstr "Создано"
+msgstr "Создано:"
 
 #. module: event_crm
 #: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__create_date
 msgid "Created on"
-msgstr "Создано"
+msgstr "Дата создания:"
 
 #. module: event_crm
 #: model_terms:ir.ui.view,arch_db:event_crm.event_lead_rule_view_search
@@ -189,12 +194,12 @@ msgstr "Событие"
 #. module: event_crm
 #: model:ir.actions.server,name:event_crm.ir_cron_generate_leads_ir_actions_server
 msgid "Event CRM: Generate Leads based on Rules"
-msgstr ""
+msgstr "CRM мероприятий: Генерация лидов на основе правил"
 
 #. module: event_crm
 #: model:ir.model,name:event_crm.model_event_lead_request
 msgid "Event Lead Request"
-msgstr ""
+msgstr "Запрос на лиды по мероприятию"
 
 #. module: event_crm
 #: model:ir.model,name:event_crm.model_event_lead_rule
@@ -214,7 +219,7 @@ msgstr "Регистрация событий"
 #. module: event_crm
 #: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__event_type_ids
 msgid "Event Templates"
-msgstr ""
+msgstr "Шаблоны для мероприятий"
 
 #. module: event_crm
 #: model:ir.actions.act_window,name:event_crm.event_lead_rule_answer_action
@@ -279,13 +284,13 @@ msgstr "Для любого из этих событий"
 #. module: event_crm
 #: model:ir.actions.server,name:event_crm.action_generate_leads
 msgid "Generate Leads"
-msgstr ""
+msgstr "Генерировать лиды"
 
 #. module: event_crm
 #. odoo-python
 #: code:addons/event_crm/models/event_event.py:0
 msgid "Got it! We've noted your request. Your leads will be created soon!"
-msgstr ""
+msgstr "Принято! Мы зафиксировали ваш запрос. Лиды скоро будут созданы."
 
 #. module: event_crm
 #: model:ir.model.fields,field_description:event_crm.field_crm_lead__id
@@ -305,12 +310,12 @@ msgstr "Если участники отвечают этим условиям"
 #. module: event_crm
 #: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__write_uid
 msgid "Last Updated by"
-msgstr "Последнее обновление"
+msgstr "Последнее обновление:"
 
 #. module: event_crm
 #: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__write_date
 msgid "Last Updated on"
-msgstr "Последнее обновление"
+msgstr "Дата последнего обновления:"
 
 #. module: event_crm
 #: model:ir.model,name:event_crm.model_crm_lead
@@ -326,7 +331,7 @@ msgstr "Тип создания лида"
 #. module: event_crm
 #: model_terms:ir.ui.view,arch_db:event_crm.event_lead_rule_view_form
 msgid "Lead Default Values"
-msgstr "Значения по умолчанию для свинца"
+msgstr "Значения по умолчанию для Лида"
 
 #. module: event_crm
 #: model:ir.ui.menu,name:event_crm.event_lead_rule_menu
@@ -337,12 +342,12 @@ msgstr "Генерация Лидов"
 #: model:ir.actions.act_window,name:event_crm.event_lead_rule_action
 #: model_terms:ir.ui.view,arch_db:event_crm.event_lead_rule_view_form
 msgid "Lead Generation Rule"
-msgstr "Правило генерации свинца"
+msgstr "Правило генерации Лида"
 
 #. module: event_crm
 #: model_terms:ir.ui.view,arch_db:event_crm.event_lead_rule_view_tree
 msgid "Lead Generation Rules"
-msgstr "Правила генерации свинца"
+msgstr "Правила генерации Лида"
 
 #. module: event_crm
 #: model:ir.model.fields,field_description:event_crm.field_event_lead_request__event_lead_rule_ids
@@ -383,7 +388,7 @@ msgstr "Новые регистрации"
 #: model_terms:ir.actions.act_window,help:event_crm.crm_lead_action_from_event
 #: model_terms:ir.actions.act_window,help:event_crm.crm_lead_action_from_registration
 msgid "No leads found"
-msgstr "Нет версий найдено"
+msgstr "Не найдено Лидов"
 
 #. module: event_crm
 #: model_terms:ir.actions.act_window,help:event_crm.event_registration_action_from_lead
@@ -395,11 +400,12 @@ msgstr "Регистрация не найдена"
 #: code:addons/event_crm/models/event_event.py:0
 msgid "Only Event Managers are allowed to re-generate all leads."
 msgstr ""
+"Только менеджеры мероприятий могут повторно запускать генерацию всех лидов."
 
 #. module: event_crm
 #: model:ir.model.fields.selection,name:event_crm.selection__event_lead_rule__lead_type__opportunity
 msgid "Opportunity"
-msgstr "Предложение"
+msgstr "Возможность"
 
 #. module: event_crm
 #. odoo-python
@@ -430,7 +436,7 @@ msgstr "За заказ"
 #. module: event_crm
 #: model:ir.model.fields,field_description:event_crm.field_event_lead_request__processed_registration_id
 msgid "Processed Registration"
-msgstr ""
+msgstr "Обработанная регистрация"
 
 #. module: event_crm
 #: model:ir.model.fields,field_description:event_crm.field_crm_lead__event_lead_rule_id
@@ -476,7 +482,7 @@ msgstr "Правило на @example.com"
 #. module: event_crm
 #: model:ir.model.fields,help:event_crm.field_crm_lead__event_lead_rule_id
 msgid "Rule that created this lead"
-msgstr "Правило, которое создало эту зацепку"
+msgstr "Правило, которое создало этот Лид"
 
 #. module: event_crm
 #: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__lead_sales_team_id
@@ -491,7 +497,7 @@ msgstr "Продавец"
 #. module: event_crm
 #: model_terms:ir.ui.view,arch_db:event_crm.event_lead_rule_view_search
 msgid "Search Lead Generation Rules"
-msgstr "Правила генерации поисковых запросов"
+msgstr "Правила генерации поиска лидов"
 
 #. module: event_crm
 #: model:ir.model.fields,field_description:event_crm.field_crm_lead__event_id
@@ -514,6 +520,8 @@ msgid ""
 "The ID of the last processed event.registration, used to know where to "
 "resume."
 msgstr ""
+"ID последней обработанной регистрации на мероприятие, используется для "
+"продолжения обработки с нужного места."
 
 #. module: event_crm
 #: model_terms:ir.actions.act_window,help:event_crm.event_lead_rule_action
@@ -545,12 +553,14 @@ msgstr "Когда"
 #. odoo-python
 #: code:addons/event_crm/models/event_event.py:0
 msgid "Yee-ha, %(leads_count)s Leads have been created!"
-msgstr ""
+msgstr "Ура! Создано лидов: %(leads_count)s!"
 
 #. module: event_crm
 #: model:ir.model.constraint,message:event_crm.constraint_event_lead_request_uniq_event
 msgid "You can only have one generation request per event at a time."
 msgstr ""
+"На одно мероприятие одновременно может приходиться только один запрос на "
+"генерацию."
 
 #. module: event_crm
 #: model_terms:ir.ui.view,arch_db:event_crm.event_lead_rule_view_form

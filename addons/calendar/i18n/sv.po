@@ -1,6 +1,6 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* calendar
+# * calendar
 #
 # Translators:
 # Peter Ojaäär <peter.ojaaar@arbetsformedlingen.se>, 2022
@@ -18,26 +18,28 @@
 # Mikael Holm <mikael.holm@vertel.se>, 2022
 # Martin Trigaux, 2022
 # Martin Wilderoth <martin.wilderoth@linserv.se>, 2023
-#
+# "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-09-11 13:55+0000\n"
-"PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Martin Wilderoth <martin.wilderoth@linserv.se>, 2023\n"
-"Language-Team: Swedish (https://app.transifex.com/odoo/teams/41243/sv/)\n"
+"PO-Revision-Date: 2025-09-16 21:29+0000\n"
+"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
+"Language-Team: Swedish <https://translate.odoo.com/projects/odoo-19/calendar/"
+"sv/>\n"
 "Language: sv\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_res_partner__meeting_count
 #: model:ir.model.fields,field_description:calendar.field_res_users__meeting_count
 msgid "# Meetings"
-msgstr "# möten"
+msgstr "# Möten"
 
 #. module: calendar
 #. odoo-python
@@ -46,26 +48,26 @@ msgid ""
 "%(date_start)s at %(time_start)s To\n"
 " %(date_end)s at %(time_end)s (%(timezone)s)"
 msgstr ""
-"%(date_start)s vid %(time_start)s till\n"
+"%(date_start)s vid %(time_start)s Till\n"
 " %(date_end)s vid %(time_end)s (%(timezone)s)"
 
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/calendar_event.py:0
 msgid "%(day)s at (%(start)s To %(end)s) (%(timezone)s)"
-msgstr "%(day)s vid (%(start)s till %(end)s) (%(timezone)s)"
+msgstr "%(day)s vid (%(start)s Till %(end)s) (%(timezone)s)"
 
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/calendar_attendee.py:0
 msgid "%s has accepted the invitation"
-msgstr ""
+msgstr "%s har acceptera inbjudan"
 
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/calendar_attendee.py:0
 msgid "%s has declined the invitation"
-msgstr ""
+msgstr "%s har avböjt inbjudan"
 
 #. module: calendar
 #: model:mail.template,body_html:calendar.calendar_template_meeting_changedate
@@ -883,7 +885,7 @@ msgstr ""
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "<span class=\"fa fa-plus\"/><span> Odoo meeting</span>"
-msgstr ""
+msgstr "<span class=\"fa fa-plus\"/><span> Odoo-möte</span>"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -892,21 +894,24 @@ msgid ""
 "['weekly', 'custom'] or (rrule_type_ui == 'custom' and rrule_type != "
 "'weekly')\">Repeat on</span>"
 msgstr ""
+"<span class=\"fw-bold text-nowrap\" invisible=\"rrule_type_ui not in "
+"['weekly', 'custom'] or (rrule_type_ui == 'custom' and rrule_type != "
+"'weekly')\">Att upprepa på</span>"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.calendar_provider_config_view_form
 msgid "<span class=\"me-1 o_form_label\">Google Calendar</span>"
-msgstr ""
+msgstr "<span class=\"me-1 o_form_label\">Google Kalender</span>"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.calendar_provider_config_view_form
 msgid "<span class=\"me-1 o_form_label\">Outlook Calendar</span>"
-msgstr ""
+msgstr "<span class=\"me-1 o_form_label\">Outlook-kalender</span>"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "<span invisible=\"allday\" style=\"white-space: pre;\"> or </span>"
-msgstr ""
+msgstr "<span invisible=\"allday\" style=\"white-space: pre;\"> eller </span>"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -948,6 +953,8 @@ msgstr ""
 msgid ""
 "<strong>Save</strong> this page and come back here to set up the feature."
 msgstr ""
+"<strong>Spara</strong> sidan och kom tillbaka hit för att konfigurera "
+"funktionen."
 
 #. module: calendar
 #: model:ir.model.constraint,message:calendar.constraint_calendar_filters_user_id_partner_id_unique
@@ -962,7 +969,7 @@ msgstr "Godkänn"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__accepted_count
 msgid "Accepted Count"
-msgstr ""
+msgstr "Accepterad räkning"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_mail_activity_type__category
@@ -972,7 +979,7 @@ msgstr "Åtgärd"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__message_needaction
 msgid "Action Needed"
-msgstr "Åtgärd krävs"
+msgstr "Åtgärd Krävs"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_mail_activity_type__category
@@ -980,7 +987,7 @@ msgid ""
 "Actions may trigger specific behavior like opening calendar view or "
 "automatically mark as done when a document is uploaded"
 msgstr ""
-"Åtgärder kan utlösa specifika beteende såsom att öppna kalendervy eller "
+"Åtgärder kan utlösa specifika beteende såsom att öppna kalendervyn eller "
 "automatiskt markeras som utfört när ett dokument laddas upp"
 
 #. module: calendar
@@ -1002,7 +1009,7 @@ msgstr "Aktivitet"
 #. module: calendar
 #: model:ir.model,name:calendar.model_mail_activity_mixin
 msgid "Activity Mixin"
-msgstr "Aktivitets mixin"
+msgstr "Aktivitets Mixin"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_mail_activity_type
@@ -1012,7 +1019,7 @@ msgstr "Aktivitetstyp"
 #. module: calendar
 #: model:ir.model,name:calendar.model_mail_activity_schedule
 msgid "Activity schedule plan Wizard"
-msgstr ""
+msgstr "Guiden Aktivitetsschema plan"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_quick_create
@@ -1022,7 +1029,7 @@ msgstr ""
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Add description"
-msgstr ""
+msgstr "Lägg till beskrivning"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -1032,13 +1039,14 @@ msgstr ""
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_alarm__body
 msgid "Additional Message"
-msgstr ""
+msgstr "Ytterligare Meddelande"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_alarm__body
 msgid ""
 "Additional message that would be sent with the notification for the reminder"
 msgstr ""
+"Ytterligare meddelande som skulle skickas med meddelandet för påminnelsen"
 
 #. module: calendar
 #. odoo-javascript
@@ -1070,7 +1078,7 @@ msgstr "Arkiverad"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__message_attachment_count
 msgid "Attachment Count"
-msgstr "Antal bilagor"
+msgstr "Antal Bilagor"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_attendee__partner_id
@@ -1086,12 +1094,12 @@ msgstr "Deltagare"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__attendees_count
 msgid "Attendees Count"
-msgstr ""
+msgstr "Antal deltagare"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__current_status
 msgid "Attending?"
-msgstr ""
+msgstr "Närvarande?"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_attendee__availability__free
@@ -1102,7 +1110,7 @@ msgstr "Tillgänglig"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_attendee__availability
 msgid "Available/Busy"
-msgstr ""
+msgstr "Tillgänglig/Upptagen"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -1112,7 +1120,7 @@ msgstr ""
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__awaiting_count
 msgid "Awaiting Count"
-msgstr ""
+msgstr "Väntar på räkning"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__base_event_id
@@ -1122,7 +1130,7 @@ msgstr "Bashändelse"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_popover_delete_wizard__body_has_template_value
 msgid "Body content is the same as the template"
-msgstr ""
+msgstr "Brödtexten är detsamma som i mallen"
 
 #. module: calendar
 #. odoo-python
@@ -1143,7 +1151,7 @@ msgstr "Per dag"
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/attendee_calendar/attendee_calendar_model.js:0
 msgid "Bye-bye, record!"
-msgstr ""
+msgstr "Hejdå, rekord!"
 
 #. module: calendar
 #: model:ir.ui.menu,name:calendar.calendar_event_menu
@@ -1164,13 +1172,13 @@ msgstr "Kalenderlarm"
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_attendee
 msgid "Calendar Attendee Information"
-msgstr "Information till kalenderdeltagare"
+msgstr "Information till Kalenderdeltagare"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_res_users__calendar_default_privacy
 #: model:ir.model.fields,field_description:calendar.field_res_users_settings__calendar_default_privacy
 msgid "Calendar Default Privacy"
-msgstr ""
+msgstr "Kalender Standard Sekretess"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_event
@@ -1183,7 +1191,7 @@ msgstr "Kalenderhändelse"
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_filters
 msgid "Calendar Filters"
-msgstr ""
+msgstr "Kalenderfilter"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.invitation_page_anonymous
@@ -1198,17 +1206,17 @@ msgstr "Kalendermöte"
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_popover_delete_wizard
 msgid "Calendar Popover Delete Wizard"
-msgstr ""
+msgstr "Kalender Popover Ta bort guiden"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_provider_config
 msgid "Calendar Provider Configuration Wizard"
-msgstr ""
+msgstr "Konfigurationsguide för kalenderleverantör"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.res_config_settings_view_form
 msgid "Calendar Settings"
-msgstr ""
+msgstr "Kalenderinställningar"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -1218,7 +1226,7 @@ msgstr ""
 #. module: calendar
 #: model:mail.template,name:calendar.calendar_template_meeting_changedate
 msgid "Calendar: Date Updated"
-msgstr ""
+msgstr "Kalender: Datum Uppdaterat"
 
 #. module: calendar
 #: model:mail.template,name:calendar.calendar_template_delete_event
@@ -1233,22 +1241,22 @@ msgstr "Kalender: Händelsepåminnelse"
 #. module: calendar
 #: model:mail.template,name:calendar.calendar_template_meeting_update
 msgid "Calendar: Event Update"
-msgstr ""
+msgstr "Kalender: Uppdatering av Händelse"
 
 #. module: calendar
 #: model:mail.template,name:calendar.calendar_template_meeting_invitation
 msgid "Calendar: Meeting Invitation"
-msgstr ""
+msgstr "Kalender: Inbjudan till möte"
 
 #. module: calendar
 #: model:mail.template,name:calendar.calendar_template_meeting_reminder
 msgid "Calendar: Reminder"
-msgstr ""
+msgstr "Kalender: Påminnelse"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_popover_delete_wizard__can_edit_body
 msgid "Can Edit Body"
-msgstr ""
+msgstr "Kan redigera stycket"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.calendar_popover_delete_view
@@ -1263,16 +1271,19 @@ msgid ""
 "only one that hasn't declined\n"
 "        the event (only if the organizer is not the only attendee)"
 msgstr ""
+"Kontrollera om arrangören är ensam i händelsen, dvs. om arrangören är den "
+"enda som inte har avböjt\n"
+"        händelsen (endast om arrangören inte är den enda deltagaren)"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_filters__partner_checked
 msgid "Checked"
-msgstr ""
+msgstr "Markerad"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_provider_config__external_calendar_provider
 msgid "Choose an external calendar to configure"
-msgstr ""
+msgstr "Välj en extern kalender för att konfigurera"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__recurrence_update
@@ -1281,17 +1292,17 @@ msgid ""
 "is not allowed when dates or time is modified"
 msgstr ""
 "Välj vad som ska hända med andra händelser i upprepningen. Uppdatering av "
-"Alla händelser är inte tillåtet när datum eller tid har blivit ändrat"
+"Alla Händelser är inte tillåtet när datum eller tid blir ändrat"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.calendar_provider_config_view_form
 msgid "Client ID"
-msgstr ""
+msgstr "Klient-ID"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.calendar_provider_config_view_form
 msgid "Client Secret"
-msgstr ""
+msgstr "Klienthemlighet"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_type__color
@@ -1324,7 +1335,7 @@ msgstr "Anslut"
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/attendee_calendar/attendee_calendar_controller.js:0
 msgid "Connect your Calendar"
-msgstr ""
+msgstr "Anslut din kalender"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_res_partner
@@ -1346,7 +1357,7 @@ msgstr ""
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_popover_delete_wizard__body
 msgid "Contents"
-msgstr ""
+msgstr "Innehåll"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__count
@@ -1380,12 +1391,12 @@ msgstr "Skapad av"
 #: model:ir.model.fields,field_description:calendar.field_calendar_provider_config__create_date
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__create_date
 msgid "Created on"
-msgstr "Skapad"
+msgstr "Skapad den"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__current_attendee
 msgid "Current Attendee"
-msgstr ""
+msgstr "Nuvarande deltagare"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__rrule_type_ui__custom
@@ -1396,7 +1407,7 @@ msgstr "Anpassad"
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__rrule_type_ui__daily
 msgid "Daily"
-msgstr ""
+msgstr "Dagligen"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.invitation_page_anonymous
@@ -1424,13 +1435,13 @@ msgstr "Dag"
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Day of Month"
-msgstr "Dag i månaden"
+msgstr "Månadens dag"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__month_by__day
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_recurrence__month_by__day
 msgid "Day of month"
-msgstr "Dag i månaden"
+msgstr "Månadens dag"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_alarm__interval__days
@@ -1447,17 +1458,19 @@ msgstr "Avböj"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__declined_count
 msgid "Declined Count"
-msgstr ""
+msgstr "Avvisad räkning"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
 msgid "Default Privacy"
-msgstr ""
+msgstr "Standard sekretess"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_res_users_settings__calendar_default_privacy
 msgid "Default privacy setting for whom the calendar events will be visible."
 msgstr ""
+"Standardinställning för sekretess för vem kalenderhändelserna ska vara "
+"synliga för."
 
 #. module: calendar
 #. odoo-javascript
@@ -1473,22 +1486,22 @@ msgstr "Ta bort"
 #: model_terms:ir.ui.view,arch_db:calendar.calendar_popover_delete_view
 #: model_terms:ir.ui.view,arch_db:calendar.view_event_delete_wizard_form
 msgid "Delete Event"
-msgstr ""
+msgstr "Radera händelse"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_popover_delete_wizard__delete__all
 msgid "Delete all the events"
-msgstr ""
+msgstr "Radera alla händelser"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_popover_delete_wizard__delete__next
 msgid "Delete this and following events"
-msgstr ""
+msgstr "Radera denna och följande händelser"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_popover_delete_wizard__delete__one
 msgid "Delete this event"
-msgstr ""
+msgstr "Radera denna händelse"
 
 #. module: calendar
 #: model:mail.template,subject:calendar.calendar_template_delete_event
@@ -1510,7 +1523,7 @@ msgstr "Detaljer"
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_event_delete_wizard_form
 msgid "Discard"
-msgstr ""
+msgstr "Avbryt"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__videocall_source__discuss
@@ -1520,17 +1533,17 @@ msgstr "Diskutera"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__videocall_channel_id
 msgid "Discuss Channel"
-msgstr ""
+msgstr "Diskussions kanal"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_discuss_channel
 msgid "Discussion Channel"
-msgstr ""
+msgstr "Diskussionskanal"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__display_description
 msgid "Display Description"
-msgstr ""
+msgstr "Visa beskrivning"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_alarm__display_name
@@ -1583,18 +1596,18 @@ msgstr "Varaktighet"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_alarm__duration_minutes
 msgid "Duration in minutes"
-msgstr "Längd i minuter"
+msgstr "Varaktighet i minuter"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "EMAIL"
-msgstr ""
+msgstr "E-POST"
 
 #. module: calendar
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/ask_recurrence_update_policy_dialog.xml:0
 msgid "Edit Recurrent event"
-msgstr ""
+msgstr "Redigera Återkommande händelse"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -1657,7 +1670,7 @@ msgstr "Händelsealarm"
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_alarm_manager
 msgid "Event Alarm Manager"
-msgstr "Hanterare för händelsealarm"
+msgstr "Hanterare för Händelsealarm"
 
 #. module: calendar
 #: model:ir.actions.act_window,name:calendar.action_event_delete_wizard
@@ -1672,54 +1685,54 @@ msgstr "Mötestyp"
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_recurrence
 msgid "Event Recurrence Rule"
-msgstr "Regel för återkommande händelse"
+msgstr "Regel för Återkommande Händelse"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__display_time
 msgid "Event Time"
-msgstr "Evenemangstid"
+msgstr "Händelsetid"
 
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/calendar_recurrence.py:0
 msgid "Every %(interval)s Days"
-msgstr ""
+msgstr "Varje %(interval)s dagar"
 
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/calendar_recurrence.py:0
 msgid "Every %(interval)s Days for %(count)s events"
-msgstr ""
+msgstr "Varje %(interval)s dag för %(count)s händelser"
 
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/calendar_recurrence.py:0
 msgid "Every %(interval)s Days until %(until)s"
-msgstr ""
+msgstr "Varje %(interval)s Dagar till %(until)s"
 
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/calendar_recurrence.py:0
 msgid "Every %(interval)s Months day %(day)s"
-msgstr ""
+msgstr "Varje %(interval)s Månadsdag %(day)s"
 
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/calendar_recurrence.py:0
 msgid "Every %(interval)s Months day %(day)s for %(count)s events"
-msgstr ""
+msgstr "Varje %(interval)s Månadsdag %(day)s för %(count)s händelser"
 
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/calendar_recurrence.py:0
 msgid "Every %(interval)s Months day %(day)s until %(until)s"
-msgstr ""
+msgstr "Varje %(interval)s Månad dag %(day)s tills %(until)s"
 
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/calendar_recurrence.py:0
 msgid "Every %(interval)s Months on the %(position)s %(weekday)s"
-msgstr ""
+msgstr "Varje %(interval)s Månader på %(position)s %(weekday)s"
 
 #. module: calendar
 #. odoo-python
@@ -1728,6 +1741,8 @@ msgid ""
 "Every %(interval)s Months on the %(position)s %(weekday)s for %(count)s "
 "events"
 msgstr ""
+"Varje %(interval)s Månader på %(position)s %(weekday)s för %(count)s "
+"händelser"
 
 #. module: calendar
 #. odoo-python
@@ -1735,48 +1750,49 @@ msgstr ""
 msgid ""
 "Every %(interval)s Months on the %(position)s %(weekday)s until %(until)s"
 msgstr ""
+"Varje %(interval)s Månader på %(position)s %(weekday)s fram till %(until)s"
 
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/calendar_recurrence.py:0
 msgid "Every %(interval)s Weeks on %(days)s"
-msgstr ""
+msgstr "Varje %(interval)s Veckor på %(days)s"
 
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/calendar_recurrence.py:0
 msgid "Every %(interval)s Weeks on %(days)s for %(count)s events"
-msgstr ""
+msgstr "Varje %(interval)s Veckor på %(days)s för %(count)s händelser"
 
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/calendar_recurrence.py:0
 msgid "Every %(interval)s Weeks on %(days)s until %(until)s"
-msgstr ""
+msgstr "Varje %(interval)s Veckor på %(days)s fram till %(until)s"
 
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/calendar_recurrence.py:0
 msgid "Every %(interval)s Years"
-msgstr ""
+msgstr "Varje %(interval)s år"
 
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/calendar_recurrence.py:0
 msgid "Every %(interval)s Years for %(count)s events"
-msgstr ""
+msgstr "Varje %(interval)s år för %(count)s händelser"
 
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/calendar_recurrence.py:0
 msgid "Every %(interval)s Years until %(until)s"
-msgstr ""
+msgstr "Varje %(interval)s År fram till %(until)s"
 
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/mail_activity.py:0
 msgid "Feedback: %(feedback)s"
-msgstr ""
+msgstr "Återkoppling: %(feedback)s"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__byday__1
@@ -1803,7 +1819,7 @@ msgstr "Följare"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__message_partner_ids
 msgid "Followers (Partners)"
-msgstr "Följare (partners)"
+msgstr "Följare (kontakter)"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__end_type__forever
@@ -1849,32 +1865,32 @@ msgstr "Google"
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.res_config_settings_view_form
 msgid "Google Calendar"
-msgstr ""
+msgstr "Google Kalender"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.calendar_provider_config_view_form
 msgid "Google Calendar icon"
-msgstr ""
+msgstr "Ikon för Google Kalender"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_provider_config__cal_client_id
 msgid "Google Client_id"
-msgstr ""
+msgstr "Google Kund_id"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_provider_config__cal_client_secret
 msgid "Google Client_key"
-msgstr ""
+msgstr "Google Kund_nyckel"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_provider_config__cal_sync_paused
 msgid "Google Synchronization Paused"
-msgstr ""
+msgstr "Google-synkronisering pausad"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_ir_http
 msgid "HTTP Routing"
-msgstr "HTTP-rutt"
+msgstr "HTTP-routing"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__has_message
@@ -1916,7 +1932,7 @@ msgstr "Om markerad så finns det meddelanden som kräver din uppmärksamhet."
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__message_has_error
 msgid "If checked, some messages have a delivery error."
-msgstr "Om markerad har det uppstått leveransfel för vissa meddelanden."
+msgstr "Om markerad, en del meddelanden har leveransfel."
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__active
@@ -1924,8 +1940,8 @@ msgid ""
 "If the active field is set to false, it will allow you to hide the event "
 "alarm information without removing it."
 msgstr ""
-"Om det aktiva fältet är falskt, tillåter det dig att gömma händelselarm utan "
-"att radera det."
+"Om det aktiva fältet är falskt, tillåter det dig att gömma händelselarm "
+"information utan att radera det."
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__show_as
@@ -1937,6 +1953,12 @@ msgid ""
 " If the event is shown as 'free', other users know         that you are "
 "available during that period of time."
 msgstr ""
+"Om tiden visas som 'upptagen', kommer händelsen att vara synlig för andra "
+"personer med antingen fullständig information eller bara 'upptagen' skrivet "
+"beroende på dess integritet. Använd det här alternativet för att meddela "
+"andra att du inte är tillgänglig under den aktuella tidsperioden.\n"
+" Om händelsen visas som 'tillgänglig', vet andra användare att du är "
+"tillgänglig under den aktuella tidsperioden."
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__res_users__calendar_default_privacy__confidential
@@ -1951,7 +1973,7 @@ msgstr "Intervall"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__invalid_email_partner_ids
 msgid "Invalid Email Partner"
-msgstr ""
+msgstr "Ogiltig e-post partner"
 
 #. module: calendar
 #: model:mail.message.subtype,name:calendar.subtype_invitation
@@ -1972,7 +1994,7 @@ msgstr "Inbjudningsdetaljer"
 #. module: calendar
 #: model:mail.template,description:calendar.calendar_template_meeting_invitation
 msgid "Invitation email to new attendees"
-msgstr ""
+msgstr "Inbjudan med e-post till nya deltagare"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.invitation_page_anonymous
@@ -1982,7 +2004,7 @@ msgstr "Inbjudan för"
 #. module: calendar
 #: model:mail.template,subject:calendar.calendar_template_meeting_invitation
 msgid "Invitation to {{ object.event_id.name }}"
-msgstr ""
+msgstr "Inbjudan till {{ object.event_id.name }}"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -1992,32 +2014,32 @@ msgstr "Inbjudningar"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_popover_delete_wizard__is_mail_template_editor
 msgid "Is Editor"
-msgstr ""
+msgstr "Är Redigerare"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__message_is_follower
 msgid "Is Follower"
-msgstr "Är följare"
+msgstr "Är Följare"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__is_highlighted
 msgid "Is the Event Highlighted"
-msgstr "Är händelsen markerad"
+msgstr "Är Händelsen Markerad"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__is_organizer_alone
 msgid "Is the Organizer Alone"
-msgstr ""
+msgstr "Är organisatören ensam"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Join Video Call"
-msgstr ""
+msgstr "Delta i videosamtal"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_popover_delete_wizard__lang
 msgid "Language"
-msgstr ""
+msgstr "Språk"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__byday__-1
@@ -2047,19 +2069,19 @@ msgstr "Senast uppdaterad av"
 #: model:ir.model.fields,field_description:calendar.field_calendar_provider_config__write_date
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__write_date
 msgid "Last Updated on"
-msgstr "Senast uppdaterad på"
+msgstr "Senast uppdaterad den"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_res_partner__calendar_last_notif_ack
 #: model:ir.model.fields,field_description:calendar.field_res_users__calendar_last_notif_ack
 msgid "Last notification marked as read from base Calendar"
-msgstr "Sista notifikationen markerad som läst från baskalendern."
+msgstr "Sista notifikationen markerad som läst från baskalendern"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__rrule_type
 #: model:ir.model.fields,help:calendar.field_calendar_event__rrule_type_ui
 msgid "Let the event automatically repeat at that interval"
-msgstr "Låt evenemanget återkomma automatiskt med det intervallet"
+msgstr "Låt händelsen återkomma automatiskt med det intervallet"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -2081,12 +2103,12 @@ msgstr "Logotyp"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_popover_delete_wizard__template_id
 msgid "Mail Template"
-msgstr ""
+msgstr "E-postmall"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_attendee__mail_tz
 msgid "Mail Tz"
-msgstr ""
+msgstr "Post Tz"
 
 #. module: calendar
 #. odoo-javascript
@@ -2094,7 +2116,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_attendee__state__tentative
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Maybe"
-msgstr ""
+msgstr "Kanske"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_filters__user_id
@@ -2122,7 +2144,7 @@ msgstr "Mötestyper"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__videocall_location
 msgid "Meeting URL"
-msgstr ""
+msgstr "URL till mötet"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_attendee__event_id
@@ -2146,7 +2168,7 @@ msgstr "Möten"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__message_has_error
 msgid "Message Delivery error"
-msgstr "Fel vid leverans av meddelande"
+msgstr "Fel vid leverans meddelande"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__message_ids
@@ -2156,7 +2178,7 @@ msgstr "Meddelanden"
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.calendar_provider_config_view_form
 msgid "Microsoft Outlook icon"
-msgstr ""
+msgstr "Ikon för Microsoft Outlook"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_alarm__interval__minutes
@@ -2166,7 +2188,7 @@ msgstr "Minuter"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__res_model_name
 msgid "Model Description"
-msgstr ""
+msgstr "Modellbeskrivning"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__mon
@@ -2188,7 +2210,7 @@ msgstr "Månad"
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__rrule_type_ui__monthly
 msgid "Monthly"
-msgstr ""
+msgstr "Månatlig"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__rrule_type__monthly
@@ -2200,7 +2222,7 @@ msgstr "Månader"
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/calendar_form/calendar_quick_create.xml:0
 msgid "More Options"
-msgstr ""
+msgstr "Fler alternativ"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
@@ -2232,7 +2254,7 @@ msgstr "Ny"
 #: model:ir.model.fields,field_description:calendar.field_res_partner__activity_calendar_event_id
 #: model:ir.model.fields,field_description:calendar.field_res_users__activity_calendar_event_id
 msgid "Next Activity Calendar Event"
-msgstr "Nästa kalenderhändelse för aktivitet"
+msgstr "Nästa Kalenderhändelse för Aktivitet"
 
 #. module: calendar
 #. odoo-javascript
@@ -2240,7 +2262,7 @@ msgstr "Nästa kalenderhändelse för aktivitet"
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_attendee__state__declined
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "No"
-msgstr ""
+msgstr "Nej"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.invitation_page_anonymous
@@ -2255,13 +2277,13 @@ msgstr "Ingen feedback ännu"
 #. module: calendar
 #: model_terms:ir.actions.act_window,help:calendar.action_calendar_event
 msgid "No meetings found. Let's schedule one!"
-msgstr ""
+msgstr "Inga möten hittades. Låt oss schemalägga ett!"
 
 #. module: calendar
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/attendee_calendar/attendee_calendar_model.js:0
 msgid "No, keep it"
-msgstr ""
+msgstr "Nej, behåll den"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__notes
@@ -2303,14 +2325,14 @@ msgstr "Meddelande - 30 minuter"
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__alarm_ids
 msgid "Notifications sent to all attendees to remind of the meeting."
-msgstr ""
+msgstr "Meddelanden skickas till alla deltagare för att påminna om mötet."
 
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/calendar_alarm.py:0
 #: model:ir.model.fields,field_description:calendar.field_calendar_alarm__notify_responsible
 msgid "Notify Responsible"
-msgstr ""
+msgstr "Meddela ansvarig"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__message_needaction_counter
@@ -2320,7 +2342,7 @@ msgstr "Antal åtgärder"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__count
 msgid "Number of Repetitions"
-msgstr ""
+msgstr "Antal upprepningar"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__message_has_error_counter
@@ -2330,7 +2352,7 @@ msgstr "Antal fel"
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__message_needaction_counter
 msgid "Number of messages requiring action"
-msgstr ""
+msgstr "Antal meddelanden som kräver åtgärd"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__message_has_error_counter
@@ -2352,12 +2374,12 @@ msgstr "OK"
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Online Meeting"
-msgstr ""
+msgstr "Möte online"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
 msgid "Only Internal Users"
-msgstr ""
+msgstr "Endast interna användare"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__effective_privacy__confidential
@@ -2407,22 +2429,22 @@ msgstr "Outlook"
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.res_config_settings_view_form
 msgid "Outlook Calendar"
-msgstr ""
+msgstr "Outlook Kalender"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_provider_config__microsoft_outlook_client_identifier
 msgid "Outlook Client Id"
-msgstr ""
+msgstr "Klient-ID för Outlook"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_provider_config__microsoft_outlook_client_secret
 msgid "Outlook Client Secret"
-msgstr ""
+msgstr "Outlook-klientens hemlighet"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_provider_config__microsoft_outlook_sync_paused
 msgid "Outlook Synchronization Paused"
-msgstr ""
+msgstr "Synkronisering av Outlook pausad"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__attendee_ids
@@ -2442,7 +2464,7 @@ msgstr "Partnerrelaterad data om användaren"
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__privacy
 msgid "People to whom this event will be visible."
-msgstr ""
+msgstr "Personer för vilka denna händelse kommer att vara synlig."
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_attendee__phone
@@ -2485,7 +2507,7 @@ msgstr ""
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_popover_delete_wizard__recipient_ids
 msgid "Recipients"
-msgstr ""
+msgstr "Mottagare"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__rrule_type
@@ -2534,7 +2556,7 @@ msgstr "Påminnelser"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_popover_delete_wizard__render_model
 msgid "Rendering Model"
-msgstr ""
+msgstr "Renderingsmodell"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__rrule_type_ui
@@ -2544,7 +2566,7 @@ msgstr "Repetera"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__interval
 msgid "Repeat On"
-msgstr ""
+msgstr "Upprepa på"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__until
@@ -2554,7 +2576,7 @@ msgstr "Repetera till"
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Repeat every"
-msgstr ""
+msgstr "Upprepa varje"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__interval
@@ -2570,7 +2592,7 @@ msgstr "Repetera x gånger"
 #. odoo-javascript
 #: code:addons/calendar/static/src/activity/activity_patch.xml:0
 msgid "Reschedule"
-msgstr ""
+msgstr "Boka om"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
@@ -2603,7 +2625,7 @@ msgstr "lördag"
 #: model_terms:ir.ui.view,arch_db:calendar.mail_activity_schedule_view_form
 #: model_terms:ir.ui.view,arch_db:calendar.mail_activity_view_form_popup
 msgid "Schedule"
-msgstr ""
+msgstr "Schemalägg"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.mail_activity_schedule_view_form
@@ -2614,7 +2636,7 @@ msgstr ""
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__partner_id
 msgid "Scheduled by"
-msgstr ""
+msgstr "Planerad av"
 
 #. module: calendar
 #. odoo-python
@@ -2623,11 +2645,13 @@ msgid ""
 "Scheduling an activity using the calendar is not possible on more than one "
 "record."
 msgstr ""
+"Att schemalägga en aktivitet med hjälp av kalendern är inte möjligt på mer "
+"än en post."
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
 msgid "Search Meetings"
-msgstr "Sök möten"
+msgstr "Sök Möten"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__byday__2
@@ -2638,17 +2662,17 @@ msgstr "Sekund"
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Select attendees..."
-msgstr "Välj deltagare ...."
+msgstr "Välj deltagare..."
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Send Email to attendees"
-msgstr ""
+msgstr "Skicka e-post till deltagarna"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Send Invitations"
-msgstr ""
+msgstr "Skicka inbjudningar"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_tree
@@ -2668,12 +2692,12 @@ msgstr ""
 #. module: calendar
 #: model:mail.template,description:calendar.calendar_template_meeting_reminder
 msgid "Sent to all attendees if a reminder is set"
-msgstr ""
+msgstr "Skickas till alla deltagare om en påminnelse har ställts in"
 
 #. module: calendar
 #: model:mail.template,description:calendar.calendar_template_meeting_changedate
 msgid "Sent to all attendees if the schedule change"
-msgstr ""
+msgstr "Skickas till alla deltagare om schemat ändras"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -2687,17 +2711,17 @@ msgstr ""
 #: model:ir.actions.act_window,name:calendar.calendar_settings_action
 #: model:ir.ui.menu,name:calendar.menu_calendar_settings
 msgid "Settings"
-msgstr ""
+msgstr "Inställningar"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__should_show_status
 msgid "Should Show Status"
-msgstr ""
+msgstr "Bör visa status"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__show_as
 msgid "Show as"
-msgstr ""
+msgstr "Visa som"
 
 #. module: calendar
 #. odoo-javascript
@@ -2746,7 +2770,7 @@ msgstr "Slutdatum för en händelse, utan tid för heldags händelser"
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/attendee_calendar/attendee_calendar_controller.xml:0
 msgid "Stop synchro"
-msgstr ""
+msgstr "Stoppa synkrot"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_popover_delete_wizard__subject
@@ -2758,7 +2782,7 @@ msgstr "Ämne"
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.calendar_popover_delete_view
 msgid "Submit"
-msgstr ""
+msgstr "Skicka"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__sun
@@ -2770,19 +2794,19 @@ msgstr "Sön"
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__weekday__sun
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_recurrence__weekday__sun
 msgid "Sunday"
-msgstr "söndag"
+msgstr "Söndag"
 
 #. module: calendar
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/attendee_calendar/attendee_calendar_controller.xml:0
 msgid "Synchro is paused"
-msgstr ""
+msgstr "Synchro är pausad"
 
 #. module: calendar
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/attendee_calendar/attendee_calendar_controller.xml:0
 msgid "Synchronize with"
-msgstr ""
+msgstr "Synkronisera med"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.calendar_provider_config_view_form
@@ -2799,7 +2823,7 @@ msgstr "Synkronisera er kalender med Outlook"
 #. module: calendar
 #: model:ir.model.constraint,message:calendar.constraint_calendar_event_type_name_uniq
 msgid "Tag name already exists!"
-msgstr ""
+msgstr "Tagnamnet finns redan!"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__categ_ids
@@ -2809,7 +2833,7 @@ msgstr "Etiketter"
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_alarm__mail_template_id
 msgid "Template used to render mail reminder content."
-msgstr ""
+msgstr "Mall som används för att rendera påminnelseinnehåll via e-post."
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.invitation_page_anonymous
@@ -2819,7 +2843,7 @@ msgstr "Preliminär"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__tentative_count
 msgid "Tentative Count"
-msgstr ""
+msgstr "Tentativ räkning"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -2848,6 +2872,8 @@ msgid ""
 "The ending date and time cannot be earlier than the starting date and time.\n"
 "Meeting “%(name)s” starts at %(start_time)s and ends at %(end_time)s"
 msgstr ""
+"Slutdatum och sluttid får inte vara tidigare än startdatum och starttid.\n"
+"Möte \"%(name)s\" börjar %(start_time)s och slutar %(end_time)s"
 
 #. module: calendar
 #. odoo-python
@@ -2856,6 +2882,8 @@ msgid ""
 "The ending date cannot be earlier than the starting date.\n"
 "Meeting “%(name)s” starts on %(start_date)s and ends on %(end_date)s"
 msgstr ""
+"Slutdatumet kan inte vara tidigare än startdatumet.\n"
+"Mötet \"%(name)s\" börjar den %(start_date)s och slutar den %(end_date)s"
 
 #. module: calendar
 #. odoo-python
@@ -2873,7 +2901,7 @@ msgstr "Antalet repetitioner får inte vara negativt."
 #. odoo-python
 #: code:addons/calendar/models/calendar_event.py:0
 msgid "There are no attendees on these events"
-msgstr "Det finns inga deltagare på dessa evenemang"
+msgstr "Det finns inga deltagare på dessa händelser"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__byday__3
@@ -2905,29 +2933,29 @@ msgstr "Tor"
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__weekday__thu
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_recurrence__weekday__thu
 msgid "Thursday"
-msgstr "torsdag"
+msgstr "Torsdag"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__event_tz
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__event_tz
 msgid "Timezone"
-msgstr "Tidzon"
+msgstr "Tidszon"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_attendee__mail_tz
 msgid "Timezone used for displaying time in the mail template"
-msgstr ""
+msgstr "Tidszon som används för att visa tid i e-postmallen"
 
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/res_users.py:0
 msgid "Today's Meetings"
-msgstr "Möten idag"
+msgstr "Dagens möten"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__trigger_id
 msgid "Trigger"
-msgstr ""
+msgstr "Utlösare"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__tue
@@ -2939,7 +2967,7 @@ msgstr "Tis"
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__weekday__tue
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_recurrence__weekday__tue
 msgid "Tuesday"
-msgstr "tisdag"
+msgstr "Tisdag"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_alarm__alarm_type
@@ -2950,7 +2978,7 @@ msgstr "Typ"
 #. odoo-python
 #: code:addons/calendar/models/calendar_event.py:0
 msgid "Unable to save the recurrence with \"This Event\""
-msgstr ""
+msgstr "Kan inte spara återkommande med \"Denna händelse\""
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__unavailable_partner_ids
@@ -2987,12 +3015,12 @@ msgstr "Användare"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__user_can_edit
 msgid "User Can Edit"
-msgstr ""
+msgstr "Användaren kan redigera"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_res_users_settings
 msgid "User Settings"
-msgstr ""
+msgstr "Användarinställningar"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -3007,7 +3035,7 @@ msgstr ""
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__videocall_source
 msgid "Videocall Source"
-msgstr ""
+msgstr "Källa för videosamtal"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_quick_create
@@ -3024,7 +3052,7 @@ msgstr "Ons"
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__weekday__wed
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_recurrence__weekday__wed
 msgid "Wednesday"
-msgstr "onsdag"
+msgstr "Onsdag"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__weekday
@@ -3035,7 +3063,7 @@ msgstr "Veckodag"
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__rrule_type_ui__weekly
 msgid "Weekly"
-msgstr ""
+msgstr "Veckovis"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__rrule_type__weekly
@@ -3060,7 +3088,7 @@ msgstr ""
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__rrule_type_ui__yearly
 msgid "Yearly"
-msgstr ""
+msgstr "Årligen"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__rrule_type__yearly
@@ -3074,12 +3102,12 @@ msgstr "År"
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_attendee__state__accepted
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Yes"
-msgstr ""
+msgstr "Ja"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.invitation_page_anonymous
 msgid "Yes I'm going."
-msgstr "Ja, jag kommer"
+msgstr "Ja, jag kommer."
 
 #. module: calendar
 #. odoo-python
@@ -3088,18 +3116,20 @@ msgid ""
 "You are not allowed to change the calendar default privacy of another user "
 "due to privacy constraints."
 msgstr ""
+"Du får inte ändra en annan användares kalenderinställningar på grund av "
+"integritetsskäl."
 
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/calendar_event.py:0
 msgid "You can't update a recurrence without base event."
-msgstr ""
+msgstr "Du kan inte uppdatera en återkommande händelse utan bas händelse."
 
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/calendar_attendee.py:0
 msgid "You cannot duplicate a calendar attendee."
-msgstr "Du kan inte duplicera ett kalenderdeltagande"
+msgstr "Du kan inte duplicera ett kalenderdeltagande."
 
 #. module: calendar
 #. odoo-python
@@ -3111,25 +3141,25 @@ msgstr "Du måste välja minst en dag i veckan"
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/attendee_calendar/common/attendee_calendar_common_renderer.xml:0
 msgid "You're alone in this meeting"
-msgstr ""
+msgstr "Du är ensam i det här mötet"
 
 #. module: calendar
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/fields/many2many_attendee_expandable.xml:0
 msgid "accepted"
-msgstr ""
+msgstr "accepterad"
 
 #. module: calendar
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/fields/many2many_attendee_expandable.xml:0
 msgid "attendees"
-msgstr ""
+msgstr "deltagare"
 
 #. module: calendar
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/fields/many2many_attendee_expandable.xml:0
 msgid "declined"
-msgstr ""
+msgstr "avvisad"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -3139,19 +3169,19 @@ msgstr "t.ex. Affärslunch"
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "e.g: 12/31/2023"
-msgstr ""
+msgstr "e.g: 12/31/2023"
 
 #. module: calendar
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/fields/attendee_tags_list.xml:0
 msgid "no email"
-msgstr ""
+msgstr "i e-postmeddelandet"
 
 #. module: calendar
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/fields/many2many_attendee.xml:0
 msgid "props.placeholder"
-msgstr ""
+msgstr "props.platshållare"
 
 #. module: calendar
 #. odoo-javascript
@@ -3163,22 +3193,22 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/fields/many2many_attendee_expandable.xml:0
 msgid "uncertain"
-msgstr ""
+msgstr "osäker"
 
 #. module: calendar
 #: model:mail.template,subject:calendar.calendar_template_meeting_reminder
 msgid "{{ object.event_id.name }} - Reminder"
-msgstr ""
+msgstr "{{ object.event_id.name }} - Påminnelse"
 
 #. module: calendar
 #: model:mail.template,subject:calendar.calendar_template_meeting_changedate
 msgid "{{ object.event_id.name }}: Date updated"
-msgstr ""
+msgstr "{{ object.event_id.name }}: Datum för uppdatering"
 
 #. module: calendar
 #: model:mail.template,subject:calendar.calendar_template_meeting_update
 msgid "{{object.name}}: Event update"
-msgstr ""
+msgstr "{{object.name}}: Uppdatering av händelse"
 
 #~ msgid ""
 #~ "<i class=\"fa fa-fw fa-calendar\" aria-label=\"Meetings\" role=\"img\" "

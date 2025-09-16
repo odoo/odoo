@@ -1,28 +1,31 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* purchase_stock
+# * purchase_stock
 #
 # Translators:
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-09-11 14:00+0000\n"
-"PO-Revision-Date: 2024-01-30 15:14+0400\n"
-"Last-Translator: \n"
-"Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
+"PO-Revision-Date: 2025-09-16 04:42+0000\n"
+"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"Language-Team: Russian <https://translate.odoo.com/projects/odoo-19/"
+"purchase_stock/ru/>\n"
 "Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
-"n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || "
-"(n%100>=11 && n%100<=14)? 2 : 3);\n"
+"n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || ("
+"n%100>=11 && n%100<=14)? 2 : 3);\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_view_form_inherit
 msgid "% On-Time Delivery"
-msgstr "% своевременной доставки"
+msgstr "% своевременной поставки"
 
 #. module: purchase_stock
 #. odoo-python
@@ -45,7 +48,7 @@ msgstr "+ %d день(ы)"
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_partner_view_purchase_buttons_inherit
 msgid "<span class=\"o_stat_text\">On-time Rate</span>"
-msgstr "<span class=\"o_stat_text\">Показатель своевременности</span>"
+msgstr "<span class=\"o_stat_text\">Уровень своевременности</span>"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.stock_production_lot_view_form
@@ -96,7 +99,7 @@ msgstr "<span> дни</span>"
 #: model_terms:ir.ui.view,arch_db:purchase_stock.report_purchaseorder_document
 #: model_terms:ir.ui.view,arch_db:purchase_stock.report_purchasequotation_document
 msgid "<strong class=\"d-block mt-3\">Shipping address</strong>"
-msgstr ""
+msgstr "<strong class=\"d-block mt-3\">Адрес доставки</strong>"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.report_purchaseorder_document
@@ -112,7 +115,7 @@ msgstr ""
 #. module: purchase_stock
 #: model:ir.model.fields,help:purchase_stock.field_purchase_order_line__is_storable
 msgid "A storable product is a product for which you manage stock."
-msgstr ""
+msgstr "Складируемый товар — это товар, для которого вы управляете запасами."
 
 #. module: purchase_stock
 #: model:ir.model.fields,help:purchase_stock.field_purchase_order_line__qty_received_method
@@ -220,7 +223,7 @@ msgstr "Контакты"
 #. odoo-python
 #: code:addons/purchase_stock/models/purchase_order.py:0
 msgid "Corresponding receipt not found."
-msgstr "Соответствующая квитанция не найдена."
+msgstr "Соответствующий прием товаров не найден."
 
 #. module: purchase_stock
 #: model:ir.model,website_form_label:purchase_stock.model_res_partner
@@ -230,7 +233,7 @@ msgstr ""
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_move__created_purchase_line_ids
 msgid "Created Purchase Order Lines"
-msgstr "Создание строк заказов на поставку"
+msgstr "Создание позиций заказов на поставку"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order_line__product_description_variants
@@ -245,20 +248,20 @@ msgstr ""
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_picking__days_to_arrive
 msgid "Days To Arrive"
-msgstr ""
+msgstr "Дней до прибытия"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_stock
 msgid "Days needed to confirm a PO"
-msgstr "Дни, необходимые для подтверждения ДО"
+msgstr "Дни, необходимые для подтверждения заказа"
 
 #. module: purchase_stock
 #: model:ir.model.fields,help:purchase_stock.field_res_company__days_to_purchase
 #: model:ir.model.fields,help:purchase_stock.field_res_config_settings__days_to_purchase
 msgid "Days needed to confirm a PO, define when a PO should be validated"
 msgstr ""
-"Дни, необходимые для подтверждения PO, определяют, когда PO должно быть "
-"подтверждено"
+"Дни, необходимые для подтверждения заказа, определяют, когда заказ должен "
+"быть подтвержден"
 
 #. module: purchase_stock
 #. odoo-python
@@ -266,7 +269,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:purchase_stock.field_res_company__days_to_purchase
 #: model:ir.model.fields,field_description:purchase_stock.field_res_config_settings__days_to_purchase
 msgid "Days to Purchase"
-msgstr "Дни до покупки"
+msgstr "Дней на покупку"
 
 #. module: purchase_stock
 #: model:ir.model.fields,help:purchase_stock.field_res_partner__group_rfq
@@ -285,7 +288,7 @@ msgstr ""
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_picking__delay_pass
 msgid "Delay Pass"
-msgstr ""
+msgstr "Просрочено"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__picking_type_id
@@ -352,17 +355,17 @@ msgstr "Дропшиппинг"
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_report__effective_date
 #: model:ir.model.fields,field_description:purchase_stock.field_vendor_delay_report__date
 msgid "Effective Date"
-msgstr "Срок действия"
+msgstr "Фактическая дата"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.vendor_delay_report_filter
 msgid "Effective Date Last Year"
-msgstr "Дата вступления в силу Последний год"
+msgstr "Фактическая дата в прошлом году"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_report__days_to_arrival
 msgid "Effective Days To Arrival"
-msgstr ""
+msgstr "Фактические дни до прибытия"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_warehouse_orderpoint__effective_vendor_id
@@ -516,7 +519,7 @@ msgstr "Запись в журнале"
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_account_move_line
 msgid "Journal Item"
-msgstr "Наименование в журнале"
+msgstr "Элемент журнала"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_product_supplierinfo__last_purchase_date
@@ -526,7 +529,7 @@ msgstr "Последняя покупка"
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order_line__location_final_id
 msgid "Location from procurement"
-msgstr ""
+msgstr "Местоположение из закупки"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_purchase
@@ -546,7 +549,7 @@ msgstr "Могут потребоваться ручные действия."
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_stock_warehouse_orderpoint
 msgid "Minimum Inventory Rule"
-msgstr "Правило минимального запаса"
+msgstr "Правило минимального остатка"
 
 #. module: purchase_stock
 #: model:ir.model.fields.selection,name:purchase_stock.selection__res_partner__group_on__1
@@ -566,7 +569,7 @@ msgstr "Затронуты следующие перемещения:"
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_help_message_template
 msgid "No receipt yet! Automate them with purchase orders."
-msgstr ""
+msgstr "Поступлений еще нет! Автоматизируйте их с помощью заказов на закупку."
 
 #. module: purchase_stock
 #. odoo-python
@@ -598,7 +601,7 @@ msgstr ""
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.vendor_delay_report_view_graph
 msgid "On-Time Delivery"
-msgstr "Своевременная доставка"
+msgstr "Своевременная поставка"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__on_time_rate
@@ -606,12 +609,12 @@ msgstr "Своевременная доставка"
 #: model:ir.model.fields,field_description:purchase_stock.field_res_users__on_time_rate
 #: model:ir.model.fields,field_description:purchase_stock.field_vendor_delay_report__on_time_rate
 msgid "On-Time Delivery Rate"
-msgstr "Коэффициент своевременной доставки"
+msgstr "Уровень своевременности поставки"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_vendor_delay_report__qty_on_time
 msgid "On-Time Quantity"
-msgstr "Своевременное количество"
+msgstr "Количество в срок"
 
 #. module: purchase_stock
 #: model:ir.actions.act_window,name:purchase_stock.action_purchase_vendor_delay_report
@@ -622,7 +625,7 @@ msgstr "Своевременная доставка"
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_partner_view_purchase_buttons_inherit
 msgid "On-time Rate"
-msgstr "Показатель своевременности"
+msgstr "Уровень своевременности"
 
 #. module: purchase_stock
 #. odoo-python
@@ -683,7 +686,7 @@ msgstr "Пополнение продукта"
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_stock_replenish_mixin
 msgid "Product Replenish Mixin"
-msgstr ""
+msgstr "Миксин пополнения запаса продукта"
 
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_product_product
@@ -704,7 +707,7 @@ msgstr "Позиции заказа"
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_purchase_order
 msgid "Purchase Order"
-msgstr "Заказа на покупку"
+msgstr "Заказ на покупку"
 
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_purchase_order_line
@@ -749,7 +752,7 @@ msgstr ""
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_view_form_inherit
 msgid "Receipt"
-msgstr "Квитанция"
+msgstr "Поступления"
 
 #. module: purchase_stock
 #. odoo-python
@@ -790,6 +793,9 @@ msgid ""
 "            Orange: To process today\n"
 "            Green: On time"
 msgstr ""
+"Красный: Просрочено\n"
+"            Оранжевый: Обработать сегодня\n"
+"            Зеленый: Вовремя"
 
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_stock_reference
@@ -816,7 +822,7 @@ msgstr "Запросите поставщиков для доставки ваш
 #. odoo-javascript
 #: code:addons/purchase_stock/static/src/purchase_stock_forecasted/forecasted_details.xml:0
 msgid "Requests for quotation"
-msgstr "Запросы на котировки"
+msgstr "Запросы на Коммерческое предложение"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order_line__move_ids
@@ -868,7 +874,7 @@ msgstr "Движение запасов"
 #: model:ir.model.fields.selection,name:purchase_stock.selection__purchase_order_line__qty_received_method__stock_moves
 #: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_line_view_form_inherit
 msgid "Stock Moves"
-msgstr "Перемещения запасов"
+msgstr "Движения по складам"
 
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_stock_forecasted_product_product
@@ -997,6 +1003,9 @@ msgid ""
 "location (%(location)s) of reordering rule (%(reordering_rule)s) for product "
 "%(product)s. Change the operation type or cancel the request for quotation."
 msgstr ""
+"Склад типа операции (%(operation_type)s) не соответствует местоположению "
+"(%(location)s), указанному в правиле повторного заказа (%(reordering_rule)s) "
+"для товара %(product)s. Измените тип операции или отмените запрос котировки."
 
 #. module: purchase_stock
 #. odoo-python
@@ -1030,11 +1039,12 @@ msgid ""
 "demand flow. The requested delivery address will be the customer delivery "
 "address and not your warehouse."
 msgstr ""
-"Это добавляет маршрут прямой поставки, применяемый к ТМЦ для доставки "
-"поставщиками вашим клиентам. ТМЦ на прямую поставку будет генерировать "
-"запрос на закупку для предложения после подтверждения заказа на продажу. Это "
-"поток по требованию. Запрашиваемый адрес доставки будет адресом доставки "
-"клиента, а не вашим складом."
+"Это добавляет маршрут прямой поставки (dropshipping), применяемый к товарам "
+"для доставки поставщиками напрямую к вашим клиентам. Заказ на прямую "
+"поставку (поставщик - клиент) создаст запрос на закупку у поставщиков после "
+"подтверждения заказа на продажу. Работа начинается после запроса клиента. "
+"Запрашиваемый адрес доставки будет адресом доставки клиента, а не вашим "
+"складом."
 
 #. module: purchase_stock
 #: model:ir.model.fields,help:purchase_stock.field_purchase_order__picking_type_id
@@ -1081,7 +1091,7 @@ msgstr "Общее количество"
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order_line__is_storable
 msgid "Track Inventory"
-msgstr ""
+msgstr "Отслеживать на складе"
 
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_stock_picking
@@ -1117,12 +1127,12 @@ msgstr "Отчет о задержке поставщика"
 #. odoo-python
 #: code:addons/purchase_stock/models/stock_rule.py:0
 msgid "Vendor Lead Time"
-msgstr "Время ожидания поставщика"
+msgstr "Время ожидания поставки от поставщика"
 
 #. module: purchase_stock
 #: model_terms:ir.actions.act_window,help:purchase_stock.action_purchase_vendor_delay_report
 msgid "Vendor On-time Delivery analysis"
-msgstr "Анализ своевременной поставки поставщиком"
+msgstr "Анализ своевременности поставки"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_replenishment_info__supplierinfo_id
@@ -1179,7 +1189,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/purchase_stock/models/purchase_order.py:0
 msgid "You must set a Vendor Location for this partner %s"
-msgstr "Вы должны указать местоположение Производителя для партнера  %s "
+msgstr "Вы должны указать местоположение Производителя для партнера  %s"
 
 #. module: purchase_stock
 #. odoo-javascript

@@ -1,6 +1,6 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* website_sale
+# * website_sale
 #
 # Translators:
 # Mehmet Demirel <mdemirell@gmail.com>, 2022
@@ -23,20 +23,22 @@
 # Umur Akın <umura@projetgrup.com>, 2022
 # Ediz Duman <neps1192@gmail.com>, 2023
 # Halil, 2023
-#
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-16 13:48+0000\n"
-"PO-Revision-Date: 2022-09-22 05:57+0000\n"
-"Last-Translator: Halil, 2023\n"
-"Language-Team: Turkish (https://app.transifex.com/odoo/teams/41243/tr/)\n"
+"PO-Revision-Date: 2025-09-16 02:35+0000\n"
+"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"Language-Team: Turkish <https://translate.odoo.com/projects/odoo-19/"
+"website_sale/tr/>\n"
 "Language: tr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
@@ -129,7 +131,7 @@ msgstr "<b>Teslimat: </b>"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.o_wsale_offcanvas
 msgid "<b>Sort By</b>"
-msgstr "<b> Sırala </b>"
+msgstr "<b>Sırala</b>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_summary
@@ -249,12 +251,12 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
 msgid "<option value=\"\">Country...</option>"
-msgstr ""
+msgstr "<option value=\"\">Ülke...</option>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
 msgid "<option value=\"\">State / Province...</option>"
-msgstr ""
+msgstr "İl/İlçe..."
 
 #. module: website_sale
 #. odoo-python
@@ -266,8 +268,11 @@ msgid ""
 "                    "
 msgstr ""
 "<p class=\"o_view_nocontent_smiling_face\">\n"
-"                        Terk edilmiş tüm arabaları burada bulabilirsiniz, yani web sitenizin ziyaretçileri tarafından bir saatten daha uzun bir süre önce oluşturulan ve henüz onaylanmayan arabaları.</p>\n"
-"                        <p>Müşterileri teşvik etmek için bir e-posta göndermelisiniz!</p>\n"
+"                        Terk edilmiş tüm sepetleri, yani web sitenizin "
+"ziyaretçileri tarafından bir saatten uzun bir süre önce oluşturulmuş ve "
+"henüz onaylanmamış sepetleri burada bulabilirsiniz.</p>\n"
+"                        <p>Müşterileri teşvik etmek için onlara bir e-posta "
+"göndermelisiniz!</p>\n"
 "                    "
 
 #. module: website_sale
@@ -293,6 +298,9 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "<span class=\"fa fa-lg fa-globe\" title=\"Values set here are website-specific.\" groups=\"website.group_multi_website\"/>"
 msgstr ""
+"<span class=\"fa fa-lg fa-globe\" title="
+"\"Values set here are website-specific.\" groups="
+"\"website.group_multi_website\"/>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -384,7 +392,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.confirmation
 msgid "<span>Order</span>"
-msgstr "<span>Sipariş</span>"
+msgstr "<span>Sipariş Numaranız</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.short_cart_summary
@@ -524,6 +532,8 @@ msgstr "<u>Şartlar ve Koşullar</u>"
 #: model:ir.model.fields,help:website_sale.field_delivery_carrier__website_description
 msgid "A description of the Product that you want to communicate to your customers. This description will be copied to every Sales Order, Delivery Order and Customer Invoice/Credit Note"
 msgstr ""
+"Müşterilerinize iletmek istediğiniz Ürün açıklaması. Bu açıklama her Satış "
+"Siparişi, Teslimat Siparişi ve Müşteri Faturası/Kredi Notuna kopyalanacaktır"
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_res_config_settings__terms_url
@@ -632,7 +642,7 @@ msgstr "Aksiyon"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_template__message_needaction
 msgid "Action Needed"
-msgstr ""
+msgstr "Aksiyon Gerekiyor"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -643,7 +653,7 @@ msgstr "Ekle"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/xml/website_sale_reorder_modal.xml:0
 msgid "Add To Cart"
-msgstr "Add To Cart"
+msgstr "Sepete Ekle"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__add_to_cart_action
@@ -768,7 +778,7 @@ msgstr "İptal Edilen Sepetin Miktarı"
 #. odoo-python
 #: code:addons/website_sale/controllers/delivery.py:0
 msgid "Anonymous express checkout partner for order %s"
-msgstr ""
+msgstr "%s siparişi için anonim hızlı ödeme ortağı"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.coupon_form
@@ -797,7 +807,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Assignment"
-msgstr ""
+msgstr "Atama"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -807,7 +817,7 @@ msgstr "Çevrimiçi siparişlerin atanması"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_template__message_attachment_count
 msgid "Attachment Count"
-msgstr ""
+msgstr "Ek Sayısı"
 
 #. module: website_sale
 #: model:ir.ui.menu,name:website_sale.menu_product_attribute_action
@@ -819,7 +829,7 @@ msgstr "Nitelikler"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Automatically send abandoned checkout emails"
-msgstr ""
+msgstr "Otomatik terk edilmiş sepet epostası yolla"
 
 #. module: website_sale
 #. odoo-javascript
@@ -873,7 +883,7 @@ msgstr "Temel Birimler"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
 msgid "Be aware!"
-msgstr "Farkında olmak!"
+msgstr "Fatura adresinizi kontrol edin!"
 
 #. module: website_sale
 #: model:res.country.group,name:website_sale.benelux
@@ -921,7 +931,11 @@ msgstr "Variller"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Boost your sales with multiple kinds of programs: Coupons, Promotions, Gift Card, Loyalty. Specific conditions can be set (products, customers, minimum purchase amount, period). Rewards can be discounts (% or amount) or free products."
-msgstr "Birden fazla program türüyle satışlarınızı artırın: Kuponlar, Promosyonlar, Hediye Kartı, Sadakat. Belirli koşullar ayarlanabilir (ürünler, müşteriler, minimum satın alma tutarı, dönem). Ödüller indirimler (% or tutarı) veya ücretsiz ürünler olabilir."
+msgstr ""
+"Birden fazla program türüyle satışlarınızı artırın: Kuponlar, Promosyonlar, "
+"Hediye Kartı, Sadakat. Belirli koşullar ayarlanabilir (ürünler, müşteriler, "
+"minimum satın alma tutarı, dönem). Ödüller indirimler (% veya tutarı) veya "
+"ücretsiz ürünler olabilir."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -1131,7 +1145,7 @@ msgstr "Alt Kategoriler"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.payment_delivery
 msgid "Choose a delivery method"
-msgstr ""
+msgstr "Bir teslimat yöntemi seçin"
 
 #. module: website_sale
 #: model:product.pricelist,name:website_sale.list_christmas
@@ -1356,12 +1370,12 @@ msgstr "Oluşturan"
 #: model:ir.model.fields,field_description:website_sale.field_website_base_unit__create_date
 #: model:ir.model.fields,field_description:website_sale.field_website_sale_extra_field__create_date
 msgid "Created on"
-msgstr "Oluşturulma"
+msgstr "Oluşturuldu"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce_abondand
 msgid "Creation Date"
-msgstr "Oluşturulma Tarihi"
+msgstr "Oluşturulma"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.s_dynamic_snippet_products_template_options
@@ -1417,19 +1431,28 @@ msgid ""
 "\n"
 "- If all the products in the checkout are free, and the customer does not visit the shipping page to add a shipping fee or the shipping fee is also free, then the email won't be sent."
 msgstr ""
-"Müşterinin oturum açması gerekir, aksi takdirde posta adresi bilinmemektedir.     \n"
+"Müşterinin oturum açmamış olduğu durumda e-posta adresi bilinmemektedir.     "
 "\n"
-"- Potansiyel bir müşteri bir veya daha fazla terk edilmiş ödeme sayfası oluşturur ve ardından kurtarma e-postası gönderilmeden önce bir satışı tamamlarsa e-posta gönderilmez.     \n"
 "\n"
-"- Kullanıcı manuel olarak bir kurtarma e-postası gönderdiyse, posta ikinci kez gönderilmez     \n"
+"- Potansiyel bir müşteri bir veya daha fazla terk edilmiş ödeme işlemi "
+"oluşturur ve kurtarma e-postası gönderilmeden önce satışı tamamlarsa, e-"
+"posta gönderilmez.     \n"
 "\n"
-"- Müşteri ödeme işlemini tamamlamaya çalıştığında bir ödeme işleme hatası oluştuysa e-posta gönderilmez.     \n"
+"- Kullanıcı kurtarma e-postasını manuel olarak göndermişse, e-posta ikinci "
+"kez gönderilmez     \n"
 "\n"
-"- Mağazanız müşterinin adresine gönderimi desteklemiyorsa e-posta gönderilmez.     \n"
+"- Müşteri ödeme işlemini tamamlamaya çalışırken bir ödeme işleme hatası "
+"meydana gelirse, e-posta gönderilmez.     \n"
 "\n"
-"- Ödeme sayfasındaki ürünlerden hiçbiri satın alınamıyorsa (örneğin boş envanter) e-posta gönderilmez.     \n"
+"- Mağazanız müşterinin adresine gönderim yapmıyorsa e-posta "
+"gönderilmeyecektir.     \n"
 "\n"
-"- Ödeme sayfasındaki tüm ürünler ücretsizse ve müşteri bir nakliye ücreti eklemek için gönderim sayfasını ziyaret etmezse veya nakliye ücreti de ücretsizse, e-posta gönderilmez."
+"- Ödeme sayfasında bulunan ürünlerin hiçbiri satın alınamıyorsa (örneğin, "
+"stokta olmamaları durumunda), e-posta gönderilmez.     \n"
+"\n"
+"- Ödeme sayfasında bulunan tüm ürünler ücretsizse ve müşteri kargo ücreti "
+"eklemek için kargo sayfasına gitmezse veya kargo da ücretsizse e-posta "
+"gönderilmez."
 
 #. module: website_sale
 #: model:ir.ui.menu,name:website_sale.menu_orders_customers
@@ -1476,7 +1499,7 @@ msgstr "Varsayılan Para Birimi"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website__pricelist_id
 msgid "Default Pricelist if any"
-msgstr ""
+msgstr "Varsayılan Fiyat Listesi (Varsa )"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -1503,7 +1526,7 @@ msgstr "Rozeti Sil"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_sale_order__amount_delivery
 msgid "Delivery Amount"
-msgstr ""
+msgstr "Teslimat Tutarı"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_sale_order__access_point_address
@@ -1528,12 +1551,12 @@ msgstr "Açıklama"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_delivery_carrier_form_website_delivery
 msgid "Description displayed on the eCommerce and on online quotations."
-msgstr ""
+msgstr "Açıklama eTicaret ve online sorularda görüntülenir."
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_delivery_carrier__website_description
 msgid "Description for Online Quotations"
-msgstr ""
+msgstr "Online Teklifler için Açıklama"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_product__website_description
@@ -1586,7 +1609,7 @@ msgstr "İndirimler, Sadakat & Hediye Kartı"
 #: model:ir.model.fields,field_description:website_sale.field_website_base_unit__display_name
 #: model:ir.model.fields,field_description:website_sale.field_website_sale_extra_field__display_name
 msgid "Display Name"
-msgstr "Görünüm Adı"
+msgstr "Ad Göster"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -1688,7 +1711,7 @@ msgstr "Easypost"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Easypost Shipping Methods"
-msgstr ""
+msgstr "Easypost Nakliye Yöntemleri"
 
 #. module: website_sale
 #: model:mail.template,name:website_sale.mail_template_sale_cart_recovery
@@ -1749,7 +1772,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/website_sale/models/product_public_category.py:0
 msgid "Error! You cannot create recursive categories."
-msgstr ""
+msgstr "Hata! Özyinelemeli kategoriler oluşturamazsınız."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -1827,23 +1850,23 @@ msgstr "Doldur"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
 msgid "Fill in your address"
-msgstr "Adresinizi girin"
+msgstr "Üyeliksiz Devam Et"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_template__message_follower_ids
 msgid "Followers"
-msgstr ""
+msgstr "Takipçiler"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_template__message_partner_ids
 msgid "Followers (Partners)"
-msgstr ""
+msgstr "Takipçiler (İş ortakları)"
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/js/website_sale_delivery.js:0
 msgid "Free"
-msgstr ""
+msgstr "Ücretsiz"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce
@@ -1915,7 +1938,7 @@ msgstr "HTTP Yönlendirme"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_template__has_message
 msgid "Has Message"
-msgstr ""
+msgstr "Mesaj Var"
 
 #. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__product_attribute__visibility__hidden
@@ -1960,13 +1983,13 @@ msgstr "ID"
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_template__message_needaction
 msgid "If checked, new messages require your attention."
-msgstr ""
+msgstr "İşaretliyse, yeni mesajlar dikkatinize sunulacak."
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_template__message_has_error
 #: model:ir.model.fields,help:website_sale.field_product_template__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
-msgstr ""
+msgstr "İşaretliyse, bazı mesajlar gönderi hatası içermektedir."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -2074,12 +2097,12 @@ msgstr "Faturalama"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Invoicing Policy"
-msgstr ""
+msgstr "Faturalama Kuralı"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_template__message_is_follower
 msgid "Is Follower"
-msgstr ""
+msgstr "Takipçi mi"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_delivery_carrier__is_published
@@ -2105,6 +2128,8 @@ msgstr "Taslak durumunda olmayan bir müşteri siparişini değiştirmek yasakt�
 #: code:addons/website_sale/controllers/delivery.py:0
 msgid "It seems that a delivery method is not compatible with your address. Please refresh the page and try again."
 msgstr ""
+"Görünüşe göre bir teslimat yöntemi adresinizle uyumlu değil. Lütfen sayfayı "
+"yenileyip tekrar deneyin."
 
 #. module: website_sale
 #. odoo-python
@@ -2230,7 +2255,7 @@ msgstr "Ampul ayrı satılır"
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__show_line_subtotals_tax_selection
 #: model:ir.model.fields,field_description:website_sale.field_website__show_line_subtotals_tax_selection
 msgid "Line Subtotals Tax Display"
-msgstr ""
+msgstr "Satır Alt Toplamları Vergi Görüntüleme"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_sale_order_line__linked_line_id
@@ -2276,6 +2301,8 @@ msgstr "Ana resim"
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Manage Promotions, coupons, loyalty cards, Gift cards & eWallet"
 msgstr ""
+"Promosyonları, kuponları, sadakat kartlarını, Hediye kartlarını ve e-Cüzdanı "
+"yönetin"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -2293,17 +2320,17 @@ msgstr "Zorunlu (misafir ödemesi yok)"
 #: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
 #: model:ir.model.fields.selection,name:website_sale.selection__website__product_page_image_spacing__medium
 msgid "Medium"
-msgstr "Orta"
+msgstr "Ortam"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_template__message_has_error
 msgid "Message Delivery error"
-msgstr ""
+msgstr "Mesaj Teslim hatası"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_template__message_ids
 msgid "Messages"
-msgstr ""
+msgstr "Mesajlar"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -2451,6 +2478,8 @@ msgstr "' için sonuç bulunamadı"
 #: code:addons/website_sale/controllers/main.py:0
 msgid "No shipping method is available for your current order and shipping address. Please contact us for more information."
 msgstr ""
+"Mevcut siparişiniz ve gönderim adresiniz için geçerli bir gönderim metodu "
+"bulunmamaktadır. Daha fazla bilgi için lütfen bizimle iletişime geçin."
 
 #. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__website__product_page_image_spacing__none
@@ -2467,7 +2496,7 @@ msgstr "Yayınlanmadı"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/js/sale_variant_mixin.js:0
 msgid "Not available with %s"
-msgstr ""
+msgstr "%s mevcut değil"
 
 #. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__res_company__website_sale_onboarding_payment_provider_state__not_done
@@ -2482,12 +2511,12 @@ msgstr "Vazgeçilen Sepetlerin Sayısı"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_template__message_needaction_counter
 msgid "Number of Actions"
-msgstr ""
+msgstr "Aksiyon Sayısı"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_template__message_has_error_counter
 msgid "Number of errors"
-msgstr ""
+msgstr "Hata adedi"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website__shop_ppr
@@ -2502,7 +2531,7 @@ msgstr ""
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_template__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr ""
+msgstr "Teslimat hatası olan mesaj adedi"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website__shop_ppg
@@ -2712,12 +2741,12 @@ msgstr "Öde"
 #. module: website_sale
 #: model:ir.ui.menu,name:website_sale.menu_ecommerce_payment_methods
 msgid "Payment Methods"
-msgstr ""
+msgstr "Ödeme Yöntemleri"
 
 #. module: website_sale
 #: model:ir.ui.menu,name:website_sale.menu_ecommerce_payment_providers
 msgid "Payment Providers"
-msgstr "Ödeme Sağlayıcılar"
+msgstr "Ödeme Sağlayıcıları"
 
 #. module: website_sale
 #: model:ir.ui.menu,name:website_sale.menu_ecommerce_payment_tokens
@@ -3087,7 +3116,7 @@ msgstr "Ürünler"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Products List"
-msgstr "Products List"
+msgstr "Ürün Listesi"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -3195,12 +3224,12 @@ msgstr "Değerlendirme Ort Metni"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_template__rating_last_feedback
 msgid "Rating Last Feedback"
-msgstr "Son Geribildirimleri Derecelendirme"
+msgstr "Son Geribildirim Değerlendirmesi"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_template__rating_last_image
 msgid "Rating Last Image"
-msgstr "Son Resmin Değerlendirilmesi"
+msgstr "Son Resmin Değerlendirmesi"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_template__rating_last_value
@@ -3210,7 +3239,7 @@ msgstr "Değerlendirme Son Değer"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_template__rating_percentage_satisfaction
 msgid "Rating Satisfaction"
-msgstr "Puanlama Memnuniyeti"
+msgstr "Değerlendirme Memnuniyeti"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_template__rating_last_text
@@ -3225,7 +3254,7 @@ msgstr "Değerlendirme sayısı"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_template__rating_ids
 msgid "Ratings"
-msgstr ""
+msgstr "Değerlendirmeler"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -3356,7 +3385,7 @@ msgstr "SEO en iyileştirildi"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_template__message_has_sms_error
 msgid "SMS Delivery error"
-msgstr ""
+msgstr "SMS İleti hatası"
 
 #. module: website_sale
 #: model:product.ribbon,html:website_sale.sale_ribbon
@@ -3380,7 +3409,7 @@ msgstr "Satış"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sale_report_view_pivot_website
 msgid "Sales Analysis"
-msgstr "Sipariş & Teklif Analizi"
+msgstr "Satış Analizi"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_sale_report
@@ -3453,7 +3482,7 @@ msgstr "Tamamlanmayan Satış Siparişlerini Ara"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Select"
-msgstr "Seçmeli"
+msgstr "Seçme"
 
 #. module: website_sale
 #. odoo-javascript
@@ -3516,7 +3545,7 @@ msgstr "Sonra gönder"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sale_order_view_form_cart_recovery
 msgid "Send by Email"
-msgstr ""
+msgstr "E-posta ile Gönder"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website__send_abandoned_cart_email
@@ -3534,7 +3563,7 @@ msgstr "Seo adı"
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__sequence
 #: model:ir.model.fields,field_description:website_sale.field_website_sale_extra_field__sequence
 msgid "Sequence"
-msgstr "Sıra"
+msgstr "Sıralama"
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.services
@@ -3577,7 +3606,7 @@ msgstr "Teslimat Ücretleri"
 #: model:ir.ui.menu,name:website_sale.menu_ecommerce_delivery
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Shipping Methods"
-msgstr ""
+msgstr "Nakliye Yöntemleri"
 
 #. module: website_sale
 #: model:website.menu,name:website_sale.menu_shop
@@ -3633,12 +3662,12 @@ msgstr "b2b Alanlarını Göster"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.confirmation
 msgid "Sign Up"
-msgstr "Kaydol"
+msgstr "Üye Ol"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
 msgid "Sign in"
-msgstr "Portal"
+msgstr "Giriş"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -3798,12 +3827,12 @@ msgstr "Etiketler"
 #. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__website__show_line_subtotals_tax_selection__tax_excluded
 msgid "Tax Excluded"
-msgstr ""
+msgstr "Vergi Hariç"
 
 #. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__website__show_line_subtotals_tax_selection__tax_included
 msgid "Tax Included"
-msgstr ""
+msgstr "Vergi Dahil"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -3813,7 +3842,7 @@ msgstr "Vergi Göstergesi"
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_sale_order__amount_delivery
 msgid "Tax included or excluded depending on the website configuration."
-msgstr ""
+msgstr "Web sitesi yapılandırmasına bağlı olarak KDV dahil veya hariçtir."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.total
@@ -3844,7 +3873,7 @@ msgstr "# 1"
 #. odoo-python
 #: code:addons/website_sale/controllers/main.py:0
 msgid "The access token is invalid."
-msgstr "Erişim belirteci geçersiz."
+msgstr "Erişim tokenı geçersiz."
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_product__compare_list_price
@@ -3899,7 +3928,9 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "The mode selected here applies as invoicing policy of any new product created but not of products already existing."
-msgstr "Burada seçilen mod, oluşturulan ancak halihazırda mevcut olan ürünler için olmayan tüm yeni ürünlerin faturalandırma politikası olarak geçerlidir."
+msgstr ""
+"Burada seçilen yöntem, yalnızca yeni oluşturulacak ürünler için fatura "
+"politikası olarak uygulanır; mevcut ürünler için geçerli değildir."
 
 #. module: website_sale
 #. odoo-python
@@ -4018,6 +4049,9 @@ msgstr "Küçük Resimler"
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "To send invitations in B2B mode, open a contact or select several ones in list view and click on 'Portal Access Management' option in the dropdown menu *Action*."
 msgstr ""
+"B2B modunda davetiye göndermek için bir kişi açın veya liste görünümünde "
+"birkaç kişi seçin ve açılır menüde *Aksiyon * 'Portal Erişim Yönetimi' "
+"seçeneğini tıklayın."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -4282,7 +4316,7 @@ msgstr "Websitesi"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_template__website_message_ids
 msgid "Website Messages"
-msgstr ""
+msgstr "Websitesi Mesajları"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_product_public_category
@@ -4327,7 +4361,7 @@ msgstr "Websitesi Ziyaretçi"
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_template__website_message_ids
 msgid "Website communication history"
-msgstr ""
+msgstr "Websitesi iletişim geçmişi"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__website_meta_description
@@ -4491,7 +4525,7 @@ msgstr "Posta Kodu"
 #. module: website_sale
 #: model:ir.ui.menu,name:website_sale.menu_delivery_zip_prefix
 msgid "Zip Prefix"
-msgstr ""
+msgstr "Posta Kodu"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.add_grid_or_list_option
@@ -4506,7 +4540,7 @@ msgstr "bpost"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "bpost Shipping Methods"
-msgstr ""
+msgstr "bpost Nakliye Yöntemleri"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.coupon_form

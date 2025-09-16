@@ -1,23 +1,26 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* sale_pdf_quote_builder
+# * sale_pdf_quote_builder
 #
 # Translators:
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-09-11 14:01+0000\n"
-"PO-Revision-Date: 2024-01-30 15:14+0400\n"
-"Last-Translator: \n"
-"Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
+"PO-Revision-Date: 2025-09-16 02:30+0000\n"
+"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"Language-Team: Russian <https://translate.odoo.com/projects/odoo-19/"
+"sale_pdf_quote_builder/ru/>\n"
 "Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
-"n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || "
-"(n%100>=11 && n%100<=14)? 2 : 3);\n"
+"n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || ("
+"n%100>=11 && n%100<=14)? 2 : 3);\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.actions.report,print_report_name:sale_pdf_quote_builder.action_report_saleorder_raw
@@ -36,12 +39,12 @@ msgstr ""
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.quotation_document_kanban
 msgid "<span class=\"pe-2\">Templates:</span>"
-msgstr ""
+msgstr "<span class=\"pe-2\">Шаблоны:</span>"
 
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.quotation_document_kanban
 msgid "<span>Document type:</span>"
-msgstr ""
+msgstr "<span>Тип документа:</span>"
 
 #. module: sale_pdf_quote_builder
 #. odoo-python
@@ -50,6 +53,8 @@ msgid ""
 "A form field set as used in product documents can't be linked to a quotation "
 "document."
 msgstr ""
+"Поле формы, заданное как используемое в документах по товарам, нельзя "
+"связать с документом коммерческого предложения."
 
 #. module: sale_pdf_quote_builder
 #. odoo-python
@@ -58,16 +63,18 @@ msgid ""
 "A form field set as used in quotation documents can't be linked to a product "
 "document."
 msgstr ""
+"Поле формы, заданное как используемое в коммерческих предложениях, нельзя "
+"связать с документом по товарам."
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__access_token
 msgid "Access Token"
-msgstr ""
+msgstr "Токен доступа"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__active
 msgid "Active"
-msgstr ""
+msgstr "Активный"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__add_by_default
@@ -78,13 +85,13 @@ msgstr ""
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.quotation_document_search_view
 msgid "All"
-msgstr ""
+msgstr "Все"
 
 #. module: sale_pdf_quote_builder
 #. odoo-python
 #: code:addons/sale_pdf_quote_builder/controllers/quotation_document.py:0
 msgid "All files uploaded"
-msgstr ""
+msgstr "Все загруженные файлы"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,help:sale_pdf_quote_builder.field_product_document__attached_on_sale
@@ -102,27 +109,38 @@ msgid ""
 "Inside quote: The document will be included in the pdf of the quotation and "
 "sale order between the header pages and the quote table. "
 msgstr ""
+"Позволяет делиться документом с клиентами в рамках продажи.\n"
+"Оставьте это поле пустым, если не хотите предоставлять документ покупателям."
+"\n"
+"Коммерческое предложение: документ будет отправлен клиентам и доступен им в "
+"любое время.\n"
+"Например, эта настройка полезна для передачи файлов с описанием товара.\n"
+"Подтвержденный заказ: документ будет отправлен клиентам и доступен для "
+"просмотра. Например, это удобно для передачи руководств пользователя или "
+"цифрового контента, приобретенного через интернет-магазин.\n"
+"В составе КП: документ будет включен в PDF коммерческого предложения между "
+"заголовком и таблицей. "
 
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.quotation_document_kanban
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.quotation_document_search_view
 msgid "Archived"
-msgstr ""
+msgstr "Архивировано"
 
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.quotation_document_form
 msgid "Attached To"
-msgstr ""
+msgstr "Прикрепить к"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__local_url
 msgid "Attachment URL"
-msgstr ""
+msgstr "URL-адрес вложения"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_order_line__available_product_document_ids
 msgid "Available Product Documents"
-msgstr ""
+msgstr "Доступные документы по товарам"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_order__available_quotation_document_ids
@@ -132,71 +150,71 @@ msgstr ""
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__checksum
 msgid "Checksum/SHA1"
-msgstr ""
+msgstr "Контрольная сумма/SHA1"
 
 #. module: sale_pdf_quote_builder
 #. odoo-javascript
 #: code:addons/sale_pdf_quote_builder/static/src/js/custom_content_kanban_like_widget/custom_field_card/custom_field_card.js:0
 msgid "Click to write content for the PDF quote..."
-msgstr ""
+msgstr "Нажмите, чтобы ввести содержимое для PDF-предложения..."
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__company_id
 msgid "Company"
-msgstr ""
+msgstr "Компания"
 
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.product_document_form
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.quotation_document_form
 msgid "Configure dynamic fields"
-msgstr ""
+msgstr "Настроить динамические поля"
 
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.product_document_form
 msgid "Configure the path to fill the form fields."
-msgstr ""
+msgstr "Настроить путь для заполнения полей формы."
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__create_uid
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_pdf_form_field__create_uid
 msgid "Created by"
-msgstr ""
+msgstr "Создано:"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__create_date
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_pdf_form_field__create_date
 msgid "Created on"
-msgstr ""
+msgstr "Дата создания:"
 
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.quotation_document_form
 msgid "Creation"
-msgstr ""
+msgstr "Создать"
 
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.quotation_document_search
 msgid "Customizable"
-msgstr ""
+msgstr "С возможностью настройки"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_order__customizable_pdf_form_fields
 msgid "Customizable PDF Form Fields"
-msgstr ""
+msgstr "Настраиваемые поля PDF-формы"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__db_datas
 msgid "Database Data"
-msgstr ""
+msgstr "Данные базы данных"
 
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.quotation_document_kanban
 msgid "Delete"
-msgstr ""
+msgstr "Удалить"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__description
 msgid "Description"
-msgstr ""
+msgstr "Описание"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_ir_actions_report__display_name
@@ -207,83 +225,83 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_order_template__display_name
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_pdf_form_field__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Отображаемое имя"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__document_type
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_pdf_form_field__document_type
 msgid "Document Type"
-msgstr ""
+msgstr "Тип документа"
 
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.quotation_document_search_view
 msgid "Document type"
-msgstr ""
+msgstr "Тип документа"
 
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.quotation_document_kanban
 msgid "Download"
-msgstr ""
+msgstr "Скачать"
 
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.sale_order_template_form
 msgid "Download examples"
-msgstr ""
+msgstr "Примеры для скачивания"
 
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.quotation_document_kanban
 msgid "Edit"
-msgstr ""
+msgstr "Редактировать"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__datas
 msgid "File Content (base64)"
-msgstr ""
+msgstr "Содержимое файла (base64)"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__raw
 msgid "File Content (raw)"
-msgstr ""
+msgstr "Содержимое файла (необработанное)"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__file_size
 msgid "File Size"
-msgstr ""
+msgstr "Размер файла"
 
 #. module: sale_pdf_quote_builder
 #. odoo-python
 #: code:addons/sale_pdf_quote_builder/models/sale_order.py:0
 #: model:ir.model.fields.selection,name:sale_pdf_quote_builder.selection__quotation_document__document_type__footer
 msgid "Footer"
-msgstr ""
+msgstr "Футер"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_pdf_form_field__name
 msgid "Form Field Name"
-msgstr ""
+msgstr "Название поля формы"
 
 #. module: sale_pdf_quote_builder
 #. odoo-python
 #: code:addons/sale_pdf_quote_builder/models/product_document.py:0
 #: code:addons/sale_pdf_quote_builder/models/quotation_document.py:0
 msgid "Form Fields"
-msgstr ""
+msgstr "Поля формы"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_product_document__form_field_ids
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__form_field_ids
 msgid "Form Fields Included"
-msgstr ""
+msgstr "Включенные поля формы"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.constraint,message:sale_pdf_quote_builder.constraint_sale_pdf_form_field_unique_name_per_doc_type
 msgid "Form field name must be unique for a given document type."
-msgstr ""
+msgstr "Название поля формы должно быть уникальным для данного типа документа."
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model,name:sale_pdf_quote_builder.model_sale_pdf_form_field
 msgid "Form fields of inside quotation documents."
-msgstr ""
+msgstr "Поля формы внутри документов коммерческого предложения."
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__has_thumbnail
@@ -295,17 +313,17 @@ msgstr ""
 #: code:addons/sale_pdf_quote_builder/models/sale_order.py:0
 #: model:ir.model.fields.selection,name:sale_pdf_quote_builder.selection__quotation_document__document_type__header
 msgid "Header"
-msgstr ""
+msgstr "Заголовок"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields.selection,name:sale_pdf_quote_builder.selection__sale_pdf_form_field__document_type__quotation_document
 msgid "Header/Footer"
-msgstr ""
+msgstr "Верхний/нижний колонтитул"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_order_template__quotation_document_ids
 msgid "Headers and footers"
-msgstr ""
+msgstr "Колонтитулы"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.actions.act_window,name:sale_pdf_quote_builder.quotation_document_action
@@ -313,12 +331,12 @@ msgstr ""
 #: model:ir.ui.menu,name:sale_pdf_quote_builder.sale_menu_quotation_document_action
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.res_config_settings_view_form
 msgid "Headers/Footers"
-msgstr ""
+msgstr "Колонтитулы (верхний/нижний)"
 
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.quotation_document_form
 msgid "History"
-msgstr ""
+msgstr "История"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_ir_actions_report__id
@@ -329,7 +347,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_order_template__id
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_pdf_form_field__id
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,help:sale_pdf_quote_builder.field_quotation_document__add_by_default
@@ -343,31 +361,33 @@ msgid ""
 "If unchecked, it will allow you to hide the header or footer without "
 "removing it."
 msgstr ""
+"Если флажок не установлен, это позволит скрыть верхний или нижний колонтитул "
+"без его удаления."
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__image_height
 msgid "Image Height"
-msgstr ""
+msgstr "Высота изображения"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__image_src
 msgid "Image Src"
-msgstr ""
+msgstr "Источник изображения"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__image_width
 msgid "Image Width"
-msgstr ""
+msgstr "Ширина изображения"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__index_content
 msgid "Indexed Content"
-msgstr ""
+msgstr "Индексированное содержимое"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields.selection,name:sale_pdf_quote_builder.selection__product_document__attached_on_sale__inside
 msgid "Inside quote pdf"
-msgstr ""
+msgstr "Внутри PDF-предложения"
 
 #. module: sale_pdf_quote_builder
 #. odoo-python
@@ -376,6 +396,8 @@ msgid ""
 "Invalid form field name %(field_name)s. A form field name in a header or a "
 "footer can not start with \"sol_id_\"."
 msgstr ""
+"Недопустимое имя поля формы %(field_name)s. Имя поля формы в колонтитуле не "
+"может начинаться с «sol_id_»."
 
 #. module: sale_pdf_quote_builder
 #. odoo-python
@@ -384,6 +406,8 @@ msgid ""
 "Invalid form field name %(field_name)s. It should only contain "
 "alphanumerics, hyphens or underscores."
 msgstr ""
+"Недопустимое имя поля формы %(field_name)s. Имя должно содержать только "
+"буквы, цифры, дефисы или подчеркивания."
 
 #. module: sale_pdf_quote_builder
 #. odoo-python
@@ -392,16 +416,18 @@ msgid ""
 "Invalid path %(path)s. It should only contain alphanumerics, hyphens, "
 "underscores or points."
 msgstr ""
+"Недопустимый путь %(path)s. Путь должен содержать только буквы, цифры, "
+"дефисы, подчеркивания или точки."
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_order__is_pdf_quote_builder_available
 msgid "Is Pdf Quote Builder Available"
-msgstr ""
+msgstr "Доступен ли конструктор коммерческих предложений в формате PDF"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__public
 msgid "Is public document"
-msgstr ""
+msgstr "Является публичным документом"
 
 #. module: sale_pdf_quote_builder
 #. odoo-python
@@ -410,44 +436,47 @@ msgid ""
 "It seems that we're not able to process this pdf inside a quotation. It is "
 "either encrypted, or encoded in a format we do not support."
 msgstr ""
+"Похоже, мы не можем обработать этот pdf-файл внутри коммерческого "
+"предложения. Он либо зашифрован, либо закодирован в формате, который мы не "
+"поддерживаем."
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__key
 msgid "Key"
-msgstr ""
+msgstr "Ключ"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__write_uid
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_pdf_form_field__write_uid
 msgid "Last Updated by"
-msgstr ""
+msgstr "Последнее обновление:"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__write_date
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_pdf_form_field__write_date
 msgid "Last Updated on"
-msgstr ""
+msgstr "Дата последнего обновления:"
 
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.quotation_document_form
 msgid "Mark fields as safe to fill in the quote."
-msgstr ""
+msgstr "Пометить поля как доступные для заполнения в предложении."
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__mimetype
 msgid "Mime Type"
-msgstr ""
+msgstr "Mime-тип"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__name
 msgid "Name"
-msgstr ""
+msgstr "Имя"
 
 #. module: sale_pdf_quote_builder
 #. odoo-python
 #: code:addons/sale_pdf_quote_builder/models/ir_actions_report.py:0
 msgid "No"
-msgstr ""
+msgstr "Нет"
 
 #. module: sale_pdf_quote_builder
 #. odoo-python
@@ -459,17 +488,17 @@ msgstr "В цитату можно вложить только документ�
 #. odoo-python
 #: code:addons/sale_pdf_quote_builder/models/quotation_document.py:0
 msgid "Only PDF documents can be used as header or footer."
-msgstr ""
+msgstr "В качестве колонтитулов можно использовать только PDF-документы."
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__original_id
 msgid "Original (unoptimized, unresized) attachment"
-msgstr ""
+msgstr "Оригинальное (неоптимизированное, без размера) вложение"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_pdf_form_field__path
 msgid "Path"
-msgstr ""
+msgstr "Путь"
 
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.actions.act_window,help:sale_pdf_quote_builder.quotation_document_action
@@ -478,18 +507,24 @@ msgid ""
 "                <br>\n"
 "                to boost your sales."
 msgstr ""
+"Персонализируйте коммерческие предложения с помощью красивых верхних и "
+"нижних колонтитулов,\n"
+"                <br>\n"
+"                чтобы увеличить продажи."
 
 #. module: sale_pdf_quote_builder
 #. odoo-python
 #: code:addons/sale_pdf_quote_builder/models/sale_pdf_form_field.py:0
 msgid "Please use only relational fields until the last value of your path."
 msgstr ""
+"Пожалуйста, используйте только связанные поля до последнего значения вашего "
+"пути."
 
 #. module: sale_pdf_quote_builder
 #. odoo-python
 #: code:addons/sale_pdf_quote_builder/models/sale_order.py:0
 msgid "Product"
-msgstr ""
+msgstr "Товар"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model,name:sale_pdf_quote_builder.model_product_document
@@ -501,7 +536,7 @@ msgstr "Документ товара"
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_order_line__product_document_ids
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_pdf_form_field__product_document_ids
 msgid "Product Documents"
-msgstr ""
+msgstr "Документы по товарам"
 
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.sale_order_template_form
@@ -517,6 +552,15 @@ msgid ""
 "                        If empty, it will use those define in the company "
 "settings. <br/>"
 msgstr ""
+"Добавьте верхний и нижний колонтитул, чтобы создать привлекательное "
+"коммерческое предложение с дополнительной информацией\n"
+"                        о вашей компании, товарах и услугах.<br/>\n"
+"                        PDF вашего предложения будет сформирован путем "
+"объединения титульных страниц, описаний товаров,\n"
+"                        деталей предложения и затем завершающих страниц.<br/>"
+"\n"
+"                        Если пусто, будут использованы значения из настроек "
+"компании.<br/>"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.actions.report,name:sale_pdf_quote_builder.action_report_saleorder_raw
@@ -526,34 +570,34 @@ msgstr "Коммерческое предложение/заказ"
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.quotation_document_search_view
 msgid "Quotation Document"
-msgstr ""
+msgstr "Документ коммерческого предложения"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_pdf_form_field__quotation_document_ids
 msgid "Quotation Documents"
-msgstr ""
+msgstr "Документы коммерческих предложений"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model,name:sale_pdf_quote_builder.model_sale_order_template
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.quotation_document_search_view
 msgid "Quotation Template"
-msgstr "Шаблон котировки"
+msgstr "Шаблон предложения"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__quotation_template_ids
 msgid "Quotation Templates"
-msgstr ""
+msgstr "Шаблоны Коммерческого предложения"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model,name:sale_pdf_quote_builder.model_quotation_document
 msgid "Quotation's Headers & Footers"
-msgstr ""
+msgstr "Колонтитулы коммерческого предложения"
 
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.sale_order_form_inherit_sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.sale_order_template_form
 msgid "Quote Builder"
-msgstr ""
+msgstr "Конструктор коммерческих предложений"
 
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.sale_order_template_form
@@ -563,7 +607,7 @@ msgstr ""
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__ir_attachment_id
 msgid "Related attachment"
-msgstr ""
+msgstr "Связанное крепление"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model,name:sale_pdf_quote_builder.model_ir_actions_report
@@ -573,32 +617,34 @@ msgstr "Отчет о действиях"
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__res_field
 msgid "Resource Field"
-msgstr ""
+msgstr "Поле ресурсов"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__res_id
 msgid "Resource ID"
-msgstr ""
+msgstr "Номер ресурса"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__res_model
 msgid "Resource Model"
-msgstr ""
+msgstr "Модель ресурсов"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__res_name
 msgid "Resource Name"
-msgstr ""
+msgstr "Название Ресурса"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_product_document__attached_on_sale
 msgid "Sale : Visible at"
-msgstr ""
+msgstr "Продажа : отображается в"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.actions.server,name:sale_pdf_quote_builder.cron_post_upgrade_assign_missing_form_fields_ir_actions_server
 msgid "Sale Pdf Quote Builder: assign form fields to documents post upgrade"
 msgstr ""
+"Конструктор PDF-предложений: назначение полей формы документам после "
+"обновления"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model,name:sale_pdf_quote_builder.model_sale_order
@@ -608,28 +654,28 @@ msgstr "Заказ на продажу"
 #. module: sale_pdf_quote_builder
 #: model:ir.model,name:sale_pdf_quote_builder.model_sale_order_line
 msgid "Sales Order Line"
-msgstr ""
+msgstr "Позиция заказа на продажу"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__sequence
 msgid "Sequence"
-msgstr ""
+msgstr "Последовательность"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__store_fname
 msgid "Stored Filename"
-msgstr ""
+msgstr "Сохраненное имя файла"
 
 #. module: sale_pdf_quote_builder
 #. odoo-python
 #: code:addons/sale_pdf_quote_builder/models/sale_pdf_form_field.py:0
 msgid "The field %(field_name)s doesn't exist on model %(model_name)s"
-msgstr ""
+msgstr "Поле %(field_name)s не существует в модели %(model_name)s"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,help:sale_pdf_quote_builder.field_sale_pdf_form_field__name
 msgid "The form field name as written in the PDF."
-msgstr ""
+msgstr "Название поля формы как указано в PDF."
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,help:sale_pdf_quote_builder.field_sale_pdf_form_field__path
@@ -637,6 +683,9 @@ msgid ""
 "The path to follow to dynamically fill the form field. \n"
 "Leave empty to be able to customized it in the quotation form."
 msgstr ""
+"Путь, по которому заполняется поле формы.\n"
+"Оставьте пустым, чтобы можно было настроить его в форме коммерческого "
+"предложения."
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,help:sale_pdf_quote_builder.field_sale_order_line__product_document_ids
@@ -644,16 +693,18 @@ msgid ""
 "The product documents for this order line that will be merged in the PDF "
 "quote."
 msgstr ""
+"Документы по товарам для этой позиции заказа, которые будут объединены в "
+"коммерческое предложение в формате PDF."
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__theme_template_id
 msgid "Theme Template"
-msgstr ""
+msgstr "Тематический шаблон"
 
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.quotation_document_search
 msgid "This document"
-msgstr ""
+msgstr "Этот документ"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__thumbnail
@@ -663,44 +714,45 @@ msgstr ""
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__type
 msgid "Type"
-msgstr ""
+msgstr "Тип"
 
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.actions.act_window,help:sale_pdf_quote_builder.quotation_document_action
 msgid "Upload quotation headers and footers"
-msgstr ""
+msgstr "Загрузите колонтитулы коммерческого предложения"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__url
 msgid "Url"
-msgstr ""
+msgstr "Url"
 
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.quotation_document_form
 msgid "Visible to all"
-msgstr ""
+msgstr "Видно всем"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__voice_ids
 msgid "Voice"
-msgstr ""
+msgstr "Голос"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_quotation_document__website_id
 msgid "Website"
-msgstr ""
+msgstr "Сайт"
 
 #. module: sale_pdf_quote_builder
 #. odoo-python
 #: code:addons/sale_pdf_quote_builder/models/product_document.py:0
 msgid "When attached inside a quote, the document must be a file, not a URL."
 msgstr ""
+"Если документ прикреплён к предложению, он должен быть файлом, а не ссылкой."
 
 #. module: sale_pdf_quote_builder
 #. odoo-python
 #: code:addons/sale_pdf_quote_builder/models/ir_actions_report.py:0
 msgid "Yes"
-msgstr ""
+msgstr "Да"
 
 #. module: sale_pdf_quote_builder
 #: model:ir.model.fields,help:sale_pdf_quote_builder.field_quotation_document__type
@@ -708,11 +760,13 @@ msgid ""
 "You can either upload a file from your computer or copy/paste an internet "
 "link to your file."
 msgstr ""
+"Вы можете загрузить файл с вашего компьютера или скопировать/вставить ссылку "
+"на свой файл в Интернете."
 
 #. module: sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.quotation_document_form
 msgid "on"
-msgstr ""
+msgstr "вкл"
 
 #~ msgid "<i class=\"fa fa-arrow-right\"/> Download examples"
 #~ msgstr "<i class=\"fa fa-arrow-right\"/> Примеры для скачивания"

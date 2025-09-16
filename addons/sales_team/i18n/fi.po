@@ -1,6 +1,6 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* sales_team
+# * sales_team
 #
 # Translators:
 # Svante Suominen <svante.suominen@web-veistamo.fi>, 2022
@@ -20,32 +20,34 @@
 # Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2022
 # Martin Trigaux, 2022
 # Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023
-#
+# "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-09-11 14:01+0000\n"
-"PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023\n"
-"Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
+"PO-Revision-Date: 2025-09-16 15:29+0000\n"
+"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
+"Language-Team: Finnish <https://translate.odoo.com/projects/odoo-19/"
+"sales_team/fi/>\n"
 "Language: fi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: sales_team
 #. odoo-python
 #: code:addons/sales_team/models/crm_team_member.py:0
 msgid "%(user_name)s already in other teams (%(team_names)s)."
-msgstr ""
+msgstr "%(user_name)s on jo muissa tiimeissä (%(team_names)s)."
 
 #. module: sales_team
 #. odoo-python
 #: code:addons/sales_team/models/crm_team.py:0
 msgid "%(user_names)s already in other teams (%(team_names)s)."
-msgstr ""
+msgstr "%(user_names)s on jo muissa tiimeissä (%(team_names)s)."
 
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_member_view_kanban
@@ -97,7 +99,7 @@ msgstr "Vaatii toimenpiteitä"
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_member_view_form
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
 msgid "Activate \"Multi-team\""
-msgstr ""
+msgstr "Aktivoi \"Monitiimi\""
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__active
@@ -119,7 +121,7 @@ msgstr "Lisää tiimin jäsen"
 #: model:ir.model.fields,help:sales_team.field_crm_team__crm_team_member_ids
 msgid "Add members to automatically assign their documents to this sales team."
 msgstr ""
-"Lisää jäseniä, jotta heidän asiakirjansa voidaan määrittää automaattisesti "
+"Lisää jäseniä, jotta heidän asiakirjansa voidaan kohdistaa automaattisesti "
 "tähän myyntitiimiin."
 
 #. module: sales_team
@@ -131,7 +133,7 @@ msgstr "Ylläpitäjä"
 #. odoo-javascript
 #: code:addons/sales_team/static/src/js/crm_team_form.js:0
 msgid "An error occurred while activating the Multi-Team option."
-msgstr ""
+msgstr "Virhe tapahtui aktivoitaessa Monitiimi-vaihtoehtoa."
 
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_member_view_form
@@ -431,7 +433,7 @@ msgstr "Virheiden määrä"
 #: model:ir.model.fields,help:sales_team.field_crm_team__message_needaction_counter
 #: model:ir.model.fields,help:sales_team.field_crm_team_member__message_needaction_counter
 msgid "Number of messages requiring action"
-msgstr ""
+msgstr "Toimenpiteitä vaativien viestien määrä"
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__message_has_error_counter
@@ -468,7 +470,7 @@ msgstr "Tuote"
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__rating_ids
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_member__rating_ids
 msgid "Ratings"
-msgstr ""
+msgstr "Arviointi"
 
 #. module: sales_team
 #: model:crm.team,name:sales_team.team_sales_department
@@ -563,7 +565,7 @@ msgstr "Tunnisteen nimi"
 #. module: sales_team
 #: model:ir.model.constraint,message:sales_team.constraint_crm_tag_name_uniq
 msgid "Tag name already exists!"
-msgstr ""
+msgstr "Tunniste on jo olemassa!"
 
 #. module: sales_team
 #: model:ir.actions.act_window,name:sales_team.sales_team_crm_tag_action
@@ -689,7 +691,7 @@ msgstr "Käyttäjä: Kaikki dokumentit"
 #. module: sales_team
 #: model:res.groups,name:sales_team.group_sale_salesman
 msgid "User: Own Documents Only"
-msgstr "Käyttäjä: Vain omat dokumentit"
+msgstr "Käyttäjä: Vain omat asiakirjat"
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__member_ids
@@ -699,7 +701,7 @@ msgstr "Tähän tiimiin määritetyt käyttäjät."
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
 msgid "Visible to all"
-msgstr ""
+msgstr "Kaikkien nähtävissä"
 
 #. module: sales_team
 #: model:crm.team,name:sales_team.salesteam_website_sales
@@ -710,7 +712,7 @@ msgstr "Verkkosivu"
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_member_view_form
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
 msgid "Working in multiple teams?"
-msgstr ""
+msgstr "Työskenteletkö useissa tiimeissä?"
 
 #. module: sales_team
 #. odoo-python
@@ -743,7 +745,8 @@ msgid ""
 "the user will have access to all records of everyone in the sales "
 "application."
 msgstr ""
-"käyttäjällä on oikeus kaikkien käyttäjien kirjauksiin myyntijärjestelmässä."
+"käyttäjällä on pääsyoikeus kaikkien Myynti-sovelluksen käyttäjien "
+"kirjauksiin."
 
 #. module: sales_team
 #: model:res.groups,comment:sales_team.group_sale_salesman

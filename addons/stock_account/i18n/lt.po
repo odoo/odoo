@@ -1,6 +1,6 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* stock_account
+# * stock_account
 #
 # Translators:
 # Anatolij, 2022
@@ -14,22 +14,24 @@
 # Linas Versada <linaskrisiukenas@gmail.com>, 2022
 # Antanas Muliuolis <an.muliuolis@gmail.com>, 2022
 # Silvija Butko <silvija.butko@gmail.com>, 2022
-#
+# "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-09-11 14:02+0000\n"
-"PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Silvija Butko <silvija.butko@gmail.com>, 2022\n"
-"Language-Team: Lithuanian (https://app.transifex.com/odoo/teams/41243/lt/)\n"
+"PO-Revision-Date: 2025-09-16 18:41+0000\n"
+"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
+"Language-Team: Lithuanian <https://translate.odoo.com/projects/odoo-19/"
+"stock_account/lt/>\n"
 "Language: lt\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=4; plural=(n % 10 == 1 && (n % 100 > 19 || n % 100 < "
-"11) ? 0 : (n % 10 >= 2 && n % 10 <=9) && (n % 100 > 19 || n % 100 < 11) ? "
-"1 : n % 1 != 0 ? 2: 3);\n"
+"11) ? 0 : (n % 10 >= 2 && n % 10 <=9) && (n % 100 > 19 || n % 100 < 11) ? 1 :"
+" n % 1 != 0 ? 2: 3);\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: stock_account
 #. odoo-python
@@ -52,7 +54,7 @@ msgstr ""
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_account_report_invoice_document
 msgid "6.00"
-msgstr ""
+msgstr "6.00"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_account_report_invoice_document
@@ -93,7 +95,7 @@ msgstr "Sąskaitų plano šablonas"
 #: model:ir.model.fields,field_description:stock_account.field_stock_inventory_adjustment_name__accounting_date
 #: model:ir.model.fields,field_description:stock_account.field_stock_quant__accounting_date
 msgid "Accounting Date"
-msgstr "Apskaitos data "
+msgstr "Apskaitos data"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_location_form_inherit
@@ -165,7 +167,7 @@ msgstr ""
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_account_analytic_account
 msgid "Analytic Account"
-msgstr ""
+msgstr "Analitinė sąskaita"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__analytic_account_line_ids
@@ -175,7 +177,7 @@ msgstr ""
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_account_analytic_plan
 msgid "Analytic Plans"
-msgstr ""
+msgstr "Analitiniai planai"
 
 #. module: stock_account
 #. odoo-javascript
@@ -246,7 +248,7 @@ msgstr ""
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_res_company
 msgid "Companies"
-msgstr ""
+msgstr "Įmonės"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_value__company_id
@@ -280,7 +282,7 @@ msgstr "Konfigūracijos nustatymai"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_lot__standard_price
 msgid "Cost"
-msgstr ""
+msgstr "Savikaina"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_product__cost_method
@@ -596,12 +598,12 @@ msgstr "Paskutinį kartą atnaujinta"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_value__lot_id
 msgid "Lot"
-msgstr ""
+msgstr "Partija"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_lot
 msgid "Lot/Serial"
-msgstr ""
+msgstr "Partijos / serijinis numeris"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.res_config_settings_view_form
@@ -630,7 +632,8 @@ msgstr ""
 "Rankinis: Apskaitos įrašai inventoriaus vertinimui nėra skelbiami "
 "automatiškai.\n"
 "Automatinis: Apskaitos įrašas yra automatiškai pridedamas inventoriaus "
-"vertinimui, kai produktas įeina ar išeina iš įmonės."
+"vertinimui, kai produktas įeina ar išeina iš įmonės.\n"
+"        "
 
 #. module: stock_account
 #: model:ir.model.fields.selection,name:stock_account.selection__res_company__inventory_period__monthly
@@ -670,7 +673,7 @@ msgstr ""
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_picking_type
 msgid "Picking Type"
-msgstr ""
+msgstr "Paėmimo būdas"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_category__property_price_difference_account_id
@@ -796,10 +799,11 @@ msgid ""
 "        "
 msgstr ""
 "Savikaina: Produktai yra įkainojami pagal produktui nurodytą savikainą.\n"
-"        Vidutinė kaina (AVCO): Produktai yra įkainojami pagal vidurkio "
-"kainą.\n"
+"        Vidutinė kaina (AVCO): Produktai yra įkainojami pagal vidurkio kainą."
+"\n"
 "        Pirmas Į Pirmas Iš (FIFO): Produktai yra įkainojami galvojant, kad "
-"tie, kurie pirmieji atkeliavo į įmonę, ją ir paliks pirmieji."
+"tie, kurie pirmieji atkeliavo į įmonę, ją ir paliks pirmieji.\n"
+"        "
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_avco_report
@@ -1068,7 +1072,7 @@ msgstr ""
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_account_report_invoice_document
 msgid "units"
-msgstr ""
+msgstr "vienetai"
 
 #~ msgid "Account Move"
 #~ msgstr "DK įrašai"

@@ -1,6 +1,6 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* calendar
+# * calendar
 #
 # Translators:
 # Miku Laitinen <miku.laitinen@gmail.com>, 2022
@@ -18,26 +18,28 @@
 # Mikko Salmela <salmemik@gmail.com>, 2022
 # Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023
 # Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2023
-#
+# "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-09-11 13:55+0000\n"
-"PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2023\n"
-"Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
+"PO-Revision-Date: 2025-09-16 15:22+0000\n"
+"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
+"Language-Team: Finnish <https://translate.odoo.com/projects/odoo-19/calendar/"
+"fi/>\n"
 "Language: fi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_res_partner__meeting_count
 #: model:ir.model.fields,field_description:calendar.field_res_users__meeting_count
 msgid "# Meetings"
-msgstr "Tapaamisten lkm"
+msgstr "# Tapaamiset"
 
 #. module: calendar
 #. odoo-python
@@ -47,7 +49,7 @@ msgid ""
 " %(date_end)s at %(time_end)s (%(timezone)s)"
 msgstr ""
 "Alkaen %(date_start)s klo %(time_start)s\n"
-"Päättyen  %(date_end)s klo %(time_end)s (%(timezone)s)"
+"Päättyen %(date_end)s klo %(time_end)s (%(timezone)s)"
 
 #. module: calendar
 #. odoo-python
@@ -834,6 +836,8 @@ msgid ""
 "<i class=\"fa fa-9x fa-calendar p-3\" title=\"Calendar\" aria-"
 "hidden=\"true\"/>"
 msgstr ""
+"<i class=\"fa fa-9x fa-calendar p-3\" title=\"Calendar\" aria-hidden=\"true\""
+"/>"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_quick_create
@@ -883,7 +887,7 @@ msgstr ""
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "<span class=\"fa fa-plus\"/><span> Odoo meeting</span>"
-msgstr ""
+msgstr "<span class=\"fa fa-plus\"/><span> Odoo-kokous</span>"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -892,6 +896,9 @@ msgid ""
 "['weekly', 'custom'] or (rrule_type_ui == 'custom' and rrule_type != "
 "'weekly')\">Repeat on</span>"
 msgstr ""
+"<span class=\"fw-bold text-nowrap\" invisible=\"rrule_type_ui not in "
+"['weekly', 'custom'] or (rrule_type_ui == 'custom' and rrule_type != "
+"'weekly')\">Toista</span>"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.calendar_provider_config_view_form
@@ -906,7 +913,7 @@ msgstr "<span class=\"me-1 o_form_label\">Outlook-kalenteri</span>"
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "<span invisible=\"allday\" style=\"white-space: pre;\"> or </span>"
-msgstr ""
+msgstr "<span invisible=\"allday\" style=\"white-space: pre;\"> tai </span>"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -931,7 +938,7 @@ msgstr ""
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "<span> hours</span>"
-msgstr "<span> tuntia</span>"
+msgstr "<span>tunnit</span>"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_quick_create
@@ -941,13 +948,15 @@ msgstr ""
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_event_delete_wizard_form
 msgid "<span>Are you sure you want to delete this event? <br/></span>"
-msgstr ""
+msgstr "<span>Oletko varma, että haluat poistaa tapahtuman? <br/></span>"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.res_config_settings_view_form
 msgid ""
 "<strong>Save</strong> this page and come back here to set up the feature."
 msgstr ""
+"<strong>Tallenna</strong> sivu ja palaa takaisin, jotta voit määrittää "
+"ominaisuuden."
 
 #. module: calendar
 #: model:ir.model.constraint,message:calendar.constraint_calendar_filters_user_id_partner_id_unique
@@ -962,7 +971,7 @@ msgstr "Hyväksy"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__accepted_count
 msgid "Accepted Count"
-msgstr ""
+msgstr "Hyväksytty määrä"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_mail_activity_type__category
@@ -980,7 +989,7 @@ msgid ""
 "Actions may trigger specific behavior like opening calendar view or "
 "automatically mark as done when a document is uploaded"
 msgstr ""
-"Toiminnot voivat laukaista tietyn toiminnan, kuten kalenterinäkymän "
+"Toiminnot voivat laukaista tietynlaisen toiminnon, kuten kalenterinäkymän "
 "avaamisen tai automaattisesti valmiiksi merkinnän, kun asiakirja on ladattu"
 
 #. module: calendar
@@ -1007,12 +1016,12 @@ msgstr "Activity Mixin"
 #. module: calendar
 #: model:ir.model,name:calendar.model_mail_activity_type
 msgid "Activity Type"
-msgstr "Toimenpiteiden tyyppi"
+msgstr "Toimenpidetyyppi"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_mail_activity_schedule
 msgid "Activity schedule plan Wizard"
-msgstr ""
+msgstr "Toiminta-aikataulun suunnittelun ohjattu toiminto"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_quick_create
@@ -1022,7 +1031,7 @@ msgstr ""
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Add description"
-msgstr ""
+msgstr "Lisää kuvaus"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -1086,23 +1095,23 @@ msgstr "Osallistujat"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__attendees_count
 msgid "Attendees Count"
-msgstr ""
+msgstr "Osallistujien määrä"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__current_status
 msgid "Attending?"
-msgstr ""
+msgstr "Osallistuuko?"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_attendee__availability__free
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__show_as__free
 msgid "Available"
-msgstr "Saatavilla"
+msgstr "Käytettävissä"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_attendee__availability
 msgid "Available/Busy"
-msgstr "Käytettävissä / varattu"
+msgstr "Käytettävissä/Varattu"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -1112,7 +1121,7 @@ msgstr ""
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__awaiting_count
 msgid "Awaiting Count"
-msgstr ""
+msgstr "Odottavien määrä"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__base_event_id
@@ -1122,7 +1131,7 @@ msgstr "Perustapahtuma"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_popover_delete_wizard__body_has_template_value
 msgid "Body content is the same as the template"
-msgstr ""
+msgstr "Tekstin sisältö on sama kuin mallissa"
 
 #. module: calendar
 #. odoo-python
@@ -1143,7 +1152,7 @@ msgstr "Päivittäin"
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/attendee_calendar/attendee_calendar_model.js:0
 msgid "Bye-bye, record!"
-msgstr ""
+msgstr "Tervemenoa tietue!"
 
 #. module: calendar
 #: model:ir.ui.menu,name:calendar.calendar_event_menu
@@ -1164,13 +1173,13 @@ msgstr "Kalenterihälytys"
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_attendee
 msgid "Calendar Attendee Information"
-msgstr "Osallistujan tiedot kalenterissa"
+msgstr "Kalenterin osallistujatiedot"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_res_users__calendar_default_privacy
 #: model:ir.model.fields,field_description:calendar.field_res_users_settings__calendar_default_privacy
 msgid "Calendar Default Privacy"
-msgstr ""
+msgstr "Kalenterin oletusyksityisyys"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_event
@@ -1198,7 +1207,7 @@ msgstr "Kalenteritapahtuma"
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_popover_delete_wizard
 msgid "Calendar Popover Delete Wizard"
-msgstr ""
+msgstr "Kalenterin ponnahdusikkuna poistamisen ohjattu toiminto"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_provider_config
@@ -1208,7 +1217,7 @@ msgstr "Ohjattu kalenteripalveluntarjoajan määritys"
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.res_config_settings_view_form
 msgid "Calendar Settings"
-msgstr ""
+msgstr "Kalenteriasetukset"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -1218,17 +1227,17 @@ msgstr ""
 #. module: calendar
 #: model:mail.template,name:calendar.calendar_template_meeting_changedate
 msgid "Calendar: Date Updated"
-msgstr "Kalenteri: Päivä päivitetty"
+msgstr "Kalenteri: Päivämäärä päivitetty"
 
 #. module: calendar
 #: model:mail.template,name:calendar.calendar_template_delete_event
 msgid "Calendar: Event Deleted"
-msgstr ""
+msgstr "Kalenteri: Tapahtuma poistettu"
 
 #. module: calendar
 #: model:ir.actions.server,name:calendar.ir_cron_scheduler_alarm_ir_actions_server
 msgid "Calendar: Event Reminder"
-msgstr "Kalenteri: Tapahtuman muistutus"
+msgstr "Kalenteri: Tapahtumamuistutus"
 
 #. module: calendar
 #: model:mail.template,name:calendar.calendar_template_meeting_update
@@ -1238,7 +1247,7 @@ msgstr "Kalenteri: Tapahtuman päivitys"
 #. module: calendar
 #: model:mail.template,name:calendar.calendar_template_meeting_invitation
 msgid "Calendar: Meeting Invitation"
-msgstr "Kalenteri: Kokouskutsu"
+msgstr "Kalenteri: Kutsu tapaamiseen"
 
 #. module: calendar
 #: model:mail.template,name:calendar.calendar_template_meeting_reminder
@@ -1248,7 +1257,7 @@ msgstr "Kalenteri: Muistutus"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_popover_delete_wizard__can_edit_body
 msgid "Can Edit Body"
-msgstr ""
+msgstr "Voi muokata tekstiä"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.calendar_popover_delete_view
@@ -1275,7 +1284,7 @@ msgstr "Valittu"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_provider_config__external_calendar_provider
 msgid "Choose an external calendar to configure"
-msgstr "Valitse ulkoinen kalenteri ja määritä se"
+msgstr "Valitse ulkoinen kalenteri ja määritä"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__recurrence_update
@@ -1283,19 +1292,19 @@ msgid ""
 "Choose what to do with other events in the recurrence. Updating All Events "
 "is not allowed when dates or time is modified"
 msgstr ""
-"Valitse, mitä tehdään muille tapahtumille, jotka ovat toistumisen aikaan. "
-"Kaikkien tapahtumien päivittäminen ei ole sallittua, kun päivämääriä tai "
-"kellonaikaa muutetaan"
+"Valitse, mitä tehdään muille tapahtumille toistuvuudessa. Kaikkien "
+"tapahtumien päivittäminen ei ole sallittua, kun päivämääriä tai kellonaikaa "
+"muutetaan"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.calendar_provider_config_view_form
 msgid "Client ID"
-msgstr ""
+msgstr "Asiakkaan tunnus/ID"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.calendar_provider_config_view_form
 msgid "Client Secret"
-msgstr ""
+msgstr "Client Secret"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_type__color
@@ -1310,7 +1319,7 @@ msgstr "Yleinen nimi"
 #. module: calendar
 #: model:ir.ui.menu,name:calendar.calendar_menu_config
 msgid "Configuration"
-msgstr "Asetukset"
+msgstr "Kokoonpanoasetukset"
 
 #. module: calendar
 #. odoo-javascript
@@ -1333,13 +1342,13 @@ msgstr "Yhdistä kalenterisi"
 #. module: calendar
 #: model:ir.model,name:calendar.model_res_partner
 msgid "Contact"
-msgstr "Kontakti"
+msgstr "Yhteystiedot"
 
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/calendar_event.py:0
 msgid "Contact Attendees"
-msgstr "Ole yhteydessä osallistujiin"
+msgstr "Ota yhteyttä osallistujiin"
 
 #. module: calendar
 #. odoo-python
@@ -1350,7 +1359,7 @@ msgstr ""
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_popover_delete_wizard__body
 msgid "Contents"
-msgstr ""
+msgstr "Sisältö"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__count
@@ -1360,7 +1369,7 @@ msgstr "Määrä"
 #. module: calendar
 #: model:ir.model,website_form_label:calendar.model_res_partner
 msgid "Create a Customer"
-msgstr ""
+msgstr "Luo asiakas"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_alarm__create_uid
@@ -1389,18 +1398,18 @@ msgstr "Luotu"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__current_attendee
 msgid "Current Attendee"
-msgstr ""
+msgstr "Nykyinen osallistuja"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__rrule_type_ui__custom
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__videocall_source__custom
 msgid "Custom"
-msgstr "Mukautettu"
+msgstr "Räätälöi"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__rrule_type_ui__daily
 msgid "Daily"
-msgstr ""
+msgstr "Päivittäin"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.invitation_page_anonymous
@@ -1451,17 +1460,17 @@ msgstr "Hylkää"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__declined_count
 msgid "Declined Count"
-msgstr ""
+msgstr "Hylättyjen määrä"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
 msgid "Default Privacy"
-msgstr ""
+msgstr "Yksityisyysasetuksen oletus"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_res_users_settings__calendar_default_privacy
 msgid "Default privacy setting for whom the calendar events will be visible."
-msgstr ""
+msgstr "Oletusyksityisyysasetus, jonka mukaan kalenteritapahtumat näkyvät."
 
 #. module: calendar
 #. odoo-javascript
@@ -1477,27 +1486,27 @@ msgstr "Poista"
 #: model_terms:ir.ui.view,arch_db:calendar.calendar_popover_delete_view
 #: model_terms:ir.ui.view,arch_db:calendar.view_event_delete_wizard_form
 msgid "Delete Event"
-msgstr ""
+msgstr "Poista tapahtuma"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_popover_delete_wizard__delete__all
 msgid "Delete all the events"
-msgstr ""
+msgstr "Poista kaikki tapahtumat"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_popover_delete_wizard__delete__next
 msgid "Delete this and following events"
-msgstr ""
+msgstr "Poista tämä ja seuraavat tapahtumat"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_popover_delete_wizard__delete__one
 msgid "Delete this event"
-msgstr ""
+msgstr "Poista tämä tapahtuma"
 
 #. module: calendar
 #: model:mail.template,subject:calendar.calendar_template_delete_event
 msgid "Deleted event: {{ object.name }}"
-msgstr ""
+msgstr "Poistettu tapahtuma: {{ object.name }}"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__description
@@ -1514,7 +1523,7 @@ msgstr "Tiedot"
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_event_delete_wizard_form
 msgid "Discard"
-msgstr ""
+msgstr "Hylkää"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__videocall_source__discuss
@@ -1529,7 +1538,7 @@ msgstr "Keskustelukanava"
 #. module: calendar
 #: model:ir.model,name:calendar.model_discuss_channel
 msgid "Discussion Channel"
-msgstr ""
+msgstr "Keskustelukanava"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__display_description
@@ -1561,12 +1570,12 @@ msgstr "Näyttönimi"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__res_id
 msgid "Document ID"
-msgstr "Dokumentin ID"
+msgstr "Asiakirjan tunnus"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__res_model_id
 msgid "Document Model"
-msgstr "Dokumentin malli"
+msgstr "Asiakirjan mallipohja"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__res_model
@@ -1587,7 +1596,7 @@ msgstr "Kesto"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_alarm__duration_minutes
 msgid "Duration in minutes"
-msgstr "Kesto minuuteissa"
+msgstr "Kesto minuutteina"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -1598,7 +1607,7 @@ msgstr "SÄHKÖPOSTI"
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/ask_recurrence_update_policy_dialog.xml:0
 msgid "Edit Recurrent event"
-msgstr ""
+msgstr "Muokkaa toistuvaa tapahtumaa"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -1645,7 +1654,7 @@ msgstr "Päättymispäivä"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__end_type
 msgid "End Type"
-msgstr "Lopputyyppi"
+msgstr "Päättymistyyppi"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__end_type__end_date
@@ -1661,17 +1670,17 @@ msgstr "Tapahtuman hälytys"
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_alarm_manager
 msgid "Event Alarm Manager"
-msgstr "Hälytysten hallinta"
+msgstr "Tapahtuman hälytysten hallinta"
 
 #. module: calendar
 #: model:ir.actions.act_window,name:calendar.action_event_delete_wizard
 msgid "Event Cancel Wizard"
-msgstr ""
+msgstr "Ohjattu \"Tapahtuman peruutus\" -toiminto"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_event_type
 msgid "Event Meeting Type"
-msgstr "Tapahtumakokouksen tyyppi"
+msgstr "Tapahtuman tapaamisen tyyppi"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_recurrence
@@ -1687,43 +1696,43 @@ msgstr "Tapahtuman aika"
 #. odoo-python
 #: code:addons/calendar/models/calendar_recurrence.py:0
 msgid "Every %(interval)s Days"
-msgstr ""
+msgstr "Joka %(interval)s päivä"
 
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/calendar_recurrence.py:0
 msgid "Every %(interval)s Days for %(count)s events"
-msgstr ""
+msgstr "Joka %(interval)s päivä %(count)s tapahtumaa varten"
 
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/calendar_recurrence.py:0
 msgid "Every %(interval)s Days until %(until)s"
-msgstr ""
+msgstr "Joka %(interval)s päivä, aina %(until)s saakka"
 
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/calendar_recurrence.py:0
 msgid "Every %(interval)s Months day %(day)s"
-msgstr ""
+msgstr "Joka %(interval)s kuukausi, %(day)s päivää"
 
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/calendar_recurrence.py:0
 msgid "Every %(interval)s Months day %(day)s for %(count)s events"
-msgstr ""
+msgstr "Joka %(interval)s kuukausi, %(day)s päivää %(count)s tapahtuman verran"
 
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/calendar_recurrence.py:0
 msgid "Every %(interval)s Months day %(day)s until %(until)s"
-msgstr ""
+msgstr "Joka %(interval)s kuukausi, %(day)s päivää, %(until)s saakka"
 
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/calendar_recurrence.py:0
 msgid "Every %(interval)s Months on the %(position)s %(weekday)s"
-msgstr ""
+msgstr "Joka %(interval)s kuukausi, %(position)s %(weekday)s"
 
 #. module: calendar
 #. odoo-python
@@ -1732,49 +1741,51 @@ msgid ""
 "Every %(interval)s Months on the %(position)s %(weekday)s for %(count)s "
 "events"
 msgstr ""
+"Joka %(interval)s kuukausi, %(position)s %(weekday)s %(count)s tapahtuman "
+"verran"
 
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/calendar_recurrence.py:0
 msgid ""
 "Every %(interval)s Months on the %(position)s %(weekday)s until %(until)s"
-msgstr ""
+msgstr "Joka %(interval)s kuukausi, %(position)s %(weekday)s,  %(until)s saakka"
 
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/calendar_recurrence.py:0
 msgid "Every %(interval)s Weeks on %(days)s"
-msgstr ""
+msgstr "Joka %(interval)s viikko päivänä %(days)s"
 
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/calendar_recurrence.py:0
 msgid "Every %(interval)s Weeks on %(days)s for %(count)s events"
-msgstr ""
+msgstr "Joka %(interval)s viikko, päivänä %(days)s, %(count)s tapahtuman verran"
 
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/calendar_recurrence.py:0
 msgid "Every %(interval)s Weeks on %(days)s until %(until)s"
-msgstr ""
+msgstr "Joka %(interval)s viikko %(days)s, kunnes %(until)s"
 
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/calendar_recurrence.py:0
 msgid "Every %(interval)s Years"
-msgstr ""
+msgstr "Joka %(interval)s vuosi"
 
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/calendar_recurrence.py:0
 msgid "Every %(interval)s Years for %(count)s events"
-msgstr ""
+msgstr "Joka %(interval)s vuosi, %(count)s tapahtuman verran"
 
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/calendar_recurrence.py:0
 msgid "Every %(interval)s Years until %(until)s"
-msgstr ""
+msgstr "Joka %(interval)s vuosi, %(until)s saakka"
 
 #. module: calendar
 #. odoo-python
@@ -1797,7 +1808,7 @@ msgstr "Ensin sinun pitää määritellä kutsulle päivä."
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__follow_recurrence
 msgid "Follow Recurrence"
-msgstr "Seuraa toistumista"
+msgstr "Seuraa toistuvuutta"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__message_follower_ids
@@ -1853,7 +1864,7 @@ msgstr "Google"
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.res_config_settings_view_form
 msgid "Google Calendar"
-msgstr ""
+msgstr "Google-kalenteri"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.calendar_provider_config_view_form
@@ -1873,7 +1884,7 @@ msgstr "Google Client_key"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_provider_config__cal_sync_paused
 msgid "Google Synchronization Paused"
-msgstr ""
+msgstr "Googlen synkronointi keskeytetty"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_ir_http
@@ -1910,7 +1921,7 @@ msgstr "Tunnit"
 #: model:ir.model.fields,field_description:calendar.field_res_users__id
 #: model:ir.model.fields,field_description:calendar.field_res_users_settings__id
 msgid "ID"
-msgstr "ID"
+msgstr "Tunnus"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__message_needaction
@@ -1928,8 +1939,8 @@ msgid ""
 "If the active field is set to false, it will allow you to hide the event "
 "alarm information without removing it."
 msgstr ""
-"Jos aktiivinen-kentän arvoksi asetetaan false, voit piilottaa "
-"tapahtumahälytystiedot poistamatta niitä."
+"Jos aktiivinen-kentän arvoksi asetetaan epätosi, voit piilottaa "
+"tapahtumahälytysten tiedot poistamatta niitä."
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__show_as
@@ -1941,6 +1952,12 @@ msgid ""
 " If the event is shown as 'free', other users know         that you are "
 "available during that period of time."
 msgstr ""
+"Jos aika näytetään \"varattu\", näytetään muille henkilöille joko tapahtuma "
+"täydet tiedot tai vain \"varattu\" -merkinnällä, riippuen sen "
+"yksityisyydestä. Käytä tätä vaihtoehtoa, jos haluat ilmoittaa muille "
+"ihmisille, että et ole käytettävissä kyseisenä aikana.\n"
+" Jos tapahtuma näkyy merkinnällä \"vapaa\", muut käyttäjät tietävät, että "
+"olet käytettävissä kyseisenä aikana."
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__res_users__calendar_default_privacy__confidential
@@ -1955,7 +1972,7 @@ msgstr "Aikaväli"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__invalid_email_partner_ids
 msgid "Invalid Email Partner"
-msgstr "Virheellinen partnerin sähköpostiosoite"
+msgstr "Virheellinen kumppanin sähköpostiosoite"
 
 #. module: calendar
 #: model:mail.message.subtype,name:calendar.subtype_invitation
@@ -1966,12 +1983,12 @@ msgstr "Kutsu"
 #: model:ir.model.fields,field_description:calendar.field_calendar_attendee__access_token
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__access_token
 msgid "Invitation Token"
-msgstr "Kutsuavain"
+msgstr "Kutsun pääsytunnus"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Invitation details"
-msgstr "Kutsun yksityiskohdat"
+msgstr "Kutsun tiedot"
 
 #. module: calendar
 #: model:mail.template,description:calendar.calendar_template_meeting_invitation
@@ -1996,7 +2013,7 @@ msgstr "Kutsut"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_popover_delete_wizard__is_mail_template_editor
 msgid "Is Editor"
-msgstr ""
+msgstr "On muokkaaja"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__message_is_follower
@@ -2021,7 +2038,7 @@ msgstr "Liity videopuheluun"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_popover_delete_wizard__lang
 msgid "Language"
-msgstr ""
+msgstr "Kieli"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__byday__-1
@@ -2085,7 +2102,7 @@ msgstr "Logo"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_popover_delete_wizard__template_id
 msgid "Mail Template"
-msgstr ""
+msgstr "Viestipohja"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_attendee__mail_tz
@@ -2098,7 +2115,7 @@ msgstr "Sähköpostin aikavyöhyke"
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_attendee__state__tentative
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Maybe"
-msgstr ""
+msgstr "Ehkä"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_filters__user_id
@@ -2170,7 +2187,7 @@ msgstr "Minuutit"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__res_model_name
 msgid "Model Description"
-msgstr ""
+msgstr "Mallin kuvaus"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__mon
@@ -2187,12 +2204,12 @@ msgstr "Maanantai"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__month_by
 msgid "Month By"
-msgstr "Kuukausittain"
+msgstr "Kuukaudet"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__rrule_type_ui__monthly
 msgid "Monthly"
-msgstr ""
+msgstr "Kuukausittain"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__rrule_type__monthly
@@ -2204,12 +2221,12 @@ msgstr "Kuukaudet"
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/calendar_form/calendar_quick_create.xml:0
 msgid "More Options"
-msgstr ""
+msgstr "Lisää valintoja"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
 msgid "My Meetings"
-msgstr "Omat tapaamiset"
+msgstr "Omat tapaamiseni"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_alarm__name
@@ -2244,7 +2261,7 @@ msgstr "Seuraavan toimenpiteen kalenterimerkintä"
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_attendee__state__declined
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "No"
-msgstr ""
+msgstr "Ei"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.invitation_page_anonymous
@@ -2259,13 +2276,13 @@ msgstr "Ei vielä palautetta"
 #. module: calendar
 #: model_terms:ir.actions.act_window,help:calendar.action_calendar_event
 msgid "No meetings found. Let's schedule one!"
-msgstr "Kokouksia ei löytynyt. Järjestetään yksi!"
+msgstr "Tapaamisia ei löytynyt. Järjestetään yksi!"
 
 #. module: calendar
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/attendee_calendar/attendee_calendar_model.js:0
 msgid "No, keep it"
-msgstr ""
+msgstr "Ei, pidä se"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__notes
@@ -2307,14 +2324,14 @@ msgstr "Ilmoitus - 30 minuuttia"
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__alarm_ids
 msgid "Notifications sent to all attendees to remind of the meeting."
-msgstr "Ilmoitus tapaamisesta lähetetty kaikille osanottajille."
+msgstr "Ilmoitus tapaamisesta lähetetty kaikille osallistujille."
 
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/calendar_alarm.py:0
 #: model:ir.model.fields,field_description:calendar.field_calendar_alarm__notify_responsible
 msgid "Notify Responsible"
-msgstr ""
+msgstr "Ilmoita asiasta vastaavalle"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__message_needaction_counter
@@ -2324,7 +2341,7 @@ msgstr "Toimenpiteiden määrä"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__count
 msgid "Number of Repetitions"
-msgstr ""
+msgstr "Toistojen määrä"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__message_has_error_counter
@@ -2334,7 +2351,7 @@ msgstr "Virheiden määrä"
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__message_needaction_counter
 msgid "Number of messages requiring action"
-msgstr ""
+msgstr "Toimenpiteitä vaativien viestien määrä"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__message_has_error_counter
@@ -2356,7 +2373,7 @@ msgstr "OK"
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Online Meeting"
-msgstr ""
+msgstr "Verkkotapaaminen"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
@@ -2368,7 +2385,7 @@ msgstr "Vain sisäiset käyttäjät"
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__privacy__confidential
 #: model:ir.model.fields.selection,name:calendar.selection__res_users_settings__calendar_default_privacy__confidential
 msgid "Only internal users"
-msgstr "Näytä vain sisäisille käyttäjille"
+msgstr "Vain sisäiset käyttäjät"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__month_by
@@ -2411,22 +2428,22 @@ msgstr "Outlook"
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.res_config_settings_view_form
 msgid "Outlook Calendar"
-msgstr ""
+msgstr "Outlook-kalenteri"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_provider_config__microsoft_outlook_client_identifier
 msgid "Outlook Client Id"
-msgstr "Outlook Client Id"
+msgstr "Outlook asiakasohjelman tunnus"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_provider_config__microsoft_outlook_client_secret
 msgid "Outlook Client Secret"
-msgstr "Outlook Client salaisuus"
+msgstr "Outlook Client Secret"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_provider_config__microsoft_outlook_sync_paused
 msgid "Outlook Synchronization Paused"
-msgstr ""
+msgstr "Outlookin synkronointi keskeytetty"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__attendee_ids
@@ -2489,7 +2506,7 @@ msgstr ""
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_popover_delete_wizard__recipient_ids
 msgid "Recipients"
-msgstr ""
+msgstr "Vastaanottajat"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__rrule_type
@@ -2505,12 +2522,12 @@ msgstr "Toistuvuussääntö"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__end_type
 msgid "Recurrence Termination"
-msgstr "Toiston päättö"
+msgstr "Toistuvuuden päättäminen"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__recurrence_update
 msgid "Recurrence Update"
-msgstr "Uusiutumisen päivitys"
+msgstr "Toistuvuuden päivitys"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__recurrency
@@ -2522,7 +2539,7 @@ msgstr "Toistuva"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__rrule
 msgid "Recurrent Rule"
-msgstr "Toistosääntä"
+msgstr "Toistuvuussääntö"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_alarm__duration
@@ -2538,7 +2555,7 @@ msgstr "Muistutukset"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_popover_delete_wizard__render_model
 msgid "Rendering Model"
-msgstr ""
+msgstr "Hahmontamismalli"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__rrule_type_ui
@@ -2548,7 +2565,7 @@ msgstr "Toista"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__interval
 msgid "Repeat On"
-msgstr ""
+msgstr "Toista"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__until
@@ -2558,7 +2575,7 @@ msgstr "Toista kunnes"
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Repeat every"
-msgstr ""
+msgstr "Toista joka"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__interval
@@ -2589,7 +2606,7 @@ msgstr "Rrule"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__rrule_type
 msgid "Rrule Type"
-msgstr "Säännön tyyppi"
+msgstr "Rrule-tyyppi"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__sat
@@ -2607,13 +2624,13 @@ msgstr "Lauantai"
 #: model_terms:ir.ui.view,arch_db:calendar.mail_activity_schedule_view_form
 #: model_terms:ir.ui.view,arch_db:calendar.mail_activity_view_form_popup
 msgid "Schedule"
-msgstr ""
+msgstr "Aikatauluta"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.mail_activity_schedule_view_form
 #: model_terms:ir.ui.view,arch_db:calendar.mail_activity_view_form_popup
 msgid "Schedule a meeting in your calendar"
-msgstr ""
+msgstr "Aikatauluta kokous kalenterissasi"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__partner_id
@@ -2627,11 +2644,13 @@ msgid ""
 "Scheduling an activity using the calendar is not possible on more than one "
 "record."
 msgstr ""
+"Toiminnan ajoittaminen kalenterin avulla ei ole mahdollista useammassa kuin "
+"yhdessä tietueessa."
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
 msgid "Search Meetings"
-msgstr "Hae tapaamiset"
+msgstr "Hae tapaamisia"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__byday__2
@@ -2662,7 +2681,7 @@ msgstr "Lähetä sähköposti"
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_event_delete_wizard_form
 msgid "Send and delete"
-msgstr ""
+msgstr "Lähetä ja poista"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -2691,12 +2710,12 @@ msgstr ""
 #: model:ir.actions.act_window,name:calendar.calendar_settings_action
 #: model:ir.ui.menu,name:calendar.menu_calendar_settings
 msgid "Settings"
-msgstr ""
+msgstr "Asetukset"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__should_show_status
 msgid "Should Show Status"
-msgstr ""
+msgstr "Pitäisi näyttää tila"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__show_as
@@ -2712,18 +2731,18 @@ msgstr "Torkuta"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__start
 msgid "Start"
-msgstr "Aloita"
+msgstr "Aloitus"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__start_date
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_tree
 msgid "Start Date"
-msgstr "Alkupäivä"
+msgstr "Aloituspäivä"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__start
 msgid "Start date of an event, without time for full days events"
-msgstr "Tapahtuman alkupäivä, kokopäivän tapahtumille ilman aikaa."
+msgstr "Tapahtuman aloituspäivä, koko päivän tapahtumille ilman aikaa."
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_attendee__state
@@ -2744,13 +2763,13 @@ msgstr "Lopeta"
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__stop
 msgid "Stop date of an event, without time for full days events"
-msgstr "Tapahtuman loppupäivä, kokopäivän tapahtumille ilman aikaa."
+msgstr "Tapahtuman loppupäivä, koko päivän tapahtumille ilman aikaa."
 
 #. module: calendar
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/attendee_calendar/attendee_calendar_controller.xml:0
 msgid "Stop synchro"
-msgstr ""
+msgstr "Lopeta synkronointi"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_popover_delete_wizard__subject
@@ -2762,7 +2781,7 @@ msgstr "Aihe"
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.calendar_popover_delete_view
 msgid "Submit"
-msgstr ""
+msgstr "Tallenna"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__sun
@@ -2780,13 +2799,13 @@ msgstr "Sunnuntai"
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/attendee_calendar/attendee_calendar_controller.xml:0
 msgid "Synchro is paused"
-msgstr ""
+msgstr "Synkronointi on keskeytetty"
 
 #. module: calendar
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/attendee_calendar/attendee_calendar_controller.xml:0
 msgid "Synchronize with"
-msgstr ""
+msgstr "Synkronoi"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.calendar_provider_config_view_form
@@ -2803,7 +2822,7 @@ msgstr "Synkronoi kalenterisi Outlookin kanssa"
 #. module: calendar
 #: model:ir.model.constraint,message:calendar.constraint_calendar_event_type_name_uniq
 msgid "Tag name already exists!"
-msgstr ""
+msgstr "Tunniste on jo olemassa!"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__categ_ids
@@ -2813,7 +2832,8 @@ msgstr "Tunnisteet"
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_alarm__mail_template_id
 msgid "Template used to render mail reminder content."
-msgstr "Malli, jota käytetään sähköpostimuistutuksen sisällön esittämiseen."
+msgstr ""
+"Mallipohja, jota käytetään sähköpostimuistutuksen sisällön hahmontamiseen."
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.invitation_page_anonymous
@@ -2823,12 +2843,12 @@ msgstr "Alustava"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__tentative_count
 msgid "Tentative Count"
-msgstr ""
+msgstr "Alustava laskenta"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "The"
-msgstr "."
+msgstr " "
 
 #. module: calendar
 #: model_terms:ir.actions.act_window,help:calendar.action_calendar_event
@@ -2837,14 +2857,14 @@ msgid ""
 "            other applications such as the employee leaves or the business\n"
 "            opportunities."
 msgstr ""
-"Kalenteri jaetaan työntekijöiden kesken ja se on täysin integroitu osaksi\n"
-"            muihin sovelluksiin, kuten työntekijän lehdet tai yrityksen\n"
-"            mahdollisuuksia."
+"Kalenteri jaetaan työntekijöiden kesken ja se on täysin integroitu\n"
+"            muihin sovelluksiin, kuten työntekijän vapaisiin tai\n"
+"            yritysmahdollisuuksiin."
 
 #. module: calendar
 #: model:ir.model.constraint,message:calendar.constraint_calendar_recurrence_month_day
 msgid "The day must be between 1 and 31"
-msgstr "Päivän on oltava 1:n ja 31:n välillä"
+msgstr "Päivän on oltava 1 ja 31 välillä"
 
 #. module: calendar
 #. odoo-python
@@ -2853,6 +2873,8 @@ msgid ""
 "The ending date and time cannot be earlier than the starting date and time.\n"
 "Meeting “%(name)s” starts at %(start_time)s and ends at %(end_time)s"
 msgstr ""
+"Päättymispäivä ja -aika eivät voi olla ennen alkamispäivää ja -aikaa.\n"
+"Tapaaminen \"%(name)s\" alkaa %(start_time)s ja päättyy %(end_time)s"
 
 #. module: calendar
 #. odoo-python
@@ -2861,12 +2883,14 @@ msgid ""
 "The ending date cannot be earlier than the starting date.\n"
 "Meeting “%(name)s” starts on %(start_date)s and ends on %(end_date)s"
 msgstr ""
+"Päättymispäivä ei voi olla ennen alkamispäivää.\n"
+"Tapaaminen \"%(name)s\" alkaa %(start_date)s ja päättyy %(end_date)s"
 
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/calendar_recurrence.py:0
 msgid "The interval cannot be negative."
-msgstr "Väli ei voi olla negatiivinen."
+msgstr "Aikaväli ei voi olla negatiivinen."
 
 #. module: calendar
 #. odoo-python
@@ -2932,7 +2956,7 @@ msgstr "Tämän päivän kokoukset"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__trigger_id
 msgid "Trigger"
-msgstr ""
+msgstr "Käynnistävä toiminto"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__tue
@@ -2955,12 +2979,12 @@ msgstr "Tyyppi"
 #. odoo-python
 #: code:addons/calendar/models/calendar_event.py:0
 msgid "Unable to save the recurrence with \"This Event\""
-msgstr ""
+msgstr "Toistuvuutta ei voida tallentaa \"Tämä tapahtuma\" -asetuksella"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__unavailable_partner_ids
 msgid "Unavailable Attendees"
-msgstr ""
+msgstr "Osallistujat, jotka eivät ole käytettävissä"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -2982,7 +3006,7 @@ msgstr "Kunnes"
 #: model:mail.template,description:calendar.calendar_template_delete_event
 #: model:mail.template,description:calendar.calendar_template_meeting_update
 msgid "Used to manually notify attendees"
-msgstr ""
+msgstr "Käytetään, kun osallistujille ilmoitetaan manuaalisesti"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_res_users
@@ -2992,12 +3016,12 @@ msgstr "Käyttäjä"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__user_can_edit
 msgid "User Can Edit"
-msgstr ""
+msgstr "Käyttäjä voi muokata"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_res_users_settings
 msgid "User Settings"
-msgstr ""
+msgstr "Käyttäjäasetukset"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -3040,7 +3064,7 @@ msgstr "Arkipäivä"
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__rrule_type_ui__weekly
 msgid "Weekly"
-msgstr ""
+msgstr "Viikottainen"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__rrule_type__weekly
@@ -3065,7 +3089,7 @@ msgstr ""
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__rrule_type_ui__yearly
 msgid "Yearly"
-msgstr ""
+msgstr "Vuosittainen"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__rrule_type__yearly
@@ -3079,7 +3103,7 @@ msgstr "Vuotta"
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_attendee__state__accepted
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Yes"
-msgstr ""
+msgstr "Kyllä"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.invitation_page_anonymous
@@ -3093,6 +3117,8 @@ msgid ""
 "You are not allowed to change the calendar default privacy of another user "
 "due to privacy constraints."
 msgstr ""
+"Et saa muuttaa toisen käyttäjän kalenterin oletusarvoista yksityisyyttä "
+"yksityisyysrajoitusten vuoksi."
 
 #. module: calendar
 #. odoo-python
@@ -3104,37 +3130,37 @@ msgstr "Et voi päivittää toistuvuutta ilman perustapahtumaa."
 #. odoo-python
 #: code:addons/calendar/models/calendar_attendee.py:0
 msgid "You cannot duplicate a calendar attendee."
-msgstr "Et voi kopioida kalenterin mukaista osallistujaa"
+msgstr "Et voi kopioida kalenterin osallistujaa"
 
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/calendar_recurrence.py:0
 msgid "You have to choose at least one day in the week"
-msgstr "Sinun on valittava vähintään yksi päivä viikossa"
+msgstr "Sinun on valittava vähintään yksi viikonpäivä"
 
 #. module: calendar
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/attendee_calendar/common/attendee_calendar_common_renderer.xml:0
 msgid "You're alone in this meeting"
-msgstr ""
+msgstr "Olet yksin tässä tapaamisessa"
 
 #. module: calendar
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/fields/many2many_attendee_expandable.xml:0
 msgid "accepted"
-msgstr ""
+msgstr "hyväksytty"
 
 #. module: calendar
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/fields/many2many_attendee_expandable.xml:0
 msgid "attendees"
-msgstr ""
+msgstr "osallistujat"
 
 #. module: calendar
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/fields/many2many_attendee_expandable.xml:0
 msgid "declined"
-msgstr ""
+msgstr "hylätty"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -3144,31 +3170,31 @@ msgstr "esim. lounastapaaminen"
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "e.g: 12/31/2023"
-msgstr ""
+msgstr "esim: 12/31/2023"
 
 #. module: calendar
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/fields/attendee_tags_list.xml:0
 msgid "no email"
-msgstr ""
+msgstr "ei sähköpostia"
 
 #. module: calendar
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/fields/many2many_attendee.xml:0
 msgid "props.placeholder"
-msgstr ""
+msgstr "props.placeholder"
 
 #. module: calendar
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/fields/attendee_tags_list.xml:0
 msgid "unavailable"
-msgstr ""
+msgstr "ei käytettävissä"
 
 #. module: calendar
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/fields/many2many_attendee_expandable.xml:0
 msgid "uncertain"
-msgstr ""
+msgstr "epävarma"
 
 #. module: calendar
 #: model:mail.template,subject:calendar.calendar_template_meeting_reminder

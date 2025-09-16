@@ -1,6 +1,6 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* base
+# * base
 #
 # Translators:
 # Darius Ribinskas <dahius@gmail.com>, 2022
@@ -33,22 +33,24 @@
 # Silvija Butko <silvija.butko@gmail.com>, 2023
 # Jonas Zinkevicius <jozi@odoo.com>, 2023
 # Ramunė ViaLaurea <ramune.vialaurea@gmail.com>, 2023
-#
+# "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-09-12 13:52+0000\n"
-"PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Ramunė ViaLaurea <ramune.vialaurea@gmail.com>, 2023\n"
-"Language-Team: Lithuanian (https://app.transifex.com/odoo/teams/41243/lt/)\n"
+"PO-Revision-Date: 2025-09-16 18:42+0000\n"
+"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
+"Language-Team: Lithuanian <https://translate.odoo.com/projects/odoo-19/base/"
+"lt/>\n"
 "Language: lt\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=4; plural=(n % 10 == 1 && (n % 100 > 19 || n % 100 < "
-"11) ? 0 : (n % 10 >= 2 && n % 10 <=9) && (n % 100 > 19 || n % 100 < 11) ? "
-"1 : n % 1 != 0 ? 2: 3);\n"
+"11) ? 0 : (n % 10 >= 2 && n % 10 <=9) && (n % 100 > 19 || n % 100 < 11) ? 1 :"
+" n % 1 != 0 ? 2: 3);\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_at_reports
@@ -483,7 +485,7 @@ msgid ""
 "holds the VAT detail info of sales or purchases made in a period of time.\n"
 "* Add a VAT summary report that is used to analyze invoicing\n"
 "* Add Digital VAT Book functionality that let us generate TXT files to "
-"import in AFIP. The ones we implement are:\n"
+"import in ARCA. The ones we implement are:\n"
 "\n"
 "    * LIBRO_IVA_DIGITAL_VENTAS_CBTE\n"
 "    * LIBRO_IVA_DIGITAL_VENTAS_ALICUOTAS\n"
@@ -491,7 +493,7 @@ msgid ""
 "    * LIBRO_IVA_DIGITAL_COMPRAS_ALICUOTAS\n"
 "    * LIBRO_IVA_DIGITAL_IMPORTACION_BIENES_ALICUOTA\n"
 "\n"
-"Official Documentation AFIP\n"
+"Official Documentation ARCA\n"
 "\n"
 "* Digital VAT Book - record design https://www.afip.gob.ar/libro-iva-digital/"
 "documentos/libro-iva-digital-diseno-registros.pdf\n"
@@ -1419,6 +1421,14 @@ msgid ""
 "level including customer and supplier transactions.\n"
 "Necessary master data is also included.\n"
 msgstr ""
+"\n"
+"Luxemborgin kirjanpidolliset raportit\n"
+"=================================\n"
+"Luxemborgin SAF-T (myös nimellä FAIA) on standarditiedostomuoto "
+"erityyppisten kirjanpitotapahtumatietojen viennissä XML-muodossa.\n"
+"Ensimmäinen SAF-T Financial versio rajoittuu pääkirjan tasolle, mukaan "
+"lukien asiakas- ja toimittajatapahtumat.\n"
+"Mukana on myös tarvittavat ydintiedot.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ml_reports
@@ -1765,7 +1775,7 @@ msgid ""
 "of identifications are defined by the government authorities that regulate "
 "the fiscal operations. For example:\n"
 "\n"
-"* AFIP in Argentina defines DNI, CUIT (vat for legal entities), CUIL (vat "
+"* ARCA in Argentina defines DNI, CUIT (vat for legal entities), CUIL (vat "
 "for natural person), and another 80 valid identification types.\n"
 "\n"
 "Each identification holds this information:\n"
@@ -4212,7 +4222,7 @@ msgid ""
 "----------\n"
 "\n"
 "Be able to create journals in Odoo to create electronic customer invoices "
-"and report then to AFIP (via webservices).\n"
+"and report then to ARCA (via webservices).\n"
 "The options available are:\n"
 "\n"
 "    * Electronic Invoice - Web Service\n"
@@ -4220,63 +4230,63 @@ msgid ""
 "    * Electronic Fiscal Bond - Web Service\n"
 "\n"
 "In the electronic journals if you validate an invoice this one will be "
-"validated in both Odoo and AFIP. This validation is\n"
+"validated in both Odoo and ARCA. This validation is\n"
 "made at the instant and we recieve and \"approved/approved with observation/"
-"rejected\" state from AFIP. If the invoice has\n"
-"been rejected by AFIP will not be post in the system and a pop up message "
+"rejected\" state from ARCA. If the invoice has\n"
+"been rejected by ARCA will not be post in the system and a pop up message "
 "will be shown with both the error detail (reject reasons)\n"
 "we recieve and a HINT about what the problem could be.\n"
 "\n"
 "For auditing and troubleshooting purposes we also add a menu \"Consulit "
-"Invoice in AFIP\" that let us to consult invoices previously\n"
-"sent to AFIP and last number used as support for any possible issues on the "
-"sequences synchronization between Odoo and AFIP.\n"
+"Invoice in ARCA\" that let us to consult invoices previously\n"
+"sent to ARCA and last number used as support for any possible issues on the "
+"sequences synchronization between Odoo and ARCA.\n"
 "\n"
 "    NOTE: From the Journal's form view we are able to force a sync between "
 "the odoo sequences to each of the document types in\n"
-"    with the last numbers registered in AFIP.\n"
+"    with the last numbers registered in ARCA.\n"
 "\n"
 "From vendor bills, we have added a functionality that can be configured in "
 "the accounting settings to be able to verify\n"
-"vendor bills in AFIP to check if the vendor bills are real (more information "
+"vendor bills in ARCA to check if the vendor bills are real (more information "
 "please review the setting description).\n"
 "\n"
 "Configuration:\n"
 "\n"
 "1. Go to the Accounting Settings > Argentinean Localization section\n"
 "\n"
-"    1.1. Configure the AFIP Web Services mode:\n"
+"    1.1. Configure the ARCA Web Services mode:\n"
 "\n"
 "    * Testing environment in order to use demo certificates that will be use "
 "to test the instance and to make NOT\n"
-"      real invoices to AFIP. is just for testing. For demo instaces is "
+"      real invoices to ARCA. is just for testing. For demo instaces is "
 "already pre-defined you will not need to configure\n"
-"      it (commonly named in AFIP as Homologation environment).\n"
+"      it (commonly named in ARCA as Homologation environment).\n"
 "    * Production environment in order to generate real certificates and "
-"legal invoices to AFIP,\n"
+"legal invoices to ARCA,\n"
 "\n"
-"    1.2. Configure your AFIP Certificate: If you are in a demo instance this "
+"    1.2. Configure your ARCA Certificate: If you are in a demo instance this "
 "one will be have been set by default. If you\n"
-"         are in production instance just need to go to upload your AFIP "
+"         are in production instance just need to go to upload your ARCA "
 "Certificate\n"
 "\n"
 "    1.3. Optionally you can define if you like to be eable to verify vendor "
-"bills in AFIP.\n"
+"bills in ARCA.\n"
 "\n"
-"2. Create Sales journals that will represent each one of your AFIP POS "
-"(Available in AFIP Portal) you want to use in Odoo.\n"
+"2. Create Sales journals that will represent each one of your ARCA POS "
+"(Available in ARCA Portal) you want to use in Odoo.\n"
 "\n"
 "    2.1. Use Documents field is set by default please dont change\n"
-"    2.2. Set AFIP POS System for one of the electronic ones.\n"
+"    2.2. Set ARCA POS System for one of the electronic ones.\n"
 "\n"
 "        * Electronic Invoice - Web Service'\n"
 "        * Electronic Fiscal Bond - Web Service'\n"
 "        * Export Voucher - Web Service'\n"
 "\n"
-"    2.3. Set the AFIP POS Number and AFIP POS Address taking into account "
-"what you have configured in your AFIP Portal.\n"
+"    2.3. Set the ARCA POS Number and ARCA POS Address taking into account "
+"what you have configured in your ARCA Portal.\n"
 "\n"
-"    NOTE: You can use the \"Check Available AFIP POS\" button in Journal's "
+"    NOTE: You can use the \"Check Available ARCA POS\" button in Journal's "
 "form to corroborate the to use to create the journals.\n"
 "\n"
 "For more information about Argentinean Electronic invoicing please go to "
@@ -4309,7 +4319,7 @@ msgid ""
 "In some Latinamerica countries, including Argentina and Chile, some "
 "accounting transactions like invoices and vendor bills are classified by a "
 "document types defined by the government fiscal authorities (In Argentina "
-"case AFIP, Chile case SII).\n"
+"case ARCA, Chile case SII).\n"
 "\n"
 "This module is intended to be extended by localizations in order to manage "
 "these document types and is an essential information that needs to be "
@@ -4342,20 +4352,20 @@ msgid ""
 "\n"
 "This module add accounting features for the Argentinean localization, which "
 "represent the minimal configuration needed for a company  to operate in "
-"Argentina and under the AFIP (Administración Federal de Ingresos Públicos) "
+"Argentina and under the ARCA (Administración Federal de Ingresos Públicos) "
 "regulations and guidelines.\n"
 "\n"
 "Follow the next configuration steps for Production:\n"
 "\n"
-"1. Go to your company and configure your VAT number and AFIP Responsibility "
+"1. Go to your company and configure your VAT number and ARCA Responsibility "
 "Type\n"
 "2. Go to Accounting / Settings and set the Chart of Account that you will "
 "like to use.\n"
-"3. Create your Sale journals taking into account AFIP POS info.\n"
+"3. Create your Sale journals taking into account ARCA POS info.\n"
 "\n"
 "Demo data for testing:\n"
 "\n"
-"* 3 companies were created, one for each AFIP responsibility type with the "
+"* 3 companies were created, one for each ARCA responsibility type with the "
 "respective Chart of Account installed. Choose the company that fix you in "
 "order to make tests:\n"
 "\n"
@@ -4379,7 +4389,7 @@ msgid ""
 "Highlights:\n"
 "\n"
 "* Chart of account will not be automatically installed, each CoA Template "
-"depends on the AFIP Responsibility of the company, you will need to install "
+"depends on the ARCA Responsibility of the company, you will need to install "
 "the CoA for your needs.\n"
 "* No sales journals will be generated when installing a CoA, you will need "
 "to configure your journals manually.\n"
@@ -4397,7 +4407,7 @@ msgid ""
 "\n"
 "Master Data:\n"
 "\n"
-"* Chart of Account: one for each AFIP responsibility that is related to a "
+"* Chart of Account: one for each ARCA responsibility that is related to a "
 "legal entity:\n"
 "\n"
 "  * Responsable Inscripto (RI)\n"
@@ -4406,15 +4416,15 @@ msgid ""
 "\n"
 "* Argentinean Taxes and Account Tax Groups (VAT taxes with the existing "
 "aliquots and other types)\n"
-"* AFIP Responsibility Types\n"
+"* ARCA Responsibility Types\n"
 "* Fiscal Positions (in order to map taxes)\n"
 "* Legal Documents Types in Argentina\n"
 "* Identification Types valid in Argentina.\n"
-"* Country AFIP codes and Country VAT codes for legal entities, natural "
+"* Country ARCA codes and Country VAT codes for legal entities, natural "
 "persons and others\n"
-"* Currency AFIP codes\n"
-"* Unit of measures AFIP codes\n"
-"* Partners: Consumidor Final and AFIP\n"
+"* Currency ARCA codes\n"
+"* Unit of measures ARCA codes\n"
+"* Partners: Consumidor Final and ARCA\n"
 msgstr ""
 
 #. module: base
@@ -11071,7 +11081,7 @@ msgstr "Priegos meniu"
 #: model_terms:ir.ui.view,arch_db:base.view_users_simple_form
 #: model_terms:ir.ui.view,arch_db:base.view_view_form
 msgid "Access Rights"
-msgstr "Prieigos teisės "
+msgstr "Prieigos teisės"
 
 #. module: base
 #. odoo-python
@@ -11972,13 +11982,13 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_users__role__group_system
 msgid "Administrator"
-msgstr ""
+msgstr "Administratorius"
 
 #. module: base
 #. odoo-python
 #: code:addons/base/models/ir_model.py:0
 msgid "Administrator access is required to uninstall a module"
-msgstr "Norint išdiegti modulį, reikalinga administratoriaus prieiga "
+msgstr "Norint išdiegti modulį, reikalinga administratoriaus prieiga"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_country_form
@@ -12410,7 +12420,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_filters_view_form
 msgid "All users"
-msgstr ""
+msgstr "Visi vartotojai"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_holidays
@@ -12486,7 +12496,7 @@ msgstr ""
 #. module: base
 #: model:res.groups,name:base.group_allow_export
 msgid "Allowed"
-msgstr ""
+msgstr "Leidžiamas"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_server__group_ids
@@ -13716,7 +13726,7 @@ msgstr "Taikyti suplanuotus atnaujinimus"
 #. module: base
 #: model:ir.module.category,name:base.module_category_services_appointment
 msgid "Appointment"
-msgstr ""
+msgstr "Susitikimas"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_appointment_google_calendar
@@ -13858,7 +13868,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_bank_form
 msgid "Archive"
-msgstr ""
+msgstr "Archyvuoti"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.edit_menu_access_search
@@ -15050,7 +15060,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_res_partner__avatar_128
 #: model:ir.model.fields,field_description:base.field_res_users__avatar_128
 msgid "Avatar 128"
-msgstr ""
+msgstr "Portretas 128"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_avatar_mixin__avatar_256
@@ -15252,7 +15262,7 @@ msgstr ""
 #. module: base
 #: model:res.currency,currency_subunit_label:base.MDL
 msgid "Ban"
-msgstr ""
+msgstr "Uždrausti"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_theme_notes
@@ -15706,6 +15716,7 @@ msgid ""
 "Below text serves as a suggestion and doesn’t engage Odoo S.A. "
 "responsibility."
 msgstr ""
+"Toliau pateiktas tekstas yra pasiūlymas ir Odoo S.A. neprisiima atsakomybės."
 
 #. module: base
 #: model:res.country,name:base.bj
@@ -15832,7 +15843,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_blog
 msgid "Blog"
-msgstr ""
+msgstr "Tinklaraštis"
 
 #. module: base
 #: model:res.currency,currency_unit_label:base.VEF
@@ -17424,7 +17435,7 @@ msgstr "Komercinis juridinis asmuo"
 #. module: base
 #: model:ir.module.category,name:base.module_category_sales_commission
 msgid "Commission"
-msgstr ""
+msgstr "Komisiniai"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_payroll_sale_commission
@@ -17519,7 +17530,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_res_partner__company_registry
 #: model:ir.model.fields,field_description:base.field_res_users__company_registry
 msgid "Company ID"
-msgstr ""
+msgstr "Įmonės kodas"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner__company_registry_label
@@ -18134,7 +18145,7 @@ msgstr "Šalies valstija"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_loyalty
 msgid "Coupons & Loyalty"
-msgstr ""
+msgstr "Nuolaidų ir lojalumo programos"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale_loyalty
@@ -18156,7 +18167,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 #: model_terms:ir.ui.view,arch_db:base.view_rule_search
 msgid "Create"
-msgstr ""
+msgstr "Sukurti"
 
 #. module: base
 #. odoo-python
@@ -18837,7 +18848,7 @@ msgstr "Kliento atsiliepimai"
 #: model_terms:res.partner,website_description:base.res_partner_2
 #: model_terms:res.partner,website_description:base.res_partner_4
 msgid "Customer Relationship Management"
-msgstr ""
+msgstr "Klientų santykių valdymas"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_partner_customer_form
@@ -18990,7 +19001,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.category,name:base.module_category_productivity_dashboard
 msgid "Dashboard"
-msgstr ""
+msgstr "Valdymo skydelis"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_board
@@ -19285,7 +19296,7 @@ msgstr "Apibrėžimas"
 #: model_terms:ir.ui.view,arch_db:base.res_users_apikeys_view_kanban
 #: model_terms:ir.ui.view,arch_db:base.view_rule_search
 msgid "Delete"
-msgstr ""
+msgstr "Trinti"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_apikeys
@@ -19552,7 +19563,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.view_users_form
 #: model_terms:ir.ui.view,arch_db:base.view_users_form_simple_modif
 msgid "Devices"
-msgstr ""
+msgstr "Įrenginiai"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_digest_enterprise
@@ -20131,7 +20142,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_act_url__target__download
 msgid "Download"
-msgstr ""
+msgstr "Atsisiųsti"
 
 #. module: base
 #: model:res.currency,currency_unit_label:base.AMD
@@ -20801,7 +20812,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.category,name:base.module_category_theme_environment
 msgid "Environment"
-msgstr ""
+msgstr "Aplinka"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_theme_treehouse
@@ -20844,7 +20855,7 @@ msgstr "Klaida"
 #. odoo-python
 #: code:addons/base/models/ir_module.py:0
 msgid "Error ! You cannot create recursive categories."
-msgstr ""
+msgstr "Klaida! Jūs negalite sukurti pasikartojančių kategorijų."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_constraint__message
@@ -21686,7 +21697,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_res_users_apikeys__expiration_date
 #: model:ir.model.fields,field_description:base.field_res_users_apikeys_description__expiration_date
 msgid "Expiration Date"
-msgstr ""
+msgstr "Galiojimo datos pabaiga"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_users_apikeys_view_kanban
@@ -22583,7 +22594,7 @@ msgstr "Šriftas"
 #. module: base
 #: model:ir.module.category,name:base.module_category_theme_food
 msgid "Food"
-msgstr ""
+msgstr "Maistas"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_food_distribution
@@ -22635,7 +22646,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_fields__relation
 msgid "For relationship fields, the technical name of the target model"
-msgstr "Santykių laukams, tikslinio modelio techninis pavadinimas "
+msgstr "Santykių laukams, tikslinio modelio techninis pavadinimas"
 
 #. module: base
 #. odoo-python
@@ -23809,7 +23820,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_helpdesk_account
 msgid "Helpdesk Account"
-msgstr ""
+msgstr "Pagalbos tarnybos paskyra"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_helpdesk_sale
@@ -23926,7 +23937,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.category,name:base.module_category_theme_hidden
 msgid "Hidden"
-msgstr ""
+msgstr "Paslėpta"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_timesheet
@@ -24295,7 +24306,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_res_device__ip_address
 #: model:ir.model.fields,field_description:base.field_res_device_log__ip_address
 msgid "IP Address"
-msgstr ""
+msgstr "IP adresas"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_profile_view_form
@@ -24465,7 +24476,9 @@ msgid ""
 msgstr ""
 "Jei šis vaizdas yra paveldėtas,\n"
 "* Jei teigiamas, vaizdas visada praplečia savo tėvinį vaizdą\n"
-"* Jei neigiamas, vaizdas nepraplečia savo tėvinio, bet tai gali būti įjungta"
+"* Jei neigiamas, vaizdas nepraplečia savo tėvinio, bet tai gali būti "
+"įjungta\n"
+"         "
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_rule_form
@@ -25442,7 +25455,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/base/models/ir_default.py:0
 msgid "Invalid field %(model)s.%(field)s"
-msgstr ""
+msgstr "Netinkamas laukas %(model)s.%(field)s"
 
 #. module: base
 #. odoo-python
@@ -25533,7 +25546,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/base/models/ir_default.py:0
 msgid "Invalid value for %(model)s.%(field)s: %(value)s"
-msgstr ""
+msgstr "Netinkama reikšmė %(model)s.%(field)s: %(value)s"
 
 #. module: base
 #. odoo-python
@@ -25596,7 +25609,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__type__invoice
 msgid "Invoice"
-msgstr ""
+msgstr "Sąskaita-faktūra"
 
 #. module: base
 #. odoo-python
@@ -26721,7 +26734,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.sequence_view
 msgid "Legend (for prefix, suffix)"
-msgstr "Paaiškinimas "
+msgstr "Paaiškinimas"
 
 #. module: base
 #: model:res.currency,currency_unit_label:base.ALL
@@ -26976,7 +26989,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:base.selection__ir_ui_view__type__list
 #: model_terms:ir.ui.view,arch_db:base.view_view_search
 msgid "List"
-msgstr ""
+msgstr "Sąrašas"
 
 #. module: base
 #. odoo-python
@@ -27365,6 +27378,8 @@ msgid ""
 "Mail delivery failed via SMTP server '%(server)s'.\n"
 "%(exception_name)s: %(message)s"
 msgstr ""
+"Pašto pristatymas nepavyko per SMTP serverį '%(server)s'.\n"
+"%(exception_name)s: %(message)s"
 
 #. module: base
 #: model:ir.ui.menu,name:base.menu_module_tree
@@ -27852,7 +27867,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/base/models/ir_model.py:0
 msgid "Many2one %(field)s on model %(model)s does not exist!"
-msgstr ""
+msgstr "Many2one %(field)s modelyje %(model)s neegzistuoja!"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_model_relation
@@ -27991,7 +28006,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.category,name:base.module_category_master_data
 msgid "Master Data"
-msgstr ""
+msgstr "Pagrindiniai duomenys"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mrp_mps
@@ -28055,7 +28070,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_users__role__group_user
 msgid "Member"
-msgstr ""
+msgstr "Narys"
 
 #. module: base
 #: model:res.company,partnership_label:base.main_company
@@ -28670,7 +28685,7 @@ msgstr "Moduliai"
 #: code:addons/base/models/ir_module.py:0
 msgid ""
 "Modules \"%(module)s\" and \"%(incompatible_module)s\" are incompatible."
-msgstr ""
+msgstr "Moduliai \"%(module)s\" ir \"%(incompatible_module)s\" nesuderinami."
 
 #. module: base
 #: model:res.country,name:base.md
@@ -29373,7 +29388,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_bank_form
 msgid "Note"
-msgstr ""
+msgstr "Pastaba"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner__comment
@@ -31295,7 +31310,7 @@ msgstr "Išsiunčiamų laiškų serveris"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_microsoft_calendar
 msgid "Outlook Calendar"
-msgstr ""
+msgstr "Outlook kalendorius"
 
 #. module: base
 #: model:ir.module.module,description:base.module_microsoft_outlook
@@ -31909,7 +31924,7 @@ msgstr "Parametrų saugykla"
 #: model:ir.model.fields,field_description:base.field_ir_model_inherit__parent_id
 #: model:ir.model.fields,field_description:base.field_res_company__parent_ids
 msgid "Parent"
-msgstr ""
+msgstr "Tėvinis"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_server__parent_id
@@ -32268,7 +32283,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.category,name:base.module_category_accounting_payment_providers
 msgid "Payment Providers"
-msgstr ""
+msgstr "Mokėjimo paslaugos tiekėjas"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_payment
@@ -32279,7 +32294,7 @@ msgstr ""
 #: model:ir.module.category,name:base.module_category_human_resources_payroll
 #: model:ir.module.module,shortdesc:base.module_hr_payroll
 msgid "Payroll"
-msgstr "Algalapis"
+msgstr "Atlyginimai"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_payroll_attendance
@@ -32556,7 +32571,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_groups_privilege__placeholder
 msgid "Placeholder"
-msgstr ""
+msgstr "Vietaženklis"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_project_forecast
@@ -32849,7 +32864,7 @@ msgstr ""
 #. module: base
 #: model:res.currency,currency_unit_label:base.SSP
 msgid "Pounds"
-msgstr ""
+msgstr "Svarai"
 
 #. module: base
 #. odoo-python
@@ -34164,7 +34179,7 @@ msgstr "Perkrauti iš priedo"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_cron_progress__remaining
 msgid "Remaining"
-msgstr ""
+msgstr "Liko"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_human_resources_remote_work
@@ -34448,7 +34463,7 @@ msgstr "Restoranas"
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_restaurant
 msgid "Restaurant extensions for the Point of Sale "
-msgstr "Restorano plėtiniai POS'ui"
+msgstr "Restorano plėtiniai POS'ui "
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.server_action_history_wizard_view
@@ -34485,7 +34500,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_device_view_tree
 msgid "Revoke"
-msgstr ""
+msgstr "Atšaukti"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_device__revoked
@@ -34533,7 +34548,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_users__role
 msgid "Role"
-msgstr ""
+msgstr "Vaidmuo"
 
 #. module: base
 #: model:res.groups,name:base.group_system
@@ -34558,7 +34573,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_form
 msgid "Roles"
-msgstr ""
+msgstr "Rolės"
 
 #. module: base
 #: model:res.country,name:base.ro
@@ -34618,7 +34633,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company__root_id
 msgid "Root"
-msgstr ""
+msgstr "Pagrindinis"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_currency__rounding
@@ -36123,7 +36138,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.category,name:base.module_category_shipping_connectors
 msgid "Shipping Connectors"
-msgstr ""
+msgstr "Siuntimo jungimai"
 
 #. module: base
 #: model:ir.module.module,description:base.module_delivery_sendcloud
@@ -36272,7 +36287,7 @@ msgstr "Užsiregistruoti"
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_discount
 msgid "Simple Discounts in the Point of Sale "
-msgstr "Paprastos nuolaidos POS'e"
+msgstr "Paprastos nuolaidos POS'e "
 
 #. module: base
 #: model:res.currency,currency_subunit_label:base.MOP
@@ -37027,7 +37042,7 @@ msgstr "Būsenos"
 #: model:ir.model.fields,field_description:base.field_res_partner__application_statistics
 #: model:ir.model.fields,field_description:base.field_res_users__application_statistics
 msgid "Stats"
-msgstr ""
+msgstr "Statistika"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_module_update__state
@@ -37813,7 +37828,7 @@ msgstr ""
 #: model_terms:res.company,sign_terms:base.main_company
 #: model_terms:res.company,sign_terms_html:base.main_company
 msgid "Terms &amp; Conditions"
-msgstr "Sąlygos"
+msgstr "Taisyklės &amp; sąlygos:"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_base_automation
@@ -38306,6 +38321,8 @@ msgid ""
 "The field '%(field)s' cannot be removed because the field '%(other_field)s' "
 "depends on it."
 msgstr ""
+"Laukas '%(field)s' negali būti pašalintas, nes laukas '%(other_field)s' nuo "
+"jo priklauso."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_model_form
@@ -39425,7 +39442,7 @@ msgstr "Laiko formatas"
 #: model:ir.module.category,name:base.module_category_human_resources_time_off
 #: model:ir.module.module,shortdesc:base.module_hr_holidays
 msgid "Time Off"
-msgstr "Atostogos"
+msgstr "Neatvykimai"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_payroll_holidays
@@ -39514,7 +39531,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_sequence_date_range__date_to
 msgid "To"
-msgstr " Į"
+msgstr "Iki"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_todo__state__open
@@ -39835,7 +39852,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__turkey
 msgid "Turkey"
-msgstr ""
+msgstr "Turkija"
 
 #. module: base
 #: model:res.country,name:base.tm
@@ -40211,6 +40228,8 @@ msgid ""
 "Unable to install module \"%(module)s\" because an external dependency is "
 "not met: %(dependency)s"
 msgstr ""
+"Nepavyksta įdiegti modulio, \"%(module)s\" nes neatitinka išorinės "
+"priklausomybės: %(dependency)s"
 
 #. module: base
 #. odoo-python
@@ -40227,6 +40246,8 @@ msgid ""
 "Unable to process module \"%(module)s\" because an external dependency is "
 "not met: %(dependency)s"
 msgstr ""
+"Nepavyksta vykdyti modulio \"%(module)s\" nes neatitinka išorinės "
+"priklausomybės: %(dependency)s"
 
 #. module: base
 #. odoo-python
@@ -40235,6 +40256,8 @@ msgid ""
 "Unable to upgrade module \"%(module)s\" because an external dependency is "
 "not met: %(dependency)s"
 msgstr ""
+"Nepavyksta atnaujinti modulio, \"%(module)s\", nes jis neatitinka išorinės "
+"priklausomybės: %(dependency)s"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_uncategorized
@@ -40974,7 +40997,7 @@ msgstr "Uzbekija"
 #: model:res.country,vat_label:base.se model:res.country,vat_label:base.si
 #: model:res.country,vat_label:base.sk model:res.country,vat_label:base.uk
 msgid "VAT"
-msgstr "PVM"
+msgstr "PVM mok. kodas"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_base_vat
@@ -41017,7 +41040,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_ir_actions_server__evaluation_type
 #: model:ir.model.fields,field_description:base.field_ir_cron__evaluation_type
 msgid "Value Type"
-msgstr ""
+msgstr "Vertės tipas"
 
 #. module: base
 #: model:res.country,name:base.vu
@@ -41198,7 +41221,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.view_view_tree
 #: model_terms:ir.ui.view,arch_db:base.view_window_action_form
 msgid "Views"
-msgstr "Peržiūros"
+msgstr "Rodiniai"
 
 #. module: base
 #: model_terms:ir.actions.act_window,help:base.action_ui_view
@@ -41227,7 +41250,7 @@ msgstr "Mergelių Salos (JAV)"
 #: model_terms:ir.ui.view,arch_db:base.edit_menu_access
 #: model_terms:ir.ui.view,arch_db:base.view_window_action_form
 msgid "Visibility"
-msgstr ""
+msgstr "Matomumas"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_module_category__visible
@@ -41843,12 +41866,13 @@ msgstr ""
 #: code:addons/base/models/ir_actions_report.py:0
 msgid "Wkhtmltopdf failed (error code: %(error_code)s). Message: %(message)s"
 msgstr ""
+"Wkhtmltopdf klaida (klaidos kodas: %(error_code)s). Pranešimas: %(message)s"
 
 #. module: base
 #: model:res.currency,currency_unit_label:base.KPW
 #: model:res.currency,currency_unit_label:base.KRW
 msgid "Won"
-msgstr ""
+msgstr "Laimėta"
 
 #. module: base
 #: model:res.partner,website_short_description:base.res_partner_1
@@ -42058,7 +42082,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_res_users_login_key
 msgid "You can not have two users with the same login!"
-msgstr ""
+msgstr "Jūs negalite turėti dviejų vartotojų su tokiu pačiu vartotojo vardu!"
 
 #. module: base
 #. odoo-python
@@ -42302,6 +42326,9 @@ msgid ""
 "(dependency)s.\n"
 "But this module is not available in your system."
 msgstr ""
+"Jūs bandote atnaujinti modulį %(module)s priklausomą nuo šio modulio: "
+"%(dependency)s.\n"
+"Tačiau modulis Jūsų sistemoje yra nepasiekiamas."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_simple_form

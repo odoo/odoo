@@ -1,6 +1,6 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* gamification
+# * gamification
 #
 # Translators:
 # Jan Horzinka <jan.horzinka@centrum.cz>, 2022
@@ -11,21 +11,23 @@
 # Jaroslav Helemik Nemec <nemec@helemik.cz>, 2022
 # Jiří Podhorecký, 2022
 # Aleš Fiala <f.ales1@seznam.cz>, 2023
-#
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-09-11 13:56+0000\n"
-"PO-Revision-Date: 2022-09-22 05:46+0000\n"
-"Last-Translator: Aleš Fiala <f.ales1@seznam.cz>, 2023\n"
-"Language-Team: Czech (https://app.transifex.com/odoo/teams/41243/cs/)\n"
+"PO-Revision-Date: 2025-09-16 10:03+0000\n"
+"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"Language-Team: Czech <https://translate.odoo.com/projects/odoo-19/"
+"gamification/cs/>\n"
 "Language: cs\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n "
 "<= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__user_count
@@ -123,6 +125,19 @@ msgid ""
 "    </t>\n"
 "</div>"
 msgstr ""
+"<div>\n"
+"    <strong>Připomínka</strong><br/>\n"
+"    Neaktualizovali jste svůj postup pro cíl <t t-out="
+"\"object.definition_id.name or ''\"/> (aktuálně dosaženo <t t-out="
+"\"object.completeness or ''\"/>%) po dobu nejméně <t t-out="
+"\"object.remind_update_delay or ''\"/> dní. Nezapomeňte to udělat.\n"
+"    <br/><br/>\n"
+"    Děkujeme,\n"
+"    <t t-if=\"object.challenge_id.manager_id.signature\">\n"
+"        <br/>\n"
+"        <t t-out=\"object.challenge_id.manager_id.signature or ''\"/>\n"
+"    </t>\n"
+"</div>"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.goal_kanban_view
@@ -578,6 +593,306 @@ msgid ""
 "</table>\n"
 "            "
 msgstr ""
+"<table cellspacing=\"0\" cellpadding=\"0\" width=\"100%\" style=\"background-"
+"color: #EEE; border-collapse: collapse;\">\n"
+"<tr>\n"
+"    <td valign=\"top\" align=\"center\">\n"
+"        <t t-set=\"object_ctx\" t-value=\"ctx.get('object')\"/>\n"
+"        <t t-set=\"company\" t-value="
+"\"object_ctx and object_ctx.company_id or user.company_id\"/>\n"
+"        <t t-set=\"challenge_lines\" t-value="
+"\"ctx.get('challenge_lines', [])\"/>\n"
+"        <table cellspacing=\"0\" cellpadding=\"0\" width=\"600\" style="
+"\"margin: 0 auto; width: 570px;\">\n"
+"            <tr><td>\n"
+"                <table cellspacing=\"0\" cellpadding=\"0\" width=\"100%\">\n"
+"                    <tr>\n"
+"                        <div>\n"
+"                            <t t-if=\"object.visibility_mode == 'ranking'\">"
+"\n"
+"                                <td style=\"padding:15px;\">\n"
+"                                    <p style=\"font-size:20px;color:#666666;"
+"\" align=\"center\">Žebříček</p>\n"
+"                                </td>\n"
+"                            </t>\n"
+"                        </div>\n"
+"                    </tr>\n"
+"                </table>\n"
+"                <table cellspacing=\"0\" cellpadding=\"0\" width=\"100%\" "
+"bgcolor=\"#fff\" style=\"background-color:#fff;\">\n"
+"                    <tr><td style=\"padding: 15px;\">\n"
+"                        <t t-if=\"object.visibility_mode == 'personal'\">\n"
+"                            <span style=\"color:#666666;font-size:13px;\""
+">Zde je váš aktuální pokrok ve výzvě <strong t-out=\"object.name or ''\""
+"/>.</span>\n"
+"                            <table cellspacing=\"0\" cellpadding=\"0\" width="
+"\"100%\" style=\"margin-top:20px;\">\n"
+"                                <tr>\n"
+"                                    <td align=\"center\">\n"
+"                                        <div>Osobní výkon</div>\n"
+"                                    </td>\n"
+"                                </tr>\n"
+"                            </table>\n"
+"                            <table cellspacing=\"0\" cellpadding=\"0\" width="
+"\"100%\" style=\"margin-top:30px;color:#666666;\">\n"
+"                                <thead>\n"
+"                                    <tr style="
+"\"color:#9A6C8E; font-size:12px;\">\n"
+"                                        <th align=\"left\" style=\"padding-"
+"bottom: 0px;width:40%;text-align:left;\">Cíle</th>\n"
+"                                        <th style="
+"\"width:20%;text-align:right;\" align=\"left\">Cílová hodnota</th>\n"
+"                                        <th style="
+"\"width:20%;text-align:right;\" align=\"right\">Aktuální</th>\n"
+"                                        <th style="
+"\"width:20%;text-align:right;\" align=\"right\">Dokončené</th>\n"
+"                                    </tr>\n"
+"                                    <tr>\n"
+"                                        <td colspan=\"5\" style="
+"\"height:1px;background-color:#9A6C8E;\"/>\n"
+"                                    </tr>\n"
+"                                </thead>\n"
+"                                <tbody t-foreach=\"challenge_lines\" t-as="
+"\"line\">\n"
+"                                    <tr style=\"font-weight:bold;\">\n"
+"                                        <td style=\"padding: 20px 0;\" align="
+"\"left\">\n"
+"                                            <t t-out=\"line['name'] or ''\"/>"
+"\n"
+"                                            <t t-if="
+"\"line['suffix'] or line['monetary']\">\n"
+"                                                (<t t-out="
+"\"line['full_suffix'] or ''\"/>)\n"
+"                                            </t>\n"
+"                                        </td>\n"
+"                                        <td style=\"padding: 20px 0;\" align="
+"\"right\"><t t-out=\"&quot;%.2f&quot; % line['target'] or ''\"/>\n"
+"                                            <t t-if=\"line['suffix']\" t-out="
+"\"line['suffix'] or ''\"/>\n"
+"                                        </td>\n"
+"                                        <td style=\"padding: 20px 0;\" align="
+"\"right\"><t t-out=\"&quot;%.2f&quot; % line['current'] or ''\"/>\n"
+"                                            <t t-if=\"line['suffix']\" t-out="
+"\"line['suffix'] or ''\"/>\n"
+"                                        </td>\n"
+"                                        <td style="
+"\"padding: 20px 0;font-size:25px;color:#9A6C8E;\" align=\"right\"><strong><t "
+"t-out=\"int(line['completeness']) or ''\"/>%</strong></td>\n"
+"                                    </tr>\n"
+"                                    <tr>\n"
+"                                        <td colspan=\"5\" style="
+"\"height:1px;background-color:#e3e3e3;\"/>\n"
+"                                    </tr>\n"
+"                                </tbody>\n"
+"                            </table>                   \n"
+"                        </t>\n"
+"                        <t t-else=\"\">\n"
+"                            <span style=\"color:#A8A8A8;font-size:13px;\">\n"
+"                                Výzva: <strong t-out=\"object.name or ''\"/>."
+"\n"
+"                            </span> \n"
+"                            <t t-foreach=\"challenge_lines\" t-as=\"line\">\n"
+"                                <!-- Header + Button table -->\n"
+"                                <table cellspacing=\"0\" cellpadding=\"0\" "
+"width=\"100%\" style=\"margin-top:35px;\">\n"
+"                                    <tr>\n"
+"                                        <td width=\"50%\">\n"
+"                                            <div>Top nejúspěšnějších v cíli "
+"<strong t-out=\"line['name'] or ''\"/></div>\n"
+"                                        </td>\n"
+"                                    </tr>\n"
+"                                </table>\n"
+"                                <!-- Podium -->\n"
+"                                <t t-if=\"len(line['goals']) == 2\">\n"
+"                                    <table cellspacing=\"0\" cellpadding="
+"\"0\" width=\"100%\" style=\"margin-top:10px;\">\n"
+"                                        <tr><td style=\"padding:0 30px;\">\n"
+"                                            <table cellspacing=\"0\" "
+"cellpadding=\"0\" width=\"100%\" style=\"table-layout: fixed;\">\n"
+"                                                <tr>\n"
+"                                                    <t t-set=\"top_goals\" "
+"t-value=\"line['goals'][:3]\"/>\n"
+"                                                    <t t-foreach="
+"\"top_goals\" t-as=\"goal\">\n"
+"                                                        <td align=\"center\" "
+"style=\"width:32%;\">\n"
+"                                                            <t t-if="
+"\"loop.index == 1\">\n"
+"                                                                <t t-set="
+"\"extra_div\" t-value="
+"\"'&lt;div style=&quot;height:40px;&quot;&gt;&lt;/div&gt;'\"/>\n"
+"                                                                <t t-set="
+"\"heightA\" t-value=\"95\"/>\n"
+"                                                                <t t-set="
+"\"heightB\" t-value=\"75\"/>\n"
+"                                                                <t t-set="
+"\"bgColor\" t-value=\"'#b898b0'\"/>\n"
+"                                                                <t t-set="
+"\"fontSize\" t-value=\"50\"/>\n"
+"                                                                <t t-set="
+"\"podiumPosition\" t-value=\"'2'\"/>\n"
+"                                                            </t>\n"
+"                                                            <t t-elif="
+"\"loop.index == 2\">\n"
+"                                                                <t t-set="
+"\"extra_div\" t-value=\"''\"/>\n"
+"                                                                <t t-set="
+"\"heightA\" t-value=\"55\"/>\n"
+"                                                                <t t-set="
+"\"heightB\" t-value=\"115\"/>\n"
+"                                                                <t t-set="
+"\"bgColor\" t-value=\"'#9A6C8E'\"/>\n"
+"                                                                <t t-set="
+"\"fontSize\" t-value=\"85\"/>\n"
+"                                                                <t t-set="
+"\"podiumPosition\" t-value=\"'1'\"/>\n"
+"                                                            </t>\n"
+"                                                            <t t-elif="
+"\"loop.index == 3\">\n"
+"                                                                <t t-set="
+"\"extra_div\" t-value="
+"\"'&lt;div style=&quot;height:60px;&quot;&gt;&lt;/div&gt;'\"/>\n"
+"                                                                <t t-set="
+"\"heightA\" t-value=\"115\"/>\n"
+"                                                                <t t-set="
+"\"heightB\" t-value=\"55\"/>\n"
+"                                                                <t t-set="
+"\"bgColor\" t-value=\"'#c8afc1'\"/>\n"
+"                                                                <t t-set="
+"\"fontSize\" t-value=\"35\"/>\n"
+"                                                                <t t-set="
+"\"podiumPosition\" t-value=\"'3'\"/>\n"
+"                                                            </t>\n"
+"                                                            <div style="
+"\"margin:0 3px 0 3px;height:220px;\">\n"
+"                                                                <div t-attf-"
+"style=\"height:{{ heightA }}px;\">\n"
+"                                                                    <t t-out="
+"\"extra_div or ''\"/>\n"
+"                                                                    <div "
+"style=\"height:55px;\">\n"
+"                                                                        <img "
+"style=\"margin-bottom:5px;width:50px;height:50px;border-radius:50%;object-"
+"fit:cover;\" t-att-src=\"image_data_uri(object.env['res.users'].browse(goal"
+"['user_id']).partner_id.image_128)\" t-att-alt=\"goal['name']\"/>\n"
+"                                                                    </div>\n"
+"                                                                    <div "
+"align=\"center\" t-attf-style=\"color:{{ bgColor }};height:20px\">\n"
+"                                                                        <t "
+"t-out=\"goal['name'] or ''\"/>\n"
+"                                                                    </div>\n"
+"                                                                </div>\n"
+"                                                                <div t-attf-"
+"style=\"background-color:{{ bgColor }};height:{{ heightB }}px;\">\n"
+"                                                                    "
+"<strong><span t-attf-style=\"color:#fff;font-size:{{ fontSize }}px;\" t-out="
+"\"podiumPosition or ''\"/></strong>\n"
+"                                                                </div>\n"
+"                                                                <div style="
+"\"height:30px;\">\n"
+"                                                                    <t t-out="
+"\"&quot;%.2f&quot; % goal['current'] or ''\"/>\n"
+"                                                                    <t t-if="
+"\"line['suffix'] or line['monetary']\">\n"
+"                                                                        <t "
+"t-out=\"line['full_suffix'] or ''\"/>\n"
+"                                                                    </t>\n"
+"                                                                </div>\n"
+"                                                            </div>\n"
+"                                                        </td>\n"
+"                                                    </t>\n"
+"                                                </tr>\n"
+"                                            </table>\n"
+"                                            </td>\n"
+"                                        </tr>\n"
+"                                    </table>\n"
+"                                </t>\n"
+"                                <!-- data table -->\n"
+"                                <table cellspacing=\"0\" cellpadding=\"0\" "
+"width=\"100%\" style=\"margin-bottom:5px\">\n"
+"                                    <tr>\n"
+"                                        <td>\n"
+"                                            <table cellspacing=\"0\" "
+"cellpadding=\"0\" width=\"100%\" style=\"margin-top:30px;margin-"
+"bottom:5px;color:#666666;\">\n"
+"                                                <thead>\n"
+"                                                    <tr style="
+"\"color:#9A6C8E; font-size:12px;\">\n"
+"                                                        <th style="
+"\"width:15%;text-align:center;\">Pořadí</th>\n"
+"                                                        <th style="
+"\"width:25%;text-align:left;\">Jméno</th>\n"
+"                                                        <th style="
+"\"width:30%;text-align:right;\">Výkon \n"
+"                                                            <t t-if="
+"\"line['suffix']\">\n"
+"                                                                (<t t-out="
+"\"line['suffix'] or ''\"/>)\n"
+"                                                            </t>\n"
+"                                                            <t t-elif="
+"\"line['monetary']\">\n"
+"                                                                (<t t-out="
+"\"company.currency_id.symbol or ''\"/>)\n"
+"                                                            </t>\n"
+"                                                        </th>\n"
+"                                                        <th style="
+"\"width:30%;text-align:right;\">Splnění cíle</th>\n"
+"                                                    </tr>\n"
+"                                                    <tr>\n"
+"                                                        <td colspan=\"5\" "
+"style=\"height:1px;background-color:#9A6C8E;\"/>\n"
+"                                                    </tr>\n"
+"                                                </thead>\n"
+"                                                <tbody t-foreach="
+"\"line['goals']\" t-as=\"goal\">\n"
+"                                                    <tr>\n"
+"                                                        <t t-set="
+"\"tdBgColor\" t-value=\"'#fff'\"/>\n"
+"                                                        <t t-set=\"tdColor\" "
+"t-value=\"'gray'\"/>\n"
+"                                                        <t t-set="
+"\"mutedColor\" t-value=\"'#AAAAAA'\"/>\n"
+"                                                        <t t-set="
+"\"tdPercentageColor\" t-value=\"'#9A6C8E'\"/>\n"
+"                                                        <td width=\"15%\" "
+"align=\"center\" valign=\"middle\" t-attf-style=\"background-color:{{ "
+"tdBgColor }};padding :5px 0;font-size:20px;\"><t t-out=\"goal['rank']+1 or ''"
+"\"/>\n"
+"                                                        </td>\n"
+"                                                        <td width=\"25%\" "
+"align=\"left\" valign=\"middle\" t-attf-style=\"background-color:{{ "
+"tdBgColor }};padding :5px 0;font-size:13px;\"><t t-out=\"goal['name'] or ''\""
+"/></td>\n"
+"                                                        <td width=\"30%\" "
+"align=\"right\" t-attf-style=\"background-color:{{ tdBgColor }};padding:5px 0"
+";line-height:1;\"><t t-out=\"&quot;%.2f&quot; % goal['current'] or ''"
+"\"/><br/><span t-attf-style=\"font-size:13px;color:{{ mutedColor }};"
+"\">na <t t-out=\"&quot;%.2f&quot; % line['target'] or ''\"/></span>\n"
+"                                                        </td>\n"
+"                                                        <td width=\"30%\" t"
+"-attf-style=\"color:{{ tdPercentageColor }};background-color:{{ tdBgColor "
+"}};padding-right:15px;font-size:22px;\" align=\"right\"><strong><t t-out="
+"\"int(goal['completeness']) or ''\"/>%</strong></td>\n"
+"                                                    </tr>\n"
+"                                                    <tr>\n"
+"                                                        <td colspan=\"5\" "
+"style=\"height:1px;background-color:#DADADA;\"/>\n"
+"                                                    </tr>\n"
+"                                                </tbody>\n"
+"                                            </table>\n"
+"                                        </td>\n"
+"                                    </tr>\n"
+"                                </table> \n"
+"                            </t>\n"
+"                        </t>\n"
+"                    </td></tr>\n"
+"                </table>\n"
+"            </td></tr>\n"
+"        </table>\n"
+"    </td>\n"
+"</tr>\n"
+"</table>\n"
+"            "
 
 #. module: gamification
 #: model_terms:ir.actions.act_window,help:gamification.badge_list_action
@@ -591,8 +906,8 @@ msgstr ""
 "Odznak je symbol udělený uživateli jako znak odměny.\n"
 "To může být zaslouženo automaticky, když jsou splněny některé podmínky, nebo "
 "ručně uživateli.\n"
-"Některé odznaky je těžší získat než jiné v závislosti na specifickýxch "
-"podmákách."
+"Některé odznaky je těžší získat než jiné v závislosti na specifických "
+"podmínkách."
 
 #. module: gamification
 #: model_terms:ir.actions.act_window,help:gamification.goal_definition_list_action
@@ -653,7 +968,7 @@ msgstr "Akce"
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge_user__message_needaction
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__message_needaction
 msgid "Action Needed"
-msgstr "Vyžaduje akci"
+msgstr "Vyžadována akce"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__active
@@ -666,12 +981,12 @@ msgstr "Aktivní"
 #: code:addons/gamification/models/res_users.py:0
 #: code:addons/gamification/tests/test_karma_tracking.py:0
 msgid "Add Manually"
-msgstr ""
+msgstr "Přidat ručně"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.challenge_form_view
 msgid "Advanced Options"
-msgstr "Rozšířené volby"
+msgstr "Pokročilé možnosti"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__rule_auth
@@ -832,7 +1147,7 @@ msgstr "Zrušit"
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_goal__state__canceled
 msgid "Cancelled"
-msgstr ""
+msgstr "Zrušeno"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.challenge_form_view
@@ -897,7 +1212,7 @@ msgstr "Uzavřený cíl"
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal__color
 msgid "Color Index"
-msgstr ""
+msgstr "Barevný index"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge_user__comment
@@ -995,7 +1310,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:gamification.field_gamification_karma_rank__create_uid
 #: model:ir.model.fields,field_description:gamification.field_gamification_karma_tracking__create_uid
 msgid "Created by"
-msgstr "Vytvořeno od"
+msgstr "Vytvořeno uživatelem"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__create_date
@@ -1009,7 +1324,7 @@ msgstr "Vytvořeno od"
 #: model:ir.model.fields,field_description:gamification.field_gamification_karma_rank__create_date
 #: model:ir.model.fields,field_description:gamification.field_gamification_karma_tracking__create_date
 msgid "Created on"
-msgstr "Vytvořeno"
+msgstr "Vytvořeno dne"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_wizard__current
@@ -1035,7 +1350,7 @@ msgstr "Data"
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.gamification_karma_tracking_view_tree
 msgid "Date"
-msgstr ""
+msgstr "Datum"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition__field_date_id
@@ -1111,7 +1426,7 @@ msgstr "Režim zobrazení"
 #: model:ir.model.fields,field_description:gamification.field_gamification_karma_tracking__display_name
 #: model:ir.model.fields,field_description:gamification.field_res_users__display_name
 msgid "Display Name"
-msgstr "Zobrazované jméno"
+msgstr "Zobrazovací název"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition__display_mode
@@ -1162,7 +1477,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal__end_date
 #: model_terms:ir.ui.view,arch_db:gamification.goal_search_view
 msgid "End Date"
-msgstr "Datum ukončení"
+msgstr "Datum do"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_goal_definition__batch_mode
@@ -1204,14 +1519,14 @@ msgstr "Filtrovat doménu"
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge_user__message_follower_ids
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__message_follower_ids
 msgid "Followers"
-msgstr "Sledující"
+msgstr "Odběratelé"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__message_partner_ids
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge_user__message_partner_ids
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__message_partner_ids
 msgid "Followers (Partners)"
-msgstr "Sledující (partneři)"
+msgstr "Odběratelé (partneři)"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__reward_first_id
@@ -1256,12 +1571,12 @@ msgstr "Plná přípona"
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_karma_tracking__gain
 msgid "Gain"
-msgstr ""
+msgstr "Výnos"
 
 #. module: gamification
 #: model:ir.model,name:gamification.model_gamification_badge
 msgid "Gamification Badge"
-msgstr "Odznak gamifikace"
+msgstr "Gamifikační odznak"
 
 #. module: gamification
 #: model:ir.model,name:gamification.model_gamification_challenge
@@ -1276,32 +1591,32 @@ msgstr "Gamifikační cíl"
 #. module: gamification
 #: model:ir.model,name:gamification.model_gamification_goal_definition
 msgid "Gamification Goal Definition"
-msgstr "Definice cíle gamifikace"
+msgstr "Gemifikační definice cíle"
 
 #. module: gamification
 #: model:ir.model,name:gamification.model_gamification_goal_wizard
 msgid "Gamification Goal Wizard"
-msgstr "Průvodce cílem gamifikace"
+msgstr "Průvodce gamifikačním cílem"
 
 #. module: gamification
 #: model:ir.ui.menu,name:gamification.gamification_menu
 msgid "Gamification Tools"
-msgstr "Nástroje Gamifikace"
+msgstr "Gamifikační nástroje"
 
 #. module: gamification
 #: model:ir.model,name:gamification.model_gamification_badge_user
 msgid "Gamification User Badge"
-msgstr "Odznak uživatele gamifikace"
+msgstr "Gamifikační odznak uživatele"
 
 #. module: gamification
 #: model:ir.model,name:gamification.model_gamification_badge_user_wizard
 msgid "Gamification User Badge Wizard"
-msgstr "Průvodce odznakem uživatele Gamifikace"
+msgstr "Průvodce gamifikačními odznaky uživatelů"
 
 #. module: gamification
 #: model:ir.model,name:gamification.model_gamification_challenge_line
 msgid "Gamification generic goal for challenge"
-msgstr "Obecný cíl gamifikace pro výzvu"
+msgstr "Obecný gamifikační cíl pro výzvu"
 
 #. module: gamification
 #: model:mail.template,name:gamification.email_template_badge_received
@@ -1352,7 +1667,7 @@ msgstr "Určení cíle"
 #: model:ir.ui.menu,name:gamification.gamification_definition_menu
 #: model_terms:ir.ui.view,arch_db:gamification.goal_definition_list_view
 msgid "Goal Definitions"
-msgstr "Definice cílů"
+msgstr "Nastavení cílů"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition__description
@@ -1506,14 +1821,14 @@ msgstr "Pokud je nastaveno maximum"
 #: model:ir.model.fields,help:gamification.field_gamification_badge_user__message_needaction
 #: model:ir.model.fields,help:gamification.field_gamification_challenge__message_needaction
 msgid "If checked, new messages require your attention."
-msgstr "Pokud je zaškrtnuto, nové zprávy vyžadují vaši pozornost."
+msgstr "Pokud zaškrtnuto, nové zprávy vyžadují vaši pozornost."
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge__message_has_error
 #: model:ir.model.fields,help:gamification.field_gamification_badge_user__message_has_error
 #: model:ir.model.fields,help:gamification.field_gamification_challenge__message_has_error
 msgid "If checked, some messages have a delivery error."
-msgstr "Pokud je zaškrtnuto, některé zprávy mají chybu při doručení."
+msgstr "Pokud zaškrtnuto, některé zprávy mají chybu při doručení."
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__image_1920
@@ -1605,7 +1920,7 @@ msgstr "Pozvat nové uživatele"
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge_user__message_is_follower
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__message_is_follower
 msgid "Is Follower"
-msgstr "Je sledující"
+msgstr "Je odběratel"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_res_users__karma
@@ -1629,7 +1944,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:gamification.gamification_karma_tracking_action
 #: model:ir.ui.menu,name:gamification.gamification_karma_tracking_menu
 msgid "Karma Tracking"
-msgstr ""
+msgstr "Měření karmy"
 
 #. module: gamification
 #. odoo-python
@@ -1659,7 +1974,7 @@ msgstr "Poslední aktualizace"
 #: model:ir.model.fields,field_description:gamification.field_gamification_karma_rank__write_uid
 #: model:ir.model.fields,field_description:gamification.field_gamification_karma_tracking__write_uid
 msgid "Last Updated by"
-msgstr "Naposledy upraveno od"
+msgstr "Naposledy upraveno uživatelem"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__write_date
@@ -1673,7 +1988,7 @@ msgstr "Naposledy upraveno od"
 #: model:ir.model.fields,field_description:gamification.field_gamification_karma_rank__write_date
 #: model:ir.model.fields,field_description:gamification.field_gamification_karma_tracking__write_date
 msgid "Last Updated on"
-msgstr "Naposled upraveno"
+msgstr "Naposledy upraveno dne"
 
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_challenge__visibility_mode__ranking
@@ -1703,19 +2018,19 @@ msgstr "Seznam cílů, které budou nastaveny"
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.gamification_karma_tracking_view_search
 msgid "Manual"
-msgstr ""
+msgstr "Ruční"
 
 #. module: gamification
 #: model:gamification.karma.rank,name:gamification.rank_master
 msgid "Master"
-msgstr "Mistr"
+msgstr "Magistr"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__message_has_error
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge_user__message_has_error
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__message_has_error
 msgid "Message Delivery error"
-msgstr "Chyba při doručování zpráv"
+msgstr "Chyba při doručování zprávy"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__message_ids
@@ -1733,7 +2048,7 @@ msgstr "Model"
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge_line__definition_monetary
 msgid "Monetary"
-msgstr "Měnový"
+msgstr "Měnové"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition__monetary
@@ -1795,7 +2110,7 @@ msgstr "Můj součet"
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge_line__name
 msgid "Name"
-msgstr "Jméno"
+msgstr "Název"
 
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_challenge__report_message_frequency__never
@@ -1910,7 +2225,7 @@ msgstr "Počet chyb"
 #: model:ir.model.fields,help:gamification.field_gamification_badge_user__message_needaction_counter
 #: model:ir.model.fields,help:gamification.field_gamification_challenge__message_needaction_counter
 msgid "Number of messages requiring action"
-msgstr ""
+msgstr "Počet zpráv vyžadujících akci"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge__message_has_error_counter
@@ -1965,7 +2280,7 @@ msgstr "Účastníci"
 #: model:ir.model.fields,help:gamification.field_gamification_badge_user__user_partner_id
 #: model:ir.model.fields,help:gamification.field_gamification_goal__user_partner_id
 msgid "Partner-related data of the user"
-msgstr ""
+msgstr "Data týkající se partnera uživatele"
 
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_badge__rule_auth__having
@@ -2051,12 +2366,12 @@ msgstr "Seznam úrovní"
 #. module: gamification
 #: model_terms:gamification.karma.rank,description_motivational:gamification.rank_master
 msgid "Reach the next rank and become a Master!"
-msgstr ""
+msgstr "Dosáhněte další pozice a staňte se mistrem!"
 
 #. module: gamification
 #: model_terms:gamification.karma.rank,description_motivational:gamification.rank_doctor
 msgid "Reach the next rank and become a powerful user!"
-msgstr ""
+msgstr "Dosáhněte další pozice a staňte se výkonným uživatelem!"
 
 #. module: gamification
 #: model_terms:gamification.karma.rank,description_motivational:gamification.rank_bachelor
@@ -2081,12 +2396,12 @@ msgstr ""
 #. module: gamification
 #: model_terms:gamification.karma.rank,description_motivational:gamification.rank_bachelor
 msgid "Reach the next rank to improve your status!"
-msgstr ""
+msgstr "Dosáhněte další pozice, abyste zlepšili svůj stav!"
 
 #. module: gamification
 #: model_terms:gamification.karma.rank,description_motivational:gamification.rank_student
 msgid "Reach the next rank to show the rest of the world you exist."
-msgstr ""
+msgstr "Dosáhněte další pozice a ukažte zbytku světa, že existujete."
 
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_goal__state__reached
@@ -2122,7 +2437,7 @@ msgstr "Související cíle"
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge_user__user_partner_id
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal__user_partner_id
 msgid "Related Partner"
-msgstr ""
+msgstr "Související kontakt"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__remaining_sending
@@ -2305,7 +2620,7 @@ msgstr "Odesláno automaticky uživateli, který dosáhl nové úrovně"
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge_line__sequence
 msgid "Sequence"
-msgstr "Číselná řada"
+msgstr "Sekvence"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.view_goal_wizard_update_current
@@ -2350,13 +2665,13 @@ msgstr "počet stříbrných odznaků"
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_karma_tracking__origin_ref
 msgid "Source"
-msgstr ""
+msgstr "Zdroj"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_karma_tracking__origin_ref_model_name
 #: model_terms:ir.ui.view,arch_db:gamification.gamification_karma_tracking_view_search
 msgid "Source Type"
-msgstr ""
+msgstr "Typ zdroje"
 
 #. module: gamification
 #. odoo-python
@@ -2489,6 +2804,10 @@ msgid ""
 "\n"
 "%(error_message)s"
 msgstr ""
+"Doména pro definici %(definition)s se zdá být nesprávná, zkontrolujte ji "
+"prosím.\n"
+"\n"
+"%(error_message)s"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_goal_definition__res_id_field
@@ -2650,7 +2969,7 @@ msgstr "Tento odznak nemohou uživatelé odeslat."
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.goal_kanban_view
 msgid "To"
-msgstr "Do"
+msgstr "Na"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal__target_goal
@@ -2671,7 +2990,7 @@ msgstr "Celkem"
 #. module: gamification
 #: model:ir.model,name:gamification.model_gamification_karma_tracking
 msgid "Track Karma Changes"
-msgstr "Sledujte změny karmy"
+msgstr "Sledování změn karmy"
 
 #. module: gamification
 #: model_terms:ir.actions.act_window,help:gamification.gamification_karma_tracking_action
@@ -2691,7 +3010,7 @@ msgstr "Datum sledování"
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.gamification_karma_tracking_view_tree
 msgid "Trackings"
-msgstr "Sledování"
+msgstr "Žebříčky"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__unique_owner_ids
@@ -2858,7 +3177,7 @@ msgstr "odznaky tohoto měsíce"
 #: model_terms:ir.ui.view,arch_db:gamification.challenge_form_view
 #: model_terms:ir.ui.view,arch_db:gamification.goal_form_view
 msgid "days"
-msgstr "dnů"
+msgstr "dny"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.gamification_karma_rank_view_form

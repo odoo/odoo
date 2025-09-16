@@ -1,6 +1,6 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* payment
+# * payment
 #
 # Translators:
 # karolína schusterová <karolina.schusterova@vdp.sk>, 2022
@@ -10,21 +10,23 @@
 # Rastislav Brencic <rastislav.brencic@azet.sk>, 2022
 # Michal Veselý <michal@veselyberanek.net>, 2022
 # Jiří Podhorecký, 2022
-#
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-09-11 13:58+0000\n"
-"PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Jiří Podhorecký, 2022\n"
-"Language-Team: Czech (https://app.transifex.com/odoo/teams/41243/cs/)\n"
+"PO-Revision-Date: 2025-09-16 10:05+0000\n"
+"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"Language-Team: Czech <https://translate.odoo.com/projects/odoo-19/payment/cs/"
+">\n"
 "Language: cs\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n "
 "<= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.availability_report_records
@@ -34,7 +36,7 @@ msgstr ""
 #. module: payment
 #: model:payment.method,name:payment.payment_method_7eleven
 msgid "7Eleven"
-msgstr ""
+msgstr "7Eleven"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_method_form
@@ -47,12 +49,21 @@ msgid ""
 "                                and should be tested on a test database "
 "first."
 msgstr ""
+"<i class=\"fa fa-exclamation-triangle\"/> Tyto vlastnosti jsou nastaveny na."
+"\n"
+"                                odpovídají chování poskytovatelů a jejich "
+"integraci s aplikacemi.\n"
+"                                Odoo ohledně této platební metody. Jakákoli "
+"změna může vést k chybám\n"
+"                                a měla by být nejprve otestována na "
+"testovací databázi."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.portal_breadcrumb
 msgid ""
 "<i class=\"fa fa-home\" role=\"img\" title=\"Home\" aria-label=\"Home\"/>"
 msgstr ""
+"<i class=\"fa fa-home\" role=\"img\" title=\"Home\" aria-label=\"Home\"/>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_capture_wizard_view_form
@@ -62,6 +73,10 @@ msgid ""
 "transactions you intend to capture can only be captured in full. Handle the "
 "transactions individually to capture a partial amount.\"/>"
 msgstr ""
+"<i class=\"fa fa-info-circle oe_inline\" invisible="
+"\"support_partial_capture != 'full_only'\" title=\"Some of the transactions "
+"you intend to capture can only be captured in full. Handle the transactions "
+"individually to capture a partial amount.\"/>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.token_form
@@ -69,33 +84,36 @@ msgid ""
 "<i class=\"fa fa-trash\" title=\"Delete payment method\" data-bs-"
 "toggle=\"tooltip\" data-bs-placement=\"top\" data-bs-delay=\"0\"/>"
 msgstr ""
+"<i class=\"fa fa-trash\" title=\"Delete payment method\" data-bs-toggle="
+"\"tooltip\" data-bs-placement=\"top\" data-bs-delay=\"0\"/>"
 
 #. module: payment
 #: model_terms:ir.actions.act_window,help:payment.action_payment_method
 msgid "<i class=\"oi oi-arrow-right me-1\"></i> Configure a payment provider"
 msgstr ""
+"<i class=\"oi oi-arrow-right me-1\"></i>Konfigurace poskytovatele plateb"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
 msgid ""
 "<i class=\"oi oi-fw o_button_icon oi-arrow-right\"/>\n"
 "                                            Enable Payment Methods"
-msgstr ""
+msgstr "Povolit platební metody"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.method_form
 msgid "<small class=\"text-600\">Save my payment details</small>"
-msgstr ""
+msgstr "<small class=\"text-600\">Uložit mé platební údaje</small>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
 msgid "<span class=\"o_stat_text text-danger\">Unpublished</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text text-danger\">Nepublikováno</span>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
 msgid "<span class=\"o_stat_text text-success\">Published</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text text-success\">Publikováno</span>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.view_partners_form_payment_defaultcreditcard
@@ -109,6 +127,9 @@ msgid ""
 "                                All countries are supported.\n"
 "                            </span>"
 msgstr ""
+"<span class=\"oe_inline text-muted\" invisible=\"supported_country_ids\">\n"
+"                                Všechny země jsou podporovány.\n"
+"                            </span>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_method_form
@@ -117,12 +138,15 @@ msgid ""
 "                                All currencies are supported.\n"
 "                            </span>"
 msgstr ""
+"<span class=\"oe_inline text-muted\" invisible=\"supported_currency_ids\">\n"
+"                                Podporovány jsou všechny měny.\n"
+"                            </span>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.method_form
 #: model_terms:ir.ui.view,arch_db:payment.token_form
 msgid "<span><i class=\"fa fa-lock\"/> Secured by</span>"
-msgstr ""
+msgstr "<span><i class=\"fa fa-lock\"/> Zajištěno</span>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.no_pms_available_warning
@@ -143,7 +167,7 @@ msgstr ""
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.no_pms_available_warning
 msgid "<strong>No payment method available</strong>"
-msgstr ""
+msgstr "<strong>Není k dispozici žádná platební metoda</strong>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_capture_wizard_view_form
@@ -153,6 +177,10 @@ msgid ""
 "provider configuration if\n"
 "                    the capture is still pending after a few minutes."
 msgstr ""
+"<strong>Upozornění!</strong> Čeká se na částečné zachycení. Vyčkejte prosím\n"
+"                    chvíli na jeho zpracování. Zkontrolujte konfiguraci "
+"poskytovatele plateb, pokud\n"
+"                    zachycení po několika minutách stále čeká."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_capture_wizard_view_form
@@ -160,6 +188,8 @@ msgid ""
 "<strong>Warning!</strong> You can not capture a negative amount nor more\n"
 "                    than"
 msgstr ""
+"<strong>Upozornění!</strong> Nelze zachytit zápornou částku ani více\n"
+"                    než"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
@@ -168,6 +198,9 @@ msgid ""
 "em> button is not supported.\n"
 "                        Please use the <em>Duplicate</em> action instead."
 msgstr ""
+"<strong>Upozornění</strong> Vytvoření poskytovatele platby z tlačítka "
+"<em>VYTVOŘIT</em> není podporováno.\n"
+"Místo toho použijte akci <em>Duplikovat</em>."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay
@@ -176,6 +209,9 @@ msgid ""
 "                                    correct partner before making this "
 "payment."
 msgstr ""
+"<strong>Upozornění</strong> Ujistěte se, že jste přihlášeni jako\n"
+"                                    před provedením této platby správným "
+"partnerem."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay
@@ -191,17 +227,17 @@ msgstr ""
 #. module: payment
 #: model:payment.method,name:payment.payment_method_ach_direct_debit
 msgid "ACH Direct Debit"
-msgstr ""
+msgstr "ACH Direct Debit"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.no_pms_available_warning
 msgid "ACTIVATE STRIPE"
-msgstr ""
+msgstr "AKTIVOVAT STRIPE"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_abitab
 msgid "Abitab"
-msgstr ""
+msgstr "Abitab"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_kanban
@@ -233,42 +269,42 @@ msgstr "Adyen"
 #. module: payment
 #: model:payment.method,name:payment.payment_method_affirm
 msgid "Affirm"
-msgstr ""
+msgstr "Affirm"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_afterpay_riverty
 msgid "AfterPay"
-msgstr ""
+msgstr "AfterPay"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_afterpay
 msgid "Afterpay"
-msgstr ""
+msgstr "Afterpay"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_akulaku
 msgid "Akulaku PayLater"
-msgstr ""
+msgstr "Akulaku PayLater"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_alipay_hk
 msgid "AliPayHK"
-msgstr ""
+msgstr "AliPayHK"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_alipay
 msgid "Alipay"
-msgstr ""
+msgstr "Alipay"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_alipay_plus
 msgid "Alipay+"
-msgstr ""
+msgstr "Alipay+"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__allow_express_checkout
 msgid "Allow Express Checkout"
-msgstr ""
+msgstr "Povolit expresní pokladnu"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__allow_tokenization
@@ -278,17 +314,17 @@ msgstr "Povolení ukládání platebních metod"
 #. module: payment
 #: model:payment.method,name:payment.payment_method_alma
 msgid "Alma"
-msgstr ""
+msgstr "Alma"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__captured_amount
 msgid "Already Captured"
-msgstr ""
+msgstr "Již zachyceno"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__voided_amount
 msgid "Already Voided"
-msgstr ""
+msgstr "Již zrušeno"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_aman
@@ -298,17 +334,17 @@ msgstr ""
 #. module: payment
 #: model:payment.method,name:payment.payment_method_amazon_pay
 msgid "Amazon Pay"
-msgstr ""
+msgstr "Amazon Pay"
 
 #. module: payment
 #: model:payment.provider,name:payment.payment_provider_aps
 msgid "Amazon Payment Services"
-msgstr ""
+msgstr "Platební služby Amazon"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_amex
 msgid "American Express"
-msgstr ""
+msgstr "American Express"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_link_wizard__amount
@@ -327,12 +363,12 @@ msgstr "Max částka"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__amount_to_capture
 msgid "Amount To Capture"
-msgstr ""
+msgstr "Částka k zachycení"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.state_header
 msgid "An error occurred during the processing of your payment."
-msgstr ""
+msgstr "Při zpracování vaší platby došlo k chybě."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.state_header
@@ -362,22 +398,22 @@ msgstr ""
 #. module: payment
 #: model:payment.method,name:payment.payment_method_argencard
 msgid "Argencard"
-msgstr ""
+msgstr "Argencard"
 
 #. module: payment
 #: model:payment.provider,name:payment.payment_provider_asiapay
 msgid "Asiapay"
-msgstr ""
+msgstr "Asiapay"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_astropay
 msgid "Astropay TEF"
-msgstr ""
+msgstr "Astropay TEF"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_atome
 msgid "Atome"
-msgstr ""
+msgstr "Atome"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__auth_msg
@@ -397,7 +433,7 @@ msgstr "Autorizováno"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__authorized_amount
 msgid "Authorized Amount"
-msgstr ""
+msgstr "Povolená částka"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
@@ -412,7 +448,7 @@ msgstr ""
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_method_search
 msgid "Available methods"
-msgstr ""
+msgstr "Dostupné metody"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_bacs_direct_debit
@@ -422,62 +458,62 @@ msgstr ""
 #. module: payment
 #: model:payment.method,name:payment.payment_method_bank_bca
 msgid "BCA"
-msgstr ""
+msgstr "BCA"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_becs_direct_debit
 msgid "BECS Direct Debit"
-msgstr ""
+msgstr "BECS Direct Debit"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_blik
 msgid "BLIK"
-msgstr ""
+msgstr "BLIK"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_bri
 msgid "BRI"
-msgstr ""
+msgstr "BRI"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_bancnet
 msgid "BancNet"
-msgstr ""
+msgstr "BancNet"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_banco_guayaquil
 msgid "Banco Guayaquil"
-msgstr ""
+msgstr "Banco Guayaquil"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_banco_pichincha
 msgid "Banco Pichincha"
-msgstr ""
+msgstr "Banco Pichincha"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_banco_de_bogota
 msgid "Banco de Bogota"
-msgstr ""
+msgstr "Banco de Bogota"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_bancolombia
 msgid "Bancolombia"
-msgstr ""
+msgstr "Bancolombia"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_bancontact
 msgid "Bancontact"
-msgstr ""
+msgstr "Bancontact"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_bangkok_bank
 msgid "Bangkok Bank"
-msgstr ""
+msgstr "Bangkok Bank"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_bank_account
 msgid "Bank Account"
-msgstr ""
+msgstr "Bankovní účet"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_installments_eg
@@ -487,27 +523,27 @@ msgstr ""
 #. module: payment
 #: model:payment.method,name:payment.payment_method_bni
 msgid "Bank Negara Indonesia"
-msgstr ""
+msgstr "Bank Negara Indonesia"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_bank_permata
 msgid "Bank Permata"
-msgstr ""
+msgstr "Bank Permata"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_bsi
 msgid "Bank Syariah Indonesia"
-msgstr ""
+msgstr "Bank Syariah Indonesia"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_bank_transfer
 msgid "Bank Transfer"
-msgstr ""
+msgstr "Bankovní převod"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_bank_of_ayudhya
 msgid "Bank of Ayudhya"
-msgstr ""
+msgstr "Bank of Ayudhya"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_bank_reference
@@ -517,48 +553,48 @@ msgstr ""
 #. module: payment
 #: model:payment.method,name:payment.payment_method_belfius
 msgid "Belfius"
-msgstr ""
+msgstr "Belfius"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_benefit
 msgid "Benefit"
-msgstr ""
+msgstr "Benefit"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_bharatqr
 msgid "BharatQR"
-msgstr ""
+msgstr "BharatQR"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_billease
 msgid "BillEase"
-msgstr ""
+msgstr "BillEase"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_billink
 msgid "Billink"
-msgstr ""
+msgstr "Billink"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_bizum
 msgid "Bizum"
-msgstr ""
+msgstr "Bizum"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_boleto
 msgid "Boleto"
-msgstr ""
+msgstr "Boleto"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_boost
 msgid "Boost"
-msgstr ""
+msgstr "Boost"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_method__brand_ids
 #: model_terms:ir.ui.view,arch_db:payment.payment_method_form
 msgid "Brands"
-msgstr ""
+msgstr "Značky"
 
 #. module: payment
 #: model:payment.provider,name:payment.payment_provider_buckaroo
@@ -568,22 +604,22 @@ msgstr "Buckaroo"
 #. module: payment
 #: model:payment.method,name:payment.payment_method_cimb_niaga
 msgid "CIMB Niaga"
-msgstr ""
+msgstr "CIMB Niaga"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_cmr
 msgid "CMR"
-msgstr ""
+msgstr "CMR"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_cabal
 msgid "Cabal"
-msgstr ""
+msgstr "Cabal"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_caixa
 msgid "Caixa"
-msgstr ""
+msgstr "Caixa"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_transaction__state__cancel
@@ -599,20 +635,20 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/payment/static/src/interactions/payment_form.js:0
 msgid "Cannot delete payment method"
-msgstr ""
+msgstr "Nelze odstranit způsob platby"
 
 #. module: payment
 #. odoo-javascript
 #: code:addons/payment/static/src/interactions/payment_form.js:0
 msgid "Cannot save payment method"
-msgstr ""
+msgstr "Nelze uložit způsob platby"
 
 #. module: payment
 #. odoo-python
 #: code:addons/payment/models/payment_transaction.py:0
 #: model_terms:ir.ui.view,arch_db:payment.payment_capture_wizard_view_form
 msgid "Capture"
-msgstr ""
+msgstr "Zachytit"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__capture_manually
@@ -622,7 +658,7 @@ msgstr "Sejmout částku ručně"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
 msgid "Capture Transaction"
-msgstr "Zachycení transakce"
+msgstr "Zaznamenat transakci"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__capture_manually
@@ -638,7 +674,7 @@ msgstr ""
 #. module: payment
 #: model:payment.method,name:payment.payment_method_card
 msgid "Card"
-msgstr ""
+msgstr "Karta"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_dpo
@@ -648,7 +684,7 @@ msgstr ""
 #. module: payment
 #: model:payment.method,name:payment.payment_method_carnet
 msgid "Carnet"
-msgstr ""
+msgstr "Carnet"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_cartes_bancaires
@@ -658,42 +694,42 @@ msgstr ""
 #. module: payment
 #: model:payment.method,name:payment.payment_method_cash_app_pay
 msgid "Cash App Pay"
-msgstr ""
+msgstr "Cash App Pay"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_cashalo
 msgid "Cashalo"
-msgstr ""
+msgstr "Cashalo"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_cebuana
 msgid "Cebuana"
-msgstr ""
+msgstr "Cebuana"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_cencosud
 msgid "Cencosud"
-msgstr ""
+msgstr "Cencosud"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__child_transaction_ids
 msgid "Child Transactions"
-msgstr ""
+msgstr "Podřízené Transakce"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
 msgid "Child transactions"
-msgstr ""
+msgstr "Podřízené transakce"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.form
 msgid "Choose another method <i class=\"oi oi-arrow-down\"/>"
-msgstr ""
+msgstr "Zvolte jinou metodu <i class=\"oi oi-arrow-down\"/>"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_cirrus
 msgid "Cirrus"
-msgstr ""
+msgstr "Cirrus"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_city
@@ -704,7 +740,7 @@ msgstr "Město"
 #. module: payment
 #: model:payment.method,name:payment.payment_method_clearpay
 msgid "Clearpay"
-msgstr ""
+msgstr "Clearpay"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_capture_wizard_view_form
@@ -721,7 +757,7 @@ msgstr "Kód"
 #. module: payment
 #: model:payment.method,name:payment.payment_method_codensa
 msgid "Codensa"
-msgstr ""
+msgstr "Codensa"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__color
@@ -742,7 +778,7 @@ msgstr "Společnosti"
 #: model_terms:ir.ui.view,arch_db:payment.payment_token_search
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_search
 msgid "Company"
-msgstr "Firma"
+msgstr "Společnost"
 
 #. module: payment
 #: model:ir.model,name:payment.model_res_config_settings
@@ -770,7 +806,7 @@ msgstr "Potvrdit vymazání"
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_transaction__state__done
 msgid "Confirmed"
-msgstr "Potvrzeno"
+msgstr "Potvrzený"
 
 #. module: payment
 #: model:ir.model,name:payment.model_res_partner
@@ -781,12 +817,12 @@ msgstr "Kontakt"
 #. module: payment
 #: model:payment.method,name:payment.payment_method_cordial
 msgid "Cordial"
-msgstr ""
+msgstr "Cordial"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_cordobesa
 msgid "Cordobesa"
-msgstr ""
+msgstr "Cordobesa"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__module_id
@@ -803,14 +839,14 @@ msgstr ""
 #: model:ir.model.fields,field_description:payment.field_payment_method__supported_country_ids
 #: model:ir.model.fields,field_description:payment.field_payment_provider__available_country_ids
 msgid "Countries"
-msgstr "Státy"
+msgstr "Země"
 
 #. module: payment
 #: model:ir.model,name:payment.model_res_country
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_country_id
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
 msgid "Country"
-msgstr "Stát"
+msgstr "Země"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__tokenize
@@ -820,7 +856,7 @@ msgstr "Vytvořit Token"
 #. module: payment
 #: model:ir.model,website_form_label:payment.model_res_partner
 msgid "Create a Customer"
-msgstr ""
+msgstr "Vytvořit zákazníka"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__create_uid
@@ -830,7 +866,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:payment.field_payment_token__create_uid
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__create_uid
 msgid "Created by"
-msgstr "Vytvořeno od"
+msgstr "Vytvořeno uživatelem"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__create_date
@@ -840,13 +876,13 @@ msgstr "Vytvořeno od"
 #: model:ir.model.fields,field_description:payment.field_payment_token__create_date
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__create_date
 msgid "Created on"
-msgstr "Vytvořeno"
+msgstr "Vytvořeno dne"
 
 #. module: payment
 #. odoo-python
 #: code:addons/payment/models/payment_transaction.py:0
 msgid "Creating a transaction from an archived token is forbidden."
-msgstr ""
+msgstr "Vytvoření transakce z archivovaného tokenu je zakázáno."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
@@ -856,13 +892,13 @@ msgstr "Pověření"
 #. module: payment
 #: model:payment.method,name:payment.payment_method_credit
 msgid "Credit Payment"
-msgstr ""
+msgstr "Credit Payment"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_method__supported_currency_ids
 #: model:ir.model.fields,field_description:payment.field_payment_provider__available_currency_ids
 msgid "Currencies"
-msgstr ""
+msgstr "Měny"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__currency_id
@@ -885,22 +921,22 @@ msgstr ""
 #. module: payment
 #: model:payment.method,name:payment.payment_method_dana
 msgid "Dana"
-msgstr ""
+msgstr "Dana"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_dankort
 msgid "Dankort"
-msgstr ""
+msgstr "Dankort"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_davivienda
 msgid "Davivienda"
-msgstr ""
+msgstr "Davivienda"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__sequence
 msgid "Define the display order"
-msgstr ""
+msgstr "Definice pořadí zobrazení"
 
 #. module: payment
 #: model:payment.provider,name:payment.payment_provider_demo
@@ -910,18 +946,18 @@ msgstr "Demo"
 #. module: payment
 #: model:payment.method,name:payment.payment_method_diners
 msgid "Diners Club International"
-msgstr ""
+msgstr "Diners Club International"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_provider__state__disabled
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
 msgid "Disabled"
-msgstr "Zakázáno"
+msgstr "Vypnuto"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_discover
 msgid "Discover"
-msgstr ""
+msgstr "Objevujte"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_ir_http__display_name
@@ -936,7 +972,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:payment.field_res_country__display_name
 #: model:ir.model.fields,field_description:payment.field_res_partner__display_name
 msgid "Display Name"
-msgstr "Zobrazované jméno"
+msgstr "Zobrazovací název"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_status
@@ -956,17 +992,17 @@ msgstr "Návrh"
 #. module: payment
 #: model:payment.method,name:payment.payment_method_duitnow
 msgid "DuitNow"
-msgstr ""
+msgstr "DuitNow"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_emi_india
 msgid "EMI"
-msgstr ""
+msgstr "EMI"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_eps
 msgid "EPS"
-msgstr ""
+msgstr "EPS"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_easypaisa
@@ -976,13 +1012,13 @@ msgstr ""
 #. module: payment
 #: model:payment.method,name:payment.payment_method_elo
 msgid "Elo"
-msgstr ""
+msgstr "Elo"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_link_wizard__partner_email
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_email
 msgid "Email"
-msgstr "E-mail "
+msgstr "Email"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_provider__state__enabled
@@ -992,7 +1028,7 @@ msgstr "Povoleno"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_kanban
 msgid "Enterprise"
-msgstr ""
+msgstr "Podnik"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_transaction__state__error
@@ -1003,12 +1039,12 @@ msgstr "Chyba"
 #: model:ir.model.fields,field_description:payment.field_payment_method__support_express_checkout
 #: model:ir.model.fields,field_description:payment.field_payment_provider__support_express_checkout
 msgid "Express Checkout"
-msgstr ""
+msgstr "Expresní pokladna"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__express_checkout_form_view_id
 msgid "Express Checkout Form Template"
-msgstr ""
+msgstr "Šablona formuláře Express Checkout"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_method__support_express_checkout
@@ -1017,31 +1053,34 @@ msgid ""
 "that provides all required billing and shipping information, thus allowing "
 "to skip the checkout process."
 msgstr ""
+"Expresní pokladna umožňuje zákazníkům platit rychleji pomocí platební "
+"metody, která poskytuje všechny požadované fakturační a dodací údaje, a "
+"umožňuje tak přeskočit proces pokladny."
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_fps
 msgid "FPS"
-msgstr ""
+msgstr "FPS"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_fpx
 msgid "FPX"
-msgstr ""
+msgstr "FPX"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_facilito
 msgid "Facilito"
-msgstr ""
+msgstr "Facilito"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_floa_bank
 msgid "Floa Bank"
-msgstr ""
+msgstr "Floa Bank"
 
 #. module: payment
 #: model:payment.provider,name:payment.payment_provider_flutterwave
 msgid "Flutterwave"
-msgstr ""
+msgstr "Flutterwave"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_forsa
@@ -1053,7 +1092,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:payment.selection__payment_method__support_refund__partial
 #: model:ir.model.fields.selection,name:payment.selection__payment_provider__support_refund__partial
 msgid "Full & Partial"
-msgstr ""
+msgstr "Full & Partial"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_method__support_manual_capture__full_only
@@ -1061,12 +1100,12 @@ msgstr ""
 #: model:ir.model.fields.selection,name:payment.selection__payment_provider__support_manual_capture__full_only
 #: model:ir.model.fields.selection,name:payment.selection__payment_provider__support_refund__full_only
 msgid "Full Only"
-msgstr ""
+msgstr "Pouze v plné výši"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_gcash
 msgid "GCash"
-msgstr ""
+msgstr "GCash"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_link_wizard_view_form
@@ -1076,32 +1115,32 @@ msgstr "Generovat platební odkaz"
 #. module: payment
 #: model:ir.model,name:payment.model_payment_link_wizard
 msgid "Generate Sales Payment Link"
-msgstr "Generovat odkaz na prodejní platbu"
+msgstr "Generování odkazu pro platbu"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_link_wizard_view_form
 msgid "Generate and Copy Payment Link"
-msgstr ""
+msgstr "Generování a kopírování platebního odkazu"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.confirm
 msgid "Go to my Account <i class=\"oi oi-arrow-right ms-2\"/>"
-msgstr ""
+msgstr "Přejít na můj účet <i class=\"oi oi-arrow-right ms-2\"/>"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_gopay
 msgid "GoPay"
-msgstr ""
+msgstr "GoPay"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_grabpay
 msgid "GrabPay"
-msgstr ""
+msgstr "GrabPay"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_hd
 msgid "HD Bank"
-msgstr ""
+msgstr "HD Bank"
 
 #. module: payment
 #: model:ir.model,name:payment.model_ir_http
@@ -1116,7 +1155,7 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__has_draft_children
 msgid "Has Draft Children"
-msgstr ""
+msgstr "Má návrh Děti"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_res_config_settings__has_enabled_provider
@@ -1126,7 +1165,7 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__has_remaining_amount
 msgid "Has Remaining Amount"
-msgstr ""
+msgstr "Má zbývající částku"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__is_post_processed
@@ -1141,17 +1180,17 @@ msgstr "Zpráva nápovědy"
 #. module: payment
 #: model:payment.method,name:payment.payment_method_hipercard
 msgid "Hipercard"
-msgstr ""
+msgstr "Hipercard"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_hoolah
 msgid "Hoolah"
-msgstr ""
+msgstr "Hoolah"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_humm
 msgid "Humm"
-msgstr ""
+msgstr "Humm"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_ir_http__id
@@ -1186,6 +1225,9 @@ msgid ""
 "In test mode, a fake payment is processed through a test payment interface.\n"
 "This mode is advised when setting up the provider."
 msgstr ""
+"V testovacím režimu je zpracována falešná platba v rámci testovacího "
+"rozhraní platby.\n"
+"Tento režim je doporučen při úvodním nastavování poskytovatele plateb."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__inline_form_view_id
@@ -1216,7 +1258,7 @@ msgstr "Instalováno"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__is_amount_to_capture_valid
 msgid "Is Amount To Capture Valid"
-msgstr ""
+msgstr "Je částka k zachycení platná"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_res_country__is_mercado_pago_supported_country
@@ -1231,12 +1273,12 @@ msgstr "Je následně zpracován"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_method__is_primary
 msgid "Is Primary Payment Method"
-msgstr ""
+msgstr "Je primární způsob platby"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_res_country__is_stripe_supported_country
 msgid "Is Stripe Supported Country"
-msgstr ""
+msgstr "Je země podporovaná Stripem"
 
 #. module: payment
 #. odoo-javascript
@@ -1252,7 +1294,7 @@ msgstr ""
 #. module: payment
 #: model:payment.method,name:payment.payment_method_jcb
 msgid "JCB"
-msgstr ""
+msgstr "JCB"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_jazzcash
@@ -1262,42 +1304,42 @@ msgstr ""
 #. module: payment
 #: model:payment.method,name:payment.payment_method_jeniuspay
 msgid "JeniusPay"
-msgstr ""
+msgstr "JeniusPay"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_jkopay
 msgid "Jkopay"
-msgstr ""
+msgstr "Jkopay"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_kbc_cbc
 msgid "KBC/CBC"
-msgstr ""
+msgstr "KBC/CBC"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_knet
 msgid "KNET"
-msgstr ""
+msgstr "KNET"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_kakaopay
 msgid "KakaoPay"
-msgstr ""
+msgstr "KakaoPay"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_kasikorn_bank
 msgid "Kasikorn Bank"
-msgstr ""
+msgstr "Kasikorn Bank"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_kiosk
 msgid "Kiosk"
-msgstr ""
+msgstr "Kiosk"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_klarna
 msgid "Klarna"
-msgstr ""
+msgstr "Klarna"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_klarna_paynow
@@ -1312,17 +1354,17 @@ msgstr ""
 #. module: payment
 #: model:payment.method,name:payment.payment_method_kredivo
 msgid "Kredivo"
-msgstr ""
+msgstr "Kredivo"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_krungthai_bank
 msgid "KrungThai Bank"
-msgstr ""
+msgstr "KrungThai Bank"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_linepay
 msgid "LINE Pay"
-msgstr ""
+msgstr "LINE Pay"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__landing_route
@@ -1347,7 +1389,7 @@ msgstr "Datum poslední změny stavu"
 #: model:ir.model.fields,field_description:payment.field_payment_token__write_uid
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__write_uid
 msgid "Last Updated by"
-msgstr "Naposledy upraveno od"
+msgstr "Naposledy upraveno uživatelem"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__write_date
@@ -1357,47 +1399,47 @@ msgstr "Naposledy upraveno od"
 #: model:ir.model.fields,field_description:payment.field_payment_token__write_date
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__write_date
 msgid "Last Updated on"
-msgstr "Naposled upraveno"
+msgstr "Naposledy upraveno dne"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_lider
 msgid "Lider"
-msgstr ""
+msgstr "Lider"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_linkaja
 msgid "LinkAja"
-msgstr ""
+msgstr "LinkAja"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_nuvei_local
 msgid "Local Payments"
-msgstr ""
+msgstr "Local Payments"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_mpesa
 msgid "M-Pesa"
-msgstr ""
+msgstr "M-Pesa"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_mbway
 msgid "MB WAY"
-msgstr ""
+msgstr "MB WAY"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_mada
 msgid "Mada"
-msgstr ""
+msgstr "Mada"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_maestro
 msgid "Maestro"
-msgstr ""
+msgstr "Maestro"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_magna
 msgid "Magna"
-msgstr ""
+msgstr "Magna"
 
 #. module: payment
 #. odoo-python
@@ -1406,67 +1448,68 @@ msgid ""
 "Making a request to the provider is not possible because the provider is "
 "disabled."
 msgstr ""
+"Zadání požadavku poskytovateli není možné, protože poskytovatel je zakázán."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.portal_my_home_payment
 msgid "Manage your payment methods"
-msgstr ""
+msgstr "Spravujte vaše platební metody"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_mandiri
 msgid "Mandiri"
-msgstr ""
+msgstr "Mandiri"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_method__support_manual_capture
 msgid "Manual Capture"
-msgstr ""
+msgstr "Manual Capture"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__support_manual_capture
 msgid "Manual Capture Supported"
-msgstr ""
+msgstr "Podporované manuální snímání"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_mastercard
 msgid "MasterCard"
-msgstr ""
+msgstr "MasterCard"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__maximum_amount
 msgid "Maximum Amount"
-msgstr ""
+msgstr "Maximální částka"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__available_amount
 msgid "Maximum Capture Allowed"
-msgstr ""
+msgstr "Maximální povolený počet záznamů"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_maya
 msgid "Maya"
-msgstr ""
+msgstr "Maya"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_maybank
 msgid "Maybank"
-msgstr ""
+msgstr "Maybank"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_meeza
 msgid "Meeza"
-msgstr ""
+msgstr "Meeza"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_mercado_livre
 msgid "Mercado Livre"
-msgstr ""
+msgstr "Mercado Livre"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__res_config_settings__onboarding_payment_module__mercado_pago
 #: model:payment.provider,name:payment.payment_provider_mercado_pago
 msgid "Mercado Pago"
-msgstr ""
+msgstr "Mercado Pago"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_mercado_pago_wallet
@@ -1487,7 +1530,7 @@ msgstr "Zprávy"
 #. module: payment
 #: model:payment.method,name:payment.payment_method_momo
 msgid "MoMo"
-msgstr ""
+msgstr "MoMo"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_mobile_wallet_eg
@@ -1502,27 +1545,27 @@ msgstr ""
 #. module: payment
 #: model:payment.method,name:payment.payment_method_mobile_pay
 msgid "MobilePay"
-msgstr ""
+msgstr "MobilePay"
 
 #. module: payment
 #: model:payment.provider,name:payment.payment_provider_mollie
 msgid "Mollie"
-msgstr ""
+msgstr "Mollie"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_multibanco
 msgid "Multibanco"
-msgstr ""
+msgstr "Multibanco"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_mybank
 msgid "MyBank"
-msgstr ""
+msgstr "MyBank"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_naps
 msgid "NAPS"
-msgstr ""
+msgstr "NAPS"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_method__name
@@ -1531,27 +1574,27 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:payment.payment_method_search
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
 msgid "Name"
-msgstr "Jméno"
+msgstr "Název"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_napas_card
 msgid "Napas Card"
-msgstr ""
+msgstr "Napas Card"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_naranja
 msgid "Naranja"
-msgstr ""
+msgstr "Naranja"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_nativa
 msgid "Nativa"
-msgstr ""
+msgstr "Nativa"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_netbanking
 msgid "Netbanking"
-msgstr ""
+msgstr "Netbanking"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_provider__code__none
@@ -1561,12 +1604,12 @@ msgstr "Není nastaven žádný poskytovatel"
 #. module: payment
 #: model_terms:ir.actions.act_window,help:payment.action_payment_method
 msgid "No payment methods found for your payment providers."
-msgstr ""
+msgstr "Pro vašeho poskytovatele plateb nebyly nalezeny žádné platební metody."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.no_pms_available_warning
 msgid "No payment providers are configured."
-msgstr ""
+msgstr "Nejsou nakonfigurováni žádní poskytovatelé plateb."
 
 #. module: payment
 #: model_terms:ir.actions.act_window,help:payment.action_payment_provider
@@ -1577,7 +1620,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/payment/models/payment_token.py:0
 msgid "No token can be assigned to the public partner."
-msgstr ""
+msgstr "Veřejnému partnerovi nelze přiřadit žádný token."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.no_pms_available_warning
@@ -1587,22 +1630,22 @@ msgstr ""
 #. module: payment
 #: model:payment.provider,name:payment.payment_provider_nuvei
 msgid "Nuvei"
-msgstr ""
+msgstr "Nuvei"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_ovo
 msgid "OVO"
-msgstr ""
+msgstr "OVO"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_oca
 msgid "Oca"
-msgstr ""
+msgstr "Oca"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_octopus
 msgid "Octopus"
-msgstr ""
+msgstr "Octopus"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__module_to_buy
@@ -1617,7 +1660,7 @@ msgstr "Offline platba pomocí tokenu"
 #. module: payment
 #: model:payment.method,name:payment.payment_method_omannet
 msgid "OmanNet"
-msgstr ""
+msgstr "OmanNet"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_res_config_settings__onboarding_payment_module
@@ -1669,7 +1712,7 @@ msgstr "Anulovat lze pouze autorizované transakce."
 #. odoo-python
 #: code:addons/payment/models/payment_transaction.py:0
 msgid "Only confirmed transactions can be refunded."
-msgstr ""
+msgstr "Vrátit lze pouze potvrzené transakce."
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_open_banking
@@ -1684,37 +1727,37 @@ msgstr "Úkon"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.form
 msgid "Other payment methods"
-msgstr ""
+msgstr "Ostatní platební metody"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_oxxopay
 msgid "Oxxo Pay"
-msgstr ""
+msgstr "Oxxo Pay"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_p24
 msgid "P24"
-msgstr ""
+msgstr "P24"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_poli
 msgid "POLi"
-msgstr ""
+msgstr "POLi"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_pps
 msgid "PPS"
-msgstr ""
+msgstr "PPS"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_pse
 msgid "PSE"
-msgstr ""
+msgstr "PSE"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_pace
 msgid "Pace."
-msgstr ""
+msgstr "Pace."
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_provider__support_manual_capture__partial
@@ -1742,27 +1785,27 @@ msgstr "Zaplatit"
 #. module: payment
 #: model:payment.method,name:payment.payment_method_paylater_india
 msgid "Pay Later"
-msgstr ""
+msgstr "Pay Later"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_paybright
 msgid "PayBright"
-msgstr ""
+msgstr "PayBright"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_pay_id
 msgid "PayID"
-msgstr ""
+msgstr "PayID"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_payme
 msgid "PayMe"
-msgstr ""
+msgstr "PayMe"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_paynow
 msgid "PayNow"
-msgstr ""
+msgstr "PayNow"
 
 #. module: payment
 #: model:payment.provider,name:payment.payment_provider_paypal
@@ -1772,17 +1815,17 @@ msgstr "PayPal"
 #. module: payment
 #: model:payment.method,name:payment.payment_method_paysafecard
 msgid "PaySafeCard"
-msgstr ""
+msgstr "PaySafeCard"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay
 msgid "Payment"
-msgstr ""
+msgstr "Platba"
 
 #. module: payment
 #: model:ir.model,name:payment.model_payment_capture_wizard
 msgid "Payment Capture Wizard"
-msgstr ""
+msgstr "Průvodce zachycením platby"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.confirm
@@ -1792,7 +1835,7 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_token__payment_details
 msgid "Payment Details"
-msgstr ""
+msgstr "Podrobnosti platby"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
@@ -1807,12 +1850,12 @@ msgstr "Platební formulář"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_link_wizard_view_form
 msgid "Payment Info"
-msgstr ""
+msgstr "Platební info"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_link_wizard__link
 msgid "Payment Link"
-msgstr ""
+msgstr "Odkaz na platbu"
 
 #. module: payment
 #: model:ir.model,name:payment.model_payment_method
@@ -1821,13 +1864,13 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:payment.confirm
 #: model_terms:ir.ui.view,arch_db:payment.payment_method_form
 msgid "Payment Method"
-msgstr "Platební podmínky"
+msgstr "Platební metoda"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_token__payment_method_code
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__payment_method_code
 msgid "Payment Method Code"
-msgstr ""
+msgstr "Kód způsobu platby"
 
 #. module: payment
 #. odoo-python
@@ -1836,25 +1879,25 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:payment.payment_methods
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
 msgid "Payment Methods"
-msgstr "Způsoby platby"
+msgstr "Platební metody"
 
 #. module: payment
 #: model:ir.model,name:payment.model_payment_provider
 msgid "Payment Provider"
-msgstr ""
+msgstr "Poskytovatel platby"
 
 #. module: payment
 #: model:ir.actions.act_window,name:payment.action_payment_provider
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_list
 msgid "Payment Providers"
-msgstr ""
+msgstr "Poskytovatelé plateb"
 
 #. module: payment
 #. odoo-python
 #: code:addons/payment/controllers/post_processing.py:0
 #: model_terms:ir.ui.view,arch_db:payment.payment_status
 msgid "Payment Status"
-msgstr ""
+msgstr "Stav platby"
 
 #. module: payment
 #: model:ir.model,name:payment.model_payment_token
@@ -1866,7 +1909,7 @@ msgstr "Platební token"
 #: model:ir.model.fields,field_description:payment.field_res_partner__payment_token_count
 #: model:ir.model.fields,field_description:payment.field_res_users__payment_token_count
 msgid "Payment Token Count"
-msgstr ""
+msgstr "Počet platebních tokenů"
 
 #. module: payment
 #: model:ir.actions.act_window,name:payment.action_payment_token
@@ -1896,41 +1939,41 @@ msgstr "Platební transakce"
 #. module: payment
 #: model:ir.actions.act_window,name:payment.action_payment_transaction_linked_to_token
 msgid "Payment Transactions Linked To Token"
-msgstr ""
+msgstr "Platební transakce spojené s tokenem"
 
 #. module: payment
 #. odoo-python
 #: code:addons/payment/models/payment_token.py:0
 msgid "Payment details saved on %(date)s"
-msgstr ""
+msgstr "Údaje o platbě uložené k %(date)s"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_unknown
 #: model_terms:ir.ui.view,arch_db:payment.form
 msgid "Payment method"
-msgstr ""
+msgstr "Platební metoda"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.availability_report
 #: model_terms:ir.ui.view,arch_db:payment.portal_my_home_payment
 msgid "Payment methods"
-msgstr ""
+msgstr "Platební metody"
 
 #. module: payment
 #. odoo-javascript
 #: code:addons/payment/static/src/interactions/payment_form.js:0
 msgid "Payment processing failed"
-msgstr ""
+msgstr "Zpracování platby se nezdařilo"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
 msgid "Payment provider"
-msgstr ""
+msgstr "Poskytovatel platby"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.availability_report
 msgid "Payment providers"
-msgstr ""
+msgstr "Poskytovatelé plateb"
 
 #. module: payment
 #: model:ir.actions.server,name:payment.cron_post_process_payment_tx_ir_actions_server
@@ -1950,22 +1993,22 @@ msgstr ""
 #. module: payment
 #: model:payment.method,name:payment.payment_method_paypal
 msgid "Paypal"
-msgstr ""
+msgstr "Paypal"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_paytm
 msgid "Paytm"
-msgstr ""
+msgstr "Paytm"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_paytrail
 msgid "Paytrail"
-msgstr ""
+msgstr "Paytrail"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_transaction__state__pending
 msgid "Pending"
-msgstr "Čekající"
+msgstr "Čeká"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__pending_msg
@@ -1980,35 +2023,35 @@ msgstr "Telefon"
 #. module: payment
 #: model:payment.method,name:payment.payment_method_pix
 msgid "Pix"
-msgstr ""
+msgstr "Pix"
 
 #. module: payment
 #. odoo-python
 #: code:addons/payment/models/payment_method.py:0
 msgid "Please make sure that %(payment_method)s is supported by %(provider)s."
-msgstr ""
+msgstr "Ujistěte se, že %(payment_method)s je podporována %(provider)s."
 
 #. module: payment
 #. odoo-python
 #: code:addons/payment/wizards/payment_link_wizard.py:0
 msgid "Please set a positive amount."
-msgstr ""
+msgstr "Nastavte prosím kladnou částku."
 
 #. module: payment
 #. odoo-python
 #: code:addons/payment/wizards/payment_link_wizard.py:0
 msgid "Please set an amount lower than %s."
-msgstr ""
+msgstr "Nastavte prosím částku nižší než %s."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.company_mismatch_warning
 msgid "Please switch to company"
-msgstr ""
+msgstr "Prosím, přejděte na společnost"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.state_header
 msgid "Please wait..."
-msgstr ""
+msgstr "Prosím, čekejte..."
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_post_finance
@@ -2018,7 +2061,7 @@ msgstr ""
 #. module: payment
 #: model:payment.method,name:payment.payment_method_poste_pay
 msgid "PostePay"
-msgstr ""
+msgstr "PostePay"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_premium_card
@@ -2028,13 +2071,13 @@ msgstr ""
 #. module: payment
 #: model:payment.method,name:payment.payment_method_presto
 msgid "Presto"
-msgstr ""
+msgstr "Presto"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_method__primary_payment_method_id
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__primary_payment_method_id
 msgid "Primary Payment Method"
-msgstr ""
+msgstr "Primární způsob platby"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.confirm
@@ -2065,13 +2108,13 @@ msgstr "Poskytovatel"
 #: model:ir.model.fields,field_description:payment.field_payment_token__provider_code
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__provider_code
 msgid "Provider Code"
-msgstr ""
+msgstr "Kód dodavatele"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_token__provider_ref
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__provider_reference
 msgid "Provider Reference"
-msgstr ""
+msgstr "Odkaz na poskytovatele"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_method__provider_ids
@@ -2088,23 +2131,23 @@ msgstr "Publikováno"
 #. module: payment
 #: model:payment.method,name:payment.payment_method_qris
 msgid "QRIS"
-msgstr ""
+msgstr "QRIS"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_rabbit_line_pay
 msgid "Rabbit LINE Pay"
-msgstr ""
+msgstr "Rabbit LINE Pay"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_ratepay
 msgid "Ratepay"
-msgstr ""
+msgstr "Ratepay"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__res_config_settings__onboarding_payment_module__razorpay
 #: model:payment.provider,name:payment.payment_provider_razorpay
 msgid "Razorpay"
-msgstr ""
+msgstr "Razorpay"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.availability_report_records
@@ -2114,12 +2157,12 @@ msgstr "Důvod:"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__redirect_form_view_id
 msgid "Redirect Form Template"
-msgstr ""
+msgstr "Šablona formuláře pro přesměrování"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_redpagos
 msgid "Redpagos"
-msgstr ""
+msgstr "Redpagos"
 
 #. module: payment
 #: model:payment.provider,name:payment.payment_provider_redsys
@@ -2146,7 +2189,7 @@ msgstr "Odkaz musí být jedinečný!"
 #: model:ir.model.fields,field_description:payment.field_payment_provider__support_refund
 #: model:ir.model.fields.selection,name:payment.selection__payment_transaction__operation__refund
 msgid "Refund"
-msgstr "Vrátit peníze"
+msgstr "Refundace"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_method__support_refund
@@ -2155,16 +2198,18 @@ msgid ""
 "Refund is a feature allowing to refund customers directly from the payment "
 "in Odoo."
 msgstr ""
+"Refundace je funkce umožňující vracet zákazníkům peníze přímo z platby v "
+"Odoo."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
 msgid "Refunds"
-msgstr "Přijaté dobropisy"
+msgstr "Dopropisy přijaté"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__refunds_count
 msgid "Refunds Count"
-msgstr ""
+msgstr "Počet refundací"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_link_wizard__res_id
@@ -2179,12 +2224,12 @@ msgstr "Související model dokumentu"
 #. module: payment
 #: model:payment.method,name:payment.payment_method_revolut_pay
 msgid "Revolut Pay"
-msgstr ""
+msgstr "Revolut Pay"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_rupay
 msgid "RuPay"
-msgstr ""
+msgstr "RuPay"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_sepa_direct_debit
@@ -2195,7 +2240,7 @@ msgstr "Inkaso SEPA"
 #. module: payment
 #: model:payment.method,name:payment.payment_method_spei
 msgid "SPEI"
-msgstr ""
+msgstr "SPEI"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_stcpay
@@ -2205,12 +2250,12 @@ msgstr ""
 #. module: payment
 #: model:payment.method,name:payment.payment_method_samsung_pay
 msgid "Samsung Pay"
-msgstr ""
+msgstr "Samsung Pay"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.form
 msgid "Save"
-msgstr ""
+msgstr "Uložit"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.state_header
@@ -2220,48 +2265,48 @@ msgstr ""
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_method_form
 msgid "Select countries. Leave empty to allow any."
-msgstr ""
+msgstr "Vybrané země. Pokud chcete povolit libovolné, nechte prázdné."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
 msgid "Select countries. Leave empty to make available everywhere."
-msgstr ""
+msgstr "Vybrané země. Nechte prázdné, aby byly dostupné všude."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
 msgid "Select currencies. Leave empty not to restrict any."
-msgstr ""
+msgstr "Vyberte měny. Nechte prázdné, abyste žádnou neomezovali."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_method_form
 msgid "Select currencies. Leave empty to allow any."
-msgstr ""
+msgstr "Vyberte měny. Nechte prázdné, pokud chcete povolit ."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_method__sequence
 #: model:ir.model.fields,field_description:payment.field_payment_provider__sequence
 msgid "Sequence"
-msgstr "Číselná řada"
+msgstr "Sekvence"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_shopback
 msgid "ShopBack"
-msgstr ""
+msgstr "ShopBack"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_shopeepay
 msgid "ShopeePay"
-msgstr ""
+msgstr "ShopeePay"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_shopping
 msgid "Shopping Card"
-msgstr ""
+msgstr "Shopping Card"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_scb
 msgid "Siam Commerical Bank"
-msgstr ""
+msgstr "Siam Commerical Bank"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.state_header
@@ -2271,7 +2316,7 @@ msgstr ""
 #. module: payment
 #: model:payment.method,name:payment.payment_method_sofort
 msgid "Sofort"
-msgstr ""
+msgstr "Sofort"
 
 #. module: payment
 #. odoo-python
@@ -2280,6 +2325,8 @@ msgid ""
 "Some of the transactions you intend to capture can only be captured in full. "
 "Handle the transactions individually to capture a partial amount."
 msgstr ""
+"Některé transakce, které chcete zachytit, lze zachytit pouze vcelku. "
+"Zpracovávejte transakce jednotlivě, abyste zachytili částečnou částku."
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_souhoola
@@ -2289,7 +2336,7 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__source_transaction_id
 msgid "Source Transaction"
-msgstr ""
+msgstr "Zdroj Transakce"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__state
@@ -2314,17 +2361,17 @@ msgstr "Stripe"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__support_partial_capture
 msgid "Support Partial Capture"
-msgstr ""
+msgstr "Podpora částečného snímání"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__payment_method_ids
 msgid "Supported Payment Methods"
-msgstr ""
+msgstr "Podporované platební metody"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_method_form
 msgid "Supported by"
-msgstr ""
+msgstr "Podporováno"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.availability_report_records
@@ -2334,7 +2381,7 @@ msgstr ""
 #. module: payment
 #: model:payment.method,name:payment.payment_method_swish
 msgid "Swish"
-msgstr ""
+msgstr "Swish"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_sympl
@@ -2344,12 +2391,12 @@ msgstr ""
 #. module: payment
 #: model:payment.method,name:payment.payment_method_tenpay
 msgid "TENPAY"
-msgstr ""
+msgstr "TENPAY"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_ttb
 msgid "TTB"
-msgstr ""
+msgstr "TTB"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_tabby
@@ -2369,17 +2416,17 @@ msgstr ""
 #. module: payment
 #: model:payment.method,name:payment.payment_method_tarjeta_mercadopago
 msgid "Tarjeta MercadoPago"
-msgstr ""
+msgstr "Tarjeta MercadoPago"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_techcom
 msgid "Techcombank"
-msgstr ""
+msgstr "Techcombank"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_tendopay
 msgid "TendoPay"
-msgstr ""
+msgstr "TendoPay"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_provider__state__test
@@ -2391,12 +2438,12 @@ msgstr "Testovací režim"
 #: model_terms:ir.ui.view,arch_db:payment.method_form
 #: model_terms:ir.ui.view,arch_db:payment.token_form
 msgid "Test mode"
-msgstr ""
+msgstr "Testovací režim"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.state_header
 msgid "Thank you!"
-msgstr ""
+msgstr "Děkujeme"
 
 #. module: payment
 #. odoo-python
@@ -2445,29 +2492,29 @@ msgstr ""
 #. odoo-python
 #: code:addons/payment/wizards/payment_capture_wizard.py:0
 msgid "The amount to capture must be positive and cannot be superior to %s."
-msgstr ""
+msgstr "Částka k zachycení musí být kladná a nesmí být vyšší než %s."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_method__image
 #: model:ir.model.fields,help:payment.field_payment_method__image_payment_form
 msgid "The base image used for this payment method; in a 64x64 px format."
-msgstr ""
+msgstr "Základní obrázek použitý pro tento způsob platby; ve formátu 64x64 px."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_method__brand_ids
 msgid ""
 "The brands of the payment methods that will be displayed on the payment form."
-msgstr ""
+msgstr "Značky platebních metod, které se zobrazí na platebním formuláři."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__child_transaction_ids
 msgid "The child transactions of the transaction."
-msgstr ""
+msgstr "Podřízené transakce transakce."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_token__payment_details
 msgid "The clear part of the payment method's payment details."
-msgstr ""
+msgstr "Přehledná část platebních údajů způsobu platby."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__color
@@ -2485,6 +2532,8 @@ msgid ""
 "The countries in which this payment provider is available. Leave blank to "
 "make it available in all countries."
 msgstr ""
+"Země, ve kterých je tento poskytovatel plateb k dispozici. Pokud chcete, aby "
+"byl k dispozici ve všech zemích, ponechte prázdné pole."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__available_currency_ids
@@ -2492,6 +2541,8 @@ msgid ""
 "The currencies available with this payment provider. Leave empty not to "
 "restrict any."
 msgstr ""
+"Měny dostupné u tohoto poskytovatele plateb. Nechte prázdné, abyste žádnou "
+"neomezovali."
 
 #. module: payment
 #. odoo-python
@@ -2505,13 +2556,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/payment/models/payment_provider.py:0
 msgid "The following fields must be filled: %s"
-msgstr ""
+msgstr "Musí být vyplněna tato pole: %s"
 
 #. module: payment
 #. odoo-python
 #: code:addons/payment/controllers/portal.py:0
 msgid "The following kwargs are not whitelisted: %s"
-msgstr ""
+msgstr "Následující kwargy nejsou na bílé listině: %s"
 
 #. module: payment
 #. odoo-python
@@ -2541,6 +2592,9 @@ msgid ""
 "provider allows it). In other countries, this payment method is not "
 "available to customers."
 msgstr ""
+"Seznam zemí, ve kterých lze tento způsob platby použít (pokud to "
+"poskytovatel umožňuje). V ostatních zemích není tento způsob platby "
+"zákazníkům k dispozici."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_method__supported_currency_ids
@@ -2549,16 +2603,19 @@ msgid ""
 "provider allows it). When paying with another currency, this payment method "
 "is not available to customers."
 msgstr ""
+"Seznam měn, které tento způsob platby podporuje (pokud to poskytovatel "
+"umožňuje). Při platbě v jiné měně není tento způsob platby zákazníkům k "
+"dispozici."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_method__provider_ids
 msgid "The list of providers supporting this payment method."
-msgstr ""
+msgstr "Seznam poskytovatelů podporujících tento způsob platby."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__main_currency_id
 msgid "The main currency of the company, used to display monetary fields."
-msgstr ""
+msgstr "Hlavní měna společnosti, která se používá k zobrazení peněžních polí."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__maximum_amount
@@ -2566,6 +2623,8 @@ msgid ""
 "The maximum payment amount that this payment provider is available for. "
 "Leave blank to make it available for any payment amount."
 msgstr ""
+"Maximální částka platby, která je u tohoto poskytovatele platby k dispozici. "
+"Nechte prázdné, aby byla k dispozici pro jakoukoli částku platby."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__auth_msg
@@ -2619,16 +2678,18 @@ msgid ""
 "For example, \"Card\" is the primary payment method of the card brand "
 "\"VISA\"."
 msgstr ""
+"Primární způsob platby aktuálního způsobu platby, pokud se jedná o značku.\n"
+"Například \"Card\" je primární platební metoda značky karty \"VISA\"."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_token__provider_ref
 msgid "The provider reference of the token of the transaction."
-msgstr ""
+msgstr "Odkaz na zprostředkovatele tokenu transakce."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__provider_reference
 msgid "The provider reference of the transaction"
-msgstr ""
+msgstr "Odkaz na poskytovatele transakce"
 
 #. module: payment
 #. odoo-python
@@ -2639,7 +2700,7 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_method__image_payment_form
 msgid "The resized image displayed on the payment form."
-msgstr ""
+msgstr "Obrázek ve změněné velikosti zobrazený na platebním formuláři."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__landing_route
@@ -2654,21 +2715,21 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__source_transaction_id
 msgid "The source transaction of the related child transactions"
-msgstr ""
+msgstr "Zdrojová transakce souvisejících podřízených transakcí"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_method__code
 #: model:ir.model.fields,help:payment.field_payment_token__payment_method_code
 #: model:ir.model.fields,help:payment.field_payment_transaction__payment_method_code
 msgid "The technical code of this payment method."
-msgstr ""
+msgstr "Technický kód tohoto způsobu platby."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__code
 #: model:ir.model.fields,help:payment.field_payment_token__provider_code
 #: model:ir.model.fields,help:payment.field_payment_transaction__provider_code
 msgid "The technical code of this payment provider."
-msgstr ""
+msgstr "Technický kód tohoto poskytovatele plateb."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__redirect_form_view_id
@@ -2681,7 +2742,7 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__express_checkout_form_view_id
 msgid "The template rendering the express payment methods' form."
-msgstr ""
+msgstr "Šablona vykreslující formulář expresních platebních metod."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__inline_form_view_id
@@ -2694,7 +2755,7 @@ msgstr "Šablona vykreslující formulář inline platby při provádění pří
 msgid ""
 "The template rendering the inline payment form when making a payment by "
 "token."
-msgstr ""
+msgstr "Šablona vykreslující inline platební formulář při platbě pomocí tokenu."
 
 #. module: payment
 #. odoo-python
@@ -2710,13 +2771,13 @@ msgstr "Neexistují žádné transakce, které by bylo možné vykázat"
 #. module: payment
 #: model_terms:ir.actions.act_window,help:payment.action_payment_token
 msgid "There is no token created yet."
-msgstr ""
+msgstr "Zatím nebyl vytvořen žádný token."
 
 #. module: payment
 #. odoo-python
 #: code:addons/payment/wizards/payment_link_wizard.py:0
 msgid "There is nothing to be paid."
-msgstr ""
+msgstr "Není třeba nic platit."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay
@@ -2748,6 +2809,12 @@ msgid ""
 "the\n"
 "provider's database, allowing the customer to reuse it for a next purchase."
 msgstr ""
+"Tím se řídí, zda mohou zákazníci ukládat své platební metody jako platební "
+"tokeny.\n"
+"Platební token je anonymní odkaz na údaje o platební metodě uložené v "
+"systému.\n"
+"v databázi poskytovatele, což zákazníkovi umožňuje opakovaně jej použít při "
+"dalším nákupu."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__allow_express_checkout
@@ -2756,6 +2823,9 @@ msgid ""
 "checkout enables customers to pay with Google Pay and Apple Pay from which "
 "address information is collected at payment."
 msgstr ""
+"Tím se kontroluje, zda mohou zákazníci používat expresní platební metody. "
+"Expresní pokladna umožňuje zákazníkům platit pomocí Google Pay a Apple Pay, "
+"z nichž jsou při platbě shromažďovány údaje o adrese."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_link_wizard_view_form
@@ -2764,6 +2834,9 @@ msgid ""
 "providers.\n"
 "                     Setting an email for this partner is advised."
 msgstr ""
+"Tento partner nemá e-mail, což může způsobit problémy u některých "
+"poskytovatelů plateb.\n"
+"                     Doporučujeme nastavit e-mail pro tohoto partnera."
 
 #. module: payment
 #. odoo-python
@@ -2772,16 +2845,18 @@ msgid ""
 "This payment method needs a partner in crime; you should enable a payment "
 "provider supporting this method first."
 msgstr ""
+"Tato platební metoda potřebuje partnera; nejprve byste měli povolit "
+"poskytovatele plateb podporujícího tuto metodu."
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_tienphong
 msgid "Tienphong"
-msgstr ""
+msgstr "Tienphong"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_tinka
 msgid "Tinka"
-msgstr ""
+msgstr "Tinka"
 
 #. module: payment
 #: model_terms:ir.actions.act_window,help:payment.action_payment_provider
@@ -2796,7 +2871,7 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__token_inline_form_view_id
 msgid "Token Inline Form Template"
-msgstr ""
+msgstr "Šablona inline formuláře Token"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_method__support_tokenization
@@ -2810,16 +2885,18 @@ msgid ""
 "Tokenization is the process of saving the payment details as a token that "
 "can later be reused without having to enter the payment details again."
 msgstr ""
+"Tokenizace je proces uložení platebních údajů jako tokenu, který lze později "
+"znovu použít, aniž by bylo nutné znovu zadávat platební údaje."
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_touch_n_go
 msgid "Touch'n Go"
-msgstr ""
+msgstr "Touch'n Go"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__transaction_ids
 msgid "Transaction"
-msgstr ""
+msgstr "Transakce"
 
 #. module: payment
 #. odoo-python
@@ -2828,6 +2905,7 @@ msgid ""
 "Transaction authorization is not supported by the following payment "
 "providers: %s"
 msgstr ""
+"Autorizace transakcí není podporována následujícími poskytovateli plateb: %s"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_troy
@@ -2837,37 +2915,37 @@ msgstr ""
 #. module: payment
 #: model:payment.method,name:payment.payment_method_truemoney
 msgid "TrueMoney"
-msgstr ""
+msgstr "TrueMoney"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_trustly
 msgid "Trustly"
-msgstr ""
+msgstr "Trustly"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_twint
 msgid "Twint"
-msgstr ""
+msgstr "Twint"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_upi
 msgid "UPI"
-msgstr ""
+msgstr "UPI"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_ussd
 msgid "USSD"
-msgstr ""
+msgstr "USSD"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_unionpay
 msgid "UnionPay"
-msgstr ""
+msgstr "UnionPay"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_uob
 msgid "United Overseas Bank"
-msgstr ""
+msgstr "United Overseas Bank"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_uatp
@@ -2886,7 +2964,7 @@ msgstr "Nepublikovaný"
 #: model:ir.model.fields.selection,name:payment.selection__payment_method__support_refund__none
 #: model:ir.model.fields.selection,name:payment.selection__payment_provider__support_refund__none
 msgid "Unsupported"
-msgstr ""
+msgstr "Unsupported"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
@@ -2897,12 +2975,12 @@ msgstr "Upgrade"
 #. module: payment
 #: model:payment.method,name:payment.payment_method_vpay
 msgid "V PAY"
-msgstr ""
+msgstr "V PAY"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_visa
 msgid "VISA"
-msgstr ""
+msgstr "VISA"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_valu
@@ -2917,37 +2995,37 @@ msgstr "Ověřování způsobu platby"
 #. module: payment
 #: model:payment.method,name:payment.payment_method_venmo
 msgid "Venmo"
-msgstr ""
+msgstr "Venmo"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_vietcom
 msgid "Vietcombank"
-msgstr ""
+msgstr "Vietcombank"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_vipps
 msgid "Vipps"
-msgstr ""
+msgstr "Vipps"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__void_remaining_amount
 msgid "Void Remaining Amount"
-msgstr ""
+msgstr "Prázdná zbývající částka"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
 msgid "Void Transaction"
-msgstr "Zrušená transakce"
+msgstr "Zrušit transakci"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_wallets_india
 msgid "Wallets India"
-msgstr ""
+msgstr "Wallets India"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_walley
 msgid "Walley"
-msgstr ""
+msgstr "Walley"
 
 #. module: payment
 #. odoo-python
@@ -2959,7 +3037,7 @@ msgstr "Varování"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_link_wizard__warning_message
 msgid "Warning Message"
-msgstr ""
+msgstr "Varovná zpráva"
 
 #. module: payment
 #. odoo-javascript
@@ -2970,17 +3048,17 @@ msgstr "Varování!"
 #. module: payment
 #: model:payment.method,name:payment.payment_method_wechat_pay
 msgid "WeChat Pay"
-msgstr ""
+msgstr "WeChat Pay"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_welend
 msgid "WeLend"
-msgstr ""
+msgstr "WeLend"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_webpay
 msgid "WebPay"
-msgstr ""
+msgstr "WebPay"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__tokenize
@@ -2993,7 +3071,7 @@ msgstr "Zda má být při následném zpracování transakce vytvořen platební
 #: model:ir.model.fields,help:payment.field_payment_capture_wizard__support_partial_capture
 msgid ""
 "Whether each of the transactions' provider supports the partial capture."
-msgstr ""
+msgstr "Zda poskytovatel každé z transakcí podporuje částečné zachycení."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__is_published
@@ -3001,6 +3079,8 @@ msgid ""
 "Whether the provider is visible on the website or not. Tokens remain "
 "functional but are only visible on manage forms."
 msgstr ""
+"Zda je poskytovatel viditelný na webových stránkách, nebo ne. Tokeny "
+"zůstávají funkční, ale jsou viditelné pouze ve formulářích pro správu."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__is_live
@@ -3017,12 +3097,12 @@ msgstr "bankovní převod"
 #. module: payment
 #: model:payment.provider,name:payment.payment_provider_worldline
 msgid "Worldline"
-msgstr ""
+msgstr "Worldline"
 
 #. module: payment
 #: model:payment.provider,name:payment.payment_provider_xendit
 msgid "Xendit"
-msgstr ""
+msgstr "Xendit"
 
 #. module: payment
 #. odoo-python
@@ -3038,7 +3118,7 @@ msgstr ""
 msgid ""
 "You cannot change the company of a payment provider with existing "
 "transactions."
-msgstr ""
+msgstr "U stávajících transakcí nelze změnit společnost poskytovatele plateb."
 
 #. module: payment
 #. odoo-python
@@ -3053,18 +3133,20 @@ msgid ""
 "You cannot delete the payment provider %s; disable it or uninstall it "
 "instead."
 msgstr ""
+"Poskytovatele plateb %s nelze smazat; deaktivujte jej nebo jej místo toho "
+"odinstalujte."
 
 #. module: payment
 #. odoo-python
 #: code:addons/payment/models/payment_provider.py:0
 msgid "You cannot publish a disabled provider."
-msgstr ""
+msgstr "Zakázaného poskytovatele nelze zveřejnit."
 
 #. module: payment
 #. odoo-python
 #: code:addons/payment/controllers/portal.py:0
 msgid "You do not have access to this payment token."
-msgstr ""
+msgstr "K tomuto platebnímu tokenu nemáte přístup."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_status
@@ -3178,12 +3260,12 @@ msgstr ""
 #: model_terms:payment.provider,done_msg:payment.payment_provider_worldline
 #: model_terms:payment.provider,done_msg:payment.payment_provider_xendit
 msgid "Your payment has been processed."
-msgstr ""
+msgstr "Vaše platba byla zpracována."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.state_header
 msgid "Your payment has not been processed yet."
-msgstr ""
+msgstr "Vaše platba ještě nebyla zpracována."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_status
@@ -3193,12 +3275,12 @@ msgstr ""
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.state_header
 msgid "Your payment method has been saved."
-msgstr ""
+msgstr "Vaše platební metoda byla uložena."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.form
 msgid "Your payment methods"
-msgstr ""
+msgstr "Vaše platební metody"
 
 #. module: payment
 #. odoo-python
@@ -3228,12 +3310,12 @@ msgstr "PSČ"
 #. module: payment
 #: model:payment.method,name:payment.payment_method_cofidis
 msgid "cofidis"
-msgstr ""
+msgstr "cofidis"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_enets
 msgid "eNETS"
-msgstr ""
+msgstr "eNETS"
 
 #. module: payment
 #. odoo-python
@@ -3244,18 +3326,18 @@ msgstr ""
 #. module: payment
 #: model:payment.method,name:payment.payment_method_ideal
 msgid "iDEAL"
-msgstr ""
+msgstr "iDEAL"
 
 #. module: payment
 #. odoo-python
 #: code:addons/payment/models/payment_provider.py:0
 msgid "id"
-msgstr ""
+msgstr "id"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_in3
 msgid "in3"
-msgstr ""
+msgstr "in3"
 
 #. module: payment
 #. odoo-python
@@ -3296,13 +3378,13 @@ msgstr ""
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_search
 msgid "payment method"
-msgstr ""
+msgstr "Platební metoda"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_kanban
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_search
 msgid "provider"
-msgstr ""
+msgstr "poskytovatel"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.company_mismatch_warning
@@ -3310,6 +3392,8 @@ msgid ""
 "to make this\n"
 "                    payment."
 msgstr ""
+"k provedení této \n"
+"                    platby."
 
 #. module: payment
 #. odoo-python

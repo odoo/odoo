@@ -1,41 +1,42 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* sale_management
+# * sale_management
 #
 # Translators:
 # Raymond Yu <cl_yu@hotmail.com>, 2022
 # Martin Trigaux, 2022
 # Jeffery CHEN <jeffery9@gmail.com>, 2022
-#
+# "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-09-11 14:01+0000\n"
-"PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Jeffery CHEN <jeffery9@gmail.com>, 2022\n"
-"Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/"
-"zh_CN/)\n"
+"PO-Revision-Date: 2025-09-16 15:29+0000\n"
+"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
+"Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
+"projects/odoo-19/sale_management/zh_Hans/>\n"
 "Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
 msgid "<span invisible=\"not require_payment\">of</span>"
-msgstr ""
+msgstr "<span invisible=\"not require_payment\">之</span>"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__active
 msgid "Active"
-msgstr "启用"
+msgstr "有效"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
 msgid "Add a note"
-msgstr "添加说明"
+msgstr "添加备注"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
@@ -45,7 +46,7 @@ msgstr "添加产品"
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
 msgid "Add a section"
-msgstr "添加节"
+msgstr "添加小节"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_portal_optional_product_quantity
@@ -60,7 +61,7 @@ msgstr "所有销售"
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__allowed_uom_ids
 msgid "Allowed Uom"
-msgstr ""
+msgstr "允许的单位"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
@@ -110,7 +111,7 @@ msgstr "创建人"
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__create_date
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__create_date
 msgid "Created on"
-msgstr "创建时间"
+msgstr "创建日期"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_res_company__sale_order_template_id
@@ -126,7 +127,7 @@ msgstr "默认模板"
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__name
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
 msgid "Description"
-msgstr "说明"
+msgstr "描述"
 
 #. module: sale_management
 #: model:ir.model,name:sale_management.model_digest_digest
@@ -153,7 +154,7 @@ msgstr "显示类型"
 #. odoo-python
 #: code:addons/sale_management/models/digest.py:0
 msgid "Do not have access, skip this data for user's digest email"
-msgstr "没有权限，用户EMail中忽略此数据"
+msgstr "无访问权限，用户摘要邮件忽略该数据"
 
 #. module: sale_management
 #: model:ir.model.constraint,message:sale_management.constraint_sale_order_template_line_non_accountable_fields_null
@@ -181,7 +182,8 @@ msgstr "ID"
 msgid ""
 "If set, SO with this template will invoice in this journal; otherwise the "
 "sales journal with the lowest sequence is used."
-msgstr ""
+msgstr "如果设置，使用此模板的 SO "
+"将在此日记账中开票；否则将使用顺序最低的销售日记账。"
 
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_template__active
@@ -193,7 +195,7 @@ msgstr "如果取消选中，将允许您隐藏报价模板而不将其删除。
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__journal_id
 msgid "Invoicing Journal"
-msgstr ""
+msgstr "发票日记账"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_digest_digest__kpi_all_sale_total_value
@@ -210,13 +212,13 @@ msgstr "最后更新人"
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__write_date
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__write_date
 msgid "Last Updated on"
-msgstr "最后更新时间"
+msgstr "上次更新日期"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__sale_order_template_line_ids
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
 msgid "Lines"
-msgstr "明细行"
+msgstr "行"
 
 #. module: sale_management
 #: model:ir.model.constraint,message:sale_management.constraint_sale_order_template_line_accountable_product_id_required
@@ -227,7 +229,7 @@ msgstr "在责任销售报价上缺少所需产品和计量单位。"
 #: model:ir.model.fields.selection,name:sale_management.selection__sale_order_template_line__display_type__line_note
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
 msgid "Note"
-msgstr "笔记"
+msgstr "备注"
 
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_template__number_of_days
@@ -242,7 +244,7 @@ msgstr "线上支付"
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__require_signature
 msgid "Online Signature"
-msgstr "线上签字"
+msgstr "线上签署"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_line__is_optional
@@ -258,13 +260,13 @@ msgstr ""
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__prepayment_percent
 msgid "Prepayment percentage"
-msgstr ""
+msgstr "预付百分比"
 
 #. module: sale_management
 #. odoo-python
 #: code:addons/sale_management/models/sale_order_template.py:0
 msgid "Prepayment percentage must be a valid percentage."
-msgstr ""
+msgstr "预付百分比必须为有效百分比。"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__product_id
@@ -317,7 +319,7 @@ msgstr "报价模板"
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
 msgid "Quotation Validity"
-msgstr ""
+msgstr "报价有效期"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_portal_optional_product_quantity
@@ -351,7 +353,7 @@ msgstr "销售订单"
 #. module: sale_management
 #: model:ir.model,name:sale_management.model_sale_order_line
 msgid "Sales Order Line"
-msgstr "销售订单行"
+msgstr "销售订单明细"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_search
@@ -362,7 +364,7 @@ msgstr "搜索报价模板"
 #: model:ir.model.fields.selection,name:sale_management.selection__sale_order_template_line__display_type__line_section
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
 msgid "Section"
-msgstr "节"
+msgstr "小节"
 
 #. module: sale_management
 #: model_terms:digest.tip,tip_description:sale_management.digest_tip_sale_management_1
@@ -370,15 +372,14 @@ msgid ""
 "Selling the same product in different sizes or colors? Try the product grid "
 "and populate your orders with multiple quantities of each variant. This "
 "feature also exists in the Purchase application."
-msgstr ""
-"以不同的尺寸或颜色销售相同的产品？尝试产品网格并使用多个数量的每个变体填充您"
-"的订单。此功能也存在于购买应用程序中。"
+msgstr "以不同的尺寸或颜色销售相同的产品？尝试产品网格并使用多个数量的每个变体填充您"
+"的订单。此功能也存在于采购应用程序中。"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__sequence
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__sequence
 msgid "Sequence"
-msgstr "序号"
+msgstr "序列"
 
 #. module: sale_management
 #: model_terms:digest.tip,tip_description:sale_management.digest_tip_sale1_management_0
@@ -417,7 +418,7 @@ msgstr ""
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_template__prepayment_percent
 msgid "The percentage of the amount needed to be paid to confirm quotations."
-msgstr ""
+msgstr "确认报价所需支付金额的百分比。"
 
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_template__mail_template_id
@@ -441,7 +442,7 @@ msgstr "提示：使用矩阵批量销售或购买产品"
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__product_uom_id
 msgid "Unit"
-msgstr ""
+msgstr "单元"
 
 #. module: sale_management
 #: model_terms:ir.actions.act_window,help:sale_management.sale_order_template_action
@@ -457,7 +458,7 @@ msgstr ""
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
 msgid "Visible to all"
-msgstr ""
+msgstr "对所有人可见"
 
 #. module: sale_management
 #. odoo-python
@@ -489,7 +490,7 @@ msgstr ""
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
 msgid "days"
-msgstr "天数"
+msgstr "天"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form

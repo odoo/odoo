@@ -1,6 +1,6 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* website_forum
+# * website_forum
 #
 # Translators:
 # Ramiz Deniz Öner <deniz@denizoner.com>, 2022
@@ -21,26 +21,28 @@
 # Murat Kaplan <muratk@projetgrup.com>, 2022
 # Martin Trigaux, 2022
 # Halil, 2023
-#
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-16 13:50+0000\n"
-"PO-Revision-Date: 2022-09-22 05:56+0000\n"
-"Last-Translator: Halil, 2023\n"
-"Language-Team: Turkish (https://app.transifex.com/odoo/teams/41243/tr/)\n"
+"PO-Revision-Date: 2025-09-16 02:37+0000\n"
+"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"Language-Team: Turkish <https://translate.odoo.com/projects/odoo-19/"
+"website_forum/tr/>\n"
 "Language: tr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: website_forum
 #. odoo-javascript
 #: code:addons/website_forum/static/src/js/website_forum.js:0
 msgid " Flag"
-msgstr "Bayrak"
+msgstr " Bayrak"
 
 #. module: website_forum
 #. odoo-javascript
@@ -256,8 +258,9 @@ msgid ""
 "<b class=\"d-block\">You have a pending post</b>\n"
 "                        Please wait for a moderator to validate your previous post to be allowed replying questions."
 msgstr ""
-"<b class=\"d-block\">Bekleyen bir postanız var</b>\n"
-"                        Lütfen bir moderatörün soruları yanıtlamasına izin vermesi için önceki yayınınızı doğrulamasını bekleyin."
+"<b class=\"d-block\">Bekleyen bir gönderiniz mevcut</b> \n"
+"                        Soruları yanıtlayabilmek için lütfen bir moderatörün "
+"önceki gönderinizi onaylamasını bekleyin."
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.moderation_display_post_answer
@@ -326,10 +329,14 @@ msgid ""
 "            - no need to answer the same question twice. Also, please <b>don't forget to vote</b>\n"
 "            - it really helps to select the best questions and answers!"
 msgstr ""
-"<b>Lütfen önemli bir cevap vermeye çalışın.</b> Soru veya cevap hakkında yorum yapmak istiyorsanız,\n"
-"            <b>yorum aracını kullanın.</b> Yanıtlarınızı her zaman gözden geçirebileceğinizi  <b>lütfen unutmayın</b>\n"
-"            - aynı soruyu iki kez cevaplamaya gerek yok. <b>Ayrıca, lütfen oy vermeyi unutmayın</b>\n"
-"            -gerçekten en iyi soruları ve cevapları seçmek için yardımcı olur!"
+"<b>Lütfen anlamlı ve kapsamlı bir yanıt vermeye çalışın.</b> Eğer sadece "
+"soruya ya da cevaba yorum yapmak istiyorsanız\n"
+"            <b>yorumlama aracını kullanın.</b> Unutmayın, <b>cevaplarınızı "
+"her zaman gözden geçirebilir ve güncelleyebilirsiniz</b>\n"
+"            - aynı soruya tekrar cevap vermenize gerek yok. Ayrıca lütfen "
+"<b>oy vermeyi unutmayın</b>\n"
+"            - en iyi soru ve cevapların öne çıkmasına gerçekten yardımcı "
+"olur!"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_index
@@ -704,7 +711,7 @@ msgstr "Kabul Edilen Cevap"
 #. odoo-python
 #: code:addons/website_forum/models/forum_post.py:0
 msgid "Accepted answer removed"
-msgstr ""
+msgstr "Kabul edilen yanıt kaldırıldı"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_gen_answer_accept
@@ -722,7 +729,7 @@ msgstr "Erişim Engellendi"
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__message_needaction
 #: model:ir.model.fields,field_description:website_forum.field_forum_tag__message_needaction
 msgid "Action Needed"
-msgstr "Eylem Gerekiyor"
+msgstr "Aksiyon Gerekiyor"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__active
@@ -794,7 +801,7 @@ msgstr "Cevap"
 #. odoo-python
 #: code:addons/website_forum/models/forum_post_vote.py:0
 msgid "Answer %s"
-msgstr ""
+msgstr "Yanıt %s"
 
 #. module: website_forum
 #. odoo-python
@@ -902,13 +909,13 @@ msgstr "Arşivlendi"
 #. odoo-python
 #: code:addons/website_forum/models/forum_post.py:0
 msgid "Ask a new question"
-msgstr ""
+msgstr "Yeni bir soru sorun"
 
 #. module: website_forum
 #. odoo-python
 #: code:addons/website_forum/models/forum_post.py:0
 msgid "Ask a question"
-msgstr ""
+msgstr "Soru sorun"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_ask
@@ -1348,14 +1355,14 @@ msgstr "15 soru için kullanılan bir etiket oluşturuldu"
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_vote__create_uid
 #: model:ir.model.fields,field_description:website_forum.field_forum_tag__create_uid
 msgid "Created by"
-msgstr "Oluşturan"
+msgstr "Tarafından oluşturuldu"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__create_date
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_reason__create_date
 #: model:ir.model.fields,field_description:website_forum.field_forum_tag__create_date
 msgid "Created on"
-msgstr "Oluşturulma"
+msgstr "Oluşturuldu"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_q_4
@@ -1421,7 +1428,7 @@ msgstr "Kendi Gönderilerinizi Silin"
 #. odoo-python
 #: code:addons/website_forum/models/forum_post.py:0
 msgid "Delete the accepted answer"
-msgstr ""
+msgstr "Kabul edilen yanıtı silin"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
@@ -1459,7 +1466,7 @@ msgstr "Açıklama web sitesinde görünür"
 #: model_terms:ir.ui.view,arch_db:website_forum.post_answer
 #: model_terms:ir.ui.view,arch_db:website_forum.post_comment
 msgid "Discard"
-msgstr "Vazgeç"
+msgstr "Sil"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_6
@@ -1480,7 +1487,7 @@ msgstr "Tartışmalar (birden fazla cevap)"
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_vote__display_name
 #: model:ir.model.fields,field_description:website_forum.field_forum_tag__display_name
 msgid "Display Name"
-msgstr "Görünüm Adı"
+msgstr "İsim Göster"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_user_bio
@@ -1496,7 +1503,7 @@ msgstr "Olumsuz oy"
 #. odoo-python
 #: code:addons/website_forum/models/forum_post.py:0
 msgid "Downvote for posting offensive contents"
-msgstr ""
+msgstr "Uygunsuz içerik paylaştığı için olumsuz oy"
 
 #. module: website_forum
 #: model:forum.post.reason,name:website_forum.reason_1
@@ -1992,7 +1999,7 @@ msgstr "Favori"
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__message_is_follower
 #: model:ir.model.fields,field_description:website_forum.field_forum_tag__message_is_follower
 msgid "Is Follower"
-msgstr "Takipçi"
+msgstr "Takipçi mi"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__has_validated_answer
@@ -2357,7 +2364,7 @@ msgstr "Kayda değer Soru"
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__message_needaction_counter
 #: model:ir.model.fields,field_description:website_forum.field_forum_tag__message_needaction_counter
 msgid "Number of Actions"
-msgstr "Eylemlerin Adedi"
+msgstr "Aksiyon Sayısı"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_tag__posts_count
@@ -2516,7 +2523,7 @@ msgstr "Cevapları Gönder"
 #. module: website_forum
 #: model:ir.actions.act_window,name:website_forum.forum_post_reason_action
 msgid "Post Close Reason"
-msgstr ""
+msgstr "Gönderi Kapatılma Nedeni"
 
 #. module: website_forum
 #: model:ir.model,name:website_forum.model_forum_post_reason
@@ -2547,13 +2554,13 @@ msgstr "Sorunuzu Gönderin"
 #. odoo-python
 #: code:addons/website_forum/models/forum_post.py:0
 msgid "Post is closed and marked as offensive content"
-msgstr ""
+msgstr "Gönderi kapatıldı ve saldırgan içerik olarak işaretlendi"
 
 #. module: website_forum
 #. odoo-python
 #: code:addons/website_forum/models/forum_post.py:0
 msgid "Post is closed and marked as spam"
-msgstr ""
+msgstr "Gönderi kapatıldı ve spam olarak işaretlendi"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.mark_as_offensive
@@ -2640,7 +2647,7 @@ msgstr "Soru"
 #. odoo-python
 #: code:addons/website_forum/models/forum_post_vote.py:0
 msgid "Question %s"
-msgstr ""
+msgstr "Soru %s"
 
 #. module: website_forum
 #. odoo-python
@@ -2740,7 +2747,7 @@ msgstr "Rütbeler"
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__rating_ids
 #: model:ir.model.fields,field_description:website_forum.field_forum_tag__rating_ids
 msgid "Ratings"
-msgstr ""
+msgstr "Değerlendirmeler"
 
 #. module: website_forum
 #. odoo-python
@@ -2811,7 +2818,7 @@ msgstr "İlgili Hesaplama"
 #. odoo-python
 #: code:addons/website_forum/models/forum_post.py:0
 msgid "Remove validated answer"
-msgstr ""
+msgstr "Doğrulanmış yanıtı kaldırın"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
@@ -2823,7 +2830,7 @@ msgstr "Yeniden Aç"
 #. odoo-python
 #: code:addons/website_forum/models/forum_post.py:0
 msgid "Reopen a banned question"
-msgstr ""
+msgstr "Yasaklanmış soruyu yeniden açın"
 
 #. module: website_forum
 #. odoo-python
@@ -2946,13 +2953,15 @@ msgstr "Seo adı"
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__sequence
 msgid "Sequence"
-msgstr "Sıra"
+msgstr "Sıralama"
 
 #. module: website_forum
 #. odoo-python
 #: code:addons/website_forum/models/forum_forum.py:0
 msgid "Share and discuss the best content and new marketing ideas, build your professional profile and become a better marketer together."
 msgstr ""
+"En iyi içerikleri ve yeni pazarlama fikirlerini paylaşın ve tartışın, "
+"profesyonel profilinizi oluşturun ve birlikte daha iyi bir pazarlamacı olun."
 
 #. module: website_forum
 #. odoo-javascript
@@ -3084,7 +3093,7 @@ msgstr "Etiket"
 #. module: website_forum
 #: model:ir.model.constraint,message:website_forum.constraint_forum_tag_name_uniq
 msgid "Tag name already exists!"
-msgstr ""
+msgstr "Etiket adı zaten mevcut!"
 
 #. module: website_forum
 #: model:ir.actions.act_window,name:website_forum.forum_tag_action
@@ -3136,7 +3145,7 @@ msgstr "Gönderi için teşekkürler !"
 #. odoo-python
 #: code:addons/website_forum/models/forum_post.py:0
 msgid "The accepted answer is deleted"
-msgstr ""
+msgstr "Kabul edilen yanıt silindi"
 
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
@@ -3187,7 +3196,10 @@ msgstr ""
 #. module: website_forum
 #: model:ir.model.fields,help:website_forum.field_forum_forum__relevancy_post_vote
 msgid "This formula is used in order to sort by relevance. The variable 'votes' represents number of votes for a post, and 'days' is number of days since the post creation"
-msgstr "Bu formül ilişkilileri düzenine göre sıralamak için kullanılır.  'Oylar' değişkeni bir gönderi için oyları temsil eder ve 'günler' gönderi oluştuktan sonraki günlerin sayısını ifade eder"
+msgstr ""
+"Bu formül, alaka düzeyine göre sıralamak için kullanılır. 'votes' değişkeni "
+"bir gönderinin aldığı oy sayısını, 'days' ise gönderinin oluşturulmasından "
+"bu yana geçen gün sayısını ifade eder."
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.header
@@ -3302,7 +3314,7 @@ msgstr "Toplam Oy"
 #. module: website_forum
 #: model:ir.model,name:website_forum.model_gamification_karma_tracking
 msgid "Track Karma Changes"
-msgstr ""
+msgstr "Karma Değişikliklerini İzleyin"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_index
@@ -3394,7 +3406,7 @@ msgstr "Kullanıcı"
 #. odoo-python
 #: code:addons/website_forum/models/forum_post.py:0
 msgid "User answer accepted"
-msgstr ""
+msgstr "Kullanıcı yanıtı kabul edildi"
 
 #. module: website_forum
 #: model:ir.actions.act_window,name:website_forum.forum_post_action_favorites
@@ -3412,7 +3424,7 @@ msgstr "Doğrula"
 #. odoo-python
 #: code:addons/website_forum/models/forum_post.py:0
 msgid "Validate an answer"
-msgstr ""
+msgstr "Bir yanıtı doğrulayın"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_post_template_validation
@@ -3443,7 +3455,7 @@ msgstr "Oy ver"
 #. module: website_forum
 #: model:ir.model.constraint,message:website_forum.constraint_forum_post_vote_vote_uniq
 msgid "Vote already exists!"
-msgstr ""
+msgstr "Oy zaten mevcut!"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__vote_ids
@@ -3669,7 +3681,7 @@ msgstr "olumsuz oy"
 #. odoo-python
 #: code:addons/website_forum/models/forum_post_vote.py:0
 msgid "downvoted"
-msgstr ""
+msgstr "eksilenmiş"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_forum_view_form
@@ -3726,7 +3738,7 @@ msgstr "yayınlanmıştır. Soruya ulaşmak için tıklayınız:"
 #. odoo-javascript
 #: code:addons/website_forum/static/src/xml/public_templates.xml:0
 msgid "here"
-msgstr "buraya"
+msgstr "burya"
 
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
@@ -3817,26 +3829,26 @@ msgstr "en yeni"
 #. odoo-python
 #: code:addons/website_forum/models/forum_post_vote.py:0
 msgid "no changes"
-msgstr ""
+msgstr "değişiklik yok"
 
 #. module: website_forum
 #. odoo-python
 #: code:addons/website_forum/models/forum_post_vote.py:0
 msgid "no more downvoted"
-msgstr ""
+msgstr "daha fazla eksi oy yok"
 
 #. module: website_forum
 #. odoo-python
 #: code:addons/website_forum/models/forum_post_vote.py:0
 msgid "no more upvoted"
-msgstr ""
+msgstr "daha fazla artı oy yok"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_post_template_new_question
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_post_template_validation
 #: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
 msgid "on"
-msgstr "tarihi"
+msgstr ":"
 
 #. module: website_forum
 #. odoo-javascript
@@ -3902,7 +3914,7 @@ msgstr "olumlu oy, yorumlar ekle"
 #. odoo-python
 #: code:addons/website_forum/models/forum_post_vote.py:0
 msgid "upvoted"
-msgstr ""
+msgstr "desteklenmiş"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_index

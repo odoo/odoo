@@ -1,6 +1,6 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* base
+# * base
 #
 # Translators:
 # Fredrik Ahlsen <fredrik@gdx.no>, 2022
@@ -16,21 +16,22 @@
 # Henning Fyllingsnes, 2023
 # Marius Stedjan <marius@stedjan.com>, 2023
 # Jorunn D. Newth, 2023
-#
+# "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-09-12 13:52+0000\n"
-"PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Jorunn D. Newth, 2023\n"
-"Language-Team: Norwegian Bokmål (https://app.transifex.com/odoo/teams/41243/"
-"nb/)\n"
+"PO-Revision-Date: 2025-09-16 18:42+0000\n"
+"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
+"Language-Team: Norwegian Bokmål <https://translate.odoo.com/projects/odoo-19/"
+"base/nb_NO/>\n"
 "Language: nb\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_at_reports
@@ -465,7 +466,7 @@ msgid ""
 "holds the VAT detail info of sales or purchases made in a period of time.\n"
 "* Add a VAT summary report that is used to analyze invoicing\n"
 "* Add Digital VAT Book functionality that let us generate TXT files to "
-"import in AFIP. The ones we implement are:\n"
+"import in ARCA. The ones we implement are:\n"
 "\n"
 "    * LIBRO_IVA_DIGITAL_VENTAS_CBTE\n"
 "    * LIBRO_IVA_DIGITAL_VENTAS_ALICUOTAS\n"
@@ -473,7 +474,7 @@ msgid ""
 "    * LIBRO_IVA_DIGITAL_COMPRAS_ALICUOTAS\n"
 "    * LIBRO_IVA_DIGITAL_IMPORTACION_BIENES_ALICUOTA\n"
 "\n"
-"Official Documentation AFIP\n"
+"Official Documentation ARCA\n"
 "\n"
 "* Digital VAT Book - record design https://www.afip.gob.ar/libro-iva-digital/"
 "documentos/libro-iva-digital-diseno-registros.pdf\n"
@@ -1747,7 +1748,7 @@ msgid ""
 "of identifications are defined by the government authorities that regulate "
 "the fiscal operations. For example:\n"
 "\n"
-"* AFIP in Argentina defines DNI, CUIT (vat for legal entities), CUIL (vat "
+"* ARCA in Argentina defines DNI, CUIT (vat for legal entities), CUIL (vat "
 "for natural person), and another 80 valid identification types.\n"
 "\n"
 "Each identification holds this information:\n"
@@ -4185,7 +4186,7 @@ msgid ""
 "----------\n"
 "\n"
 "Be able to create journals in Odoo to create electronic customer invoices "
-"and report then to AFIP (via webservices).\n"
+"and report then to ARCA (via webservices).\n"
 "The options available are:\n"
 "\n"
 "    * Electronic Invoice - Web Service\n"
@@ -4193,63 +4194,63 @@ msgid ""
 "    * Electronic Fiscal Bond - Web Service\n"
 "\n"
 "In the electronic journals if you validate an invoice this one will be "
-"validated in both Odoo and AFIP. This validation is\n"
+"validated in both Odoo and ARCA. This validation is\n"
 "made at the instant and we recieve and \"approved/approved with observation/"
-"rejected\" state from AFIP. If the invoice has\n"
-"been rejected by AFIP will not be post in the system and a pop up message "
+"rejected\" state from ARCA. If the invoice has\n"
+"been rejected by ARCA will not be post in the system and a pop up message "
 "will be shown with both the error detail (reject reasons)\n"
 "we recieve and a HINT about what the problem could be.\n"
 "\n"
 "For auditing and troubleshooting purposes we also add a menu \"Consulit "
-"Invoice in AFIP\" that let us to consult invoices previously\n"
-"sent to AFIP and last number used as support for any possible issues on the "
-"sequences synchronization between Odoo and AFIP.\n"
+"Invoice in ARCA\" that let us to consult invoices previously\n"
+"sent to ARCA and last number used as support for any possible issues on the "
+"sequences synchronization between Odoo and ARCA.\n"
 "\n"
 "    NOTE: From the Journal's form view we are able to force a sync between "
 "the odoo sequences to each of the document types in\n"
-"    with the last numbers registered in AFIP.\n"
+"    with the last numbers registered in ARCA.\n"
 "\n"
 "From vendor bills, we have added a functionality that can be configured in "
 "the accounting settings to be able to verify\n"
-"vendor bills in AFIP to check if the vendor bills are real (more information "
+"vendor bills in ARCA to check if the vendor bills are real (more information "
 "please review the setting description).\n"
 "\n"
 "Configuration:\n"
 "\n"
 "1. Go to the Accounting Settings > Argentinean Localization section\n"
 "\n"
-"    1.1. Configure the AFIP Web Services mode:\n"
+"    1.1. Configure the ARCA Web Services mode:\n"
 "\n"
 "    * Testing environment in order to use demo certificates that will be use "
 "to test the instance and to make NOT\n"
-"      real invoices to AFIP. is just for testing. For demo instaces is "
+"      real invoices to ARCA. is just for testing. For demo instaces is "
 "already pre-defined you will not need to configure\n"
-"      it (commonly named in AFIP as Homologation environment).\n"
+"      it (commonly named in ARCA as Homologation environment).\n"
 "    * Production environment in order to generate real certificates and "
-"legal invoices to AFIP,\n"
+"legal invoices to ARCA,\n"
 "\n"
-"    1.2. Configure your AFIP Certificate: If you are in a demo instance this "
+"    1.2. Configure your ARCA Certificate: If you are in a demo instance this "
 "one will be have been set by default. If you\n"
-"         are in production instance just need to go to upload your AFIP "
+"         are in production instance just need to go to upload your ARCA "
 "Certificate\n"
 "\n"
 "    1.3. Optionally you can define if you like to be eable to verify vendor "
-"bills in AFIP.\n"
+"bills in ARCA.\n"
 "\n"
-"2. Create Sales journals that will represent each one of your AFIP POS "
-"(Available in AFIP Portal) you want to use in Odoo.\n"
+"2. Create Sales journals that will represent each one of your ARCA POS "
+"(Available in ARCA Portal) you want to use in Odoo.\n"
 "\n"
 "    2.1. Use Documents field is set by default please dont change\n"
-"    2.2. Set AFIP POS System for one of the electronic ones.\n"
+"    2.2. Set ARCA POS System for one of the electronic ones.\n"
 "\n"
 "        * Electronic Invoice - Web Service'\n"
 "        * Electronic Fiscal Bond - Web Service'\n"
 "        * Export Voucher - Web Service'\n"
 "\n"
-"    2.3. Set the AFIP POS Number and AFIP POS Address taking into account "
-"what you have configured in your AFIP Portal.\n"
+"    2.3. Set the ARCA POS Number and ARCA POS Address taking into account "
+"what you have configured in your ARCA Portal.\n"
 "\n"
-"    NOTE: You can use the \"Check Available AFIP POS\" button in Journal's "
+"    NOTE: You can use the \"Check Available ARCA POS\" button in Journal's "
 "form to corroborate the to use to create the journals.\n"
 "\n"
 "For more information about Argentinean Electronic invoicing please go to "
@@ -4282,7 +4283,7 @@ msgid ""
 "In some Latinamerica countries, including Argentina and Chile, some "
 "accounting transactions like invoices and vendor bills are classified by a "
 "document types defined by the government fiscal authorities (In Argentina "
-"case AFIP, Chile case SII).\n"
+"case ARCA, Chile case SII).\n"
 "\n"
 "This module is intended to be extended by localizations in order to manage "
 "these document types and is an essential information that needs to be "
@@ -4315,20 +4316,20 @@ msgid ""
 "\n"
 "This module add accounting features for the Argentinean localization, which "
 "represent the minimal configuration needed for a company  to operate in "
-"Argentina and under the AFIP (Administración Federal de Ingresos Públicos) "
+"Argentina and under the ARCA (Administración Federal de Ingresos Públicos) "
 "regulations and guidelines.\n"
 "\n"
 "Follow the next configuration steps for Production:\n"
 "\n"
-"1. Go to your company and configure your VAT number and AFIP Responsibility "
+"1. Go to your company and configure your VAT number and ARCA Responsibility "
 "Type\n"
 "2. Go to Accounting / Settings and set the Chart of Account that you will "
 "like to use.\n"
-"3. Create your Sale journals taking into account AFIP POS info.\n"
+"3. Create your Sale journals taking into account ARCA POS info.\n"
 "\n"
 "Demo data for testing:\n"
 "\n"
-"* 3 companies were created, one for each AFIP responsibility type with the "
+"* 3 companies were created, one for each ARCA responsibility type with the "
 "respective Chart of Account installed. Choose the company that fix you in "
 "order to make tests:\n"
 "\n"
@@ -4352,7 +4353,7 @@ msgid ""
 "Highlights:\n"
 "\n"
 "* Chart of account will not be automatically installed, each CoA Template "
-"depends on the AFIP Responsibility of the company, you will need to install "
+"depends on the ARCA Responsibility of the company, you will need to install "
 "the CoA for your needs.\n"
 "* No sales journals will be generated when installing a CoA, you will need "
 "to configure your journals manually.\n"
@@ -4370,7 +4371,7 @@ msgid ""
 "\n"
 "Master Data:\n"
 "\n"
-"* Chart of Account: one for each AFIP responsibility that is related to a "
+"* Chart of Account: one for each ARCA responsibility that is related to a "
 "legal entity:\n"
 "\n"
 "  * Responsable Inscripto (RI)\n"
@@ -4379,15 +4380,15 @@ msgid ""
 "\n"
 "* Argentinean Taxes and Account Tax Groups (VAT taxes with the existing "
 "aliquots and other types)\n"
-"* AFIP Responsibility Types\n"
+"* ARCA Responsibility Types\n"
 "* Fiscal Positions (in order to map taxes)\n"
 "* Legal Documents Types in Argentina\n"
 "* Identification Types valid in Argentina.\n"
-"* Country AFIP codes and Country VAT codes for legal entities, natural "
+"* Country ARCA codes and Country VAT codes for legal entities, natural "
 "persons and others\n"
-"* Currency AFIP codes\n"
-"* Unit of measures AFIP codes\n"
-"* Partners: Consumidor Final and AFIP\n"
+"* Currency ARCA codes\n"
+"* Unit of measures ARCA codes\n"
+"* Partners: Consumidor Final and ARCA\n"
 msgstr ""
 
 #. module: base
@@ -4471,6 +4472,8 @@ msgid ""
 "\n"
 "Gantt view for Time Off Dashboard\n"
 msgstr ""
+"\n"
+"Gantt visning av fravær Dashboard\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_uy
@@ -9645,7 +9648,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/base/models/res_currency.py:0
 msgid "%(integral_amount)s %(currency_unit)s"
-msgstr ""
+msgstr "%(integral_amount)s %(currency_unit)s"
 
 #. module: base
 #. odoo-python
@@ -9884,7 +9887,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__base_enable_profiling_wizard__duration__days_1
 msgid "1 Day"
-msgstr ""
+msgstr "1 dag"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__base_enable_profiling_wizard__duration__hours_1
@@ -9894,7 +9897,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__base_enable_profiling_wizard__duration__months_1
 msgid "1 Month"
-msgstr ""
+msgstr "1 måned"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_us_1099
@@ -10339,12 +10342,12 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodulereference
 msgid "<span>Module</span>"
-msgstr ""
+msgstr "<span>Modul</span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodulereference
 msgid "<span>Name</span>"
-msgstr ""
+msgstr "<span>Navn</span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.server_action_history_wizard_view
@@ -10430,7 +10433,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodulereference
 msgid "<strong>Menu:</strong>"
-msgstr ""
+msgstr "<strong>Meny:</strong>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodeloverview
@@ -10947,7 +10950,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_model_search
 msgid "Abstract"
-msgstr ""
+msgstr "Abstrakt"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model__abstract
@@ -11098,7 +11101,7 @@ msgstr "Kontoeier"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_bank__acc_holder_name
 msgid "Account Holder Name"
-msgstr ""
+msgstr "Kontoinnehaverens navn"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_invoice_extract
@@ -11150,7 +11153,7 @@ msgstr ""
 msgid ""
 "Account holder name, in case it is different than the name of the Account "
 "Holder"
-msgstr ""
+msgstr "Kontoholders navn, hvis det er forskjellig fra navnet på kontoholderen."
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_accounting
@@ -11334,7 +11337,7 @@ msgstr ""
 #. module: base
 #: model:ir.model,name:base.model_ir_actions_act_window_view
 msgid "Action Window View"
-msgstr ""
+msgstr "Handlingsvindu-visning"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.ir_sequence_actions
@@ -11913,7 +11916,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_users__role__group_system
 msgid "Administrator"
-msgstr ""
+msgstr "Administrator"
 
 #. module: base
 #. odoo-python
@@ -12351,7 +12354,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_filters_view_form
 msgid "All users"
-msgstr ""
+msgstr "Alle brukere"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_holidays
@@ -12427,7 +12430,7 @@ msgstr ""
 #. module: base
 #: model:res.groups,name:base.group_allow_export
 msgid "Allowed"
-msgstr ""
+msgstr "Tillatt"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_server__group_ids
@@ -13483,7 +13486,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/base/models/res_partner.py:0
 msgid "An email is required for find_or_create to work"
-msgstr ""
+msgstr "En e-postadresse er påkrevd for at find_or_create skal fungere."
 
 #. module: base
 #. odoo-python
@@ -13662,7 +13665,7 @@ msgstr "Utfør planlagte oppgraderinger"
 #. module: base
 #: model:ir.module.category,name:base.module_category_services_appointment
 msgid "Appointment"
-msgstr ""
+msgstr "Avtale"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_appointment_google_calendar
@@ -13804,7 +13807,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_bank_form
 msgid "Archive"
-msgstr ""
+msgstr "Arkiver"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.edit_menu_access_search
@@ -14989,28 +14992,28 @@ msgstr "Avatar"
 #: model:ir.model.fields,field_description:base.field_res_partner__avatar_1024
 #: model:ir.model.fields,field_description:base.field_res_users__avatar_1024
 msgid "Avatar 1024"
-msgstr ""
+msgstr "Avatar 1024"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_avatar_mixin__avatar_128
 #: model:ir.model.fields,field_description:base.field_res_partner__avatar_128
 #: model:ir.model.fields,field_description:base.field_res_users__avatar_128
 msgid "Avatar 128"
-msgstr ""
+msgstr "Avatar 128"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_avatar_mixin__avatar_256
 #: model:ir.model.fields,field_description:base.field_res_partner__avatar_256
 #: model:ir.model.fields,field_description:base.field_res_users__avatar_256
 msgid "Avatar 256"
-msgstr ""
+msgstr "Avatar 256"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_avatar_mixin__avatar_512
 #: model:ir.model.fields,field_description:base.field_res_partner__avatar_512
 #: model:ir.model.fields,field_description:base.field_res_users__avatar_512
 msgid "Avatar 512"
-msgstr ""
+msgstr "Avatar 512"
 
 #. module: base
 #: model:ir.model,name:base.model_avatar_mixin
@@ -15276,7 +15279,7 @@ msgstr "Bankkonto"
 #: model:ir.model.fields,help:base.field_res_partner_bank__acc_type
 msgid ""
 "Bank account type: Normal or IBAN. Inferred from the bank account number."
-msgstr ""
+msgstr "Bankkontotype: Normal eller IBAN. Utledet fra bankkontonummeret."
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_res_bank_form
@@ -15467,7 +15470,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_batch_payment
 msgid "Batch Payment"
-msgstr ""
+msgstr "Batch betaling"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_delivery_stock_picking_batch
@@ -15507,7 +15510,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_asset__directive__before
 msgid "Before"
-msgstr ""
+msgstr "Før"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_country__name_position__before
@@ -15650,6 +15653,8 @@ msgid ""
 "Below text serves as a suggestion and doesn’t engage Odoo S.A. "
 "responsibility."
 msgstr ""
+"Nedenstående tekst fungerer som et forslag og medfører ikke Odoo S.A.s "
+"ansvar."
 
 #. module: base
 #: model:res.country,name:base.bj
@@ -15776,7 +15781,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_blog
 msgid "Blog"
-msgstr ""
+msgstr "logg"
 
 #. module: base
 #: model:res.currency,currency_unit_label:base.VEF
@@ -16141,7 +16146,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_res_device__browser
 #: model:ir.model.fields,field_description:base.field_res_device_log__browser
 msgid "Browser"
-msgstr ""
+msgstr "Nettleser"
 
 #. module: base
 #: model:res.country,name:base.bn
@@ -16782,7 +16787,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_certificate
 msgid "Certificate"
-msgstr ""
+msgstr "Sertifikat"
 
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_ir_mail_server_certificate_requires_tls
@@ -17020,7 +17025,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
 msgid "Choose a value..."
-msgstr ""
+msgstr "Velg en verdi..."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_mail_server__smtp_encryption
@@ -17450,7 +17455,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company__company_details
 msgid "Company Details"
-msgstr ""
+msgstr "Selskapdetaljer"
 
 #. module: base
 #. odoo-python
@@ -17520,6 +17525,8 @@ msgid ""
 "Company tagline, which is included in a printed document's header or footer "
 "(depending on the selected layout)."
 msgstr ""
+"Firmaslagord, som blir printet i topp- eller bunntekst på dokumenter ("
+"avhengig av valgt oppsett)."
 
 #. module: base
 #. odoo-python
@@ -18076,7 +18083,7 @@ msgstr "Navn på stat"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_loyalty
 msgid "Coupons & Loyalty"
-msgstr ""
+msgstr "Kuponger og lojalitet"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale_loyalty
@@ -18098,13 +18105,13 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 #: model_terms:ir.ui.view,arch_db:base.view_rule_search
 msgid "Create"
-msgstr ""
+msgstr "Opprett"
 
 #. module: base
 #. odoo-python
 #: code:addons/base/models/ir_actions.py:0
 msgid "Create %(model_name)s"
-msgstr ""
+msgstr "Opprett %(model_name)s"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_access__perm_create
@@ -18157,7 +18164,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.actions.act_window,help:base.action_res_partner_bank_account_form
 msgid "Create a Bank Account"
-msgstr ""
+msgstr "Opprett bankkonto"
 
 #. module: base
 #: model_terms:ir.actions.act_window,help:base.action_partner_category_form
@@ -18738,7 +18745,7 @@ msgstr "Tilpassede snarveier"
 #: model:ir.model.fields,field_description:base.field_ir_cron__selection_value
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
 msgid "Custom Value"
-msgstr ""
+msgstr "Tilpasset verdi"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_ui_view_custom
@@ -18775,7 +18782,7 @@ msgstr "Kundereferanser"
 #: model_terms:res.partner,website_description:base.res_partner_2
 #: model_terms:res.partner,website_description:base.res_partner_4
 msgid "Customer Relationship Management"
-msgstr ""
+msgstr "Administrasjon av kunderelasjoner (CRM)"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_partner_customer_form
@@ -18928,7 +18935,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.category,name:base.module_category_productivity_dashboard
 msgid "Dashboard"
-msgstr ""
+msgstr "Dashbord"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_board
@@ -19047,7 +19054,7 @@ msgstr "Dager"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_cron_progress__deactivate
 msgid "Deactivate"
-msgstr ""
+msgstr "Deaktiver"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_debit_note
@@ -19143,7 +19150,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_form
 msgid "Default Company"
-msgstr ""
+msgstr "Standard selskap"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_filters__is_default
@@ -19225,7 +19232,7 @@ msgstr "Definisjon"
 #: model_terms:ir.ui.view,arch_db:base.res_users_apikeys_view_kanban
 #: model_terms:ir.ui.view,arch_db:base.view_rule_search
 msgid "Delete"
-msgstr ""
+msgstr "Slett"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_apikeys
@@ -19486,7 +19493,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.view_users_form
 #: model_terms:ir.ui.view,arch_db:base.view_users_form_simple_modif
 msgid "Devices"
-msgstr ""
+msgstr "Enheter"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_digest_enterprise
@@ -20041,7 +20048,7 @@ msgstr "Fullført"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.form_res_users_key_show
 msgid "Done!"
-msgstr ""
+msgstr "Ferdig!"
 
 #. module: base
 #: model:res.currency,currency_unit_label:base.VND
@@ -20064,7 +20071,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_act_url__target__download
 msgid "Download"
-msgstr ""
+msgstr "Last ned"
 
 #. module: base
 #: model:res.currency,currency_unit_label:base.AMD
@@ -20503,7 +20510,7 @@ msgstr "Ansatt"
 #. module: base
 #: model:ir.module.category,name:base.module_category_services_employee_hourly_cost
 msgid "Employee Hourly Cost"
-msgstr ""
+msgstr "Ansatt timekostnad"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_hourly_cost
@@ -20514,7 +20521,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_presence
 msgid "Employee Presence Control"
-msgstr ""
+msgstr "Kontroll tilstedeværelse ansatte"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_referral
@@ -20732,7 +20739,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.category,name:base.module_category_theme_environment
 msgid "Environment"
-msgstr ""
+msgstr "Miljø"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_theme_treehouse
@@ -20775,7 +20782,7 @@ msgstr "Feil"
 #. odoo-python
 #: code:addons/base/models/ir_module.py:0
 msgid "Error ! You cannot create recursive categories."
-msgstr ""
+msgstr "Feil! Du kan ikke opprette rekursive kategorier."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_constraint__message
@@ -21612,7 +21619,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_res_users_apikeys__expiration_date
 #: model:ir.model.fields,field_description:base.field_res_users_apikeys_description__expiration_date
 msgid "Expiration Date"
-msgstr ""
+msgstr "Utløpsdato"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_users_apikeys_view_kanban
@@ -21757,7 +21764,7 @@ msgstr ""
 #. module: base
 #: model:ir.model,name:base.model_ir_exports
 msgid "Exports"
-msgstr ""
+msgstr "Eksporter"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_exports_line
@@ -21767,7 +21774,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
 msgid "Expression"
-msgstr ""
+msgstr "Uttrykk"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_voip_ai
@@ -22510,7 +22517,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.category,name:base.module_category_theme_food
 msgid "Food"
-msgstr ""
+msgstr "Mat"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_food_distribution
@@ -22952,7 +22959,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_holidays_gantt
 msgid "Gantt view for Time Off Dashboard"
-msgstr ""
+msgstr "Gantt visning av fravær Dashboard"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_gardening
@@ -23852,7 +23859,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.category,name:base.module_category_theme_hidden
 msgid "Hidden"
-msgstr ""
+msgstr "Skjult"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_timesheet
@@ -24221,7 +24228,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_res_device__ip_address
 #: model:ir.model.fields,field_description:base.field_res_device_log__ip_address
 msgid "IP Address"
-msgstr ""
+msgstr "IP-adresse"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_profile_view_form
@@ -24393,7 +24400,8 @@ msgstr ""
 "Hvis denne visningen er arvet,\n"
 "* hvis Sann, vil visningen alltid utvide sin overordnede visning\n"
 "* hvis Usann, vil visningen ikke utvide sin overordnede visning, men kan "
-"skrus på"
+"skrus på\n"
+"         "
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_rule_form
@@ -24741,7 +24749,7 @@ msgstr "Inaktive brukere"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_asset__directive__include
 msgid "Include"
-msgstr ""
+msgstr "Inkluder"
 
 #. module: base
 #. odoo-python
@@ -25364,7 +25372,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/base/models/ir_default.py:0
 msgid "Invalid field %(model)s.%(field)s"
-msgstr ""
+msgstr "Ugyldig felt %(model)s.%(field)s"
 
 #. module: base
 #. odoo-python
@@ -25425,6 +25433,8 @@ msgid ""
 "Invalid server name!\n"
 " %s"
 msgstr ""
+"Ugyldig servernavn!\n"
+"%s"
 
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_ir_filters_check_sort_json
@@ -25516,7 +25526,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__type__invoice
 msgid "Invoice"
-msgstr ""
+msgstr "Faktura"
 
 #. module: base
 #. odoo-python
@@ -26895,7 +26905,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:base.selection__ir_ui_view__type__list
 #: model_terms:ir.ui.view,arch_db:base.view_view_search
 msgid "List"
-msgstr ""
+msgstr "Liste"
 
 #. module: base
 #. odoo-python
@@ -27248,7 +27258,7 @@ msgstr ""
 #. module: base
 #: model:ir.model,name:base.model_ir_mail_server
 msgid "Mail Server"
-msgstr ""
+msgstr "Mail server"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_mail
@@ -27284,6 +27294,8 @@ msgid ""
 "Mail delivery failed via SMTP server '%(server)s'.\n"
 "%(exception_name)s: %(message)s"
 msgstr ""
+"Levering feilet via SMTP server '%(server)s'.\n"
+"%(exception_name)s: %(message)s"
 
 #. module: base
 #: model:ir.ui.menu,name:base.menu_module_tree
@@ -27905,7 +27917,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.category,name:base.module_category_master_data
 msgid "Master Data"
-msgstr ""
+msgstr "Hoveddata"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mrp_mps
@@ -27969,7 +27981,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_users__role__group_user
 msgid "Member"
-msgstr ""
+msgstr "Medlem"
 
 #. module: base
 #: model:res.company,partnership_label:base.main_company
@@ -28035,7 +28047,7 @@ msgstr ""
 #. module: base
 #: model:ir.model,name:base.model_base_partner_merge_automatic_wizard
 msgid "Merge Partner Wizard"
-msgstr ""
+msgstr "Slå sammen partnerveiviseren."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.base_partner_merge_automatic_wizard_form
@@ -28496,7 +28508,7 @@ msgstr ""
 #. module: base
 #: model:ir.model,name:base.model_base_module_uninstall
 msgid "Module Uninstall"
-msgstr ""
+msgstr "Modul avinstaller"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_view_base_module_update
@@ -28584,7 +28596,7 @@ msgstr "Moduler"
 #: code:addons/base/models/ir_module.py:0
 msgid ""
 "Modules \"%(module)s\" and \"%(incompatible_module)s\" are incompatible."
-msgstr ""
+msgstr "Modulene \"%(module)s\" og \"%(incompatible_module)s\" er inkompatible."
 
 #. module: base
 #: model:res.country,name:base.md
@@ -29289,7 +29301,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_bank_form
 msgid "Note"
-msgstr ""
+msgstr "Notat"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner__comment
@@ -30510,6 +30522,7 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:base.action_partner_customer_form
 msgid "Odoo helps you easily track all activities related to a customer."
 msgstr ""
+"Odoo hjelper deg enkelt med å spore alle aktiviteter relatert til en kunde."
 
 #. module: base
 #: model_terms:ir.actions.act_window,help:base.action_partner_supplier_form
@@ -31804,7 +31817,7 @@ msgstr "Parameterlagring"
 #: model:ir.model.fields,field_description:base.field_ir_model_inherit__parent_id
 #: model:ir.model.fields,field_description:base.field_res_company__parent_ids
 msgid "Parent"
-msgstr ""
+msgstr "Overordnet"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_server__parent_id
@@ -32163,7 +32176,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.category,name:base.module_category_accounting_payment_providers
 msgid "Payment Providers"
-msgstr ""
+msgstr "Betalingsmåter"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_payment
@@ -32451,7 +32464,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_groups_privilege__placeholder
 msgid "Placeholder"
-msgstr ""
+msgstr "Plassholder"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_project_forecast
@@ -32741,7 +32754,7 @@ msgstr ""
 #. module: base
 #: model:res.currency,currency_unit_label:base.SSP
 msgid "Pounds"
-msgstr ""
+msgstr "Pund"
 
 #. module: base
 #. odoo-python
@@ -32881,12 +32894,12 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_stock_barcode_mrp
 msgid "Process Manufacturing Orders from the barcode application"
-msgstr ""
+msgstr "Behandle produksjonsordrer fra strekkodeapplikasjonen"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale_stock
 msgid "Product Availability"
-msgstr ""
+msgstr "Produkt tilgjengelighet"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale_comparison_wishlist
@@ -33800,7 +33813,7 @@ msgstr "Kurser"
 #: model:ir.model.fields,field_description:base.field_ir_rule__perm_read
 #: model_terms:ir.ui.view,arch_db:base.view_rule_search
 msgid "Read"
-msgstr ""
+msgstr "Les"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_access__perm_read
@@ -33998,7 +34011,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__relation
 msgid "Related Model"
-msgstr ""
+msgstr "Relatert modell"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_users__partner_id
@@ -34041,7 +34054,7 @@ msgstr "Relasjonstabell"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__relation_field_id
 msgid "Relation field"
-msgstr ""
+msgstr "Relasjonsfelt"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_report__attachment_use
@@ -34051,13 +34064,13 @@ msgstr "Last inn på nytt fra vedlegg"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_cron_progress__remaining
 msgid "Remaining"
-msgstr ""
+msgstr "Gjenstående"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_human_resources_remote_work
 #: model:ir.module.module,shortdesc:base.module_hr_homeworking
 msgid "Remote Work"
-msgstr ""
+msgstr "Hjemmekontor"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_homeworking_calendar
@@ -34094,7 +34107,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_renting
 msgid "Rental"
-msgstr ""
+msgstr "Utleie"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_mrp_renting
@@ -34139,7 +34152,7 @@ msgstr "Gjenta hver x."
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_asset__directive__replace
 msgid "Replace"
-msgstr ""
+msgstr "Erstatt"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_act_url__binding_type__report
@@ -34370,13 +34383,13 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_device_view_tree
 msgid "Revoke"
-msgstr ""
+msgstr "Trekk tilbake"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_device__revoked
 #: model:ir.model.fields,field_description:base.field_res_device_log__revoked
 msgid "Revoked"
-msgstr ""
+msgstr "Tilbaketrukket"
 
 #. module: base
 #: model:res.currency,currency_unit_label:base.OMR
@@ -34418,7 +34431,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_users__role
 msgid "Role"
-msgstr ""
+msgstr "Rolle"
 
 #. module: base
 #: model:res.groups,name:base.group_system
@@ -34503,7 +34516,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company__root_id
 msgid "Root"
-msgstr ""
+msgstr "Rot"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_currency__rounding
@@ -34770,7 +34783,7 @@ msgstr ""
 #. module: base
 #: model_terms:res.company,invoice_terms_html:base.main_company
 msgid "STANDARD TERMS AND CONDITIONS OF SALE"
-msgstr ""
+msgstr "STANDARD VILKÅR OG BETINGELSER FOR SALG"
 
 #. module: base
 #: model:res.country,name:base.bl
@@ -34810,7 +34823,7 @@ msgstr "Saint Vincent og Grenadinene"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_contract_salary
 msgid "Salary Configurator"
-msgstr ""
+msgstr "Lønnskonfigurator"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_be_hr_contract_salary
@@ -35141,7 +35154,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_bank__sanitized_acc_number
 msgid "Sanitized Account Number"
-msgstr ""
+msgstr "Sanitert kontonummer."
 
 #. module: base
 #: model:res.currency,currency_subunit_label:base.RWF
@@ -35685,6 +35698,11 @@ msgid ""
 "emails are compromised. Once verified, you can activate the ability to send "
 "money."
 msgstr ""
+"Å sende falske fakturaer med et svindelkontonummer er en vanlig phishing-"
+"praksis. For å beskytte deg selv, bør du alltid verifisere nye "
+"bankkontonumre, helst ved å ringe leverandøren, da phishing vanligvis skjer "
+"når e-postene deres er kompromittert. Når kontonummeret er verifisert, kan "
+"du aktivere muligheten til å sende penger."
 
 #. module: base
 #: model:res.currency,currency_subunit_label:base.WST
@@ -35998,7 +36016,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.category,name:base.module_category_shipping_connectors
 msgid "Shipping Connectors"
-msgstr ""
+msgstr "Forsendelses connectorer"
 
 #. module: base
 #: model:ir.module.module,description:base.module_delivery_sendcloud
@@ -36211,7 +36229,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_skills
 msgid "Skills Management"
-msgstr ""
+msgstr "Ferdighetsstyring"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_skills_slides
@@ -36471,7 +36489,7 @@ msgstr "Sør-Sudan"
 #. odoo-python
 #: code:addons/base/models/ir_qweb_fields.py:0
 msgid "Space"
-msgstr ""
+msgstr "Mellomrom"
 
 #. module: base
 #: model:res.country,name:base.es
@@ -36902,7 +36920,7 @@ msgstr "Stater"
 #: model:ir.model.fields,field_description:base.field_res_partner__application_statistics
 #: model:ir.model.fields,field_description:base.field_res_users__application_statistics
 msgid "Stats"
-msgstr ""
+msgstr "Statistikk"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_module_update__state
@@ -37338,7 +37356,7 @@ msgstr "Syria"
 #. module: base
 #: model:ir.model,name:base.model_ir_config_parameter
 msgid "System Parameter"
-msgstr ""
+msgstr "System parameter"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.ir_config_list_action
@@ -37618,7 +37636,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.category,name:base.module_category_technical_settings
 msgid "Technical Settings"
-msgstr ""
+msgstr "Teknisk innstilling"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_groups__view_group_hierarchy
@@ -38065,6 +38083,9 @@ msgid ""
 "order to be valid, any derogation must be expressly agreed to in advance in "
 "writing."
 msgstr ""
+"Klienten frasier seg eksplisitt sine egne standardvilkår og betingelser, "
+"selv om disse ble utarbeidet etter disse standardvilkårene for salg. For å "
+"være gyldig, må enhver avvik være uttrykkelig avtalt på forhånd skriftlig."
 
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_res_country_code_uniq
@@ -38152,7 +38173,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,help:base.field_res_users__company_id
 msgid "The default company for this user."
-msgstr ""
+msgstr "Standard selskap for denne brukeren."
 
 #. module: base
 #. odoo-python
@@ -38179,6 +38200,8 @@ msgid ""
 "The field '%(field)s' cannot be removed because the field '%(other_field)s' "
 "depends on it."
 msgstr ""
+"Feltet '%(field)s' kan ikke fjernes fordi feltet '%(other_field)s' er "
+"avhengig av det."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_model_form
@@ -39332,7 +39355,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_timer
 msgid "Timer"
-msgstr ""
+msgstr "Tidtaker"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_timer
@@ -39718,7 +39741,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__turkey
 msgid "Turkey"
-msgstr ""
+msgstr "Tyrkia"
 
 #. module: base
 #: model:res.country,name:base.tm
@@ -40061,6 +40084,9 @@ msgid ""
 "\n"
 "Sorry, %(user)s doesn't have '%(operation)s' access to:"
 msgstr ""
+"Oi. Ser ut som du har møtt et område uten tilgang.\n"
+"\n"
+"Beklager, %(user)s har ikke \"%(operation)s\" tilgang til:"
 
 #. module: base
 #: model:res.country,name:base.ua
@@ -40109,6 +40135,8 @@ msgid ""
 "Unable to process module \"%(module)s\" because an external dependency is "
 "not met: %(dependency)s"
 msgstr ""
+"Kunne ikke prosessere modulen \"%(module)s\" fordi en ekstern avhengighet "
+"ikke er møtt: %(dependency)s"
 
 #. module: base
 #. odoo-python
@@ -40117,6 +40145,8 @@ msgid ""
 "Unable to upgrade module \"%(module)s\" because an external dependency is "
 "not met: %(dependency)s"
 msgstr ""
+"Kunne ikke oppdatere modulen \"%(module)s\" fordi en ekstern avhengighet "
+"ikke er møtt: %(dependency)s"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_uncategorized
@@ -40700,7 +40730,7 @@ msgstr "Brukerinnlogging"
 #. module: base
 #: model:ir.model,name:base.model_res_users_settings
 msgid "User Settings"
-msgstr ""
+msgstr "Bruker innstillinger"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_users__device_ids
@@ -40897,7 +40927,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_ir_actions_server__evaluation_type
 #: model:ir.model.fields,field_description:base.field_ir_cron__evaluation_type
 msgid "Value Type"
-msgstr ""
+msgstr "Verdtiype"
 
 #. module: base
 #: model:res.country,name:base.vu
@@ -41107,7 +41137,7 @@ msgstr "Jomfruøyene (amerikanske)"
 #: model_terms:ir.ui.view,arch_db:base.edit_menu_access
 #: model_terms:ir.ui.view,arch_db:base.view_window_action_form
 msgid "Visibility"
-msgstr ""
+msgstr "Synlighet"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_module_category__visible
@@ -41729,7 +41759,7 @@ msgstr ""
 #: model:res.currency,currency_unit_label:base.KPW
 #: model:res.currency,currency_unit_label:base.KRW
 msgid "Won"
-msgstr ""
+msgstr "Vunnet"
 
 #. module: base
 #: model:res.partner,website_short_description:base.res_partner_1
@@ -41741,7 +41771,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_work_entry
 msgid "Work Entries"
-msgstr ""
+msgstr "Arbeidsposter"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_work_entry_attendance
@@ -41766,7 +41796,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_worksheet
 msgid "Worksheet"
-msgstr ""
+msgstr "Arbeidsdokument"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_maintenance_worksheet
@@ -41787,7 +41817,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_ir_rule__perm_write
 #: model_terms:ir.ui.view,arch_db:base.view_rule_search
 msgid "Write"
-msgstr ""
+msgstr "Skriv"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_access__perm_write
@@ -41919,6 +41949,8 @@ msgid ""
 "You can either upload a file from your computer or copy/paste an internet "
 "link to your file."
 msgstr ""
+"Du kan enten laste opp en fil fra datamaskinen din eller kopiere/klebe inn "
+"en nettlenke til filen din."
 
 #. module: base
 #. odoo-python
@@ -41935,7 +41967,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_res_users_login_key
 msgid "You can not have two users with the same login!"
-msgstr ""
+msgstr "Du kan ikke ha to brukere med samme brukernavn!"
 
 #. module: base
 #. odoo-python
@@ -42159,6 +42191,7 @@ msgstr "Du bør prøve andre søkekriterier."
 #: model_terms:res.company,invoice_terms_html:base.main_company
 msgid "You should update this document to reflect your T&amp;C."
 msgstr ""
+"Du bør oppdatere dette dokumentet for å gjenspeile din vilkår og betingelser."
 
 #. module: base
 #. odoo-python
@@ -42282,7 +42315,7 @@ msgstr ""
 #: model:ir.module.category,name:base.module_category_account
 #: model:ir.module.category,name:base.module_category_services_payroll_account
 msgid "account"
-msgstr ""
+msgstr "konto"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_qr_code_emv
@@ -42292,7 +42325,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_asset__active
 msgid "active"
-msgstr ""
+msgstr "aktiv"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_ai_fields
@@ -42559,7 +42592,7 @@ msgstr "elæring"
 #. module: base
 #: model:ir.module.category,name:base.module_category_services_expenses
 msgid "expenses"
-msgstr ""
+msgstr "utgifter"
 
 #. module: base
 #. odoo-python
@@ -42805,7 +42838,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/base/models/ir_rule.py:0
 msgid "read"
-msgstr ""
+msgstr "led"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_server__value_field_to_show__resource_ref
@@ -42960,7 +42993,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_server__value_field_to_show__value
 msgid "value"
-msgstr ""
+msgstr "verdi"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_web_studio_ai_fields
@@ -42993,7 +43026,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/base/models/ir_rule.py:0
 msgid "write"
-msgstr ""
+msgstr "skriv"
 
 #. module: base
 #. odoo-python

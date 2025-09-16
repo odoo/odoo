@@ -1,31 +1,33 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* delivery
+# * delivery
 #
 # Translators:
 # Martin Trigaux, 2022
 # Muftiara Syuhada <muftiara.syuhada@gmail.com>, 2023
 # Abe Manyo, 2023
-#
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-09-11 13:55+0000\n"
-"PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Abe Manyo, 2023\n"
-"Language-Team: Indonesian (https://app.transifex.com/odoo/teams/41243/id/)\n"
+"PO-Revision-Date: 2025-09-16 04:38+0000\n"
+"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"Language-Team: Indonesian <https://translate.odoo.com/projects/odoo-19/"
+"delivery/id/>\n"
 "Language: id\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: delivery
 #. odoo-python
 #: code:addons/delivery/wizard/choose_delivery_carrier.py:0
 msgid "%(carrier)s Error"
-msgstr ""
+msgstr "%(carrier)s Error"
 
 #. module: delivery
 #. odoo-python
@@ -34,17 +36,19 @@ msgid ""
 "%s\n"
 "Free Shipping"
 msgstr ""
+"%s\n"
+"Pengiriman Gratis"
 
 #. module: delivery
 #. odoo-python
 #: code:addons/delivery/models/delivery_carrier.py:0
 msgid "%s (copy)"
-msgstr ""
+msgstr "%s (salin)"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.choose_delivery_carrier_view_form
 msgid "<i class=\"oi oi-arrow-right me-1\"/>Get rate"
-msgstr ""
+msgstr "<i class=\"oi oi-arrow-right me-1\"/>Dapatkan harga"
 
 #. module: delivery
 #. odoo-python
@@ -54,6 +58,10 @@ msgid ""
 "                    Buy Odoo Enterprise now to get more providers.\n"
 "                </p>"
 msgstr ""
+"<p class=\"o_view_nocontent\">\n"
+"                    Beli Odoo Enterprise sekarang untuk mendapatkan lebih "
+"banyak penyedia.\n"
+"                </p>"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -62,16 +70,19 @@ msgid ""
 "                                <span class=\"o_stat_text\">Environment</"
 "span>"
 msgstr ""
+"<span class=\"o_stat_text o_warning_text fw-bold\">Tes</span>\n"
+"                                <span class=\"o_stat_text\""
+">Environment</span>"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid "<span class=\"o_stat_text text-danger\">No debug</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text text-danger\">Tidak ada debug</span>"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid "<span class=\"text-success\">Debug requests</span>"
-msgstr ""
+msgstr "<span class=\"text-success\">Permintaan debug</span>"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -80,11 +91,14 @@ msgid ""
 "                                <span class=\"o_stat_text\">Environment</"
 "span>"
 msgstr ""
+"<span class=\"text-success\">Produksi</span>\n"
+"                                <span class=\"o_stat_text\""
+">Environment</span>"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.delivery_report_saleorder_document
 msgid "<strong>Shipping Description</strong>"
-msgstr ""
+msgstr "<strong>Keterangan Pengiriman</strong>"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__carrier_description
@@ -100,7 +114,7 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__integration_level
 msgid "Action while validating Delivery Orders"
-msgstr ""
+msgstr "Action saat memvalidasi Order Pengiriman"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__active
@@ -127,12 +141,12 @@ msgstr "Tambah pengiriman"
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid "Additional margin"
-msgstr ""
+msgstr "Margin tambahan"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__allow_cash_on_delivery
 msgid "Allow customers to choose Cash on Delivery as their payment method."
-msgstr ""
+msgstr "Izinkan pelanggan untuk memilih COD sebagai metode pembayaran mereka."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__amount
@@ -145,6 +159,8 @@ msgid ""
 "Amount of the order to benefit from a free shipping, expressed in the "
 "company currency"
 msgstr ""
+"Jumlah order untuk mendapatkan pengiriman gratis, ditunjukkan dalam mata "
+"uang perusahaan"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -158,26 +174,28 @@ msgid ""
 "Are you sure you want the delivery to be free for this order? You might have "
 "forgotten to compute the rates."
 msgstr ""
+"Apakah Anda yakin Anda ingin pengiriman gratis untuk pesanan ini? Anda "
+"mungkin lupa untuk menghitung harga."
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid "Availability"
-msgstr ""
+msgstr "Ketersediaan"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__available_carrier_ids
 msgid "Available Carriers"
-msgstr ""
+msgstr "Carrier yang Tersedia"
 
 #. module: delivery
 #: model:ir.model.fields.selection,name:delivery.selection__delivery_carrier__delivery_type__base_on_rule
 msgid "Based on Rules"
-msgstr ""
+msgstr "Berdasarkan Peraturan"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__can_generate_return
 msgid "Can Generate Return"
-msgstr ""
+msgstr "Dapat Membuat Pengembalian"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__carrier_id
@@ -193,42 +211,44 @@ msgstr "Pembawa"
 msgid ""
 "Carrier %s cannot have the same tag in both Must Have Tags and Excluded Tags."
 msgstr ""
+"Carrier %s tidak boleh memiliki tag yang sama di Harus Memiliki Tag dan Tag "
+"yang Dikecualikan."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__carrier_description
 msgid "Carrier Description"
-msgstr ""
+msgstr "Keterangan Carrier"
 
 #. module: delivery
 #: model:ir.model.fields.selection,name:delivery.selection__payment_provider__custom_mode__cash_on_delivery
 msgid "Cash On Delivery"
-msgstr ""
+msgstr "Cash on Delivery"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__allow_cash_on_delivery
 #: model:payment.method,name:delivery.payment_method_cash_on_delivery
 #: model:payment.provider,name:delivery.payment_provider_cod
 msgid "Cash on Delivery"
-msgstr ""
+msgstr "Bayar di Tempat (COD)"
 
 #. module: delivery
 #. odoo-javascript
 #: code:addons/delivery/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.js:0
 msgid "Choose a pick-up point"
-msgstr ""
+msgstr "Pilih titik pengambilan"
 
 #. module: delivery
 #. odoo-javascript
 #: code:addons/delivery/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.js:0
 #: code:addons/delivery/static/src/js/location_selector/map_container/map_container.js:0
 msgid "Choose this location"
-msgstr ""
+msgstr "Pilih lokasi ini"
 
 #. module: delivery
 #. odoo-javascript
 #: code:addons/delivery/static/src/js/location_selector/location_schedule/location_schedule.js:0
 msgid "Closed"
-msgstr ""
+msgstr "Ditutup"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__company_id
@@ -249,7 +269,7 @@ msgstr "Kontak"
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid "Content"
-msgstr ""
+msgstr "Konten"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__display_price
@@ -264,7 +284,7 @@ msgstr "Negara"
 #. module: delivery
 #: model:ir.model,website_form_label:delivery.model_res_partner
 msgid "Create a Customer"
-msgstr ""
+msgstr "Buat Pelanggan"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__create_uid
@@ -292,7 +312,7 @@ msgstr "Mata Uang"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_payment_provider__custom_mode
 msgid "Custom Mode"
-msgstr ""
+msgstr "Mode Kustom"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__partner_id
@@ -302,7 +322,7 @@ msgstr "Pelanggan"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__debug_logging
 msgid "Debug logging"
-msgstr ""
+msgstr "Logging debug"
 
 #. module: delivery
 #: model_terms:ir.actions.act_window,help:delivery.action_delivery_carrier_form
@@ -312,12 +332,12 @@ msgstr "Tentukan metode pengiriman baru"
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
 msgid "Delivery Carrier"
-msgstr ""
+msgstr "Carrier Pengiriman"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_choose_delivery_carrier
 msgid "Delivery Carrier Selection Wizard"
-msgstr ""
+msgstr "Wizard Pemilihan Carrier Pengiriman"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_price_rule_form
@@ -344,7 +364,7 @@ msgstr "Metode Pengiriman"
 #: model:ir.ui.menu,name:delivery.sale_menu_action_delivery_carrier_form
 #: model_terms:ir.ui.view,arch_db:delivery.delivery_provider_module_kanban
 msgid "Delivery Methods"
-msgstr ""
+msgstr "Metode Pengiriman"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__delivery_price
@@ -354,7 +374,7 @@ msgstr "Harga Pengiriman"
 #. module: delivery
 #: model:ir.model,name:delivery.model_delivery_price_rule
 msgid "Delivery Price Rules"
-msgstr ""
+msgstr "Peraturan Harga Pengiriman"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__product_id
@@ -364,12 +384,12 @@ msgstr "Produk Pengiriman"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order__delivery_set
 msgid "Delivery Set"
-msgstr ""
+msgstr "Delivery Set"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_delivery_zip_prefix
 msgid "Delivery Zip Prefix"
-msgstr ""
+msgstr "Awalan Kode Pos Pengiriman"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order__recompute_delivery_price
@@ -383,6 +403,8 @@ msgid ""
 "Delivery zip prefixes are assigned to delivery carriers to restrict\n"
 "            which zips it is available to."
 msgstr ""
+"Awalan Kode Pos pengiriman ditetapkan ke carrier pengiriman untuk membatasi\n"
+"            kode pos yang tersedia untuk carrier."
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -392,7 +414,7 @@ msgstr "Deskripsi"
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid "Destination"
-msgstr ""
+msgstr "Tujuan"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__sequence
@@ -427,6 +449,11 @@ msgid ""
 "            UPS Express, UPS Standard) with a set of pricing rules attached\n"
 "            to each method."
 msgstr ""
+"Setiap carrier (contoh UPS) dapat memiliki beberapa metode pengiriman ("
+"contoh\n"
+"            UPS Express, UPS Standard) dengan kelompok peraturan harga yang "
+"terlampir\n"
+"            untuk setiap metode."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__prod_environment
@@ -443,7 +470,7 @@ msgstr "Kesalahan: metode pengiriman ini tidak tersedia untuk alamat ini."
 #. odoo-python
 #: code:addons/delivery/models/delivery_carrier.py:0
 msgid "Error: this delivery method is not available."
-msgstr ""
+msgstr "Error: metode pengiriman ini tidak tersedia."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__invoice_policy
@@ -453,6 +480,9 @@ msgid ""
 "Real Cost: the customer will be invoiced the real cost of the shipping, the "
 "cost of theshipping will be updated on the SO after the delivery."
 msgstr ""
+"Estimasi Biaya: pelanggan akan difaktur estimasi biaya pengiriman.\n"
+"Biaya Nyata: pelanggan akan difaktur biaya nyata pengiriman, biaya "
+"pengiriman akan diupdate pada SO setelah pengiriman."
 
 #. module: delivery
 #: model:ir.model.fields.selection,name:delivery.selection__delivery_carrier__invoice_policy__estimated
@@ -462,12 +492,14 @@ msgstr "Estimasi Biaya"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__excluded_tag_ids
 msgid "Excluded Tags"
-msgstr ""
+msgstr "Tag yang Dikecualikan"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_sale_order__carrier_id
 msgid "Fill this field if you plan to invoice the shipping based on picking."
 msgstr ""
+"Isi field ini bila Anda berencana untuk memfakturkan pengiriman berdasarkan "
+"picking."
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -475,11 +507,13 @@ msgid ""
 "Filling this form allows you to make the shipping method available according "
 "to the content of the order or its destination."
 msgstr ""
+"Mengisi formulir ini memungkinkan Anda untuk membuat metode pengiriman ini "
+"tersedia menurut konten pesanan atau tujuannya."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__fixed_margin
 msgid "Fixed Margin"
-msgstr ""
+msgstr "Margin Tetap"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__fixed_price
@@ -495,17 +529,17 @@ msgstr "Gratis jika pesanan melebihi"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__return_label_on_delivery
 msgid "Generate Return Label"
-msgstr ""
+msgstr "Buat Label Pengembalian"
 
 #. module: delivery
 #: model:ir.model.fields.selection,name:delivery.selection__delivery_carrier__integration_level__rate
 msgid "Get Rate"
-msgstr ""
+msgstr "Dapatkan Harga"
 
 #. module: delivery
 #: model:ir.model.fields.selection,name:delivery.selection__delivery_carrier__integration_level__rate_and_ship
 msgid "Get Rate and Create Shipment"
-msgstr ""
+msgstr "Dapatkan Harga dan Buat Pengiriman"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_ir_http
@@ -534,6 +568,8 @@ msgid ""
 "If the order total amount (shipping excluded) is above or equal to this "
 "value, the customer benefits from a free shipping"
 msgstr ""
+"Bila jumlah total order (tidak termasuk pengiriman) diatas atau sama dengan "
+"value ini, pelanggan mendapatkan pengiriman gratis"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__max_volume
@@ -541,39 +577,40 @@ msgid ""
 "If the total volume of the order is over this volume, the method won't be "
 "available."
 msgstr ""
+"Bila volume total pesanan di atas volume ini, metode tidak akan tersedia."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__max_weight
 msgid ""
 "If the total weight of the order is over this weight, the method won't be "
 "available."
-msgstr ""
+msgstr "Bila berat total pesanan di atas berat ini, metode tidak akan tersedia."
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid "Install more Providers"
-msgstr ""
+msgstr "Instal lebih banyak Penyedia"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__shipping_insurance
 msgid "Insurance Percentage"
-msgstr ""
+msgstr "Persentase Asuransi"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__integration_level
 msgid "Integration Level"
-msgstr ""
+msgstr "Level Integrasi"
 
 #. module: delivery
 #. odoo-python
 #: code:addons/delivery/models/delivery_carrier.py:0
 msgid "Invalid source document type"
-msgstr ""
+msgstr "Sumber tipe dokumen tidak valid"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__invoicing_message
 msgid "Invoicing Message"
-msgstr ""
+msgstr "Pesan Faktur"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__invoice_policy
@@ -584,7 +621,7 @@ msgstr "Kebijakan Penagihan"
 #: model:ir.model.fields,field_description:delivery.field_res_partner__is_pickup_location
 #: model:ir.model.fields,field_description:delivery.field_res_users__is_pickup_location
 msgid "Is Pickup Location"
-msgstr ""
+msgstr "Apakah Lokasi Pickup"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order_line__is_delivery
@@ -597,7 +634,7 @@ msgstr "Adalah Pengiriman"
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__write_uid
 #: model:ir.model.fields,field_description:delivery.field_delivery_zip_prefix__write_uid
 msgid "Last Updated by"
-msgstr "Terakhir diperbarui oleh"
+msgstr "Terakhir Diperbarui oleh"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__write_date
@@ -605,19 +642,19 @@ msgstr "Terakhir diperbarui oleh"
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__write_date
 #: model:ir.model.fields,field_description:delivery.field_delivery_zip_prefix__write_date
 msgid "Last Updated on"
-msgstr "Terakhir diperbarui pada"
+msgstr "Terakhir Diperbarui pada"
 
 #. module: delivery
 #. odoo-javascript
 #: code:addons/delivery/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.js:0
 msgid "List view"
-msgstr ""
+msgstr "Tampilan list"
 
 #. module: delivery
 #. odoo-javascript
 #: code:addons/delivery/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.js:0
 msgid "Loading..."
-msgstr ""
+msgstr "Memuat..."
 
 #. module: delivery
 #: model:delivery.carrier,name:delivery.delivery_local_delivery
@@ -627,18 +664,18 @@ msgstr "Pengiriman Lokal"
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__debug_logging
 msgid "Log requests in order to ease debugging"
-msgstr ""
+msgstr "Catat permintaan untuk memudahkan debugging"
 
 #. module: delivery
 #: model_terms:ir.actions.act_window,help:delivery.action_delivery_zip_prefix_list
 msgid "Manage delivery zip prefixes"
-msgstr ""
+msgstr "Kelola awalan kode pos pengiriman"
 
 #. module: delivery
 #. odoo-javascript
 #: code:addons/delivery/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.js:0
 msgid "Map view"
-msgstr ""
+msgstr "Tampilan peta"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__margin
@@ -648,27 +685,27 @@ msgstr "Margin"
 #. module: delivery
 #: model:ir.model.constraint,message:delivery.constraint_delivery_carrier_margin_not_under_100_percent
 msgid "Margin cannot be lower than -100%"
-msgstr ""
+msgstr "Margin tidak boleh di bawah -100%"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid "Margin on Rate"
-msgstr ""
+msgstr "Margin pada Harga"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__max_volume
 msgid "Max Volume"
-msgstr ""
+msgstr "Volume Maks"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__max_weight
 msgid "Max Weight"
-msgstr ""
+msgstr "Berat Maks."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__max_value
 msgid "Maximum Value"
-msgstr ""
+msgstr "Value Maksimum"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_ir_module_module
@@ -678,7 +715,7 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__must_have_tag_ids
 msgid "Must Have Tags"
-msgstr ""
+msgstr "Harus Memiliki Tag"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__name
@@ -689,32 +726,32 @@ msgstr "Nama"
 #. odoo-python
 #: code:addons/delivery/models/delivery_carrier.py:0
 msgid "New Providers"
-msgstr ""
+msgstr "Penyedia Baru"
 
 #. module: delivery
 #. odoo-python
 #: code:addons/delivery/models/sale_order.py:0
 msgid "No pick-up points are available for this delivery address."
-msgstr ""
+msgstr "Tidak ada titik pengambilan yang tersedia untuk alamat pengiriman ini."
 
 #. module: delivery
 #. odoo-javascript
 #: code:addons/delivery/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.js:0
 msgid "No result"
-msgstr ""
+msgstr "Tidak ada hasil"
 
 #. module: delivery
 #. odoo-python
 #: code:addons/delivery/models/delivery_carrier.py:0
 msgid "Not available for current order"
-msgstr ""
+msgstr "Tidak tersedia untuk order saat ini"
 
 #. module: delivery
 #. odoo-javascript
 #: code:addons/delivery/static/src/js/location_selector/location/location.js:0
 #: code:addons/delivery/static/src/js/location_selector/map_container/map_container.js:0
 msgid "Opening hours"
-msgstr ""
+msgstr "Jam buka"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__operator
@@ -729,28 +766,28 @@ msgstr "Order"
 #. module: delivery
 #: model:ir.model,name:delivery.model_payment_provider
 msgid "Payment Provider"
-msgstr ""
+msgstr "Penyedia Pembayaran"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_payment_transaction
 msgid "Payment Transaction"
-msgstr ""
+msgstr "Transaksi Tagihan"
 
 #. module: delivery
 #. odoo-javascript
 #: code:addons/delivery/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.js:0
 msgid "Pickup Location"
-msgstr ""
+msgstr "Lokasi Pickup"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order__pickup_location_data
 msgid "Pickup Location Data"
-msgstr ""
+msgstr "Data Lokasi Pickup"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid "Please select a country before choosing a state or a zip prefix."
-msgstr ""
+msgstr "Mohon pilih negara sebelum memilih negara bagian atau awalan kode pos."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_zip_prefix__name
@@ -760,7 +797,7 @@ msgstr "Prefiks"
 #. module: delivery
 #: model:ir.model.constraint,message:delivery.constraint_delivery_zip_prefix_name_uniq
 msgid "Prefix already exists!"
-msgstr ""
+msgstr "Awalan sudah tersedia!"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__zip_prefix_ids
@@ -770,6 +807,10 @@ msgid ""
 "i.e. '$' can be added to end of prefix to match the exact zip (e.g. '100$' "
 "will only match '100' and not '1000')"
 msgstr ""
+"Awalan kode pos yang carrier ini terapkan. Ingat bahwa expression reguler "
+"dapat digunakan untuk mendukung negara dengan beragam panjang kode pos, "
+"contoh '$' dapat ditambahkan di akhir awalan untuk mencocokkan kode pos ("
+"contoh '100$' hanya akan cocok dengan '100' dan tidak dengan '1000')"
 
 #. module: delivery
 #: model:ir.model.fields.selection,name:delivery.selection__delivery_price_rule__variable__price
@@ -781,7 +822,7 @@ msgstr "Harga"
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_price_rule_form
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_price_rule_tree
 msgid "Price Rules"
-msgstr ""
+msgstr "Peraturan Harga"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -791,12 +832,12 @@ msgstr "Harga"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__price_rule_ids
 msgid "Pricing Rules"
-msgstr ""
+msgstr "Peraturan-Peraturan Harga"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_product_category
 msgid "Product Category"
-msgstr ""
+msgstr "Kategori Produk"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order_line__product_qty
@@ -819,12 +860,12 @@ msgstr "Kuantitas"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__get_return_label_from_portal
 msgid "Return Label Accessible from Customer Portal"
-msgstr ""
+msgstr "Label Pengembalian Dapat Diakses dari Portal Pelanggan"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__list_base_price
 msgid "Sale Base Price"
-msgstr ""
+msgstr "Harga Dasar Sale"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__list_price
@@ -839,13 +880,13 @@ msgstr "Order Penjualan"
 #. module: delivery
 #: model:ir.model,name:delivery.model_sale_order_line
 msgid "Sales Order Line"
-msgstr "Detail Order Penjualan"
+msgstr "Baris Pesanan Penjualan"
 
 #. module: delivery
 #. odoo-javascript
 #: code:addons/delivery/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.xml:0
 msgid "Search"
-msgstr ""
+msgstr "Cari"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__sequence
@@ -862,6 +903,7 @@ msgstr "Produk Layanan"
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__prod_environment
 msgid "Set to True if your credentials are certified for production."
 msgstr ""
+"Tetapkan sebagai True bila kredensial Anda disertifikasi untuk produksi."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__carrier_id
@@ -885,6 +927,8 @@ msgid ""
 "Shipping insurance is a service which may reimburse senders whose parcels "
 "are lost, stolen, and/or damaged in transit."
 msgstr ""
+"Asuransi pengiriman adalah layanan yang dapat membayar kembali pengirim yang "
+"mana parselnya hilang, dicuri, dan/atau rusak selama transit."
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -892,12 +936,14 @@ msgid ""
 "Shipping method details to be included at bottom sales orders and their "
 "confirmation emails. E.g. Instructions for customers to follow."
 msgstr ""
+"Detail metode pengiriman untuk dimasukkan di bagian bawah sale order dan "
+"email konfirmasi mereka. Contoh Instruksi untuk diikuti pelanggan."
 
 #. module: delivery
 #: model:delivery.carrier,name:delivery.free_delivery_carrier
 #: model:product.template,name:delivery.product_product_delivery_product_template
 msgid "Standard delivery"
-msgstr ""
+msgstr "Pengiriman standar"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__state_ids
@@ -907,18 +953,18 @@ msgstr "Status"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__supports_shipping_insurance
 msgid "Supports Shipping Insurance"
-msgstr ""
+msgstr "Mendukung Asuransi Pengiriman"
 
 #. module: delivery
 #: model:delivery.carrier,name:delivery.delivery_carrier
 #: model:product.template,name:delivery.product_product_delivery_poste_product_template
 msgid "The Poste"
-msgstr ""
+msgstr "The Poste"
 
 #. module: delivery
 #: model_terms:payment.provider,pending_msg:delivery.payment_provider_cod
 msgid "The delivery staff will collect payment upon delivery."
-msgstr ""
+msgstr "Staff pengiriman akan mengumpulkan pembayaran setelah pengiriman."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__excluded_tag_ids
@@ -926,6 +972,8 @@ msgid ""
 "The method is NOT available if at least one product of the order has one of "
 "these tags."
 msgstr ""
+"Metode TIDAK tersedia bila setidaknya satu produk pesanan memiliki salah "
+"satu tag ini"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__must_have_tag_ids
@@ -933,22 +981,24 @@ msgid ""
 "The method is available only if at least one product of the order has one of "
 "these tags."
 msgstr ""
+"Metode hanya tersedia bila setidaknya satu produk dari pesanan memiliki tag "
+"ini."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__get_return_label_from_portal
 msgid ""
 "The return label can be downloaded by the customer from the customer portal."
-msgstr ""
+msgstr "Label pengembalian dapat diunduh oleh pelanggan dari portal pelanggan."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__return_label_on_delivery
 msgid "The return label is automatically generated at the delivery."
-msgstr ""
+msgstr "Label pengembalian secara otomatis dibuat pada pengiriman."
 
 #. module: delivery
 #: model:ir.model.constraint,message:delivery.constraint_delivery_carrier_shipping_insurance_is_percentage
 msgid "The shipping insurance must be a percentage between 0 and 100."
-msgstr ""
+msgstr "Asuransi pengiriman harus merupakan persentase di antara 0 dan 100."
 
 #. module: delivery
 #. odoo-python
@@ -960,7 +1010,7 @@ msgstr "Pengiriman bebas ongkir karena jumlah order melebihi %.2f."
 #. odoo-javascript
 #: code:addons/delivery/static/src/js/location_selector/map_container/map_container.js:0
 msgid "There was an error loading the map"
-msgstr ""
+msgstr "Terdapat error selagi memuat peta"
 
 #. module: delivery
 #: model_terms:ir.actions.act_window,help:delivery.action_delivery_carrier_form
@@ -969,11 +1019,15 @@ msgid ""
 "            according to your settings; on the sales order (based on the\n"
 "            quotation) or the invoice (based on the delivery orders)."
 msgstr ""
+"Metode-metode ini memungkinkan Anda untuk secara otomatis menghitung harga "
+"pengiriman\n"
+"            tergantung pada pengaturan Anda; pada sale order (berdasarkan\n"
+"            quotation) atau faktur (berdasarkan delivery order)."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__fixed_margin
 msgid "This fixed amount will be added to the shipping price."
-msgstr ""
+msgstr "Jumlah tetap ini akan ditambahkan ke harga pengiriman"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__tracking_url
@@ -981,6 +1035,9 @@ msgid ""
 "This option adds a link for the customer in the portal to track their "
 "package easily. Use <shipmenttrackingnumber> as a placeholder in your URL."
 msgstr ""
+"Opsi ini menambahkan link ke pelanggan di portal untuk melacak paket mereka "
+"dengan gampang. Gunakan <shipmenttrackingnumber> sebagai placeholder di URL "
+"Anda."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__margin
@@ -990,17 +1047,17 @@ msgstr "Persentase ini akan ditambahkan pada harga pengiriman."
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__total_weight
 msgid "Total Order Weight"
-msgstr ""
+msgstr "Total Berat Order"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__tracking_url
 msgid "Tracking Link"
-msgstr ""
+msgstr "Link Pelacak"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.choose_delivery_carrier_view_form
 msgid "Update"
-msgstr "Perbaharui"
+msgstr "Perbarui"
 
 #. module: delivery
 #. odoo-python
@@ -1013,7 +1070,7 @@ msgstr "Perbarui biaya pengiriman"
 #: model:ir.model.fields,help:delivery.field_res_partner__property_delivery_carrier_id
 #: model:ir.model.fields,help:delivery.field_res_users__property_delivery_carrier_id
 msgid "Used in sales orders."
-msgstr ""
+msgstr "Digunakan di sales order."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__variable
@@ -1028,7 +1085,7 @@ msgstr "Faktor Variasi"
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid "Visible to all"
-msgstr ""
+msgstr "Terlihat untuk semua"
 
 #. module: delivery
 #: model:ir.model.fields.selection,name:delivery.selection__delivery_price_rule__variable__volume
@@ -1039,7 +1096,7 @@ msgstr "Volume"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__volume_uom_name
 msgid "Volume unit of measure label"
-msgstr ""
+msgstr "Satuan volume dari label ukuran"
 
 #. module: delivery
 #: model:ir.model.fields.selection,name:delivery.selection__delivery_price_rule__variable__weight
@@ -1051,17 +1108,17 @@ msgstr "Berat"
 #: model:ir.model.fields.selection,name:delivery.selection__delivery_price_rule__variable__wv
 #: model:ir.model.fields.selection,name:delivery.selection__delivery_price_rule__variable_factor__wv
 msgid "Weight * Volume"
-msgstr ""
+msgstr "Berat * Volume"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__weight_uom_name
 msgid "Weight Uom Name"
-msgstr ""
+msgstr "Nama Satuan Ukuran Berat"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__weight_uom_name
 msgid "Weight unit of measure label"
-msgstr ""
+msgstr "Satuan berat dari label ukuran"
 
 #. module: delivery
 #. odoo-python
@@ -1074,6 +1131,12 @@ msgid ""
 "already been processed:\n"
 "\n"
 msgstr ""
+"Anda tidak dapat mengupdate biaya pengiriman pada order yang sudah difaktur!"
+"\n"
+"\n"
+"Baris pengiriman berikut (produk, kuantitas difaktur dan harga) sudah "
+"diproses:\n"
+"\n"
 
 #. module: delivery
 #. odoo-python
@@ -1082,53 +1145,56 @@ msgid ""
 "You cannot delete the deliveries product category as it is used on the "
 "delivery carriers products."
 msgstr ""
+"Anda tidak dapat menghapus kategori produk yang dikirim karena digunakan di "
+"pengiriman produk carrier."
 
 #. module: delivery
 #: model_terms:payment.provider,auth_msg:delivery.payment_provider_cod
 msgid "Your payment has been authorized."
-msgstr ""
+msgstr "Tagihan Anda telah disahkan."
 
 #. module: delivery
 #: model_terms:payment.provider,cancel_msg:delivery.payment_provider_cod
 msgid "Your payment has been cancelled."
-msgstr ""
+msgstr "Pembayaran Anda telah dibatalkan."
 
 #. module: delivery
 #: model_terms:payment.provider,done_msg:delivery.payment_provider_cod
 msgid "Your payment has been processed."
-msgstr ""
+msgstr "Pembayaran Anda sudah diproses."
 
 #. module: delivery
 #. odoo-javascript
 #: code:addons/delivery/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.js:0
 msgid "Your postal code"
-msgstr ""
+msgstr "Kode pos Anda"
 
 #. module: delivery
 #: model:ir.actions.act_window,name:delivery.action_delivery_zip_prefix_list
 msgid "Zip Prefix"
-msgstr ""
+msgstr "Awalan Zip"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__zip_prefix_ids
 msgid "Zip Prefixes"
-msgstr ""
+msgstr "Awalan Kode Pos"
 
 #. module: delivery
 #. odoo-python
 #: code:addons/delivery/models/payment_provider.py:0
 msgid "cash on delivery not allowed by selected delivery method"
-msgstr ""
+msgstr "COD tidak diizinkan oleh metode pengiriman terpili"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid "e.g. UPS Express"
-msgstr ""
+msgstr "contoh UPS Express"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid "i.e. https://ekartlogistics.com/shipmenttrack/<shipmenttrackingnumber>"
 msgstr ""
+"contoh. https://ekartlogistics.com/shipmenttrack/<shipmenttrackingnumber>"
 
 #~ msgid "<strong>Shipping Description:</strong>"
 #~ msgstr "<strong>Keterangan Pengiriman:</strong>"

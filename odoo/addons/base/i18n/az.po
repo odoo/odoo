@@ -1,24 +1,26 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* base
+# * base
 #
 # Translators:
 # erpgo translator <jumshud@erpgo.az>, 2022
 # Jumshud Sultanov <cumshud@gmail.com>, 2023
-#
+# "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-09-12 13:52+0000\n"
-"PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Jumshud Sultanov <cumshud@gmail.com>, 2023\n"
-"Language-Team: Azerbaijani (https://app.transifex.com/odoo/teams/41243/az/)\n"
+"PO-Revision-Date: 2025-09-16 13:39+0000\n"
+"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
+"Language-Team: Azerbaijani <https://translate.odoo.com/projects/odoo-19/base/"
+"az/>\n"
 "Language: az\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_at_reports
@@ -473,7 +475,7 @@ msgid ""
 "holds the VAT detail info of sales or purchases made in a period of time.\n"
 "* Add a VAT summary report that is used to analyze invoicing\n"
 "* Add Digital VAT Book functionality that let us generate TXT files to "
-"import in AFIP. The ones we implement are:\n"
+"import in ARCA. The ones we implement are:\n"
 "\n"
 "    * LIBRO_IVA_DIGITAL_VENTAS_CBTE\n"
 "    * LIBRO_IVA_DIGITAL_VENTAS_ALICUOTAS\n"
@@ -481,7 +483,7 @@ msgid ""
 "    * LIBRO_IVA_DIGITAL_COMPRAS_ALICUOTAS\n"
 "    * LIBRO_IVA_DIGITAL_IMPORTACION_BIENES_ALICUOTA\n"
 "\n"
-"Official Documentation AFIP\n"
+"Official Documentation ARCA\n"
 "\n"
 "* Digital VAT Book - record design https://www.afip.gob.ar/libro-iva-digital/"
 "documentos/libro-iva-digital-diseno-registros.pdf\n"
@@ -1761,7 +1763,7 @@ msgid ""
 "of identifications are defined by the government authorities that regulate "
 "the fiscal operations. For example:\n"
 "\n"
-"* AFIP in Argentina defines DNI, CUIT (vat for legal entities), CUIL (vat "
+"* ARCA in Argentina defines DNI, CUIT (vat for legal entities), CUIL (vat "
 "for natural person), and another 80 valid identification types.\n"
 "\n"
 "Each identification holds this information:\n"
@@ -4331,7 +4333,7 @@ msgid ""
 "----------\n"
 "\n"
 "Be able to create journals in Odoo to create electronic customer invoices "
-"and report then to AFIP (via webservices).\n"
+"and report then to ARCA (via webservices).\n"
 "The options available are:\n"
 "\n"
 "    * Electronic Invoice - Web Service\n"
@@ -4339,63 +4341,63 @@ msgid ""
 "    * Electronic Fiscal Bond - Web Service\n"
 "\n"
 "In the electronic journals if you validate an invoice this one will be "
-"validated in both Odoo and AFIP. This validation is\n"
+"validated in both Odoo and ARCA. This validation is\n"
 "made at the instant and we recieve and \"approved/approved with observation/"
-"rejected\" state from AFIP. If the invoice has\n"
-"been rejected by AFIP will not be post in the system and a pop up message "
+"rejected\" state from ARCA. If the invoice has\n"
+"been rejected by ARCA will not be post in the system and a pop up message "
 "will be shown with both the error detail (reject reasons)\n"
 "we recieve and a HINT about what the problem could be.\n"
 "\n"
 "For auditing and troubleshooting purposes we also add a menu \"Consulit "
-"Invoice in AFIP\" that let us to consult invoices previously\n"
-"sent to AFIP and last number used as support for any possible issues on the "
-"sequences synchronization between Odoo and AFIP.\n"
+"Invoice in ARCA\" that let us to consult invoices previously\n"
+"sent to ARCA and last number used as support for any possible issues on the "
+"sequences synchronization between Odoo and ARCA.\n"
 "\n"
 "    NOTE: From the Journal's form view we are able to force a sync between "
 "the odoo sequences to each of the document types in\n"
-"    with the last numbers registered in AFIP.\n"
+"    with the last numbers registered in ARCA.\n"
 "\n"
 "From vendor bills, we have added a functionality that can be configured in "
 "the accounting settings to be able to verify\n"
-"vendor bills in AFIP to check if the vendor bills are real (more information "
+"vendor bills in ARCA to check if the vendor bills are real (more information "
 "please review the setting description).\n"
 "\n"
 "Configuration:\n"
 "\n"
 "1. Go to the Accounting Settings > Argentinean Localization section\n"
 "\n"
-"    1.1. Configure the AFIP Web Services mode:\n"
+"    1.1. Configure the ARCA Web Services mode:\n"
 "\n"
 "    * Testing environment in order to use demo certificates that will be use "
 "to test the instance and to make NOT\n"
-"      real invoices to AFIP. is just for testing. For demo instaces is "
+"      real invoices to ARCA. is just for testing. For demo instaces is "
 "already pre-defined you will not need to configure\n"
-"      it (commonly named in AFIP as Homologation environment).\n"
+"      it (commonly named in ARCA as Homologation environment).\n"
 "    * Production environment in order to generate real certificates and "
-"legal invoices to AFIP,\n"
+"legal invoices to ARCA,\n"
 "\n"
-"    1.2. Configure your AFIP Certificate: If you are in a demo instance this "
+"    1.2. Configure your ARCA Certificate: If you are in a demo instance this "
 "one will be have been set by default. If you\n"
-"         are in production instance just need to go to upload your AFIP "
+"         are in production instance just need to go to upload your ARCA "
 "Certificate\n"
 "\n"
 "    1.3. Optionally you can define if you like to be eable to verify vendor "
-"bills in AFIP.\n"
+"bills in ARCA.\n"
 "\n"
-"2. Create Sales journals that will represent each one of your AFIP POS "
-"(Available in AFIP Portal) you want to use in Odoo.\n"
+"2. Create Sales journals that will represent each one of your ARCA POS "
+"(Available in ARCA Portal) you want to use in Odoo.\n"
 "\n"
 "    2.1. Use Documents field is set by default please dont change\n"
-"    2.2. Set AFIP POS System for one of the electronic ones.\n"
+"    2.2. Set ARCA POS System for one of the electronic ones.\n"
 "\n"
 "        * Electronic Invoice - Web Service'\n"
 "        * Electronic Fiscal Bond - Web Service'\n"
 "        * Export Voucher - Web Service'\n"
 "\n"
-"    2.3. Set the AFIP POS Number and AFIP POS Address taking into account "
-"what you have configured in your AFIP Portal.\n"
+"    2.3. Set the ARCA POS Number and ARCA POS Address taking into account "
+"what you have configured in your ARCA Portal.\n"
 "\n"
-"    NOTE: You can use the \"Check Available AFIP POS\" button in Journal's "
+"    NOTE: You can use the \"Check Available ARCA POS\" button in Journal's "
 "form to corroborate the to use to create the journals.\n"
 "\n"
 "For more information about Argentinean Electronic invoicing please go to "
@@ -4428,7 +4430,7 @@ msgid ""
 "In some Latinamerica countries, including Argentina and Chile, some "
 "accounting transactions like invoices and vendor bills are classified by a "
 "document types defined by the government fiscal authorities (In Argentina "
-"case AFIP, Chile case SII).\n"
+"case ARCA, Chile case SII).\n"
 "\n"
 "This module is intended to be extended by localizations in order to manage "
 "these document types and is an essential information that needs to be "
@@ -4451,36 +4453,6 @@ msgid ""
 "country. The document type has a country field\n"
 "\n"
 msgstr ""
-"\n"
-"Funksional\n"
-"----------\n"
-"\n"
-"Argentina və Çili daxil olmaqla bəzi Latınamerika ölkələrində, fakturalar və "
-"podratçı fakturaları kimi bəzi mühasibat əməliyyatları dövlətin maliyyə "
-"orqanları tərəfindən müəyyən edilmiş sənəd növləri ilə təsnif edilir "
-"(Argentinada AFIP, Çilidə SII).\n"
-"\n"
-"Bu modul, bu sənəd növlərini idarə etmək üçün lokallaşdırma yolu ilə "
-"genişləndirilmək üçün nəzərdə tutulmuşdur və çap olunmuş hesabatlarda "
-"göstərilməsi lazım olan və faktura dəsti daxilində asanlıqla müəyyən "
-"edilməsi lazım olan vacib bir məlumatdır.\n"
-"\n"
-"Hər bir sənəd növünün öz qaydaları və sıra nömrəsi var, sonuncusu "
-"lokalizasiya istifadəçisi üçün asan olması üçün faktura nömrəsi və jurnal "
-"sırası ilə inteqrasiya olunur. Bu sənəd növlərini dəstəkləmək və ya "
-"dəstəkləməmək üçün Jurnalda sənəddən istifadə etməyə imkan verən yeni bir "
-"seçim var.\n"
-"\n"
-"Texniki\n"
-"---------\n"
-"\n"
-"Lokalizasiyanız bu məntiqə ehtiyac duyarsa, bu modulu asılılıq olaraq əlavə "
-"etmək və lokalizasiya modulunuza genişləndirmək lazımdır:\n"
-"\n"
-"* şirkətin _localization_use_documents () metodunu genişləndirin.\n"
-"* xüsusi ölkə üçün mövcud sənəd növləri haqqında məlumat yaradın. Sənədin "
-"növü ölkə ərazisini əhatə edir\n"
-"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ar
@@ -4491,20 +4463,20 @@ msgid ""
 "\n"
 "This module add accounting features for the Argentinean localization, which "
 "represent the minimal configuration needed for a company  to operate in "
-"Argentina and under the AFIP (Administración Federal de Ingresos Públicos) "
+"Argentina and under the ARCA (Administración Federal de Ingresos Públicos) "
 "regulations and guidelines.\n"
 "\n"
 "Follow the next configuration steps for Production:\n"
 "\n"
-"1. Go to your company and configure your VAT number and AFIP Responsibility "
+"1. Go to your company and configure your VAT number and ARCA Responsibility "
 "Type\n"
 "2. Go to Accounting / Settings and set the Chart of Account that you will "
 "like to use.\n"
-"3. Create your Sale journals taking into account AFIP POS info.\n"
+"3. Create your Sale journals taking into account ARCA POS info.\n"
 "\n"
 "Demo data for testing:\n"
 "\n"
-"* 3 companies were created, one for each AFIP responsibility type with the "
+"* 3 companies were created, one for each ARCA responsibility type with the "
 "respective Chart of Account installed. Choose the company that fix you in "
 "order to make tests:\n"
 "\n"
@@ -4528,7 +4500,7 @@ msgid ""
 "Highlights:\n"
 "\n"
 "* Chart of account will not be automatically installed, each CoA Template "
-"depends on the AFIP Responsibility of the company, you will need to install "
+"depends on the ARCA Responsibility of the company, you will need to install "
 "the CoA for your needs.\n"
 "* No sales journals will be generated when installing a CoA, you will need "
 "to configure your journals manually.\n"
@@ -4546,7 +4518,7 @@ msgid ""
 "\n"
 "Master Data:\n"
 "\n"
-"* Chart of Account: one for each AFIP responsibility that is related to a "
+"* Chart of Account: one for each ARCA responsibility that is related to a "
 "legal entity:\n"
 "\n"
 "  * Responsable Inscripto (RI)\n"
@@ -4555,15 +4527,15 @@ msgid ""
 "\n"
 "* Argentinean Taxes and Account Tax Groups (VAT taxes with the existing "
 "aliquots and other types)\n"
-"* AFIP Responsibility Types\n"
+"* ARCA Responsibility Types\n"
 "* Fiscal Positions (in order to map taxes)\n"
 "* Legal Documents Types in Argentina\n"
 "* Identification Types valid in Argentina.\n"
-"* Country AFIP codes and Country VAT codes for legal entities, natural "
+"* Country ARCA codes and Country VAT codes for legal entities, natural "
 "persons and others\n"
-"* Currency AFIP codes\n"
-"* Unit of measures AFIP codes\n"
-"* Partners: Consumidor Final and AFIP\n"
+"* Currency ARCA codes\n"
+"* Unit of measures ARCA codes\n"
+"* Partners: Consumidor Final and ARCA\n"
 msgstr ""
 
 #. module: base
@@ -5649,6 +5621,7 @@ msgid ""
 "also possible in order to automatically create a meeting when a time off "
 "request is accepted by setting up a type of meeting in time off Type.\n"
 msgstr ""
+"\n"
 "Məzuniyyət İstəklərini və Paylarını idarə edin\n"
 "=====================================\n"
 "\n"
@@ -6634,7 +6607,6 @@ msgid ""
 "Proposes advanced routing options not available in web or base to keep\n"
 "base modules simple.\n"
 msgstr ""
-"\n"
 "\n"
 "Əsas modulları asanlaşdırmaq üçün veb və ya bazada mövcud olmayan qabaqcıl "
 "marşrutlaşdırma variantları təklif edir.\n"
@@ -7755,7 +7727,7 @@ msgstr ""
 "\n"
 "Agrega una nomenclatura contable para Guatemala. También icluye impuestos y\n"
 "la moneda del Quetzal. -- Qvatemala üçün hesab cədvəlini əlavə edir. Buraya "
-"vergilər və Kvezal valyutası da daxildir.\n"
+"vergilər və Kvezal valyutası da daxildir."
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_hn
@@ -8424,7 +8396,7 @@ msgid ""
 "This module allows a customer to give rating.\n"
 msgstr ""
 "\n"
-"Bu müştəriyə qiymətləndirmə imkanını verir. \n"
+"Bu müştəriyə qiymətləndirmə imkanını verir.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_sale_ups
@@ -9688,8 +9660,8 @@ msgid ""
 "Time off documents will be automatically integrated to the Document app.\n"
 msgstr ""
 "\n"
-"Vaxtı bitmiş sənədlər avtomatik olaraq Sənəd əlavəsinə inteqrasiya "
-"olunacaq. \n"
+"Vaxtı bitmiş sənədlər avtomatik olaraq Sənəd əlavəsinə inteqrasiya olunacaq."
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_product_expiry
@@ -11264,7 +11236,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_partner_merge_automatic_wizard__exclude_contact
 msgid "A user associated to the contact"
-msgstr "Kontakta bağlı olan istifadəçi "
+msgstr "Kontakta bağlı olan istifadəçi"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_groups__disjoint_ids
@@ -11879,7 +11851,7 @@ msgstr "Fəaliyyət Pəncərəsi"
 #. module: base
 #: model:ir.model,name:base.model_ir_actions_act_window_close
 msgid "Action Window Close"
-msgstr "Bağlı Fəaliyyət Pəncərəsi "
+msgstr "Bağlı Fəaliyyət Pəncərəsi"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_actions_act_window_view
@@ -14279,7 +14251,7 @@ msgstr ""
 #: model:ir.model,name:base.model_ir_module_category
 #: model:ir.model.fields,field_description:base.field_ir_module_module__application
 msgid "Application"
-msgstr "Ərizə "
+msgstr "Ərizə"
 
 #. module: base
 #: model:ir.ui.menu,name:base.menu_translation_app
@@ -14414,7 +14386,7 @@ msgstr "Tətbiqlər:"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_view__arch_db
 msgid "Arch Blob"
-msgstr "Arxivin böyük ikili obyekti "
+msgstr "Arxivin böyük ikili obyekti"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_view__arch_fs
@@ -16114,7 +16086,7 @@ msgstr "Əşyaların İnternetini dəstəkləyən əsas modellər və köməkçi
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_batch_payment
 msgid "Batch Payment"
-msgstr "Məlumat Paketi Ödənişi "
+msgstr "Məlumat Paketi Ödənişi"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_delivery_stock_picking_batch
@@ -16341,7 +16313,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_website_sale_ups
 msgid "Bill to your UPS account number"
-msgstr "UPS hesab nömrənizə hesab "
+msgstr "UPS hesab nömrənizə hesab"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_billboard_rental
@@ -20252,7 +20224,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_lang_tree
 msgid "Disable"
-msgstr "Deaktiv "
+msgstr "Deaktiv"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_report_paperformat__disable_shrinking
@@ -21130,7 +21102,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/template_inheritance.py:0
 msgid "Element '%s' cannot be located in parent view"
-msgstr " '%s' elementi orijinal  görünüşdə yerləşdirilə bilməz. "
+msgstr "'%s' elementi orijinal  görünüşdə yerləşdirilə bilməz."
 
 #. module: base
 #. odoo-python
@@ -21175,7 +21147,7 @@ msgstr "Email Marketinqi"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_users__signature
 msgid "Email Signature"
-msgstr "Email İmzası "
+msgstr "Email İmzası"
 
 #. module: base
 #. odoo-python
@@ -21375,7 +21347,7 @@ msgid ""
 "help tab of this document."
 msgstr ""
 "Python kodu buraya daxil edin. Pyhtonun izahı haqında kömək bu sənədin kömək "
-"tabında mövcuddur. "
+"tabında mövcuddur."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.form_res_users_key_description
@@ -21543,7 +21515,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/base/models/ir_ui_menu.py:0
 msgid "Error! You cannot create recursive menus."
-msgstr "Xəta! Rekrusiv menyuları yarada bilməzsiniz. "
+msgstr "Xəta! Rekrusiv menyuları yarada bilməzsiniz."
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_escape_rooms
@@ -21768,7 +21740,7 @@ msgstr "Efiopiya"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_et
 msgid "Ethiopia - Accounting"
-msgstr "Efiopiya - Mühsaibat "
+msgstr "Efiopiya - Mühsaibat"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_et_reports
@@ -22201,7 +22173,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_event_sale
 msgid "Events Sales"
-msgstr "Tədbir Satışları "
+msgstr "Tədbir Satışları"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_event_booth
@@ -22225,7 +22197,7 @@ msgid ""
 "usage of the CRM Sale module."
 msgstr ""
 "CRM Satış modulunun istifadəsi ilə əlaqədar istifadə edilə bilən məqsəd "
-"tərifləri və problemlərin nümunəsi. "
+"tərifləri və problemlərin nümunəsi."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_rule_form
@@ -22282,7 +22254,7 @@ msgstr "Hamısını İcra edin"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_cron_view_search
 msgid "Execution"
-msgstr "İcra "
+msgstr "İcra"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__report_paperformat__format__executive
@@ -22357,7 +22329,7 @@ msgid ""
 msgstr ""
 "Unsplas. com-un  pulsuz yüksək görüntü imknalı şəkil kitabxanası tədqiq edin "
 "və  Odoo-da istifadə etmək üçün təsvirlər  tapın.  Unsplash axtarış barını   "
-"şəkil kitabxanası modelinə əlavə edin. "
+"şəkil kitabxanası modelinə əlavə edin."
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_exports_line__export_id
@@ -22489,7 +22461,7 @@ msgstr "İxraclar"
 #. module: base
 #: model:ir.model,name:base.model_ir_exports_line
 msgid "Exports Line"
-msgstr "İxraclar Xətti "
+msgstr "İxraclar Xətti"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
@@ -22681,7 +22653,7 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.fk
 msgid "Falkland Islands"
-msgstr "Folklend Adaları "
+msgstr "Folklend Adaları"
 
 #. module: base
 #: model:res.country,name:base.fo
@@ -22988,7 +22960,7 @@ msgstr ""
 "Ekranın yarandığı yerdən fayl\n"
 "                                                           Pozuq görüntünü "
 "yeniləmək (sərtləşdirmək) üçün və ya  dev-xml rejimindəki  fayldan arxivi "
-"oxumaq üçün  faydalıdır. "
+"oxumaq üçün  faydalıdır."
 
 #. module: base
 #: model:ir.model,name:base.model_ir_binary
@@ -23031,7 +23003,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_attachment_search
 msgid "Filter on my documents"
-msgstr " Sənədlərim üzrə Filter"
+msgstr "Sənədlərim üzrə Filter"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_filters
@@ -23045,7 +23017,7 @@ msgstr "Filterlər"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_filters_view_search
 msgid "Filters shared with all users"
-msgstr "Bütün istifadəçilərlə paylaşılan Filterlər "
+msgstr "Bütün istifadəçilərlə paylaşılan Filterlər"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_filters_view_search
@@ -23089,7 +23061,7 @@ msgstr "Tamalandı"
 #. module: base
 #: model:res.country,name:base.fi
 msgid "Finland"
-msgstr "Finlandiya "
+msgstr "Finlandiya"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_fi
@@ -23180,7 +23152,7 @@ msgstr "Şəbəkə Dəstinin Tarixi"
 #. module: base
 #: model:ir.module.module,summary:base.module_documents_fleet
 msgid "Fleet from documents"
-msgstr "Sənədlərdən şəbəkə dəsti "
+msgstr "Sənədlərdən şəbəkə dəsti"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_florist
@@ -23299,7 +23271,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_fields__relation
 msgid "For relationship fields, the technical name of the target model"
-msgstr "Əlaqə sahələri üçün, hədəf modelinin texniki adı "
+msgstr "Əlaqə sahələri üçün, hədəf modelinin texniki adı"
 
 #. module: base
 #. odoo-python
@@ -23411,7 +23383,7 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.fr
 msgid "France"
-msgstr "Fransa "
+msgstr "Fransa"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_fr_account
@@ -23654,7 +23626,7 @@ msgstr "MXVÖEN"
 #. module: base
 #: model:res.country,name:base.ga
 msgid "Gabon"
-msgstr "Qabon "
+msgstr "Qabon"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ga
@@ -23823,7 +23795,7 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.de
 msgid "Germany"
-msgstr "Almaniya "
+msgstr "Almaniya"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_de
@@ -30743,7 +30715,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_mx_reports
 msgid "Odoo Mexican Localization Reports"
-msgstr "Odoo Meksika Lokalizasiya Hesabatları "
+msgstr "Odoo Meksika Lokalizasiya Hesabatları"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_mx_xml_polizas
@@ -31399,18 +31371,18 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__on_delete
 msgid "On Delete"
-msgstr "Silinmə haqqında "
+msgstr "Silinmə haqqında"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_act_window_view__multi
 #: model:ir.model.fields,field_description:base.field_ir_actions_report__multi
 msgid "On Multiple Doc."
-msgstr " Birdən çox sənəddə"
+msgstr "Birdən çox sənəddə"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_fields__on_delete
 msgid "On delete property for many2one fields"
-msgstr "Many2one sahələri üçün əmlakın silinməsi haqqında "
+msgstr "Many2one sahələri üçün əmlakın silinməsi haqqında"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_onboarding
@@ -31473,7 +31445,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_event_sale
 msgid "Online Event Ticketing"
-msgstr "Onlayn Tədbir "
+msgstr "Onlayn Tədbir"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_hr_recruitment
@@ -31578,17 +31550,17 @@ msgstr "Tətbiqləri Açın"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_company__font__open_sans
 msgid "Open Sans"
-msgstr "Sanları Açın "
+msgstr "Sanları Açın"
 
 #. module: base
 #: model:ir.actions.client,name:base.action_client_base_menu
 msgid "Open Settings Menu"
-msgstr "Parametrlər Menyusunu Açın "
+msgstr "Parametrlər Menyusunu Açın"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_window_action_tree
 msgid "Open Window"
-msgstr "Pəncərini Açın "
+msgstr "Pəncərini Açın"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_window_action_form
@@ -31611,7 +31583,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_crm
 msgid "Opportunity to Quotation"
-msgstr "Təklif üçün İmkan "
+msgstr "Təklif üçün İmkan"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_renting_crm
@@ -31628,7 +31600,7 @@ msgstr "Seçim"
 msgid ""
 "Optional domain filtering of the destination data, as a Python expression"
 msgstr ""
-" Python ifadəsi kimi təyinat məlumatlarının istəyə bağlı domen filtrlənməsi"
+"Python ifadəsi kimi təyinat məlumatlarının istəyə bağlı domen filtrlənməsi"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_actions_act_url__help
@@ -31953,18 +31925,18 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_report_paperformat__orientation
 msgid "Orientation"
-msgstr "İstiqamət "
+msgstr "İstiqamət"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_view_custom__ref_id
 msgid "Original View"
-msgstr "Orijinal Görünüş "
+msgstr "Orijinal Görünüş"
 
 #. module: base
 #. odoo-python
 #: code:addons/base/models/ir_qweb_fields.py:0
 msgid "Original currency"
-msgstr "Orijinal valyuta "
+msgstr "Orijinal valyuta"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_company__font__oswald
@@ -31979,22 +31951,22 @@ msgstr "Digər"
 #. module: base
 #: model:ir.module.category,name:base.module_category_extra
 msgid "Other Extra Rights"
-msgstr "Digər Əlavə Hüquqlar "
+msgstr "Digər Əlavə Hüquqlar"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_module_module__license__other_osi_approved_licence
 msgid "Other OSI Approved License"
-msgstr "Digər OSI Təsdiqlənmiş Lisenziya "
+msgstr "Digər OSI Təsdiqlənmiş Lisenziya"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_module_module__license__other_proprietary
 msgid "Other Proprietary"
-msgstr "Digər Mülkiyyət "
+msgstr "Digər Mülkiyyət"
 
 #. module: base
 #: model:res.partner.industry,name:base.res_partner_industry_S
 msgid "Other Services"
-msgstr "Digər Xidmətlər "
+msgstr "Digər Xidmətlər"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_model_form
@@ -32083,7 +32055,7 @@ msgstr "Çıxış DPI"
 #: model:ir.model.fields,field_description:base.field_base_language_import__overwrite
 #: model:ir.model.fields,field_description:base.field_base_language_install__overwrite
 msgid "Overwrite Existing Terms"
-msgstr "Mövcud Şərtlərin Yenidən Yazılması "
+msgstr "Mövcud Şərtlərin Yenidən Yazılması"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_attachment_search
@@ -32109,7 +32081,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__base_language_export__format__po
 msgid "PO File"
-msgstr "PO Faylı "
+msgstr "PO Faylı"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.wizard_lang_export
@@ -32171,7 +32143,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_adyen
 msgid "POS Adyen"
-msgstr "POS Adyen "
+msgstr "POS Adyen"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_avatax
@@ -32557,7 +32529,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_report_paperformat__page_height
 msgid "Page height (mm)"
-msgstr "Səhifə uzunluğu (mm) "
+msgstr "Səhifə uzunluğu (mm)"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_report_paperformat__page_width
@@ -32630,7 +32602,7 @@ msgstr "Kağız Formatı Konfiqurasiyası"
 #. module: base
 #: model:ir.actions.act_window,name:base.paper_format_action
 msgid "Paper Format General Configuration"
-msgstr "Kağız Formatı Ümumi Konfuqrasiya "
+msgstr "Kağız Formatı Ümumi Konfuqrasiya"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company__paperformat_id
@@ -32646,7 +32618,7 @@ msgstr "Kağız formatı konfiqurasiyası"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_report_paperformat__format
 msgid "Paper size"
-msgstr "Kağız ölçüsü "
+msgstr "Kağız ölçüsü"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_theme_paptic
@@ -32656,7 +32628,7 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.pg
 msgid "Papua New Guinea"
-msgstr "Papua Yeni Qvineya "
+msgstr "Papua Yeni Qvineya"
 
 #. module: base
 #: model:res.currency,currency_subunit_label:base.RSD
@@ -32676,7 +32648,7 @@ msgstr "Parametrlər"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_client__params_store
 msgid "Params storage"
-msgstr "Parametrlərin saxlanılması "
+msgstr "Parametrlərin saxlanılması"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_inherit__parent_id
@@ -32694,13 +32666,13 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_module_category__parent_id
 msgid "Parent Application"
-msgstr "Əsa Tətbiq "
+msgstr "Əsa Tətbiq"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_partner_merge_automatic_wizard__group_by_parent_id
 #: model:ir.model.fields,field_description:base.field_res_company__parent_id
 msgid "Parent Company"
-msgstr "Əsas Şirkət "
+msgstr "Əsas Şirkət"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_inherit__parent_field_id
@@ -32711,7 +32683,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_ir_ui_menu__parent_id
 #: model:ir.model.fields,field_description:base.field_wizard_ir_model_menu_create__menu_id
 msgid "Parent Menu"
-msgstr "Əsas Menyu "
+msgstr "Əsas Menyu"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_menu__parent_path
@@ -32745,7 +32717,7 @@ msgstr "Tərəfdaşın Avtomatik Tamamlanması"
 #. module: base
 #: model:ir.model,name:base.model_res_partner_category
 msgid "Partner Tags"
-msgstr "Tərəfdaş Etiketləri "
+msgstr "Tərəfdaş Etiketləri"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_users__active_partner
@@ -32755,7 +32727,7 @@ msgstr "Tərəfdaş aktivdir"
 #. module: base
 #: model:ir.module.module,summary:base.module_website_partner
 msgid "Partner module for website"
-msgstr "Veb sayt üçün tərəfdaş modulu "
+msgstr "Veb sayt üçün tərəfdaş modulu"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner__same_company_registry_partner_id
@@ -32767,7 +32739,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_res_partner__same_vat_partner_id
 #: model:ir.model.fields,field_description:base.field_res_users__same_vat_partner_id
 msgid "Partner with same Tax ID"
-msgstr "Eyni vergi ID ilə Tərəfdaş "
+msgstr "Eyni vergi ID ilə Tərəfdaş"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_users__partner_id
@@ -32779,7 +32751,7 @@ msgstr "İstifadəçinin tərəfdaşla bağlı datası"
 #: model_terms:ir.ui.view,arch_db:base.base_partner_merge_automatic_wizard_form
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 msgid "Partners"
-msgstr "Tərəfdaşlar "
+msgstr "Tərəfdaşlar"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_base_geolocalize
@@ -32911,7 +32883,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_payroll_account_iso20022
 msgid "Pay your employees with SEPA payment."
-msgstr "SEPA ödənişi ilə işçilərinizə ödəniş edin. "
+msgstr "SEPA ödənişi ilə işçilərinizə ödəniş edin."
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_accounting_payment
@@ -32921,7 +32893,7 @@ msgstr "Ödəniş"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_payment
 msgid "Payment - Account"
-msgstr "Ödəniş- Hesab "
+msgstr "Ödəniş- Hesab"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_payment
@@ -33077,7 +33049,7 @@ msgstr "Əmək Haqqı Uçotu"
 #. module: base
 #: model:ir.module.category,name:base.module_category_payroll_localization
 msgid "Payroll Localization"
-msgstr "Əmək Haqqı Lokalizasiya "
+msgstr "Əmək Haqqı Lokalizasiya"
 
 #. module: base
 #: model:res.currency,currency_subunit_label:base.FKP
@@ -33319,7 +33291,7 @@ msgstr "Pitkern adaları"
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_act_window_view__view_mode__pivot
 #: model:ir.model.fields.selection,name:base.selection__ir_ui_view__type__pivot
 msgid "Pivot"
-msgstr "Pivot "
+msgstr "Pivot"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_gelato
@@ -33340,7 +33312,7 @@ msgstr "Layihə tapşırıqları haqqında  mənbələrinizi planlaşdırın"
 #: model:ir.module.category,name:base.module_category_human_resources_planning
 #: model:ir.module.module,shortdesc:base.module_planning
 msgid "Planning"
-msgstr "Planlaşdırma "
+msgstr "Planlaşdırma"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_planning_hr_skills
@@ -33482,7 +33454,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_discount
 msgid "Point of Sale Discounts"
-msgstr "Satış Endirimləri Nöqtəsi "
+msgstr "Satış Endirimləri Nöqtəsi"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_mobile
@@ -33512,7 +33484,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_enterprise
 msgid "Point of Sale enterprise"
-msgstr "Satış Müəssisəsinin Nöqtəsi "
+msgstr "Satış Müəssisəsinin Nöqtəsi"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_online_payment
@@ -33528,7 +33500,7 @@ msgstr "Polşa"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_pl
 msgid "Poland - Accounting"
-msgstr "Polşa- Mühasibat "
+msgstr "Polşa- Mühasibat"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_pl_reports
@@ -33580,7 +33552,7 @@ msgstr "Potret"
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__portugal
 #: model:res.country,name:base.pt
 msgid "Portugal"
-msgstr "Portuqaliya "
+msgstr "Portuqaliya"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_pt
@@ -33596,7 +33568,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_constraint__definition
 msgid "PostgreSQL constraint definition"
-msgstr "PostgreSQL məhdudiyyət tərifi "
+msgstr "PostgreSQL məhdudiyyət tərifi"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_constraint__name
@@ -33606,7 +33578,7 @@ msgstr "PostgreSQL məhdudiyyəti və xarici açar adı."
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_relation__name
 msgid "PostgreSQL table name implementing a many2many relation."
-msgstr "Many2many əlaqəsini yerinə yetirən PostgreSQL cədvəl adı "
+msgstr "Many2many əlaqəsini yerinə yetirən PostgreSQL cədvəl adı"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
@@ -33643,7 +33615,7 @@ msgstr "Parametrlər"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_sequence__prefix
 msgid "Prefix"
-msgstr "Prefiks "
+msgstr "Prefiks"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_sequence__prefix
@@ -33658,18 +33630,18 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_report_layout__image
 msgid "Preview image src"
-msgstr "Şəkil src-ya İlkin Baxış "
+msgstr "Şəkil src-ya İlkin Baxış"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_report_layout__pdf
 msgid "Preview pdf src"
-msgstr "Pdf src-ya İlkin Baxış "
+msgstr "Pdf src-ya İlkin Baxış"
 
 #. module: base
 #. odoo-python
 #: code:addons/base/models/ir_ui_view.py:0
 msgid "Previous Arch"
-msgstr "Əvvəlki Arxiv "
+msgstr "Əvvəlki Arxiv"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_view__arch_prev
@@ -33713,22 +33685,22 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_us_check_printing
 msgid "Print US Checks"
-msgstr "US "
+msgstr "US"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_report_paperformat__print_page_height
 msgid "Print page height (mm)"
-msgstr "Səhifə uzunluğunu (mm) çap edin "
+msgstr "Səhifə uzunluğunu (mm) çap edin"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_report_paperformat__print_page_width
 msgid "Print page width (mm)"
-msgstr "Səhifə genişliyini (mm) çap edin "
+msgstr "Səhifə genişliyini (mm) çap edin"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_report__print_report_name
 msgid "Printed Report Name"
-msgstr "Çap edilmiş Hesabat Adı "
+msgstr "Çap edilmiş Hesabat Adı"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_cron__priority
@@ -33815,7 +33787,7 @@ msgstr "Məhsul Matrisi"
 #. module: base
 #: model:ir.module.category,name:base.module_category_productivity
 msgid "Productivity"
-msgstr "Məhsuldarlıq "
+msgstr "Məhsuldarlıq"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_product
@@ -34111,7 +34083,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_documents_project
 msgid "Project from documents"
-msgstr "Sənədlərdən Layihə "
+msgstr "Sənədlərdən Layihə"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_project_helpdesk
@@ -35031,7 +35003,7 @@ msgstr "Bərpalar"
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_cron__interval_number
 msgid "Repeat every x."
-msgstr "Hər bir x. təkrarla "
+msgstr "Hər bir x. təkrarla"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_asset__directive__replace
@@ -35159,7 +35131,7 @@ msgstr "Satıcılar"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_partner_commission
 msgid "Resellers Commissions For Subscription"
-msgstr "Abunəlik Üçün Satıcılar Komissiyası "
+msgstr "Abunəlik Üçün Satıcılar Komissiyası"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_reset_view_arch_wizard__reset_mode
@@ -36103,7 +36075,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_report__attachment
 msgid "Save as Attachment Prefix"
-msgstr "Əlavə Prefiks kimi saxlayın "
+msgstr "Əlavə Prefiks kimi saxlayın"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_barcodes
@@ -38432,7 +38404,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_asset__target
 msgid "Target"
-msgstr "Hədəf "
+msgstr "Hədəf"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_server__crud_model_name
@@ -39633,7 +39605,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.category,name:base.module_category_theme
 msgid "Theme"
-msgstr "Tema "
+msgstr "Tema"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_theme_common
@@ -41243,7 +41215,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_delivery_usps_rest
 msgid "United States Postal Service (USPS) Shipping"
-msgstr "Amerika Birləşmiş Ştatları Poçt Çatdırılma Xidməti (USPS) "
+msgstr "Amerika Birləşmiş Ştatları Poçt Çatdırılma Xidməti (USPS)"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_delivery_usps
@@ -42123,7 +42095,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_module_category__visible
 msgid "Visible"
-msgstr "Görünən "
+msgstr "Görünən"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_currency_form
@@ -42630,7 +42602,7 @@ msgstr ""
 "Tarix aralığına görə alt ardıcıllıqlardan istifadə edildikdə, cari tarix "
 "əvəzinə aralığın başlanğıcında istifadə üçün 'range_' ilə dəyişənlərin "
 "girişini verə bilərsiniz,\n"
-"                                məs. %(year)s əvəzinə %(range_year)s "
+"                                məs. %(year)s əvəzinə %(range_year)s"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_fields__copied
@@ -42790,7 +42762,7 @@ msgstr "İş Sifarişləri, Planlaşdırma, Ehtiyatlar barədə Hesabatlar."
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_worksheet
 msgid "Worksheet"
-msgstr "İş səhifəsi "
+msgstr "İş səhifəsi"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_maintenance_worksheet
@@ -42817,7 +42789,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_ir_model_access__perm_write
 #: model_terms:ir.ui.view,arch_db:base.ir_access_view_search
 msgid "Write Access"
-msgstr "Girişi Yazın "
+msgstr "Girişi Yazın"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_relation__write_date
@@ -42880,7 +42852,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.demo_force_install_form
 msgid "Yes, I understand the risks"
-msgstr "Bəli, riskləri başa düşürəm "
+msgstr "Bəli, riskləri başa düşürəm"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_yoga_pilates
@@ -43001,7 +42973,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/base/models/res_users.py:0
 msgid "You cannot activate the superuser."
-msgstr "İmtiyazlı  istifadəçini aktivləşdirə bilməzsiniz. "
+msgstr "İmtiyazlı  istifadəçini aktivləşdirə bilməzsiniz."
 
 #. module: base
 #. odoo-python
@@ -43615,7 +43587,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_model_fields__ttype__float
 msgid "float"
-msgstr "Üzgəc "
+msgstr "Üzgəc"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_model_fields_form
@@ -43632,7 +43604,7 @@ msgstr ""
 #: code:addons/base/models/res_lang.py:0
 msgid "format() must be given exactly one %char format specifier"
 msgstr ""
-"format ()  dəqiq şəkildə % hərf simvol format göstəricisinə verilməlidir "
+"format ()  dəqiq şəkildə % hərf simvol format göstəricisinə verilməlidir"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__base_language_export__state__get
@@ -44059,6 +44031,69 @@ msgstr "Åland Adaları"
 #: code:addons/base/models/ir_ui_view.py:0
 msgid "“%(attribute)s” value must be an integer (%(value)s)"
 msgstr ""
+
+#~ msgid ""
+#~ "\n"
+#~ "Functional\n"
+#~ "----------\n"
+#~ "\n"
+#~ "In some Latinamerica countries, including Argentina and Chile, some "
+#~ "accounting transactions like invoices and vendor bills are classified by "
+#~ "a document types defined by the government fiscal authorities (In "
+#~ "Argentina case AFIP, Chile case SII).\n"
+#~ "\n"
+#~ "This module is intended to be extended by localizations in order to "
+#~ "manage these document types and is an essential information that needs to "
+#~ "be displayed in the printed reports and that needs to be easily "
+#~ "identified, within the set of invoices as well of account moves.\n"
+#~ "\n"
+#~ "Each document type have their own rules and sequence number, this last "
+#~ "one is integrated with the invoice number and journal sequence in order "
+#~ "to be easy for the localization user. In order to support or not this "
+#~ "document types a Journal has a new option that lets to use document or "
+#~ "not.\n"
+#~ "\n"
+#~ "Technical\n"
+#~ "---------\n"
+#~ "\n"
+#~ "If your localization needs this logic will then need to add this module "
+#~ "as dependency and in your localization module extend:\n"
+#~ "\n"
+#~ "* extend company's _localization_use_documents() method.\n"
+#~ "* create the data of the document types that exists for the specific "
+#~ "country. The document type has a country field\n"
+#~ "\n"
+#~ msgstr ""
+#~ "\n"
+#~ "Funksional\n"
+#~ "----------\n"
+#~ "\n"
+#~ "Argentina və Çili daxil olmaqla bəzi Latınamerika ölkələrində, fakturalar "
+#~ "və podratçı fakturaları kimi bəzi mühasibat əməliyyatları dövlətin "
+#~ "maliyyə orqanları tərəfindən müəyyən edilmiş sənəd növləri ilə təsnif "
+#~ "edilir (Argentinada AFIP, Çilidə SII).\n"
+#~ "\n"
+#~ "Bu modul, bu sənəd növlərini idarə etmək üçün lokallaşdırma yolu ilə "
+#~ "genişləndirilmək üçün nəzərdə tutulmuşdur və çap olunmuş hesabatlarda "
+#~ "göstərilməsi lazım olan və faktura dəsti daxilində asanlıqla müəyyən "
+#~ "edilməsi lazım olan vacib bir məlumatdır.\n"
+#~ "\n"
+#~ "Hər bir sənəd növünün öz qaydaları və sıra nömrəsi var, sonuncusu "
+#~ "lokalizasiya istifadəçisi üçün asan olması üçün faktura nömrəsi və jurnal "
+#~ "sırası ilə inteqrasiya olunur. Bu sənəd növlərini dəstəkləmək və ya "
+#~ "dəstəkləməmək üçün Jurnalda sənəddən istifadə etməyə imkan verən yeni bir "
+#~ "seçim var.\n"
+#~ "\n"
+#~ "Texniki\n"
+#~ "---------\n"
+#~ "\n"
+#~ "Lokalizasiyanız bu məntiqə ehtiyac duyarsa, bu modulu asılılıq olaraq "
+#~ "əlavə etmək və lokalizasiya modulunuza genişləndirmək lazımdır:\n"
+#~ "\n"
+#~ "* şirkətin _localization_use_documents () metodunu genişləndirin.\n"
+#~ "* xüsusi ölkə üçün mövcud sənəd növləri haqqında məlumat yaradın. Sənədin "
+#~ "növü ölkə ərazisini əhatə edir\n"
+#~ "\n"
 
 #~ msgid ""
 #~ "\n"

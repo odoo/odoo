@@ -1,27 +1,29 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* fleet
+# * fleet
 #
 # Translators:
 # Mustafa Rawi <mustafa@cubexco.com>, 2022
 # Martin Trigaux, 2022
 # Niyas Raphy, 2022
 # Malaz Abuidris <msea@odoo.com>, 2023
-#
+# "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-09-11 13:56+0000\n"
-"PO-Revision-Date: 2022-09-22 05:46+0000\n"
-"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2023\n"
-"Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
+"PO-Revision-Date: 2025-09-16 13:38+0000\n"
+"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
+"Language-Team: Arabic <https://translate.odoo.com/projects/odoo-19/fleet/ar/>"
+"\n"
 "Language: ar\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
-"&& n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
+"&& n%100<=10 ? 3 : n%100>=11 ? 4 : 5;\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_kanban
@@ -34,21 +36,23 @@ msgid ""
 "<span class=\"o_stat_value\">New</span>\n"
 "                                <span class=\"o_stat_text\">Vehicle</span>"
 msgstr ""
+"<span class=\"o_stat_value\">مركبة</span>\n"
+"                                <span class=\"o_stat_text\">جديدة</span>"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.res_config_settings_view_form
 msgid "<span> days before the end date</span>"
-msgstr "<span> أيام قبل تاريخ الانتهاء</span> "
+msgstr "<span> أيام قبل تاريخ الانتهاء</span>"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.res_config_settings_view_form
 msgid "<span>Send an alert </span>"
-msgstr "<span>إرسال تنبيه </span> "
+msgstr "<span>إرسال تنبيه </span>"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
 msgid "<span>cm</span>"
-msgstr "<span>سم</span> "
+msgstr "<span>سم</span>"
 
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle__trailer_hook
@@ -56,6 +60,8 @@ msgid ""
 "A trailer hitch is a device attached to a vehicle's chassis for towing "
 "purposes,             such as pulling trailers, boats, or other vehicles."
 msgstr ""
+"وصلة المقطورة عبارة عن جهاز متصل بهيكل السيارة يُستخدم في القَطر،             "
+"مثل سحب المقطورات أو القوارب أو المركبات الأخرى."
 
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_model__trailer_hook
@@ -63,31 +69,33 @@ msgid ""
 "A trailer hitch is a device attached to a vehicle's chassis for towing "
 "purposes,            such as pulling trailers, boats, or other vehicles."
 msgstr ""
+"وصلة المقطورة عبارة عن جهاز متصل بهيكل السيارة يُستخدم في القَطر،            "
+"مثل سحب المقطورات أو القوارب أو المركبات الأخرى."
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_1
 msgid "A/C Compressor Replacement"
-msgstr "استبدال ضاغط المكيف "
+msgstr "استبدال ضاغط المكيف"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_2
 msgid "A/C Condenser Replacement"
-msgstr "استبدال مكثف المكيف "
+msgstr "استبدال مكثف المكيف"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_3
 msgid "A/C Diagnosis"
-msgstr "تشخيص المكيف "
+msgstr "تشخيص المكيف"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_4
 msgid "A/C Evaporator Replacement"
-msgstr "استبدال مبخر المكيف "
+msgstr "استبدال مبخر المكيف"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_5
 msgid "A/C Recharge"
-msgstr "إعادة شحن المكيف "
+msgstr "إعادة شحن المكيف"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__message_needaction
@@ -95,7 +103,7 @@ msgstr "إعادة شحن المكيف "
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__message_needaction
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__message_needaction
 msgid "Action Needed"
-msgstr "يتطلب اتخاذ إجراء "
+msgstr "إجراء مطلوب"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
@@ -122,7 +130,7 @@ msgstr "الأنشطة"
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_search
 msgid "Activities of"
-msgstr ""
+msgstr "أنشطة"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__activity_exception_decoration
@@ -143,7 +151,7 @@ msgstr "حالة النشاط"
 #. module: fleet
 #: model:ir.model,name:fleet.model_mail_activity_type
 msgid "Activity Type"
-msgstr ""
+msgstr "نوع النشاط"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__activity_type_icon
@@ -157,22 +165,22 @@ msgstr "أيقونة نوع النشاط"
 #: model:ir.actions.act_window,name:fleet.mail_activity_type_action_config_fleet
 #: model:ir.ui.menu,name:fleet.fleet_menu_config_activity_type
 msgid "Activity Types"
-msgstr "أنواع الأنشطة "
+msgstr "أنواع الأنشطة"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_search
 msgid "Activity type"
-msgstr ""
+msgstr "نوع النشاط"
 
 #. module: fleet
 #: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_tag_action
 msgid "Add a new tag"
-msgstr "إضافة علامة تصنيف جديدة "
+msgstr "إضافة علامة تصنيف جديدة"
 
 #. module: fleet
 #: model:res.groups,name:fleet.fleet_group_manager
 msgid "Administrator"
-msgstr "المدير "
+msgstr "المدير"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_6
@@ -187,17 +195,17 @@ msgstr "كافة المركبات"
 #. module: fleet
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle_model__drive_type__awd
 msgid "All-Wheel Drive (AWD)"
-msgstr ""
+msgstr "نظام الدفع بكل العجلات (AWD)"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
 msgid "Apply New Driver"
-msgstr "تطبيق سائق جديد "
+msgstr "تطبيق سائق جديد"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_model_brand_view_kanban
 msgid "Archive"
-msgstr ""
+msgstr "الأرشيف"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
@@ -213,13 +221,13 @@ msgstr "مؤرشف"
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__next_assignation_date
 msgid "Assignment Date"
-msgstr "تاريخ الإسناد "
+msgstr "تاريخ الإسناد"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__log_drivers
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_assignation_log_view_list
 msgid "Assignment Logs"
-msgstr "سجلات التعيين "
+msgstr "سجلات التعيين"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_service_8
@@ -237,17 +245,17 @@ msgstr "عدد المرفقات"
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_send_mail__attachment_ids
 msgid "Attachments"
-msgstr ""
+msgstr "المرفقات"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_kanban
 msgid "Attention: renewal overdue"
-msgstr "تحذير: مر موعد التجديد "
+msgstr "تحذير: مر موعد التجديد"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_send_mail__author_id
 msgid "Author"
-msgstr ""
+msgstr "الكاتب"
 
 #. module: fleet
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle__transmission__automatic
@@ -264,36 +272,36 @@ msgstr "متاح"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__avatar_1920
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__avatar_1920
 msgid "Avatar"
-msgstr ""
+msgstr "الصورة الرمزية"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__avatar_1024
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__avatar_1024
 msgid "Avatar 1024"
-msgstr ""
+msgstr "الصورة الرمزية 1024"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__avatar_128
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__avatar_128
 msgid "Avatar 128"
-msgstr ""
+msgstr "الصورة الرمزية 128"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__avatar_256
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__avatar_256
 msgid "Avatar 256"
-msgstr ""
+msgstr "الصورة الرمزية 256"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__avatar_512
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__avatar_512
 msgid "Avatar 512"
-msgstr ""
+msgstr "الصورة الرمزية 512"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_7
 msgid "Ball Joint Replacement"
-msgstr "استبدال المفصل الكروي "
+msgstr "استبدال المفصل الكروي"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_9
@@ -309,7 +317,7 @@ msgstr "استبدال البطارية"
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle_cost_report__vehicle_type__bike
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle_model__vehicle_type__bike
 msgid "Bike"
-msgstr "الدراجة "
+msgstr "الدراجة"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__frame_type
@@ -319,12 +327,12 @@ msgstr "نوع إطار الدراجة"
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_search
 msgid "Bikes"
-msgstr "الدراجات "
+msgstr "الدراجات"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_send_mail__body_has_template_value
 msgid "Body content is the same as the template"
-msgstr ""
+msgstr "محتوى المتن هو نفس القالب"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_11
@@ -367,13 +375,13 @@ msgstr "انبعاثات ثاني أكسيد الكربون"
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle__co2
 msgid "CO2 emissions of the vehicle"
-msgstr "انبعاثات ثاني أكسيد الكربون من هذه المركبة "
+msgstr "انبعاثات ثاني أكسيد الكربون من هذه المركبة"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__co2
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__default_co2
 msgid "CO₂ Emissions"
-msgstr ""
+msgstr "انبعاثات ثاني أكسيد الكربون"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_service_1
@@ -383,12 +391,12 @@ msgstr "حساب المزايا العينية"
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_send_mail__can_edit_body
 msgid "Can Edit Body"
-msgstr ""
+msgstr "يمكن تحرير النص"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_send_mail_view_form
 msgid "Cancel"
-msgstr "إلغاء "
+msgstr "إلغاء"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__write_off_date
@@ -399,13 +407,13 @@ msgstr "تاريخ الإلغاء"
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle_log_contract__state__closed
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle_log_services__state__cancelled
 msgid "Cancelled"
-msgstr "ملغي"
+msgstr "تم الإلغاء"
 
 #. module: fleet
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle_cost_report__vehicle_type__car
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle_model__vehicle_type__car
 msgid "Car"
-msgstr "السيارة "
+msgstr "السيارة"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_14
@@ -415,7 +423,7 @@ msgstr "غسيل السيارة"
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_search
 msgid "Cars"
-msgstr "السيارات "
+msgstr "السيارات"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__car_value
@@ -438,7 +446,7 @@ msgstr "الفئات"
 msgid ""
 "Categories will help you manage your fleet more efficiently and arrange your "
 "vehicles."
-msgstr ""
+msgstr "ستساعدك الفئات على إدارة أسطولك بكفاءة أعلى وتنظيم مركباتك."
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_service_type__category
@@ -448,17 +456,17 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_model_view_search
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_odometer_report_view_search
 msgid "Category"
-msgstr "الفئة "
+msgstr "الفئة"
 
 #. module: fleet
 #: model:ir.model.constraint,message:fleet.constraint_fleet_vehicle_model_category_name_uniq
 msgid "Category name must be unique"
-msgstr "يجب أن يكون اسم الفئة فريداً "
+msgstr "يجب أن يكون اسم الفئة فريداً"
 
 #. module: fleet
 #: model:ir.model,name:fleet.model_fleet_vehicle_model_category
 msgid "Category of the model"
-msgstr "فئة النموذج "
+msgstr "فئة النموذج"
 
 #. module: fleet
 #: model:mail.message.subtype,description:fleet.mt_fleet_driver_updated
@@ -479,12 +487,12 @@ msgstr "رقم الشاسيه"
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract__state
 msgid "Choose whether the contract is still valid or not"
-msgstr "تحديد ما إذا كان العقد لا يزال صالحًا أم لا "
+msgstr "تحديد ما إذا كان العقد لا يزال صالحًا أم لا"
 
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_service_type__category
 msgid "Choose whether the service refer to contracts, vehicle services or both"
-msgstr "تحديد ما إذا كانت الخدمة تشير لعقود أم لخدمات المركبة أم لكليهما "
+msgstr "تحديد ما إذا كانت الخدمة تشير لعقود أم لخدمات المركبة أم لكليهما"
 
 #. module: fleet
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle__contract_state__closed
@@ -495,7 +503,7 @@ msgstr "مغلق"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__co2_emission_unit
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__co2_emission_unit
 msgid "Co2 Emission Unit"
-msgstr ""
+msgstr "وحدة انبعاثات ثاني أكسيد الكربون"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__color
@@ -512,7 +520,7 @@ msgstr "لون المركبة"
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_send_mail_view_form
 msgid "Communication about your vehicle."
-msgstr ""
+msgstr "تواصل بشأن مركبتك."
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__company_id
@@ -520,28 +528,28 @@ msgstr ""
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__company_id
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__company_id
 msgid "Company"
-msgstr "الشركة "
+msgstr "الشركة"
 
 #. module: fleet
 #: model:ir.model,name:fleet.model_res_config_settings
 msgid "Config Settings"
-msgstr "تهيئة الإعدادات "
+msgstr "تهيئة الإعدادات"
 
 #. module: fleet
 #: model:ir.ui.menu,name:fleet.fleet_configuration
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_model_brand_view_kanban
 msgid "Configuration"
-msgstr "التهيئة "
+msgstr "التهيئة"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_model_view_search
 msgid "Contains Vehicle"
-msgstr ""
+msgstr "يحتوي على مركبة"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_send_mail__body
 msgid "Contents"
-msgstr ""
+msgstr "المحتويات"
 
 #. module: fleet
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_service_type__category__contract
@@ -586,7 +594,7 @@ msgstr "العقود المراد تجديدها"
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_kanban
 msgid "Contract(s)"
-msgstr "العقد (العقود) "
+msgstr "العقد (العقود)"
 
 #. module: fleet
 #: model:ir.actions.act_window,name:fleet.fleet_vehicle_log_contract_action
@@ -652,12 +660,12 @@ msgstr "إنشاء عقد جديد"
 #. module: fleet
 #: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_model_brand_action
 msgid "Create a new manufacturer"
-msgstr "إنشاء مُصَنِّع جديد "
+msgstr "إنشاء مُصَنِّع جديد"
 
 #. module: fleet
 #: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_model_action
 msgid "Create a new model"
-msgstr "إنشاء نموذج جديد "
+msgstr "إنشاء نموذج جديد"
 
 #. module: fleet
 #: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_odometer_action
@@ -721,12 +729,12 @@ msgstr "العملة"
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_assignation_log_view_list
 msgid "Current Driver"
-msgstr "السائق الحالي "
+msgstr "السائق الحالي"
 
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle__state_id
 msgid "Current state of the vehicle"
-msgstr "الحالة الحالية للمركبة "
+msgstr "الحالة الحالية للمركبة"
 
 #. module: fleet
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle_log_contract__cost_frequency__daily
@@ -747,7 +755,7 @@ msgstr "التاريخ"
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle__acquisition_date
 msgid "Date of vehicle registration"
-msgstr ""
+msgstr "تاريخ تسجيل المركبة"
 
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract__date
@@ -776,17 +784,17 @@ msgstr "التاريخ الذي تم فيه إلغاء / إزالة لوحة ت�
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_res_config_settings__delay_alert_contract
 msgid "Delay alert contract outdated"
-msgstr "تحذير تأخير، انتهت مدة العقد "
+msgstr "تحذير تأخير، انتهت مدة العقد"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_model_brand_view_kanban
 msgid "Delete"
-msgstr ""
+msgstr "حذف"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_service_2
 msgid "Depreciation and Interests"
-msgstr "الإهلاك والفوائد "
+msgstr "الإهلاك والفوائد"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__description
@@ -796,7 +804,7 @@ msgstr "الوصف"
 #. module: fleet
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle__frame_type__diamant
 msgid "Diamant"
-msgstr "ديامانت "
+msgstr "ديامانت"
 
 #. module: fleet
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle__fuel_type__diesel
@@ -822,12 +830,12 @@ msgstr "ديزل"
 #: model:ir.model.fields,field_description:fleet.field_mail_activity_type__display_name
 #: model:ir.model.fields,field_description:fleet.field_res_config_settings__display_name
 msgid "Display Name"
-msgstr "اسم العرض "
+msgstr "اسم العرض"
 
 #. module: fleet
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle_log_services__state__done
 msgid "Done"
-msgstr "منتهي "
+msgstr "منتهي"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_17
@@ -837,12 +845,12 @@ msgstr "استبدال محرك/منظم نافذة الباب"
 #. module: fleet
 #: model:fleet.vehicle.state,name:fleet.fleet_vehicle_state_downgraded
 msgid "Downgraded"
-msgstr "خفض الرتبة "
+msgstr "خفض الرتبة"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__drive_type
 msgid "Drive Type"
-msgstr ""
+msgstr "نوع القيادة"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__driver_id
@@ -861,27 +869,27 @@ msgstr "السائق"
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle__driver_id
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract__purchaser_id
 msgid "Driver address of the vehicle"
-msgstr "عنوان السائق للمركبة "
+msgstr "عنوان السائق للمركبة"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_search
 msgid "Drivers"
-msgstr "السائقين "
+msgstr "السائقين"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
 msgid "Drivers History"
-msgstr "سجل السائقين "
+msgstr "سجل السائقين"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__history_count
 msgid "Drivers History Count"
-msgstr "عدد سجلات السائقين "
+msgstr "عدد سجلات السائقين"
 
 #. module: fleet
 #: model:ir.model,name:fleet.model_fleet_vehicle_assignation_log
 msgid "Drivers history on a vehicle"
-msgstr "سِجِل السائقين على مركبة "
+msgstr "سِجِل السائقين على مركبة"
 
 #. module: fleet
 #: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_log_contract_action
@@ -901,19 +909,19 @@ msgstr "يمكن استخدام كل خدمة في العقود، أو كخدم�
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle__fuel_type__electric
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle_model__default_fuel_type__electric
 msgid "Electric"
-msgstr "كهربائية "
+msgstr "كهربائية"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__electric_assistance
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__electric_assistance
 msgid "Electric Assistance"
-msgstr "المساعدة الكهربائية "
+msgstr "المساعدة الكهربائية"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__co2_standard
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__co2_standard
 msgid "Emission Standard"
-msgstr ""
+msgstr "معيار الانبعاثات"
 
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle__co2_standard
@@ -921,6 +929,8 @@ msgid ""
 "Emission Standard specifies the regulatory test procedure             or "
 "guideline under which a vehicle's emissions are measured."
 msgstr ""
+"يحدد معيار الانبعاثات إجراء الاختبار التنظيمي             أو المبدأ التوجيهي "
+"الذي يتم بموجبه قياس انبعاثات السيارة."
 
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_model__co2_standard
@@ -928,6 +938,8 @@ msgid ""
 "Emission Standard specifies the regulatory test procedure or             "
 "guideline under which a vehicle's emissions are measured."
 msgstr ""
+"يحدد معيار الانبعاثات إجراء الاختبار التنظيمي أو             المبدأ التوجيهي "
+"الذي يتم بموجبه قياس انبعاثات السيارة."
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_service_16
@@ -937,13 +949,13 @@ msgstr "الانبعاثات"
 #. module: fleet
 #: model:fleet.vehicle.tag,name:fleet.vehicle_tag_leasing
 msgid "Employee Car"
-msgstr "سيارة موظف "
+msgstr "سيارة موظف"
 
 #. module: fleet
 #. odoo-python
 #: code:addons/fleet/models/fleet_vehicle_log_services.py:0
 msgid "Emptying the odometer value of a vehicle is not allowed."
-msgstr "لا يُسمَح بتصفير قيمة عداد المسافات. "
+msgstr "لا يُسمَح بتصفير قيمة عداد المسافات."
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_assignation_log__date_end
@@ -953,13 +965,13 @@ msgstr "تاريخ الانتهاء"
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.res_config_settings_view_form
 msgid "End Date Contract Alert"
-msgstr ""
+msgstr "تنبيه تاريخ انتهاء العقد"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_model_view_form
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
 msgid "Engine"
-msgstr "المحرك "
+msgstr "المحرك"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_18
@@ -974,7 +986,7 @@ msgstr "استبدال مبرد المحرك"
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_20
 msgid "Engine/Drive Belt(s) Replacement"
-msgstr "استبدال حزام (أحزمة) المحرك/حزام الأمان "
+msgstr "استبدال حزام (أحزمة) المحرك/حزام الأمان"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_service_12
@@ -989,7 +1001,7 @@ msgid ""
 "Are you sure that you want to archive this record?"
 msgstr ""
 "سوف تتم أرشفة كافة الخدمات والعقود المرتبطة بهذه المركبة. هل أنت متأكد من "
-"أنك ترغب في أرشفة هذا السجل؟ "
+"أنك ترغب في أرشفة هذا السجل؟"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_21
@@ -1016,7 +1028,7 @@ msgstr "تاريخ أول عقد"
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
 msgid "Fiscality"
-msgstr "الشؤون المالية "
+msgstr "الشؤون المالية"
 
 #. module: fleet
 #: model:ir.ui.menu,name:fleet.fleet_vehicle_menu
@@ -1030,7 +1042,7 @@ msgstr "الأسطول"
 #. module: fleet
 #: model:ir.model,name:fleet.model_fleet_vehicle_cost_report
 msgid "Fleet Analysis Report"
-msgstr "تقرير تحليل الأسطول "
+msgstr "تقرير تحليل الأسطول"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_costs_report_view_graph
@@ -1038,7 +1050,7 @@ msgstr "تقرير تحليل الأسطول "
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vechicle_costs_report_view_form
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vechicle_costs_report_view_tree
 msgid "Fleet Costs Analysis"
-msgstr "تحليل تكاليف الأسطول "
+msgstr "تحليل تكاليف الأسطول"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.res_config_settings_view_form
@@ -1050,12 +1062,12 @@ msgstr "إدارة الأسطول"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__manager_id
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_services_view_search
 msgid "Fleet Manager"
-msgstr "مدير الأسطول "
+msgstr "مدير الأسطول"
 
 #. module: fleet
 #: model:ir.model,name:fleet.model_fleet_vehicle_odometer_report
 msgid "Fleet Odometer Analysis Report"
-msgstr ""
+msgstr "تقرير تحليل عداد المسافات للأسطول"
 
 #. module: fleet
 #: model:ir.model,name:fleet.model_fleet_service_type
@@ -1070,7 +1082,7 @@ msgstr "الأسطول: إنشاء تكاليف العقود حسب معدل س�
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_state__fold
 msgid "Folded in Kanban"
-msgstr ""
+msgstr "مطوي في عرض كانبان"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__message_follower_ids
@@ -1078,7 +1090,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__message_follower_ids
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__message_follower_ids
 msgid "Followers"
-msgstr "المتابعين "
+msgstr "المتابعين"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__message_partner_ids
@@ -1086,7 +1098,7 @@ msgstr "المتابعين "
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__message_partner_ids
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__message_partner_ids
 msgid "Followers (Partners)"
-msgstr "المتابعين (الشركاء) "
+msgstr "المتابعين (الشركاء)"
 
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle__activity_type_icon
@@ -1094,22 +1106,22 @@ msgstr "المتابعين (الشركاء) "
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_services__activity_type_icon
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_model__activity_type_icon
 msgid "Font awesome icon e.g. fa-tasks"
-msgstr "أيقونة Font awesome مثال fa-tasks "
+msgstr "أيقونة من Font awesome مثال: fa-tasks"
 
 #. module: fleet
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle_model__drive_type__4wd
 msgid "Four-Wheel Drive (4WD)"
-msgstr ""
+msgstr "الدفع رباعي العجلات (4WD)"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__frame_size
 msgid "Frame Size"
-msgstr "حجم الهيكل "
+msgstr "حجم الهيكل"
 
 #. module: fleet
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle_model__drive_type__fwd
 msgid "Front-Wheel Drive (FWD)"
-msgstr ""
+msgstr "نظام الدفع بالعجلات الأمامية (FWD)"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_cost_report__fuel_type
@@ -1150,12 +1162,12 @@ msgstr "الأنشطة المستقبلية"
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__future_driver_id
 msgid "Future Driver"
-msgstr "السائق المستقبلي "
+msgstr "السائق المستقبلي"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_kanban
 msgid "Future Driver :"
-msgstr "السائق المستقبلي : "
+msgstr "السائق المستقبلي :"
 
 #. module: fleet
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle__fuel_type__gasoline
@@ -1166,12 +1178,12 @@ msgstr "بنزين"
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__contract_renewal_overdue
 msgid "Has Contracts Overdue"
-msgstr "يحتوي على عقود متأخرة "
+msgstr "يحتوي على عقود متأخرة"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__contract_renewal_due_soon
 msgid "Has Contracts to renew"
-msgstr "يحتوي على عقود بانتظار التجديد "
+msgstr "يحتوي على عقود بانتظار التجديد"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__has_message
@@ -1179,22 +1191,22 @@ msgstr "يحتوي على عقود بانتظار التجديد "
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__has_message
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__has_message
 msgid "Has Message"
-msgstr "يحتوي على رسالة "
+msgstr "يحتوي على رسالة"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__has_open_contract
 msgid "Has Open Contract"
-msgstr ""
+msgstr "يحتوي على عقد مفتوح"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_24
 msgid "Head Gasket(s) Replacement"
-msgstr "استبدال حشية الرأس "
+msgstr "استبدال حشية الرأس"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_25
 msgid "Heater Blower Motor Replacement"
-msgstr "استبدال محرك مروحة السخان "
+msgstr "استبدال محرك مروحة السخان"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_26
@@ -1221,7 +1233,7 @@ msgstr "قوة حصان"
 #. module: fleet
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle_model__power_unit__horsepower
 msgid "Horsepower (hp)"
-msgstr ""
+msgstr "قوة حصان (hp)"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__horsepower_tax
@@ -1233,7 +1245,7 @@ msgstr "الضريبة على قوة الحصان"
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle__fuel_type__hydrogen
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle_model__default_fuel_type__hydrogen
 msgid "Hydrogen"
-msgstr "هيدروجين "
+msgstr "هيدروجين"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_service_type__id
@@ -1269,7 +1281,7 @@ msgstr "الأيقونة"
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_services__activity_exception_icon
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_model__activity_exception_icon
 msgid "Icon to indicate an exception activity."
-msgstr "الأيقونة للإشارة إلى النشاط المستثنى. "
+msgstr "الأيقونة للإشارة إلى النشاط المستثنى."
 
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle__message_needaction
@@ -1277,7 +1289,7 @@ msgstr "الأيقونة للإشارة إلى النشاط المستثنى. "
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_services__message_needaction
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_model__message_needaction
 msgid "If checked, new messages require your attention."
-msgstr "إذا كان محددًا، فهناك رسائل جديدة تحتاج لرؤيتها."
+msgstr "إذا كان محددًا، فهناك رسائل جديدة عليك رؤيتها."
 
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle__message_has_error
@@ -1290,37 +1302,37 @@ msgstr "إذا كان محددًا، فقد حدث خطأ في تسليم بعض
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_29
 msgid "Ignition Coil Replacement"
-msgstr "استبدال مولد شرارة الإشعال "
+msgstr "استبدال مولد شرارة الإشعال"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__image_1920
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__image_1920
 msgid "Image"
-msgstr ""
+msgstr "صورة"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__image_1024
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__image_1024
 msgid "Image 1024"
-msgstr ""
+msgstr "صورة 1024"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__image_128
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__image_128
 msgid "Image 128"
-msgstr ""
+msgstr "صورة 128"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__image_256
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__image_256
 msgid "Image 256"
-msgstr ""
+msgstr "صورة 256"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__image_512
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__image_512
 msgid "Image 512"
-msgstr ""
+msgstr "صورة 512"
 
 #. module: fleet
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle__contract_state__open
@@ -1336,7 +1348,7 @@ msgstr "الخدمات المشمولة"
 #. module: fleet
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle__contract_state__futur
 msgid "Incoming"
-msgstr "واردة "
+msgstr "واردة"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
@@ -1347,12 +1359,12 @@ msgstr "معلومات"
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_30
 msgid "Intake Manifold Gasket Replacement"
-msgstr "استبدال مشعب الحشية "
+msgstr "استبدال مشعب الحشية"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_send_mail__is_mail_template_editor
 msgid "Is Editor"
-msgstr ""
+msgstr "محرر"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__message_is_follower
@@ -1371,17 +1383,17 @@ msgstr "مستجد"
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle__fuel_type__lpg
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle_model__default_fuel_type__lpg
 msgid "LPG"
-msgstr "غاز نفطي مسال "
+msgstr "غاز نفطي مسال"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_send_mail__lang
 msgid "Language"
-msgstr ""
+msgstr "اللغة"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__contract_state
 msgid "Last Contract State"
-msgstr "حالة آخر عقد "
+msgstr "حالة آخر عقد"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__odometer
@@ -1434,28 +1446,28 @@ msgstr "إيجار"
 #. module: fleet
 #: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_action
 msgid "Let's create your first vehicle."
-msgstr "فلنقم بإنشاء مركبتك الأولى. "
+msgstr "فلنقم بإنشاء مركبتك الأولى."
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__license_plate
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_search
 msgid "License Plate"
-msgstr "لوحة السيارة "
+msgstr "لوحة السيارة"
 
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle__license_plate
 msgid "License plate number of the vehicle (i = plate number for a car)"
-msgstr "رقم لوحة المركبة (i = رقم لوحة لسيارة) "
+msgstr "رقم لوحة المركبة (i = رقم لوحة لسيارة)"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_send_mail_view_form
 msgid "Load template"
-msgstr ""
+msgstr "تحميل القالب"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__location
 msgid "Location"
-msgstr "الموقع "
+msgstr "الموقع"
 
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle__location
@@ -1470,22 +1482,22 @@ msgstr "الشعار"
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_model_brand_view_kanban
 msgid "MODELS"
-msgstr "الموديلات "
+msgstr "الموديلات"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_send_mail__template_id
 msgid "Mail Template"
-msgstr ""
+msgstr "قالب البريد الإلكتروني"
 
 #. module: fleet
 #: model:ir.actions.server,name:fleet.action_fleet_vehicle_send_mail
 msgid "Mail to Driver"
-msgstr ""
+msgstr "إرسال إلى السائق عن طريق البريد"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
 msgid "Make Vehicle Available"
-msgstr ""
+msgstr "اجعل المركبة متاحة"
 
 #. module: fleet
 #: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_log_contract_action
@@ -1496,17 +1508,17 @@ msgid ""
 msgstr ""
 "تمكن من إدارة كافة عقودك (عقود التأجير، عقود التأمين، إلخ) من خلال\n"
 "            الخدمات والتكاليف المقترنة بها. سوف يقوم أودو بتنبيهك تلقائيًا\n"
-"            عند الحاجة لتجديد بعض العقود. "
+"            عند الحاجة لتجديد بعض العقود."
 
 #. module: fleet
 #: model_terms:ir.actions.act_window,help:fleet.fleet_costs_reporting_action
 msgid "Manage efficiently your different effective vehicles Costs with Odoo."
-msgstr "تمكن من إدارة تكاليف مركباتك المتنوعة بكل سهولة مع أودو. "
+msgstr "تمكن من إدارة تكاليف مركباتك المتنوعة بكل سهولة مع أودو."
 
 #. module: fleet
 #: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_odometer_reporting_action
 msgid "Manage efficiently your vehicle Odometers with Odoo."
-msgstr ""
+msgstr "قم بإدارة عداد مسافات مركبتك بكفاءة مع أودو."
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_service_10
@@ -1525,14 +1537,14 @@ msgstr "يدوي"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__brand_id
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_services_view_search
 msgid "Manufacturer"
-msgstr "مصنِّع "
+msgstr "مصنِّع"
 
 #. module: fleet
 #: model:ir.actions.act_window,name:fleet.fleet_vehicle_model_brand_action
 #: model:ir.ui.menu,name:fleet.fleet_vehicle_model_brand_menu
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_model_view_search
 msgid "Manufacturers"
-msgstr "المصنّعين "
+msgstr "المصنّعين"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__message_has_error
@@ -1553,7 +1565,7 @@ msgstr "الرسائل"
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_odometer_report__mileage_delta
 msgid "Mileage Delta"
-msgstr ""
+msgstr "دلتا المسافة المقطوعة"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__model_id
@@ -1567,18 +1579,18 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_search
 msgid "Model"
-msgstr "الكائن"
+msgstr "النموذج"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_model_category_view_form
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_model_category_view_tree
 msgid "Model Category"
-msgstr "فئة الموديل "
+msgstr "فئة الموديل"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_brand__model_count
 msgid "Model Count"
-msgstr "عدد الموديلات "
+msgstr "عدد الموديلات"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_model_brand_view_form
@@ -1590,12 +1602,12 @@ msgstr "العلامة التجارية للموديل"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__model_year
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__model_year
 msgid "Model Year"
-msgstr "سنة الموديل "
+msgstr "سنة الموديل"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__name
 msgid "Model name"
-msgstr "اسم الموديل "
+msgstr "اسم الموديل"
 
 #. module: fleet
 #: model:ir.model,name:fleet.model_fleet_vehicle_model
@@ -1624,7 +1636,7 @@ msgstr "شهرياً"
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_search
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_search
 msgid "My Activities"
-msgstr ""
+msgstr "أنشطتي"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__my_activity_date_deadline
@@ -1632,7 +1644,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__my_activity_date_deadline
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__my_activity_date_deadline
 msgid "My Activity Deadline"
-msgstr "نهاية الوقت المعين للنشاط"
+msgstr "الموعد النهائي لنشاطاتي"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_service_type__name
@@ -1648,7 +1660,7 @@ msgstr "الاسم"
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_search
 msgid "Need Action"
-msgstr "يتطلب اتخاذ إجراء "
+msgstr "يتطلب اتخاذ إجراء"
 
 #. module: fleet
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle_log_contract__state__futur
@@ -1667,7 +1679,7 @@ msgstr "طلب جديد"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__activity_calendar_event_id
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__activity_calendar_event_id
 msgid "Next Activity Calendar Event"
-msgstr "الفعالية التالية في تقويم الأنشطة "
+msgstr "الفعالية التالية في تقويم الأنشطة"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__activity_date_deadline
@@ -1696,7 +1708,7 @@ msgstr "نوع النشاط التالي"
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle__future_driver_id
 msgid "Next Driver Address of the vehicle"
-msgstr "عنوان السائق التالي للمركبة "
+msgstr "عنوان السائق التالي للمركبة"
 
 #. module: fleet
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle_log_contract__cost_frequency__no
@@ -1712,18 +1724,18 @@ msgstr "لا توجد لوحة"
 #. module: fleet
 #: model_terms:ir.actions.act_window,help:fleet.fleet_costs_reporting_action
 msgid "No data for analysis"
-msgstr "لا توجد بيانات لتحليلها "
+msgstr "لا توجد بيانات لتحليلها"
 
 #. module: fleet
 #: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_odometer_reporting_action
 msgid "No data for odometer analysis"
-msgstr ""
+msgstr "لا توجد بياينات لتحليل عدّاد المسافات"
 
 #. module: fleet
 #. odoo-python
 #: code:addons/fleet/models/fleet_vehicle.py:0
 msgid "No plate"
-msgstr "لا توجد لوحة "
+msgstr "لا توجد لوحة"
 
 #. module: fleet
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle__service_activity__none
@@ -1733,7 +1745,7 @@ msgstr "لا شيء"
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
 msgid "Note"
-msgstr "ملاحظة "
+msgstr "الملاحظات"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__notes
@@ -1753,7 +1765,7 @@ msgstr "عدد الإجراءات"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__doors
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__doors
 msgid "Number of Doors"
-msgstr ""
+msgstr "عدد الأبواب"
 
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle__doors
@@ -1766,7 +1778,7 @@ msgstr "عدد أبواب المركبة"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__message_has_error_counter
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__message_has_error_counter
 msgid "Number of errors"
-msgstr "عدد الأخطاء "
+msgstr "عدد الأخطاء"
 
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle__message_needaction_counter
@@ -1774,7 +1786,7 @@ msgstr "عدد الأخطاء "
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_services__message_needaction_counter
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_model__message_needaction_counter
 msgid "Number of messages requiring action"
-msgstr ""
+msgstr "عدد الرسائل التي تتطلب اتخاذ إجراء"
 
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle__message_has_error_counter
@@ -1799,7 +1811,7 @@ msgstr "عداد المسافات"
 #. module: fleet
 #: model:ir.actions.act_window,name:fleet.fleet_vehicle_odometer_reporting_action
 msgid "Odometer Analysis"
-msgstr ""
+msgstr "تحليل عدّاد المسافات"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_odometer_view_form
@@ -1810,7 +1822,7 @@ msgstr "سجلات عداد المسافات"
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
 msgid "Odometer Report"
-msgstr ""
+msgstr "تقرير عدّاد المسافات"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__odometer_unit
@@ -1839,19 +1851,19 @@ msgstr "سجل عداد المسافات لمركبة"
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_services__odometer
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_services__odometer_id
 msgid "Odometer measure of the vehicle at the moment of this log"
-msgstr "قيمة عداد مسافات المركبة عند في هذا السجل "
+msgstr "قيمة عداد مسافات المركبة عند في هذا السجل"
 
 #. module: fleet
 #: model:ir.actions.act_window,name:fleet.fleet_vehicle_odometer_action
 #: model:ir.ui.menu,name:fleet.fleet_vehicle_odometer_menu
 #: model:ir.ui.menu,name:fleet.menu_fleet_odometer_reporting_odometer
 msgid "Odometers"
-msgstr "عدادات السرعة "
+msgstr "عدادات السرعة"
 
 #. module: fleet
 #: model:res.groups,name:fleet.fleet_group_user
 msgid "Officer: Manage all vehicles"
-msgstr ""
+msgstr "المسؤول: إدارة كافة المركبات"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_31
@@ -1880,12 +1892,12 @@ msgstr ""
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_service_15
 msgid "Options"
-msgstr "الخيارات "
+msgstr "الخيارات"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__order_date
 msgid "Order Date"
-msgstr ""
+msgstr "تاريخ الطلب"
 
 #. module: fleet
 #: model:fleet.vehicle.state,name:fleet.fleet_vehicle_state_ordered
@@ -1910,51 +1922,51 @@ msgstr "استبدال مستشعر الاكسجين"
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__plan_to_change_bike
 msgid "Plan To Change Bike"
-msgstr "خطة لتغيير الدراجة "
+msgstr "خطة لتغيير الدراجة"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__plan_to_change_car
 msgid "Plan To Change Car"
-msgstr "خطة لتغيير السيارة "
+msgstr "خطة لتغيير السيارة"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_search
 msgid "Planned for Change"
-msgstr "مخطط للتغيير "
+msgstr "مخطط للتغيير"
 
 #. module: fleet
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle__fuel_type__plug_in_hybrid_diesel
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle_model__default_fuel_type__plug_in_hybrid_diesel
 msgid "Plug-in Hybrid Diesel"
-msgstr "ديزل لمركبة هجينة قابلة للشحن الخارجي "
+msgstr "ديزل لمركبة هجينة قابلة للشحن الخارجي"
 
 #. module: fleet
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle__fuel_type__plug_in_hybrid_gasoline
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle_model__default_fuel_type__plug_in_hybrid_gasoline
 msgid "Plug-in Hybrid Gasoline"
-msgstr "غازولين لمركبة هجينة قابلة للشحن الخارجي "
+msgstr "غازولين لمركبة هجينة قابلة للشحن الخارجي"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__power
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__power
 msgid "Power"
-msgstr "الطاقة "
+msgstr "الطاقة"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_35
 msgid "Power Steering Hose Replacement"
-msgstr "استبدال خرطوم الطاقة التوجيهية "
+msgstr "استبدال خرطوم الطاقة التوجيهية"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_36
 msgid "Power Steering Pump Replacement"
-msgstr "استبدال مضخة الطاقة التوجيهية "
+msgstr "استبدال مضخة الطاقة التوجيهية"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__power_unit
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__power_unit
 msgid "Power Unit"
-msgstr ""
+msgstr "وحدة قياس القوة"
 
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle__power
@@ -1965,59 +1977,59 @@ msgstr "قدرة المركبة بالكيلوواط"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__vehicle_properties
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_search
 msgid "Properties"
-msgstr ""
+msgstr "الخصائص"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__net_car_value
 msgid "Purchase Value"
-msgstr "قيمة الشراء "
+msgstr "قيمة الشراء"
 
 #. module: fleet
 #: model:fleet.vehicle.tag,name:fleet.vehicle_tag_purchased
 msgid "Purchased"
-msgstr "تم الشراء "
+msgstr "تم الشراء"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_37
 msgid "Radiator Repair"
-msgstr "إصلاح المُبرّد "
+msgstr "إصلاح المُبرّد"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__vehicle_range
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__vehicle_range
 msgid "Range"
-msgstr ""
+msgstr "المدى"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__range_unit
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__range_unit
 msgid "Range Unit"
-msgstr ""
+msgstr "وحدة النطاق"
 
 #. module: fleet
 #: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_action
 msgid "Ready to manage your fleet more efficiently?"
-msgstr ""
+msgstr "أانت جاهز لإدارة أسطولك بفعالية أكبر؟"
 
 #. module: fleet
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle_model__drive_type__rwd
 msgid "Rear-Wheel Drive (RWD)"
-msgstr ""
+msgstr "نظام الدفع بالعجلات الخلفية (RWD)"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__cost_generated
 msgid "Recurring Cost"
-msgstr "التكلفة المتكررة "
+msgstr "التكلفة المتكررة"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__cost_frequency
 msgid "Recurring Cost Frequency"
-msgstr "مدى تواتر التكلفة الدورية "
+msgstr "مدى تواتر التكلفة الدورية"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__ins_ref
 msgid "Reference"
-msgstr "المرجع "
+msgstr "الرقم المرجعي"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_refueling
@@ -2032,17 +2044,17 @@ msgstr "مُسجل"
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__acquisition_date
 msgid "Registration Date"
-msgstr ""
+msgstr "تاريخ التسجيل"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_send_mail__render_model
 msgid "Rendering Model"
-msgstr ""
+msgstr "نموذج التكوين"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_service_11
 msgid "Rent (Excluding VAT)"
-msgstr "الإيجار (دون إضافة ضريبة القيمة المضافة) "
+msgstr "الإيجار (دون إضافة ضريبة القيمة المضافة)"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_service_7
@@ -2062,7 +2074,7 @@ msgstr "المركبة البديلة"
 #. module: fleet
 #: model:ir.ui.menu,name:fleet.menu_fleet_reporting
 msgid "Reporting"
-msgstr "التقارير"
+msgstr "إعداد التقارير"
 
 #. module: fleet
 #: model:fleet.vehicle.state,name:fleet.fleet_vehicle_state_reserve
@@ -2077,7 +2089,7 @@ msgstr "القيمة المتبقية"
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_service_14
 msgid "Residual value (Excluding VAT)"
-msgstr "القيمة المتبقية (دون إضافة ضريبة القيمة المضافة) "
+msgstr "القيمة المتبقية (دون إضافة ضريبة القيمة المضافة)"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_service_18
@@ -2087,7 +2099,7 @@ msgstr "القيمة المتبقية كنسبة مئوية %"
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__user_id
 msgid "Responsible"
-msgstr "المسؤول "
+msgstr "المسؤول"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__activity_user_id
@@ -2100,12 +2112,12 @@ msgstr "المستخدم المسؤول"
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_model_brand_view_kanban
 msgid "Restore"
-msgstr ""
+msgstr "استعادة"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_38
 msgid "Resurface Rotors"
-msgstr "تجديد سطع الدوارات "
+msgstr "تجديد سطع الدوارات"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_39
@@ -2115,7 +2127,7 @@ msgstr "تدوير الإطارات"
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_40
 msgid "Rotor Replacement"
-msgstr "استبدال الدوارات "
+msgstr "استبدال الدوارات"
 
 #. module: fleet
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle_log_contract__state__open
@@ -2126,29 +2138,29 @@ msgstr "جاري"
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_send_mail_view_form
 msgid "Save as new template"
-msgstr ""
+msgstr "حفظ كقالب جديد"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__seats
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__seats
 msgid "Seating Capacity"
-msgstr ""
+msgstr "سعة المقاعد"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_send_mail_view_form
 msgid "Send"
-msgstr ""
+msgstr "إرسال"
 
 #. module: fleet
 #. odoo-python
 #: code:addons/fleet/models/fleet_vehicle.py:0
 msgid "Send Email"
-msgstr ""
+msgstr "إرسال بريد إلكتروني"
 
 #. module: fleet
 #: model:ir.model,name:fleet.model_fleet_vehicle_send_mail
 msgid "Send mails to Drivers"
-msgstr ""
+msgstr "إرسال رسائل البريد الإلكتروني إلى السائقين"
 
 #. module: fleet
 #: model:fleet.vehicle.tag,name:fleet.vehicle_tag_senior
@@ -2159,7 +2171,7 @@ msgstr "خبير"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_category__sequence
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_state__sequence
 msgid "Sequence"
-msgstr "التسلسل "
+msgstr "تسلسل"
 
 #. module: fleet
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_service_type__category__service
@@ -2171,7 +2183,7 @@ msgstr "الخدمة"
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__service_activity
 msgid "Service Activity"
-msgstr "خدمة النشاط"
+msgstr "نشاط الخدمة"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__service_type_id
@@ -2182,7 +2194,7 @@ msgstr "نوع الخدمة"
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_service_types_view_tree
 msgid "Service Types"
-msgstr "أنواع الخدمات "
+msgstr "أنواع الخدمات"
 
 #. module: fleet
 #: model:ir.actions.act_window,name:fleet.fleet_vehicle_log_services_action
@@ -2222,7 +2234,7 @@ msgstr "الإعدادات"
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_search
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_search
 msgid "Show all records whose next activity date is past"
-msgstr ""
+msgstr "عرض كافة السجلات التي مضى تاريخ نشاطها التالي"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_service_6
@@ -2240,12 +2252,13 @@ msgid ""
 "Specifies the total number of doors, including the truck and hatch doors, if "
 "applicable."
 msgstr ""
+"يحدد العدد الإجمالي للأبواب، بما في ذلك أبواب الشاحنة وأبواب الفتحات إن وجدت."
 
 #. module: fleet
 #. odoo-python
 #: code:addons/fleet/models/fleet_vehicle.py:0
 msgid "Specify the End date of %s"
-msgstr "تحديد تاريخ انتهاء %s "
+msgstr "تحديد تاريخ انتهاء %s"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__state
@@ -2255,7 +2268,7 @@ msgstr "المرحلة"
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_assignation_log__date_start
 msgid "Start Date"
-msgstr "تاريخ البداية"
+msgstr "تاريخ البدء"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_42
@@ -2266,12 +2279,12 @@ msgstr "استبدال مفتاح التشغيل"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__state_id
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_state_view_tree
 msgid "State"
-msgstr "الحالة "
+msgstr "الحالة"
 
 #. module: fleet
 #: model:ir.model.constraint,message:fleet.constraint_fleet_vehicle_state_fleet_state_name_unique
 msgid "State name already exists"
-msgstr "اسم الولاية موجود بالفعل "
+msgstr "اسم الولاية موجود بالفعل"
 
 #. module: fleet
 #: model:ir.actions.act_window,name:fleet.fleet_vehicle_state_action
@@ -2292,7 +2305,7 @@ msgid ""
 "Today: Activity date is today\n"
 "Planned: Future activities."
 msgstr ""
-"الحالة على أساس الأنشطة\n"
+"الأنشطة المعتمدة على الحالة\n"
 "المتأخرة: تاريخ الاستحقاق مر\n"
 "اليوم: تاريخ النشاط هو اليوم\n"
 "المخطط: الأنشطة المستقبلية."
@@ -2300,12 +2313,12 @@ msgstr ""
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_send_mail__subject
 msgid "Subject"
-msgstr ""
+msgstr "الموضوع"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vechicle_costs_report_view_tree
 msgid "Sum of Cost"
-msgstr "إجمالي التكلفة "
+msgstr "إجمالي التكلفة"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_service_5
@@ -2315,24 +2328,24 @@ msgstr "إطارات الصيف"
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_tag__name
 msgid "Tag Name"
-msgstr "اسم علامة التصنيف "
+msgstr "اسم علامة التصنيف"
 
 #. module: fleet
 #: model:ir.model.constraint,message:fleet.constraint_fleet_vehicle_tag_name_uniq
 msgid "Tag name already exists!"
-msgstr ""
+msgstr "اسم علامة التصنيف مستخدم بالفعل!"
 
 #. module: fleet
 #: model:ir.actions.act_window,name:fleet.fleet_vehicle_tag_action
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__tag_ids
 #: model:ir.ui.menu,name:fleet.fleet_vehicle_tag_menu
 msgid "Tags"
-msgstr "علامات التصنيف "
+msgstr "علامات التصنيف"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
 msgid "Tax Info"
-msgstr "معلومات الضريبة "
+msgstr "معلومات الضريبة"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_service_3
@@ -2358,18 +2371,18 @@ msgstr ""
 #. odoo-python
 #: code:addons/fleet/wizard/fleet_vehicle_send_mail.py:0
 msgid "The following vehicle drivers are missing an email address: %s."
-msgstr ""
+msgstr "ليس لدى السائقين التالين عناوين بريد إلكتروني: %s."
 
 #. module: fleet
 #. odoo-python
 #: code:addons/fleet/models/fleet_vehicle.py:0
 msgid "The odometer value cannot be lower than the previous one."
-msgstr ""
+msgstr "لا يمكن أن تكون قيمة عدّاد المسافة أقل من القيمة السابقة."
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_43
 msgid "Thermostat Replacement"
-msgstr "استبدال منظم الحرارة "
+msgstr "استبدال منظم الحرارة"
 
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle__next_assignation_date
@@ -2378,18 +2391,18 @@ msgid ""
 "available instantly"
 msgstr ""
 "هذا هو التاريخ الذي ستكون المركبة متاحة فيه. إذا لم يكن معيناً، هذا يعني بأن "
-"المركبة متاحة فوراً "
+"المركبة متاحة فوراً"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
 msgid ""
 "This will allow this vehicle to be selectable for the Salary Configurator"
-msgstr ""
+msgstr "سيتيح ذلك إمكانية تحديد هذه المركبة في أداة تهيئة الرواتب"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_44
 msgid "Tie Rod End Replacement"
-msgstr "استبدال نهاية عمود الربط "
+msgstr "استبدال نهاية عمود الربط"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_45
@@ -2404,7 +2417,7 @@ msgstr "خدمة الإطار"
 #. module: fleet
 #: model:fleet.vehicle.state,name:fleet.fleet_vehicle_state_to_order
 msgid "To Order"
-msgstr "بحاجة إلى الطلب "
+msgstr "بحاجة إلى الطلب"
 
 #. module: fleet
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle__service_activity__today
@@ -2415,7 +2428,7 @@ msgstr "اليوم"
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_search
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_search
 msgid "Today Activities"
-msgstr "أنشطة اليوم "
+msgstr "أنشطة اليوم"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_services_view_tree
@@ -2425,7 +2438,7 @@ msgstr "الإجمالي"
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_service_13
 msgid "Total expenses (Excluding VAT)"
-msgstr "إجمالي النفقات (دون إضافة ضريبة القيمة المضافة) "
+msgstr "إجمالي النفقات (دون إضافة ضريبة القيمة المضافة)"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_service_17
@@ -2440,39 +2453,39 @@ msgid ""
 "maintenance, etc."
 msgstr ""
 "تتبع كافة الخدمات التي تتم على مركبتك.\n"
-"            هناك أنواع كثيرة للخدمات: إصلاح عرضي، صيانة دورية، إلخ. "
+"            هناك أنواع كثيرة للخدمات: إصلاح عرضي، صيانة دورية، إلخ."
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__trailer_hook
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__trailer_hook
 msgid "Trailer Hitch"
-msgstr "وصلة المقطورة "
+msgstr "وصلة المقطورة"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_search
 msgid "Trailer Hook"
-msgstr "خُطّاف المقطورة "
+msgstr "خُطّاف المقطورة"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__transmission
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__transmission
 msgid "Transmission"
-msgstr "ناقل الحركة "
+msgstr "ناقل الحركة"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_47
 msgid "Transmission Filter Replacement"
-msgstr "استبدال مرشح ناقل الحركة "
+msgstr "استبدال مرشح ناقل الحركة"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_48
 msgid "Transmission Fluid Replacement"
-msgstr "استبدال سائل ناقل الحركة "
+msgstr "استبدال سائل ناقل الحركة"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_49
 msgid "Transmission Replacement"
-msgstr "استبدال ناقل الحركة "
+msgstr "استبدال ناقل الحركة"
 
 #. module: fleet
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle__frame_type__trapez
@@ -2490,13 +2503,13 @@ msgstr "النوع"
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_services__activity_exception_decoration
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_model__activity_exception_decoration
 msgid "Type of the exception activity on record."
-msgstr "نوع النشاط المستثنى في السجل. "
+msgstr "نوع النشاط المستثنى في السجل."
 
 #. module: fleet
 #: model:ir.actions.act_window,name:fleet.fleet_vehicle_service_types_action
 #: model:ir.ui.menu,name:fleet.fleet_vehicle_service_types_menu
 msgid "Types"
-msgstr "الأنواع "
+msgstr "الأنواع"
 
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle__vin_sn
@@ -2534,37 +2547,37 @@ msgstr "المركبة"
 #. module: fleet
 #: model:ir.model,name:fleet.model_fleet_vehicle_log_contract
 msgid "Vehicle Contract"
-msgstr "عقد المركبة "
+msgstr "عقد المركبة"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__vehicle_count
 msgid "Vehicle Count"
-msgstr "عدد المركبات "
+msgstr "عدد المركبات"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__description
 msgid "Vehicle Description"
-msgstr "وصف المركبة "
+msgstr "وصف المركبة"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_model_view_form
 msgid "Vehicle Information"
-msgstr "معلومات المركبة "
+msgstr "معلومات المركبة"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_cost_report__name
 msgid "Vehicle Name"
-msgstr "اسم المركبة "
+msgstr "اسم المركبة"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_odometer_report_view_graph
 msgid "Vehicle Odometer Timeline"
-msgstr ""
+msgstr "المخطط الزمني لعداد المركبة"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__vehicle_properties_definition
 msgid "Vehicle Properties"
-msgstr ""
+msgstr "خصائص المركبة"
 
 #. module: fleet
 #: model:ir.model,name:fleet.model_fleet_vehicle_state
@@ -2574,13 +2587,13 @@ msgstr "حالة المركبة"
 #. module: fleet
 #: model:ir.model,name:fleet.model_fleet_vehicle_tag
 msgid "Vehicle Tag"
-msgstr "علامة تصنيف المركبة "
+msgstr "علامة تصنيف المركبة"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_tag_view_view_form
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_tag_view_view_tree
 msgid "Vehicle Tags"
-msgstr "علامات تصنيف المركبات "
+msgstr "علامات تصنيف المركبات"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__vehicle_type
@@ -2588,13 +2601,13 @@ msgstr "علامات تصنيف المركبات "
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__vehicle_type
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_model_view_search
 msgid "Vehicle Type"
-msgstr "نوع المركبة "
+msgstr "نوع المركبة"
 
 #. module: fleet
 #. odoo-python
 #: code:addons/fleet/wizard/fleet_vehicle_send_mail.py:0
 msgid "Vehicle: Mass mail drivers"
-msgstr ""
+msgstr "المركبة: إرسال رسائل بريد جماعية إلى السائقين"
 
 #. module: fleet
 #. odoo-python
@@ -2633,20 +2646,20 @@ msgstr "المورد"
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__inv_ref
 msgid "Vendor Reference"
-msgstr "مرجع المورّد "
+msgstr "مرجع المورّد"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__vendors
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_model_view_form
 msgid "Vendors"
-msgstr "الموردون"
+msgstr "الموردين"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vechicle_costs_report_view_form
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
 msgid "Visible to all"
-msgstr ""
+msgstr "مرئي للكل"
 
 #. module: fleet
 #: model:fleet.vehicle.state,name:fleet.fleet_vehicle_state_waiting_list
@@ -2671,7 +2684,7 @@ msgstr "استبدال مضخة المياه"
 #. module: fleet
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle__frame_type__wave
 msgid "Wave"
-msgstr "مموج "
+msgstr "مموج"
 
 #. module: fleet
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle_log_contract__cost_frequency__weekly
@@ -2681,7 +2694,7 @@ msgstr "أسبوعيًا"
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_51
 msgid "Wheel Alignment"
-msgstr "محاذاة العجلات "
+msgstr "محاذاة العجلات"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_52
@@ -2691,12 +2704,12 @@ msgstr "استبدال محامل العجلات"
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_53
 msgid "Windshield Wiper(s) Replacement"
-msgstr "استبدال ماسحة (ماسحات) الزجاج الأمامي "
+msgstr "استبدال ماسحة (ماسحات) الزجاج الأمامي"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_model_brand_view_search
 msgid "With Models"
-msgstr "مع موديلات "
+msgstr "مع موديلات"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
@@ -2706,22 +2719,22 @@ msgstr "اكتب هنا كافة المعلومات المرتبطة بهذا ا
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_services_view_form
 msgid "Write here any other information related to the service completed."
-msgstr "اكتب هنا أي معلومات أخرى متعلقة بالخدمة المكتملة. "
+msgstr "اكتب هنا أي معلومات أخرى متعلقة بالخدمة المكتملة."
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
 msgid "Write here any other information related to this vehicle"
-msgstr "اكتب هنا أي معلومات أخرى متعلقة بهذه المركبة. "
+msgstr "اكتب هنا أي معلومات أخرى متعلقة بهذه المركبة."
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_send_mail_view_form
 msgid "Write your message here..."
-msgstr ""
+msgstr "اكتب رسالتك هنا..."
 
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle__model_year
 msgid "Year of the model"
-msgstr "سنة الموديل "
+msgstr "سنة الموديل"
 
 #. module: fleet
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle_log_contract__cost_frequency__yearly
@@ -2740,19 +2753,19 @@ msgid ""
 "            each vehicle. Example: active, being repaired, sold."
 msgstr ""
 "يمكنك تخصيص الحالة المتاحة لتتبع تطور\n"
-"            كل مركبة. مثال: نشطة، جاري إصلاحها ، تم بيعها. "
+"            كل مركبة. مثال: نشطة، جاري إصلاحها ، تم بيعها."
 
 #. module: fleet
 #: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_model_action
 msgid "You can define several models (e.g. A3, A4) for each make (Audi)."
-msgstr "يمكنك تحديد أكثر من موديل (مثلًا: أ3، أ4) لكل علامة تجارية (Audi). "
+msgstr "يمكنك تحديد أكثر من موديل (مثلًا: أ3، أ4) لكل علامة تجارية (Audi)."
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_model_view_form
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form_quick_create
 msgid "e.g. Model S"
-msgstr "مثلًا: الموديل S "
+msgstr "مثلًا: الموديل S"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
@@ -2763,31 +2776,31 @@ msgstr "مثلًا: PAE 326"
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_model_view_form
 msgid "e.g. Tesla"
-msgstr "مثلًا: Tesla "
+msgstr "مثلًا: Tesla"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_model_view_form
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
 msgid "eg. WLTP, Euro 6, or EPA, ..."
-msgstr ""
+msgstr "مثال: WLTP، Euro 6، أو EPA، ..."
 
 #. module: fleet
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle__co2_emission_unit__g/km
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle_model__co2_emission_unit__g/km
 msgid "g/km"
-msgstr ""
+msgstr "ج/كم"
 
 #. module: fleet
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle__co2_emission_unit__g/mi
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle_model__co2_emission_unit__g/mi
 msgid "g/mi"
-msgstr ""
+msgstr "ج/ميل"
 
 #. module: fleet
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle__power_unit__power
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle_model__power_unit__power
 msgid "kW"
-msgstr ""
+msgstr "kW"
 
 #. module: fleet
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle__odometer_unit__kilometers
@@ -2801,7 +2814,7 @@ msgstr "كم"
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle__range_unit__mi
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle_model__range_unit__mi
 msgid "mi"
-msgstr "ميل "
+msgstr "ميل"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form

@@ -1,6 +1,6 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* account
+# * account
 #
 # Translators:
 # yacov mosbacher <ymosba@gmail.com>, 2022
@@ -31,21 +31,23 @@
 # hed shefer <hed@laylinetech.com>, 2023
 # ZVI BLONDER <ZVIBLONDER@gmail.com>, 2023
 # Martin Trigaux, 2023
-#
+# "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-09-12 14:42+0000\n"
-"PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Martin Trigaux, 2023\n"
-"Language-Team: Hebrew (https://app.transifex.com/odoo/teams/41243/he/)\n"
+"PO-Revision-Date: 2025-09-16 17:05+0000\n"
+"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
+"Language-Team: Hebrew <https://translate.odoo.com/projects/odoo-19/account/"
+"he/>\n"
 "Language: he\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n == 2 && n % "
-"1 == 0) ? 1: (n % 10 == 0 && n % 1 == 0 && n > 10) ? 2 : 3;\n"
+"Plural-Forms: nplurals=4; plural=(n == 1) ? 0 : ((n == 2) ? 1 : ((n > 10 && "
+"n % 10 == 0) ? 2 : 3));\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__type
@@ -111,9 +113,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "#Created by: %s"
-msgstr ""
-"#נוצר על ידי: %s\n"
-" "
+msgstr "#נוצר על ידי: %s"
 
 #. module: account
 #. odoo-python
@@ -2147,7 +2147,7 @@ msgstr "בעל החשבון"
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__acc_holder_name
 #: model:ir.model.fields,field_description:account.field_res_partner_bank__acc_holder_name
 msgid "Account Holder Name"
-msgstr "שם בעל החשבון "
+msgstr "שם בעל החשבון"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__journal_id
@@ -2295,7 +2295,7 @@ msgstr "מס חשבון"
 #: model_terms:ir.ui.view,arch_db:account.view_tax_group_form
 #: model_terms:ir.ui.view,arch_db:account.view_tax_group_tree
 msgid "Account Tax Group"
-msgstr "חשבון קבוצת מס "
+msgstr "חשבון קבוצת מס"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_ir_module_module__account_templates
@@ -2347,7 +2347,7 @@ msgstr "חשבון נגדי לסכום ההפרש אחרי שניתנה הנחה
 #: model:ir.model.fields,help:account.field_res_config_settings__account_journal_early_pay_discount_gain_account_id
 msgid ""
 "Account for the difference amount after the income discount has been granted"
-msgstr "חשבון נגדי לסכום ההפרש אחרי שניתנה הנחה בהכנסה מלקוח "
+msgstr "חשבון נגדי לסכום ההפרש אחרי שניתנה הנחה בהכנסה מלקוח"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_group_search
@@ -3131,7 +3131,7 @@ msgstr "תמיד (עם חשבונית)"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__always_tax_exigible
 #: model:ir.model.fields,field_description:account.field_account_move__always_tax_exigible
 msgid "Always Tax Exigible"
-msgstr " זכאי מס תמידי"
+msgstr "זכאי מס תמידי"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_partial_reconcile__amount
@@ -4161,7 +4161,7 @@ msgstr "סבב תשלומים"
 #. odoo-javascript
 #: code:addons/account/static/src/components/account_resequence/account_resequence.xml:0
 msgid "Before"
-msgstr "לפני "
+msgstr "לפני"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_payment_register__installments_mode__before_date
@@ -4408,7 +4408,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_register__can_edit_wizard
 msgid "Can Edit Wizard"
-msgstr "ניתן לערוך אשף "
+msgstr "ניתן לערוך אשף"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_register__can_group_payments
@@ -4676,12 +4676,12 @@ msgstr "הפחתת מס מהנחות מזומן"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_journal_early_pay_discount_gain_account_id
 msgid "Cash Discount Write-Off Gain Account"
-msgstr "מחיקת הכנסה מחשבון הנחת מזומן "
+msgstr "מחיקת הכנסה מחשבון הנחת מזומן"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_journal_early_pay_discount_loss_account_id
 msgid "Cash Discount Write-Off Loss Account"
-msgstr "מחיקת הוצאה מחשבון הנחת מזומן "
+msgstr "מחיקת הוצאה מחשבון הנחת מזומן"
 
 #. module: account
 #: model:account.account,name:account.1_cash_journal_default_account_155
@@ -4959,7 +4959,7 @@ msgstr "תחילת קוד"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_group__code_prefix_end
 msgid "Code Prefix End"
-msgstr "סיומת קוד קידומת "
+msgstr "סיומת קוד קידומת"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_group__code_prefix_start
@@ -5773,7 +5773,7 @@ msgstr "זכות"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_partial_reconcile__credit_amount_currency
 msgid "Credit Amount Currency"
-msgstr "סכום שער מטבע אשראי "
+msgstr "סכום שער מטבע אשראי"
 
 #. module: account
 #. odoo-python
@@ -6380,7 +6380,7 @@ msgstr "חשבונות ברירת מחדל"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__account_default_credit_limit
 msgid "Default Credit Limit"
-msgstr "ברירת המחדל לתקרת האשראי "
+msgstr "ברירת המחדל לתקרת האשראי"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
@@ -6724,7 +6724,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_term__discount_percentage
 msgid "Discount %"
-msgstr " % הנחה"
+msgstr "% הנחה"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__discount
@@ -7920,7 +7920,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_repartition_line__factor
 msgid "Factor Ratio"
-msgstr "גורמי יחס "
+msgstr "גורמי יחס"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line__factor
@@ -8051,7 +8051,7 @@ msgstr "אינקדס שורה ראשונה"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_resequence_wizard__first_name
 msgid "First New Sequence"
-msgstr "רצף ראשון חדש "
+msgstr "רצף ראשון חדש"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__auto_post_origin_id
@@ -8191,7 +8191,7 @@ msgstr "צף"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_line__amount
 msgid "Float Amount"
-msgstr "כמות Float "
+msgstr "כמות Float"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_line__foldable
@@ -8533,7 +8533,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_res_company__income_currency_exchange_account_id
 #: model:ir.model.fields,field_description:account.field_res_config_settings__income_currency_exchange_account_id
 msgid "Gain Exchange Rate Account"
-msgstr "רווח חשבון שער חליפין "
+msgstr "רווח חשבון שער חליפין"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
@@ -8647,12 +8647,12 @@ msgstr ""
 #. module: account
 #: model:account.report,name:account.generic_tax_report_account_tax
 msgid "Group by: Account > Tax "
-msgstr "קבץ לפי: חשבון > מס"
+msgstr "קבץ לפי: חשבון > מס "
 
 #. module: account
 #: model:account.report,name:account.generic_tax_report_tax_account
 msgid "Group by: Tax > Account "
-msgstr "קבץ לפי: מס > חשבון"
+msgstr "קבץ לפי: מס > חשבון "
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_tax__amount_type__group
@@ -8768,7 +8768,7 @@ msgstr ""
 #. module: account
 #: model:ir.actions.report,name:account.action_report_account_hash_integrity
 msgid "Hash integrity result PDF"
-msgstr "תוצאת PDF של שלמות גיבוב "
+msgstr "תוצאת PDF של שלמות גיבוב"
 
 #. module: account
 #: model:account.account,name:account.2_account_account_us_healthcare
@@ -9813,7 +9813,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__invoice_partner_display_name
 #: model:ir.model.fields,field_description:account.field_account_move__invoice_partner_display_name
 msgid "Invoice Partner Display Name"
-msgstr "הצג שם של חשבונית שותף "
+msgstr "הצג שם של חשבונית שותף"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__invoice_payments_widget
@@ -10994,7 +10994,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_move__message_main_attachment_id
 #: model:ir.model.fields,field_description:account.field_account_payment__message_main_attachment_id
 msgid "Main Attachment"
-msgstr "קובץ ראשי מצורף "
+msgstr "קובץ ראשי מצורף"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -11208,7 +11208,7 @@ msgid ""
 "Matching number for this line, 'P' if it is only partially reconcile, or the "
 "name of the full reconcile if it exists."
 msgstr ""
-"מספר תואם עבור שורה זו, 'P' אם הוא רק התאמה חלקית, או השם של ההתאמה המלאה אם ​​"
+"מספר תואם עבור שורה זו, 'P' אם הוא רק התאמה חלקית, או השם של ההתאמה המלאה אם "
 "הוא קיים."
 
 #. module: account
@@ -11693,7 +11693,7 @@ msgstr "מועד אחרון לפעילות הבאה"
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__activity_summary
 #: model:ir.model.fields,field_description:account.field_res_partner_bank__activity_summary
 msgid "Next Activity Summary"
-msgstr "תיאור הפעילות הבאה "
+msgstr "תיאור הפעילות הבאה"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__activity_type_id
@@ -12005,7 +12005,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment_term__discount_days
 msgid "Number of days before the early payment proposition expires"
-msgstr "מספר ימים לפני סיום האפשרות למכירה מוקדמת "
+msgstr "מספר ימים לפני סיום האפשרות למכירה מוקדמת"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__message_has_error_counter
@@ -12189,8 +12189,8 @@ msgid ""
 "Once installed, set 'Bank Feeds' to 'File Import' in bank account "
 "settings.This adds a button to import from the Accounting dashboard."
 msgstr ""
-"לאחר ההתקנה, הגדר את 'עדכוני בנק' ל'ייבוא ​​קבצים 'בהגדרות חשבון הבנק. זה "
-"מוסיף כפתור לייבוא ​​מלוח הבקרה של יישום חשבונאות."
+"לאחר ההתקנה, הגדר את 'עדכוני בנק' ל'ייבוא קבצים 'בהגדרות חשבון הבנק. זה "
+"מוסיף כפתור לייבוא מלוח הבקרה של יישום חשבונאות."
 
 #. module: account
 #. odoo-javascript
@@ -12306,7 +12306,7 @@ msgstr "יתרת פתיחה לשנת הכספים"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__opening_credit
 msgid "Opening Credit"
-msgstr "פתיחת אשראי "
+msgstr "פתיחת אשראי"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_financial_year_op__opening_date
@@ -12316,7 +12316,7 @@ msgstr "תאריך פתיחה"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__opening_debit
 msgid "Opening Debit"
-msgstr "פתיחת חיוב "
+msgstr "פתיחת חיוב"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_opening_date
@@ -12886,7 +12886,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Payment Communications"
-msgstr "תשלום תקשורת "
+msgstr "תשלום תקשורת"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__payment_count
@@ -12897,7 +12897,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_tree
 msgid "Payment Currency"
-msgstr "תשלום שער מטבע "
+msgstr "תשלום שער מטבע"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_register__payment_date
@@ -13732,7 +13732,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "QIF Import"
-msgstr "ייבוא QIF "
+msgstr "ייבוא QIF"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_base_document_layout
@@ -13872,7 +13872,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__partner_bank_id
 #: model:ir.model.fields,field_description:account.field_account_move__partner_bank_id
 msgid "Recipient Bank"
-msgstr "בנק מקבל "
+msgstr "בנק מקבל"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__partner_bank_id
@@ -14313,7 +14313,7 @@ msgstr "חשבון הכנסות/הוצאות"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_accrued_orders_wizard__reversal_date
 msgid "Reversal Date"
-msgstr "תאריך פקודה נגדית "
+msgstr "תאריך פקודה נגדית"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__reversal_move_ids
@@ -15118,7 +15118,7 @@ msgstr "עקוף רצף רגיל"
 #: model:ir.model.fields,field_description:account.field_sequence_mixin__sequence_prefix
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
 msgid "Sequence Prefix"
-msgstr "רצף קידומת "
+msgstr "רצף קידומת"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_tax__tax_scope__service
@@ -15728,7 +15728,7 @@ msgstr "דירוג ספק"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__suspense_account_id
 msgid "Suspense Account"
-msgstr "צפייה בחשבון "
+msgstr "צפייה בחשבון"
 
 #. module: account
 #: model:ir.actions.server,name:account.action_move_switch_move_type

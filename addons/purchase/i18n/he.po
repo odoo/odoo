@@ -1,6 +1,6 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* purchase
+# * purchase
 #
 # Translators:
 # Leandro Noijovich <eliel.sorcerer@gmail.com>, 2022
@@ -26,21 +26,23 @@
 # Ha Ketem <haketem@gmail.com>, 2022
 # Roy Sayag, 2023
 # ZVI BLONDER <ZVIBLONDER@gmail.com>, 2023
-#
+# "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-09-11 14:00+0000\n"
-"PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: ZVI BLONDER <ZVIBLONDER@gmail.com>, 2023\n"
-"Language-Team: Hebrew (https://app.transifex.com/odoo/teams/41243/he/)\n"
+"PO-Revision-Date: 2025-09-16 18:39+0000\n"
+"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
+"Language-Team: Hebrew <https://translate.odoo.com/projects/odoo-19/purchase/"
+"he/>\n"
 "Language: he\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n == 2 && n % "
-"1 == 0) ? 1: (n % 10 == 0 && n % 1 == 0 && n > 10) ? 2 : 3;\n"
+"Plural-Forms: nplurals=4; plural=(n == 1) ? 0 : ((n == 2) ? 1 : ((n > 10 && "
+"n % 10 == 0) ? 2 : 3));\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: purchase
 #: model:ir.actions.report,print_report_name:purchase.action_report_purchase_order
@@ -51,14 +53,14 @@ msgid ""
 "                'Purchase Order - %s' % (object.name))"
 msgstr ""
 "\n"
-"                 (object.state in ('draft', 'sent') and 'בקשה להצעת מחיר - "
+"                (object.state in ('draft', 'sent') and 'בקשה להצעת מחיר - "
 "%s' % (object.name) or\n"
 "                 'הזמנת רכש - %s' % (object.name))"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__partner_bill_count
 msgid "# Vendor Bills"
-msgstr "מס' חשבונית ספק "
+msgstr "מס' חשבונית ספק"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__nbr_lines
@@ -307,8 +309,7 @@ msgid ""
 "                        <span class=\"d-block d-md-none\">Ref.</span>"
 msgstr ""
 "<span class=\"d-none d-md-inline\">בקשה להצעת מחיר #1</span>\n"
-"<span class=\"d-block d-md-none\">#.</span>\n"
-" "
+"<span class=\"d-block d-md-none\">#.</span>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -918,7 +919,7 @@ msgstr "בוטל"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 msgid "Cancelled Purchase Order #"
-msgstr "מספר הזמנת רכש מבוטלת "
+msgstr "מספר הזמנת רכש מבוטלת"
 
 #. module: purchase
 #. odoo-python
@@ -1191,8 +1192,7 @@ msgstr ""
 msgid ""
 "Delivery date promised by vendor. This date is used to determine expected "
 "arrival of products."
-msgstr ""
-"מועד אספקה ​​מובטח על ידי הספק. תאריך זה משמש לקביעת הגעת המוצרים הצפויה."
+msgstr "מועד אספקה מובטח על ידי הספק. תאריך זה משמש לקביעת הגעת המוצרים הצפויה."
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__date_order
@@ -1872,7 +1872,7 @@ msgstr "מועד אחרון לפעילות הבאה"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__activity_summary
 msgid "Next Activity Summary"
-msgstr "תיאור הפעילות הבאה "
+msgstr "תיאור הפעילות הבאה"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__activity_type_id
@@ -1919,7 +1919,7 @@ msgstr "לא נמצאה בקשה להצעת מחיר. בואו ניצור אחת
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__purchase_order__priority__0
 msgid "Normal"
-msgstr "נורמלי "
+msgstr "נורמלי"
 
 #. module: purchase
 #. odoo-javascript
@@ -2043,7 +2043,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__date_order
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_rfqs
 msgid "Order Deadline"
-msgstr "מועד אחרון להזמנה "
+msgstr "מועד אחרון להזמנה"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__order_line
@@ -2180,7 +2180,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__product_tmpl_id
 msgid "Product Template"
-msgstr "תבנית מוצר "
+msgstr "תבנית מוצר"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__product_type
@@ -2324,7 +2324,7 @@ msgstr "הזמנת רכש"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 msgid "Purchase Order #"
-msgstr " מספר הזמנת רכש "
+msgstr "מספר הזמנת רכש"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings__po_order_approval
@@ -2710,11 +2710,7 @@ msgid ""
 "will be confirmed and turned into purchase orders."
 msgstr ""
 "בקשות להצעת מחיר הן מסמכים שיישלחו לספקים שלך כדי לבקש מחירים עבור מוצרים "
-"שונים שאתה שוקל לקנות. לאחר שנמצא הסכם עם הספק, הם יאושרו ויהפכו להזמנות "
-"רכש.\n"
-" \n"
-"\n"
-" "
+"שונים שאתה שוקל לקנות. לאחר שנמצא הסכם עם הספק, הם יאושרו ויהפכו להזמנות רכש."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__activity_user_id

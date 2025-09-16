@@ -1,29 +1,32 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* auth_signup
+# * auth_signup
 #
 # Translators:
 # Martin Trigaux, 2022
 # Wichanon Jamwutthipreecha, 2022
 #
+# "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-09-11 13:54+0000\n"
-"PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Wichanon Jamwutthipreecha, 2022\n"
-"Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
+"PO-Revision-Date: 2025-09-16 21:20+0000\n"
+"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
+"Language-Team: Thai <https://translate.odoo.com/projects/odoo-19/auth_signup/"
+"th/>\n"
 "Language: th\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.reset_password_email
 msgid "+1 650-123-4567"
-msgstr ""
+msgstr "+1 650-123-4567"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.reset_password_email
@@ -38,12 +41,12 @@ msgstr ""
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.reset_password_email
 msgid "--<br/>Mitchell Admin"
-msgstr ""
+msgstr "--<br/>แอดมิน Mitchell"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.reset_password_email
 msgid "<span style=\"font-size: 10px;\">Your Account</span><br/>"
-msgstr ""
+msgstr "<span style=\"font-size: 10px;\">บัญชีของคุณ</span><br/>"
 
 #. module: auth_signup
 #: model:mail.template,body_html:auth_signup.mail_template_data_unregistered_users
@@ -103,6 +106,60 @@ msgid ""
 "</table>\n"
 "            "
 msgstr ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"background-"
+"color: #FFFFFF; font-family:Verdana, Arial,sans-serif; color: #454748; width:"
+" 100%; border-collapse:separate;\"><tr><td align=\"center\">\n"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style="
+"\"padding: 16px; background-color: #FFFFFF; color: #454748; border-"
+"collapse:separate;\">\n"
+"<tbody>\n"
+"    <!-- เนื้อหา -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width="
+"\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px "
+"0px 8px; border-collapse:separate;\">\n"
+"                <t t-set=\"invited_users\" t-value="
+"\"ctx.get('invited_users', [])\"></t>\n"
+"                <td style=\"text-align : left\">\n"
+"                    <span style=\"font-size: 20px; font-weight: bold;\">\n"
+"                        คำเชิญที่รอดำเนินการ\n"
+"                    </span><br><br>\n"
+"                </td>\n"
+"                <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
+"                    <div>\n"
+"                        เรียน <t t-out=\"object.name or ''\">แอดมิน Mitchell</"
+"t><br> <br>\n"
+"                        คุณได้เพิ่มผู้ใช้ต่อไปนี้ในฐานข้อมูลของคุณ แต่พวกเขายังไม่ได้ลงทะเบียน:"
+"\n"
+"                        <ul>\n"
+"                            <t t-foreach=\"invited_users\" t-as="
+"\"invited_user\">\n"
+"                                <li t-out=\"invited_user or ''\""
+">demo@example.com</li>\n"
+"                            </t>\n"
+"                        </ul>\n"
+"                        ติดตามผลกับพวกเขา "
+"เพื่อให้พวกเขาสามารถเข้าถึงฐานข้อมูลของคุณและเริ่มทำงานกับคุณได้\n"
+"                        <br><br>\n"
+"                        Have a nice day!<br>\n"
+"                        --<br>ทีม<t t-out=\"object.company_id.name or ''\""
+">YourCompany</t> \n"
+"                    </div>\n"
+"                </td></tr>\n"
+"                <tr><td style=\"text-align:center;\">\n"
+"                  <hr width=\"100%\" style=\"background-"
+"color:rgb(204,204,204);border:medium none;clear:both;display:block;font-"
+"size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\">\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"</tbody>\n"
+"</table>\n"
+"</td></tr>\n"
+"</table>\n"
+"            "
 
 #. module: auth_signup
 #: model:mail.template,body_html:auth_signup.portal_set_password_email
@@ -503,6 +560,131 @@ msgid ""
 "</td></tr>\n"
 "</table>"
 msgstr ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: "
+"16px; background-color: #FFFFFF; font-family:Verdana, Arial,sans-serif; "
+"color: #454748; width: 100%; border-collapse:separate;\"><tr><td align=\""
+"center\">\n"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style="
+"\"padding: 16px; background-color: #FFFFFF; color: #454748; border-"
+"collapse:separate;\">\n"
+"<tbody>\n"
+"    <!-- ส่วนหัว -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width="
+"\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px "
+"0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"middle\">\n"
+"                    <span style=\"font-size: 10px;\">บัญชีของคุณ</span><br/>\n"
+"                    <span style=\"font-size: 20px; font-weight: bold;\">\n"
+"                        <t t-out=\"object.name or ''\">Marc Demo</t>\n"
+"                    </span>\n"
+"                </td><td valign=\"middle\" align=\"right\" t-if="
+"\"not object.company_id.uses_default_logo\">\n"
+"                    <img t-attf-src="
+"\"/logo.png?company={{ object.company_id.id }}\" style="
+"\"padding: 0px; margin: 0px; height: auto; width: 80px;\" t-att-alt="
+"\"object.company_id.name\"/>\n"
+"                </td></tr>\n"
+"                <tr><td colspan=\"2\" style=\"text-align:center;\">\n"
+"                  <hr width=\"100%\" style=\"background-"
+"color:rgb(204,204,204);border:medium none;clear:both;display:block;font-"
+"size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <!-- เนื้อหา -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width="
+"\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px "
+"0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
+"                    <div>\n"
+"                        เรียน <t t-out=\"object.name or ''\">Marc Demo</t>,<"
+"br/><br/>\n"
+"                        บัญชีของคุณถูกสร้างขึ้นสำเร็จแล้ว!<br/>\n"
+"                        การเข้าสู่ระบบของคุณคือ <strong><t t-out="
+"\"object.email or ''\">mark.brown23@example.com</t></strong><br/>\n"
+"                        หากต้องการเข้าถึงบัญชีของคุณ คุณสามารถใช้ลิงก์ต่อไปนี้:\n"
+"                        <div style=\"margin: 16px 0px 16px 0px;\">\n"
+"                            <a t-attf-href="
+"\"/web/login?auth_login={{object.email}}\" t-attf-style=\"background-color: "
+"{{object.company_id.email_secondary_color or '#875A7B'}}; padding: 8px 16px "
+"8px 16px; text-decoration: none; color: {{"
+"object.company_id.email_primary_color or '#FFFFFF'}}; border-radius: 5px; "
+"font-size:13px;\">\n"
+"                                ไปที่บัญชีของฉัน\n"
+"                            </a>\n"
+"                        </div>\n"
+"                        ขอบคุณ<br/>\n"
+"                        <t t-if=\"user.signature\" data-o-mail-quote-"
+"container=\"1\">\n"
+"                            <br/>\n"
+"                            <div data-o-mail-quote=\"1\">--<br data-o-mail-"
+"quote=\"1\"/><t t-out=\"user.signature or ''\" data-o-mail-quote=\"1\""
+">Mitchell Admin</t></div>\n"
+"                        </t>\n"
+"                    </div>\n"
+"                </td></tr>\n"
+"                <tr><td style=\"text-align:center;\">\n"
+"                  <hr width=\"100%\" style=\"background-"
+"color:rgb(204,204,204);border:medium none;clear:both;display:block;font-"
+"size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <!-- ส่วนท้าย -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width="
+"\"590\" style=\"min-width: 590px; background-color: white; font-size: 11px; "
+"padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"middle\" align=\"left\">\n"
+"                    <t t-out=\"object.company_id.name or ''\">YourCompany</t>"
+"\n"
+"                </td></tr>\n"
+"                <tr><td valign=\"middle\" align=\"left\" style="
+"\"opacity: 0.7;\">\n"
+"                    <t t-out=\"object.company_id.phone or ''\">+1 "
+"650-123-4567</t>\n"
+"                    <t t-if=\"object.company_id.email\">\n"
+"                        | <a t-attf-href="
+"\"'mailto:%s' % {{ object.company_id.email }}\" style=\"text-decoration:none;"
+" color: #454748;\"><t t-out=\"object.company_id.email or ''\""
+">info@yourcompany.com</t></a>\n"
+"                    </t>\n"
+"                    <t t-if=\"object.company_id.website\">\n"
+"                        | <a t-attf-href="
+"\"'%s' % {{ object.company_id.website }}\" style=\"text-decoration:none; "
+"color: #454748;\">\n"
+"                            <t t-out=\"object.company_id.website or ''\""
+">http://www.example.com</t>\n"
+"                        </a>\n"
+"                    </t>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"</tbody>\n"
+"</table>\n"
+"</td></tr>\n"
+"<!-- สนับสนุนโดย -->\n"
+"<tr><td align=\"center\" style=\"min-width: 590px;\">\n"
+"    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" "
+"style=\"min-width: 590px; background-color: #F1F1F1; color: #454748; padding:"
+" 8px; border-collapse:separate;\">\n"
+"      <tr><td style=\"text-align: center; font-size: 13px;\">\n"
+"        สนับสนุนโดย <a target=\"_blank\" href="
+"\"https://www.odoo.com?utm_source=db&amp;utm_medium=auth\" t-attf-style="
+"\"color: {{object.company_id.email_secondary_color or '#875A7B'}};\">Odoo</a>"
+"\n"
+"      </td></tr>\n"
+"    </table>\n"
+"</td></tr>\n"
+"</table>"
 
 #. module: auth_signup
 #. odoo-python
@@ -541,7 +723,7 @@ msgstr "ไม่สามารถส่งอีเมล: ผู้ใช้ 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.reset_password_email
 msgid "Change password"
-msgstr ""
+msgstr "เปลี่ยนรหัสผ่าน"
 
 #. module: auth_signup
 #: model:ir.model,name:auth_signup.model_res_config_settings
@@ -570,6 +752,7 @@ msgid ""
 "Could not contact the mail server, please check your outgoing email server "
 "configuration"
 msgstr ""
+"ไม่สามารถติดต่อเซิร์ฟเวอร์อีเมลได้ โปรดตรวจสอบการกำหนดค่าเซิร์ฟเวอร์อีเมลขาออกของคุณ"
 
 #. module: auth_signup
 #. odoo-python
@@ -586,7 +769,7 @@ msgstr "ไม่สามารถรีเซ็ตรหัสผ่านข
 #. module: auth_signup
 #: model:ir.model,website_form_label:auth_signup.model_res_partner
 msgid "Create a Customer"
-msgstr ""
+msgstr "สร้างลูกค้า"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_config_settings__auth_signup_uninvited
@@ -596,7 +779,7 @@ msgstr "บัญชีของลูกค้า"
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.reset_password_email
 msgid "Dear"
-msgstr ""
+msgstr "เรียน"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.res_config_settings_view_form
@@ -609,24 +792,24 @@ msgstr "สิทธิการเข้าถึงเริ่มต้น"
 #: model:ir.model.fields,field_description:auth_signup.field_res_partner__display_name
 #: model:ir.model.fields,field_description:auth_signup.field_res_users__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "แสดงชื่อ"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.login
 msgid "Don't have an account?"
-msgstr "ยังไม่มีบัญชี ?"
+msgstr "ยังไม่มีบัญชี?"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.reset_password
 #: model_terms:ir.ui.view,arch_db:auth_signup.signup
 msgid "Email"
-msgstr ""
+msgstr "อีเมล"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_config_settings__auth_signup_reset_password
 #: model_terms:ir.ui.view,arch_db:auth_signup.res_config_settings_view_form
 msgid "Enable password reset from Login page"
-msgstr "อนุญาตให้รีเซ็ตรหัสผ่านจากหน้าล๊อกอิน"
+msgstr "อนุญาตให้รีเซ็ตรหัสผ่านจากหน้าล็อกอิน"
 
 #. module: auth_signup
 #: model:ir.model.fields.selection,name:auth_signup.selection__res_config_settings__auth_signup_uninvited__b2c
@@ -644,7 +827,7 @@ msgstr "การกำหนด HTTP"
 #: model:ir.model.fields,field_description:auth_signup.field_res_partner__id
 #: model:ir.model.fields,field_description:auth_signup.field_res_users__id
 msgid "ID"
-msgstr ""
+msgstr "ไอดี"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.reset_password_email
@@ -652,12 +835,14 @@ msgid ""
 "If you do not expect this, you can safely ignore this email.<br/><br/>\n"
 "                                Thanks,"
 msgstr ""
+"หากคุณไม่คาดถึงสิ่งนี้ คุณสามารถเพิกเฉยต่ออีเมลฉบับนี้ได้อย่างปลอดภัย<br/><br/>\n"
+"                                ขอบคุณ"
 
 #. module: auth_signup
 #. odoo-python
 #: code:addons/auth_signup/controllers/main.py:0
 msgid "Invalid signup token"
-msgstr "โทเคนการลงชื่อไม่ถูกต้อง"
+msgstr "โทเค็นการลงชื่อไม่ถูกต้อง"
 
 #. module: auth_signup
 #: model:ir.model.fields.selection,name:auth_signup.selection__res_users__state__new
@@ -667,7 +852,7 @@ msgstr ""
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.signup
 msgid "John Doe"
-msgstr ""
+msgstr "John Doe"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.res_config_settings_view_form
@@ -677,24 +862,24 @@ msgstr "ให้ลูกค้าของคุณเข้าสู่ระ
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.reset_password_email
 msgid "Marc Demo"
-msgstr ""
+msgstr "Marc Demo"
 
 #. module: auth_signup
 #. odoo-python
 #: code:addons/auth_signup/models/res_users.py:0
 msgid "Multiple accounts found for this login"
-msgstr ""
+msgstr "พบหลายบัญชีสำหรับการเข้าสู่ระบบนี้"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.signup
 msgid "Name"
-msgstr ""
+msgstr "ชื่อ"
 
 #. module: auth_signup
 #. odoo-python
 #: code:addons/auth_signup/models/res_users.py:0
 msgid "No account found for this login"
-msgstr ""
+msgstr "ไม่พบบัญชีสำหรับการเข้าสู่ระบบนี้"
 
 #. module: auth_signup
 #. odoo-python
@@ -705,7 +890,7 @@ msgstr "ไม่มีการให้เข้าสู่ระบบ"
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.reset_password_email
 msgid "Odoo"
-msgstr ""
+msgstr "Odoo"
 
 #. module: auth_signup
 #: model:ir.model.fields.selection,name:auth_signup.selection__res_config_settings__auth_signup_uninvited__b2b
@@ -743,12 +928,12 @@ msgstr "รหัสผ่านไม่ตรงกัน; กรุณาพ�
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.reset_password_email
 msgid "Powered by"
-msgstr ""
+msgstr "สนับสนุนโดย"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.login_successful
 msgid "Registration successful."
-msgstr ""
+msgstr "การลงทะเบียนสำเร็จแล้ว"
 
 #. module: auth_signup
 #: model:mail.template,subject:auth_signup.mail_template_data_unregistered_users
@@ -782,7 +967,7 @@ msgstr "ส่งอีเมลเชิญ"
 #: model:mail.template,description:auth_signup.mail_template_data_unregistered_users
 msgid ""
 "Sent automatically to admin if new user haven't responded to the invitation"
-msgstr ""
+msgstr "ส่งถึงผู้ดูแลระบบโดยอัตโนมัติหากผู้ใช้ใหม่ไม่ตอบรับคำเชิญแล้ว"
 
 #. module: auth_signup
 #: model:mail.template,description:auth_signup.portal_set_password_email
@@ -792,17 +977,17 @@ msgstr ""
 #. module: auth_signup
 #: model:mail.template,description:auth_signup.set_password_email
 msgid "Sent to new user after you invited them"
-msgstr ""
+msgstr "ส่งไปยังผู้ใช้ใหม่หลังจากที่คุณเชิญพวกเขาแล้ว"
 
 #. module: auth_signup
 #: model:mail.template,description:auth_signup.mail_template_user_signup_account_created
 msgid "Sent to portal user who registered themselves"
-msgstr ""
+msgstr "ส่งไปยังผู้ใช้พอร์ทัลที่ลงทะเบียนด้วยตนเองแล้ว"
 
 #. module: auth_signup
 #: model:mail.template,name:auth_signup.mail_template_user_signup_account_created
 msgid "Settings: New Portal Sign Up"
-msgstr ""
+msgstr "การตั้งค่า: ลงทะเบียนพอร์ทัลใหม่"
 
 #. module: auth_signup
 #: model:mail.template,name:auth_signup.portal_set_password_email
@@ -812,12 +997,12 @@ msgstr ""
 #. module: auth_signup
 #: model:mail.template,name:auth_signup.set_password_email
 msgid "Settings: New User Invite"
-msgstr ""
+msgstr "การตั้งค่า: คำเชิญผู้ใช้ใหม่"
 
 #. module: auth_signup
 #: model:mail.template,name:auth_signup.mail_template_data_unregistered_users
 msgid "Settings: Unregistered User Reminder"
-msgstr ""
+msgstr "การตั้งค่า: การแจ้งเตือนผู้ใช้ที่ไม่ได้ลงทะเบียน"
 
 #. module: auth_signup
 #. odoo-python
@@ -834,7 +1019,7 @@ msgstr "ลงชื่อ"
 #: model:ir.model.fields,field_description:auth_signup.field_res_partner__signup_type
 #: model:ir.model.fields,field_description:auth_signup.field_res_users__signup_type
 msgid "Signup Token Type"
-msgstr "ประเภทโทเคนการลงชื่อ"
+msgstr "ประเภทโทเค็นการลงชื่อ"
 
 #. module: auth_signup
 #. odoo-python
@@ -846,7 +1031,7 @@ msgstr "ไม่อนุญาตให้ลงชื่อสำหรับ
 #. odoo-python
 #: code:addons/auth_signup/models/res_partner.py:0
 msgid "Signup token '%s' is not valid or expired"
-msgstr ""
+msgstr "โทเค็นการลงทะเบียน '%s' ไม่ถูกต้องหรือหมดอายุ"
 
 #. module: auth_signup
 #. odoo-python
@@ -888,7 +1073,7 @@ msgstr "การกรอกแบบฟอร์มไม่ถูกต้อ
 msgid ""
 "There was an error when trying to deliver your Email, please check your "
 "configuration"
-msgstr ""
+msgstr "เกิดข้อผิดพลาดขณะพยายามส่งอีเมลของคุณ โปรดตรวจสอบการกำหนดค่าของคุณ"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.res_config_settings_view_form
@@ -936,22 +1121,22 @@ msgstr ""
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.reset_password_email
 msgid "YourCompany"
-msgstr ""
+msgstr "YourCompany"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.reset_password_email
 msgid "hours:<br/>"
-msgstr ""
+msgstr "ชั่วโมง:<br/>"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.reset_password_email
 msgid "http://www.example.com"
-msgstr ""
+msgstr "http://www.example.com"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.reset_password_email
 msgid "info@yourcompany.com"
-msgstr ""
+msgstr "info@yourcompany.com"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.signup

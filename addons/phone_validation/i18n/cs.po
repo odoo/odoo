@@ -1,6 +1,6 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* phone_validation
+# * phone_validation
 #
 # Translators:
 # Jan Horzinka <jan.horzinka@centrum.cz>, 2022
@@ -9,21 +9,23 @@
 # Rastislav Brencic <rastislav.brencic@azet.sk>, 2022
 # karolína schusterová <karolina.schusterova@vdp.sk>, 2022
 # Jiří Podhorecký, 2022
-#
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-09-11 13:59+0000\n"
-"PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Jiří Podhorecký, 2022\n"
-"Language-Team: Czech (https://app.transifex.com/odoo/teams/41243/cs/)\n"
+"PO-Revision-Date: 2025-09-16 10:05+0000\n"
+"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"Language-Team: Czech <https://translate.odoo.com/projects/odoo-19/"
+"phone_validation/cs/>\n"
 "Language: cs\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n "
 "<= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: phone_validation
 #. odoo-python
@@ -36,7 +38,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:phone_validation.field_phone_blacklist__message_needaction
 #: model:ir.model.fields,field_description:phone_validation.field_res_partner__message_needaction
 msgid "Action Needed"
-msgstr "Vyžaduje akci"
+msgstr "Vyžadována akce"
 
 #. module: phone_validation
 #: model:ir.model.fields,field_description:phone_validation.field_phone_blacklist__active
@@ -76,7 +78,7 @@ msgstr "Počet příloh"
 #. module: phone_validation
 #: model:ir.model,name:phone_validation.model_base
 msgid "Base"
-msgstr ""
+msgstr "Jádro"
 
 #. module: phone_validation
 #: model_terms:ir.ui.view,arch_db:phone_validation.phone_blacklist_view_form
@@ -91,7 +93,7 @@ msgstr "Datum Blacklistu"
 #. module: phone_validation
 #: model:ir.actions.act_window,name:phone_validation.phone_blacklist_action
 msgid "Blacklisted Phone Numbers"
-msgstr "Telefonní čísla na černé listině"
+msgstr "Telefonní čísla na blacklistu"
 
 #. module: phone_validation
 #: model:ir.model.fields,field_description:phone_validation.field_mail_thread_phone__phone_blacklisted
@@ -112,6 +114,8 @@ msgid ""
 "Blocked by deletion of portal account %(portal_user_name)s by %(user_name)s "
 "(#%(user_id)s)"
 msgstr ""
+"Blokováno smazáním účtu portálu %(portal_user_name)s přes %(user_name)s "
+"(#%(user_id)s)"
 
 #. module: phone_validation
 #: model:ir.model,name:phone_validation.model_res_partner
@@ -121,19 +125,19 @@ msgstr "Kontakt"
 #. module: phone_validation
 #: model:ir.model,website_form_label:phone_validation.model_res_partner
 msgid "Create a Customer"
-msgstr ""
+msgstr "Vytvořit zákazníka"
 
 #. module: phone_validation
 #: model:ir.model.fields,field_description:phone_validation.field_phone_blacklist__create_uid
 #: model:ir.model.fields,field_description:phone_validation.field_phone_blacklist_remove__create_uid
 msgid "Created by"
-msgstr "Vytvořeno od"
+msgstr "Vytvořeno uživatelem"
 
 #. module: phone_validation
 #: model:ir.model.fields,field_description:phone_validation.field_phone_blacklist__create_date
 #: model:ir.model.fields,field_description:phone_validation.field_phone_blacklist_remove__create_date
 msgid "Created on"
-msgstr "Vytvořeno"
+msgstr "Vytvořeno dne"
 
 #. module: phone_validation
 #: model_terms:ir.ui.view,arch_db:phone_validation.phone_blacklist_remove_view_form
@@ -147,7 +151,7 @@ msgstr "Zrušit"
 #: model:ir.model.fields,field_description:phone_validation.field_res_partner__display_name
 #: model:ir.model.fields,field_description:phone_validation.field_res_users__display_name
 msgid "Display Name"
-msgstr "Zobrazované jméno"
+msgstr "Zobrazovací název"
 
 #. module: phone_validation
 #: model:ir.model.fields,help:phone_validation.field_mail_thread_phone__phone_sanitized
@@ -165,14 +169,14 @@ msgstr ""
 #: model:ir.model.fields,field_description:phone_validation.field_phone_blacklist__message_follower_ids
 #: model:ir.model.fields,field_description:phone_validation.field_res_partner__message_follower_ids
 msgid "Followers"
-msgstr "Sledující"
+msgstr "Odběratelé"
 
 #. module: phone_validation
 #: model:ir.model.fields,field_description:phone_validation.field_mail_thread_phone__message_partner_ids
 #: model:ir.model.fields,field_description:phone_validation.field_phone_blacklist__message_partner_ids
 #: model:ir.model.fields,field_description:phone_validation.field_res_partner__message_partner_ids
 msgid "Followers (Partners)"
-msgstr "Sledující (partneři)"
+msgstr "Odběratelé (partneři)"
 
 #. module: phone_validation
 #: model:ir.model.fields,field_description:phone_validation.field_mail_thread_phone__has_message
@@ -195,14 +199,14 @@ msgstr "ID"
 #: model:ir.model.fields,help:phone_validation.field_phone_blacklist__message_needaction
 #: model:ir.model.fields,help:phone_validation.field_res_partner__message_needaction
 msgid "If checked, new messages require your attention."
-msgstr "Pokud je zaškrtnuto, nové zprávy vyžadují vaši pozornost."
+msgstr "Pokud zaškrtnuto, nové zprávy vyžadují vaši pozornost."
 
 #. module: phone_validation
 #: model:ir.model.fields,help:phone_validation.field_mail_thread_phone__message_has_error
 #: model:ir.model.fields,help:phone_validation.field_phone_blacklist__message_has_error
 #: model:ir.model.fields,help:phone_validation.field_res_partner__message_has_error
 msgid "If checked, some messages have a delivery error."
-msgstr "Pokud je zaškrtnuto, některé zprávy mají chybu při doručení."
+msgstr "Pokud zaškrtnuto, některé zprávy mají chybu při doručení."
 
 #. module: phone_validation
 #: model:ir.model.fields,help:phone_validation.field_mail_thread_phone__phone_sanitized_blacklisted
@@ -263,26 +267,26 @@ msgstr ""
 #: model:ir.model.fields,field_description:phone_validation.field_phone_blacklist__message_is_follower
 #: model:ir.model.fields,field_description:phone_validation.field_res_partner__message_is_follower
 msgid "Is Follower"
-msgstr "Je sledující"
+msgstr "Je odběratel"
 
 #. module: phone_validation
 #: model:ir.model.fields,field_description:phone_validation.field_phone_blacklist__write_uid
 #: model:ir.model.fields,field_description:phone_validation.field_phone_blacklist_remove__write_uid
 msgid "Last Updated by"
-msgstr "Naposledy upraveno od"
+msgstr "Naposledy upraveno uživatelem"
 
 #. module: phone_validation
 #: model:ir.model.fields,field_description:phone_validation.field_phone_blacklist__write_date
 #: model:ir.model.fields,field_description:phone_validation.field_phone_blacklist_remove__write_date
 msgid "Last Updated on"
-msgstr "Naposled upraveno"
+msgstr "Naposledy upraveno dne"
 
 #. module: phone_validation
 #: model:ir.model.fields,field_description:phone_validation.field_mail_thread_phone__message_has_error
 #: model:ir.model.fields,field_description:phone_validation.field_phone_blacklist__message_has_error
 #: model:ir.model.fields,field_description:phone_validation.field_res_partner__message_has_error
 msgid "Message Delivery error"
-msgstr "Chyba při doručování zpráv"
+msgstr "Chyba při doručování zprávy"
 
 #. module: phone_validation
 #: model:ir.model.fields,field_description:phone_validation.field_mail_thread_phone__message_ids
@@ -321,7 +325,7 @@ msgstr "Počet chyb"
 #: model:ir.model.fields,help:phone_validation.field_phone_blacklist__message_needaction_counter
 #: model:ir.model.fields,help:phone_validation.field_res_partner__message_needaction_counter
 msgid "Number of messages requiring action"
-msgstr ""
+msgstr "Počet zpráv vyžadujících akci"
 
 #. module: phone_validation
 #: model:ir.model.fields,help:phone_validation.field_mail_thread_phone__message_has_error_counter
@@ -338,7 +342,7 @@ msgstr "Číslo by mělo být ve formátu E164"
 #. module: phone_validation
 #: model:ir.ui.menu,name:phone_validation.phone_menu_main
 msgid "Phone / SMS"
-msgstr "Telefon / SMS"
+msgstr "Telefonáty / SMS"
 
 #. module: phone_validation
 #: model:ir.model,name:phone_validation.model_phone_blacklist
@@ -346,12 +350,12 @@ msgstr "Telefon / SMS"
 #: model_terms:ir.ui.view,arch_db:phone_validation.phone_blacklist_view_form
 #: model_terms:ir.ui.view,arch_db:phone_validation.phone_blacklist_view_tree
 msgid "Phone Blacklist"
-msgstr ""
+msgstr "Blacklist telefonních čísel"
 
 #. module: phone_validation
 #: model:ir.model,name:phone_validation.model_mail_thread_phone
 msgid "Phone Blacklist Mixin"
-msgstr ""
+msgstr "Mixin blacklistu telefonních čísel"
 
 #. module: phone_validation
 #: model:ir.model.fields,field_description:phone_validation.field_mail_thread_phone__phone_sanitized_blacklisted
@@ -386,7 +390,7 @@ msgstr "Důvod"
 #: model:ir.model,name:phone_validation.model_phone_blacklist_remove
 #: model_terms:ir.ui.view,arch_db:phone_validation.phone_blacklist_remove_view_form
 msgid "Remove phone from blacklist"
-msgstr ""
+msgstr "Odebrat číslo z blacklistu"
 
 #. module: phone_validation
 #: model:ir.model.fields,field_description:phone_validation.field_mail_thread_phone__phone_sanitized
@@ -417,7 +421,7 @@ msgstr "Mimo čiernej listiny"
 #. odoo-python
 #: code:addons/phone_validation/wizard/phone_blacklist_remove.py:0
 msgid "Unblock Reason: %(reason)s"
-msgstr ""
+msgstr "Důvod odblokování: %(reason)s"
 
 #. module: phone_validation
 #: model:ir.model,name:phone_validation.model_res_users
@@ -435,12 +439,12 @@ msgstr ""
 #. module: phone_validation
 #: model_terms:ir.ui.view,arch_db:phone_validation.phone_blacklist_remove_view_form
 msgid "e.g \"Asked to receive our next newsletters\""
-msgstr ""
+msgstr "např \"Mají zájem dostávat naše příští newslettery\""
 
 #. module: phone_validation
 #: model_terms:ir.ui.view,arch_db:phone_validation.phone_blacklist_remove_view_form
 msgid "phone_blacklist_removal"
-msgstr ""
+msgstr "phone_blacklist_removal"
 
 #~ msgid "Blacklisted Phone Is Mobile"
 #~ msgstr "Telefon na černé listině je mobilné číslo"

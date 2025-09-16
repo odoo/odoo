@@ -1,6 +1,6 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* gamification
+# * gamification
 #
 # Translators:
 # Tugay Hatıl <tugayh@projetgrup.com>, 2022
@@ -21,20 +21,22 @@
 # Levent Karakaş <levent@mektup.at>, 2022
 # Martin Trigaux, 2022
 # Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2023
-#
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-09-11 13:56+0000\n"
-"PO-Revision-Date: 2022-09-22 05:46+0000\n"
-"Last-Translator: Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2023\n"
-"Language-Team: Turkish (https://app.transifex.com/odoo/teams/41243/tr/)\n"
+"PO-Revision-Date: 2025-09-16 02:32+0000\n"
+"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"Language-Team: Turkish <https://translate.odoo.com/projects/odoo-19/"
+"gamification/tr/>\n"
 "Language: tr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__user_count
@@ -587,6 +589,306 @@ msgid ""
 "</table>\n"
 "            "
 msgstr ""
+"<table cellspacing=\"0\" cellpadding=\"0\" width=\"100%\" style=\"background-"
+"color: #EEE; border-collapse: collapse;\">\n"
+"<tr>\n"
+"    <td valign=\"top\" align=\"center\">\n"
+"        <t t-set=\"object_ctx\" t-value=\"ctx.get('object')\"/>\n"
+"        <t t-set=\"company\" t-value="
+"\"object_ctx and object_ctx.company_id or user.company_id\"/>\n"
+"        <t t-set=\"challenge_lines\" t-value="
+"\"ctx.get('challenge_lines', [])\"/>\n"
+"        <table cellspacing=\"0\" cellpadding=\"0\" width=\"600\" style="
+"\"margin: 0 auto; width: 570px;\">\n"
+"            <tr><td>\n"
+"                <table cellspacing=\"0\" cellpadding=\"0\" width=\"100%\">\n"
+"                    <tr>\n"
+"                        <div>\n"
+"                            <t t-if=\"object.visibility_mode == 'ranking'\">"
+"\n"
+"                                <td style=\"padding:15px;\">\n"
+"                                    <p style=\"font-size:20px;color:#666666;"
+"\" align=\"center\">Lider Panosu</p>\n"
+"                                </td>\n"
+"                            </t>\n"
+"                        </div>\n"
+"                    </tr>\n"
+"                </table>\n"
+"                <table cellspacing=\"0\" cellpadding=\"0\" width=\"100%\" "
+"bgcolor=\"#fff\" style=\"background-color:#fff;\">\n"
+"                    <tr><td style=\"padding: 15px;\">\n"
+"                        <t t-if=\"object.visibility_mode == 'personal'\">\n"
+"                            <span style=\"color:#666666;font-size:13px;\""
+">İşte mücadeledeki mevcut ilerlemeniz: <strong t-out=\"object.name or ''\""
+"/>.</span>\n"
+"                            <table cellspacing=\"0\" cellpadding=\"0\" width="
+"\"100%\" style=\"margin-top:20px;\">\n"
+"                                <tr>\n"
+"                                    <td align=\"center\">\n"
+"                                        <div>Kişisel Performans</div>\n"
+"                                    </td>\n"
+"                                </tr>\n"
+"                            </table>\n"
+"                            <table cellspacing=\"0\" cellpadding=\"0\" width="
+"\"100%\" style=\"margin-top:30px;color:#666666;\">\n"
+"                                <thead>\n"
+"                                    <tr style="
+"\"color:#9A6C8E; font-size:12px;\">\n"
+"                                        <th align=\"left\" style=\"padding-"
+"bottom: 0px;width:40%;text-align:left;\">Amaçlar</th>\n"
+"                                        <th style="
+"\"width:20%;text-align:right;\" align=\"left\">Hedef</th>\n"
+"                                        <th style="
+"\"width:20%;text-align:right;\" align=\"right\">Mevcut</th>\n"
+"                                        <th style="
+"\"width:20%;text-align:right;\" align=\"right\">Tamamlanma oranı</th>\n"
+"                                    </tr>\n"
+"                                    <tr>\n"
+"                                        <td colspan=\"5\" style="
+"\"height:1px;background-color:#9A6C8E;\"/>\n"
+"                                    </tr>\n"
+"                                </thead>\n"
+"                                <tbody t-foreach=\"challenge_lines\" t-as="
+"\"line\">\n"
+"                                    <tr style=\"font-weight:bold;\">\n"
+"                                        <td style=\"padding: 20px 0;\" align="
+"\"left\">\n"
+"                                            <t t-out=\"line['name'] or ''\"/>"
+"\n"
+"                                            <t t-if="
+"\"line['suffix'] or line['monetary']\">\n"
+"                                                (<t t-out="
+"\"line['full_suffix'] or ''\"/>)\n"
+"                                            </t>\n"
+"                                        </td>\n"
+"                                        <td style=\"padding: 20px 0;\" align="
+"\"right\"><t t-out=\"&quot;%.2f&quot; % line['target'] or ''\"/>\n"
+"                                            <t t-if=\"line['suffix']\" t-out="
+"\"line['suffix'] or ''\"/>\n"
+"                                        </td>\n"
+"                                        <td style=\"padding: 20px 0;\" align="
+"\"right\"><t t-out=\"&quot;%.2f&quot; % line['current'] or ''\"/>\n"
+"                                            <t t-if=\"line['suffix']\" t-out="
+"\"line['suffix'] or ''\"/>\n"
+"                                        </td>\n"
+"                                        <td style="
+"\"padding: 20px 0;font-size:25px;color:#9A6C8E;\" align=\"right\"><strong><t "
+"t-out=\"int(line['completeness']) or ''\"/>%</strong></td>\n"
+"                                    </tr>\n"
+"                                    <tr>\n"
+"                                        <td colspan=\"5\" style="
+"\"height:1px;background-color:#e3e3e3;\"/>\n"
+"                                    </tr>\n"
+"                                </tbody>\n"
+"                            </table>                   \n"
+"                        </t>\n"
+"                        <t t-else=\"\">\n"
+"                            <span style=\"color:#A8A8A8;font-size:13px;\">\n"
+"                                Mücadele: <strong t-out=\"object.name or ''\""
+"/>.\n"
+"                            </span> \n"
+"                            <t t-foreach=\"challenge_lines\" t-as=\"line\">\n"
+"                                <!-- Başlık + Buton tablosu -->\n"
+"                                <table cellspacing=\"0\" cellpadding=\"0\" "
+"width=\"100%\" style=\"margin-top:35px;\">\n"
+"                                    <tr>\n"
+"                                        <td width=\"50%\">\n"
+"                                            <div>Hedef için en başarılılar "
+"<strong t-out=\"line['name'] or ''\"/></div>\n"
+"                                        </td>\n"
+"                                    </tr>\n"
+"                                </table>\n"
+"                                <!-- Podyum -->\n"
+"                                <t t-if=\"len(line['goals']) == 2\">\n"
+"                                    <table cellspacing=\"0\" cellpadding="
+"\"0\" width=\"100%\" style=\"margin-top:10px;\">\n"
+"                                        <tr><td style=\"padding:0 30px;\">\n"
+"                                            <table cellspacing=\"0\" "
+"cellpadding=\"0\" width=\"100%\" style=\"table-layout: fixed;\">\n"
+"                                                <tr>\n"
+"                                                    <t t-set=\"top_goals\" "
+"t-value=\"line['goals'][:3]\"/>\n"
+"                                                    <t t-foreach="
+"\"top_goals\" t-as=\"goal\">\n"
+"                                                        <td align=\"center\" "
+"style=\"width:32%;\">\n"
+"                                                            <t t-if="
+"\"loop.index == 1\">\n"
+"                                                                <t t-set="
+"\"extra_div\" t-value="
+"\"'&lt;div style=&quot;height:40px;&quot;&gt;&lt;/div&gt;'\"/>\n"
+"                                                                <t t-set="
+"\"heightA\" t-value=\"95\"/>\n"
+"                                                                <t t-set="
+"\"heightB\" t-value=\"75\"/>\n"
+"                                                                <t t-set="
+"\"bgColor\" t-value=\"'#b898b0'\"/>\n"
+"                                                                <t t-set="
+"\"fontSize\" t-value=\"50\"/>\n"
+"                                                                <t t-set="
+"\"podiumPosition\" t-value=\"'2'\"/>\n"
+"                                                            </t>\n"
+"                                                            <t t-elif="
+"\"loop.index == 2\">\n"
+"                                                                <t t-set="
+"\"extra_div\" t-value=\"''\"/>\n"
+"                                                                <t t-set="
+"\"heightA\" t-value=\"55\"/>\n"
+"                                                                <t t-set="
+"\"heightB\" t-value=\"115\"/>\n"
+"                                                                <t t-set="
+"\"bgColor\" t-value=\"'#9A6C8E'\"/>\n"
+"                                                                <t t-set="
+"\"fontSize\" t-value=\"85\"/>\n"
+"                                                                <t t-set="
+"\"podiumPosition\" t-value=\"'1'\"/>\n"
+"                                                            </t>\n"
+"                                                            <t t-elif="
+"\"loop.index == 3\">\n"
+"                                                                <t t-set="
+"\"extra_div\" t-value="
+"\"'&lt;div style=&quot;height:60px;&quot;&gt;&lt;/div&gt;'\"/>\n"
+"                                                                <t t-set="
+"\"heightA\" t-value=\"115\"/>\n"
+"                                                                <t t-set="
+"\"heightB\" t-value=\"55\"/>\n"
+"                                                                <t t-set="
+"\"bgColor\" t-value=\"'#c8afc1'\"/>\n"
+"                                                                <t t-set="
+"\"fontSize\" t-value=\"35\"/>\n"
+"                                                                <t t-set="
+"\"podiumPosition\" t-value=\"'3'\"/>\n"
+"                                                            </t>\n"
+"                                                            <div style="
+"\"margin:0 3px 0 3px;height:220px;\">\n"
+"                                                                <div t-attf-"
+"style=\"height:{{ heightA }}px;\">\n"
+"                                                                    <t t-out="
+"\"extra_div or ''\"/>\n"
+"                                                                    <div "
+"style=\"height:55px;\">\n"
+"                                                                        <img "
+"style=\"margin-bottom:5px;width:50px;height:50px;border-radius:50%;object-"
+"fit:cover;\" t-att-src=\"image_data_uri(object.env['res.users'].browse(goal"
+"['user_id']).partner_id.image_128)\" t-att-alt=\"goal['name']\"/>\n"
+"                                                                    </div>\n"
+"                                                                    <div "
+"align=\"center\" t-attf-style=\"color:{{ bgColor }};height:20px\">\n"
+"                                                                        <t "
+"t-out=\"goal['name'] or ''\"/>\n"
+"                                                                    </div>\n"
+"                                                                </div>\n"
+"                                                                <div t-attf-"
+"style=\"background-color:{{ bgColor }};height:{{ heightB }}px;\">\n"
+"                                                                    "
+"<strong><span t-attf-style=\"color:#fff;font-size:{{ fontSize }}px;\" t-out="
+"\"podiumPosition or ''\"/></strong>\n"
+"                                                                </div>\n"
+"                                                                <div style="
+"\"height:30px;\">\n"
+"                                                                    <t t-out="
+"\"&quot;%.2f&quot; % goal['current'] or ''\"/>\n"
+"                                                                    <t t-if="
+"\"line['suffix'] or line['monetary']\">\n"
+"                                                                        <t "
+"t-out=\"line['full_suffix'] or ''\"/>\n"
+"                                                                    </t>\n"
+"                                                                </div>\n"
+"                                                            </div>\n"
+"                                                        </td>\n"
+"                                                    </t>\n"
+"                                                </tr>\n"
+"                                            </table>\n"
+"                                            </td>\n"
+"                                        </tr>\n"
+"                                    </table>\n"
+"                                </t>\n"
+"                                <!-- veri tablosu -->\n"
+"                                <table cellspacing=\"0\" cellpadding=\"0\" "
+"width=\"100%\" style=\"margin-bottom:5px\">\n"
+"                                    <tr>\n"
+"                                        <td>\n"
+"                                            <table cellspacing=\"0\" "
+"cellpadding=\"0\" width=\"100%\" style=\"margin-top:30px;margin-"
+"bottom:5px;color:#666666;\">\n"
+"                                                <thead>\n"
+"                                                    <tr style="
+"\"color:#9A6C8E; font-size:12px;\">\n"
+"                                                        <th style="
+"\"width:15%;text-align:center;\">Sıra</th>\n"
+"                                                        <th style="
+"\"width:25%;text-align:left;\">İsim</th>\n"
+"                                                        <th style="
+"\"width:30%;text-align:right;\">Performans \n"
+"                                                            <t t-if="
+"\"line['suffix']\">\n"
+"                                                                (<t t-out="
+"\"line['suffix'] or ''\"/>)\n"
+"                                                            </t>\n"
+"                                                            <t t-elif="
+"\"line['monetary']\">\n"
+"                                                                (<t t-out="
+"\"company.currency_id.symbol or ''\"/>)\n"
+"                                                            </t>\n"
+"                                                        </th>\n"
+"                                                        <th style="
+"\"width:30%;text-align:right;\">Tamamlanma oranı</th>\n"
+"                                                    </tr>\n"
+"                                                    <tr>\n"
+"                                                        <td colspan=\"5\" "
+"style=\"height:1px;background-color:#9A6C8E;\"/>\n"
+"                                                    </tr>\n"
+"                                                </thead>\n"
+"                                                <tbody t-foreach="
+"\"line['goals']\" t-as=\"goal\">\n"
+"                                                    <tr>\n"
+"                                                        <t t-set="
+"\"tdBgColor\" t-value=\"'#fff'\"/>\n"
+"                                                        <t t-set=\"tdColor\" "
+"t-value=\"'gray'\"/>\n"
+"                                                        <t t-set="
+"\"mutedColor\" t-value=\"'#AAAAAA'\"/>\n"
+"                                                        <t t-set="
+"\"tdPercentageColor\" t-value=\"'#9A6C8E'\"/>\n"
+"                                                        <td width=\"15%\" "
+"align=\"center\" valign=\"middle\" t-attf-style=\"background-color:{{ "
+"tdBgColor }};padding :5px 0;font-size:20px;\"><t t-out=\"goal['rank']+1 or ''"
+"\"/>\n"
+"                                                        </td>\n"
+"                                                        <td width=\"25%\" "
+"align=\"left\" valign=\"middle\" t-attf-style=\"background-color:{{ "
+"tdBgColor }};padding :5px 0;font-size:13px;\"><t t-out=\"goal['name'] or ''\""
+"/></td>\n"
+"                                                        <td width=\"30%\" "
+"align=\"right\" t-attf-style=\"background-color:{{ tdBgColor }};padding:5px 0"
+";line-height:1;\"><t t-out=\"&quot;%.2f&quot; % goal['current'] or ''"
+"\"/><br/><span t-attf-style=\"font-size:13px;color:{{ mutedColor }};"
+"\">üzerinden <t t-out=\"&quot;%.2f&quot; % line['target'] or ''\"/></span>\n"
+"                                                        </td>\n"
+"                                                        <td width=\"30%\" t"
+"-attf-style=\"color:{{ tdPercentageColor }};background-color:{{ tdBgColor "
+"}};padding-right:15px;font-size:22px;\" align=\"right\"><strong><t t-out="
+"\"int(goal['completeness']) or ''\"/>%</strong></td>\n"
+"                                                    </tr>\n"
+"                                                    <tr>\n"
+"                                                        <td colspan=\"5\" "
+"style=\"height:1px;background-color:#DADADA;\"/>\n"
+"                                                    </tr>\n"
+"                                                </tbody>\n"
+"                                            </table>\n"
+"                                        </td>\n"
+"                                    </tr>\n"
+"                                </table> \n"
+"                            </t>\n"
+"                        </t>\n"
+"                    </td></tr>\n"
+"                </table>\n"
+"            </td></tr>\n"
+"        </table>\n"
+"    </td>\n"
+"</tr>\n"
+"</table>\n"
+"            "
 
 #. module: gamification
 #: model_terms:ir.actions.act_window,help:gamification.badge_list_action
@@ -663,7 +965,7 @@ msgstr "Aksiyon"
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge_user__message_needaction
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__message_needaction
 msgid "Action Needed"
-msgstr "Eylem Gerekiyor"
+msgstr "Aksiyon Gerekiyor"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__active
@@ -843,7 +1145,7 @@ msgstr "İptal"
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_goal__state__canceled
 msgid "Cancelled"
-msgstr ""
+msgstr "İptal Edildi"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.challenge_form_view
@@ -908,7 +1210,7 @@ msgstr "Kapanmış Hedef"
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal__color
 msgid "Color Index"
-msgstr ""
+msgstr "Renk"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge_user__comment
@@ -1004,7 +1306,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:gamification.field_gamification_karma_rank__create_uid
 #: model:ir.model.fields,field_description:gamification.field_gamification_karma_tracking__create_uid
 msgid "Created by"
-msgstr "Oluşturan"
+msgstr "Tarafından oluşturuldu"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__create_date
@@ -1018,7 +1320,7 @@ msgstr "Oluşturan"
 #: model:ir.model.fields,field_description:gamification.field_gamification_karma_rank__create_date
 #: model:ir.model.fields,field_description:gamification.field_gamification_karma_tracking__create_date
 msgid "Created on"
-msgstr "Oluşturulma"
+msgstr "Oluşturuldu"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_wizard__current
@@ -1044,7 +1346,7 @@ msgstr "Veri"
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.gamification_karma_tracking_view_tree
 msgid "Date"
-msgstr ""
+msgstr "Tarih"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition__field_date_id
@@ -1120,7 +1422,7 @@ msgstr "Görünüm Modu"
 #: model:ir.model.fields,field_description:gamification.field_gamification_karma_tracking__display_name
 #: model:ir.model.fields,field_description:gamification.field_res_users__display_name
 msgid "Display Name"
-msgstr "Görünüm Adı"
+msgstr "İsim Göster"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition__display_mode
@@ -1135,7 +1437,7 @@ msgstr "Toplu kullanıcı için ayırdedici alan"
 #. module: gamification
 #: model:gamification.karma.rank,name:gamification.rank_doctor
 msgid "Doctor"
-msgstr "Doktor"
+msgstr "Doktora"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_goal_definition__domain
@@ -1152,7 +1454,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_challenge__state__done
 #: model_terms:ir.ui.view,arch_db:gamification.goal_search_view
 msgid "Done"
-msgstr "Biten"
+msgstr "Yapıldı"
 
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_challenge__state__draft
@@ -1207,7 +1509,7 @@ msgstr "Toplanacak Alan"
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition__domain
 msgid "Filter Domain"
-msgstr "Süzme Tanım Kümesi"
+msgstr "Filtre Etki Alanı"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__message_follower_ids
@@ -1256,7 +1558,7 @@ msgstr "Forum Rozet Seviye"
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.goal_kanban_view
 msgid "From"
-msgstr "Başlangıç"
+msgstr "Başlama"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition__full_suffix
@@ -1266,7 +1568,7 @@ msgstr "Tam Sonek"
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_karma_tracking__gain
 msgid "Gain"
-msgstr ""
+msgstr "Kazanç"
 
 #. module: gamification
 #: model:ir.model,name:gamification.model_gamification_badge
@@ -1558,7 +1860,7 @@ msgstr "Görsel 512"
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_challenge__state__inprogress
 msgid "In Progress"
-msgstr "Devam Eden"
+msgstr "İşlemde"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.goal_definition_form_view
@@ -1614,7 +1916,7 @@ msgstr "Yeni Kullanıcı Davet Et"
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge_user__message_is_follower
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__message_is_follower
 msgid "Is Follower"
-msgstr "Takipçi"
+msgstr "Takipçi mi"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_res_users__karma
@@ -1712,7 +2014,7 @@ msgstr "Koyulacak hedefleri listesi"
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.gamification_karma_tracking_view_search
 msgid "Manual"
-msgstr ""
+msgstr "Manuel"
 
 #. module: gamification
 #: model:gamification.karma.rank,name:gamification.rank_master
@@ -1907,7 +2209,7 @@ msgstr "Bildirim Mesajları"
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge_user__message_needaction_counter
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__message_needaction_counter
 msgid "Number of Actions"
-msgstr "Eylemlerin Adedi"
+msgstr "Aksiyon Sayısı"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__message_has_error_counter
@@ -1921,7 +2223,7 @@ msgstr "Hata adedi"
 #: model:ir.model.fields,help:gamification.field_gamification_badge_user__message_needaction_counter
 #: model:ir.model.fields,help:gamification.field_gamification_challenge__message_needaction_counter
 msgid "Number of messages requiring action"
-msgstr ""
+msgstr "İşlem gerektiren mesaj sayısı"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge__message_has_error_counter
@@ -2111,7 +2413,7 @@ msgstr "Mevcut değeri"
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_goal_definition__computation_mode__manually
 msgid "Recorded manually"
-msgstr "Elle kaydedilmiş"
+msgstr "Manuel kaydedilmiş"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.goal_form_view
@@ -2236,7 +2538,7 @@ msgstr "Devam Eden Yarışmalar"
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.goal_form_view
 msgid "Schedule"
-msgstr "Çalışma Saatleri"
+msgstr "Planla"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.gamification_badge_view_search
@@ -2315,7 +2617,7 @@ msgstr "Kullanıcı yeni bir rütbeye ulaştığında otomatik olarak gönderili
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge_line__sequence
 msgid "Sequence"
-msgstr "Sıra"
+msgstr "Sıralama"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.view_goal_wizard_update_current
@@ -2360,13 +2662,13 @@ msgstr "Gümüş rozet sayısı"
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_karma_tracking__origin_ref
 msgid "Source"
-msgstr ""
+msgstr "Kaynak"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_karma_tracking__origin_ref_model_name
 #: model_terms:ir.ui.view,arch_db:gamification.gamification_karma_tracking_view_search
 msgid "Source Type"
-msgstr ""
+msgstr "Kaynak Tipi"
 
 #. module: gamification
 #. odoo-python
@@ -2499,6 +2801,10 @@ msgid ""
 "\n"
 "%(error_message)s"
 msgstr ""
+"%(definition)s tanımlaması için tanım kümesi hatalı görünüyor, lütfen "
+"kontrol edin.\n"
+"\n"
+"%(error_message)s"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_goal_definition__res_id_field
@@ -2711,7 +3017,7 @@ msgstr "Benzersiz Sahipleri"
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge_line__definition_suffix
 msgid "Unit"
-msgstr "Adet"
+msgstr "Birim"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.view_goal_wizard_update_current

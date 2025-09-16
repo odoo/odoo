@@ -1,6 +1,6 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* delivery
+# * delivery
 #
 # Translators:
 # Gökay Kıvırcıoğlu <riza.gokay@gmail.com>, 2022
@@ -18,26 +18,28 @@
 # Umur Akın <umura@projetgrup.com>, 2022
 # Ayhan KIZILTAN <akiziltan76@hotmail.com>, 2022
 # Tugay Hatıl <tugayh@projetgrup.com>, 2023
-#
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-09-11 13:55+0000\n"
-"PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Tugay Hatıl <tugayh@projetgrup.com>, 2023\n"
-"Language-Team: Turkish (https://app.transifex.com/odoo/teams/41243/tr/)\n"
+"PO-Revision-Date: 2025-09-16 04:38+0000\n"
+"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"Language-Team: Turkish <https://translate.odoo.com/projects/odoo-19/delivery/"
+"tr/>\n"
 "Language: tr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: delivery
 #. odoo-python
 #: code:addons/delivery/wizard/choose_delivery_carrier.py:0
 msgid "%(carrier)s Error"
-msgstr ""
+msgstr "%(carrier)sHata"
 
 #. module: delivery
 #. odoo-python
@@ -46,17 +48,19 @@ msgid ""
 "%s\n"
 "Free Shipping"
 msgstr ""
+"%s\n"
+"Ücretsiz Kargo"
 
 #. module: delivery
 #. odoo-python
 #: code:addons/delivery/models/delivery_carrier.py:0
 msgid "%s (copy)"
-msgstr ""
+msgstr "%s (kopya)"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.choose_delivery_carrier_view_form
 msgid "<i class=\"oi oi-arrow-right me-1\"/>Get rate"
-msgstr ""
+msgstr "<i class=\"oi oi-arrow-right me-1\"/>Oran Al"
 
 #. module: delivery
 #. odoo-python
@@ -77,11 +81,13 @@ msgid ""
 "                                <span class=\"o_stat_text\">Environment</"
 "span>"
 msgstr ""
+"<span class=\"o_stat_text o_warning_text fw-bold\">Test</span>\n"
+"                                <span class=\"o_stat_text\">Ortamı</span>"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid "<span class=\"o_stat_text text-danger\">No debug</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text text-danger\">Hata ayıklama yok</span>"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -95,11 +101,13 @@ msgid ""
 "                                <span class=\"o_stat_text\">Environment</"
 "span>"
 msgstr ""
+"<span class=\"text-success\">Üretim</span>\n"
+"                                <span class=\"o_stat_text\">Ortamı</span>"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.delivery_report_saleorder_document
 msgid "<strong>Shipping Description</strong>"
-msgstr ""
+msgstr "<strong>Nakliye Açıklaması</strong>"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__carrier_description
@@ -142,7 +150,7 @@ msgstr "Sevkiyat ekle"
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid "Additional margin"
-msgstr ""
+msgstr "Ek marj"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__allow_cash_on_delivery
@@ -179,7 +187,7 @@ msgstr ""
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid "Availability"
-msgstr ""
+msgstr "Müsaitlik"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__available_carrier_ids
@@ -210,6 +218,8 @@ msgstr "Nakliyeci"
 msgid ""
 "Carrier %s cannot have the same tag in both Must Have Tags and Excluded Tags."
 msgstr ""
+"Taşıyıcı %s hem \"Mecburi Etiketler\" hem de \"Hariç Tutulan Etiketler\" "
+"içinde aynı etikete sahip olamaz."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__carrier_description
@@ -232,26 +242,26 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/delivery/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.js:0
 msgid "Choose a pick-up point"
-msgstr ""
+msgstr "Bir teslim alma noktası seçin"
 
 #. module: delivery
 #. odoo-javascript
 #: code:addons/delivery/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.js:0
 #: code:addons/delivery/static/src/js/location_selector/map_container/map_container.js:0
 msgid "Choose this location"
-msgstr ""
+msgstr "Bu konumu seçin"
 
 #. module: delivery
 #. odoo-javascript
 #: code:addons/delivery/static/src/js/location_selector/location_schedule/location_schedule.js:0
 msgid "Closed"
-msgstr ""
+msgstr "Kapanmış"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__company_id
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__company_id
 msgid "Company"
-msgstr "Şirket"
+msgstr "Firma"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_price_rule_form
@@ -266,7 +276,7 @@ msgstr "Kontak"
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid "Content"
-msgstr ""
+msgstr "İçerik"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__display_price
@@ -289,7 +299,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__create_uid
 #: model:ir.model.fields,field_description:delivery.field_delivery_zip_prefix__create_uid
 msgid "Created by"
-msgstr "Oluşturan"
+msgstr "Tarafından oluşturuldu"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__create_date
@@ -297,14 +307,14 @@ msgstr "Oluşturan"
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__create_date
 #: model:ir.model.fields,field_description:delivery.field_delivery_zip_prefix__create_date
 msgid "Created on"
-msgstr "Oluşturulma"
+msgstr "Oluşturuldu"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__currency_id
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__currency_id
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__currency_id
 msgid "Currency"
-msgstr "Para Birimi"
+msgstr "Kur"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_payment_provider__custom_mode
@@ -361,7 +371,7 @@ msgstr "Teslim Yöntemi"
 #: model:ir.ui.menu,name:delivery.sale_menu_action_delivery_carrier_form
 #: model_terms:ir.ui.view,arch_db:delivery.delivery_provider_module_kanban
 msgid "Delivery Methods"
-msgstr ""
+msgstr "Teslim Yöntemleri"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__delivery_price
@@ -400,6 +410,9 @@ msgid ""
 "Delivery zip prefixes are assigned to delivery carriers to restrict\n"
 "            which zips it is available to."
 msgstr ""
+"Teslimat posta kodu ön ekleri teslimat taşıyıcılarına atanarak hangi posta "
+"kodlarında\n"
+"            kullanılabilecekleri kısıtlanır."
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -409,7 +422,7 @@ msgstr "Açıklama"
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid "Destination"
-msgstr ""
+msgstr "Varış Yeri"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__sequence
@@ -419,7 +432,7 @@ msgstr "Görünüm sırasını belirle"
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.choose_delivery_carrier_view_form
 msgid "Discard"
-msgstr "Vazgeç"
+msgstr "Sil"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__display_name
@@ -435,7 +448,7 @@ msgstr "Vazgeç"
 #: model:ir.model.fields,field_description:delivery.field_sale_order__display_name
 #: model:ir.model.fields,field_description:delivery.field_sale_order_line__display_name
 msgid "Display Name"
-msgstr "Görünüm Adı"
+msgstr "İsim Göster"
 
 #. module: delivery
 #: model_terms:ir.actions.act_window,help:delivery.action_delivery_carrier_form
@@ -444,6 +457,10 @@ msgid ""
 "            UPS Express, UPS Standard) with a set of pricing rules attached\n"
 "            to each method."
 msgstr ""
+"Her taşıyıcı (örn. UPS), her bir yönteme bağlı fiyatlandırma kurallarıyla "
+"birlikte\n"
+"            birkaç teslimat yöntemine (örn. UPS Express, UPS Standard)\n"
+"            sahip olabilir."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__prod_environment
@@ -460,7 +477,7 @@ msgstr "Hata: bu teslimat yöntemi bu adres için mevcut değil."
 #. odoo-python
 #: code:addons/delivery/models/delivery_carrier.py:0
 msgid "Error: this delivery method is not available."
-msgstr ""
+msgstr "Hata: bu teslimat yöntemi mevcut değil."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__invoice_policy
@@ -470,6 +487,11 @@ msgid ""
 "Real Cost: the customer will be invoiced the real cost of the shipping, the "
 "cost of theshipping will be updated on the SO after the delivery."
 msgstr ""
+"Tahmini Maliyet: müşteri, nakliye için tahmini maliyet üzerinden "
+"faturalandırılacaktır.\n"
+"Gerçek Maliyet: müşteri, nakliye için gerçek maliyet üzerinden "
+"faturalandırılacaktır, teslimattan sonra satış siparişi üzerinde nakliye "
+"maliyeti güncellenecektir."
 
 #. module: delivery
 #: model:ir.model.fields.selection,name:delivery.selection__delivery_carrier__invoice_policy__estimated
@@ -479,7 +501,7 @@ msgstr "Tahmini maliyet"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__excluded_tag_ids
 msgid "Excluded Tags"
-msgstr ""
+msgstr "Hariç Tutulan Etiketler"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_sale_order__carrier_id
@@ -493,11 +515,13 @@ msgid ""
 "Filling this form allows you to make the shipping method available according "
 "to the content of the order or its destination."
 msgstr ""
+"Bu formu doldurmak, nakliye yöntemini siparişin içeriğine veya teslimat "
+"adresine göre kullanılabilir hale getirir."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__fixed_margin
 msgid "Fixed Margin"
-msgstr ""
+msgstr "Sabit Marj"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__fixed_price
@@ -561,6 +585,7 @@ msgid ""
 "If the total volume of the order is over this volume, the method won't be "
 "available."
 msgstr ""
+"Siparişin toplam hacmi bu hacmin üzerinde ise söz konusu yöntem kullanılamaz."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__max_weight
@@ -568,6 +593,8 @@ msgid ""
 "If the total weight of the order is over this weight, the method won't be "
 "available."
 msgstr ""
+"Siparişin toplam ağırlığı bu ağırlığın üzerinde ise söz konusu yöntem "
+"kullanılamaz."
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -631,13 +658,13 @@ msgstr "Son Güncelleme"
 #. odoo-javascript
 #: code:addons/delivery/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.js:0
 msgid "List view"
-msgstr ""
+msgstr "Liste Görünümü"
 
 #. module: delivery
 #. odoo-javascript
 #: code:addons/delivery/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.js:0
 msgid "Loading..."
-msgstr ""
+msgstr "Yükleniyor..."
 
 #. module: delivery
 #: model:delivery.carrier,name:delivery.delivery_local_delivery
@@ -658,7 +685,7 @@ msgstr "Teslimat zip öneklerini yönetme"
 #. odoo-javascript
 #: code:addons/delivery/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.js:0
 msgid "Map view"
-msgstr ""
+msgstr "Harita görünümü"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__margin
@@ -678,12 +705,12 @@ msgstr "Karlılık Oranı"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__max_volume
 msgid "Max Volume"
-msgstr ""
+msgstr "Azami Hacim"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__max_weight
 msgid "Max Weight"
-msgstr ""
+msgstr "Maksimum Ağırlık"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__max_value
@@ -698,7 +725,7 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__must_have_tag_ids
 msgid "Must Have Tags"
-msgstr ""
+msgstr "Mecburi Etiketler"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__name
@@ -715,26 +742,26 @@ msgstr "Yeni Sağlayıcılar"
 #. odoo-python
 #: code:addons/delivery/models/sale_order.py:0
 msgid "No pick-up points are available for this delivery address."
-msgstr ""
+msgstr "Bu teslimat adresi için teslim alma noktası mevcut değil."
 
 #. module: delivery
 #. odoo-javascript
 #: code:addons/delivery/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.js:0
 msgid "No result"
-msgstr ""
+msgstr "Sonuç Yok"
 
 #. module: delivery
 #. odoo-python
 #: code:addons/delivery/models/delivery_carrier.py:0
 msgid "Not available for current order"
-msgstr ""
+msgstr "Mevcut sipariş için geçerli değil"
 
 #. module: delivery
 #. odoo-javascript
 #: code:addons/delivery/static/src/js/location_selector/location/location.js:0
 #: code:addons/delivery/static/src/js/location_selector/map_container/map_container.js:0
 msgid "Opening hours"
-msgstr ""
+msgstr "Çalışma saatleri"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__operator
@@ -765,12 +792,12 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order__pickup_location_data
 msgid "Pickup Location Data"
-msgstr ""
+msgstr "Teslim Alma Noktası Verileri"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid "Please select a country before choosing a state or a zip prefix."
-msgstr ""
+msgstr "Lütfen bir eyalet veya posta kodu ön eki seçmeden önce bir ülke seçin."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_zip_prefix__name
@@ -821,7 +848,7 @@ msgstr "Fiyatlandırma Kuralları"
 #. module: delivery
 #: model:ir.model,name:delivery.model_product_category
 msgid "Product Category"
-msgstr ""
+msgstr "Ürün Kategorisi"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order_line__product_qty
@@ -870,13 +897,13 @@ msgstr "Satış Sipariş Satırı"
 #. odoo-javascript
 #: code:addons/delivery/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.xml:0
 msgid "Search"
-msgstr ""
+msgstr "Arama"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__sequence
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__sequence
 msgid "Sequence"
-msgstr "Sıra"
+msgstr "Sıralama"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order__is_all_service
@@ -926,7 +953,7 @@ msgstr ""
 #: model:delivery.carrier,name:delivery.free_delivery_carrier
 #: model:product.template,name:delivery.product_product_delivery_product_template
 msgid "Standard delivery"
-msgstr ""
+msgstr "Standart teslimat"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__state_ids
@@ -955,6 +982,8 @@ msgid ""
 "The method is NOT available if at least one product of the order has one of "
 "these tags."
 msgstr ""
+"Siparişteki ürünlerden en az biri bu etiketlerden birine sahipse yöntem "
+"KULLANILAMAZ."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__must_have_tag_ids
@@ -962,6 +991,8 @@ msgid ""
 "The method is available only if at least one product of the order has one of "
 "these tags."
 msgstr ""
+"Bu yöntem yalnızca siparişteki ürünlerden en az biri bu etiketlerden birine "
+"sahipse kullanılabilir."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__get_return_label_from_portal
@@ -989,7 +1020,7 @@ msgstr "Sipariş miktarı %.2f'yi aştığı için kargo ücretsizdir."
 #. odoo-javascript
 #: code:addons/delivery/static/src/js/location_selector/map_container/map_container.js:0
 msgid "There was an error loading the map"
-msgstr ""
+msgstr "Harita yüklenirken bir hata oluştu"
 
 #. module: delivery
 #: model_terms:ir.actions.act_window,help:delivery.action_delivery_carrier_form
@@ -998,11 +1029,15 @@ msgid ""
 "            according to your settings; on the sales order (based on the\n"
 "            quotation) or the invoice (based on the delivery orders)."
 msgstr ""
+"Bu yöntemler, ayarlarınıza göre teslimat fiyatının\n"
+"            otomatik hesaplanmasına olanak tanır; satış siparişinde (fiyat "
+"teklifini baz alarak)\n"
+"            veya faturada (teslimat emirlerini baz alarak)."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__fixed_margin
 msgid "This fixed amount will be added to the shipping price."
-msgstr ""
+msgstr "Bu sabit tutar kargo ücretine eklenecektir."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__tracking_url
@@ -1010,6 +1045,9 @@ msgid ""
 "This option adds a link for the customer in the portal to track their "
 "package easily. Use <shipmenttrackingnumber> as a placeholder in your URL."
 msgstr ""
+"Bu seçenek, müşterinin paketini kolayca takip edebilmesi için portala "
+"bağlantı ekler. URL’nizde <shipmenttrackingnumber> ögesini yer tutucu olarak "
+"kullanın."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__margin
@@ -1019,12 +1057,12 @@ msgstr "Bu yüzde gönderim bedeline eklenecektir."
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__total_weight
 msgid "Total Order Weight"
-msgstr ""
+msgstr "Toplam Sipariş Ağırlığı"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__tracking_url
 msgid "Tracking Link"
-msgstr ""
+msgstr "Takip Bağlantısı"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.choose_delivery_carrier_view_form
@@ -1068,7 +1106,7 @@ msgstr "Hacim"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__volume_uom_name
 msgid "Volume unit of measure label"
-msgstr ""
+msgstr "Hacim ölçü birimi etiketi"
 
 #. module: delivery
 #: model:ir.model.fields.selection,name:delivery.selection__delivery_price_rule__variable__weight
@@ -1085,12 +1123,12 @@ msgstr "Ağırlık * Hacim"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__weight_uom_name
 msgid "Weight Uom Name"
-msgstr ""
+msgstr "Ağırlık Ölçü Adı"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__weight_uom_name
 msgid "Weight unit of measure label"
-msgstr ""
+msgstr "Ağırlık ölçü birimi etiketi"
 
 #. module: delivery
 #. odoo-python
@@ -1107,6 +1145,7 @@ msgstr ""
 "\n"
 "Aşağıdaki teslimat satırları (ürün, faturalanan miktar ve fiyat) halihazırda "
 "işlenmiştir:\n"
+"\n"
 
 #. module: delivery
 #. odoo-python
@@ -1115,6 +1154,8 @@ msgid ""
 "You cannot delete the deliveries product category as it is used on the "
 "delivery carriers products."
 msgstr ""
+"Teslimat taşıyıcı ürünlerinde kullanıldığı için \"Teslimatlar\" ürün "
+"kategorisini silemezsiniz."
 
 #. module: delivery
 #: model_terms:payment.provider,auth_msg:delivery.payment_provider_cod
@@ -1135,7 +1176,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/delivery/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.js:0
 msgid "Your postal code"
-msgstr ""
+msgstr "Posta kodunuz"
 
 #. module: delivery
 #: model:ir.actions.act_window,name:delivery.action_delivery_zip_prefix_list
@@ -1161,7 +1202,7 @@ msgstr "örn. UPS Ekspres"
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid "i.e. https://ekartlogistics.com/shipmenttrack/<shipmenttrackingnumber>"
-msgstr ""
+msgstr "örn. https://ekartlogistics.com/shipmenttrack/<shipmenttrackingnumber>"
 
 #~ msgid "<strong>Shipping Description:</strong>"
 #~ msgstr "<strong>Nakliye Açıklaması:</strong>"

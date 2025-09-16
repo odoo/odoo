@@ -1,6 +1,6 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* auth_signup
+# * auth_signup
 #
 # Translators:
 # Michal Veselý <michal@veselyberanek.net>, 2022
@@ -9,26 +9,28 @@
 # Jiří Podhorecký, 2022
 # karolína schusterová <karolina.schusterova@vdp.sk>, 2022
 # Martin Trigaux, 2022
-#
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-09-11 13:54+0000\n"
-"PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
-"Language-Team: Czech (https://app.transifex.com/odoo/teams/41243/cs/)\n"
+"PO-Revision-Date: 2025-09-16 10:02+0000\n"
+"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"Language-Team: Czech <https://translate.odoo.com/projects/odoo-19/"
+"auth_signup/cs/>\n"
 "Language: cs\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n "
 "<= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.reset_password_email
 msgid "+1 650-123-4567"
-msgstr ""
+msgstr "+420 601 123 456"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.reset_password_email
@@ -43,12 +45,12 @@ msgstr ""
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.reset_password_email
 msgid "--<br/>Mitchell Admin"
-msgstr ""
+msgstr "--<br/>Mitchell Admin"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.reset_password_email
 msgid "<span style=\"font-size: 10px;\">Your Account</span><br/>"
-msgstr ""
+msgstr "<span style=\"font-size: 10px;\">Váš účet</span><br/>"
 
 #. module: auth_signup
 #: model:mail.template,body_html:auth_signup.mail_template_data_unregistered_users
@@ -108,6 +110,60 @@ msgid ""
 "</table>\n"
 "            "
 msgstr ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"background-"
+"color: #FFFFFF; font-family:Verdana, Arial,sans-serif; color: #454748; width:"
+" 100%; border-collapse:separate;\"><tr><td align=\"center\">\n"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style="
+"\"padding: 16px; background-color: #FFFFFF; color: #454748; border-"
+"collapse:separate;\">\n"
+"<tbody>\n"
+"    <!-- CONTENT -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width="
+"\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px "
+"0px 8px; border-collapse:separate;\">\n"
+"                <t t-set=\"invited_users\" t-value="
+"\"ctx.get('invited_users', [])\"/>\n"
+"                <td style=\"text-align : left\">\n"
+"                    <span style=\"font-size: 20px; font-weight: bold;\">\n"
+"                        Nevyřízené pozvánky\n"
+"                    </span><br/><br/>\n"
+"                </td>\n"
+"                <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
+"                    <div>\n"
+"                        Vážený/á <t t-out=\"object.name or ''\">Mitchell "
+"Admin</t>,<br/> <br/>\n"
+"                        Do vaší databáze jste přidali následující(ho) "
+"uživatele, kteří se však ještě nezaregistrovali:\n"
+"                        <ul>\n"
+"                            <t t-foreach=\"invited_users\" t-as="
+"\"invited_user\">\n"
+"                                <li t-out=\"invited_user or ''\""
+">demo@example.com</li>\n"
+"                            </t>\n"
+"                        </ul>\n"
+"                        Spojte se s nimi, aby měli přístup k vaší databázi a "
+"mohli s vámi začít pracovat..\n"
+"                        <br/><br/>\n"
+"                        Hezký den!<br/>\n"
+"                        --<br/>Tým <t t-out=\"object.company_id.name or ''\""
+">Vaší Společnosti</t> \n"
+"                    </div>\n"
+"                </td></tr>\n"
+"                <tr><td style=\"text-align:center;\">\n"
+"                  <hr width=\"100%\" style=\"background-"
+"color:rgb(204,204,204);border:medium none;clear:both;display:block;font-"
+"size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"</tbody>\n"
+"</table>\n"
+"</td></tr>\n"
+"</table>\n"
+"            "
 
 #. module: auth_signup
 #: model:mail.template,body_html:auth_signup.portal_set_password_email
@@ -546,12 +602,12 @@ msgstr "Nelze odeslat e-mail: uživatel %s nemá žádnou e-mailovou adresu."
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.reset_password_email
 msgid "Change password"
-msgstr ""
+msgstr "Změnit heslo"
 
 #. module: auth_signup
 #: model:ir.model,name:auth_signup.model_res_config_settings
 msgid "Config Settings"
-msgstr "Nastavení konfigurace"
+msgstr "Konfigurační nastavení"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.fields
@@ -561,7 +617,7 @@ msgstr "Potvrzení hesla"
 #. module: auth_signup
 #: model:ir.model.fields.selection,name:auth_signup.selection__res_users__state__active
 msgid "Confirmed"
-msgstr "Potvrzeno"
+msgstr "Potvrzený"
 
 #. module: auth_signup
 #: model:ir.model,name:auth_signup.model_res_partner
@@ -575,6 +631,8 @@ msgid ""
 "Could not contact the mail server, please check your outgoing email server "
 "configuration"
 msgstr ""
+"Nepodařilo se spojit s poštovním serverem, zkontrolujte nastavení serveru "
+"odchozí pošty"
 
 #. module: auth_signup
 #. odoo-python
@@ -591,7 +649,7 @@ msgstr "Heslo se nepodařilo resetovat"
 #. module: auth_signup
 #: model:ir.model,website_form_label:auth_signup.model_res_partner
 msgid "Create a Customer"
-msgstr ""
+msgstr "Vytvořit zákazníka"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_config_settings__auth_signup_uninvited
@@ -601,7 +659,7 @@ msgstr "Zákaznický účet"
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.reset_password_email
 msgid "Dear"
-msgstr ""
+msgstr "Vážený"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.res_config_settings_view_form
@@ -614,7 +672,7 @@ msgstr "Výchozí přístupová práva"
 #: model:ir.model.fields,field_description:auth_signup.field_res_partner__display_name
 #: model:ir.model.fields,field_description:auth_signup.field_res_users__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Zobrazovací název"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.login
@@ -625,7 +683,7 @@ msgstr "Nemáte účet?"
 #: model_terms:ir.ui.view,arch_db:auth_signup.reset_password
 #: model_terms:ir.ui.view,arch_db:auth_signup.signup
 msgid "Email"
-msgstr ""
+msgstr "Email"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_config_settings__auth_signup_reset_password
@@ -636,7 +694,7 @@ msgstr "Povolit obnovu hesla na přihlašovací stránce"
 #. module: auth_signup
 #: model:ir.model.fields.selection,name:auth_signup.selection__res_config_settings__auth_signup_uninvited__b2c
 msgid "Free sign up"
-msgstr "Přihlášení zdarma"
+msgstr "Volná registrace"
 
 #. module: auth_signup
 #: model:ir.model,name:auth_signup.model_ir_http
@@ -649,7 +707,7 @@ msgstr "HTTP Routing"
 #: model:ir.model.fields,field_description:auth_signup.field_res_partner__id
 #: model:ir.model.fields,field_description:auth_signup.field_res_users__id
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.reset_password_email
@@ -657,6 +715,8 @@ msgid ""
 "If you do not expect this, you can safely ignore this email.<br/><br/>\n"
 "                                Thanks,"
 msgstr ""
+"Pokud to neočekáváte, můžete tento e-mail klidně ignorovat.<br/><br/>\n"
+"                                Díky,"
 
 #. module: auth_signup
 #. odoo-python
@@ -672,7 +732,7 @@ msgstr ""
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.signup
 msgid "John Doe"
-msgstr ""
+msgstr "Jan Testovací"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.res_config_settings_view_form
@@ -682,24 +742,24 @@ msgstr "Nechte své zákazníky přihlásit se kvuli zobrazení svých dokument�
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.reset_password_email
 msgid "Marc Demo"
-msgstr ""
+msgstr "Marc Demo"
 
 #. module: auth_signup
 #. odoo-python
 #: code:addons/auth_signup/models/res_users.py:0
 msgid "Multiple accounts found for this login"
-msgstr ""
+msgstr "Pro toto přihlášení bylo nalezeno více účtů"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.signup
 msgid "Name"
-msgstr ""
+msgstr "Název"
 
 #. module: auth_signup
 #. odoo-python
 #: code:addons/auth_signup/models/res_users.py:0
 msgid "No account found for this login"
-msgstr ""
+msgstr "Pro toto přihlášení nebyl nalezen žádný účet"
 
 #. module: auth_signup
 #. odoo-python
@@ -710,7 +770,7 @@ msgstr "Není poskytnuto žádné přihlášení."
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.reset_password_email
 msgid "Odoo"
-msgstr ""
+msgstr "Odoo"
 
 #. module: auth_signup
 #: model:ir.model.fields.selection,name:auth_signup.selection__res_config_settings__auth_signup_uninvited__b2b
@@ -748,12 +808,12 @@ msgstr "Hesla se neshodují; přepište je prosím."
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.reset_password_email
 msgid "Powered by"
-msgstr ""
+msgstr "Běží na"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.login_successful
 msgid "Registration successful."
-msgstr ""
+msgstr "Registrace úspěšně dokončena."
 
 #. module: auth_signup
 #: model:mail.template,subject:auth_signup.mail_template_data_unregistered_users
@@ -788,6 +848,8 @@ msgstr "Zašlete e-mail s pozvánkou"
 msgid ""
 "Sent automatically to admin if new user haven't responded to the invitation"
 msgstr ""
+"Automaticky odesláno administrátorovi, pokud nový uživatel neodpověděl na "
+"pozvánku"
 
 #. module: auth_signup
 #: model:mail.template,description:auth_signup.portal_set_password_email
@@ -797,17 +859,17 @@ msgstr ""
 #. module: auth_signup
 #: model:mail.template,description:auth_signup.set_password_email
 msgid "Sent to new user after you invited them"
-msgstr ""
+msgstr "Odesláno novému uživateli poté, co jste ho pozvali"
 
 #. module: auth_signup
 #: model:mail.template,description:auth_signup.mail_template_user_signup_account_created
 msgid "Sent to portal user who registered themselves"
-msgstr ""
+msgstr "Odesláno uživateli portálu, který se sám zaregistroval"
 
 #. module: auth_signup
 #: model:mail.template,name:auth_signup.mail_template_user_signup_account_created
 msgid "Settings: New Portal Sign Up"
-msgstr ""
+msgstr "Nastavení: Nové registrace na portálu"
 
 #. module: auth_signup
 #: model:mail.template,name:auth_signup.portal_set_password_email
@@ -817,12 +879,12 @@ msgstr ""
 #. module: auth_signup
 #: model:mail.template,name:auth_signup.set_password_email
 msgid "Settings: New User Invite"
-msgstr ""
+msgstr "Nastavení: Pozvání nového uživatele"
 
 #. module: auth_signup
 #: model:mail.template,name:auth_signup.mail_template_data_unregistered_users
 msgid "Settings: Unregistered User Reminder"
-msgstr ""
+msgstr "Nastavení: Připomenutí neregistrovaného uživatele"
 
 #. module: auth_signup
 #. odoo-python
@@ -839,7 +901,7 @@ msgstr "Přihlásit se"
 #: model:ir.model.fields,field_description:auth_signup.field_res_partner__signup_type
 #: model:ir.model.fields,field_description:auth_signup.field_res_users__signup_type
 msgid "Signup Token Type"
-msgstr "Druh přihlašovacího tokenu"
+msgstr "Druh registračního tokenu"
 
 #. module: auth_signup
 #. odoo-python
@@ -851,7 +913,7 @@ msgstr "U nezvaných uživatelů není registrace povolena"
 #. odoo-python
 #: code:addons/auth_signup/models/res_partner.py:0
 msgid "Signup token '%s' is not valid or expired"
-msgstr ""
+msgstr "Registrační token '%s' není platný nebo vypršela jeho platnost"
 
 #. module: auth_signup
 #. odoo-python
@@ -879,7 +941,7 @@ msgstr "Stav"
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_config_settings__auth_signup_template_user_id
 msgid "Template user for new users created through signup"
-msgstr "Šablona pro nové uživatele vytvořené při registraci"
+msgstr "Šablona přístupových práv pro nové uživatele, založené při registraci"
 
 #. module: auth_signup
 #. odoo-python
@@ -894,6 +956,8 @@ msgid ""
 "There was an error when trying to deliver your Email, please check your "
 "configuration"
 msgstr ""
+"Při pokusu o doručení e-mailu došlo k chybě, zkontrolujte prosím své "
+"nastavení."
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.res_config_settings_view_form
@@ -919,7 +983,7 @@ msgstr "Uživatelé: upozorňují na neregistrované uživatele"
 #. module: auth_signup
 #: model:mail.template,subject:auth_signup.mail_template_user_signup_account_created
 msgid "Welcome to {{ object.company_id.name }}!"
-msgstr ""
+msgstr "Vítejte v {{ object.company_id.name }}!"
 
 #. module: auth_signup
 #. odoo-python
@@ -941,22 +1005,22 @@ msgstr ""
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.reset_password_email
 msgid "YourCompany"
-msgstr ""
+msgstr "VašeFirma"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.reset_password_email
 msgid "hours:<br/>"
-msgstr ""
+msgstr "hodiny:<br/>"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.reset_password_email
 msgid "http://www.example.com"
-msgstr ""
+msgstr "http://www.example.com"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.reset_password_email
 msgid "info@yourcompany.com"
-msgstr ""
+msgstr "info@yourcompany.com"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.signup
@@ -969,6 +1033,8 @@ msgid ""
 "{{ object.create_uid.name }} from {{ object.company_id.name }} invites you "
 "to connect to Odoo"
 msgstr ""
+"{{ object.create_uid.name }} z {{ object.company_id.name }} Vás zve k "
+"připojení do Odoo"
 
 #~ msgid ""
 #~ "<strong>A password reset has been requested for this user. An email "
