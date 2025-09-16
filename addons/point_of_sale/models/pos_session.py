@@ -1,16 +1,17 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import logging
 from collections import defaultdict
 from datetime import timedelta
 from itertools import groupby, starmap
-from markupsafe import Markup
-import logging
 
-from odoo import api, fields, models, _, Command
+from markupsafe import Markup
+
+from odoo import Command, _, api, fields, models
 from odoo.exceptions import AccessError, UserError, ValidationError
-from odoo.tools import float_is_zero, float_compare, plaintext2html, split_every
-from odoo.tools.constants import PREFETCH_MAX
-from odoo.service.common import exp_version
 from odoo.osv.expression import AND
+from odoo.service.common import exp_version
+from odoo.tools import float_compare, float_is_zero, plaintext2html, split_every
+from odoo.tools.constants import PREFETCH_MAX
 
 _logger = logging.getLogger(__name__)
 

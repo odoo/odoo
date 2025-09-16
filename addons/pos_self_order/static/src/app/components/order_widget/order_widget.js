@@ -46,7 +46,7 @@ export class OrderWidget extends Component {
 
         if (currentPage === "product_list") {
             label = _t("Checkout");
-            disabled = isNoLine || hasNotAllLinesSent.length === 0;
+            disabled = isNoLine || hasNotAllLinesSent.length === 0 || !this.selfOrder.ordering;
         } else if (
             payAfter === "meal" &&
             Object.keys(this.selfOrder.currentOrder.changes).length > 0
@@ -55,6 +55,10 @@ export class OrderWidget extends Component {
             disabled = isNoLine;
         } else {
             label = this.selfOrder.hasPaymentMethod() ? _t("Pay") : _t("Order");
+        }
+
+        if (currentPage === "cart" && typeof this.selfOrder.currentOrder.id === "number") {
+            disabled = true;
         }
 
         return { label, disabled };
