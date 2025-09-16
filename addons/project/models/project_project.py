@@ -1396,7 +1396,9 @@ class ProjectProject(models.Model):
         """
         Whitelist of fields that can be set through the `default_` context keys when creating a project from a template.
         """
-        return []
+        return [
+            "allow_milestones",
+        ]
 
     @api.model
     def _get_template_field_blacklist(self):

@@ -182,7 +182,6 @@ class SaleOrderLine(models.Model):
             'company_id': self.company_id.id,
             'allow_billable': True,
             'user_id': self.product_id.project_template_id.user_id.id,
-            'allow_milestones': self.product_id.service_type == 'milestones',
         }
 
     def _timesheet_create_project(self):
@@ -433,6 +432,8 @@ class SaleOrderLine(models.Model):
         self.ensure_one()
         if self.product_id.service_policy != 'delivered_milestones':
             return
+        if not self.project_id.allow_milestones:
+            self.project_id.allow_milestones = True
         if (milestones := project.milestone_ids.filtered(lambda milestone: not milestone.sale_line_id)):
             milestones.write({
                 'sale_line_id': self.id,
