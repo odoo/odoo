@@ -76,7 +76,7 @@
         <field name="inherit_id" ref="hr_recruitment.crm_case_tree_view_job"/>
         <field name="mode">extension</field>
         <field name="arch" type="xml">
-            <field name="stage_id" position="after">
+            <field name="kanban_state" position="after">
                 <field name="matching_score" string="Matching" widget="progressbar" options="{'overflow_class': 'bg-success'}" invisible="not matching_score"/>
             </field>
         </field>
