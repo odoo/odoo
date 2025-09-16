@@ -313,6 +313,28 @@ describe("Link creation", () => {
             });
         });
 
+        test("click on link command in powerbox should create link and preserve styling", async () => {
+            const { editor, el } = await setupEditor(
+                `<div class="o-paragraph"><span class="display-2-fs">a[]b</span></div>`
+            );
+            await insertText(editor, "/link");
+            await animationFrame();
+            expect(".active .o-we-command-name").toHaveText("Link");
+            await click(".o-we-command-name:first");
+            await contains(".o-we-linkpopover input.o_we_href_input_link").fill("cd.com");
+            expect(cleanLinkArtifacts(getContent(el))).toBe(
+                unformat(`
+                    <div class="o-paragraph">
+                        <span class="display-2-fs">a</span>
+                        <a href="https://cd.com">
+                            <span class="display-2-fs">cd.com[]</span>
+                        </a>
+                        <span class="display-2-fs">b</span>
+                    </div>    
+                `)
+            );
+        });
+
         test("when create a new link by powerbox and not input anything, the link should be removed", async () => {
             const { editor, el } = await setupEditor("<p>ab[]</p>");
             await insertText(editor, "/link");
