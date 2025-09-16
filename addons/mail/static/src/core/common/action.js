@@ -60,11 +60,12 @@ export class Action {
         this.owner = owner;
         const rawOwner = toRaw(owner);
         this.store =
-            store ?? rawOwner[STORE_SYM]
+            store ??
+            (rawOwner[STORE_SYM]
                 ? owner
                 : isRecord(owner)
                 ? owner.store
-                : useService("mail.store");
+                : useService("mail.store"));
     }
 
     get params() {
