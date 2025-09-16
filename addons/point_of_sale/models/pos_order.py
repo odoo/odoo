@@ -8,6 +8,7 @@ from itertools import groupby
 from collections import defaultdict
 from random import randrange
 from pprint import pformat
+from uuid import uuid4
 
 import psycopg2
 import pytz
@@ -1183,7 +1184,8 @@ class PosOrder(models.Model):
             'amount_tax': -self.amount_tax,
             'amount_total': -self.amount_total,
             'amount_paid': 0,
-            'is_total_cost_computed': False
+            'is_total_cost_computed': False,
+            'uuid': str(uuid4()),
         }
 
     def _prepare_mail_values(self, email, ticket, basic_ticket):
