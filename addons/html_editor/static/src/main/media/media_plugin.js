@@ -18,7 +18,7 @@ import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
 import { MediaDialog } from "./media_dialog/media_dialog";
 import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
-import { rightPos } from "@html_editor/utils/position";
+import { boundariesOut, rightPos } from "@html_editor/utils/position";
 import { withSequence } from "@html_editor/utils/resource";
 import { closestElement } from "@html_editor/utils/dom_traversal";
 
@@ -381,9 +381,16 @@ export class MediaPlugin extends Plugin {
     /**
      * @param {import("@html_editor/core/selection_plugin").SelectionData} param0
      */
-    selectAroundIcon({ editableSelection: { anchorNode, isCollapsed } }) {
-        if (isCollapsed && closestElement(anchorNode, isIconElement)) {
-            this.dependencies.selection.selectAroundNonEditable();
+    selectAroundIcon({ editableSelection }) {
+        if (!editableSelection.isCollapsed) {
+            return;
         }
+        const iconEl = closestElement(editableSelection.anchorNode, isIconElement);
+        if (!iconEl) {
+            return;
+        }
+        const [anchorNode, anchorOffset, focusNode, focusOffset] = boundariesOut(iconEl);
+        const iconOuterBoundaries = { anchorNode, anchorOffset, focusNode, focusOffset };
+        this.dependencies.selection.setSelection(iconOuterBoundaries);
     }
 }
