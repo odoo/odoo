@@ -1,7 +1,7 @@
-import { isTextNode, isParagraphRelatedElement } from "../utils/dom_info";
+import { isTextNode, isParagraphRelatedElement, isEmptyBlock } from "../utils/dom_info";
 import { Plugin } from "../plugin";
 import { closestBlock } from "../utils/blocks";
-import { unwrapContents, wrapInlinesInBlocks, splitTextNode } from "../utils/dom";
+import { unwrapContents, wrapInlinesInBlocks, splitTextNode, fillEmpty } from "../utils/dom";
 import { childNodes, closestElement } from "../utils/dom_traversal";
 import { parseHTML } from "../utils/html";
 import {
@@ -450,6 +450,13 @@ export class ClipboardPlugin extends Plugin {
             }
         } else if (node.nodeType !== Node.TEXT_NODE) {
             if (node.nodeName === "TD") {
+                // Insert base container into empty TD.
+                if (isEmptyBlock(node)) {
+                    const baseContainer = this.dependencies.baseContainer.createBaseContainer();
+                    fillEmpty(baseContainer);
+                    node.replaceChildren(baseContainer);
+                }
+
                 if (node.hasAttribute("bgcolor") && !node.style["background-color"]) {
                     node.style["background-color"] = node.getAttribute("bgcolor");
                 }
