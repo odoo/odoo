@@ -26,7 +26,7 @@ class StockPickingBatch(models.Model):
         domain="[('id', 'in', allowed_picking_ids)]", check_company=True,
         help='List of transfers associated to this batch')
     show_check_availability = fields.Boolean(
-        compute='_compute_move_ids',
+        compute='_compute_show_check_availability',
         string='Show Check Availability')
     show_allocation = fields.Boolean(
         compute='_compute_show_allocation',
@@ -119,11 +119,15 @@ class StockPickingBatch(models.Model):
                 domain += [('picking_type_id', '=', batch.picking_type_id.id)]
             batch.allowed_picking_ids = self.env['stock.picking'].search(domain)
 
-    @api.depends('picking_ids', 'picking_ids.move_line_ids', 'picking_ids.move_ids', 'picking_ids.move_ids.state')
+    @api.depends('picking_ids', 'picking_ids.move_ids')
     def _compute_move_ids(self):
         for batch in self:
             batch.move_ids = batch.picking_ids.move_ids
-            batch.show_check_availability = any(m.state not in ['assigned', 'cancel', 'done'] for m in batch.move_ids)
+
+    @api.depends('picking_ids.show_check_availability')
+    def _compute_show_check_availability(self):
+        for batch in self:
+            batch.show_check_availability = any(picking.show_check_availability for picking in batch.picking_ids)
 
     @api.depends('picking_ids', 'picking_ids.move_line_ids')
     def _compute_move_line_ids(self):
