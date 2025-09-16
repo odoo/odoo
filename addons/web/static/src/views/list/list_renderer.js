@@ -685,7 +685,7 @@ export class ListRenderer extends Component {
             values = this.props.list.records.map((r) => r.data);
         }
         const aggregates = {};
-        for (const column of this.allColumns) {
+        for (const column of this.columns) {
             if (column.type !== "field") {
                 continue;
             }
