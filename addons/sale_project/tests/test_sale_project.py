@@ -1820,3 +1820,19 @@ class TestSaleProject(TestSaleProjectCommon):
             task_with_context.sale_line_id, sol2,
             "Task with context should pick the original SOL even if removed from project"
         )
+
+    def test_enable_milestones_settings_of_project_on_so_confirmation(self):
+        self.product_service_delivered_milestone.service_tracking = 'project_only'
+        so = self.env['sale.order'].create({
+            'partner_id': self.partner.id,
+            'order_line': [
+                Command.create({'product_id': self.product_order_service4.id, 'sequence': 1}),  # service_tracking: 'project_only', not based on project template, invoice policy: order
+                Command.create({'product_id': self.product_service_delivered_milestone.id, 'sequence': 2}),  # service_tracking: 'project_only', not based on project template, invoice policy: milestones
+            ],
+        })
+        so.action_confirm()
+        self.assertEqual(len(so.project_ids), 1, 'One project should be generated and linked to the SO.')
+        self.assertTrue(
+            so.project_ids.allow_milestones,
+            'The generated project should have the "Allow Milestones" setting enabled, as one of the products has invoice policy based on milestones.',
+        )
