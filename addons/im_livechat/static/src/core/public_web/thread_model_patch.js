@@ -60,13 +60,6 @@ patch(Thread.prototype, {
         return this.correspondent.name;
     },
 
-    get avatarUrl() {
-        if (this.channel_type === "livechat" && this.correspondent) {
-            return this.correspondent.avatarUrl;
-        }
-        return super.avatarUrl;
-    },
-
     get inChathubOnNewMessage() {
         return this.channel_type === "livechat" || super.inChathubOnNewMessage;
     },

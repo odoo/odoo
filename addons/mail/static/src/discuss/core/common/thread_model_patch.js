@@ -231,7 +231,7 @@ const threadPatch = {
                 unique: this.avatar_cache_key,
             });
         }
-        if (this.channel_type === "chat" && this.correspondent) {
+        if (this.correspondent) {
             return this.correspondent.avatarUrl;
         }
         return super.avatarUrl;
