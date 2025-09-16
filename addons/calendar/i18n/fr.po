@@ -407,7 +407,7 @@ msgstr ""
 "\n"
 "        <t t-if=\"not target_responsible\">\n"
 "            <t t-if=\"not object.event_id.user_id.active\">\n"
-"                Vous avez été invité par Client à la réunion <strong t-out=\"object.event_id.name or ''\">Suivi de la proposition de projet</strong>.\n"
+"                Vous avez reçu une invitation par Client à la réunion <strong t-out=\"object.event_id.name or ''\">Suivi de la proposition de projet</strong>.\n"
 "            </t>\n"
 "            <t t-else=\"\">\n"
 "                <t t-out=\"object.event_id.user_id.partner_id.name or ''\">Colleen Diaz</t> vous a invité à la réunion <strong t-out=\"object.event_id.name or ''\">Suivi de la proposition de projet</strong>.\n"
@@ -2886,7 +2886,7 @@ msgstr "Vous devez choisir au moins un jour dans la semaine"
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/attendee_calendar/common/attendee_calendar_common_renderer.xml:0
 msgid "You're alone in this meeting"
-msgstr "Vous êtes le seul participant à cette réunion"
+msgstr "Il n'y a que vous dans cette réunion."
 
 #. module: calendar
 #. odoo-javascript
