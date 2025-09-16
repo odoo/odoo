@@ -151,3 +151,9 @@ export function checkSlotUnavailable(slotValue) {
         },
     };
 }
+
+export function isShown() {
+    return {
+        trigger: `.o_self_cart_page`,
+    };
+}
