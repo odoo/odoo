@@ -1650,3 +1650,14 @@ test("dropdown menu should not overflow scroll container", async () => {
     // Font selector should be visible
     expect(fontSelector).toBeVisible();
 });
+
+test.tags("desktop");
+test("toolbar should not be displayed when only invisible nodes are selected", async () => {
+    const { el } = await setupEditor(
+        `<div><p>[abc]</p><h1 class="d-none">I'm not displayed</h1></div>`
+    );
+    await waitFor(".o-we-toolbar");
+    await expectElementCount(".o-we-toolbar", 1);
+    setContent(el, `<div><p>abc</p><h1 class="d-none">[I'm not displayed]</h1></div>`);
+    await expectElementCount(".o-we-toolbar", 0);
+});
