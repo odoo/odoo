@@ -510,7 +510,10 @@ class RecurrenceRule(models.Model):
         return ((start, start + event_duration) for start in starts)
 
     def _get_timezone(self):
-        return pytz.timezone(self.event_tz or self.env.context.get('tz') or 'UTC')
+        try:
+            return pytz.timezone(self.event_tz or self.env.context.get('tz') or 'UTC')
+        except pytz.UnknownTimeZoneError:
+            return pytz.timezone('UTC')
 
     def _get_occurrences(self, dtstart):
         """
