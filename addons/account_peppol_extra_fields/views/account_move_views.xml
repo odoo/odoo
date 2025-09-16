@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_move_form_inherit_peppol" model="ir.ui.view">
+            <field name="name">account.move.form.peppol.inherit</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account_peppol_advanced_fields.view_move_form_inherit_peppol"/>
+            <field name="arch" type="xml">
+                <field name="ubl_cii_xml_file" position="attributes">
+                    <attribute name="widget">binary</attribute>
+                    <attribute name="options">{'accepted_file_extensions': '.xml', 'allowed_mime_type': 'application/xml'}</attribute>
+                </field>
+            </field>
+        </record>
+    </data>
+</odoo>
