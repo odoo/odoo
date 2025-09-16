@@ -1259,8 +1259,8 @@ class ChromeBrowser:
     def _websocket_request(self, method, *, params=None, timeout=10.0):
         assert threading.get_ident() != self._receiver.ident,\
             "_websocket_request must not be called from the consumer thread"
-        if self.ws is None:
-            return
+        if not hasattr(self, 'ws'):
+            return None
 
         f = self._websocket_send(method, params=params, with_future=True)
         try:
@@ -1273,8 +1273,8 @@ class ChromeBrowser:
 
         If ``with_future`` is set, returns a ``Future`` for the operation.
         """
-        if self.ws is None:
-            return
+        if not hasattr(self, 'ws'):
+            return None
 
         result = None
         request_id = next(self._request_id)
@@ -1471,7 +1471,8 @@ which leads to stray network requests and inconsistencies."""
 
         self._logger.info('Asking for screenshot')
         f = self._websocket_send('Page.captureScreenshot', with_future=True)
-        f.add_done_callback(handler)
+        if f:
+            f.add_done_callback(handler)
         return f
 
     def _save_screencast(self, prefix='failed'):
