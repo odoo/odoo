@@ -23,7 +23,7 @@ class PosSelfOrderController(http.Controller):
         sequence_number = order.get('sequence_number')
         pos_reference = order.get('pos_reference')
         tracking_number = order.get('tracking_number')
-        if not (sequence_number and pos_reference and tracking_number):
+        if not (sequence_number and pos_reference and tracking_number) and pos_session:
             pos_reference, sequence_number, tracking_number = pos_session.get_next_order_refs(ref_prefix=ref_prefix, tracking_prefix=tracking_prefix)
 
         if 'picking_type_id' in order:
@@ -42,6 +42,9 @@ class PosSelfOrderController(http.Controller):
         order['date_order'] = str(fields.Datetime.now())
         order['fiscal_position_id'] = preset_id.fiscal_position_id.id if preset_id else pos_config.default_fiscal_position_id.id
         order['pricelist_id'] = preset_id.pricelist_id.id if preset_id else pos_config.pricelist_id.id
+        order['config_id'] = pos_config.id
+        if pos_session:
+            order['session_id'] = pos_session.id
 
         results = pos_config.env['pos.order'].sudo().with_company(pos_config.company_id.id).sync_from_ui([order])
         line_ids = pos_config.env['pos.order.line'].browse([line['id'] for line in results['pos.order.line']])
@@ -258,7 +261,7 @@ class PosSelfOrderController(http.Controller):
         return pos_config_sudo.sudo(False).with_company(company).with_user(user).with_context(allowed_company_ids=company.ids)
 
     def _verify_config_constraint(self, pos_config_sudo):
-        return not pos_config_sudo or (pos_config_sudo.self_ordering_mode != 'mobile' and pos_config_sudo.self_ordering_mode != 'kiosk') or not pos_config_sudo.has_active_session
+        return not pos_config_sudo or (pos_config_sudo.self_ordering_mode != 'mobile' and pos_config_sudo.self_ordering_mode != 'kiosk')
 
     def _verify_authorization(self, access_token, table_identifier, order):
         """
@@ -271,6 +274,8 @@ class PosSelfOrderController(http.Controller):
         is_takeaway = order and pos_config.use_presets and preset and preset.service_at != 'table'
         if not table_sudo and not pos_config.self_ordering_mode == 'kiosk' and pos_config.self_ordering_service_mode == 'table' and not is_takeaway:
             raise Unauthorized("Table not found")
+        if not pos_config.has_active_session and not is_takeaway:
+            raise Unauthorized("No active session")
 
         company = pos_config.company_id
         user = pos_config.self_ordering_default_user_id

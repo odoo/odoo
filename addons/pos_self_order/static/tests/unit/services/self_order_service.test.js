@@ -219,7 +219,8 @@ describe("self_order_service", () => {
             store.cancelOrder();
             expect(order.lines).toHaveLength(0);
             // Order and lines are deleted
-            expect(models["pos.order"].length).toBe(0);
+            expect(models["pos.order"].length).toBe(1);
+            expect(models["pos.order"].getFirst().state).toBe("cancel");
             expect(models["pos.order.line"].length).toBe(0);
             expect(store.selectedOrderUuid).toBeEmpty();
         });

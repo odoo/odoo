@@ -41,6 +41,20 @@ export class PosPreset extends Base {
         );
     }
 
+    get nextSlotAcrossDays() {
+        const dateNow = DateTime.now();
+        for (const i of [...Array(7).keys()]) {
+            const sqlDate = dateNow.plus({ days: i }).toFormat("yyyy-MM-dd");
+            const nextSlot = Object.values(this.uiState.availabilities[sqlDate]).find(
+                (s) => !s.isFull && s.datetime > dateNow
+            );
+            if (nextSlot) {
+                return nextSlot;
+            }
+        }
+        return false;
+    }
+
     get availabilities() {
         return this.uiState.availabilities;
     }
@@ -91,10 +105,11 @@ export class PosPreset extends Base {
         const usage = this.slotsUsage;
         const interval = this.interval_time;
         const slots = {};
+        const now = DateTime.now();
 
         // Compute slots for next 7 days
         for (const i of [...Array(7).keys()]) {
-            const dateNow = DateTime.now().plus({ days: i });
+            const dateNow = now.plus({ days: i });
             const getDateTime = (hour) =>
                 DateTime.fromObject({
                     year: dateNow.year,
@@ -104,7 +119,7 @@ export class PosPreset extends Base {
                     minute: Math.round((hour % 1) * 60),
                 });
             const dayOfWeek = (dateNow.weekday - 1).toString();
-            const date = DateTime.now().plus({ days: i }).toFormat("yyyy-MM-dd");
+            const date = dateNow.toFormat("yyyy-MM-dd");
             const attToday = this.attendance_ids.filter((a) => a.dayofweek === dayOfWeek);
             slots[date] = [];
 
@@ -114,16 +129,18 @@ export class PosPreset extends Base {
 
                 let start = dateOpening;
                 while (start >= dateOpening && start <= dateClosing && interval > 0) {
-                    const sqlDatetime = start.toFormat("yyyy-MM-dd HH:mm:ss");
+                    if (start > now) {
+                        const sqlDatetime = start.toFormat("yyyy-MM-dd HH:mm:ss");
 
-                    if (slots[date][sqlDatetime]) {
-                        slots[date][sqlDatetime].order_ids.add(...(usage[sqlDatetime] || []));
-                    } else {
-                        slots[date][sqlDatetime] = {
-                            periode: attendance.day_period,
-                            datetime: start,
-                            order_ids: new Set(usage[sqlDatetime] || []),
-                        };
+                        if (slots[date][sqlDatetime]) {
+                            slots[date][sqlDatetime].order_ids.add(...(usage[sqlDatetime] || []));
+                        } else {
+                            slots[date][sqlDatetime] = {
+                                periode: attendance.day_period,
+                                datetime: start,
+                                order_ids: new Set(usage[sqlDatetime] || []),
+                            };
+                        }
                     }
 
                     start = start.plus({ minutes: interval });
