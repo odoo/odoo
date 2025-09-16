@@ -224,16 +224,21 @@ export class MediaPlugin extends Plugin {
                 }
             }
         };
+        const oldSrcToNewSrcMap = new Map();
         const b64Proms = [...editableEl.querySelectorAll(".o_b64_image_to_save")].map(
             async (el) => {
                 const { resModel, resId } = this.getRecordInfo(getClosestSavable(el));
+                const oldSrc = el.getAttribute("src");
                 await this.saveB64Image(el, resModel, resId);
+                oldSrcToNewSrcMap.set(oldSrc, el.getAttribute("src"));
             }
         );
         const modifiedProms = [...editableEl.querySelectorAll(".o_modified_image_to_save")].map(
             async (el) => {
                 const { resModel, resId } = this.getRecordInfo(getClosestSavable(el));
+                const oldSrc = el.getAttribute("src");
                 await this.saveModifiedImage(el, resModel, resId);
+                oldSrcToNewSrcMap.set(oldSrc, el.getAttribute("src"));
             }
         );
         const proms = [...b64Proms, ...modifiedProms];
@@ -241,7 +246,7 @@ export class MediaPlugin extends Plugin {
         if (hasChange) {
             await Promise.all(proms);
         }
-        return hasChange;
+        return hasChange ? oldSrcToNewSrcMap : undefined;
     }
 
     createAttachment({ el, imageData, resModel, resId }) {
