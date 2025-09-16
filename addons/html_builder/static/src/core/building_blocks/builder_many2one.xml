@@ -16,17 +16,17 @@
 
             message="domState.selected?.display_name || props.defaultMessage"
         />
-        <button
-            t-if="domState.selected and props.allowUnselect"
-            type="button"
-            class="btn btn-primary fa fa-fw fa-times"
-            style="min-width: min-content;"
-            t-on-click="() => this.select()"
-            t-on-pointerenter="hasPreview ? () => this.preview() : undefined"
-            t-on-pointerleave="revert"
-            t-on-focusin="hasPreview ? () => this.preview() : undefined"
-            t-on-focusout="revert"
-        />
+        <button type="button"
+                t-if="domState.selected and props.allowUnselect"
+                class="o-hb-btn o-hb-btn-has-icon btn btn-secondary"
+                t-on-click="() => this.select()"
+                t-on-pointerenter="hasPreview ? () => this.preview() : undefined"
+                t-on-pointerleave="revert"
+                t-on-focusin="hasPreview ? () => this.preview() : undefined"
+                t-on-focusout="revert"
+                aria-label="Unselect">
+            <i class="oi oi-close" role="presentation"/>
+        </button>
     </BuilderComponent>
 </t>
 

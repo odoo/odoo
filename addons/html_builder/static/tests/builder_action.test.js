@@ -230,7 +230,7 @@ describe("isPreviewing is passed to action's apply and clean", () => {
         expect.verifySteps(["apply true", "apply false"]);
 
         // clean
-        await contains(".o_select_menu + button.fa-times").click();
+        await contains(".o_select_menu + button > .oi-close").click();
         expect.verifySteps(["clean true", "clean false"]);
     });
 });
