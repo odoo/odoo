@@ -65,12 +65,24 @@ class ResCurrency(models.Model):
         All the rates in this currency table are equal to 1 (since everything is in the same currency). This is useful so that the queries can
         be written exactly in the same way, joining the currency table returned by some function, for both mono and multi currency cases.
         """
-        unit_rates = [
-            SQL("(%(company_id)s, CAST(NULL AS VARCHAR), CAST(NULL AS DATE), CAST(NULL AS DATE), %(rate_type)s, 1)", company_id=company.id, rate_type=rate_type)
-            for company in companies
-            for rate_type in (('historical', 'current', 'average') if use_cta_rates else ('current',))
-        ]
-        return SQL('(VALUES %s) AS account_currency_table(company_id, period_key, date_from, date_next, rate_type, rate)', SQL(',').join(unit_rates))
+        rate_types = ('historical', 'current', 'average') if use_cta_rates else ('current',)
+        array_length = len(rate_types) * len(companies)
+
+        return SQL("""(
+                SELECT
+                    UNNEST(ARRAY[%(companies)s]::int[]) AS company_id,
+                    UNNEST(ARRAY[%(nulls)s]::varchar[]) AS period_key,
+                    UNNEST(ARRAY[%(nulls)s]::date[]) AS date_from,
+                    UNNEST(ARRAY[%(nulls)s]::date[]) AS date_next,
+                    UNNEST(ARRAY[%(rate_types)s]::text[]) AS rate_type,
+                    UNNEST(ARRAY[%(ones)s]::numeric[]) AS rate
+            )
+            """,
+            companies=companies.ids * len(rate_types),
+            nulls=SQL(',').join([SQL('NULL')] * array_length),
+            rate_types=tuple(rate_type for _company in companies for rate_type in rate_types),
+            ones=SQL(',').join([SQL('1')] * array_length),
+        )
 
     def _create_currency_table(self, companies, date_periods, use_cta_rates=False):
         """ Creates a temporary table containing the currency rates to be used in order to aggregate amounts belonging to companies

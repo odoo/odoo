@@ -122,7 +122,7 @@ class SaleReport(models.Model):
             LEFT JOIN pos_session session ON session.id = pos.session_id
             LEFT JOIN pos_config config ON config.id = session.config_id
             LEFT JOIN stock_picking_type picking ON picking.id = config.picking_type_id
-            JOIN {currency_table} ON account_currency_table.company_id = pos.company_id
+            JOIN {currency_table} AS account_currency_table ON account_currency_table.company_id = pos.company_id
             """.format(
             currency_table=self.env.cr.mogrify(currency_table).decode(self.env.cr.connection.encoding),
             )

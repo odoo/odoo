@@ -107,7 +107,7 @@ class PurchaseReport(models.Model):
                 left join res_company C ON C.id = po.company_id
                 left join uom_uom line_uom on (line_uom.id=l.product_uom_id)
                 left join uom_uom product_uom on (product_uom.id=t.uom_id)
-                left join %(currency_table)s ON account_currency_table.company_id = po.company_id
+                left join %(currency_table)s AS account_currency_table ON account_currency_table.company_id = po.company_id
             """,
             currency_table=self.env['res.currency']._get_simple_currency_table(self.env.companies),
         )
