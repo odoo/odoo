@@ -2631,10 +2631,10 @@ class MrpProduction(models.Model):
         consumed_sn_ids = []
         sn_error_msg = {}
         for move in self.move_raw_ids:
-            if move.has_tracking != 'serial' or not move.picked:
+            if move.has_tracking != 'serial':
                 continue
             for move_line in move.move_line_ids:
-                if not move_line.picked or float_is_zero(move_line.quantity, precision_rounding=move_line.product_uom_id.rounding) or\
+                if float_is_zero(move_line.quantity, precision_rounding=move_line.product_uom_id.rounding) or\
                         not move_line.lot_id:
                     continue
                 sml_sn = move_line.lot_id

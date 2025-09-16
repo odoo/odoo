@@ -1536,6 +1536,89 @@ class TestMrpOrder(TestMrpCommon):
         mo2.lot_producing_id = sn
         mo2.button_mark_done()
 
+    def test_product_produce_duplicate_7(self):
+        """ produce two in progress product with component tracked by same serial number 2
+        times with the same SN. Check that an error is raised the second time"""
+
+        # Create the final and composant products
+        product = self.env['product.product'].create({
+            'name': 'Young Tom',
+            'type': 'consu',
+            'is_storable': True,
+            'tracking': 'serial',
+        })
+        comp = self.env['product.product'].create({
+            'name': 'Botox',
+            'type': 'consu',
+            'is_storable': True,
+            'tracking': 'serial',
+        })
+
+        bom_comp = self.env['mrp.bom'].create(
+            {
+                'product_id': comp.id,
+                'product_tmpl_id': comp.product_tmpl_id.id,
+                'product_uom_id': self.uom_unit.id,
+                'product_qty': 1.0,
+                'type': 'normal',
+                'consumption': 'flexible',
+                'bom_line_ids': [],
+            }
+        )
+
+        bom_prod = self.env['mrp.bom'].create({
+            'product_id': product.id,
+            'product_tmpl_id': product.product_tmpl_id.id,
+            'product_uom_id': self.uom_unit.id,
+            'product_qty': 1.0,
+            'type': 'normal',
+            'consumption': 'flexible',
+            'bom_line_ids': [
+                Command.create({'product_id': comp.id, 'product_qty': 1, 'manual_consumption': True})
+        ]})
+
+        mo_comp = self.env['mrp.production'].create({
+            'product_id': comp.id,
+            'bom_id': bom_comp.id,
+            'product_qty': 1.0,
+        })
+
+        mo_comp.action_confirm()
+        mo_comp.move_finished_ids._action_assign()
+
+        mo_comp.button_mark_done()
+        sn = mo_comp.move_finished_ids.lot_ids
+
+        mo_form1 = Form(self.env['mrp.production'])
+        mo_form1.product_id = product
+
+        mo_form1.bom_id = bom_prod
+        mo1 = mo_form1.save()
+        mo1.action_confirm()
+        mo1 = mo_form1.save()
+
+        for move_line in mo1.move_raw_ids:
+            if move_line.product_id == comp:
+                move_line.lot_ids = sn
+
+        mo1.button_mark_done()
+
+        mo_form2 = Form(self.env['mrp.production'])
+        mo_form2.product_id = product
+        mo_form2.bom_id = bom_prod
+        mo_form2.product_qty = 1
+        mo2 = mo_form2.save()
+        mo2.action_confirm()
+
+        mo_form2 = Form(mo2)
+        mo2 = mo_form2.save()
+
+        for move_line in mo2.move_raw_ids:
+            if move_line.product_id == comp:
+                move_line.lot_ids = sn
+        with self.assertRaises(UserError):
+            mo2.button_mark_done()
+
     def test_product_produce_12(self):
         """ Checks that, the production is robust against deletion of finished move."""
 
