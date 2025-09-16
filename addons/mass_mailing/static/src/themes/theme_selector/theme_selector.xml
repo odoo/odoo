@@ -3,6 +3,7 @@
         <div class="o_mailing_template_preview_wrapper d-inline-block w-100">
             <div t-foreach="favoriteTemplates" t-as="template" t-key="template_index"
                 class="o_mail_template_preview d-inline-block dropdown-item"
+                t-if="template.modelId === this.props.config.mailingModelId"
                 t-on-click="() => this.onSelectFavorite(template.html)">
                 <div class="d-inline-flex flex-row align-items-center border px-2 py-2 w-100">
                     <i class="fa fa-star text-warning me-2"/>
