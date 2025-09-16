@@ -25,7 +25,6 @@
                 <button
                     t-if="product_variant_id"
                     type="button"
-                    role="button"
                     t-attf-class="btn o_add_wishlist #{in_wish and 'o_in_wishlist'}"
                     t-att-disabled="in_wish"
                     t-att-data-product-template-id="product.id"
@@ -362,7 +361,6 @@
                                                     t-else=""
                                                     id="add_to_cart_button"
                                                     type="button"
-                                                    role="button"
                                                     class="o_wsale_product_btn_primary btn btn-primary o_wish_add"
                                                     t-att-data-show-quantity="is_view_active('website_sale.product_quantity')"
                                                     t-att-data-product-template-id="wish.product_id.product_tmpl_id.id"
