@@ -164,8 +164,24 @@ export class HtmlField extends Component {
     }
 
     async getEditorContent() {
-        await this.editor.shared.imageSave?.savePendingImages();
-        return this.editor.getElContent();
+        const content = this.editor.getElContent();
+        const oldSrcToNewSrcMap = await this.editor.shared.imageSave?.savePendingImages(content);
+        // Update the actual editable if still in the DOM.
+        if (this.editor.editable && oldSrcToNewSrcMap) {
+            this.editor.editable
+                .querySelectorAll('.o_b64_image_to_save, .o_modified_image_to_save')
+              .forEach((unsavedImage) => {
+                const oldSrc = unsavedImage.getAttribute('src');
+                if (oldSrcToNewSrcMap.has(oldSrc)) {
+                  unsavedImage.setAttribute(
+                    'src',
+                    oldSrcToNewSrcMap.get(oldSrc)
+                  );
+                }
+                unsavedImage.classList.remove("o_b64_image_to_save", "o_modified_image_to_save");
+              });
+        }
+        return content;
     }
 
     async _commitChanges({ urgent }) {
