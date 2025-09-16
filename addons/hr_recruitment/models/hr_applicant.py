@@ -138,6 +138,8 @@ class HrApplicant(models.Model):
     refuse_date = fields.Datetime('Refuse Date')
     talent_pool_ids = fields.Many2many(comodel_name="hr.talent.pool", string="Talent Pools")
     pool_applicant_id = fields.Many2one("hr.applicant", index='btree_not_null')
+    root_applicant_id = fields.Many2one("hr.applicant", index='btree_not_null')
+    is_obsolete = fields.Boolean()
     is_pool_applicant = fields.Boolean(compute="_compute_is_pool")
     is_applicant_in_pool = fields.Boolean(
         compute="_compute_is_applicant_in_pool", search="_search_is_applicant_in_pool"
@@ -621,6 +623,36 @@ class HrApplicant(models.Model):
             if not applicant.stage_id.hired_stage:
                 applicant.date_closed = False
 
+    def _flag_obsolete_applicants(self):
+        """ Flag the duplicated applicants as obsolete using connected components.
+        We point the duplicates to the root applicant to keep them connected. """
+        self.ensure_one()
+        # Search only the last duplicate applicant (leaf), no need for more (optimal).
+        duplicated_domain = Domain.AND([
+            self._get_similar_applicants_domain(ignore_talent=True),
+            [('id', '!=', self.id)],
+        ])
+        duplicated_applicant = self.search(duplicated_domain, limit=1)
+
+        if duplicated_applicant:
+            if not duplicated_applicant.is_obsolete:
+                duplicated_applicant.is_obsolete = True
+
+            # Flag the last duplicate applicant (leaf) as a duplicate.
+            root_duplicate = duplicated_applicant.root_applicant_id
+            leaf_duplicate = self.search([
+                ('root_applicant_id', '=', root_duplicate.id),
+                ('id', '!=', root_duplicate.id)
+            ], limit=1)
+            leaf_duplicate.is_obsolete = True
+
+            # Point the new applicant to the root of duplicates.
+            self.root_applicant_id = root_duplicate
+        else:
+            # If no root applicant is assigned, point to itself (new component).
+            if not self.root_applicant_id:
+                self.root_applicant_id = self
+
     def copy_data(self, default=None):
         vals_list = super().copy_data(default=default)
 
@@ -641,6 +673,9 @@ class HrApplicant(models.Model):
                 vals['email_from'] = vals['email_from'].strip()
         applicants = super().create(vals_list)
         applicants.sudo().interviewer_ids._create_recruitment_interviewers()
+
+        for applicant in applicants:
+            applicant._flag_obsolete_applicants()
 
         if (applicants.interviewer_ids.partner_id - self.env.user.partner_id):
             for applicant in applicants:
@@ -684,6 +719,8 @@ class HrApplicant(models.Model):
         res = super().write(vals)
 
         for applicant in self:
+            if not applicant.is_obsolete and applicant.root_applicant_id.id == applicant.id:
+                applicant._flag_obsolete_applicants()
             if applicant.pool_applicant_id and applicant != applicant.pool_applicant_id and (not applicant.is_pool_applicant):
                 if 'email_from' in vals:
                     applicant.pool_applicant_id.email_from = vals['email_from']
