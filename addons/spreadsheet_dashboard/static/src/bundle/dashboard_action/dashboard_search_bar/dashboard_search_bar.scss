@@ -1,3 +1,24 @@
 .o_sp_dashboard_search {
     min-width: 50vw;
+
+    .o_sp_date_filter_button {
+        height: fit-content;
+    }
+
+    .o_searchview {
+        overflow-y: auto;
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0;
+    }
+
+    @media (min-width: 768px){
+        .o_searchview {
+            max-height: 200px;
+        }
+    }
+
+    .o_searchview_dropdown_toggler {
+        margin-left: calc(var(--border-width) * -1);
+    }
+
 }

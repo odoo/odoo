@@ -73,21 +73,34 @@
         min-width: 0;
     }
 
+    /* Not in mobile */
+    @media (min-width: 768px){
+        .o_control_panel_actions {
+            max-height: 200px;
+            /* Place the search bar before the navigation buttons */
+            order: 1 !important;
+        }
+    }
+
+    /* In mobile */
+    @media (max-width: 768px){
+        .o_control_panel_navigation {
+            /* DashboardMobileSearchPanel is added in navigation buttons in mobile, and should be aligned left*/
+            justify-content: start !important;
+        }
+
+        .o_control_panel_main {
+            /* We don't want a gap before the DashboardMobileSearchPanel */
+            column-gap: 0px !important;
+        }
+    }
+
     .o_control_panel_actions {
         gap: map-get($spacers, 2);
-        max-height: 200px;
         overflow: auto;
         flex-wrap: wrap;
         justify-content: start !important;
         align-items: start !important;
-        order: 1 !important;
-
-        .o_filter_value_container {
-            width: 235px;
-            max-height: 150px;
-            overflow: hidden auto;
-            padding-right: 18px;
-        }
 
         .o-filter-value {
             min-height: 25px;
@@ -102,10 +115,6 @@
                     flex: 1 0 1rem;
                 }
             }
-        }
-
-        .o-filter-value-double-size {
-            flex-basis: 200px;
         }
     }
 
