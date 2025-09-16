@@ -57,7 +57,7 @@ export class StockValuationReportController {
         for (let [accountId, data] of Object.entries(this.data.ending_stock.lines_by_account_id)) {
             const account = this.data.accounts_by_id[accountId];
             this.data.ending_stock.lines.push({
-                label: account.display_name,
+                label: account?.display_name,
                 value: data.value,
             });
             this.data.ending_stock.accounts.push(...data.accounts);
