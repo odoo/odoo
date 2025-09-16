@@ -89,9 +89,7 @@ class CrmLead(models.Model):
             except iap_tools.InsufficientCreditError:
                 _logger.info('Lead enrichment failed because of insufficient credit')
                 if send_notification:
-                    self.env['iap.account']._send_no_credit_notification(
-                        service_name='reveal',
-                        title=_("Not enough credits for Lead Enrichment"))
+                    self.env['iap.account']._send_no_credit_notification(service_name='reveal')
                 raise
             except Exception as e:
                 if send_notification:
