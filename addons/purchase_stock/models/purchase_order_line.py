@@ -340,8 +340,8 @@ class PurchaseOrderLine(models.Model):
         res['date_planned'] = values.get('date_planned')
         # The date must be day before or equal at the supplier target day
         if po.partner_id.group_rfq == 'week' and po.partner_id.group_on != 'default':
-            delta_days = (res['date_planned'].isoweekday() - int(po.partner_id.group_on)) % 7
-            res['date_planned'] = fields.Datetime.to_datetime(res['date_planned']) - relativedelta(days=delta_days)
+            delta_days = (7 + int(po.partner_id.group_on) - res['date_planned'].isoweekday()) % 7
+            res['date_planned'] = fields.Datetime.to_datetime(res['date_planned']) + relativedelta(days=delta_days)
         res['move_dest_ids'] = [(4, x.id) for x in values.get('move_dest_ids', [])]
         res['location_final_id'] = location_dest_id.id
         res['orderpoint_id'] = values.get('orderpoint_id', False) and values.get('orderpoint_id').id
