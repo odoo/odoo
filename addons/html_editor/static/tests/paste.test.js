@@ -78,6 +78,38 @@ describe("Html Paste cleaning - whitelist", () => {
         });
     });
 
+    test("should insert a base container inside empty <td> on paste", async () => {
+        await testEditor({
+            contentBefore: `
+                <p>[]<br></p>
+            `,
+            stepFunction: async (editor) => {
+                pasteHtml(
+                    editor,
+                    unformat(`
+                        <table>
+                            <tbody>
+                                <tr>
+                                    <td></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    `)
+                );
+            },
+            contentAfter: unformat(`
+                <table class="table table-bordered">
+                    <tbody>
+                        <tr>
+                            <td><p><br></p></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p>[]<br></p>
+            `),
+        });
+    });
+
     test("should not keep span", async () => {
         await testEditor({
             contentBefore: "<p>123[]</p>",
