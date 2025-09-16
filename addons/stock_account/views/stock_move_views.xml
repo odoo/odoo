@@ -25,7 +25,7 @@
                 <field name="product_uom" groups="uom.group_uom"/>
                 <field name="lot_ids" widget="many2many_tags" column_invisible="context.get('tracking') == 'none'"/>
                 <field name="value" column_invisible="context.get('cost_method') != 'fifo'"/>
-                <field name="standard_price" column_invisible="context.get('cost_method') == 'fifo'"/>
+                <field name="standard_price" string="Unit Cost" column_invisible="context.get('cost_method') == 'fifo'"/>
                 <field name="remaining_qty" sum="Total Remaining Qty"/>
                 <field name="remaining_value" sum="Total Remaining Value"/>
             </list>
