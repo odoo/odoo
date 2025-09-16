@@ -279,7 +279,8 @@ class Website(models.Model):
     def _compute_currency_id(self):
         for website in self:
             website.currency_id = (
-                request and request.pricelist.currency_id or website.company_id.sudo().currency_id
+                request and hasattr(request, 'pricelist') and request.pricelist.currency_id
+                or website.company_id.sudo().currency_id
             )
 
     @api.depends('send_abandoned_cart_email')
