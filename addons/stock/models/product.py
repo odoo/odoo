@@ -916,7 +916,7 @@ class ProductTemplate(models.Model):
     )
     @api.depends_context('warehouse_id')
     def _compute_quantities(self):
-        res = self._compute_quantities_dict()
+        res = self.sudo()._compute_quantities_dict()
         for template in self.with_context(skip_qty_available_update=True):
             template.qty_available = res[template.id]['qty_available']
             template.virtual_available = res[template.id]['virtual_available']
