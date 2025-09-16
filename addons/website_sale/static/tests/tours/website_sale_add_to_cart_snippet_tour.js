@@ -43,12 +43,12 @@ registerWebsitePreviewTour('add_to_cart_snippet_tour', {
         ...changeOptionInPopover("Add to Cart Button", "Product", "Product Yes Variant 1", true),
         ...clickOnSave(),
         clickOnElement("add to cart button", ":iframe .s_add_to_cart_btn"),
-        clickOnElement("continue shopping", ":iframe .modal button:contains(Continue Shopping)"),
+        clickOnElement("add to cart", ":iframe .modal button:contains(Add to Cart)"),
         checkQuanityInCart("2"),
 
         // Product with 2 variants with a variant selected
         ...editAddToCartSnippet(),
-        ...changeOptionInPopover("Add to Cart Button", "Product", "Product Yes Variant 2", true),
+        ...changeOptionInPopover("Add to Cart Button", "Product", "Product Yes Variant 2"),
         {
             content: "Check if variant option is visible",
             trigger: "[data-container-title='Add to Cart Button'] [data-label='Variant']"
@@ -73,12 +73,16 @@ registerWebsitePreviewTour('add_to_cart_snippet_tour', {
             content: "Check if the pink variant is selected",
             trigger: ":iframe .modal li:contains(Pink) input:checked",
         },
-        clickOnElement('continue shopping', ':iframe .modal button:contains(Continue Shopping)',),
+        clickOnElement('add to cart', ':iframe .modal button:contains(Add to Cart)'),
         checkQuanityInCart("3"),
 
         // Basic product with no variants and action=buy now
         ...editAddToCartSnippet(),
-        ...changeOptionInPopover("Add to Cart Button", "Product", "Product No Variant", true),
+        ...changeOptionInPopover("Add to Cart Button", "Product", "Product No Variant"),
+        {
+            content: "Check if action option is visible",
+            trigger: "[data-container-title='Add to Cart Button'] [data-label='Action']"
+        },
         ...changeOptionInPopover("Add to Cart Button", "Action", "Buy Now", false),
         // At this point the "Add to cart" button was changed to a "Buy Now" button
         ...clickOnSave(),
