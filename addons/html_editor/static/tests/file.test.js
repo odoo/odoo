@@ -93,6 +93,34 @@ test("Should not apply color to file box", async () => {
     expect(fileBox).not.toHaveClass("text-o-color-1");
 });
 
+test("Should not apply add file box inside inline element", async () => {
+    const { editor } = await setupEditor("<p><strong>\ufeef[]</strong></p>", {
+        config: configWithEmbeddedFile,
+    });
+    const mockedUpload = patchUpload(editor);
+    await insertText(editor, "/file");
+    await animationFrame();
+    await press("Enter");
+    await animationFrame();
+    await mockedUpload;
+    const fileBox = queryOne(".o_file_box");
+    expect(fileBox.parentElement.nodeName).toBe("P");
+});
+
+test("Should not apply add file box inside nested inline element", async () => {
+    const { editor } = await setupEditor("<p><strong><u>\ufeef[]</u></strong></p>", {
+        config: configWithEmbeddedFile,
+    });
+    const mockedUpload = patchUpload(editor);
+    await insertText(editor, "/file");
+    await animationFrame();
+    await press("Enter");
+    await animationFrame();
+    await mockedUpload;
+    const fileBox = queryOne(".o_file_box");
+    expect(fileBox.parentElement.nodeName).toBe("P");
+});
+
 describe("document tab in media dialog", () => {
     onRpc("ir.attachment", "search_read", () => [
         {
@@ -193,7 +221,7 @@ describe("zero width no-break space", () => {
 
     test("should not add two contiguous ZWNBSP between two file cards", async () => {
         const { editor, el } = await setupEditor("<p>[]<br></p>", {
-            config: { ...configWithEmbeddedFile, resources: {} }, // disable embedded component rendering
+            config: { ...configWithEmbeddedFile, resources: { embedded_components: true } }, // disable embedded component rendering
         });
         let mockUpload = patchUpload(editor);
         execCommand(editor, "uploadFile");
