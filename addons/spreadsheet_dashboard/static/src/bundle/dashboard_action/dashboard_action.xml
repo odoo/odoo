@@ -4,33 +4,37 @@
         <ControlPanel display="controlPanelDisplay">
             <t t-set-slot="layout-actions" t-if="!loader.getActiveDashboard()?.isSample">
                 <t t-set="status" t-value="loader.getActiveDashboard() and loader.getActiveDashboard().status"/>
-                <div class="d-flex flex-wrap">
+                <div class="d-flex flex-wrap w-100">
                     <DashboardSearchBar t-if="status === Status.Loaded and loader.getActiveDashboard().model.getters.getGlobalFilters().length"
                                         t-key="activeDashboardId"
                                         model="loader.getActiveDashboard().model"
+                                        toggler="searchBarToggler"
                     />
                 </div>
             </t>
             <t t-set-slot="control-panel-navigation-additional" t-if="!loader.getActiveDashboard()?.isSample">
+                <!-- Dashboard selection -->
+                <t t-if="env.isSmall">
+                    <DashboardMobileSearchPanel
+                        onDashboardSelected="(dashboardId) => this.openDashboard(dashboardId)"
+                        activeDashboard="dashboard"
+                        groups="getDashboardGroups()"/>
+                </t>
                 <SpreadsheetShareButton t-key="activeDashboardId" model="loader.getActiveDashboard()?.model" onSpreadsheetShared.bind="shareSpreadsheet" togglerClass="'btn-light'"/>
                 <a
                     t-if="loader.getActiveDashboard()"
                     title="Toggle favorite"
                     t-on-click="toggleFavorite"
-                    t-attf-class="o_dashboard_star fa fa-lg fa-star{{!loader.getActiveDashboard().data.is_favorite ? '-o' : ''}}"
+                    t-attf-class="o_dashboard_star align-middle lh-base fa fa-lg fa-star{{!loader.getActiveDashboard().data.is_favorite ? '-o' : ''}}"
                 />
+                <div class="ms-1 o_search_toggler" t-if="env.isSmall">
+                    <t t-component="searchBarToggler.component" t-props="searchBarToggler.props"/>
+                </div>
             </t>
         </ControlPanel>
         <t t-set="dashboard" t-value="loader.getActiveDashboard()"/>
         <div class="o_content o_component_with_search_panel" t-att-class="{ o_mobile_dashboard: env.isSmall }">
-            <!-- Dashboard selection -->
-            <t t-if="env.isSmall">
-                <DashboardMobileSearchPanel
-                    onDashboardSelected="(dashboardId) => this.openDashboard(dashboardId)"
-                    activeDashboard="dashboard"
-                    groups="getDashboardGroups()"/>
-            </t>
-            <t t-else="">
+            <t t-if="!env.isSmall">
                 <t t-if="state.sidebarExpanded" t-call="spreadsheet_dashboard.DashboardAction.Expanded"/>
                 <t t-else="" t-call="spreadsheet_dashboard.DashboardAction.Collapsed"/>
             </t>
