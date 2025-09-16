@@ -1,4 +1,4 @@
-import { Component, useState } from "@odoo/owl";
+import { Component, useState, onWillStart } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { useSelfOrder } from "@pos_self_order/app/services/self_order_service";
 import { PopupTable } from "@pos_self_order/app/components/popup_table/popup_table";
@@ -21,6 +21,10 @@ export class CartPage extends Component {
             selectTable: false,
             fillInformations: false,
             cancelConfirmation: false,
+            showCancelButton: this.showCancelButton,
+        });
+        onWillStart(async () => {
+            await this.canShowCancelButton();
         });
     }
 
@@ -49,6 +53,10 @@ export class CartPage extends Component {
         } else {
             return this.lines;
         }
+    }
+
+    async canShowCancelButton() {
+        this.state.showCancelButton = this.showCancelButton();
     }
 
     async cancelOrder() {
