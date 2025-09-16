@@ -32,3 +32,30 @@ registerThreadAction("show-threads", {
     sequenceGroup: 10,
     toggle: true,
 });
+
+registerThreadAction("show-announcement", {
+    condition: (component) =>
+        component.thread?.hasOneSubAnnouncementFeature && !component.thread?.parent_channel_id,
+    open: async (component) => {
+        if (
+            !component.thread?.sub_channel_ids?.length ||
+            !component.thread?.sub_channel_ids.some((sub) => sub.channel_type === "announcement")
+        ) {
+            await component.thread.createSubChannel({
+                name: _t("Announcements"),
+                type: "announcement",
+            });
+            return;
+        }
+        component.thread.sub_channel_ids
+            .find((sub) => sub.channel_type === "announcement")
+            .open({ focus: true });
+    },
+    icon: "fa fa-fw fa-bullhorn",
+    iconLarge: "fa fa-fw fa-lg fa-bullhorn",
+    name: _t("Announcements"),
+    panelOuterClass: "bg-100 border border-secondary",
+    sequence: ({ owner }) => (owner.props.chatWindow ? 40 : 5),
+    sequenceGroup: 15,
+    toggle: true,
+});

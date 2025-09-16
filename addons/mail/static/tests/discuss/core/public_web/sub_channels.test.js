@@ -10,7 +10,7 @@ import {
 } from "@mail/../tests/mail_test_helpers";
 import { describe, test } from "@odoo/hoot";
 import { Deferred, mockDate, animationFrame } from "@odoo/hoot-mock";
-import { Command, serverState, withUser } from "@web/../tests/web_test_helpers";
+import { Command, makeKwArgs, serverState, withUser } from "@web/../tests/web_test_helpers";
 import { rpc } from "@web/core/network/rpc";
 
 describe.current.tags("desktop");
@@ -41,6 +41,33 @@ test("navigate to sub channel", async () => {
     });
     await click(".o-mail-NotificationMessage a", { text: "New Thread" });
     await contains(".o-mail-DiscussContent-threadName", { value: "New Thread" });
+});
+
+test("new sub-announcement creates a thread if not exists", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    await start();
+    await openDiscuss(channelId);
+    await contains(".o-mail-DiscussContent-threadName", { value: "General" });
+    await click("button[title='Announcements']");
+    await contains(".o-mail-DiscussSidebarSubchannel", { text: "Announcements" });
+    await contains(".o-mail-DiscussSidebarSubchannel .fa-bullhorn");
+});
+
+test("new sub-announcement does not create a thread if already exists", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    const { sub_channel } = pyEnv["discuss.channel"]._create_sub_channel(
+        channelId,
+        makeKwArgs({ channel_type: "announcement" })
+    );
+    pyEnv["discuss.channel"].write([sub_channel], { name: "Another name" });
+    await start();
+    await openDiscuss(channelId);
+    await contains(".o-mail-DiscussContent-threadName", { value: "General" });
+    await click("button[title='Announcements']");
+    await contains(".o-mail-DiscussSidebarSubchannel", { text: "Another name" });
+    await contains(".o-mail-DiscussSidebarSubchannel .fa-bullhorn");
 });
 
 test("can manually unpin a sub-thread", async () => {

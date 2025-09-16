@@ -7,13 +7,8 @@
                 <CloseConfirmation onCloseConfirmationDialog.bind="onCloseConfirmationDialog" onClickLeaveConversation.bind="close"/>
             </t>
         </xpath>
-        <xpath expr="//Composer" position="replace">
-            <div t-if="thread?.composerDisabled" class="bg-200 py-1 text-center d-flex fst-italic fw-bold text-muted" t-ref="composerDisabledContainer">
-                <span t-if="!showGiveFeedbackBtn" class="flex-grow-1"/>
-                <span t-esc="thread.composerDisabledText"/>
-                <span class="flex-grow-1"/>
-            </div>
-            <t t-else="">$0</t>
+        <xpath expr="//*[@t-ref='composerDisabledContainer-blank']" position="replace">
+            <span t-if="!showGiveFeedbackBtn" class="flex-grow-1" t-ref="composerDisabledContainer-blank"/>
         </xpath>
     </t>
 </templates>

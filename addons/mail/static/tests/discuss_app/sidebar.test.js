@@ -1364,3 +1364,17 @@ test("Sidebar channels show correct notification counter based on settings", asy
     await contains(".o-mail-DiscussSidebarChannel:contains(Mentions) .badge", { count: 0 });
     await contains(".o-mail-DiscussSidebarChannel:contains(Regular) .badge", { count: 0 });
 });
+
+test("Sidebar - announcement: basic rendering", async () => {
+    const pyEnv = await startServer();
+    const channel = pyEnv["discuss.channel"]._create_announcement_channel("Global announcement");
+    await start();
+    await openDiscuss(channel[0].id);
+    await contains(".o-mail-DiscussSidebarCategory", { text: "Announcements" });
+    await contains(".o-mail-DiscussSidebarChannel", { text: "Global announcement" });
+    await click("[title='Channel Actions']");
+    await contains(".o-dropdown-item", { text: "Invite People" });
+    await contains(".o-dropdown-item", { text: "Notification Settings" });
+    await contains(".o-dropdown-item", { text: "Advanced Settings" });
+    await contains(".o-dropdown-item", { text: "Leave Channel" });
+});

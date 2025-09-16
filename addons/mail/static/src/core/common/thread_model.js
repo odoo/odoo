@@ -77,7 +77,7 @@ export class Thread extends Record {
         sort: (a1, a2) => (a1.id < a2.id ? 1 : -1),
     });
     get allowedToLeaveChannelTypes() {
-        return ["channel", "group"];
+        return ["channel", "group", "announcement"];
     }
     get canLeave() {
         return (
@@ -123,7 +123,7 @@ export class Thread extends Record {
         compute() {
             return (
                 this.self_member_id?.is_pinned ||
-                (["channel", "group"].includes(this.channel_type) &&
+                (["channel", "group", "announcement"].includes(this.channel_type) &&
                     this.hasSelfAsMember &&
                     !this.parent_channel_id)
             );
@@ -349,7 +349,7 @@ export class Thread extends Record {
     }
 
     get allowDescription() {
-        return ["channel", "group"].includes(this.channel_type);
+        return ["channel", "group", "announcement"].includes(this.channel_type);
     }
 
     get isTransient() {
@@ -753,9 +753,10 @@ export class Thread extends Record {
         const newName = name.trim();
         if (
             newName !== this.displayName &&
-            ((newName && this.channel_type === "channel") || this.isChatChannel)
+            ((newName && ["channel", "announcement"].includes(this.channel_type)) ||
+                this.isChatChannel)
         ) {
-            if (this.channel_type === "channel" || this.channel_type === "group") {
+            if (["channel", "group", "announcement"].includes(this.channel_type)) {
                 this.name = newName;
                 await this.store.env.services.orm.call(
                     "discuss.channel",

@@ -14,6 +14,7 @@ import {
 import { Composer } from "@mail/core/common/composer";
 import { beforeEach, describe, test } from "@odoo/hoot";
 import {
+    Command,
     asyncStep,
     getService,
     patchWithCleanup,
@@ -101,6 +102,34 @@ test("add an emoji after a command", async () => {
     await click("button[title='Add Emojis']");
     await click(".o-Emoji", { text: "😊" });
     await contains(".o-mail-Composer-input", { value: "/who 😊" });
+});
+
+test("composer is enabled when admin of an announcement channel", async () => {
+    const pyEnv = await startServer();
+    const channel = pyEnv["discuss.channel"]._create_announcement_channel("General");
+    const channelId = channel[0].id;
+    await start();
+    await openDiscuss(channelId);
+    await contains(".o-mail-Composer-input");
+});
+
+test("composer is disabled when not admin of an announcement channel", async () => {
+    const pyEnv = await startServer();
+    const channel = pyEnv["discuss.channel"]._create_announcement_channel("General");
+    const channelId = channel[0].id;
+    const partnerId = pyEnv["res.partner"].create({ name: "Test User" });
+    const userId = pyEnv["res.users"].create({
+        partner_id: partnerId,
+        login: "testUser",
+        password: "testUser",
+    });
+    pyEnv["discuss.channel"].write([channelId], {
+        channel_member_ids: [Command.create({ partner_id: partnerId })],
+    });
+    await start({ authenticateAs: pyEnv["res.users"].read(userId)[0] });
+    await openDiscuss(channelId);
+    await contains("span", { text: "Only channel administrators can post messages." });
+    await contains(".o-mail-Composer-input", { count: 0 });
 });
 
 test.tags("html composer");

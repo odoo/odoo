@@ -13,7 +13,7 @@ commandRegistry
         methodName: "execute_command_leave",
     })
     .add("who", {
-        channel_types: ["channel", "chat", "group"],
+        channel_types: ["channel", "chat", "group", "announcement"],
         help: _t("List users in the current channel"),
         methodName: "execute_command_who",
     });

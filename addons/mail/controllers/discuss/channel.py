@@ -51,7 +51,14 @@ class DiscussChannelWebclientController(WebclientController):
             )
             store.add(channel).resolve_data_request(channel=Store.One(channel, []))
         if name == "/discuss/create_channel":
-            channel = request.env["discuss.channel"]._create_channel(params["name"], params["group_id"])
+            if params.get("channel_type") == "announcement":
+                channel = request.env["discuss.channel"]._create_announcement_channel(
+                    params["name"], params["group_id"]
+                )
+            else:
+                channel = request.env["discuss.channel"]._create_channel(
+                    params["name"], params["group_id"]
+                )
             store.add(channel).resolve_data_request(channel=Store.One(channel, []))
         if name == "/discuss/create_group":
             channel = request.env["discuss.channel"]._create_group(
@@ -186,11 +193,11 @@ class ChannelController(http.Controller):
         return Store().add(channel).get_result()
 
     @http.route("/discuss/channel/sub_channel/create", methods=["POST"], type="jsonrpc", auth="public")
-    def discuss_channel_sub_channel_create(self, parent_channel_id, from_message_id=None, name=None):
+    def discuss_channel_sub_channel_create(self, parent_channel_id, from_message_id=None, name=None, channel_type=None):
         channel = request.env["discuss.channel"].search([("id", "=", parent_channel_id)])
         if not channel:
             raise NotFound()
-        sub_channel = channel._create_sub_channel(from_message_id, name)
+        sub_channel = channel._create_sub_channel(from_message_id, name, channel_type)
         return {"store_data": Store().add(sub_channel).get_result(), "sub_channel": sub_channel.id}
 
     @http.route("/discuss/channel/sub_channel/fetch", methods=["POST"], type="jsonrpc", auth="public")

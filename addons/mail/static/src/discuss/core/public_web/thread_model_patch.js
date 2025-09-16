@@ -10,7 +10,9 @@ const threadPatch = {
         super.setup(...arguments);
         this.appAsUnreadChannels = fields.One("DiscussApp", {
             compute() {
-                return this.channel_type === "channel" && this.isUnread ? this.store.discuss : null;
+                return ["channel", "announcement"].includes(this.channel_type) && this.isUnread
+                    ? this.store.discuss
+                    : null;
             },
         });
         this.categoryAsThreadWithCounter = fields.One("DiscussAppCategory", {
@@ -59,8 +61,15 @@ const threadPatch = {
         if (["group", "chat"].includes(this.channel_type)) {
             return this.store.discuss.chats;
         }
-        if (this.channel_type === "channel") {
+        if (
+            this.channel_type === "channel" ||
+            (this.channel_type === "announcement" &&
+                this.parent_channel_id?.channel_type === "channel")
+        ) {
             return this.store.discuss.channels;
+        }
+        if (this.channel_type === "announcement") {
+            return this.store.discuss.announcements;
         }
     },
     get allowCalls() {
@@ -73,7 +82,10 @@ const threadPatch = {
         super.delete(...arguments);
     },
     get hasSubChannelFeature() {
-        return ["channel", "group"].includes(this.channel_type);
+        return ["channel", "group", "announcement"].includes(this.channel_type);
+    },
+    get hasOneSubAnnouncementFeature() {
+        return this.channel_type === "channel";
     },
     get isEmpty() {
         return !this.from_message_id && super.isEmpty;
@@ -83,11 +95,12 @@ const threadPatch = {
      * @param {import("models").Message} [param0.initialMessage]
      * @param {string} [param0.name]
      */
-    async createSubChannel({ initialMessage, name } = {}) {
+    async createSubChannel({ initialMessage, name, type } = {}) {
         const { store_data, sub_channel } = await rpc("/discuss/channel/sub_channel/create", {
             parent_channel_id: this.parent_channel_id?.id || this.id,
             from_message_id: initialMessage?.id,
             name,
+            channel_type: type,
         });
         this.store.insert(store_data);
         this.store.Thread.get({ model: "discuss.channel", id: sub_channel }).open({ focus: true });

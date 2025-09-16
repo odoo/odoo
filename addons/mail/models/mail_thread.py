@@ -2214,10 +2214,7 @@ class MailThread(models.AbstractModel):
             set(kwargs.keys()),
             forbidden_names={'model', 'res_id', 'subtype'}
         )
-        if self._name == 'mail.thread' or not self.id:
-            raise ValueError(_("Posting a message should be done on a business document. Use message_notify to send a notification to an user."))
-        if message_type == 'user_notification':
-            raise ValueError(_("Use message_notify to send a notification to an user."))
+        self._check_can_post_message(message_type=message_type)
         if attachments:
             # attachments should be a list (or tuples) of 3-elements list (or tuple)
             format_error = not is_list_of(attachments, list) and not is_list_of(attachments, tuple)
@@ -2334,6 +2331,12 @@ class MailThread(models.AbstractModel):
         self._message_post_after_hook(new_message, msg_values)
         self._notify_thread(new_message, msg_values, **notif_kwargs)
         return new_message
+
+    def _check_can_post_message(self, message_type):
+        if self._name == 'mail.thread' or not self.id:
+            raise ValueError(_("Posting a message should be done on a business document. Use message_notify to send a notification to an user."))
+        if message_type == 'user_notification':
+            raise ValueError(_("Use message_notify to send a notification to an user."))
 
     def _message_post_after_hook(self, message, msg_values):
         """ Hook to add custom behavior after having posted the message. Both

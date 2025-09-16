@@ -111,6 +111,7 @@ export class ChannelMember extends Record {
     /** @type {number} */
     typingTimeoutId;
     unpin_dt = fields.Datetime();
+    member_type = "member";
 
     get name() {
         if (this.guest_id) {

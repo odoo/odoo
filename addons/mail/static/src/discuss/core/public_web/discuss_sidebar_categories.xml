@@ -132,6 +132,7 @@
                 'o-unread': thread.self_member_id?.message_unread_counter > 0 and !thread.self_member_id?.mute_until_dt,
                 'opacity-50': thread.self_member_id?.mute_until_dt,
             }">
+                <span t-attf-class="fa fa-fw mx-1 {{thread.channel_type === 'announcement'? 'fa-bullhorn': 'fa-comments-o'}}"></span>
                 <span class="text-truncate" t-esc="thread.displayName" t-att-class="{
                     'fw-bolder': thread.self_member_id?.message_unread_counter > 0,
                     'opacity-75 opacity-100-hover': !(thread.self_member_id?.message_unread_counter > 0 and !thread.self_member_id?.mute_until_dt),

@@ -67,13 +67,16 @@ patch(Thread.prototype, {
     },
 
     get composerDisabled() {
-        return this.channel_type === "livechat" && this.livechat_end_dt;
+        return (this.channel_type === "livechat" && this.livechat_end_dt) || super.composerDisabled;
     },
 
     get composerDisabledText() {
-        return this.channel_type === "livechat" && this.livechat_end_dt
-            ? _t("This livechat conversation has ended")
-            : "";
+        return (
+            super.composerDisabledText ??
+            (this.channel_type === "livechat" && this.livechat_end_dt
+                ? _t("This livechat conversation has ended")
+                : "")
+        );
     },
     /**
      * @override

@@ -582,8 +582,9 @@ test("basic rendering: sidebar", async () => {
     await contains(".o-mail-DiscussSidebar button", { text: "Inbox" });
     await contains(".o-mail-DiscussSidebar button", { text: "Starred messages" });
     await contains(".o-mail-DiscussSidebar button", { text: "History" });
-    await contains(".o-mail-DiscussSidebarCategory", { count: 2 });
+    await contains(".o-mail-DiscussSidebarCategory", { count: 3 });
     await contains(".o-mail-DiscussSidebarCategory-channel", { text: "Channels" });
+    await contains(".o-mail-DiscussSidebarCategory-announcement", { text: "Announcements" });
     await contains(".o-mail-DiscussSidebarCategory-chat", { text: "Direct messages" });
 });
 
@@ -733,13 +734,14 @@ test("basic top bar rendering", async () => {
     await contains(".o-mail-DiscussContent-threadName", { value: "Starred messages" });
     await click(".o-mail-DiscussSidebarChannel", { text: "General" });
     await contains(".o-mail-DiscussContent-threadName", { value: "General" });
-    await contains(".o-mail-DiscussContent-header button", { count: 9 });
+    await contains(".o-mail-DiscussContent-header button", { count: 10 });
     await contains(".o-mail-DiscussContent-header button[title='Start Video Call']");
     await contains(".o-mail-DiscussContent-header button[title='Start Call']");
     await contains(".o-mail-DiscussContent-header button[title='Notification Settings']");
     await contains(".o-mail-DiscussContent-header button[title='Invite People']");
     await contains(".o-mail-DiscussContent-header button[title='Search Messages']");
     await contains(".o-mail-DiscussContent-header button[title='Threads']");
+    await contains(".o-mail-DiscussContent-header button[title='Announcements']");
     await contains(".o-mail-DiscussContent-header button[title='Attachments']");
     await contains(".o-mail-DiscussContent-header button[title='Pinned Messages']");
     await contains(".o-mail-DiscussContent-header button[title='Members']");

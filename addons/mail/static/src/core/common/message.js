@@ -443,6 +443,8 @@ export class Message extends Component {
             const text = linkEl.textContent.substring(1); // remove '#' prefix
             const icon = linkEl.classList.contains("o_channel_redirect_asThread")
                 ? "fa fa-comments-o"
+                : linkEl.classList.contains("o_channel_redirect_asAnnouncementThread")
+                ? "fa fa-bullhorn"
                 : "fa fa-hashtag";
             const iconEl = renderToElement("mail.Message.mentionedChannelIcon", { icon });
             linkEl.replaceChildren(iconEl);

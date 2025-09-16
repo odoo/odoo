@@ -6,7 +6,7 @@
     <div class="o-mail-DiscussContent d-flex flex-column h-100 w-100 overflow-auto o-scrollbar-thin" t-ref="root">
         <div class="o-mail-DiscussContent-header py-2 ps-2 ps-xl-3 pe-3 d-flex flex-shrink-0 align-items-center border-bottom border-secondary gap-1 z-1 flex-grow-0" t-ref="header">
             <t t-if="thread">
-                <div t-if="['channel', 'group', 'chat'].includes(thread.channel_type)" class="o-mail-DiscussContent-threadAvatar position-relative align-self-center align-items-center bg-inherit">
+                <div t-if="['channel', 'group', 'chat', 'announcement'].includes(thread.channel_type)" class="o-mail-DiscussContent-threadAvatar position-relative align-self-center align-items-center bg-inherit">
                     <img class="rounded-2 object-fit-cover" t-att-src="thread.parent_channel_id?.avatarUrl ?? thread.avatarUrl" alt="Thread Image"/>
                     <FileUploader t-if="!thread.parent_channel_id and thread.is_editable and thread.channel_type !== 'chat'" acceptedFileExtensions="'.bmp, .jpg, .jpeg, .png, .svg'" showUploadingText="false" multiUpload="false" onUploaded.bind="(data) => this.onFileUploaded(data)">
                         <t t-set-slot="toggler">
@@ -70,7 +70,8 @@
                     <t t-if="thread">
                         <div class="d-flex flex-column flex-grow-1 bg-inherit">
                             <t name="thread"><Thread thread="thread" t-key="thread.localId" jumpPresent="state.jumpThreadPresent"/></t>
-                            <Composer t-if="thread.model !== 'mail.box' or thread.composer.replyToMessage" t-key="thread.localId" composer="thread.composer" autofocus="true" onDiscardCallback="() => (thread.composer.replyToMessage = undefined)" onPostCallback.bind="() => this.state.jumpThreadPresent++" dropzoneRef="root" type="thread.composer.replyToMessage ? (thread.composer.replyToMessage.isNote ? 'note' : 'message') : undefined"/>
+                            <Composer t-if="(thread.model !== 'mail.box' and !thread.composerDisabled) or thread.composer.replyToMessage" t-key="thread.localId" composer="thread.composer" autofocus="true" onDiscardCallback="() => (thread.composer.replyToMessage = undefined)" onPostCallback.bind="() => this.state.jumpThreadPresent++" dropzoneRef="root" type="thread.composer.replyToMessage ? (thread.composer.replyToMessage.isNote ? 'note' : 'message') : undefined"/>
+                            <span t-if="thread?.composerDisabled" class="bg-200 py-1 text-center fst-italic fw-bold text-muted" t-esc="thread.composerDisabledText"/>
                         </div>
                         <div t-if="threadActions.activeAction?.actionPanelComponentCondition" t-attf-class="{{ threadActions.activeAction.panelOuterClass }}" class="o-mail-DiscussContent-panelContainer o-mail-discussSidebarBgColor h-100 border-start border-secondary flex-shrink-0">
                             <t t-component="threadActions.activeAction.actionPanelComponent" thread="thread" t-props="threadActions.activeAction.actionPanelComponentProps"/>

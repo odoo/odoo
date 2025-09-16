@@ -29,6 +29,21 @@ const discussAppPatch = {
             },
             eager: true,
         });
+        this.announcements = fields.One("DiscussAppCategory", {
+            compute() {
+                return {
+                    addTitle: _t("View announcements"),
+                    canView: true,
+                    extraClass: "o-mail-DiscussSidebarCategory-announcement",
+                    icon: "fa fa-bullhorn",
+                    id: "announcements",
+                    name: _t("Announcements"),
+                    sequence: 20,
+                    serverStateKey: "is_discuss_sidebar_category_announcement_open",
+                };
+            },
+            eager: true,
+        });
         this.chats = fields.One("DiscussAppCategory", {
             compute() {
                 return this.computeChats();

@@ -242,6 +242,37 @@ export class DiscussChannel extends models.ServerModel {
         return DiscussChannel.browse(id);
     }
 
+    _create_announcement_channel(name, group_id) {
+        const kwargs = getKwArgs(arguments, "name", "group_id");
+        name = kwargs.name;
+        group_id = kwargs.group_id;
+
+        /** @type {import("mock_models").DiscussChannel} */
+        const DiscussChannel = this.env["discuss.channel"];
+        /** @type {import("mock_models").ResPartner} */
+        const ResPartner = this.env["res.partner"];
+
+        const id = this.create({
+            channel_member_ids: [
+                Command.create({ partner_id: this.env.user.partner_id, member_type: "admin" }),
+            ],
+            channel_type: "announcement",
+            name,
+            group_public_id: group_id,
+        });
+        this.write([id], { group_public_id: group_id });
+        this.message_post(
+            id,
+            makeKwArgs({
+                body: `<div class="o_mail_notification">created <a href="#" class="o_channel_redirect" data-oe-id="${id}">#${name}</a></div>`,
+                message_type: "notification",
+            })
+        );
+        const [partner] = ResPartner.read(this.env.user.partner_id);
+        this._broadcast([id], [partner]);
+        return DiscussChannel.browse(id);
+    }
+
     _channel_basic_info_fields() {
         return [
             "avatar_cache_key",
@@ -606,14 +637,16 @@ export class DiscussChannel extends models.ServerModel {
         return DiscussChannel.browse(id);
     }
 
-    _create_sub_channel(ids, from_message_id, name) {
-        const kwargs = getKwArgs(arguments, "ids", "from_message_id", "name");
+    _create_sub_channel(ids, from_message_id, name, channel_type) {
+        const kwargs = getKwArgs(arguments, "ids", "from_message_id", "name", "channel_type");
         ids = kwargs.ids;
         from_message_id = kwargs.from_message_id;
         name = kwargs.name;
+        channel_type = kwargs.channel_type || "channel";
         delete kwargs.name;
         delete kwargs.ids;
         delete kwargs.from_message_id;
+        delete kwargs.channel_type;
         /** @type {import("mock_models").MailMessage} */
         const MailMessage = this.env["mail.message"];
         /** @type {import("mock_models").BusBus} */
@@ -629,7 +662,7 @@ export class DiscussChannel extends models.ServerModel {
         const subChannels = this.browse(
             this.create({
                 channel_member_ids: [Command.create({ partner_id: partner.id })],
-                channel_type: "channel",
+                channel_type,
                 group_public_id: self.group_public_id,
                 from_message_id: message?.id,
                 name: message

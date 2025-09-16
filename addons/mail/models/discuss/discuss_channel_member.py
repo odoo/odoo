@@ -53,6 +53,13 @@ class DiscussChannelMember(models.Model):
         help="Contains the date and time of the last interesting event that happened in this channel for this user. This includes: creating, joining, pinning",
     )
     last_seen_dt = fields.Datetime("Last seen date")
+    member_type = fields.Selection(
+        [
+            ("admin", "Admin"),
+            ("member", "Member"),
+        ],
+        default="member",
+    )
     # RTC
     rtc_session_ids = fields.One2many(string="RTC Sessions", comodel_name='discuss.channel.rtc.session', inverse_name='channel_member_id')
     rtc_inviting_session_id = fields.Many2one('discuss.channel.rtc.session', string='Ringing session')
@@ -218,7 +225,11 @@ class DiscussChannelMember(models.Model):
         # kept in sync.
         for member in res:
             if parent := member.channel_id.parent_channel_id:
-                parent._add_members(partners=member.partner_id, guests=member.guest_id)
+                parent._add_members(
+                    partners=member.partner_id,
+                    guests=member.guest_id,
+                    member_type=member.member_type,
+                )
         for channel, members in name_members_by_channel.items():
             if channel.channel_name_member_ids != members:
                 Store(bus_channel=channel).add(
@@ -381,6 +392,9 @@ class DiscussChannelMember(models.Model):
             "fetched_message_id",
             "last_seen_dt",
             "seen_message_id",
+            Store.Attr(
+                "member_type", predicate=lambda m: m.channel_id.channel_type == "announcement"
+            ),
             *self.env["discuss.channel.member"]._to_store_persona(),
         ]
 

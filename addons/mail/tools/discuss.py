@@ -323,7 +323,7 @@ class Store:
                 and (
                     self.subchannel == "internal_users"
                     or (
-                        bus_record.channel_type == "channel"
+                        bus_record.channel_type in ("channel", "announcement")
                         and env.ref("base.group_user") in bus_record.group_public_id.all_implied_ids
                     )
                 )

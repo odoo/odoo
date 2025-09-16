@@ -73,5 +73,9 @@ const messagePatch = {
             mentionedRoles,
         });
     },
+
+    get editable() {
+        return super.editable && this.thread?.channel_type !== "announcement";
+    },
 };
 patch(Message.prototype, messagePatch);

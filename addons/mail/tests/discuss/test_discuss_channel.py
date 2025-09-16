@@ -13,7 +13,7 @@ from odoo.addons.mail.models.discuss.discuss_channel import channel_avatar, grou
 from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.addons.mail.tests.common import MailCommon
 from odoo.addons.mail.tools.discuss import Store
-from odoo.exceptions import ValidationError
+from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.tests import HttpCase, tagged, users
 from odoo.tools import html_escape, mute_logger
 
@@ -1024,3 +1024,176 @@ class TestChannelInternals(MailCommon, HttpCase):
         actual_member_ids = [m.partner_id.id if m.partner_id else m.guest_id.id for m in channel.channel_member_ids]
         expected_member_ids = [self.partner_employee.id, self.guest.id, self.env.user.partner_id.id]
         self.assertCountEqual(actual_member_ids, expected_member_ids)
+
+    @users('employee')
+    def test_create_announcement_channel(self):
+        channel = self.env["discuss.channel"].create({
+            "name": "Announcement channel",
+            "channel_type": "announcement",
+        })
+        self.assertTrue(channel.channel_type == "announcement")
+        self.assertEqual(channel.group_public_id, self.env.ref("base.group_user"))
+        self.assertIn(self.env.user.partner_id, channel.channel_member_ids.partner_id)
+        self.assertEqual(channel.self_member_id.member_type, "admin")
+        self.assertTrue(channel.is_self_admin)
+
+    @users('employee')
+    def test_announcement_admin_can_post_message(self):
+        channel = self.env["discuss.channel"].create({
+            "name": "Announcement channel",
+            "channel_type": "announcement",
+        })
+        message = channel.message_post(
+            body="Announcement message", message_type="comment", subtype_xmlid="mail.mt_comment"
+        )
+        self.assertEqual(message.author_id, self.env.user.partner_id)
+        self.assertEqual(message.model, "discuss.channel")
+        self.assertEqual(message.res_id, channel.id)
+
+    @users('employee')
+    def test_announcement_non_admin_cannot_post_message(self):
+        channel = self.env["discuss.channel"].with_user(self.test_user).create({
+            "name": "Announcement channel",
+            "channel_type": "announcement",
+            "channel_member_ids": [
+                (0, 0, {"partner_id": self.env.user.partner_id.id}),
+            ]
+        })
+        # Invalidate caches to ensure `is_self_admin` is recomputed
+        self.env.invalidate_all()
+        with self.assertRaises(UserError):
+            self.env["discuss.channel"].search([("id", "=", channel.id)])[0].message_post(
+                body="Announcement message", message_type="comment", subtype_xmlid="mail.mt_comment"
+            )
+
+    @users('employee')
+    def test_announcement_non_members_cannot_post_message(self):
+        channel = self.env["discuss.channel"].create(
+            {
+                "name": "Announcement channel",
+                "channel_type": "announcement",
+            }
+        )
+        # Invalidate caches to ensure `is_self_admin` is recomputed
+        self.env.invalidate_all()
+        with self.assertRaises(UserError):
+            self.env["discuss.channel"].with_user(self.test_user).search([("id", "=", channel.id)])[
+                0
+            ].message_post(
+                body="Announcement message", message_type="comment", subtype_xmlid="mail.mt_comment"
+            )
+
+    def test_announcement_channel_admin_group_has_all_rights(self):
+        channel = self.env["discuss.channel"].with_user(self.test_user).create({
+            "name": "Announcement channel",
+            "channel_type": "announcement",
+        })
+        self.env.invalidate_all()
+        channel = self.env["discuss.channel"].search([("id", "=", channel.id)])[0]
+        self.assertNotIn(self.env.user.partner_id, channel.channel_member_ids.mapped('partner_id'))
+        channel.write({
+            "description": "New description",
+            "channel_member_ids": [
+                (0, 0, {"partner_id": self.env.user.partner_id.id}),
+            ]
+        })
+        channel.channel_member_ids.filtered(
+            lambda m: m.partner_id != self.env.user.partner_id
+        ).unlink()
+        channel.read(["name"])
+        channel.unlink()
+
+    def test_announcement_channel_members_can_read_messages(self):
+        channel = self.env["discuss.channel"].create(
+            {
+                "name": "Announcement channel",
+                "channel_type": "announcement",
+                "channel_member_ids": [
+                    (0, 0, {"partner_id": self.test_user.partner_id.id}),
+                ],
+            }
+        )
+        message = channel.message_post(
+            body="Announcement message", message_type="comment", subtype_xmlid="mail.mt_comment"
+        )
+        self.env.invalidate_all()
+        channel = (
+            self.env["discuss.channel"]
+            .with_user(self.test_user)
+            .search([("id", "=", channel.id)])[0]
+        )
+        messages = channel.message_ids
+        self.assertIn(message, messages)
+
+    def test_announcement_channel_cannot_edit_messages(self):
+        channel = self.env["discuss.channel"].create({
+            "name": "Announcement channel",
+            "channel_type": "announcement",
+        })
+        message = channel.message_post(
+            body="Announcement message", message_type="comment", subtype_xmlid="mail.mt_comment"
+        )
+        with self.assertRaises(UserError):
+            channel._message_update_content(
+                message,
+                body=Markup("<p>Test update</p>"),
+                attachment_ids=[],
+            )
+
+    def test_channel_cannot_have_two_announcement_sub_channels(self):
+        channel = self.env["discuss.channel"]._create_channel(name="General", group_id=None)
+        self.env["discuss.channel"].create({
+            "name": "Announcement channel",
+            "channel_type": "announcement",
+            "parent_channel_id": channel.id,
+        })
+        with self.assertRaises(UserError):
+            self.env["discuss.channel"].create({
+                "name": "Announcement channel 2",
+                "channel_type": "announcement",
+                "parent_channel_id": channel.id,
+            })
+
+    @users('employee')
+    def test_announcement_channel_parent_admin_has_admin_on_child(self):
+        channel = self.env["discuss.channel"].create({
+            "name": "Announcement channel",
+            "channel_type": "announcement",
+        })
+        self.env["discuss.channel"].with_user(self.test_user).create({
+            "name": "Sub channel",
+            "channel_type": "announcement",
+            "parent_channel_id": channel.id,
+            "channel_member_ids": [
+                Command.create({"partner_id": self.partner_employee_nomail.id}),
+            ],
+        })
+        sub_channel = self.env["discuss.channel"].search([("name", "=", "Sub channel")])
+        self.assertTrue(sub_channel.is_self_admin)
+        sub_channel.write({"name": "New name"})
+        sub_channel.channel_member_ids.filtered(
+            lambda m: m.member_type != "admin"
+        ).unlink()
+        with self.assertRaises(AccessError):
+            sub_channel.channel_member_ids.filtered(
+                lambda m: m.member_type == "admin"
+            ).unlink()
+        sub_channel.read(["name"])
+        sub_channel._add_members(users=self.user_employee, member_type="admin")
+
+    @users('employee')
+    def test_announcement_channel_parent_admin_cannot_post_message(self):
+        channel = self.env["discuss.channel"].create({
+            "name": "Announcement channel",
+            "channel_type": "announcement",
+        })
+        sub_channel = self.env["discuss.channel"].with_user(self.test_user).create({
+            "name": "Sub channel",
+            "channel_type": "announcement",
+            "parent_channel_id": channel.id,
+        })
+        self.env.invalidate_all()
+        with self.assertRaises(UserError):
+            sub_channel.with_user(self.user_employee).message_post(
+                body="Announcement message", message_type="comment", subtype_xmlid="mail.mt_comment"
+            )

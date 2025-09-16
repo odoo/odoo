@@ -24,7 +24,7 @@ test("no auto-call on joining chat", async () => {
     await openDiscuss();
     await click("input[placeholder='Search conversations']");
     await insertText("input[placeholder='Search a conversation']", "mario");
-    await click("a", { text: "mario" });
+    await click("a", { text: "Mario" });
     await contains(".o-mail-DiscussSidebar-item", { text: "Mario" });
     await contains(".o-mail-Message", { count: 0 });
     await contains(".o-discuss-Call", { count: 0 });

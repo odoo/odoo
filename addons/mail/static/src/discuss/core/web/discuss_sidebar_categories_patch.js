@@ -25,6 +25,21 @@ const DiscussSidebarCategoryPatch = {
                     ["parent_channel_id", "=", false],
                 ],
             });
+        } else if (this.category.id === "announcements") {
+            this.actionService.doAction({
+                name: _t("Announcement Channels"),
+                type: "ir.actions.act_window",
+                res_model: "discuss.channel",
+                views: [
+                    [false, "kanban"],
+                    [false, "form"],
+                ],
+                context: { default_channel_type: "announcement" },
+                domain: [
+                    ["channel_type", "=", "announcement"],
+                    ["parent_channel_id", "=", false],
+                ],
+            });
         }
     },
     get actions() {
@@ -32,7 +47,7 @@ const DiscussSidebarCategoryPatch = {
         if (this.category.canView) {
             actions.push({
                 onSelect: () => this.open(),
-                label: _t("View or join channels"),
+                label: _t("View or join %s", this.category.id),
                 icon: "fa fa-cog",
             });
         }

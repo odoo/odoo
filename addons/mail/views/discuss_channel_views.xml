@@ -71,15 +71,22 @@
                             <page string="Privacy" name="privacy">
                                 <group class="o_label_nowrap">
                                     <field name="group_public_id"
-                                        invisible="channel_type != 'channel' or parent_channel_id" readonly="not is_editable"/>
+                                        invisible="channel_type not in ('channel', 'announcement') or parent_channel_id" readonly="not is_editable"/>
                                     <field name="group_ids" widget="many2many_tags"
-                                        invisible="channel_type != 'channel'"
+                                        invisible="channel_type not in ('channel', 'announcement')"
                                         string="Auto Subscribe Groups" readonly="not is_editable"/>
                                 </group>
                             </page>
                             <page string="Members" name="members">
                                 <field name="channel_type" invisible="1"/>
-                                <field name="channel_member_ids" mode="list" context="{'active_test': False}" readonly="channel_type == 'chat'">
+                                <field name="channel_member_ids" mode="list" context="{'active_test': False}" invisible="channel_type != 'announcement'">
+                                    <list string="Members" editable="bottom">
+                                        <field name="partner_id" readonly="id or guest_id" required="not guest_id"/>
+                                        <field name="guest_id" readonly="id or partner_id" required="not partner_id"/>
+                                        <field name="member_type"/>
+                                    </list>
+                                </field>
+                                <field name="channel_member_ids" mode="list" context="{'active_test': False}" readonly="channel_type == 'chat'" invisible="channel_type == 'announcement'">
                                     <list string="Members" editable="bottom">
                                         <field name="partner_id" readonly="id or guest_id" required="not guest_id"/>
                                         <field name="guest_id" readonly="id or partner_id" required="not partner_id"/>
@@ -92,8 +99,8 @@
                                     <field name="parent_channel_id"/>
                                     <field name="sub_channel_ids"/>
                                     <field name="from_message_id"/>
-                                    <field name="sfu_channel_uuid"/>
-                                    <field name="sfu_server_url"/>
+                                    <field name="sfu_channel_uuid" invisible="channel_type == 'announcement'"/>
+                                    <field name="sfu_server_url" invisible="channel_type == 'announcement'"/>
                                 </group>
                             </page>
                             <page string="Integrations" invisible="1" name="discuss_channel_integrations"></page>
@@ -138,6 +145,16 @@
             <field name="res_model">discuss.channel</field>
             <field name="view_mode">kanban</field>
             <field name="domain" eval="[(('channel_type', '=', 'channel'))]" />
+            <field name="search_view_id" ref="discuss_channel_view_search" />
+        </record>
+        <record id="mail.discuss_announcement_action" model="ir.actions.act_window">
+            <field name="name">Announcements</field>
+            <field name="res_model">discuss.channel</field>
+            <field name="view_mode">kanban,form</field>
+            <field name="domain" eval="[(('channel_type', '=', 'announcement'))]" />
+            <field name="context">
+                {'default_channel_type': 'announcement'}
+            </field>
             <field name="search_view_id" ref="discuss_channel_view_search" />
         </record>
 

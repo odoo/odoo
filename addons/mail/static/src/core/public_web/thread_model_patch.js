@@ -23,8 +23,8 @@ patch(Thread.prototype, {
         if (
             !this.self_member_id?.mute_until_dt &&
             !this.store.self.im_status.includes("busy") &&
-            (this.channel_type !== "channel" ||
-                (this.channel_type === "channel" &&
+            (!["channel", "announcement"].includes(this.channel_type) ||
+                (["channel", "announcement"].includes(this.channel_type) &&
                     (channel_notifications === "all" ||
                         (channel_notifications === "mentions" &&
                             message.partner_ids?.includes(this.store.self)))))

@@ -162,7 +162,8 @@
                 'id': 'more-actions',
                 'name': moreName,
                 'tags': [],
-            }]"/> 
+                'onSelected': () => {},
+            }]"/>
         </div>
     </div>
 </t>
@@ -203,7 +204,8 @@
 
     <t t-name="mail.Composer.suggestionThread">
         <strong class="px-2 py-1 align-self-center flex-shrink-0 text-truncate">
-            <i t-attf-class="fa #{option.thread.parent_channel_id ? 'fa-comments-o' : 'fa-hashtag'} me-2"/>
+            <i t-if="option.thread.channel_type === 'announcement'" class="fa fa-bullhorn me-2"/>
+            <i t-else="option.thread.channel_type === 'channel'" t-attf-class="fa #{option.thread.parent_channel_id ? 'fa-comments-o' : 'fa-hashtag'} me-2"/>
             <t t-if="option.thread.parent_channel_id">
                 <t t-esc="option.thread.parent_channel_id.displayName"/>
                 <i class="oi oi-chevron-right o-xsmaller mx-1"/>

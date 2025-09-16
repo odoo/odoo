@@ -14,9 +14,9 @@ class DiscussChannel(models.Model):
 
     @api.constrains('subscription_department_ids')
     def _constraint_subscription_department_ids_channel(self):
-        failing_channels = self.sudo().filtered(lambda channel: channel.channel_type != 'channel' and channel.subscription_department_ids)
+        failing_channels = self.sudo().filtered(lambda channel: channel.channel_type not in ('channel', 'announcement') and channel.subscription_department_ids)
         if failing_channels:
-            raise ValidationError(_("For %(channels)s, channel_type should be 'channel' to have the department auto-subscription.", channels=', '.join([ch.name for ch in failing_channels])))
+            raise ValidationError(_("For %(channels)s, channel_type should be 'channel' or 'announcement' to have the department auto-subscription.", channels=', '.join([ch.name for ch in failing_channels])))
 
     def _subscribe_users_automatically_get_members(self):
         """ Auto-subscribe members of a department to a channel """
