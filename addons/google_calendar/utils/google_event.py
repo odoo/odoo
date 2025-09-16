@@ -93,7 +93,8 @@ class GoogleEvent(abc.Set):
         if unsure:
             unsure._load_odoo_ids_from_metadata(env, model)
 
-        return tuple(e._odoo_id for e in self)
+        # skip unmatched ids because we browse the result
+        return tuple(e._odoo_id for e in self if e._odoo_id)
 
     def _load_odoo_ids_from_metadata(self, env, model):
         unsure_odoo_ids = tuple(e._meta_odoo_id(env.cr.dbname) for e in self)

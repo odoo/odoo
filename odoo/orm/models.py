@@ -5228,6 +5228,7 @@ class BaseModel(metaclass=MetaModel):
             ids = (ids,)
         else:
             ids = tuple(ids)
+            assert all(ids) or all(isinstance(x, NewId) or x for x in ids), "Invalid falsy real id"
         return self.__class__(self.env, ids, ids)
 
     #
@@ -6219,8 +6220,8 @@ class BaseModel(metaclass=MetaModel):
                         rec_ids = OrderedSet()
                         for rec in self:
                             try:
-                                if rec[invf.model_field] == field.model_name:
-                                    rec_ids.add(rec[invf.name])
+                                if rec[invf.model_field] == field.model_name and (rec_id := rec[invf.name]):
+                                    rec_ids.add(rec_id)
                             except MissingError:
                                 continue
                         records = model.browse(rec_ids)

@@ -475,7 +475,7 @@ class ResUsers(models.Model):
             'mail.activity': {'overdue_count': 0, 'today_count': 0, 'planned_count': 0, 'total_count': 0}
         }
         for model_name, activities_by_record in activities_rec_groups.items():
-            res_ids = activities_by_record.keys()
+            res_ids = [id_ for id_ in activities_by_record if id_]
             Model = self.env[model_name]
             has_model_access_right = Model.has_access('read')
             if has_model_access_right:

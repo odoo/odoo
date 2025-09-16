@@ -171,7 +171,7 @@ class StockPackage(models.Model):
     def _compute_picking_ids(self):
         children_by_dest_pack, all_pack_ids = self._get_all_children_package_dest_ids()
         groups = self.env['stock.move.line']._read_group(
-            domain=[('state', 'not in', ['done', 'cancel']), ('result_package_id', 'in', all_pack_ids)],
+            domain=[('state', 'not in', ['done', 'cancel']), ('result_package_id', 'in', all_pack_ids), ('picking_id', '!=', False)],
             groupby=['result_package_id'], aggregates=['picking_id:array_agg'])
         pickings_by_package = {package.id: picking_ids for package, picking_ids in groups}
 

@@ -1,5 +1,6 @@
 import re
 import warnings
+from collections.abc import Reversible
 from collections.abc import Set as AbstractSet
 
 import dateutil.relativedelta
@@ -126,7 +127,7 @@ def expand_ids(id0, ids):
             seen.add(id_)
 
 
-class OriginIds:
+class OriginIds(Reversible):
     """ A reversible iterable returning the origin ids of a collection of ``ids``.
         Actual ids are returned as is, and ids without origin are not returned.
     """
@@ -137,13 +138,10 @@ class OriginIds:
 
     def __iter__(self):
         for id_ in self.ids:
-            if id_ := id_ or getattr(id_, 'origin', None):
+            if id_ := id_ or id_.origin:
                 yield id_
 
     def __reversed__(self):
         for id_ in reversed(self.ids):
-            if id_ := id_ or getattr(id_, 'origin', None):
+            if id_ := id_ or id_.origin:
                 yield id_
-
-
-origin_ids = OriginIds

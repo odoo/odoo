@@ -191,6 +191,11 @@ def _eval_xml(self, node, env):
             pass  # already bound to an empty recordset
         else:
             record_ids, *args = args
+            # skip falsy ids
+            try:
+                record_ids = tuple(record_id for record_id in record_ids if record_id)
+            except TypeError:
+                record_ids = (record_ids,) if record_ids else ()
             model = model.browse(record_ids)
             method = getattr(model, method_name)
         # invoke method

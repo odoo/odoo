@@ -1124,20 +1124,14 @@ class AccountJournal(models.Model):
         :return: A recordset with all the account.account used by this journal for inbound transactions.
         """
         self.ensure_one()
-        account_ids = set()
-        for line in self.inbound_payment_method_line_ids:
-            account_ids.add(line.payment_account_id.id)
-        return self.env['account.account'].browse(account_ids)
+        return self.inbound_payment_method_line_ids.payment_account_id
 
     def _get_journal_outbound_outstanding_payment_accounts(self):
         """
         :return: A recordset with all the account.account used by this journal for outbound transactions.
         """
         self.ensure_one()
-        account_ids = set()
-        for line in self.outbound_payment_method_line_ids:
-            account_ids.add(line.payment_account_id.id)
-        return self.env['account.account'].browse(account_ids)
+        return self.outbound_payment_method_line_ids.payment_account_id
 
     def _get_available_payment_method_lines(self, payment_type):
         """

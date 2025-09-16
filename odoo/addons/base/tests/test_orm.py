@@ -148,8 +148,9 @@ class TestORM(TransactionCase):
         recs = partner.new({})
         self.assertTrue(recs.exists())
 
-        # check that there is no record with id 0
-        recs = partner.browse([0])
+        # check that there is no record with id -1
+        # (it is technically valid, but should not exist)
+        recs = partner.browse([-1])
         self.assertFalse(recs.exists())
 
     def test_lock_for_update(self):
