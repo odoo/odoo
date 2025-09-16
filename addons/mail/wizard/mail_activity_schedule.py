@@ -439,7 +439,7 @@ class MailActivitySchedule(models.TransientModel):
     def _get_applied_on_records(self):
         if not self.res_model:
             return None
-        return self.env[self.res_model].browse(self._evaluate_res_ids())
+        return self.sudo().env[self.res_model].browse(self._evaluate_res_ids())
 
     def _get_plan_available_base_domain(self):
         self.ensure_one()
