@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-09-12 18:39+0000\n"
-"PO-Revision-Date: 2025-08-07 04:45+0000\n"
+"PO-Revision-Date: 2025-09-16 00:20+0000\n"
 "Last-Translator: \"Ujjawal Pathak (pauj)\" <pauj@odoo.com>\n"
 "Language-Team: Hindi <https://translate.odoo.com/projects/odoo-s18-3/"
 "delivery/hi/>\n"
@@ -36,6 +36,8 @@ msgid ""
 "%s\n"
 "Free Shipping"
 msgstr ""
+"%s\n"
+"फ्री शिपिंग"
 
 #. module: delivery
 #. odoo-python
@@ -46,7 +48,7 @@ msgstr "%s (कॉपी)"
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.choose_delivery_carrier_view_form
 msgid "<i class=\"oi oi-arrow-right me-1\"/>Get rate"
-msgstr ""
+msgstr "<i class=\"oi oi-arrow-right me-1\"/>रेट पाएं"
 
 #. module: delivery
 #. odoo-python
@@ -56,6 +58,9 @@ msgid ""
 "                    Buy Odoo Enterprise now to get more providers.\n"
 "                </p>"
 msgstr ""
+"<p class=\"o_view_nocontent\">\n"
+"                    Odoo Enterprise को अभी खरीदें और ज़्यादा सेवाएं पाएं.\n"
+"                </p>"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -64,16 +69,18 @@ msgid ""
 "                                <span class=\"o_stat_text\">Environment</"
 "span>"
 msgstr ""
+"<span class=\"o_stat_text o_warning_text fw-bold\">टेस्ट</span>\n"
+"                                <span class=\"o_stat_text\">एन्वायरमेंट</span>"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid "<span class=\"o_stat_text text-danger\">No debug</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text text-danger\">कोई डीबग नहीं</span>"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid "<span class=\"text-success\">Debug requests</span>"
-msgstr ""
+msgstr "<span class=\"text-success\">डीबग रिक्वेस्ट</span>"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -82,11 +89,13 @@ msgid ""
 "                                <span class=\"o_stat_text\">Environment</"
 "span>"
 msgstr ""
+"<span class=\"text-success\">प्रॉडक्शन</span>\n"
+"                                <span class=\"o_stat_text\">एन्वायरमेंट</span>"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.delivery_report_saleorder_document
 msgid "<strong>Shipping Description</strong>"
-msgstr ""
+msgstr "<strong>शिपिंग की जानकारी</strong>"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__carrier_description
@@ -95,11 +104,13 @@ msgid ""
 "customers on the Sales Order and sales confirmation email.E.g. instructions "
 "for customers to follow."
 msgstr ""
+"ग्राहकों को सेल्स ऑर्डर और कन्फ़र्मेशन ईमेल पर डिलीवरी के बारे में बताने के लिए विवरण. उदा"
+"हरण के तौर पर, ग्राहकों को पालन करने के लिए दिए जाने वाले निर्देश।"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__integration_level
 msgid "Action while validating Delivery Orders"
-msgstr ""
+msgstr "डिलीवरी ऑर्डर की जांच करते समय की जाने वाली कार्रवाई"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__active
@@ -109,29 +120,30 @@ msgstr "सक्रिय"
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.choose_delivery_carrier_view_form
 msgid "Add"
-msgstr "जोड़ना"
+msgstr "जोड़ें"
 
 #. module: delivery
 #. odoo-python
 #: code:addons/delivery/models/sale_order.py:0
 #: code:addons/delivery/wizard/choose_delivery_carrier.py:0
 msgid "Add a shipping method"
-msgstr ""
+msgstr "शिपिंग का कोई तरीका जोड़ें"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_order_form_with_carrier
 msgid "Add shipping"
-msgstr ""
+msgstr "शिपिंग जोड़ें"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid "Additional margin"
-msgstr ""
+msgstr "अतिरिक्त मार्जिन"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__allow_cash_on_delivery
 msgid "Allow customers to choose Cash on Delivery as their payment method."
 msgstr ""
+"ग्राहकों को कैश ऑन डिलीवरी को उनके भुगतान के तरीके के रूप में चुनने की अनुमति दें।"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__amount
@@ -144,6 +156,7 @@ msgid ""
 "Amount of the order to benefit from a free shipping, expressed in the "
 "company currency"
 msgstr ""
+"फ़्री शिपिंग का फ़ायदा पाने के लिए ऑर्डर की कुल रकम, जिसे कंपनी की मुद्रा में दिखाया गया है"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -157,6 +170,8 @@ msgid ""
 "Are you sure you want the delivery to be free for this order? You might have "
 "forgotten to compute the rates."
 msgstr ""
+"क्या आप वाकई चाहते हैं कि इस ऑर्डर की डिलीवरी मुफ़्त हो? हो सकता है कि आप दरें लगाना भूल "
+"गए हों।"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -166,17 +181,17 @@ msgstr "उपलब्धता"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__available_carrier_ids
 msgid "Available Carriers"
-msgstr ""
+msgstr "उपलब्ध कैरियर"
 
 #. module: delivery
 #: model:ir.model.fields.selection,name:delivery.selection__delivery_carrier__delivery_type__base_on_rule
 msgid "Based on Rules"
-msgstr ""
+msgstr "नियमों पर आधारित"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__can_generate_return
 msgid "Can Generate Return"
-msgstr ""
+msgstr "रिटर्न जनरेट किया जा सकता है"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__carrier_id
@@ -184,7 +199,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_tree
 msgid "Carrier"
-msgstr ""
+msgstr "कैरियर"
 
 #. module: delivery
 #. odoo-python
@@ -192,36 +207,37 @@ msgstr ""
 msgid ""
 "Carrier %s cannot have the same tag in both Must Have Tags and Excluded Tags."
 msgstr ""
+"वाहक %s में 'ज़रूरी टैग' और 'शामिल न किए जाने वाले टैग', दोनों में एक ही टैग नहीं हो सकता।"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__carrier_description
 msgid "Carrier Description"
-msgstr ""
+msgstr "कैरियर की जानकारी"
 
 #. module: delivery
 #: model:ir.model.fields.selection,name:delivery.selection__payment_provider__custom_mode__cash_on_delivery
 msgid "Cash On Delivery"
-msgstr ""
+msgstr "कैश ऑन डिलीवरी"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__allow_cash_on_delivery
 #: model:payment.method,name:delivery.payment_method_cash_on_delivery
 #: model:payment.provider,name:delivery.payment_provider_cod
 msgid "Cash on Delivery"
-msgstr ""
+msgstr "कैश ऑन डिलीवरी"
 
 #. module: delivery
 #. odoo-javascript
 #: code:addons/delivery/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.js:0
 msgid "Choose a pick-up point"
-msgstr ""
+msgstr "पिक-अप पॉइंट चुनें"
 
 #. module: delivery
 #. odoo-javascript
 #: code:addons/delivery/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.js:0
 #: code:addons/delivery/static/src/js/location_selector/map_container/map_container.js:0
 msgid "Choose this location"
-msgstr ""
+msgstr "इस जगह को चुनें"
 
 #. module: delivery
 #. odoo-javascript
@@ -233,32 +249,32 @@ msgstr "बंद"
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__company_id
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__company_id
 msgid "Company"
-msgstr "संस्था"
+msgstr "कंपनी"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_price_rule_form
 msgid "Condition"
-msgstr ""
+msgstr "शर्त"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_res_partner
 msgid "Contact"
-msgstr "संपर्क"
+msgstr "संपर्क करें"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid "Content"
-msgstr ""
+msgstr "कॉन्टेंट"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__display_price
 msgid "Cost"
-msgstr "कीम"
+msgstr "कीमत"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__country_ids
 msgid "Countries"
-msgstr ""
+msgstr "देश"
 
 #. module: delivery
 #: model:ir.model,website_form_label:delivery.model_res_partner
@@ -271,7 +287,7 @@ msgstr "ग्राहक बनाएं"
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__create_uid
 #: model:ir.model.fields,field_description:delivery.field_delivery_zip_prefix__create_uid
 msgid "Created by"
-msgstr "द्वारा निर्मित"
+msgstr "इन्होंने बनाया"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__create_date
@@ -291,43 +307,43 @@ msgstr "करेंसी"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_payment_provider__custom_mode
 msgid "Custom Mode"
-msgstr ""
+msgstr "कस्टम मोड"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__partner_id
 msgid "Customer"
-msgstr "साथी"
+msgstr "ग्राहक"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__debug_logging
 msgid "Debug logging"
-msgstr ""
+msgstr "डीबग लॉगिंग"
 
 #. module: delivery
 #: model_terms:ir.actions.act_window,help:delivery.action_delivery_carrier_form
 msgid "Define a new delivery method"
-msgstr ""
+msgstr "एक नया डिलीवरी तरीका तय करें"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
 msgid "Delivery Carrier"
-msgstr ""
+msgstr "डिलीवरी कैरियर"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_choose_delivery_carrier
 msgid "Delivery Carrier Selection Wizard"
-msgstr ""
+msgstr "डिलीवरी कैरियर चुनने के लिए विज़ॉर्ड"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_price_rule_form
 msgid "Delivery Cost"
-msgstr ""
+msgstr "डिलीवरी की कीमत"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__delivery_message
 #: model:ir.model.fields,field_description:delivery.field_sale_order__delivery_message
 msgid "Delivery Message"
-msgstr ""
+msgstr "डिलीवरी मैसेज"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__name
@@ -336,44 +352,44 @@ msgstr ""
 #: model:ir.model.fields,field_description:delivery.field_sale_order__carrier_id
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid "Delivery Method"
-msgstr ""
+msgstr "डिलीवरी का तरीका"
 
 #. module: delivery
 #: model:ir.actions.act_window,name:delivery.action_delivery_carrier_form
 #: model:ir.ui.menu,name:delivery.sale_menu_action_delivery_carrier_form
 msgid "Delivery Methods"
-msgstr ""
+msgstr "डिलीवरी का तरीका"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__delivery_price
 msgid "Delivery Price"
-msgstr ""
+msgstr "डिलीवरी की कीमत"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_delivery_price_rule
 msgid "Delivery Price Rules"
-msgstr ""
+msgstr "डिलीवरी की कीमत के नियम"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__product_id
 msgid "Delivery Product"
-msgstr ""
+msgstr "डिलीवरी प्रॉडक्ट"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order__delivery_set
 msgid "Delivery Set"
-msgstr ""
+msgstr "डिलीवरी सेट"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_delivery_zip_prefix
 msgid "Delivery Zip Prefix"
-msgstr ""
+msgstr "डिलीवरी ज़िप का प्रीफ़िक्स"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order__recompute_delivery_price
 #: model:ir.model.fields,field_description:delivery.field_sale_order_line__recompute_delivery_price
 msgid "Delivery cost should be recomputed"
-msgstr ""
+msgstr "डिलीवरी की कीमत को फिर से तय करना होगा"
 
 #. module: delivery
 #: model_terms:ir.actions.act_window,help:delivery.action_delivery_zip_prefix_list
@@ -381,6 +397,8 @@ msgid ""
 "Delivery zip prefixes are assigned to delivery carriers to restrict\n"
 "            which zips it is available to."
 msgstr ""
+"डिलीवरी ज़िप प्रीफ़िक्स, डिलीवरी करने वाले वाहकों को दिए जाते हैं, \n"
+"            ताकि उन पर यह पाबंदी लगाई जा सके कि वे किन ज़िप कोड में सेवा दे सकते हैं।"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -390,12 +408,12 @@ msgstr "विवरण"
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid "Destination"
-msgstr ""
+msgstr "डेस्टिनेशन"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__sequence
 msgid "Determine the display order"
-msgstr ""
+msgstr "दिखाने का क्रम तय करें"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.choose_delivery_carrier_view_form
@@ -424,6 +442,9 @@ msgid ""
 "            UPS Express, UPS Standard) with a set of pricing rules attached\n"
 "            to each method."
 msgstr ""
+"हर कैरियर (जैसे, UPS) के डिलीवरी के कई तरीके (जैसे,\n"
+"            UPS Express, UPS Standard)हो सकते हैं और हर तरीके के साथ \n"
+"            कीमत तय करने के नियम भी जुड़े होते हैं।"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__prod_environment
@@ -434,13 +455,13 @@ msgstr "एन्वायरमेंट"
 #. odoo-python
 #: code:addons/delivery/models/delivery_carrier.py:0
 msgid "Error: this delivery method is not available for this address."
-msgstr ""
+msgstr "गड़बड़ी: यह डिलीवरी तरीका इस पते के लिए उपलब्ध नहीं है।"
 
 #. module: delivery
 #. odoo-python
 #: code:addons/delivery/models/delivery_carrier.py:0
 msgid "Error: this delivery method is not available."
-msgstr ""
+msgstr "गड़बड़ी: यह डिलीवरी तरीका उपलब्ध नहीं है।"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__invoice_policy
@@ -450,21 +471,25 @@ msgid ""
 "Real Cost: the customer will be invoiced the real cost of the shipping, the "
 "cost of theshipping will be updated on the SO after the delivery."
 msgstr ""
+"अंदाज़न लागत: ग्राहक को शिपिंग की अनुमानित लागत का इनवॉइस भेजा जाएगा.\n"
+"असली लागत: ग्राहक को शिपिंग की असली लागत का इनवॉइस भेजा जाएगा, डिलीवरी के बाद सेल्"
+"स ऑर्डर पर शिपिंग की लागत अपडेट की जाएगी।"
 
 #. module: delivery
 #: model:ir.model.fields.selection,name:delivery.selection__delivery_carrier__invoice_policy__estimated
 msgid "Estimated cost"
-msgstr ""
+msgstr "अंदाज़न लागत"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__excluded_tag_ids
 msgid "Excluded Tags"
-msgstr ""
+msgstr "शामिल नहीं किए गए टैग्स"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_sale_order__carrier_id
 msgid "Fill this field if you plan to invoice the shipping based on picking."
 msgstr ""
+"अगर आप पिकिंग के आधार पर शिपिंग का बिल भेजने की योजना बना रहे हैं, तो इस फ़ील्ड को भरें।"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -472,22 +497,24 @@ msgid ""
 "Filling this form allows you to make the shipping method available according "
 "to the content of the order or its destination."
 msgstr ""
+"इस फ़ॉर्म को भरने से आपको यह सुविधा मिलेगी कि आप ऑर्डर के सामान या उसके पते के आधार पर "
+"शिपिंग का तरीका चुन सकें।"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__fixed_margin
 msgid "Fixed Margin"
-msgstr ""
+msgstr "तय मार्जिन"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__fixed_price
 #: model:ir.model.fields.selection,name:delivery.selection__delivery_carrier__delivery_type__fixed
 msgid "Fixed Price"
-msgstr ""
+msgstr "तय कीमत"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__free_over
 msgid "Free if order amount is above"
-msgstr ""
+msgstr "ऑर्डर की तय रकम से ज़्यादा होने पर मुफ़्त डिलीवरी"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__return_label_on_delivery
@@ -771,7 +798,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:delivery.selection__delivery_price_rule__variable__price
 #: model:ir.model.fields.selection,name:delivery.selection__delivery_price_rule__variable_factor__price
 msgid "Price"
-msgstr "कीम"
+msgstr "कीमत"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_price_rule_form
@@ -782,7 +809,7 @@ msgstr ""
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid "Pricing"
-msgstr "कीम"
+msgstr "कीमत"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__price_rule_ids
@@ -792,7 +819,7 @@ msgstr ""
 #. module: delivery
 #: model:ir.model,name:delivery.model_product_category
 msgid "Product Category"
-msgstr "उत्पाद श्रेणी"
+msgstr "प्रॉडक्ट कैटगरी"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order_line__product_qty
@@ -835,7 +862,7 @@ msgstr "सेल्स ऑर्डर"
 #. module: delivery
 #: model:ir.model,name:delivery.model_sale_order_line
 msgid "Sales Order Line"
-msgstr "परचेज़ ऑर्डर लाइन"
+msgstr "सेल्स ऑर्डर लाइन"
 
 #. module: delivery
 #. odoo-javascript
@@ -847,7 +874,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__sequence
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__sequence
 msgid "Sequence"
-msgstr "अनुक्रम"
+msgstr "सीक्वेंस"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order__is_all_service
