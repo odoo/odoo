@@ -144,7 +144,7 @@ export class UseSuggestion {
         this.clearSearch();
     }
     get thread() {
-        return this.composer.thread || this.composer.message.thread;
+        return this.composer.thread || this.composer.message?.thread;
     }
     insert(option) {
         const position = this.composer.selection.start;
@@ -198,6 +198,9 @@ export class UseSuggestion {
     }
 
     async fetchSuggestions() {
+        if (!this.thread || status(this.comp) === "destroyed") {
+            return;
+        }
         let resetFetchingState = true;
         try {
             this.abortController?.abort();
@@ -219,7 +222,7 @@ export class UseSuggestion {
                 this.state.isFetching = false;
             }
         }
-        if (status(this.comp) === "destroyed") {
+        if (!this.thread || status(this.comp) === "destroyed") {
             return;
         }
         this.update();
