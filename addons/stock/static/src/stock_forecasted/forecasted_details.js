@@ -151,17 +151,19 @@ export class ForecastedDetails extends Component {
     _mergeLines(){
         let lines = this.lines;
         this.mergesLinesData = {};
-        let lastIndex;
+        let lastIndex = 0;
         for(let i = 0; i < lines.length-1; i++){
             const line = lines[i];
             const nextLine = lines[i + 1];
             if (line.product.id != nextLine.product.id || !this._sameLineRule(line, nextLine)) {
                 lastIndex = i+1;
+                continue;
+            }
+            if (!this.mergesLinesData[lastIndex]){
                 this.mergesLinesData[lastIndex] = {
                     rowcount: 1,
-                    tot_qty: nextLine.quantity,
+                    tot_qty: line.quantity,
                 };
-                continue;
             }
             this.mergesLinesData[lastIndex].rowcount += 1;
             this.mergesLinesData[lastIndex].tot_qty += nextLine.quantity;
