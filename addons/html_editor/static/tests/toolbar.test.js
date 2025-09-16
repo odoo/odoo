@@ -1329,17 +1329,17 @@ test("should not close image cropper while loading media", async () => {
     await animationFrame();
     await click('.btn[name="image_crop"]');
 
-    await waitFor('.btn[title="Discard"]', { timeout: 1000 });
-    await click('.btn[title="Discard"]');
+    await waitFor('.btn:contains("Discard")', { timeout: 1000 });
+    await click('.btn:contains("Discard")');
     await animationFrame();
 
     // Cropper should not close as the cropper still loading the image.
-    expect('.btn[title="Discard"]').toHaveCount(1);
+    expect('.btn:contains("Discard")').toHaveCount(1);
 
     // Once the image loaded we should be able to close
     await cropperReadyPromise;
-    await click('.btn[title="Discard"]');
-    await waitForNone('.btn[title="Discard"]', { timeout: 1500 });
+    await click('.btn:contains("Discard")');
+    await waitForNone('.btn:contains("Discard")', { timeout: 1500 });
 });
 
 test("toolbar shouldn't be visible if can_display_toolbar === false", async () => {
