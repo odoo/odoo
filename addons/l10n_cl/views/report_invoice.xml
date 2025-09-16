@@ -148,9 +148,9 @@
 
         <xpath expr="//t[@t-set='layout_document_title']" position="replace"/>
 
-        <t t-set="section_subtotal" t-value="line.get_section_subtotal()" position="before">
+        <xpath expr="//t[@t-foreach='lines_to_report']/t" position="before">
             <t t-set="line_amounts" t-value="line._l10n_cl_get_line_amounts()"/>
-        </t>
+        </xpath>
 
         <xpath expr="//span[@t-field='line.price_unit']" position="before">
             <t t-if="'second_currency' in line_amounts" t-set="line_second_currency_round" t-value="line_amounts['second_currency']['round_currency']"/>
