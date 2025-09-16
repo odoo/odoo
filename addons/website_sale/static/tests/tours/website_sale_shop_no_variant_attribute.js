@@ -17,7 +17,7 @@ registry.category("web_tour.tours").add('tour_shop_no_variant_attribute', {
     },
     {
         content: "add to cart",
-        trigger: 'a:contains(Add to cart)',
+        trigger: 'button:contains(Add to cart)',
         run: "click",
     },
         tourUtils.goToCart(),

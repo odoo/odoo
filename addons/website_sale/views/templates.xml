@@ -447,16 +447,14 @@
         <t t-set="pricelist" t-value="request.pricelist"/>
         <t t-set="pricelist_label">Pricelist</t>
         <div t-attf-class="o_pricelist_dropdown dropdown #{_classes if hasPricelistDropdown else 'd-none'}">
-            <a
-                role="button"
-                href="#"
+            <button
                 t-attf-class="dropdown-toggle btn px-2"
                 data-bs-toggle="dropdown"
             >
                 <small class="d-none d-md-inline opacity-75"><t t-out="pricelist_label"/>:</small>
                 <span class="d-none d-md-inline" t-out="pricelist and pricelist.name or ' - '" />
                 <span class="d-md-none"><t t-out="pricelist_label"/></span>
-            </a>
+            </button>
             <div class="dropdown-menu" role="menu">
                 <t t-foreach="website_sale_pricelists" t-as="pl">
                     <t t-set="_is_active" t-value="pricelist.id == pl.id"/>
@@ -725,16 +723,14 @@
                                                 <t t-call="website_sale.search" placeholder="placeholder" search="original_search or search"/>
                                             </div>
                                             <!-- Mobile Search button -->
-                                            <a
+                                            <button
                                                 t-attf-class="btn o_not_editable d-inline-block d-sm-none me-auto btn-{{navClass}}"
                                                 data-bs-target="#o_wsale_search_modal"
                                                 data-bs-toggle="modal"
-                                                role="button"
                                                 title="Search Products"
-                                                href="#"
                                             >
                                                 <i class="oi oi-search" role="img"/>
-                                            </a>
+                                            </button>
                                         </t>
                                         <div t-attf-class="{{'d-lg-none' if not hasPricelistDropdown and not is_view_active('website_sale.sort') else ''}} o_wsale_products_header_dropdown_wrap d-flex gap-3">
                                             <t
@@ -966,9 +962,7 @@
                 t-value="isSortingBy and isSortingBy[0][0] or website.shop_default_sort"
             />
             <t t-set="_sort_label">Sort By</t>
-            <a
-                role="button"
-                href="#"
+            <button
                 t-attf-class="dropdown-toggle btn px-2"
                 data-bs-toggle="dropdown"
             >
@@ -980,7 +974,7 @@
                     <span t-else="" t-out="dict(website_sale_sortable)[website.shop_default_sort]"/>
                 </span>
                 <i t-if="_icon_classes" t-attf-class="fa fa-sort {{_icon_classes}}" role="img"/>
-            </a>
+            </button>
             <div class="dropdown-menu dropdown-menu-end" role="menu">
                 <t t-foreach="website_sale_sortable" t-as="sortby">
                     <t t-set="_is_active" t-value="_current_sort == sortby[0]"/>
@@ -1615,16 +1609,14 @@
                     t-attf-class="navbar position-sticky d-flex gap-1 gap-lg-2 flex-shrink-0 bg-body rounded mb-2 px-2 px-lg-3 shadow {{floatBar_hasSearch and 'ps-1 ps-lg-1'}}"
                 >
                     <div t-if="floatBar_hasSearch">
-                        <a
+                        <button
                             t-attf-class="btn o_not_editable {{(wsale_has_filters_btn or floatBar_hasSort or floatBar_hasPricelist) and 'me-n2'}}"
                             data-bs-target="#o_wsale_search_modal"
                             data-bs-toggle="modal"
-                            role="button"
                             title="Search Products"
-                            href="#"
                         >
                             <i class="oi oi-search" role="img"/>
-                        </a>
+                        </button>
                     </div>
                     <span
                         t-if="floatBar_hasSearch and (wsale_has_filters_btn or floatBar_hasSort or floatBar_hasPricelist)"
@@ -2330,17 +2322,15 @@
                 id="add_to_cart_wrap"
                 t-attf-class="{{'d-none' if combination_info['prevent_zero_price_sale'] else 'd-flex'}} flex-grow-1 flex-lg-grow-0 flex-wrap align-items-center gap-2 {{'' if is_50_pc else ' w-100'}}"
             >
-                <a
+                <button
                     id="add_to_cart"
-                    role="button"
-                    href="#"
                     t-attf-class="btn btn-primary js_check_product a-submit flex-grow-1"
                     t-att-data-show-quantity="is_view_active('website_sale.product_quantity')"
                     data-animation-selector=".o_wsale_product_images"
                 >
                     <i class="fa fa-shopping-cart me-2"/>
                     Add to cart
-                </a>
+                </button>
             </div>
             <div
                 id="product_option_block"
@@ -2588,15 +2578,14 @@
                 t-attf-class="css_quantity input-group {{'d-none' if combination_info['prevent_zero_price_sale'] else 'd-inline-flex order-first'}} align-middle border"
                 contenteditable="false"
             >
-                <a
-                    t-attf-href="#"
+                <button
                     class="css_quantity_minus btn btn-link pe-2 js_add_cart_json border-0"
                     aria-label="Remove one"
                     title="Remove one"
                     name="remove_one"
                 >
                     <i class="oi oi-minus text-600"/>
-                </a>
+                </button>
                 <input
                     type="text"
                     t-attf-class="form-control quantity text-center border-0"
@@ -2604,14 +2593,13 @@
                     name="add_qty"
                     t-att-value="1"
                 />
-                <a
-                    t-attf-href="#"
+                <button
                     class="css_quantity_plus btn btn-link ps-2 js_add_cart_json border-0"
                     aria-label="Add one"
                     title="Add one"
                 >
                     <i class="oi oi-plus text-600"/>
-                </a>
+                </button>
             </div>
         </div>
     </template>
@@ -2638,14 +2626,12 @@
         name="Buy Now Button"
     >
         <xpath expr="//div[@id='add_to_cart_wrap']" position="inside">
-            <a
-                role="button"
+            <button
                 t-attf-class="btn btn-outline-primary o_we_buy_now w-100 {{'' if is_view_active('website_sale.cta_wrapper_boxed') or is_view_active('website_sale.cta_wrapper_large') or not is_50_pc else 'w-sm-auto'}} {{'flex-grow-1' if not is_50_pc else ''}}"
-                href="#"
             >
                 <i class="fa fa-bolt me-2"/>
                 Buy now
-            </a>
+            </button>
         </xpath>
     </template>
 
@@ -2933,14 +2919,13 @@
                                     name="o_wsale_cart_line_button_container"
                                     t-attf-class="d-none d-md-flex align-items-center gap-2 mt-2 {{'justify-content-between' if is_combo else ''}}"
                                 >
-                                    <a
-                                        href='#'
-                                        class="js_delete_product small"
+                                    <button
+                                        class="js_delete_product small border-0 bg-transparent p-0 link-primary btn-link"
                                         aria-label="Remove from cart"
                                         title="Remove from cart"
                                     >
                                         Remove
-                                    </a>
+                                    </button>
                                     <div t-if="is_combo" class="d-none d-md-block ms-auto"><t t-call="website_sale.cart_lines_quantity"/></div>
                                 </div>
                             </div>
@@ -2979,14 +2964,13 @@
             t-attf-name="{{'website_sale_cart_line_quantity' if not is_mobile else 'website_sale_cart_line_quantity_mobile'}}"
         >
             <t t-if="should_show_quantity_selector and line._is_sellable()">
-                <a
-                    href="#"
+                <button
                     class="btn btn-link d-inline-block border-end-0"
                     aria-label="Remove one"
                     title="Remove one"
                 >
                     <i class="oi oi-minus position-relative z-1"/>
-                </a>
+                </button>
                 <input
                     type="text"
                     class="js_quantity quantity form-control border-0"
@@ -2995,24 +2979,23 @@
                     t-att-value="line._get_displayed_quantity()"
                 />
                 <t t-if="line._get_shop_warning(clear=False)">
-                    <a href="#" class="btn btn-link">
+                    <button class="btn btn-link">
                         <i
                             class="fa fa-warning text-warning"
                             t-att-title="line._get_shop_warning()"
                             role="img"
                             aria-label="Warning"
                         />
-                    </a>
+                    </button>
                 </t>
-                <a
+                <button
                     t-else=""
-                    href="#"
                     class="btn btn-link d-inline-block border-start-0"
                     aria-label="Add one"
                     title="Add one"
                 >
                     <i class="oi oi-plus position-relative z-1"/>
-                </a>
+                </button>
             </t>
             <t t-else="">
                 <input

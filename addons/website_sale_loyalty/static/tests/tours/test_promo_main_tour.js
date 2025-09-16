@@ -22,7 +22,7 @@ registry.category("web_tour.tours").add('shop_sale_loyalty', {
         },
         {
             content: "click on 'Add to Cart' button",
-            trigger: "a:contains(Add to cart)",
+            trigger: "button:contains(Add to cart)",
             run: "click",
         },
             tourUtils.goToCart({quantity: 2}),

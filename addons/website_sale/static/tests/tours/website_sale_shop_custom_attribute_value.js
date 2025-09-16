@@ -19,7 +19,7 @@
         run: "edit Wood",
     }, {
         id: 'add_cart_step',
-        trigger: 'a:contains(Add to cart)',
+        trigger: 'button:contains(Add to cart)',
         run: 'click',
     },
     {

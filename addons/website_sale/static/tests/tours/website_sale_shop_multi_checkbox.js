@@ -35,7 +35,7 @@ registry.category("web_tour.tours").add('tour_shop_multi_checkbox', {
     },
     {
         content: "add to cart",
-        trigger: 'a:contains(Add to cart)',
+        trigger: 'button:contains(Add to cart)',
         run: "click",
     },
         tourUtils.goToCart(),
@@ -69,7 +69,7 @@ registry.category("web_tour.tours").add('tour_shop_multi_checkbox_single_value',
     },
     {
         content: "add to cart",
-        trigger: 'a:contains(Add to cart)',
+        trigger: 'button:contains(Add to cart)',
         run: "click",
     },
         tourUtils.goToCart(),

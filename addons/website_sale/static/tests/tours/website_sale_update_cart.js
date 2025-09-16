@@ -47,7 +47,7 @@ registry.category('web_tour.tours').add('shop_update_cart', {
         },
         {
             content: "remove Storage Box",
-            trigger: '#cart_products div:has(a[name="o_cart_line_product_link"]>h6:contains("Storage Box")) a:has(i.oi-minus)',
+            trigger: '#cart_products div:has(a[name="o_cart_line_product_link"]>h6:contains("Storage Box")) button:has(i.oi-minus)',
             run: "click",
         },
         {
@@ -55,7 +55,7 @@ registry.category('web_tour.tours').add('shop_update_cart', {
         },
         {
             content: "add one more",
-            trigger: '#cart_products div:has(a[name="o_cart_line_product_link"]>h6:contains("Conference Chair")) a:has(i.oi-plus)',
+            trigger: '#cart_products div:has(a[name="o_cart_line_product_link"]>h6:contains("Conference Chair")) button:has(i.oi-plus)',
             run: "click",
         },
         {

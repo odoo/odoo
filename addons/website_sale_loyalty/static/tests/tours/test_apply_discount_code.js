@@ -15,7 +15,7 @@ registry.category("web_tour.tours").add('apply_discount_code_program_multi_rewar
         },
         {
             content: 'Add Super Chair into cart',
-            trigger: 'a:contains(Add to cart)',
+            trigger: 'button:contains(Add to cart)',
             run: "click",
         },
         tourUtils.goToCart(),
