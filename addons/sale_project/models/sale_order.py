@@ -189,6 +189,7 @@ class SaleOrder(models.Model):
                 'default_company_id': self.company_id.id,
                 'generate_milestone': default_sale_line.product_id.service_policy == 'delivered_milestones',
                 'default_name': self.name,
+                'default_allow_milestones': 'delivered_milestones' in self.order_line.product_id.mapped('service_policy'),
             },
         }
 
