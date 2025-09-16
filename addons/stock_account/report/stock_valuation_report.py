@@ -30,8 +30,9 @@ class StockValuationReport(models.AbstractModel):
         # Check if date is a string instance
         if isinstance(date, str):
             date = fields.Date.from_string(date)
-
         if date == fields.Date.today():
+            date = False
+        if date:
             inventory_data = company.stock_value()
             accounting_data = company.stock_accounting_value()
         else:
