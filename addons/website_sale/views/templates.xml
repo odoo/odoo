@@ -2064,12 +2064,13 @@
                             <div id="o_wsale_product_details_content" t-attf-class="js_product js_main_product o_wsale_content_contained container">
 
                                 <!-- Product title (purchase not available)-->
+                                <t t-set="is_add_to_cart_possible" t-value="product._is_add_to_cart_possible()"/>
                                 <t
-                                    t-if="not product._is_add_to_cart_possible()"
+                                    t-if="not is_add_to_cart_possible"
                                     t-call="website_sale.product_title"
                                 />
 
-                                <form t-if="product._is_add_to_cart_possible()">
+                                <form t-if="is_add_to_cart_possible">
                                     <!-- Product title (purchase available)-->
                                     <t t-call="website_sale.product_title"/>
 
@@ -2270,6 +2271,7 @@
         <div
             t-attf-class="o_wsale_product_details_content_section o_wsale_product_details_content_section_title {{'mb-3' if not product.description_ecommerce else ''}}"
         >
+            <!-- FIXME VCR variable seems unused -->
             <t t-set="base_url" t-value="website.get_base_url()"/>
             <h1
                 t-attf-class="h3 {{'mb-3' if not product.description_ecommerce and not is_view_active('website_sale.product_comment') else ''}}"
@@ -2308,10 +2310,10 @@
                     t-value="product_variant.all_product_tag_ids"
                 />
             </t>
-            <p t-if="(not product._is_add_to_cart_possible()) and (not product.active)" class="alert alert-warning">
+            <p t-if="(not is_add_to_cart_possible) and (not product.active)" class="alert alert-warning">
                 This product is no longer available.
             </p>
-            <p t-elif="not product._is_add_to_cart_possible()" class="alert alert-warning">
+            <p t-elif="not is_add_to_cart_possible" class="alert alert-warning">
                 This product has no valid combination.
             </p>
         </div>
@@ -2478,7 +2480,7 @@
         </xpath>
     </template>
 
-    <template id="product_tags" name="Product Tags" active="True">
+    <template id="website_sale.product_tags" name="Product Tags" active="True">
         <t t-set="visible_tags" t-value="all_product_tags.filtered('visible_to_customers')"/>
         <div
             t-attf-class="o_product_tags o_field_tags {{ 'd-flex flex-wrap align-items-center gap-2 mb-2 mt-1' if visible_tags else '' }}"
