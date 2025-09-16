@@ -21,10 +21,10 @@
             <t t-if="props.readonly">
                 <t t-if="value">
                     <t t-if="props.canOpen">
-                        <a class="o_form_uri" t-att-class="props.linkCssClass" t-att-href="linkHref" t-on-click.prevent.stop="() => this.openRecord('action')" t-esc="displayName"/>
+                        <a class="o_form_uri text-truncate d-inline-block w-100 align-middle" t-att-class="props.linkCssClass" t-att-href="linkHref" t-on-click.prevent.stop="() => this.openRecord('action')" t-esc="displayName" t-att-title="displayName"/>
                     </t>
                     <t t-else="">
-                        <span t-esc="displayName"/>
+                        <span t-esc="displayName" t-att-title="displayName" class="text-truncate d-inline-block w-100 align-middle"/>
                     </t>
                 </t>
             </t>
