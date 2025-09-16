@@ -1,5 +1,11 @@
 import { expect, test } from "@odoo/hoot";
-import { defineWebsiteModels, setupWebsiteBuilder } from "../website_helpers";
+import {
+    defineWebsiteModels,
+    getDragHelper,
+    setupWebsiteBuilder,
+    setupWebsiteBuilderWithSnippet,
+    waitForEndOfOperation,
+} from "../website_helpers";
 import { contains, onRpc } from "@web/../tests/web_test_helpers";
 import { click } from "@odoo/hoot-dom";
 
@@ -170,4 +176,21 @@ test("save social medias", async () => {
 
     await contains(".o-snippets-top-actions button[data-action='save']").click();
     expect(writeCalled).toBe(true, { message: "did not write social links" });
+});
+
+test("Edit share icon", async () => {
+    const dragAndDropSnippet = async (dataSnippet) => {
+        const dragUtils = await contains(
+            `.o-snippets-menu #snippet_content .o_snippet_thumbnail[data-snippet='${dataSnippet}']`
+        ).drag();
+        await dragUtils.moveTo(":iframe .s_text_image .oe_drop_zone");
+        await dragUtils.drop(getDragHelper());
+        await waitForEndOfOperation();
+    };
+    await setupWebsiteBuilderWithSnippet("s_text_image", { loadIframeBundles: true });
+    // Add a dummy snippet so that the page is dirty
+    await dragAndDropSnippet("s_inline_text");
+    await dragAndDropSnippet("s_share");
+    await contains(":iframe .s_share a i").dblclick();
+    expect(".modal-content").toBeDisplayed();
 });

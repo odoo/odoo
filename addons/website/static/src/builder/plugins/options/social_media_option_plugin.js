@@ -144,6 +144,8 @@ class SocialMediaOptionPlugin extends Plugin {
         normalize_handlers: this.normalize.bind(this),
         save_handlers: this.saveRecordedSocialMedia.bind(this),
         extra_contenteditable_handlers: this.extraContentEditableHandlers.bind(this),
+        force_not_editable_selector: [".s_share"],
+        force_editable_selector: [".s_share a > i", ".s_share .s_share_title"],
     };
 
     extraContentEditableHandlers(filteredContentEditableEls) {
