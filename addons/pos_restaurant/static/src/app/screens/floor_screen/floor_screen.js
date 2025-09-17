@@ -619,25 +619,10 @@ export class FloorScreen extends Component {
         this.pos.restoreOrdersToOriginalTable(mainOrder, table);
     }
     _getNewTableNumber() {
-        let firstNum = 1;
-        const tablesNumber = [
-            ...new Set(
-                this.activeTables
-                    .map((table) => table.table_number)
-                    .sort(function (a, b) {
-                        return a - b;
-                    })
-            ),
-        ];
-
-        for (let i = 0; i < tablesNumber.length; i++) {
-            if (tablesNumber[i] == firstNum) {
-                firstNum += 1;
-            } else {
-                break;
-            }
+        if (!this.activeTables?.length) {
+            return 1;
         }
-        return firstNum;
+        return Math.max(...this.activeTables.map((t) => t.table_number)) + 1;
     }
     get activeFloor() {
         return this.state.selectedFloorId
