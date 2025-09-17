@@ -735,23 +735,34 @@ test.tags("focus required");
 test("[text composer] quick edit last self-message from UP arrow", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "general" });
-    pyEnv["mail.message"].create({
-        author_id: serverState.partnerId,
-        body: "Test",
-        attachment_ids: [],
-        message_type: "comment",
-        model: "discuss.channel",
-        res_id: channelId,
-    });
+    pyEnv["mail.message"].create([
+        {
+            author_id: serverState.partnerId,
+            body: "Test-1",
+            attachment_ids: [],
+            message_type: "comment",
+            model: "discuss.channel",
+            res_id: channelId,
+        },
+        {
+            author_id: serverState.partnerId,
+            body: "Test-2",
+            attachment_ids: [],
+            message_type: "comment",
+            model: "discuss.channel",
+            res_id: channelId,
+        },
+    ]);
     await start();
     await openDiscuss(channelId);
-    await contains(".o-mail-Message-content", { text: "Test" });
+    await contains(".o-mail-Message-content", { text: "Test-1" });
+    await contains(".o-mail-Message-content", { text: "Test-2" });
     await contains(".o-mail-Message .o-mail-Composer", { count: 0 });
     triggerHotkey("ArrowUp");
-    await contains(".o-mail-Message .o-mail-Composer");
+    await contains(".o-mail-Message .o-mail-Composer-input", { value: "Test-2" });
     triggerHotkey("Escape");
     await contains(".o-mail-Message .o-mail-Composer", { count: 0 });
-    await contains(".o-mail-Composer-input:focus");
+    await contains(".o-mail-Composer.o-focused");
     // non-empty composer should not trigger quick edit
     await insertText(".o-mail-Composer-input", "Shrek");
     triggerHotkey("ArrowUp");
@@ -760,6 +771,15 @@ test("[text composer] quick edit last self-message from UP arrow", async () => {
     await tick();
     await tick();
     await contains(".o-mail-Message .o-mail-Composer", { count: 0 });
+    // ArrowUp for quick edit last stays on last edit message, does not jump to older messages.
+    await insertText(".o-mail-Composer-input", "", { replace: true });
+    triggerHotkey("ArrowUp");
+    await insertText(".o-mail-Message .o-mail-Composer-input", "", { replace: true });
+    triggerHotkey("ArrowUp");
+    await contains(".o-mail-Message .o-mail-Composer-input", { value: "" });
+    await insertText(".o-mail-Message .o-mail-Composer-input", "edited message", { replace: true });
+    triggerHotkey("Enter");
+    await contains(".o-mail-Message-content", { text: "edited message (edited)" });
 });
 
 test.tags("focus required", "html composer");
