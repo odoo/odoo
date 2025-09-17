@@ -762,16 +762,20 @@ class AccountPaymentRegister(models.TransientModel):
                 total_amount_values = wizard._get_total_amounts_to_pay(wizard.batches)
                 html_lines = []
                 if wizard.installments_mode == 'full':
-                    if (
+                    is_full_match = (
                         wizard.currency_id.is_zero(total_amount_values['full_amount'] - wizard.amount)
                         and wizard.currency_id.is_zero(total_amount_values['full_amount'] - total_amount_values['amount_by_default'])
-                    ):
-                        wizard.installments_switch_amount = 0.0
-                    else:
-                        wizard.installments_switch_amount = total_amount_values['amount_by_default']
+                    )
+                    wizard.installments_switch_amount = 0.0 if is_full_match else total_amount_values['amount_by_default']
+                    if not is_full_match and not wizard.currency_id.is_zero(wizard.amount):
+                        switch_message = (
+                            _("Consider paying the amount with %(btn_start)searly payment discount%(btn_end)s instead.")
+                            if total_amount_values['epd_applied']
+                            else _("Consider paying in %(btn_start)sinstallments%(btn_end)s instead.")
+                        )
                         html_lines += [
                             _("This is the full amount."),
-                            _("Consider paying in %(btn_start)sinstallments%(btn_end)s instead."),
+                            switch_message,
                         ]
                 elif wizard.installments_mode == 'overdue':
                     wizard.installments_switch_amount = total_amount_values['full_amount']
