@@ -21,7 +21,7 @@ export class DiscussChannel extends Record {
     member_count = undefined;
     typingMembers = fields.Many("discuss.channel.member");
     firstUnreadMessage = fields.One("mail.message");
-
+    default_display_mode;
     correspondent = fields.One("discuss.channel.member", {
         /** @this {import("models").Thread} */
         compute() {
