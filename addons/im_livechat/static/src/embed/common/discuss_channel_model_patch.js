@@ -9,4 +9,7 @@ patch(DiscussChannel.prototype, {
         }
         return super.avatarUrl;
     },
+    get membersThatCanSeen() {
+        return super.membersThatCanSeen.filter((member) => member.livechat_member_type !== "bot");
+    },
 });

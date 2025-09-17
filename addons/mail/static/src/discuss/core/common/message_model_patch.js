@@ -10,7 +10,7 @@ const messagePatch = {
         this.hasEveryoneSeen = fields.Attr(false, {
             /** @this {import("models").Message} */
             compute() {
-                return this.thread?.membersThatCanSeen.every((m) => m.hasSeen(this));
+                return this.thread?.channel?.membersThatCanSeen.every((m) => m.hasSeen(this));
             },
         });
         this.hasNewMessageSeparator = fields.Attr(false, {
@@ -31,7 +31,7 @@ const messagePatch = {
         this.hasSomeoneSeen = fields.Attr(false, {
             /** @this {import("models").Message} */
             compute() {
-                return this.thread?.membersThatCanSeen
+                return this.thread?.channel?.membersThatCanSeen
                     .filter((member) => member.persona.notEq(this.author))
                     .some((m) => m.hasSeen(this));
             },
@@ -51,7 +51,7 @@ const messagePatch = {
     },
     /** @returns {import("models").ChannelMember[]} */
     get channelMemberHaveSeen() {
-        return this.thread.membersThatCanSeen.filter(
+        return this.thread.channel.membersThatCanSeen.filter(
             (m) => m.hasSeen(this) && m.persona.notEq(this.author)
         );
     },

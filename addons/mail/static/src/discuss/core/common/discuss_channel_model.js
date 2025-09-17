@@ -164,6 +164,15 @@ export class DiscussChannel extends Record {
         }
         return this.correspondent?.avatarUrl;
     }
+    /**
+     * To be overridden.
+     * The purpose is to exclude technical channel_member_ids like bots and avoid
+     * "wrong" seen message indicator
+     * @returns {import("models").ChannelMember[]}
+     */
+    get membersThatCanSeen() {
+        return this.channel_member_ids;
+    }
 }
 
 DiscussChannel.register();

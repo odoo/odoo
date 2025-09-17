@@ -292,15 +292,6 @@ const threadPatch = {
             });
         }).then(() => (this.markingAsRead = false));
     },
-    /**
-     * To be overridden.
-     * The purpose is to exclude technical channel_member_ids like bots and avoid
-     * "wrong" seen message indicator
-     * @returns {import("models").ChannelMember[]}
-     */
-    get membersThatCanSeen() {
-        return this.channel?.channel_member_ids;
-    },
     /** @override */
     get needactionCounter() {
         return this.isChatChannel
