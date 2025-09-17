@@ -93,7 +93,7 @@ class ChatbotCase(common.HttpCase):
             'chatbot_script_id': cls.chatbot_script.id,
         }, {
             'step_type': 'text',
-            'message': 'Please find documentation at https://www.odoo.com/documentation/19.0/',
+            'message': 'Please find documentation at https://www.odoo.com/documentation/latest/',
             'triggering_answer_ids': [(4, cls.step_dispatch_documentation.id)],
             'chatbot_script_id': cls.chatbot_script.id,
         }])

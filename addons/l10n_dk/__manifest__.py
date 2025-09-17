@@ -5,7 +5,7 @@
     'countries': ['dk'],
     'version': '1.3',
     'author': 'Odoo House ApS, VK DATA ApS, FlexERP ApS',
-    'website': 'https://www.odoo.com/documentation/master/applications/finance/fiscal_localizations.html',
+    'website': 'https://www.odoo.com/documentation/latest/applications/finance/fiscal_localizations.html',
     'category': 'Accounting/Localizations/Account Charts',
     'description': """
 

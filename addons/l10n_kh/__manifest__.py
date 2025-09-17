@@ -8,7 +8,7 @@
     'description': """
     Chart Of Account and Taxes for Cambodia.
     """,
-    'website': 'https://www.odoo.com/documentation/master/applications/finance/fiscal_localizations.html',
+    'website': 'https://www.odoo.com/documentation/latest/applications/finance/fiscal_localizations.html',
     'depends': [
         'account_qr_code_emv',
         'l10n_account_withholding_tax',
