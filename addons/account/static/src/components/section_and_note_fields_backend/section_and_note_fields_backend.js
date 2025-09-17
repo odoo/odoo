@@ -117,20 +117,12 @@ export class SectionAndNoteListRenderer extends ListRenderer {
         return this.record.data.collapse_composition;
     }
 
-    get showPricesButton() {
-        if (this.isSubSection(this.record)) {
-            const parentRecord = getParentSectionRecord(this.props.list, this.record);
-            return !parentRecord?.data?.collapse_prices && !parentRecord?.data?.collapse_composition;
-        }
-        return true;
+    get disablePricesButton() {
+        return this.shouldCollapse(this.record, 'collapse_prices') || this.disableCompositionButton;
     }
 
-    get showCompositionButton() {
-        if (this.isSubSection(this.record)) {
-            const parentRecord = getParentSectionRecord(this.props.list, this.record);
-            return !parentRecord?.data?.collapse_composition;
-        }
-        return true;
+    get disableCompositionButton() {
+        return this.shouldCollapse(this.record, 'collapse_composition');
     }
 
     async toggleCollapse(record, fieldName) {
@@ -325,21 +317,40 @@ export class SectionAndNoteListRenderer extends ListRenderer {
      * - If the parent is a subsection: use parent subsection OR its section.
      * @param {object} record
      * @param {string} fieldName
+     * @param {boolean} checkSection - if true, also evaluates the collapse state for section or
+     *  subsection records
      * @returns {boolean}
      */
-    shouldCollapse(record, fieldName) {
+    shouldCollapse(record, fieldName, checkSection = false) {
+        const parentSection = getParentSectionRecord(this.props.list, record);
+
+        // --- For sections ---
+        if (this.isSection(record) && checkSection) {
+            if (this.isTopSection(record)) {
+                return record.data[fieldName];
+            }
+            if (this.isSubSection(record)) {
+                return record.data[fieldName] || parentSection?.data[fieldName];
+            }
+            return false;
+        }
+
+        // `line_section` never collapses unless explicitly checked above
         if (this.isTopSection(record)) {
             return false;
-        } else {
-            const parentSection = getParentSectionRecord(this.props.list, record);
-            if (parentSection?.data.display_type === DISPLAY_TYPES.SUBSECTION) {
-                return (
-                    parentSection.data[fieldName]
-                    || getParentSectionRecord(this.props.list, parentSection)?.data[fieldName]
-                );
-            }
-            return parentSection?.data[fieldName];
         }
+
+        if (!parentSection) {
+            return false;
+        }
+
+        // --- For regular lines ---
+        if (this.isSubSection(parentSection)) {
+            const grandParent = getParentSectionRecord(this.props.list, parentSection);
+            return parentSection.data[fieldName] || grandParent?.data[fieldName];
+        }
+
+        return !!parentSection.data[fieldName];
     }
 
     getRowClass(record) {
@@ -453,6 +464,42 @@ export class SectionAndNoteListRenderer extends ListRenderer {
             }));
         }
         await this.props.list.applyCommands(commands, { sort: true });
+    }
+
+    /**
+     * @override
+     * This override basically resets the values of `collapse_` fields of subsection if it is dragged
+     * under hidden section.
+     */
+    async sortDrop(dataRowId, dataGroupId, options) {
+        await super.sortDrop(dataRowId, dataGroupId, options);
+
+        const record = this.props.list.records.find(r => r.id === dataRowId);
+        const parentSection = getParentSectionRecord(this.props.list, record);
+        const commands = [];
+
+        if (this.resetOnResequence(record, parentSection)) {
+            commands.push(x2ManyCommands.update(record.resId || record._virtualId, {
+                ...this.fieldsToReset(),
+            }));
+        }
+
+        await this.props.list.applyCommands(commands);
+    }
+
+    resetOnResequence(record, parentSection) {
+        return (
+            this.isSubSection(record)
+            && parentSection?.data.collapse_composition
+            && (record.data.collapse_composition || record.data.collapse_prices)
+        );
+    }
+
+    fieldsToReset() {
+        return {
+            ...(this.props.hideComposition && { collapse_composition: false }),
+            ...(this.props.hidePrices && { collapse_prices: false }),
+        };
     }
 }
 
