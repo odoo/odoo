@@ -1,5 +1,5 @@
 import { describe, expect, test } from "@odoo/hoot";
-import { animationFrame, Deferred, press, tick } from "@odoo/hoot-dom";
+import { animationFrame, Deferred, press, queryFirst, tick } from "@odoo/hoot-dom";
 import {
     asyncStep,
     patchWithCleanup,
@@ -290,4 +290,25 @@ test("when triggering jump to present, keeps showing old messages until recent o
     slowMessageFetchDeferred.resolve();
     await contains(".o-mail-Thread .o-mail-Message", { text: "first-message", count: 0 });
     await contains(".o-mail-Thread", { scroll: "bottom" });
+});
+
+test("focus composer after jump to present", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    pyEnv["mail.message"].create(
+        [...Array(40).keys()].map((i) => ({
+            body: `<p>Non Empty Message ${i}</p>`,
+            message_type: "comment",
+            model: "discuss.channel",
+            res_id: channelId,
+        }))
+    );
+    await start();
+    await openDiscuss(channelId);
+    await contains(".o-mail-Message", { count: 30 });
+    await contains(".o-mail-Composer.o-focused");
+    queryFirst(".o-mail-Composer-input").blur();
+    await contains(".o-mail-Composer.o-focused", { count: 0 });
+    await click("[title='Jump to Present']");
+    await contains(".o-mail-Composer.o-focused");
 });
