@@ -1,4 +1,4 @@
-import { Component, markup, onMounted, useRef } from "@odoo/owl";
+import { Component, markup, onMounted, useRef, onPatched } from "@odoo/owl";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 import {
     clickableBuilderComponentProps,
@@ -28,7 +28,7 @@ export class BuilderSelectItem extends Component {
         this.info = useActionInfo();
         const item = useRef("item");
         let label = "";
-        const getLabel = () => {
+        this.getLabel = () => {
             // todo: it's not clear why the item.el?.innerHTML is not set at in
             // some cases. We fallback on a previously set value to circumvent
             // the problem, but it should be investigated.
@@ -37,16 +37,19 @@ export class BuilderSelectItem extends Component {
             return label;
         };
 
-        onMounted(getLabel);
+        onMounted(this.getLabel);
 
         const { state, operation } = useSelectableItemComponent(this.props.id, {
-            getLabel,
+            getLabel: this.getLabel,
         });
         this.state = state;
         this.operation = operation;
 
         this.onFocusin = this.operation.preview;
         this.onFocusout = this.operation.revert;
+        onPatched(() => {
+            this.env.throttledDropdownUpdate();
+        });
     }
 
     onClick() {

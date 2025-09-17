@@ -1,13 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
+<t t-name="html_builder.BuilderSelect.search">
+    <div class="o_builder_select_searchbox position-sticky start-0 top-0">
+        <input type="text"
+            class="o_input dropdown-item"
+            placeholder="Search..."
+            t-on-input="debouncedOnSearchInput"
+            t-ref="inputRef"
+            autocorrect="off"
+            spellcheck="false"/>
+    </div>
+</t>
+
 <t t-name="html_builder.BuilderSelect">
     <BuilderComponent>
         <!-- Render the SelectItem(s) into an invisible node to ensure the label of the
         button is being set. -->
         <div t-ref="root" class="o-hb-select-wrapper">
             <div inert="" class="h-0 w-0 overflow-hidden" t-att-class="props.className" t-ref="content"><WithIgnoreItem><t t-slot="default" /></WithIgnoreItem></div>
-            <Dropdown state="this.dropdown" menuClass="props.dropdownClass">
+            <Dropdown state="this.dropdown" menuClass="props.dropdownClass" onStateChanged.bind="onStateChanged">
                 <button 
                     class="o-hb-select-toggle o-hb-btn btn btn-secondary text-start o-dropdown-caret"
                     t-ref="button"
@@ -18,8 +30,10 @@
                     <t t-slot="fixedButton"/>
                 </button>
                 <t t-set-slot="content">
+                    <t t-if="props.searchable" t-call="html_builder.BuilderSelect.search"/>
                     <div t-att-class="props.dropdownContainerClass" data-prevent-closing-overlay="true">
                         <t t-slot="default" />
+                        <p t-if="props.searchable" class="text-muted fst-italic mx-4 my-1 o_builder_select_no_result">No results</p>
                     </div>
                 </t>
             </Dropdown>
