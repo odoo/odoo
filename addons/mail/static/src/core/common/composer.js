@@ -490,7 +490,7 @@ export class Composer extends Component {
         const composer = toRaw(this.props.composer);
         switch (ev.key) {
             case "ArrowUp":
-                if (!this.env.inChatter && composer.text === "") {
+                if (!this.env.inChatter && composer.text === "" && composer.thread) {
                     const messageToEdit = composer.thread.lastEditableMessageOfSelf;
                     if (messageToEdit) {
                         messageToEdit.enterEditMode(this.props.composer.thread);
