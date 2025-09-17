@@ -103,6 +103,10 @@ const DEFAULT_HOOKS = {
     onWillDisplayOnchangeWarning: () => {},
     /** @type {(changes: Object, validRecords: RelationalRecord[]) => any} */
     onAskMultiSaveConfirmation: () => true,
+    /** @type {(originalRecord: RelationalRecord, duplicatedRecord: RelationalRecord) => any} */
+    onRecordDuplicated: () => {},
+    /** @type {(originalRecords: RelationalRecord[], duplicatedRecords: RelationalRecord[]) => any} */
+    onDuplicatedMulti: () => {},
 };
 
 rpcBus.addEventListener("RPC:RESPONSE", (ev) => {

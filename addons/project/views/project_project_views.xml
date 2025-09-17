@@ -404,7 +404,7 @@
 
                                         <a t-if="['portal', 'invited_users'].includes(record.privacy_visibility.raw_value) and !record.is_template.raw_value" class="dropdown-item" role="menuitem" name="action_open_share_project_wizard" type="object">Share Project</a>
 
-                                        <a class="dropdown-item" role="menuitem" name="copy" type="object">Duplicate</a>
+                                        <a class="dropdown-item" role="menuitem" name="action_copy_project_with_refresh" type="object">Duplicate</a>
                                         <a class="dropdown-item" role="menuitem" type="open">Settings</a>
                                     </div>
                                     <div class="col-12 ps-0" groups="!project.group_project_manager">

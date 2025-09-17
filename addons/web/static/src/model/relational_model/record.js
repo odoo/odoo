@@ -226,6 +226,7 @@ export class Record extends DataPoint {
             );
             const resIds = this.resIds.slice();
             resIds.splice(index + 1, 0, resId);
+            await this.model.hooks.onRecordDuplicated(this.resId, resId);
             await this.model.load({ resId, resIds, mode: "edit" });
         });
     }

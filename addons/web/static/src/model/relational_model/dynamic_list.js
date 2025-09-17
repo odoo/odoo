@@ -250,6 +250,7 @@ export class DynamicList extends DataPoint {
             if (resIds.length > copiedRecords.length) {
                 this.model.notification.add(_t("Some records could not be duplicated"));
             }
+            await this.model.hooks.onDuplicatedMulti(resIds, copiedRecords);
             return this.model.load();
         };
 

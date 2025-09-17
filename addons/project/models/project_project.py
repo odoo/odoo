@@ -963,6 +963,11 @@ class ProjectProject(models.Model):
         action['domain'] = [('milestone_id', 'in', self.milestone_ids.ids)]
         return action
 
+    def action_copy_project_with_refresh(self):
+        self.ensure_one()
+        self.copy()
+        return {'type': 'ir.actions.client', 'tag': 'reload'}
+
     # ---------------------------------------------
     #  PROJECT UPDATES
     # ---------------------------------------------

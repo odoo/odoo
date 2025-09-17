@@ -223,6 +223,7 @@ export class ListController extends Component {
                 onWillSaveMulti: this.onWillSaveMulti.bind(this),
                 onAskMultiSaveConfirmation: this.onAskMultiSaveConfirmation.bind(this),
                 onWillSetInvalidField: this.onWillSetInvalidField.bind(this),
+                onDuplicatedMulti: this.onDuplicatedMulti.bind(this),
             },
         };
     }
@@ -312,6 +313,14 @@ export class ListController extends Component {
      * @param {Record} record
      */
     async onWillSaveRecord(record) {}
+
+    /**
+     * onDuplicatedMulti is a callBack that will be executed after the
+     * records are duplicated.
+     * @param {Record[]} originalRecords
+     * @param {Record[]} duplicatedRecords
+     */
+    async onDuplicatedMulti(originalRecords, duplicatedRecords) {}
 
     async createRecord({ group } = {}) {
         if (!this.model.isReady && !this.model.config.groupBy.length && this.editable) {

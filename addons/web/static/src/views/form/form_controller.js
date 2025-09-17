@@ -369,6 +369,7 @@ export class FormController extends Component {
                 onWillSaveRecord: this.onWillSaveRecord.bind(this),
                 onRecordSaved: this.onRecordSaved.bind(this),
                 onWillDisplayOnchangeWarning: this.onWillDisplayOnchangeWarning.bind(this),
+                onRecordDuplicated: this.onRecordDuplicated.bind(this),
             },
             useSendBeaconToSaveUrgently: true,
         };
@@ -414,6 +415,14 @@ export class FormController extends Component {
      * @param {Record} record
      */
     async onWillSaveRecord() {}
+
+    /**
+     * onRecordDuplicated is a callBack that will be executed after the
+     * record is duplicated.
+     * @param {Integer} originalRecordId
+     * @param {Integer} duplicatedRecordId
+     */
+    async onRecordDuplicated(originalRecordId, duplicatedRecordId) {}
 
     async onSaveError(error, { discard, retry }, leaving) {
         const suggestedCompany = error.data?.context?.suggested_company;

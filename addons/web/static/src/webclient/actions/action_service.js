@@ -1548,10 +1548,8 @@ export function makeActionManager(env, router = _router) {
         if (!isEmbeddedAction && action.embedded_action_ids?.length) {
             const embeddedActionsKey = `${action.id}+${params.resId || ""}`;
             const embeddedActionsOrder =
-                env.services.embedded_settings_service.getEmbeddedActionsConfigKey(
-                    embeddedActionsKey,
-                    "embedded_actions_order"
-                );
+                user.settings.embedded_actions_config_ids?.[embeddedActionsKey]
+                    ?.embedded_actions_order;
             const embeddedActionId = embeddedActionsOrder?.[0];
             const embeddedAction = action.embedded_action_ids?.find(
                 (embeddedAction) => embeddedAction.id === embeddedActionId
@@ -1860,15 +1858,7 @@ export function makeActionManager(env, router = _router) {
 }
 
 export const actionService = {
-    dependencies: [
-        "dialog",
-        "effect",
-        "localization",
-        "notification",
-        "title",
-        "ui",
-        "embedded_settings_service",
-    ],
+    dependencies: ["dialog", "effect", "localization", "notification", "title", "ui"],
     start(env) {
         return makeActionManager(env);
     },

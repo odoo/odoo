@@ -78,4 +78,18 @@ export class ProjectProjectFormController extends FormControllerWithHTMLExpander
             }
         }
     }
+
+    /**
+     * @override
+     */
+    async onRecordDuplicated(originalRecordId, duplicatedRecordId) {
+        await super.onRecordDuplicated(...arguments);
+        const embeddedSettings = await this.orm.call(
+            "res.users.settings",
+            "get_embedded_actions_settings",
+            [user.settings.id],
+            { res_model: this.modelParams.config.resModel, res_ids: [duplicatedRecordId] }
+        );
+        user.updateUserSettings("embedded_actions_config_ids", embeddedSettings);
+    }
 }

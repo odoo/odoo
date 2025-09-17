@@ -107,32 +107,6 @@ class ResUsersSettings extends WebResUsersSettings {
     /**
      * @param {number} action_id
      * @param {number} res_id
-     */
-    get_embedded_actions_setting(id, action_id, res_id) {
-        const kwargs = getKwArgs(arguments, "id", "action_id", "res_id", "vals");
-        id = kwargs.id;
-        action_id = kwargs.action_id;
-        res_id = kwargs.res_id;
-
-        /** @type {import("mock_models").ResUsersSettingsEmbeddedAction} */
-        const ResUsersSettingsEmbeddedAction = this.env["res.users.settings.embedded.action"];
-
-        const [embeddedSettings] = ResUsersSettingsEmbeddedAction.search_read([
-            ["user_setting_id", "=", id],
-            ["action_id", "=", action_id],
-            ["res_id", "=", res_id],
-        ]);
-        if (embeddedSettings) {
-            return ResUsersSettingsEmbeddedAction.embedded_action_settings_format(
-                embeddedSettings.id
-            );
-        }
-        return {};
-    }
-
-    /**
-     * @param {number} action_id
-     * @param {number} res_id
      * @param {number} vals
      */
     set_embedded_actions_setting(id, action_id, res_id, vals) {
@@ -286,6 +260,7 @@ defineActions([
 
 beforeEach(() => {
     user.updateUserSettings("id", 1); // workaround to populate the user settings
+    user.updateUserSettings("embedded_actions_config_ids", {}); // workaround to populate the embedded user settings
 });
 
 test("can display embedded actions linked to the current action", async () => {

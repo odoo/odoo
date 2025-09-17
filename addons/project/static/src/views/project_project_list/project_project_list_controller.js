@@ -25,4 +25,18 @@ export class ProjectListController extends ListController {
         }
         return actionMenuItems;
     }
-};
+
+    /**
+     * @override
+     */
+    async onDuplicatedMulti(originalRecords, duplicatedRecords) {
+        await super.onDuplicatedMulti(...arguments);
+        const embeddedSettings = await this.orm.call(
+            "res.users.settings",
+            "get_embedded_actions_settings",
+            [user.settings.id],
+            { res_model: this.modelParams.config.resModel, res_ids: duplicatedRecords }
+        );
+        user.updateUserSettings("embedded_actions_config_ids", embeddedSettings);
+    }
+}

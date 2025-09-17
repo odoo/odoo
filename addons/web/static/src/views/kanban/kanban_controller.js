@@ -302,6 +302,7 @@ export class KanbanController extends Component {
             activeIdsLimit: session.active_ids_limit,
             hooks: {
                 onRecordSaved: this.onRecordSaved.bind(this),
+                onDuplicatedMulti: this.onDuplicatedMulti.bind(this),
             },
         };
     }
@@ -484,6 +485,14 @@ export class KanbanController extends Component {
             this.progressBarState?.updateCounts(group);
         }
     }
+
+    /**
+     * onDuplicatedMulti is a callBack that will be executed after the
+     * records are duplicated.
+     * @param {Record[]} originalRecords
+     * @param {Record[]} duplicatedRecords
+     */
+    async onDuplicatedMulti(originalRecords, duplicatedRecords) {}
 
     onPageChangeScroll() {
         if (this.rootRef && this.rootRef.el) {
