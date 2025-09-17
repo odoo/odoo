@@ -22,7 +22,7 @@ export class CalendarSyncButtons extends Component {
     async initSyncValues() {
         const [credentialStatus, syncStatus] = await Promise.all([
             rpc("/calendar/check_credentials"),
-            this.orm.call("res.users", "check_synchronization_status", [[this.props.record.id]]),
+            this.orm.call("res.users", "check_synchronization_status", [[this.props.record ? this.props.record.id : user.userId]]),
         ]);
 
         // this.googleCredentialsSet = true;
