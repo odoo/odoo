@@ -6,3 +6,4 @@ cd ..\server_config\images\odoo\17\data
 git add ./*
 git commit -m "update project odoo odoo-17" -- .\
 git push
+
