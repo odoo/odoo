@@ -18,7 +18,7 @@ import {
 } from "@mail/../tests/mail_test_helpers";
 import { LONG_PRESS_DELAY } from "@mail/utils/common/hooks";
 import { describe, expect, test } from "@odoo/hoot";
-import { animationFrame, leave, pointerDown, press, queryFirst } from "@odoo/hoot-dom";
+import { animationFrame, leave, pointerDown, press, queryFirst, waitFor } from "@odoo/hoot-dom";
 import { advanceTime, mockDate, mockTouch, mockUserAgent, tick } from "@odoo/hoot-mock";
 import {
     asyncStep,
@@ -776,10 +776,9 @@ test("Can quickly add a reaction", async () => {
     await click("[title='Add a Reaction']");
     await click(".o-mail-QuickReactionMenu button", { text: "😅" });
     await contains(".o-mail-MessageReaction", { text: "😅1" });
-    await hover(".o-mail-MessageReactions");
-    await click("button[title='Add Reaction']");
-    await click(".o-Emoji", { text: "😏" });
-    await contains(".o-mail-MessageReaction", { text: "😏1" });
+    await click(".o-mail-MessageReactions button[title='Add a Reaction']");
+    await click(".o-mail-QuickReactionMenu button", { text: "🤣" });
+    await contains(".o-mail-MessageReaction", { text: "🤣1" });
 });
 
 test("Reaction summary", async () => {
@@ -810,9 +809,12 @@ test("Reaction summary", async () => {
         const userId = pyEnv["res.users"].create({ partner_id });
         pyEnv["res.partner"].create({ name, user_ids: [Command.link(userId)] });
         await withUser(userId, async () => {
-            await click("[title='Add a Reaction']");
+            await click(".o-mail-Message-actions [title='Add a Reaction']");
             await click(".o-mail-QuickReactionMenu button", { text: "😅" });
-            await contains(".o-mail-MessageReaction", { text: `😅${idx + 1}` });
+            await waitFor(`.o-mail-MessageReaction:contains(/^😅 ${idx + 1}$/)`, {
+                exact: true,
+                timeout: 3000,
+            });
             await hover(".o-mail-MessageReaction");
             await contains(".o-mail-MessageReactionList-preview", {
                 text: `${expectedSummaries[idx]}`,
@@ -836,10 +838,10 @@ test("Select already reacted emoji from quick reaction removes the reaction on m
     });
     await start();
     await openDiscuss(channelId);
-    await click("[title='Add a Reaction']");
+    await click(".o-mail-Message-actions [title='Add a Reaction']");
     await click(".o-mail-QuickReactionMenu button", { text: "😅" });
     await contains(".o-mail-MessageReaction", { text: "😅1" });
-    await click("[title='Add a Reaction']");
+    await click(".o-mail-Message-actions [title='Add a Reaction']");
     await click(".o-mail-QuickReactionMenu button", { text: "😅" });
     await contains(".o-mail-MessageReaction", { count: 0 });
 });

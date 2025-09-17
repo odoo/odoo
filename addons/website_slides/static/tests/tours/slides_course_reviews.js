@@ -80,7 +80,7 @@ registry.category("web_tour.tours").add("course_reviews", {
         },
         {
             trigger:
-                "#chatterRoot:shadow .o-mail-Message .o-mail-MessageReactions-add:not(:visible)",
+                "#chatterRoot:shadow .o-mail-Message .o-mail-MessageReactions:not([title='Add a Reaction'])",
         },
         {
             trigger: "#chatterRoot:shadow .o-mail-Message .o-mail-MessageReaction",

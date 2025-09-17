@@ -102,9 +102,14 @@ export class QuickReactionMenu extends Component {
     }
 
     get attClass() {
-        const invisible = !this.props.messageActive && !this.dropdown.isOpen && !this.picker.isOpen;
+        const invisible =
+            typeof this.props.messageActive === "boolean" &&
+            !this.props.messageActive &&
+            !this.dropdown.isOpen &&
+            !this.picker.isOpen;
         return {
             ...this.props.classNames,
+            "o-open": this.dropdown.isOpen,
             invisible,
             visible: !invisible,
         };
