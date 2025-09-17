@@ -260,3 +260,24 @@ test("show jump to present banner after scrolling up 10 messages", async () => {
     await scroll(".o-mail-Thread", queryFirst(".o-mail-Thread").scrollTop - 5 * messageHeight);
     await contains("[title='Jump to Present']");
 });
+
+test("focus composer after jump to present", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    pyEnv["mail.message"].create(
+        [...Array(40).keys()].map((i) => ({
+            body: `<p>Non Empty Message ${i}</p>`,
+            message_type: "comment",
+            model: "discuss.channel",
+            res_id: channelId,
+        }))
+    );
+    await start();
+    await openDiscuss(channelId);
+    await contains(".o-mail-Message", { count: 30 });
+    await contains(".o-mail-Composer.o-focused");
+    queryFirst(".o-mail-Composer-input").blur();
+    await contains(".o-mail-Composer.o-focused", { count: 0 });
+    await click("[title='Jump to Present']");
+    await contains(".o-mail-Composer.o-focused");
+});
