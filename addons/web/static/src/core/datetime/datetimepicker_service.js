@@ -278,6 +278,7 @@ export const datetimePickerService = {
                     const options = { tz: pickerProps.tz, format: hookParams.format };
                     if (operation === "format") {
                         options.showSeconds = hookParams.showSeconds ?? true;
+                        options.showTime = hookParams.showTime ?? true;
                         options.condensed = hookParams.condensed || false;
                     }
                     try {

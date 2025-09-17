@@ -389,10 +389,14 @@ export function formatDateTime(value, options = {}) {
     }
     let format = options.format;
     if (!format) {
-        if (options.showSeconds === false) {
-            format = `${localization.dateFormat} ${localization.shortTimeFormat}`;
+        if (options.showTime === false) {
+            format = `${localization.dateFormat}`;
         } else {
-            format = localization.dateTimeFormat;
+            if (options.showSeconds === false) {
+                format = `${localization.dateFormat} ${localization.shortTimeFormat}`;
+            } else {
+                format = localization.dateTimeFormat;
+            }
         }
         if (options.condensed) {
             format = getCondensedFormat(format);
