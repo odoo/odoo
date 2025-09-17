@@ -532,10 +532,9 @@ class PaymentProvider(models.Model):
         :return: None
         :raise UserError: If the provider is disabled.
         """
-        if self.state != 'disabled':
-            self.is_published = not self.is_published
-        else:
+        if self.state == 'disabled' and not self.is_published:
             raise UserError(_("You cannot publish a disabled provider."))
+        self.is_published = not self.is_published
 
     def action_view_payment_methods(self):
         self.ensure_one()
