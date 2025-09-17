@@ -32,7 +32,7 @@ class StockValuationReport(models.AbstractModel):
             date = fields.Date.from_string(date)
         if date == fields.Date.today():
             date = False
-        if date:
+        if not date:
             inventory_data = company.stock_value()
             accounting_data = company.stock_accounting_value()
         else:
