@@ -1,5 +1,5 @@
 import { describe, expect, test } from "@odoo/hoot";
-import { press, tick } from "@odoo/hoot-dom";
+import { press, queryFirst, tick } from "@odoo/hoot-dom";
 import { serverState } from "@web/../tests/web_test_helpers";
 
 import {
@@ -239,4 +239,25 @@ test("Post message when seeing old message should jump to present", async () => 
         text: "Newly posted",
         after: [".o-mail-Message-content", { text: "Most Recent!" }], // should load around present
     });
+});
+
+test("focus composer after jump to present", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    pyEnv["mail.message"].create(
+        [...Array(40).keys()].map((i) => ({
+            body: `<p>Non Empty Message ${i}</p>`,
+            message_type: "comment",
+            model: "discuss.channel",
+            res_id: channelId,
+        }))
+    );
+    await start();
+    await openDiscuss(channelId);
+    await contains(".o-mail-Message", { count: 30 });
+    await contains(".o-mail-Composer.o-focused");
+    queryFirst(".o-mail-Composer-input").blur();
+    await contains(".o-mail-Composer.o-focused", { count: 0 });
+    await click("[title='Jump to Present']");
+    await contains(".o-mail-Composer.o-focused");
 });
