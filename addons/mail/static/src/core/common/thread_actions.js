@@ -72,6 +72,7 @@ registerThreadAction("search-messages", {
         ["discuss.channel", "mail.box"].includes(thread?.model) &&
         (!owner.props.chatWindow || owner.props.chatWindow.isOpen) &&
         !owner.isDiscussSidebarChannelActions,
+    hotkey: "f",
     panelOuterClass: "o-mail-SearchMessagesPanel bg-inherit",
     icon: "oi oi-fw oi-search",
     name: ({ action }) => (action.isActive ? _t("Close Search") : _t("Search Messages")),
