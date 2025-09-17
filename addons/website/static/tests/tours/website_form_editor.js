@@ -120,13 +120,22 @@ const addField = function (
             run: `edit ${display.condition} && press Tab`,
         });
     }
-    if (required) {
-        testText += ".s_website_form_required";
+    const addToggleRequiredStep = (required = true) =>
         ret.push({
-            content: "Mark the field as required",
+            content: `Mark the field as ${required ? "" : "non-"}required`,
             trigger: ".o_customize_tab div[data-action-id='toggleRequired'] input[type='checkbox']",
             run: "click",
         });
+    if (required) {
+        testText += ".s_website_form_required";
+        if (name !== "boolean") {
+            addToggleRequiredStep();
+        }
+    } else {
+        if (name === "boolean") {
+            // Checkbox fields are "required" by default.
+            addToggleRequiredStep(false);
+        }
     }
     if (label) {
         testText += `:has(label:contains(${label}))`;
@@ -721,7 +730,7 @@ registerWebsitePreviewTour("website_form_editor_tour", {
     },
     {
         content: 'Change the Recipient Email',
-        trigger: '[data-label="Recipient Email"] input',
+        trigger: '[data-label="Emails"] input',
         run: "edit test@test.test",
     },
     // Test a field visibility when it's tied to another Date [Time] field
@@ -801,7 +810,7 @@ registerWebsitePreviewTour("website_form_editor_tour", {
 
     // Ensure that the description option is working as wanted.
     ...addCustomField("char", "text", "Check description option", false),
-    changeOption("Field", "[data-action-id='toggleDescription'] input"),
+    changeOption("Field", "[data-action-id='setDescription'] input"),
     {
         content: "Ensure that the description has correctly been added on the field",
         trigger: ":iframe .s_website_form_field:contains('Check description option') .s_website_form_field_description",
@@ -836,7 +845,7 @@ registerWebsitePreviewTour('website_form_contactus_edition_with_email', {
 }, () => editContactUs([
     {
         content: "Change the Recipient Email",
-        trigger: "div[data-label='Recipient Email'] input",
+        trigger: "div[data-label='Emails'] input",
         run: "edit test@test.test",
     },
 ]));
@@ -850,7 +859,7 @@ registerWebsitePreviewTour('website_form_contactus_edition_no_email', {
         run: "edit **",
     }, {
         content: "Check that the recipient email is correct",
-        trigger: "div[data-label='Recipient Email'] input:value('website_form_contactus_edition_no_email@mail.com')",
+        trigger: "div[data-label='Emails'] input:value('website_form_contactus_edition_no_email@mail.com')",
     },
 ]));
 
