@@ -374,20 +374,25 @@ class ModifyRibbonAction extends BuilderAction {
         }
         return this.ribbonOptions.getRibbonsObject()[ribbonId][params.mainParam] === value;
     }
-    apply({ editingElement, params, value }) {
+    async apply({ editingElement, params, value }) {
         const isPreviewMode = this.dependencies.history.getIsPreviewing();
         const ribbonEl = editingElement.querySelector('.o_ribbons')
         const setting = params.mainParam;
-        const ribbonId = parseInt(ribbonEl.dataset.ribbonId);
+        let ribbonId = parseInt(ribbonEl.dataset.ribbonId);
         const previousRibbon = this.ribbonOptions.getRibbonsObject()[ribbonId];
         this.ribbonOptions.setRibbonObject(ribbonId, {...previousRibbon, [setting]: value});
-        this.ribbonOptions.setRibbon(ribbonId, {...previousRibbon, [setting]: value});
-        const res = this.ribbonOptions._setRibbon(ribbonEl, {...previousRibbon, [setting]: value}, !isPreviewMode);
+        const res = await this.ribbonOptions._setRibbon(
+            ribbonEl,
+            { ...previousRibbon, [setting]: value },
+            !isPreviewMode
+        );
+        ribbonId = parseInt(ribbonEl.dataset.ribbonId);
+        this.ribbonOptions.setRibbon(ribbonId, { ...previousRibbon, [setting]: value });
         if(isPreviewMode){
-            this.ribbonOptions.setRibbonObject(ribbonId, previousRibbon)
-            this.ribbonOptions.setRibbon(ribbonId, previousRibbon)
+            this.ribbonOptions.setRibbonObject(ribbonId, previousRibbon);
+            this.ribbonOptions.setRibbon(ribbonId, previousRibbon);
         }
-        return res
+        return res;
     }
 }
 class DeleteRibbonAction extends BuilderAction {
