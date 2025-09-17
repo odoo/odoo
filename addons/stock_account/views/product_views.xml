@@ -82,5 +82,21 @@
                 </field>
             </field>
         </record>
+
+        <record model="ir.ui.view" id="product_product_view_list_at_date">
+            <field name="name">product.product.list.inherit.stock.account.at.date</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="stock.view_stock_product_tree"/>
+            <field name="arch" type="xml">
+                <field name="standard_price" position="after">
+                    <field name="avg_cost" string="Unit Cost" optional="hide" options="{
+                        'currency_field': 'company_currency_id',
+                    }"/>
+                    <field name="total_value" string="Total Value" optional="hide" options="{
+                        'currency_field': 'company_currency_id',
+                    }"/>
+                </field>
+            </field>
+        </record>
    </data>
 </odoo>

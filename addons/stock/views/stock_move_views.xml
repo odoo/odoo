@@ -29,24 +29,24 @@
             <field name="model">stock.move</field>
             <field eval="8" name="priority"/>
             <field name="arch" type="xml">
-                <list string="Moves" create="0" default_order="date desc" duplicate="0">
+                <list string="Moves" create="0" editable="bottom" default_order="date desc" duplicate="0">
                     <field name="date" groups="base.group_no_one" decoration-danger="(state not in ('cancel','done')) and date > current_date"/>
                     <field name="reference"/>
-                    <field name="picking_type_id" column_invisible="True"/>
-                    <field name="location_usage" column_invisible="True"/>
-                    <field name="location_dest_usage" column_invisible="True"/>
-                    <field name="product_id" readonly="state == 'done'"/>
+                    <field name="picking_type_id" column_invisible="True" readonly="1"/>
+                    <field name="location_usage" column_invisible="True" readonly="1"/>
+                    <field name="location_dest_usage" column_invisible="True" readonly="1"/>
+                    <field name="product_id" readonly="1"/>
                     <field name="location_id" options="{'no_create': True}" string="From"
-                        decoration-muted="location_usage not in ('internal','transit')"/>
+                        decoration-muted="location_usage not in ('internal','transit')" readonly="1"/>
                     <field name="location_dest_id" options="{'no_create': True}" string="To"
-                        decoration-muted="location_dest_usage not in ('internal','transit')"/>
-                    <field name="product_uom_qty" sum="Total Demand" readonly="state == 'done'"/>
-                    <field name="quantity" string="Quantity" sum="Total Quantity"
+                        decoration-muted="location_dest_usage not in ('internal','transit')" readonly="1"/>
+                    <field name="product_uom_qty" sum="Total Demand" readonly="1"/>
+                    <field name="quantity" string="Quantity" sum="Total Quantity" readonly="1"
                         decoration-danger="(location_usage in ('internal','transit')) and (location_dest_usage not in ('internal','transit'))"
                         decoration-success="(location_usage not in ('internal','transit')) and (location_dest_usage in ('internal','transit'))"/>
-                    <field name="product_uom" options="{'no_open': True, 'no_create': True}" groups="uom.group_uom" widget="many2one_uom"/>
-                    <field name="company_id" groups="base.group_multi_company"/>
-                    <field name="state" widget='badge' optional="show"
+                    <field name="product_uom" readonly="1" options="{'no_open': True, 'no_create': True}" groups="uom.group_uom" widget="many2one_uom"/>
+                    <field name="company_id" readonly="1" groups="base.group_multi_company"/>
+                    <field name="state" readonly="1" widget='badge' optional="show"
                            decoration-danger="state=='cancel'"
                            decoration-info="state== 'assigned'"
                            decoration-muted="state == 'draft'"
