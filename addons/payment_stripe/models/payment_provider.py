@@ -485,7 +485,11 @@ class PaymentProvider(models.Model):
         inline_form_values = {
             'publishable_key': self._stripe_get_publishable_key(),
             'currency_name': currency_name,
-            'minor_amount': amount and payment_utils.to_minor_currency_units(amount, currency),
+            'minor_amount': amount and payment_utils.to_minor_currency_units(
+                amount,
+                currency,
+                arbitrary_decimal_number=const.CURRENCY_DECIMALS.get(currency.name),
+            ),
             'capture_method': 'manual' if self.capture_manually else 'automatic',
             'billing_details': {
                 'name': partner.name or '',
