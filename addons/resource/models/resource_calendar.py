@@ -268,8 +268,16 @@ class ResourceCalendar(models.Model):
         else:
             return NotImplemented
 
-        calendar_ids = self.env['resource.calendar']._search(Domain('work_time', operator, value))
-        return [('id', 'in', calendar_ids)]
+        calendar_ids = self.env['resource.calendar'].search([])
+        if operator == 'in':
+            calender = calendar_ids.filtered(lambda m: m.work_time_rate in value)
+        elif operator == 'not in':
+            calender = calendar_ids.filtered(lambda m: m.work_time_rate not in value)
+        elif operator == '<':
+            calender = calendar_ids.filtered(lambda m: m.work_time_rate < value)
+        elif operator == '>':
+            calender = calendar_ids.filtered(lambda m: m.work_time_rate > value)
+        return [('id', 'in', calender.ids)]
 
     # --------------------------------------------------
     # Overrides
