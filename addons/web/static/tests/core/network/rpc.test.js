@@ -141,6 +141,7 @@ test("rpc can send additional headers", async () => {
         expect(settings.headers).toEqual({
             "Content-Type": "application/json",
             Hello: "World",
+            "X-Rpcfingerprint": undefined,
         });
         return { result: true };
     });

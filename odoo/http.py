@@ -138,8 +138,10 @@ import hashlib
 import hmac
 import importlib.metadata
 import inspect
+import ipaddress
 import json
 import logging
+import math
 import mimetypes
 import os
 import re
@@ -197,6 +199,7 @@ except ImportError:
     from .tools._vendor.send_file import send_file as _send_file
 
 import odoo.addons
+from odoo.tools._vendor.useragents import UserAgent
 from .exceptions import UserError, AccessError, AccessDenied
 from .modules import module as module_manager
 from .modules.registry import Registry
@@ -208,7 +211,6 @@ from .tools.facade import Proxy, ProxyAttr, ProxyFunc
 from .tools.func import filter_kwargs
 from .tools.misc import submap, real_time
 from .tools._vendor import sessions
-from .tools._vendor.useragents import UserAgent
 
 
 _logger = logging.getLogger(__name__)
@@ -240,7 +242,8 @@ def get_default_session():
         'login': None,
         'uid': None,
         'session_token': None,
-        '_trace': [],
+        '_trace': {},
+        '_fingerprint': '',
         'create_time': time.time(),
     }
 
@@ -326,6 +329,13 @@ STATIC_CACHE = 60 * 60 * 24 * 7
 # The cache duration for content where the url uniquely identifies the
 # content (usually using a hash), one year.
 STATIC_CACHE_LONG = 60 * 60 * 24 * 365
+
+# The frequency with which a device's activity is updated
+DEVICE_ACTIVITY_UPDATE_FREQUENCY = 3600  # seconds (1 hour)
+
+# The duration for which a device is considered active
+# following its most recent activity
+DEVICE_VALIDITY_PERIOD = 30 * 24 * 60 * 60  # 30 days in seconds
 
 
 # =========================================================
@@ -467,6 +477,75 @@ def serialize_exception(exception, *, message=None, arguments=None):
         'context': getattr(exception, 'context', {}),
         'debug': ''.join(traceback.format_exception(exception)),
     }
+
+
+@functools.cache
+def is_same_browser(ua_1_str, ua_2_str):
+    user_agent_parser = UserAgent._parser
+    platform_1, browser_1, _, browser_language_1 = user_agent_parser(ua_1_str)
+    platform_2, browser_2, _, browser_language_2 = user_agent_parser(ua_2_str)
+    # Not checking the browser version
+    return (
+        platform_1 == platform_2 and
+        browser_1 == browser_2 and
+        browser_language_1 == browser_language_2
+    )
+
+
+@functools.cache
+def is_same_ip_location(ip_1_str, ip_2_str):
+
+    def _haversine_formula(latitude_A, longitude_A, latitude_B, longitude_B):
+        """
+            The haversine formula is used to calculate the distance between two points
+            on a sphere, taking into account their latitudes and longitudes.
+            :return (int): the distance between the two points in kilometers.
+        """
+        latitude_A = math.radians(latitude_A)
+        longitude_A = math.radians(longitude_A)
+        latitude_B = math.radians(latitude_B)
+        longitude_B = math.radians(longitude_B)
+        delta_latitude = latitude_B - latitude_A
+        delta_longitude = longitude_B - longitude_A
+        var_1 = math.sin(delta_latitude / 2) ** 2 \
+            + math.cos(latitude_A) * math.cos(latitude_B) * math.sin(delta_longitude / 2) ** 2
+        var_2 = 2 * math.atan2(math.sqrt(var_1), math.sqrt(1 - var_1))
+        return math.floor(var_2 * 6371)  # 6371 = radius of Earth [km]
+
+    ip_1 = ipaddress.ip_address(ip_1_str)
+    ip_2 = ipaddress.ip_address(ip_2_str)
+    if (
+        ip_1 == ip_2 or (
+            # Assume all IPv6 networks are /64, consider IPs coming from a same network safe.
+            isinstance(ip_1, ipaddress.IPv6Address) and
+            isinstance(ip_2, ipaddress.IPv6Address) and
+            (int(ip_1) >> 64) == (int(ip_2) >> 64)
+        )
+    ):
+        return True
+
+    geoip_1 = GeoIP(ip_1_str)
+    latitude_1 = geoip_1.location.latitude
+    longitude_1 = geoip_1.location.longitude
+    accuracy_radius_1 = geoip_1.location.accuracy_radius
+
+    geoip_2 = GeoIP(ip_2_str)
+    latitude_2 = geoip_2.location.latitude
+    longitude_2 = geoip_2.location.longitude
+    accuracy_radius_2 = geoip_2.location.accuracy_radius
+
+    if not (
+        latitude_1 and longitude_1 and accuracy_radius_1 and
+        latitude_2 and longitude_2 and accuracy_radius_2
+    ):
+        # It is not possible to verify if we do not have the necessary information
+        return True
+
+    distance = _haversine_formula(latitude_1, longitude_1, latitude_2, longitude_2)
+    max_distance = max(accuracy_radius_1, accuracy_radius_2) * 1.5
+    # Add a tolerance, because according to the definition of
+    # the ``accuracy_radius`` attribute, the radius has a confidence of 67%.
+    return distance <= max_distance
 
 
 # =========================================================
@@ -1266,9 +1345,83 @@ class Session(collections.abc.MutableMapping):
 
     def update_trace(self, request):
         """
-            :return: dict if a device log has to be inserted, ``None`` otherwise
+        :rtype: tuple(
+                    trace := tuple(tuple(str, str, str), tuple(int, int)) | None,
+                    suspicious_reasons := list(str)
+                )
+
+        Note:
+        ``trace``: (tuple)
+            - device: (tuple) -> key in ``session['_trace']``
+                - user agent (str)
+                - ip address (str)
+                - fingerprint (str)
+            - activity: (tuple)
+                - first activity (int)
+                - last activity (int)
+        ``trace``: ``None`` if there is no new activity
         """
-        if self.get('_trace_disable'):
+        # TODO: Remove backward compatibility (v20 ?)
+        if not isinstance(self['_trace'], dict):
+            self['_trace'] = {}
+        if self.get('_fingerprint') is None:
+            self['_fingerprint'] = ''
+
+        now = int(datetime.now().timestamp())
+
+        suspicious_reasons = []  # Not incriminate by default, there may be several reasons for suspicious
+
+        device = (
+            user_agent := request.httprequest.user_agent.string,
+            ip_address := request.httprequest.remote_addr,
+            fingerprint := request.httprequest.headers.get('X-Rpcfingerprint', '')
+                    if (req_has_fingerprint := getattr(request, '_has_fingerprint', False))
+                    else '',
+        )
+
+        # ===== Check fingerprint =====
+        if req_has_fingerprint:
+            if not fingerprint and self['_fingerprint']:
+                suspicious_reasons.append('fingerprint')
+            elif fingerprint:
+                if not self['_fingerprint']:
+                    self['_fingerprint'] = fingerprint
+                elif not consteq(fingerprint, self['_fingerprint']):
+                    suspicious_reasons.append('fingerprint')
+
+        # ===== Check device =====
+        device_key = json.dumps(device)
+        try:
+            tdevice, (tfirst_activity, tlast_activity) = trace = self['_trace'][device_key]
+            # If a trace exist check whether it needs updating
+            if bool(now - tlast_activity < DEVICE_ACTIVITY_UPDATE_FREQUENCY):
+                return trace if suspicious_reasons else None, suspicious_reasons
+
+            new_trace = (tdevice, (tfirst_activity, now))
+
+        except KeyError:
+            new_trace = (device, (now, now))
+
+        # Check the new trace (which can be an updated old trace)
+        # Take advantage of the fact that the trace history
+        # remains unchanged to verify consistency.
+        minimal_time_activity = now - DEVICE_VALIDITY_PERIOD
+        for (tuser_agent, tip_address, _), (_, tlast_activity) in self['_trace'].values():
+            if tlast_activity < minimal_time_activity:
+                continue
+            if is_same_browser(user_agent, tuser_agent) and is_same_ip_location(ip_address, tip_address):
+                break
+        else:
+            if self['_trace']:
+                suspicious_reasons.append('device')
+
+        self['_trace'][device_key] = new_trace
+        # Even if it is suspicious, the next time this device is detected, it will no longer
+        # be considered suspicious (because there is a trace of it in the session).
+
+        self.is_dirty = True  # Because we are modifying the internal structure of ``_trace`` and not ``_trace`` itself.
+
+        if self.get('_trace_disable') and not suspicious_reasons:
             # To avoid generating useless logs, e.g. for automated technical sessions,
             # a session can be flagged with `_trace_disable`. This should never be done
             # without a proper assessment of the consequences for auditability.
@@ -1276,31 +1429,9 @@ class Session(collections.abc.MutableMapping):
             # be abused by unprivileged users. Such sessions will of course still be
             # subject to all other auditing mechanisms (server logs, web proxy logs,
             # metadata tracking on modified records, etc.)
-            return
+            return None, suspicious_reasons
 
-        user_agent = request.httprequest.user_agent
-        platform = user_agent.platform
-        browser = user_agent.browser
-        ip_address = request.httprequest.remote_addr
-        now = int(datetime.now().timestamp())
-        for trace in self['_trace']:
-            if trace['platform'] == platform and trace['browser'] == browser and trace['ip_address'] == ip_address:
-                # If the device logs are not up to date (i.e. not updated for one hour or more)
-                if bool(now - trace['last_activity'] >= 3600):
-                    trace['last_activity'] = now
-                    self.is_dirty = True
-                    return trace
-                return
-        new_trace = {
-            'platform': platform,
-            'browser': browser,
-            'ip_address': ip_address,
-            'first_activity': now,
-            'last_activity': now
-        }
-        self['_trace'].append(new_trace)
-        self.is_dirty = True
-        return new_trace
+        return new_trace, suspicious_reasons
 
     def _delete_old_sessions(self):
         root.session_store.delete_old_sessions(self)
@@ -2233,6 +2364,7 @@ class Request:
             self.env = odoo.api.Environment(cr, self.session.uid, self.session.context)
             try:
                 rule, args = self.registry['ir.http']._match(self.httprequest.path)
+                request._has_fingerprint = rule.endpoint.routing.get('fingerprint', False)
             except NotFound as not_found_exc:
                 # no controller endpoint matched -> fallback or 404
                 serve_func = functools.partial(self._serve_ir_http_fallback, not_found_exc)
