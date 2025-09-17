@@ -1,84 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo auto_sequence="1">
 
-    <record id="l10n_de_tax_report_headers" model="account.report">
-        <field name="name">Header</field>
-        <field name="name@de">Kopfzeile</field>
-        <field name="sequence">99</field>
-        <field name="country_id" ref="base.de"/>
-        <field name="availability_condition">country</field>
-        <field name="column_ids">
-            <record id="l10n_de_tax_report_headers_balance" model="account.report.column">
-                <field name="name">Value</field>
-                <field name="name@de">Wert</field>
-                <field name="expression_label">balance</field>
-            </record>
-        </field>
-        <field name="line_ids">
-            <record id="tax_report_de_headers" model="account.report.line">
-                <field name="name">Metadata</field>
-                <field name="name@de">Metadata</field>
-                <field name="children_ids">
-                    <record id="tax_report_de_header_tax_office" model="account.report.line">
-                        <field name="name">To the Tax Office</field>
-                        <field name="name@de">An das Finanzamt</field>
-                        <field name="expression_ids">
-                            <record id="tax_report_de_header_tax_office_exp" model="account.report.expression">
-                                <field name="label">balance</field>
-                                <field name="engine">external</field>
-                                <field name="formula">most_recent</field>
-                                <field name="figure_type">string</field>
-                                <field name="subformula">editable</field>
-                            </record>
-                        </field>
-                    </record>
-                     <record id="tax_report_de_header_different_company" model="account.report.line">
-                        <field name="name">Entrepreneur – if applicable, different company name – Address – Telephone – E-mail address</field>
-                        <field name="name@de">Unternehmer – ggf. abweichende Firmenbezeichnung – Anschrift – Telefon – E-Mail-Adresse</field>
-                        <field name="expression_ids">
-                            <record id="tax_report_de_header_different_company_exp" model="account.report.expression">
-                                <field name="label">balance</field>
-                                <field name="engine">external</field>
-                                <field name="formula">most_recent</field>
-                                <field name="figure_type">string</field>
-                                <field name="subformula">editable</field>
-                            </record>
-                        </field>
-                    </record>
-                    <record id="tax_report_de_header_corrected_return" model="account.report.line">
-                        <field name="name">Corrected return. 1 = Yes</field>
-                        <field name="name@de">Berichtigte Anmeldung. 1 = Ja </field>
-                        <field name="expression_ids">
-                            <record id="tax_report_de_header_corrected_return_exp" model="account.report.expression">
-                                <field name="label">balance</field>
-                                <field name="engine">external</field>
-                                <field name="formula">most_recent</field>
-                                <field name="subformula">editable</field>
-                                <field name="figure_type">integer</field>
-                            </record>
-                        </field>
-                    </record>
-                    <record id="tax_report_de_header_supported_docs" model="account.report.line">
-                        <field name="name">Supporting documents (e.g., contracts, invoices) are attached or will be submitted separately. 1 = Yes</field>
-                        <field name="name@de">Belege (z. B. Verträge, Rechnungen) sind beigefügt bzw. werden gesondert eingereicht. 1 = Ja</field>
-                        <field name="expression_ids">
-                            <record id="tax_report_de_header_supported_docs_exp" model="account.report.expression">
-                                <field name="label">balance</field>
-                                <field name="engine">external</field>
-                                <field name="formula">most_recent</field>
-                                <field name="figure_type">integer</field>
-                                <field name="subformula">editable</field>
-                            </record>
-                        </field>
-                    </record>
-                </field>
-            </record>
-        </field>
-    </record>
     <record id="tax_report" model="account.report">
         <field name="name">Tax Report</field>
         <field name="name@de">Steuerbericht</field>
         <field name="country_id" ref="base.de"/>
+        <field name="root_report_id" ref="account.generic_tax_report"/>
         <field name="allow_foreign_vat" eval="True"/>
         <field name="availability_condition">country</field>
         <field name="column_ids">
@@ -94,12 +21,10 @@
             </record>
         </field>
         <field name="line_ids">
-
-            <record id="tax_report_de_tag_19" model="account.report.line">
-                <field name="name">Taxable turnover</field>
-                <field name="name@de">Steuerpflichtige Umsätze</field>
+            <record id="tax_report_de_section_a" model="account.report.line">
+                <field name="name">A. Taxable supplies, other services, and self-supplies</field>
+                <field name="name@de">A. Steuerpflichtige Lieferungen, sonstige Leistungen und unentgeltliche Wertabgaben</field>
                 <field name="code">AGG_DE_19</field>
-                <field name="aggregation_formula"></field>
                 <field name="children_ids">
                     <record id="tax_report_de_tag_81" model="account.report.line">
                         <field name="name">81. At the tax rate of 19 %</field>
@@ -207,11 +132,10 @@
                     </record>
                 </field>
             </record>
-            <record id="tax_report_de_tag_25" model="account.report.line">
-                <field name="name">Tax-exempt transactions with input tax deduction</field>
-                <field name="name@de">Steuerfreie Umsätze mit Vorsteuerabzug</field>
+            <record id="tax_report_de_section_b" model="account.report.line">
+                <field name="name">B. Taxable supplies, other services, and self-supplies</field>
+                <field name="name@de">B. Steuerfreie Lieferungen, sonstige Leistungen und unentgeltliche Wertabgaben</field>
                 <field name="code">AGG_DE_25</field>
-                <field name="aggregation_formula"></field>
                 <field name="children_ids">
                     <record id="tax_report_de_tag_41" model="account.report.line">
                         <field name="name">41. To customer with VAT number</field>
@@ -262,21 +186,6 @@
                             </record>
                         </field>
                     </record>
-                </field>
-                <field name="expression_ids">
-                    <record id="tax_report_de_tag_25_base_agg" model="account.report.expression">
-                        <field name="label">base</field>
-                        <field name="engine">aggregation</field>
-                        <field name="formula">DE_41.base + DE_44.base + DE_49.base + DE_43.base</field>
-                    </record>
-                </field>
-            </record>
-            <record id="tax_report_de_tag_24" model="account.report.line">
-                <field name="name">Tax-exempt transactions without input tax deduction</field>
-                <field name="name@de">Steuerfreie Umsätze ohne Vorsteuerabzug</field>
-                <field name="aggregation_formula"></field>
-                <field name="code">AGG_DE_48</field>
-                <field name="children_ids">
                     <record id="tax_report_de_tag_48" model="account.report.line">
                         <field name="name">48. Tax-exempt transactions without input tax deduction</field>
                         <field name="name@de">48. Steuerfreie Umsätze ohne Vorsteuerabzug</field>
@@ -291,18 +200,17 @@
                     </record>
                 </field>
                 <field name="expression_ids">
-                    <record id="tax_report_de_tag_48_base_agg" model="account.report.expression">
+                    <record id="tax_report_de_tag_25_base_agg" model="account.report.expression">
                         <field name="label">base</field>
                         <field name="engine">aggregation</field>
-                        <field name="formula">DE_48.base</field>
+                        <field name="formula">DE_41.base + DE_44.base + DE_49.base + DE_43.base</field>
                     </record>
                 </field>
             </record>
-            <record id="tax_report_de_tag_31" model="account.report.line">
-                <field name="name">Intra-Community acquisitions</field>
-                <field name="name@de">Innergemeinschaftliche Erwerbe</field>
+            <record id="tax_report_de_section_c" model="account.report.line">
+                <field name="name">C. Intra-Community acquisitions</field>
+                <field name="name@de">C. Innergemeinschaftliche Erwerbe</field>
                 <field name="code">AGG_DE_31</field>
-                <field name="aggregation_formula"></field>
                 <field name="children_ids">
                     <record id="tax_report_de_tag_91" model="account.report.line">
                         <field name="name">91. Tax-free intra-Community acquisitions</field>
@@ -410,12 +318,10 @@
                     </record>
                 </field>
             </record>
-
-            <record id="tax_report_de_tag_46" model="account.report.line">
-                <field name="name">The recipient of the service as the person liable to pay tax</field>
-                <field name="name@de">Leistungsempfänger als Steuerschuldner</field>
+            <record id="tax_report_de_section_d" model="account.report.line">
+                <field name="name">D. Recipient of the supply as tax debtor (§ 13b UStG)</field>
+                <field name="name@de">D. Leistungsempfänger als Steuerschuldner (§ 13b UStG)</field>
                 <field name="code">AGG_DE_46</field>
-                <field name="aggregation_formula"></field>
                 <field name="children_ids">
                     <record id="tax_report_de_tag_46_47" model="account.report.line">
                         <field name="name">46/47. Other taxable supplies by a trader established in the rest of the Community</field>
@@ -469,7 +375,7 @@
                         </field>
                     </record>
                 </field>
-                <field name="expression_ids">
+                 <field name="expression_ids">
                     <record id="tax_report_de_tag_46_base_agg" model="account.report.expression">
                         <field name="label">base</field>
                         <field name="engine">aggregation</field>
@@ -482,12 +388,10 @@
                     </record>
                 </field>
             </record>
-
-            <record id="tax_report_de_tag_37" model="account.report.line">
-                <field name="name">Supplementary information on turnover</field>
-                <field name="name@de">Ergänzende Angaben zu Umsätzen</field>
+            <record id="tax_report_de_section_e" model="account.report.line">
+                <field name="name">E. Supplementary information on supplies</field>
+                <field name="name@de">E. Ergänzende Angaben zu Umsätzen</field>
                 <field name="code">AGG_DE_37</field>
-                <field name="aggregation_formula"></field>
                 <field name="children_ids">
                     <record id="tax_report_de_tag_42" model="account.report.line">
                         <field name="name">42. Triangular transactions</field>
@@ -548,6 +452,18 @@
                             </record>
                         </field>
                     </record>
+                    <record id="tax_report_de_line_36" model="account.report.line">
+                        <field name="name">Total VAT</field>
+                        <field name="name@de">Umsatzsteuer insgesamt</field>
+                        <field name="code">DE_LINE36</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_de_line_36_agg" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">AGG_DE_19.tax + AGG_DE_31.tax + AGG_DE_46.tax</field>
+                            </record>
+                        </field>
+                    </record>
                 </field>
                 <field name="expression_ids">
                     <record id="tax_report_de_tag_37_base_agg" model="account.report.expression">
@@ -557,13 +473,10 @@
                     </record>
                 </field>
             </record>
-
-
-            <record id="tax_report_de_tax_tag_55" model="account.report.line">
-                <field name="name">Deductible input tax amounts</field>
-                <field name="name@de">Abziehbare Vorsteuerbetrage</field>
+            <record id="tax_report_de_section_f" model="account.report.line">
+                <field name="name">F. Deductible input VAT amounts and adjustment of input VAT deduction</field>
+                <field name="name@de">F. Abziehbare Vorsteuerbeträge und Berichtigung des Vorsteuerabzugs</field>
                 <field name="code">AGG_DE_55_TAX</field>
-                <field name="aggregation_formula"></field>
                 <field name="children_ids">
                     <record id="tax_report_de_tag_66" model="account.report.line">
                         <field name="name">66. Input tax amounts from invoices from other traders</field>
@@ -649,6 +562,18 @@
                             </record>
                         </field>
                     </record>
+                    <record id="tax_report_de_line_44" model="account.report.line">
+                        <field name="name">Remaining amount</field>
+                        <field name="name@de">Verbleibender Betrag</field>
+                        <field name="code">DE_LINE44</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_de_line_44_agg" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">DE_LINE36.tax - AGG_DE_55_TAX.tax</field>
+                            </record>
+                        </field>
+                    </record>
                 </field>
                 <field name="expression_ids">
                     <record id="tax_report_de_tax_tag_55_tax_agg" model="account.report.expression">
@@ -658,11 +583,9 @@
                     </record>
                 </field>
             </record>
-            <record id="tax_report_de_tax_tag_64" model="account.report.line">
-                <field name="name">Other tax amounts</field>
-                <field name="name@de">Andere Steuerbetrage</field>
-                <field name="code">AGG_DE_64_TAX</field>
-                <field name="aggregation_formula"></field>
+            <record id="tax_report_de_section_g" model="account.report.line">
+                <field name="name">G. Other tax amounts</field>
+                <field name="name@de">G. Andere Steuerbeträge</field>
                 <field name="children_ids">
                     <record id="tax_report_de_tag_65" model="account.report.line">
                         <field name="name">65. Tax due to change in the form of taxation and after-tax on taxed prepayments and similar due to change in tax rate</field>
@@ -688,6 +611,24 @@
                             </record>
                         </field>
                     </record>
+                </field>
+            </record>
+            <record id="tax_report_de_section_h" model="account.report.line">
+                <field name="name">H. Tax Prepayment/Overpayment</field>
+                <field name="name@de">H. Vorauszahlung/Überschuss</field>
+                <field name="children_ids">
+                    <record id="tax_report_de_line_47" model="account.report.line">
+                        <field name="name">VAT advance payment/surplus</field>
+                        <field name="name@de">Umsatzsteuer-Vorauszahlung/Überschuss</field>
+                        <field name="code">DE_LINE47</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_de_line_47_agg" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">DE_LINE44.tax + DE_69.tax + DE_65.tax</field>
+                            </record>
+                        </field>
+                    </record>
                     <record id="tax_report_de_tag_39" model="account.report.line">
                         <field name="name">39. Deduction of the special advance payment for the extension of the standing period</field>
                         <field name="name@de">39. Abzug der festgesetzten Sondervorauszahlung für Dauerfristverlängerung</field>
@@ -708,23 +649,15 @@
                             <record id="tax_report_de_tag_83_tag" model="account.report.expression">
                                 <field name="label">tax</field>
                                 <field name="engine">aggregation</field>
-                                <field name="formula">AGG_DE_19.tax + AGG_DE_31.tax + AGG_DE_46.tax  - AGG_DE_55_TAX.tax + AGG_DE_64_TAX.tax</field>
+                                <field name="formula">AGG_DE_19.tax + AGG_DE_31.tax + AGG_DE_46.tax  - AGG_DE_55_TAX.tax + DE_65.tax + DE_69.tax - DE_39.tax</field>
                             </record>
                         </field>
                     </record>
                 </field>
-                <field name="expression_ids">
-                    <record id="tax_report_de_tax_tag_64_tax_agg" model="account.report.expression">
-                        <field name="label">tax</field>
-                        <field name="engine">aggregation</field>
-                        <field name="formula">DE_65.tax + DE_69.tax - DE_39.tax</field>
-                    </record>
-                </field>
             </record>
-
-            <record id="tax_report_de_tag_71" model="account.report.line">
-                <field name="name">Reduction</field>
-                <field name="name@de">Minderung</field>
+            <record id="tax_report_de_section_i" model="account.report.line">
+                <field name="name">I. Supplementary information on reductions according to § 17, Paragraph 1, Sentences 1 and 2 in conjunction with Paragraph 2, Number 1, Sentence 1 of the German VAT Act (UStG)</field>
+                <field name="name@de">I. Ergänzende Angaben zu Minderungen nach § 17 Absatz 1 Sätze 1 und 2 in Verbindung mit Absatz 2 Nummer 1 Satz 1 UStG</field>
                 <field name="children_ids">
                     <record id="tax_report_de_tag_50" model="account.report.line">
                         <field name="name">50. Reduction of the tax base </field>
@@ -753,20 +686,6 @@
                 </field>
             </record>
         </field>
-    </record>
-
-    <record id="tax_report_sections" model="account.report">
-        <field name="name">Tax Report</field>
-        <field name="name@de">Steuerbericht</field>
-        <field name="root_report_id" ref="account.generic_tax_report"/>
-        <field name="country_id" ref="base.de"/>
-        <field name="allow_foreign_vat" eval="True"/>
-        <field name="availability_condition">country</field>
-        <field name="use_sections" eval="True"/>
-        <field name="section_report_ids" eval="[Command.set([
-            ref('l10n_de.tax_report'),
-            ref('l10n_de.l10n_de_tax_report_headers'),
-            ])]"/>
     </record>
 
     <record id="tag_de_intracom_community_delivery" model="account.account.tag">
