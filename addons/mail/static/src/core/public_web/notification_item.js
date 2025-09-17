@@ -55,7 +55,7 @@ export class NotificationItem extends Component {
     }
 
     onClick(ev) {
-        this.props.onClick(ev.target === this.markAsReadRef.el);
+        this.props.onClick(this.markAsReadRef.el?.contains(ev.target));
     }
 
     webkitLineClamp(maxLine) {
