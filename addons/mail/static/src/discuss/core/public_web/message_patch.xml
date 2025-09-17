@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-inherit="mail.Message" t-inherit-mode="extension">
+        <xpath expr="//*[@name='after-reactions']" position="after">
+            <SubChannelPreview t-if="message.linkedSubChannel?.notEq(props.thread)" class="'mt-1 mx-4'" thread="message.linkedSubChannel" onClick="() => this.message.linkedSubChannel.open()"/>
+        </xpath>
+    </t>
+</templates>

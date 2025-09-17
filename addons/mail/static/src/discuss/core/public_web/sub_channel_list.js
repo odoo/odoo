@@ -1,14 +1,12 @@
 import { NotificationItem } from "@mail/core/public_web/notification_item";
 import { ActionPanel } from "@mail/discuss/core/common/action_panel";
-import { isToday } from "@mail/utils/common/dates";
+import { SubChannelPreview } from "@mail/discuss/core/public_web/sub_channel_preview";
 import { useSequential, useVisible } from "@mail/utils/common/hooks";
 import { Component, useEffect, useRef, useState } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
 import { useAutofocus, useService } from "@web/core/utils/hooks";
 import { fuzzyLookup } from "@web/core/utils/search";
-
-const { DateTime } = luxon;
 
 /**
  * @typedef {Object} Props
@@ -18,7 +16,7 @@ const { DateTime } = luxon;
  */
 export class SubChannelList extends Component {
     static template = "mail.SubChannelList";
-    static components = { ActionPanel, NotificationItem };
+    static components = { ActionPanel, NotificationItem, SubChannelPreview };
 
     static props = ["thread", "close?"];
 
@@ -71,13 +69,6 @@ export class SubChannelList extends Component {
         this.state.searching = false;
         this.state.loading = false;
         this.state.subChannels = this.props.thread.sub_channel_ids;
-    }
-
-    dateText(message) {
-        if (isToday(message.datetime)) {
-            return message.datetime?.toLocaleString(DateTime.TIME_SIMPLE);
-        }
-        return message.datetime?.toLocaleString(DateTime.DATE_MED);
     }
 
     onKeydownSearch(ev) {

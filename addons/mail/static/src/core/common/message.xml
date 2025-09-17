@@ -140,6 +140,7 @@
                             <t t-if="message.bubbleColor and (!message.hasTextContent or env.inChatWindow) and !(props.asCard and isMobileOS)" t-call="mail.Message.actions"/>
                         </div>
                         <MessageReactions message="message" openReactionMenu="openReactionMenu" t-if="message.reactions.length"/>
+                        <t name="after-reactions"/>
                     </div>
                 </div>
             </div>

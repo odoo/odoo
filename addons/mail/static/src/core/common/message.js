@@ -135,6 +135,7 @@ export class Message extends Component {
         useChildSubEnv({
             message: this.props.message,
             alignedRight: this.isAlignedRight,
+            inMessage: true,
         });
         onMounted(() => {
             if (this.shadowBody.el) {
