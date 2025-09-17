@@ -371,7 +371,7 @@ class HrLeave(models.Model):
             if not leave.employee_id:
                 continue
             contracts = self.env['hr.version'].search([('employee_id', '=', leave.employee_id.id)]).filtered(
-                lambda c: c.date_start <= leave.request_date_to and
+                lambda c: (c.date_start <= leave.request_date_to if leave.request_date_to else c.date_start <= leave.request_date_from) and
                           (not c.date_end or c.date_end >= leave.request_date_from))
             if contracts:
                 # If there are more than one contract they should all have the
