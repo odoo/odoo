@@ -201,6 +201,12 @@ export class Thread extends Component {
             if (!this.env.chatter || this.env.chatter?.fetchMessages) {
                 if (this.env.chatter) {
                     this.env.chatter.fetchMessages = false;
+                    const needactionMessageIds = this.props.thread.messages
+                        .filter((msg) => msg.needaction && msg.message_type !== "user_notification")
+                        .map((msg) => msg.id);
+                    if (needactionMessageIds.length) {
+                        this.props.thread.markMessagesAsRead(needactionMessageIds);
+                    }
                 }
                 this.fetchMessages();
             }

@@ -491,6 +491,11 @@ export class Message extends Record {
     }
 
     /** @param {import("models").Thread} thread the thread where the message is shown */
+    canMarkAsRead(thread) {
+        return thread && this.needaction;
+    }
+
+    /** @param {import("models").Thread} thread the thread where the message is shown */
     canReplyTo(thread) {
         return (
             ["discuss.channel", "mail.box"].includes(thread?.model) &&

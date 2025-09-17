@@ -27,11 +27,28 @@ patch(Message.prototype, {
         this.action = useService("action");
         this.avatarCard = usePopover(AvatarCardPopover);
     },
+    get attClass() {
+        return {
+            ...super.attClass,
+            "o-needaction-message o-rounded-bubble bg-view shadow-sm border pb-1 pt-sm-2":
+                this.message.needaction && this.env.inChatter,
+        };
+    },
     get authorAvatarAttClass() {
         return {
             ...super.authorAvatarAttClass,
             "o_redirect cursor-pointer": this.hasAuthorClickable(),
         };
+    },
+    get onRightSwipe() {
+        if (this.hasTouch() && this.message.canMoveToInbox(this.props.thread)) {
+            return {
+                action: () => this.message.moveToInbox(this.props.thread),
+                bgColor: "bg-secondary",
+                icon: "fa-eye-slash",
+            };
+        }
+        return super.onRightSwipe;
     },
     getAuthorAttClass() {
         return {

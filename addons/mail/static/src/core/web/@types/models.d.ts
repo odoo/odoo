@@ -11,6 +11,8 @@ declare module "models" {
     export interface Message {
         canForward: (thread: Thread) => boolean;
         canReplyAll: (thread: Thread) => boolean;
+        canMoveToInbox: (thread: Thread) => boolean;
+        moveToInbox: (thread: Thread) => void;
     }
     export interface Store {
         _onActivityBroadcastChannelMessage: (param0: { data: { type: "INSERT"|"DELETE"|"RELOAD_CHATTER", payload: Partial<Activity> } }) => void;
