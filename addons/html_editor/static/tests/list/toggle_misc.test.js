@@ -11,6 +11,11 @@ describe("Mixed", () => {
             stepFunction: toggleUnorderedList,
             contentAfter: "<ul><li>a[b]c</li></ul>",
         });
+        await testEditor({
+            contentBefore: '<ol><li><a href="http://test.com">[test]</a></li></ol>',
+            stepFunction: toggleUnorderedList,
+            contentAfter: '<ul><li><a href="http://test.com">[test]</a></li></ul>',
+        });
     });
 
     test("should turn an unordered list into an ordered list", async () => {
@@ -18,6 +23,11 @@ describe("Mixed", () => {
             contentBefore: "<ul><li>a[b]c</li></ul>",
             stepFunction: toggleOrderedList,
             contentAfter: "<ol><li>a[b]c</li></ol>",
+        });
+        await testEditor({
+            contentBefore: '<ul><li><a href="http://test.com">[test]</a></li></ul>',
+            stepFunction: toggleOrderedList,
+            contentAfter: '<ol><li><a href="http://test.com">[test]</a></li></ol>',
         });
     });
 
@@ -346,6 +356,12 @@ describe("Mixed", () => {
             contentBefore: "<ul><li>a[b]c</li></ul>",
             stepFunction: toggleCheckList,
             contentAfter: '<ul class="o_checklist"><li>a[b]c</li></ul>',
+        });
+        await testEditor({
+            contentBefore: '<ul><li><a href="http://test.com">[test]</a></li></ul>',
+            stepFunction: toggleCheckList,
+            contentAfter:
+                '<ul class="o_checklist"><li><a href="http://test.com">[test]</a></li></ul>',
         });
     });
 
