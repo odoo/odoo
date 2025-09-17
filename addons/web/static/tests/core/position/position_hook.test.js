@@ -319,6 +319,24 @@ test("is positioned relative to its containing block", async () => {
     expect(popBox1.left).toBe(popBox2.left);
 });
 
+function getPopperComponent(popperOptions, target) {
+    class PopperComp extends Component {
+        static template = xml`
+            <div id="popper" t-ref="popper" style="background-color: plum; height: 100px; width: 100px">
+                <div id="popper-content" style="background-color: coral; height: 50px; width: 50px"/>
+            </div>
+        `;
+        static props = ["*"];
+        setup() {
+            usePosition("popper", () => target?.el || target, {
+                ...popperOptions,
+                container: () => popperOptions?.container,
+            });
+        }
+    }
+    return PopperComp;
+}
+
 test("iframe: popper is outside, target inside", async () => {
     await mountWithCleanup(
         `<div id="container" style="background-color: salmon; display: flex; align-items: center; justify-content: center; width: 450px; height: 450px; margin: 25px"/>`
@@ -347,24 +365,6 @@ test("iframe: popper is outside, target inside", async () => {
         width: "400px",
         overflowX: "hidden",
     });
-
-    function getPopperComponent(popperOptions, target) {
-        class PopperComp extends Component {
-            static template = xml`
-                <div id="popper" t-ref="popper" style="background-color: plum; height: 100px; width: 100px">
-                    <div id="popper-content" style="background-color: coral; height: 50px; width: 50px"/>
-                </div>
-            `;
-            static props = ["*"];
-            setup() {
-                usePosition("popper", () => target?.el || target, {
-                    ...popperOptions,
-                    container: () => popperOptions?.container,
-                });
-            }
-        }
-        return PopperComp;
-    }
 
     // Prepare popper outside iframe
     const popperTarget = iframe.contentDocument.getElementById("target");
@@ -418,6 +418,69 @@ test("iframe: popper is outside, target inside", async () => {
     expectedLeft = iframeLeft + targetBox.left + popperTarget.offsetWidth / 2 - popperBox.width / 2;
 
     expect(popperBox.top).toBe(expectedTop);
+    expect(popperBox.top).toBe(onPositionedArgs.solution.top);
+
+    expect(popperBox.left).toBe(expectedLeft);
+    expect(popperBox.left).toBe(onPositionedArgs.solution.left);
+});
+
+test("iframe: popper is outside, target and container inside", async () => {
+    await mountWithCleanup(
+        `<div id="container" style="background-color: salmon; display: flex; align-items: center; justify-content: center; width: 700px; height: 700px; margin: 25px"/>`
+    );
+
+    const iframe = document.createElement("iframe");
+    Object.assign(iframe.style, {
+        top: "50px",
+        height: "500px",
+        width: "325px",
+        margin: "100px",
+    });
+    iframe.srcdoc = `<div id="inner-container"><div id="target" style="background-color: green; width: 50px; height: 500px; top: 50px"/></div>`;
+    const def = new Deferred();
+    iframe.onload = () => def.resolve();
+    const container = queryOne("#container");
+    container.appendChild(iframe);
+    await def;
+
+    const innerContainer = queryOne(":iframe #inner-container");
+    Object.assign(innerContainer.style, {
+        display: "flex",
+        justifyContent: "center",
+        height: "300px",
+        width: "300px",
+        margin: "10px",
+        backgroundColor: "yellow",
+        overflowY: "auto",
+    });
+
+    const popperTarget = iframe.contentDocument.getElementById("target");
+    let onPositionedArgs;
+    const Popper = getPopperComponent(
+        {
+            container,
+            onPositioned: (el, solution) => {
+                onPositionedArgs = { el, solution };
+            },
+        },
+        popperTarget
+    );
+    await mountWithCleanup(Popper, { target: container, noMainContainer: true });
+
+    expect("#popper").toHaveCount(1);
+    expect("#target").toHaveCount(0);
+
+    expect(":iframe #popper").toHaveCount(0);
+    expect(":iframe #target").toHaveCount(1);
+
+    const { top: iframeTop, left: iframeLeft } = iframe.getBoundingClientRect();
+    const targetBox = popperTarget.getBoundingClientRect();
+    const popperBox = onPositionedArgs.el.getBoundingClientRect();
+    const expectedTop = iframeTop + targetBox.top;
+    const expectedLeft =
+        iframeLeft + targetBox.left + popperTarget.offsetWidth / 2 - popperBox.width / 2;
+
+    expect(popperBox.bottom).toBe(expectedTop);
     expect(popperBox.top).toBe(onPositionedArgs.solution.top);
 
     expect(popperBox.left).toBe(expectedLeft);
