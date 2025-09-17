@@ -90,7 +90,7 @@ export class UpdateDialog extends Component {
             <t t-set-slot="header">
                 <div>
                     Update
-                    <a href="https://www.odoo.com/documentation/19.0/applications/general/iot/iot_advanced/updating_iot.html" class="fa fa-question-circle text-decoration-none text-dark" target="_blank"></a>
+                    <a href="https://www.odoo.com/documentation/latest/applications/general/iot/iot_advanced/updating_iot.html" class="fa fa-question-circle text-decoration-none text-dark" target="_blank"></a>
                 </div>
             </t>
             <t t-set-slot="body">
@@ -108,7 +108,7 @@ export class UpdateDialog extends Component {
                     </div>
                     <div t-else="" class="alert alert-warning small mb-0">
                         A new version of the operating system is available, see:
-                        <a href="https://www.odoo.com/documentation/19.0/applications/general/iot/iot_advanced/updating_iot.html#iot-updating-iot-image-code" target="_blank" class="alert-link">
+                        <a href="https://www.odoo.com/documentation/latest/applications/general/iot/iot_advanced/updating_iot.html#iot-updating-iot-image-code" target="_blank" class="alert-link">
                             Flashing the SD Card on IoT Box
                         </a>
                     </div>

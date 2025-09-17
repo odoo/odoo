@@ -7,7 +7,7 @@
     ],
     'description': 'Sale modifications for Italy E-invoicing',
     'category': 'Accounting/Localizations/EDI',
-    'website': 'https://www.odoo.com/documentation/master/applications/finance/fiscal_localizations/italy.html',
+    'website': 'https://www.odoo.com/documentation/latest/applications/finance/fiscal_localizations/italy.html',
     'data': [
         'views/sale_order_views.xml',
     ],

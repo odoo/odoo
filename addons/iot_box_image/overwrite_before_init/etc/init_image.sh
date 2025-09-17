@@ -55,7 +55,7 @@ odoo_help() {
   echo 'odoo_origin <branch>  Resets Odoo on the specified branch from the odoo repository'
   echo 'devtools              Enables/Disables specific functions for development (more help with devtools help)'
   echo ''
-  echo 'Odoo IoT online help: <https://www.odoo.com/documentation/master/applications/general/iot.html>'
+  echo 'Odoo IoT online help: <https://www.odoo.com/documentation/latest/applications/general/iot.html>'
 }
 
 odoo_dev() {
