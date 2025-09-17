@@ -132,13 +132,13 @@ export class IndexedDB {
             request.onupgradeneeded = (event) => {
                 const db = event.target.result;
                 const dbTables = new Set(db.objectStoreNames);
-                const newTables = this._tables.difference(dbTables);
+                const newTables = new Set([...this._tables].filter(x => !dbTables.has(x)));
                 newTables.forEach((table) => db.createObjectStore(table));
             };
             request.onsuccess = (event) => {
                 const db = event.target.result;
                 const dbTables = new Set(db.objectStoreNames);
-                const newTables = this._tables.difference(dbTables);
+                const newTables = new Set([...this._tables].filter(x => !dbTables.has(x)));
                 if (newTables.size !== 0) {
                     db.close();
                     const version = db.version + 1;
