@@ -1,5 +1,3 @@
-import { queryAll } from "@odoo/hoot-dom";
-
 export function pickRadio(name) {
     return [
         {
@@ -39,7 +37,7 @@ export function pickSelect(name) {
         {
             content: `picking select attribute with name ${name}`,
             trigger: `.modal .configurator_select:has(option:contains('${name}'))`,
-            run: () => {
+            run: ({ queryAll }) => {
                 const selects = queryAll`.modal .configurator_select`;
                 for (const select of selects) {
                     const option = Array.from(select.options).find(
@@ -63,7 +61,7 @@ export function selectedSelect(name) {
         {
             content: `check selected value for select containing option "${name}"`,
             trigger: `.modal .configurator_select:has(option:contains(${name}))`,
-            run: () => {
+            run: ({ queryAll }) => {
                 const selects = queryAll`.modal .configurator_select:has(option:contains(${name}))`;
                 for (const select of selects) {
                     const selected = select.options[select.selectedIndex];
@@ -110,7 +108,7 @@ export function selectedCustomAttribute(value) {
             content: `checking selected custom attribute with value "${value}"`,
             // trigger: `.modal .custom_value:contains('${value}')`,
             trigger: `.modal .custom_value`,
-            run: () => {
+            run: ({ queryAll }) => {
                 const inputs = queryAll(".modal .custom_value");
                 for (const input of inputs) {
                     const actual = input.value?.trim();

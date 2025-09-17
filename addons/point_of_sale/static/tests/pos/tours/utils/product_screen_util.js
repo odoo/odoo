@@ -6,7 +6,6 @@ import * as TextInputPopup from "@point_of_sale/../tests/generic_helpers/text_in
 import * as Dialog from "@point_of_sale/../tests/generic_helpers/dialog_util";
 import * as Chrome from "@point_of_sale/../tests/pos/tours/utils/chrome_util";
 import { LONG_PRESS_DURATION } from "@point_of_sale/utils";
-import { queryFirst } from "@odoo/hoot-dom";
 
 export function firstProductIsFavorite(name) {
     return [
@@ -998,7 +997,7 @@ export function longPressOrderline(productName, delay = 500) {
         {
             content: `long press on orderline with product '${productName}'`,
             trigger: `.order-container .orderline:has(.product-name:contains("${productName}"))`,
-            run: async () => {
+            run: async ({ queryFirst }) => {
                 const el = queryFirst`.order-container .orderline:has(.product-name:contains("${productName}"))`;
                 if (!el) {
                     throw new Error(`Orderline with product '${productName}' not found`);
