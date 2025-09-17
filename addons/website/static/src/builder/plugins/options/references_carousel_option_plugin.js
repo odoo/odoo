@@ -2,7 +2,6 @@ import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
 import { withSequence } from "@html_editor/utils/resource";
 import { END } from "@html_builder/utils/option_sequence";
-import { ReferencesCarouselOption } from "./references_carousel_option";
 
 class ReferencesCarouselOptionPlugin extends Plugin {
     static id = "referencesCarouselOption";
@@ -11,7 +10,7 @@ class ReferencesCarouselOptionPlugin extends Plugin {
         return {
             builder_options: [
                 withSequence(END, {
-                    OptionComponent: ReferencesCarouselOption,
+                    template: "website.ReferencesCarouselOption",
                     selector: ".s_references_carousel",
                 }),
             ],
@@ -22,92 +21,89 @@ class ReferencesCarouselOptionPlugin extends Plugin {
         };
     }
 
+    // Apply the 'snippet-selected' class to the snippet when it is
+    // selected in the editor to style it(pause the animation)
     onSelectionChange(containers) {
         // Find all references carousels in the document
-        const allReferencesCarousels = this.editable.querySelectorAll('.s_references_carousel');
-
-        // Check if any of the selected containers is a references carousel
-        const isReferencesCarouselSelected = containers.some(container => 
-            container.element && container.element.matches('.s_references_carousel')
-        );
+        const allReferencesCarouselEls = this.editable.querySelectorAll('.s_references_carousel');
 
         // Add or remove the 'snippet-selected' class to all references carousels
-        allReferencesCarousels.forEach(carousel => {
-            if (isReferencesCarouselSelected && containers.some(container => container.element === carousel)) {
-                carousel.classList.add('snippet-selected');
-            } else {
-                carousel.classList.remove('snippet-selected');
-            }
+        allReferencesCarouselEls.forEach(carouselEl => {
+            carouselEl.classList.toggle(
+                'snippet-selected',
+                containers.some(container => container.element === carouselEl)
+            );
         });
     }
 
     onWillClone({ originalEl }) {
-        // If the original element is an img inside a li.item, we need to redirect the clone
-        // to target the li.item instead. We'll store this information for the clone operation.
-        if (originalEl.matches('.s_references_carousel .item img')) {
-            const liItem = originalEl.closest('.item');
-            if (liItem) {
+        // If the original element is an img inside a li.item, we need to
+        // redirect the clone to target the li.item instead. We'll store this
+        // information for the clone operation.
+        if (originalEl.matches('.s_references_carousel .s_references_carousel_item img')) {
+            const liItemEl = originalEl.closest('.s_references_carousel_item');
+            if (liItemEl) {
                 // Store the target li element on the original img element for the clone operation
-                originalEl._cloneTarget = liItem;
+                originalEl._cloneTarget = liItemEl;
             }
         }
     }
 
     onCloned({ cloneEl, originalEl }) {
         // If we cloned an img element that had a _cloneTarget, we need to handle this specially
-        if (originalEl._cloneTarget && cloneEl.matches('.s_references_carousel .item img')) {
+        if (originalEl._cloneTarget && cloneEl.matches('.s_references_carousel .s_references_carousel_item img')) {
             // Remove the cloned img element
             cloneEl.remove();
 
             // Clone the li.item instead
-            const liItem = originalEl._cloneTarget;
-            const clonedLi = liItem.cloneNode(true);
+            const liItemEl = originalEl._cloneTarget;
+            const clonedLiEl = liItemEl.cloneNode(true);
 
             // Insert the cloned li at the end of the list
-            const list = liItem.closest('.list');
-            if (list) {
-                list.appendChild(clonedLi);
+            const listEl = liItemEl.closest('.s_references_carousel_list');
+            if (listEl) {
+                listEl.appendChild(clonedLiEl);
             }
 
             // Update the position and quantity
-            const slider = clonedLi.closest('.slider');
-            if (slider) {
-                const items = slider.querySelectorAll('.item');
+            const sliderEl = clonedLiEl.closest('.s_references_carousel_slider');
+            if (sliderEl) {
+                const itemEls = sliderEl.querySelectorAll('.s_references_carousel_item');
                 // Update the position of the cloned element
-                clonedLi.style.setProperty('--position', items.length);
+                clonedLiEl.style.setProperty('--position', itemEls.length);
                 // Update the quantity on the slider
-                slider.style.setProperty('--quantity', items.length);
+                sliderEl.style.setProperty('--quantity', itemEls.length);
             }
 
             // Clean up the temporary property
             delete originalEl._cloneTarget;
-        } else if (cloneEl.matches('.s_references_carousel .item')) {
+        } else if (cloneEl.matches('.s_references_carousel .s_references_carousel_item')) {
             // Normal case: we cloned a li.item element directly
-            const slider = cloneEl.closest('.slider');
-            if (slider) {
-                const items = slider.querySelectorAll('.item');
+            const sliderEl = cloneEl.closest('.s_references_carousel_slider');
+            if (sliderEl) {
+                const itemEls = sliderEl.querySelectorAll('.s_references_carousel_item');
                 // Update the position of the cloned element
-                cloneEl.style.setProperty('--position', items.length);
+                cloneEl.style.setProperty('--position', itemEls.length);
                 // Update the quantity on the slider
-                slider.style.setProperty('--quantity', items.length);
+                sliderEl.style.setProperty('--quantity', itemEls.length);
             }
         }
     }
 
     onRemove(removedEl) {
         // If we removed a li.item element, update the positions and quantity
-        if (removedEl && removedEl.matches('.s_references_carousel .item')) {
-            const slider = removedEl.closest('.slider');
-            if (slider) {
-                const remainingItems = slider.querySelectorAll('.item');
+        if (removedEl && removedEl.matches('.s_references_carousel .s_references_carousel_item')) {
+            const sliderEl = removedEl.closest('.s_references_carousel_slider');
+            if (sliderEl) {
+                const remainingItemEls = sliderEl.querySelectorAll('.s_references_carousel_item');
 
                 // Update positions of all remaining items
-                remainingItems.forEach((item, index) => {
-                    item.style.setProperty('--position', index + 1);
+                remainingItemEls.forEach((itemEl, index) => {
+                    itemEl.style.setProperty('--position', index + 1);
                 });
 
                 // Update the quantity on the slider
-                slider.style.setProperty('--quantity', remainingItems.length);
+                sliderEl.style.setProperty('--quantity', remainingItemEls.length);
             }
         }
     }

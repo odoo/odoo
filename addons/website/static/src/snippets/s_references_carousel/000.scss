@@ -1,17 +1,17 @@
 .s_references_carousel {
-    .slider {
+    .s_references_carousel_slider {
         --duration: 5s;
         height: var(--height);
         overflow: hidden;
         mask-image: linear-gradient(to right, transparent, #000 10% 90%, transparent);
     }
 
-    .list {
+    .s_references_carousel_list {
         min-width: calc(var(--width) * var(--quantity));
         position: relative;
     }
 
-    .item {
+    .s_references_carousel_item {
         width: var(--width);
         height: var(--height);
         position: absolute;
@@ -38,7 +38,7 @@
 
 // Style the references carousel when it's selected in the editor
 body.editor_enable .s_references_carousel.snippet-selected {
-    .item {
+    .s_references_carousel_item {
         animation-play-state: paused;
         // Position items properly when animation is paused to prevent overlapping
         // Calculate left position based on item position and width
@@ -47,13 +47,13 @@ body.editor_enable .s_references_carousel.snippet-selected {
         left: unset !important;
     }
 
-    ul {
+    .s_references_carousel_list {
         display: flex;
         flex-wrap: wrap;
         min-width: unset;
     }
 
-    .slider {
+    .s_references_carousel_slider {
         height: unset;
     }
 }
