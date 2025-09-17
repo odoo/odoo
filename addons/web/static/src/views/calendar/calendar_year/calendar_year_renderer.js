@@ -1,5 +1,4 @@
 import { localization } from "@web/core/l10n/localization";
-import { useDebounced } from "@web/core/utils/timing";
 import { getColor } from "../colors";
 import { useCalendarPopover, useFullCalendar } from "../hooks";
 import { CalendarYearPopover } from "./calendar_year_popover";
@@ -34,7 +33,6 @@ export class CalendarYearRenderer extends Component {
         }
         this.popover = useCalendarPopover(this.constructor.components.Popover);
         this.rootRef = useRef("root");
-        this.onWindowResizeDebounced = useDebounced(this.onWindowResize, 200);
 
         useEffect(() => {
             this.updateSize();
@@ -74,7 +72,7 @@ export class CalendarYearRenderer extends Component {
             weekNumberCalculation: (date) => getLocalWeekNumber(date),
             weekNumbers: false,
             weekNumberFormat: { week: "numeric" },
-            windowResize: this.onWindowResizeDebounced,
+            windowResize: this.onWindowResize,
             eventContent: this.onEventContent,
             viewDidMount: this.viewDidMount,
             weekends: this.props.isWeekendVisible,
