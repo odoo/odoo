@@ -675,9 +675,15 @@ class AccountMove(models.Model):
     @api.model
     def _l10n_in_extract_digits(self, string):
         if not string:
-            return string
+            return ""
         matches = re.findall(r"\d+", string)
         return "".join(matches)
+
+    @api.model
+    def _l10n_in_get_hsn_type(self, hsn_code):
+        if not hsn_code:
+            return ""
+        return "service" if self._l10n_in_extract_digits(hsn_code).startswith('99') else "consu"
 
     @api.model
     def _l10n_in_round_value(self, amount, precision_digits=2):

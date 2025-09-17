@@ -388,13 +388,16 @@ class L10nInEwaybill(models.Model):
         if not any(l.product_id for l in invoice_lines):
             error_message.append(_("Ensure that at least one line item includes a product."))
             return error_message
-        if all(l.product_id.type == 'service' for l in invoice_lines if l.product_id):
+        if all(
+            self.env['account.move']._l10n_in_get_hsn_type(l.l10n_in_hsn_code) == 'service'
+            for l in invoice_lines if l.product_id
+        ):
             error_message.append(_("You need at least one product having 'Product Type' as stockable or consumable."))
             return error_message
         for line in invoice_lines:
             if (
                 line.display_type == 'product'
-                and line.product_id.type != 'service'
+                and self.env['account.move']._l10n_in_get_hsn_type(line.l10n_in_hsn_code) != 'service'
                 and (hsn_error_message := line._l10n_in_check_invalid_hsn_code())
             ):
                 error_message.append(hsn_error_message)
