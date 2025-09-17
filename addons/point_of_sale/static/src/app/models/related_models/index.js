@@ -10,6 +10,7 @@ import {
     STORE_SYMBOL,
     mapObj,
     convertDateTimeToRaw,
+    convertDateToRaw,
     BACKREF_PREFIX,
     PARENT_X2MANY_TYPES,
     SERIALIZED_UI_STATE_PROP,
@@ -277,7 +278,9 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
                     }
                 } else {
                     rawData[fieldName] = DATE_TIME_TYPE.has(field.type)
-                        ? convertDateTimeToRaw(value)
+                        ? field.type === "datetime"
+                            ? convertDateTimeToRaw(value)
+                            : convertDateToRaw(value)
                         : value;
                 }
             }
@@ -430,7 +433,10 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
                     const oldValue = record[RAW_SYMBOL][name];
                     let newValue = vals[name];
                     if (DATE_TIME_TYPE.has(field.type)) {
-                        newValue = convertDateTimeToRaw(newValue);
+                        newValue =
+                            field.type === "datetime"
+                                ? convertDateTimeToRaw(newValue)
+                                : convertDateToRaw(newValue);
                     }
                     if (newValue !== oldValue) {
                         record[RAW_SYMBOL][name] = newValue;
