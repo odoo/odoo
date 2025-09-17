@@ -56,7 +56,6 @@ export class QWebPlugin extends Plugin {
             if (
                 [
                     "data-oe-t-group",
-                    "data-oe-t-inline",
                     "data-oe-t-selectable",
                     "data-oe-t-group-active",
                 ].includes(mutationRecord.attributeName)
@@ -242,11 +241,10 @@ export class QWebPlugin extends Plugin {
 
     clearDataAttributes(root) {
         for (const node of root.querySelectorAll(
-            "[data-oe-t-group], [data-oe-t-inline], [data-oe-t-selectable], [data-oe-t-group-active]"
+            "[data-oe-t-group], [data-oe-t-selectable], [data-oe-t-group-active]"
         )) {
             node.removeAttribute("data-oe-t-group-active");
             node.removeAttribute("data-oe-t-group");
-            node.removeAttribute("data-oe-t-inline");
             node.removeAttribute("data-oe-t-selectable");
         }
     }

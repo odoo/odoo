@@ -104,9 +104,9 @@ describe("Selection collapsed", () => {
                 stepFunction: splitBlock,
                 contentAfter: unformat(`
                     <h1 t-if="true">
-                        <t t-out="Hello"></t>
+                        <t t-out="Hello" data-oe-t-inline="true"></t>
                         <br>
-                        []<t t-out="World"></t>
+                        []<t t-out="World" data-oe-t-inline="true"></t>
                     </h1>
                 `),
                 config: { Plugins: [...MAIN_PLUGINS, QWebPlugin] },

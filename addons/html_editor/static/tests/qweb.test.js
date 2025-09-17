@@ -33,7 +33,7 @@ describe("qweb picker", () => {
         );
 
         dispatchClean(editor);
-        expect(getContent(el)).toBe(`<div><t t-if="test">yes</t><t t-else="">no</t></div>`);
+        expect(getContent(el)).toBe(`<div><t t-if="test" data-oe-t-inline="true">yes</t><t t-else="" data-oe-t-inline="true">no</t></div>`);
     });
 
     test("plugin's dom markers are not savable", async () => {
@@ -301,9 +301,9 @@ test("cleaning removes content editable", async () => {
 
     expect(editor.getContent()).toBe(`
         <div>
-            <t t-field="test">Hello</t>
-            <t t-out="test">Hello</t>
-            <t t-esc="test">Hello</t>
-            <t t-raw="test">Hello</t>
+            <t t-field="test" data-oe-t-inline="true">Hello</t>
+            <t t-out="test" data-oe-t-inline="true">Hello</t>
+            <t t-esc="test" data-oe-t-inline="true">Hello</t>
+            <t t-raw="test" data-oe-t-inline="true">Hello</t>
         </div>`);
 });
