@@ -15,7 +15,7 @@ class WebsiteSaleGMCCommon(ProductVariantsCommon, WebsiteSaleCommon):
     def setUpClass(cls):
         super().setUpClass()
         cls.ProductFeedController = ProductFeed()
-        cls.website.enabled_gmc_src = True
+        cls.env['res.config.settings'].create({'group_gmc_feed': True}).execute()
 
         cls.gmc_feed = cls.env['product.feed'].create({
             'name': "GMC",

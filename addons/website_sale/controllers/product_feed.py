@@ -22,7 +22,7 @@ class ProductFeed(Controller):
         This method generates an XML feed containing information about eCommerce products.
         The feed is configured via the `product.feed` model, allowing customization such as:
         - Localization by specifying a language or pricelist (currency).
-        - Filtering products by category or categories.
+        - Filtering products by categories.
 
         Notes:
         - The feed is only accessible through a valid `access_token`.
@@ -35,7 +35,7 @@ class ProductFeed(Controller):
         :return: The XML feed compressed using GZIP.
         :rtype: bytes
         """
-        if not request.website.enabled_gmc_src:
+        if not request.env['res.groups']._is_feature_enabled('website_sale.group_product_feed'):
             raise NotFound()
 
         feed_sudo = self._find_and_check_feed_access(feed_id, access_token)
