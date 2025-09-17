@@ -276,7 +276,7 @@ export class BaseProductPageAction extends BuilderAction {
                     {
                         name: webpName,
                         description: size === originalSize ? "" : `resize: ${size}`,
-                        datas: canvas.toDataURL("image/webp", 0.75).split(",")[1],
+                        datas: canvas.toDataURL("image/webp", 1).split(",")[1],
                         res_id: referenceId,
                         res_model: "ir.attachment",
                         mimetype: "image/webp",
@@ -295,7 +295,7 @@ export class BaseProductPageAction extends BuilderAction {
                     {
                         name: attachment.name,
                         description: `format: ${format}`,
-                        datas: canvas.toDataURL(mimetype, 0.75).split(",")[1],
+                        datas: canvas.toDataURL(mimetype, 1).split(",")[1],
                         res_id: resizedId,
                         res_model: "ir.attachment",
                         mimetype: mimetype,
