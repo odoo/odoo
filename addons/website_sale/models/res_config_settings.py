@@ -24,8 +24,6 @@ class ResConfigSettings(models.TransientModel):
         string="Google Merchant Center",
         implied_group='website_sale.group_product_feed',
         group='base.group_user',
-        related='website_id.enabled_gmc_src',
-        readonly=False,
     )
 
     # Modules

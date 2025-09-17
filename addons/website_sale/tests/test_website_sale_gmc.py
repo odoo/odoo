@@ -20,7 +20,7 @@ class TestWebsiteSaleGMC(WebsiteSaleGMCCommon, HttpCase):
         self.assertEqual(200, response.status_code)
 
     def test_gmc_xml_not_found_if_gmc_setting_disabled(self):
-        self.website.enabled_gmc_src = False
+        self.env['res.config.settings'].create({'group_gmc_feed': False}).execute()
 
         response = self.url_open(self.gmc_feed.url)
 
