@@ -192,7 +192,7 @@ export class LinkPopover extends Component {
                                 : ["solid", "custom"],
                         getUsedCustomColors: () => [],
                         colorPrefix: "",
-                        themeColorPrefix: "hb-cp-",
+                        cssVarColorPrefix: "hb-cp-",
                         applyColor: (colorValue) => {
                             this[colorStateRef].selectedColor = colorValue;
                             this[resetValueRef] = colorValue;
