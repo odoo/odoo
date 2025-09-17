@@ -578,7 +578,10 @@ test("Use saved volume settings", async () => {
     await openDiscuss(channelId);
     await click("[title='Join the Call']");
     await contains(".o-discuss-Call");
-    await triggerEvents(`.o-discuss-CallParticipantCard[title='${partnerName}']`, ["mouseenter"]);
+    await contains(
+        `.o-discuss-CallParticipantCard[title='${partnerName}'][data-is-context-menu-available]`
+    );
+    await hover(`.o-discuss-CallParticipantCard[title='${partnerName}']`);
     await click("button[title='Participant options']");
     await contains(".o-discuss-CallContextMenu");
     const rangeInput = queryFirst(".o-discuss-CallContextMenu input[type='range']");
@@ -822,4 +825,37 @@ test("dynamic focus switches to talking participant", async () => {
     await contains(".o-dropdown-item", { count: 0 });
     await click("[title='More']");
     await contains(".o-dropdown-item:contains('Autofocus speaker')");
+});
+
+test("should not show context menu on participant card when not in a call", async () => {
+    mockGetMedia();
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({
+        name: "General",
+    });
+    pyEnv["discuss.channel.rtc.session"].create([
+        {
+            channel_member_id: pyEnv["discuss.channel.member"].create({
+                channel_id: channelId,
+                partner_id: pyEnv["res.partner"].create({ name: "Awesome Partner" }),
+            }),
+            channel_id: channelId,
+        },
+    ]);
+    await start();
+    await openDiscuss(channelId);
+    await contains(".o-discuss-CallParticipantCard[title='Awesome Partner']");
+    await contains(
+        ".o-discuss-CallParticipantCard[title='Awesome Partner'][data-is-context-menu-available]",
+        { count: 0 }
+    );
+    await click("[title='Join Call']");
+    await contains(
+        ".o-discuss-CallParticipantCard[title='Awesome Partner'][data-is-context-menu-available]"
+    );
+    await hover(".o-discuss-CallParticipantCard[title='Awesome Partner']");
+    await click(
+        ".o-discuss-CallParticipantCard[title='Awesome Partner'] .o-discuss-CallParticipantCard-contextButton"
+    );
+    await contains(".o-discuss-CallContextMenu");
 });
