@@ -171,7 +171,7 @@ export class Homepage extends Component {
                 <FooterButtons />
                 <div class="d-flex justify-content-center gap-2 mt-2" t-if="!store.base.is_access_point_up">
                     <a href="https://www.odoo.com/fr_FR/help" target="_blank" class="link-primary">Help</a>
-                    <a href="https://www.odoo.com/documentation/master/applications/general/iot.html" target="_blank" class="link-primary">Documentation</a>
+                    <a href="https://www.odoo.com/documentation/latest/applications/general/iot.html" target="_blank" class="link-primary">Documentation</a>
                 </div>
             </div>
         </div>
