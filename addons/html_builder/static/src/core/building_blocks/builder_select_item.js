@@ -32,7 +32,7 @@ export class BuilderSelectItemInternal extends Component {
         this.info = useActionInfo();
         const item = useRef("item");
         let label = "";
-        const getLabel = () => {
+        this.getLabel = () => {
             // todo: it's not clear why the item.el?.innerHTML is not set at in
             // some cases. We fallback on a previously set value to circumvent
             // the problem, but it should be investigated.
@@ -41,22 +41,27 @@ export class BuilderSelectItemInternal extends Component {
             return label;
         };
 
-        onMounted(getLabel);
+        onMounted(this.getLabel);
 
         const { state, operation } = useSelectableItemComponent(this.props.id, {
-            getLabel,
+            getLabel: this.getLabel,
         });
         this.state = state;
         this.operation = operation;
-
-        this.onFocusin = this.operation.preview;
-        this.onFocusout = this.operation.revert;
     }
 
     onClick() {
         this.env.onSelectItem();
         this.operation.commit();
         this.removeKeydown?.();
+    }
+    onFocusin() {
+        this.operation.preview;
+        this.env.focusInput();
+    }
+    onFocusout() {
+        this.operation.revert;
+        this.env.focusInput();
     }
     onKeydown(ev) {
         const hotkey = getActiveHotkey(ev);
