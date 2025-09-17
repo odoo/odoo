@@ -210,7 +210,7 @@ def rotate_pdf(pdf):
 def to_pdf_stream(attachment) -> io.BytesIO:
     """Get the byte stream of the attachment as a PDF."""
     stream = io.BytesIO(attachment.raw)
-    if attachment.mimetype == 'application/pdf':
+    if attachment.mimetype.startswith('application/pdf'):
         return stream
     elif attachment.mimetype.startswith('image'):
         output_stream = io.BytesIO()
