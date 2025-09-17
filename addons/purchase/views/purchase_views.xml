@@ -947,4 +947,16 @@ if isinstance(res, dict):
         <field name="binding_model_id" ref="purchase.model_purchase_order"/>
         <field name="binding_view_types">list,kanban</field>
     </record>
+
+    <record id="action_purchase_order_mass_mail" model="ir.actions.act_window">
+        <field name="name">Send by mail</field>
+        <field name="res_model">mail.compose.message</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="context">{
+            'default_composition_mode': 'mass_mail',
+        }</field>
+        <field name="binding_model_id" ref="purchase.model_purchase_order"/>
+        <field name="binding_view_types">list,kanban</field>
+    </record>
 </odoo>
