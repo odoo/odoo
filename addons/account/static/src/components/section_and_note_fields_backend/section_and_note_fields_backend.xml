@@ -36,15 +36,17 @@
                                 </DropdownItem>
                             </t>
                             <DropdownItem
-                                t-if="props.hidePrices and showPricesButton"
+                                t-if="props.hidePrices"
                                 onSelected="() => this.toggleCollapse(record, 'collapse_prices')"
+                                attrs="{ 'class': disablePricesButton ? 'disabled' : '' }"
                             >
                                 <i class="me-1 fa fa-fw" t-att-class="hidePrices ? 'fa-eye' : 'fa-eye-slash'"/><span t-out="hidePrices ? 'Show Prices' : 'Hide Prices'"/>
                             </DropdownItem>
                             <t t-name="composition_button">
                                 <DropdownItem
-                                    t-if="props.hideComposition and showCompositionButton"
+                                    t-if="props.hideComposition"
                                     onSelected="() => this.toggleCollapse(record, 'collapse_composition')"
+                                    attrs="{ 'class': disableCompositionButton ? 'disabled' : '' }"
                                 >
                                     <i class="me-1 fa fa-fw" t-att-class="hideCompositions ? 'fa-eye' : 'fa-eye-slash'"/><span t-out="hideCompositions ? 'Show Composition' : 'Hide Composition'"/>
                                 </DropdownItem>
