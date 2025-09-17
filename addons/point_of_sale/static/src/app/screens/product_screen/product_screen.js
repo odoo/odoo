@@ -255,6 +255,7 @@ export class ProductScreen extends Component {
             product.needToConfigure()
         );
         this.numberBuffer.reset();
+        this.showOptionalProductPopupIfNeeded(product);
     }
     async _getPartnerByBarcode(code) {
         let partner = this.pos.models["res.partner"].getBy("barcode", code.code);
@@ -302,6 +303,7 @@ export class ProductScreen extends Component {
             { code: lotBarcode }
         );
         this.numberBuffer.reset();
+        this.showOptionalProductPopupIfNeeded(product);
     }
     displayAllControlPopup() {
         this.dialog.add(ControlButtonsPopup);
@@ -392,8 +394,11 @@ export class ProductScreen extends Component {
                 options["presetVariant"] = searchedProduct[0];
             }
         }
-        const line = await this.pos.addLineToCurrentOrder({ product_tmpl_id: product }, options);
-        if (line?.product_id?.product_tmpl_id?.pos_optional_product_ids?.length) {
+        await this.pos.addLineToCurrentOrder({ product_tmpl_id: product }, options);
+        this.showOptionalProductPopupIfNeeded(product);
+    }
+    showOptionalProductPopupIfNeeded(product) {
+        if (product.pos_optional_product_ids?.length) {
             this.dialog.add(OptionalProductPopup, {
                 productTemplate: product,
             });
