@@ -53,7 +53,7 @@ export class ColorPicker extends Component {
         setOperationCallbacks: { type: Function, optional: true },
         enabledTabs: { type: Array, optional: true },
         colorPrefix: { type: String },
-        themeColorPrefix: { type: String, optional: true },
+        cssVarColorPrefix: { type: String, optional: true },
         defaultOpacity: { type: Number, optional: true },
         grayscales: { type: Object, optional: true },
         noTransparency: { type: Boolean, optional: true },
@@ -64,7 +64,7 @@ export class ColorPicker extends Component {
         close: () => {},
         defaultOpacity: 100,
         enabledTabs: ["solid", "custom"],
-        themeColorPrefix: "",
+        cssVarColorPrefix: "",
         setOnCloseCallback: () => {},
     };
 

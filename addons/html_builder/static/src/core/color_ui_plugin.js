@@ -7,8 +7,8 @@ export class ColorUIPlugin extends EditorColorUIPlugin {
     }
 
     getPropsForColorSelector(type) {
-        const props = {...super.getPropsForColorSelector(type)};
-        props.themeColorPrefix = "hb-cp-";
+        const props = { ...super.getPropsForColorSelector(type) };
+        props.cssVarColorPrefix = "hb-cp-";
         return props;
     }
 }
