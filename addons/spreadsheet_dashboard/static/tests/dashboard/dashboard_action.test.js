@@ -334,7 +334,7 @@ test("Should toggle favorite status of a dashboard when the 'Favorite' icon is c
     await createSpreadsheetDashboard();
     expect(".o_search_panel_section").toHaveCount(2);
     await contains(".o_dashboard_star").click();
-    expect(".o_dashboard_star").toHaveClass("fa-star favorite_button_enabled", {
+    expect(".o_dashboard_star").toHaveClass("fa-star", {
         message: "The star should be filled",
     });
     expect(".o_search_panel_section").toHaveCount(3);
@@ -343,7 +343,7 @@ test("Should toggle favorite status of a dashboard when the 'Favorite' icon is c
         "FAVORITES"
     );
     await contains(".o_dashboard_star").click();
-    expect(".o_dashboard_star").not.toHaveClass("fa-star favorite_button_enabled", {
+    expect(".o_dashboard_star").not.toHaveClass("fa-star", {
         message: "The star should not be filled",
     });
     expect.verifySteps(["action_toggle_favorite"]);
