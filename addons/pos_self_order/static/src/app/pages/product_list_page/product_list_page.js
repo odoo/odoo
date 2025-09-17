@@ -64,9 +64,11 @@ export class ProductListPage extends Component {
 
         useEffect(
             (lines) => {
+                const changes = this.selfOrder.currentOrder.changes;
                 this.state.quantityByProductTmplId = lines
                     .filter((line) => !line.combo_parent_id)
-                    .reduce((acc, { product_id, qty }) => {
+                    .reduce((acc, { product_id, uuid }) => {
+                        const { qty } = changes[uuid] || {};
                         const tmplId = product_id.product_tmpl_id.id;
                         if (tmplId != null) {
                             acc[tmplId] = (acc[tmplId] || 0) + qty;
