@@ -10,4 +10,4 @@ class ResCompany(models.Model):
     @api.depends('partner_id.country_id.country_group_ids.code')
     def _compute_l10n_gcc_country_is_gcc(self):
         for record in self:
-            record.l10n_gcc_country_is_gcc = 'GCC' in record.country_id.country_group_codes
+            record.l10n_gcc_country_is_gcc = record.country_id and 'GCC' in record.country_id.country_group_codes
