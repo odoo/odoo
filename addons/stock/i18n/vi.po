@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-08-29 18:37+0000\n"
-"PO-Revision-Date: 2025-08-08 10:53+0000\n"
+"PO-Revision-Date: 2025-09-16 22:21+0000\n"
 "Last-Translator: \"Thi Huong Nguyen (thng)\" <thng@odoo.com>\n"
 "Language-Team: Vietnamese <https://translate.odoo.com/projects/odoo-18/stock/"
 "vi/>\n"
@@ -82,20 +82,20 @@ msgid ""
 " * Done: The transfer has been processed.\n"
 " * Cancelled: The transfer has been cancelled."
 msgstr ""
-" * Nháp: Lệnh chuyển hàng chưa được xác nhận. Không áp dụng dự trữ.\n"
+" * Nháp: Lệnh chuyển hàng chưa được xác nhận. Không áp dụng đặt trước.\n"
 " * Đợi hoạt động khác: Lệnh chuyển hàng này đang đợi hoạt động khác hoàn "
 "thành mới có thể thực hiện được.\n"
 " * Đang đợi: Lệnh chuyển hàng này đang chờ đủ tình trạng còn hàng của một số "
 "sản phẩm.\n"
 "(a) Chính sách vận chuyển là \"Càng nhanh càng tốt\": không sản phẩm nào có "
-"thể dự trữ.\n"
+"thể đặt trước.\n"
 "(b) Chính sách vận chuyển là \"Khi tất cả sản phẩm đều sẵn sàng\": không "
-"phải tất cả sản phẩm đều có thể dự trữ.\n"
+"phải tất cả sản phẩm đều có thể đặt trước.\n"
 " * Sẵn sàng: Lệnh chuyển hàng đã sẵn sàng để xử lý.\n"
 "(a) Chính sách vận chuyển là \"Càng nhanh càng tốt\": ít nhất một sản phẩm "
-"đã được dự trữ.\n"
+"đã được đặt trước.\n"
 "(b) Chính sách vận chuyển là \"Khi tất cả sản phẩm đều sẵn sàng\": tất cả "
-"sản phẩm đã được dự trữ.\n"
+"sản phẩm đã được đặt trước.\n"
 " * Hoàn tất: Lệnh chuyển hàng đã được xử lý xong.\n"
 " * Đã hủy: Lệnh chuyển hàng đã bị hủy."
 
@@ -351,9 +351,9 @@ msgstr ""
 "* Mới: Điều chuyển tồn kho đã được tạo nhưng chưa được xác nhận.\n"
 "* Chờ điều chuyển khác: Điều chuyển tồn kho liên kết cần được hoàn tất trước "
 "điều chuyển này.\n"
-"* Chờ hàng: Điều chuyển tồn kho đã được xác nhận nhưng không thể dự trữ sản "
-"phẩm.\n"
-"* Có hàng: Sản phẩm của điều chuyển chuyển tồn kho đã được dự trữ.\n"
+"* Chờ hàng: Điều chuyển tồn kho đã được xác nhận nhưng không thể đặt trước "
+"sản phẩm.\n"
+"* Có hàng: Sản phẩm của điều chuyển chuyển tồn kho đã được đặt trước.\n"
 "* Hoàn tất: Sản phẩm đã được chuyển đi và lệnh chuyển hàng này đã được xác "
 "nhận."
 
@@ -657,8 +657,8 @@ msgid ""
 "the \"Check Availability\" button to try to reserve products."
 msgstr ""
 "<i class=\"fa fa-exclamation-triangle\"/>\n"
-"                                Không thể dự trữ tất cả sản phẩm. Hãy bấm "
-"nút \"Kiểm tra tình trạng còn hàng\" để dự trữ các sản phẩm."
+"                                Không thể đặt trước tất cả sản phẩm. Hãy bấm "
+"nút \"Kiểm tra tình trạng còn hàng\" để đặt trước các sản phẩm."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
@@ -2090,7 +2090,7 @@ msgstr "Tính toán phí giao hàng và giao bằng bpost"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__reservation_date
 msgid "Computes when a move should be reserved"
-msgstr "Tính toán thời điểm nên dự trữ cho một điều chuyển"
+msgstr "Tính toán thời điểm nên đặt trước cho một điều chuyển"
 
 #. module: stock
 #: model:ir.model,name:stock.model_res_config_settings
@@ -3677,7 +3677,7 @@ msgid ""
 "Otherwise, this includes goods stored in any Stock Location with 'internal' "
 "type."
 msgstr ""
-"Số lượng dự kiến (được tính bằng Số lượng hiện có - Số lượng dự trữ)\n"
+"Số lượng dự kiến (được tính bằng Số lượng hiện có - Số lượng đặt trước)\n"
 "Đối với một Vị trí tồn kho, số lượng này bao gồm số lượng được lưu trữ trong "
 "vị trí này, hoặc các vị trí phụ của nó.\n"
 "Đối với một Kho hàng, số lượng này bao gồm số lượng được lưu trữ trong Vị "
@@ -4031,8 +4031,8 @@ msgstr "Thời gian dự báo"
 #: model:ir.model.fields,help:stock.field_stock_picking_type__reservation_method
 msgid "How products in transfers of this operation type should be reserved."
 msgstr ""
-"Các sản phẩm đang lệnh chuyển hàng của loại hoạt động này nên được dự trữ "
-"như thế nào."
+"Các sản phẩm đang điều chuyển của loại hoạt động này nên được dự trữ như thế "
+"nào."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_lot_label_layout__id
@@ -5474,14 +5474,14 @@ msgid ""
 "Maximum number of days before scheduled date that priority picking products "
 "should be reserved."
 msgstr ""
-"Số ngày tối đa trước ngày đã lên lịch mà sản phẩm ưu tiên cần được dự trữ."
+"Số ngày tối đa trước ngày đã lên lịch mà sản phẩm ưu tiên cần được đặt trước."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__reservation_days_before
 msgid ""
 "Maximum number of days before scheduled date that products should be "
 "reserved."
-msgstr "Số ngày tối đa trước ngày đã lên lịch mà sản phẩm cần được dự trữ."
+msgstr "Số ngày tối đa trước ngày đã lên lịch mà sản phẩm cần được đặt trước."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_package_type__max_weight
@@ -6085,8 +6085,8 @@ msgid ""
 "On hand quantity which hasn't been reserved on a transfer, in the default "
 "unit of measure of the product"
 msgstr ""
-"Số lượng hiện có chưa được dự trữ trong một lệnh chuyển hàng, theo đơn vị đo "
-"lường mặc định của sản phẩm"
+"Số lượng hiện có chưa được đặt trước trong một lệnh chuyển hàng, theo đơn vị "
+"đo lường mặc định của sản phẩm"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_template_kanban_stock_view
@@ -7181,8 +7181,8 @@ msgid ""
 "Products will be reserved first for the transfers with the highest "
 "priorities."
 msgstr ""
-"Sản phẩm sẽ được dự trữ cho lệnh chuyển hàng có mức độ ưu tiên cao nhất đầu "
-"tiên."
+"Sản phẩm sẽ được đặt trước cho lệnh chuyển hàng có mức độ ưu tiên cao nhất "
+"đầu tiên."
 
 #. module: stock
 #. odoo-python
@@ -7423,7 +7423,7 @@ msgstr "Số lượng được chuyển vị trí"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_form_editable
 msgid "Quantity Reserved"
-msgstr "Số lượng được dự trữ"
+msgstr "Số lượng được đặt trước"
 
 #. module: stock
 #. odoo-python
@@ -7450,7 +7450,7 @@ msgstr "Số lượng theo ĐVT sản phẩm"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__availability
 msgid "Quantity in stock that can still be reserved for this move"
-msgstr "Số lượng tồn kho vẫn có thể được dự trữ cho điều chuyển này"
+msgstr "Số lượng tồn kho vẫn có thể được đặt trước cho điều chuyển này"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__product_qty
@@ -7509,14 +7509,14 @@ msgid ""
 "Quantity of reserved products in this quant, in the default unit of measure "
 "of the product"
 msgstr ""
-"Số lượng sản phẩm dự trữ trong quant này, theo đơn vị đo lường mặc định của "
-"sản phẩm"
+"Số lượng sản phẩm đặt trước trong quant này, theo đơn vị đo lường mặc định "
+"của sản phẩm"
 
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 msgid "Quantity or Reserved Quantity should be set."
-msgstr "Phải thiết lập số lượng hoặc số lượng dự trữ."
+msgstr "Phải thiết lập số lượng hoặc số lượng đặt trước."
 
 #. module: stock
 #. odoo-javascript
@@ -7953,12 +7953,12 @@ msgid ""
 "orders 2 pallets of 1000 units each and you only have 1600 in stock, then "
 "1600 will be reserved"
 msgstr ""
-"Chỉ dự trữ toàn bộ gói hàng: sẽ không dự trữ một phần gói hàng. Nếu khách "
+"Chỉ đặt trước toàn bộ gói hàng: sẽ không đặt trước một phần gói hàng. Nếu "
+"khách hàng đặt 2 pallet, mỗi pallet 1000 chiếc và bạn chỉ có 1600 chiếc "
+"trong kho, thì chỉ 1000 chiếc sẽ được đặt trước.\n"
+"Dự trữ một phần gói hàng: cho phép đặt trước một phần gói hàng. Nếu khách "
 "hàng đặt 2 pallet, mỗi pallet 1000 chiếc và bạn chỉ có 1600 chiếc trong kho, "
-"thì chỉ 1000 chiếc sẽ được dự trữ.\n"
-"Dự trữ một phần gói hàng: cho phép dự trữ một phần gói hàng. Nếu khách hàng "
-"đặt 2 pallet, mỗi pallet 1000 chiếc và bạn chỉ có 1600 chiếc trong kho, thì "
-"1600 chiếc sẽ được dự trữ."
+"thì 1600 chiếc sẽ được đặt trước."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_category__packaging_reserve_method
@@ -7973,18 +7973,18 @@ msgstr "Dự trữ một phần gói hàng"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_package_level__state__assigned
 msgid "Reserved"
-msgstr "Đã dự trữ"
+msgstr "Đặt trước"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__product_packaging_qty
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__product_packaging_qty
 msgid "Reserved Packaging Quantity"
-msgstr "Số lượng gói hàng đã dự trữ"
+msgstr "Số lượng gói hàng đặt trước"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant__reserved_quantity
 msgid "Reserved Quantity"
-msgstr "Số lượng dự trữ"
+msgstr "Số lượng đặt trước"
 
 #. module: stock
 #. odoo-python
@@ -10121,7 +10121,7 @@ msgstr "Tổng số lượng"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_tree_editable
 msgid "Total Reserved"
-msgstr "Tổng đã dự trữ"
+msgstr "Tổng đặt trước"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_category__total_route_ids
@@ -11203,9 +11203,9 @@ msgid ""
 "(example: 0.00001)."
 msgstr ""
 "Bạn đang sử dụng đơn vị tính nhỏ hơn đơn vị bạn đang dùng để lưu kho sản "
-"phẩm. Điều này có thể dẫn đến việc làm tròn không đúng số lượng dự trữ. Bạn "
-"nên sử dụng đơn vị tính nhỏ hơn để định lượng tồn kho hoặc thay đổi độ chính "
-"xác làm tròn của nó thành giá trị nhỏ hơn (ví dụ: 0,00001)"
+"phẩm. Điều này có thể dẫn đến việc làm tròn không đúng số lượng đặt trước. "
+"Bạn nên sử dụng đơn vị tính nhỏ hơn để định lượng tồn kho hoặc thay đổi độ "
+"chính xác làm tròn của nó thành giá trị nhỏ hơn (ví dụ: 0,00001)"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_routes_form
@@ -11237,9 +11237,9 @@ msgid ""
 "reserved on a stock move. If you need to change the inventory tracking, you "
 "should first unreserve the stock move."
 msgstr ""
-"Bạn không thể thay đổi theo dõi hàng tồn kho của sản phẩm hiện đang được dự "
-"trữ cho một điều chuyển tồn kho. Nếu bạn cần thay đổi theo dõi hàng tồn kho, "
-"trước tiên bạn nên hủy dự trữ điều chuyển tồn kho."
+"Bạn không thể thay đổi theo dõi hàng tồn kho của sản phẩm hiện đang được đặt "
+"trước cho một điều chuyển tồn kho. Nếu bạn cần thay đổi theo dõi hàng tồn "
+"kho, trước tiên bạn nên hủy đặt trước điều chuyển tồn kho."
 
 #. module: stock
 #. odoo-python
@@ -11398,7 +11398,7 @@ msgid ""
 "this UoM have already been moved or are currently reserved."
 msgstr ""
 "Bạn không thể thay đổi tỷ lệ của đơn vị tính này vì một số sản phẩm có đơn "
-"vị tính này đã được chuyển đi hoặc hiện đang được dự trữ."
+"vị tính này đã được chuyển đi hoặc hiện đang được đặt trước."
 
 #. module: stock
 #. odoo-python
@@ -11540,8 +11540,8 @@ msgid ""
 "You cannot validate a transfer if no quantities are reserved. To force the "
 "transfer, encode quantities."
 msgstr ""
-"Bạn không thể xác nhận một lệnh chuyển hàng nếu không có số lượng được dự "
-"trữ. Để tiếp tục, hãy nhập số lượng."
+"Bạn không thể xác nhận một lệnh chuyển hàng nếu không có số lượng được đặt "
+"trước. Để tiếp tục, hãy nhập số lượng."
 
 #. module: stock
 #. odoo-python
@@ -11905,7 +11905,7 @@ msgstr "report_stock_quantity_graph"
 #. odoo-javascript
 #: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
 msgid "reserved"
-msgstr "đã dự trữ"
+msgstr "đặt trước"
 
 #. module: stock
 #. odoo-javascript
