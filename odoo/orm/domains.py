@@ -651,8 +651,9 @@ class DomainNary(Domain):
             # sort children in order to ease their grouping by field and operator
             children.sort(key=_optimize_nary_sort_key)
             # run optimizations until some merge happens
+            cls = type(self)
             for merge in _MERGE_OPTIMIZATIONS:
-                children = list(merge(type(self), children, model))
+                children = merge(cls, children, model)
                 if len(children) < size:
                     break
         return self.apply(children)
@@ -1083,7 +1084,7 @@ ANY_TYPES = (Domain, Query, SQL)
 
 if typing.TYPE_CHECKING:
     ConditionOptimization = Callable[[DomainCondition, BaseModel], Domain]
-    MergeOptimization = Callable[[type[DomainNary], list[Domain], BaseModel], Iterable[Domain]]
+    MergeOptimization = Callable[[type[DomainNary], list[Domain], BaseModel], list[Domain]]
 
 _OPTIMIZATIONS_FOR: dict[OptimizationLevel, dict[str, list[ConditionOptimization]]] = {
     level: collections.defaultdict(list) for level in OptimizationLevel if level != OptimizationLevel.NONE}
@@ -1180,24 +1181,47 @@ def nary_condition_optimization(operators: Collection[str], field_types: Collect
     NOTE: if you want to merge different operators, register for
     `operator=CONDITION_OPERATORS` and find conditions that you want to merge.
     """
-    def grouping_key(domain):
-        return domain.field_expr if isinstance(domain, DomainCondition) and domain.operator in operators else None
-
-    def register(optimization: Callable[[type[DomainNary], list[DomainCondition], BaseModel], Iterable[Domain]]):
+    def register(optimization: Callable[[type[DomainNary], list[DomainCondition], BaseModel], list[Domain]]):
         @nary_optimization
-        def optimizer(cls, domains, model):
-            # group domains by field_expr
-            for field_expr, doms in itertools.groupby(domains, grouping_key):
-                if field_expr:
-                    conditions = list(doms)
-                    if len(conditions) > 1 and (
-                        field_types is None or conditions[0]._field(model).type in field_types
+        def optimizer(cls, domains: list[Domain], model):
+            # trick: result remains None until an optimization is applied, after
+            # which it becomes the optimization of domains[:index]
+            result = None
+            # when not None, domains[block:index] are all conditions with the same field_expr
+            block = None
+
+            domains_iterator = enumerate(domains)
+            stop_item = (len(domains), None)
+            while True:
+                # enumerating domains and adding the stop_item as the sentinel
+                # so that the last loop merges the domains and stops the iteration
+                index, domain = next(domains_iterator, stop_item)
+                matching = isinstance(domain, DomainCondition) and domain.operator in operators
+
+                if block is not None and not (matching and domain.field_expr == domains[block].field_expr):
+                    # optimize domains[block:index] if necessary and "flush" them in result
+                    if block < index - 1 and (
+                        field_types is None or domains[block]._field(model).type in field_types
                     ):
-                        yield from optimization(cls, conditions, model)
-                    else:
-                        yield from conditions
-                else:
-                    yield from doms
+                        if result is None:
+                            result = domains[:block]
+                        result.extend(optimization(cls, domains[block:index], model))
+                    elif result is not None:
+                        result.extend(domains[block:index])
+                    block = None
+
+                # block is None or (matching and domain.field_expr == domains[block].field_expr)
+                if domain is None:
+                    break
+                if matching:
+                    if block is None:
+                        block = index
+                elif result is not None:
+                    result.append(domain)
+
+            # block is None
+            return domains if result is None else result
+
         return optimization
 
     return register
@@ -1910,7 +1934,8 @@ def _optimize_same_conditions(cls, conditions, model):
     Quick optimization for some conditions, just compare if we have the same
     condition twice.
     """
-    for a, b in itertools.pairwise(itertools.chain([None], conditions)):
-        if a == b:
-            continue
-        yield b
+    return [
+        b
+        for a, b in itertools.pairwise(itertools.chain([None], conditions))
+        if a != b
+    ]
