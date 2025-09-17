@@ -5,6 +5,9 @@ import {
     getGridItemProperties,
     resizeGrid,
     setElementToMaxZindex,
+    adjustGrid,
+    rowSize,
+    isContentOverflowing,
 } from "@html_builder/utils/grid_layout_utils";
 
 // TODO move them elsewhere.
@@ -67,13 +70,6 @@ export class BuilderOverlay {
         }
         return this.isResizableY() || this.isResizableX() || this.isResizableGrid();
     }
-
-    // displayOverlayOptions(el) {
-    //     // TODO when options will be more clear:
-    //     // - moving
-    //     // - timeline
-    //     // (maybe other where `displayOverlayOptions: true`)
-    // }
 
     isActive() {
         // TODO active still necessary ? (check when we have preview mode)
@@ -351,57 +347,114 @@ export class BuilderOverlay {
     }
 
     onResizeGrid(compass, initialClasses, currentIndex) {
+        const rowEl = this.overlayTarget.parentNode;
+        const fullCompass = this.resizeState.fullCompass;
+        const { rowStart, rowEnd, columnStart, columnEnd } = getGridItemProperties(
+            this.overlayTarget
+        );
         const style = this.overlayTarget.style;
+        let isResizeBlocked = false;
         if (compass === "n") {
-            const rowEnd = parseInt(style.gridRowEnd);
             if (currentIndex < 0) {
                 style.gridRowStart = 1;
             } else if (currentIndex + 1 >= rowEnd) {
                 style.gridRowStart = rowEnd - 1;
+                isResizeBlocked = true;
             } else {
                 style.gridRowStart = currentIndex + 1;
             }
+
+            // Store the `rowStart` matching the mouse position.
+            this.resizeState.rowStartAtCursor = style.gridRowStart;
+            // If the grid item content is overflowing set back `rowStart` to
+            // its previous value.
+            if (isContentOverflowing(this.overlayTarget)) {
+                style.gridRowStart = rowStart;
+                isResizeBlocked = true;
+            }
         } else if (compass === "s") {
-            const rowStart = parseInt(style.gridRowStart);
-            const rowEnd = parseInt(style.gridRowEnd);
             if (currentIndex + 2 <= rowStart) {
                 style.gridRowEnd = rowStart + 1;
+                isResizeBlocked = true;
             } else {
                 style.gridRowEnd = currentIndex + 2;
             }
-
-            // Updating the grid height.
-            const rowEl = this.overlayTarget.parentNode;
-            const rowCount = parseInt(rowEl.dataset.rowCount);
-            const backgroundGridEl = rowEl.querySelector(".o_we_background_grid");
-            const backgroundGridRowEnd = parseInt(backgroundGridEl.style.gridRowEnd);
-            let rowMove = 0;
-            if (style.gridRowEnd > rowEnd && style.gridRowEnd > rowCount + 1) {
-                rowMove = style.gridRowEnd - rowEnd;
-            } else if (style.gridRowEnd < rowEnd && style.gridRowEnd >= rowCount + 1) {
-                rowMove = style.gridRowEnd - rowEnd;
+            // Store the `rowEnd` matching the mouse position.
+            this.resizeState.rowEndAtCursor = style.gridRowEnd;
+            // If the content is overflowing the grid item, set back `rowEnd` to
+            // its previous value.
+            if (isContentOverflowing(this.overlayTarget)) {
+                style.gridRowEnd = rowEnd;
+                isResizeBlocked = true;
             }
-            backgroundGridEl.style.gridRowEnd = backgroundGridRowEnd + rowMove;
         } else if (compass === "w") {
-            const columnEnd = parseInt(style.gridColumnEnd);
             if (currentIndex < 0) {
                 style.gridColumnStart = 1;
             } else if (currentIndex + 1 >= columnEnd) {
                 style.gridColumnStart = columnEnd - 1;
+                isResizeBlocked = true;
             } else {
                 style.gridColumnStart = currentIndex + 1;
             }
         } else if (compass === "e") {
-            const columnStart = parseInt(style.gridColumnStart);
             if (currentIndex + 2 > 13) {
                 style.gridColumnEnd = 13;
             } else if (currentIndex + 2 <= columnStart) {
                 style.gridColumnEnd = columnStart + 1;
+                isResizeBlocked = true;
             } else {
                 style.gridColumnEnd = currentIndex + 2;
             }
         }
 
+        // Adapt the grid item height when resizing horizontally.
+        if (compass === "w" || compass === "e") {
+            // If the content is bigger than the grid item, increase the height.
+            const overflow = isContentOverflowing(this.overlayTarget);
+            if (overflow) {
+                const { rowGap, rowSize } = getGridProperties(rowEl);
+                const rowOverflow = Math.ceil((overflow + rowGap) / (rowSize + rowGap));
+                style.gridRowEnd = rowEnd + rowOverflow;
+            } else {
+                // If there is no overflow, check the underflow.
+
+                // Check if we can reduce the grid item `rowEnd` without causing
+                // an overflow and without making it smaller than the starting
+                // one (or the current one if we are resizing diagonally).
+                let currentRowEnd = parseInt(style.gridRowEnd);
+                while (currentRowEnd > this.resizeState.rowEndAtCursor) {
+                    style.gridRowEnd = currentRowEnd - 1;
+                    if (isContentOverflowing(this.overlayTarget)) {
+                        style.gridRowEnd = currentRowEnd;
+                        break;
+                    }
+                    currentRowEnd--;
+                }
+                // If we are resizing from "nw" or "ne", check if we can set
+                // `rowStart` closer to where the mouse is without causing an
+                // overflow.
+                if (["nw", "ne"].includes(fullCompass)) {
+                    let currentRowStart = parseInt(style.gridRowStart);
+                    while (currentRowStart < this.resizeState.rowStartAtCursor) {
+                        style.gridRowStart = currentRowStart + 1;
+                        if (isContentOverflowing(this.overlayTarget)) {
+                            style.gridRowStart = currentRowStart;
+                            break;
+                        }
+                        currentRowStart++;
+                    }
+                }
+            }
+        }
+
+        // Update the background grid height.
+        if (["s", "w", "e"].includes(compass)) {
+            const rowCount = parseInt(rowEl.dataset.rowCount);
+            const backgroundGridEl = rowEl.querySelector(".o_we_background_grid");
+            backgroundGridEl.style.gridRowEnd = Math.max(rowCount + 1, style.gridRowEnd);
+        }
+
+        // Update the grid classes.
         if (compass === "n" || compass === "s") {
             const numberRows = style.gridRowEnd - style.gridRowStart;
             this.replaceSizingClass(/\s*(g-height-)([0-9-]+)/g, `g-height-${numberRows}`);
@@ -414,9 +467,17 @@ export class BuilderOverlay {
                 `g-col-${this.mobileBreakpoint}-${numberColumns}`
             );
         }
+
+        // Update the grid handles color, to show if it is possible to to resize
+        // in that direction.
+        this.gridHandles.forEach((gridHandleEl) => {
+            if (gridHandleEl.matches(`.${compass}, .${fullCompass}`)) {
+                gridHandleEl.classList.toggle("o_resizing_blocked", isResizeBlocked);
+            }
+        });
     }
 
-    getDirections(ev, handleEl, sizingConfig) {
+    getDirections(ev, handleEl, sizingConfig, heightAdjustment) {
         let compass = false;
         let XY = false;
         if (handleEl.matches(".n")) {
@@ -475,9 +536,10 @@ export class BuilderOverlay {
                     "\\s*" + config.classes[currentIndex].replace(/[-]*[0-9]+/, "[-]*[0-9]+"),
                     "g"
                 ),
-                initialPageXY: ev["page" + XY[i]],
+                initialPageXY: ev["page" + XY[i]] + heightAdjustment,
                 XY: XY[i],
                 compass: compass[i],
+                fullCompass: compass,
             });
         }
 
@@ -497,14 +559,31 @@ export class BuilderOverlay {
         const handleEl = ev.currentTarget;
         const isGridHandle = handleEl.classList.contains("o_grid_handle");
         this.isMobile = this.isMobileView(this.overlayTarget);
+        this.resizeState = {};
 
         // If we are in grid mode, add a background grid and place it in front
         // of the other elements.
         let rowEl, backgroundGridEl;
+        let adjustment = 0;
         if (isGridHandle) {
             rowEl = this.overlayTarget.parentNode;
+            // Adjust the grid and compute the height difference to take it into
+            // account for the mouse position.
+            const oldHeight = this.overlayTarget.getBoundingClientRect().bottom;
+            adjustGrid(rowEl);
+            // self.trigger_up("cover_update");
+            const newHeight = this.overlayTarget.getBoundingClientRect().bottom;
+            adjustment = Math.round(newHeight - oldHeight);
+            // Lock the grid row size so it is fixed during the resize.
+            rowEl.style["grid-auto-rows"] = `${rowSize}px`;
+            // Add the background grid.
             backgroundGridEl = addBackgroundGrid(rowEl, 0);
             setElementToMaxZindex(backgroundGridEl, rowEl);
+
+            // Store usesful information.
+            const { rowStart, rowEnd } = getGridItemProperties(this.overlayTarget);
+            this.resizeState.rowStartAtCursor = rowStart;
+            this.resizeState.rowEndAtCursor = rowEnd;
         }
 
         let sizingConfig, onResize;
@@ -519,7 +598,8 @@ export class BuilderOverlay {
             onResize = this.onResizeX.bind(this);
         }
 
-        const directions = this.getDirections(ev, handleEl, sizingConfig);
+        const directions = this.getDirections(ev, handleEl, sizingConfig, adjustment);
+        this.resizeState.fullCompass = directions[0].fullCompass;
 
         // Set the cursor.
         const cursorClass = `${window.getComputedStyle(handleEl)["cursor"]}-important`;
@@ -602,6 +682,12 @@ export class BuilderOverlay {
             // toggle to normal mode and the mobile view are well done.
             if (isGridHandle) {
                 backgroundGridEl.remove();
+                // Unlock the grid row size.
+                rowEl.style.removeProperty("grid-auto-rows");
+                // Reset the handles state.
+                this.gridHandles.forEach((gridHandleEl) =>
+                    gridHandleEl.classList.remove("o_resizing_blocked")
+                );
                 resizeGrid(rowEl);
 
                 const colClass = [...this.overlayTarget.classList].find((c) => /^col-/.test(c));

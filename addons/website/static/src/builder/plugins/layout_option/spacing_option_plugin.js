@@ -1,7 +1,11 @@
 import { Plugin } from "@html_editor/plugin";
 import { isBlock } from "@html_editor/utils/blocks";
 import { registry } from "@web/core/registry";
-import { addBackgroundGrid, setElementToMaxZindex } from "@html_builder/utils/grid_layout_utils";
+import {
+    addBackgroundGrid,
+    adjustGrid,
+    setElementToMaxZindex,
+} from "@html_builder/utils/grid_layout_utils";
 import { StyleAction } from "@html_builder/core/core_builder_action_plugin";
 
 class SpacingOptionPlugin extends Plugin {
@@ -62,6 +66,9 @@ export class SetGridSpacingAction extends StyleAction {
         // Apply the style action on the grid gaps.
         super.apply(...arguments);
         // Add an animated grid preview.
+        if (!this.config.isMobileView(rowEl)) {
+            adjustGrid(rowEl);
+        }
         gridPreviewEl = addBackgroundGrid(rowEl, 0);
         gridPreviewEl.classList.add("o_we_grid_preview");
         setElementToMaxZindex(gridPreviewEl, rowEl);

@@ -5,6 +5,8 @@ import { clamp } from "@web/core/utils/numbers";
 import {
     addBackgroundGrid,
     additionalRowLimit,
+    adjustGrid,
+    adjustGridItem,
     checkIfImageColumn,
     cleanUpGrid,
     convertColumnToGrid,
@@ -33,6 +35,7 @@ export class GridLayoutPlugin extends Plugin {
         }),
         on_cloned_handlers: this.onCloned.bind(this),
         on_removed_handlers: this.onRemoved.bind(this),
+        on_prepare_drag_handlers: this.prepareDrag.bind(this),
         // Drag and drop from sidebar
         on_snippet_dragged_handlers: this.onSnippetDragged.bind(this),
         on_snippet_over_dropzone_handlers: this.onSnippetOverDropzone.bind(this),
@@ -52,6 +55,10 @@ export class GridLayoutPlugin extends Plugin {
         on_element_dropped_handlers: this.onElementDropped.bind(this),
         // Ignore background grid in history
         savable_mutation_record_predicates: this.ignoreBackgroundGrid.bind(this),
+        // Adjust the grids/grid items to the changes.
+        change_current_options_containers_listeners: this.onContainersChange.bind(this),
+        handleNewRecords: this.handleMutations.bind(this),
+        normalize_handlers: this.onNormalize.bind(this),
     };
 
     setup() {
@@ -127,6 +134,71 @@ export class GridLayoutPlugin extends Plugin {
     }
 
     /**
+     *
+     * @param {*} optionsContainer
+     * @returns
+     */
+    onContainersChange(optionsContainer) {
+        if (this.config.isMobileView(this.editable)) {
+            return;
+        }
+        optionsContainer.forEach(({ element }) => {
+            if (element.classList.contains("o_grid_item")) {
+                this.dependencies.history.ignoreDOMMutations(() => {
+                    const rowEl = element.parentElement;
+                    adjustGrid(rowEl);
+                });
+                return;
+            }
+        });
+    }
+
+    /**
+     *
+     * @param {*} records
+     * @returns
+     */
+    handleMutations(records) {
+        if (this.config.isMobileView(this.editable)) {
+            return;
+        }
+        records.forEach((record) => {
+            if (record.target) {
+                const node = isElement(record.target) ? record.target : record.target.parentNode;
+                if (node) {
+                    this.modifiedGridItemEl = node.closest(".o_grid_item");
+                    this.modifiedGridEl = node.matches(".row.o_grid_mode") && node;
+                }
+            }
+        });
+    }
+
+    /**
+     *
+     * @param {*} root
+     * @param {*} type
+     */
+    onNormalize(root, type) {
+        if (type === "original") {
+            // console.warn("NORMALIZE", root, this.modifiedGridItemEl, this.modifiedGridEl);
+            if (this.modifiedGridItemEl && !this.modifiedGridEl) {
+                // console.log("GRID ITEM");
+                // Lock the row size and adjust the height of the modified grid item.
+                const rowEl = this.modifiedGridItemEl.parentElement;
+                const { rowSize } = getGridProperties(rowEl);
+                rowEl.style["grid-auto-rows"] = `${rowSize}px`;
+                adjustGridItem(this.modifiedGridItemEl);
+                rowEl.style.removeProperty("grid-auto-rows");
+            } else if (this.modifiedGridEl) {
+                // console.log("GRID ONLY");
+                adjustGrid(this.modifiedGridEl);
+            }
+        }
+        this.modifiedGridItemEl = null;
+        this.modifiedGridEl = null;
+    }
+
+    /**
      * Puts the grid item behind all the others (minimum z-index).
      */
     sendGridItemToBack() {
@@ -165,37 +237,42 @@ export class GridLayoutPlugin extends Plugin {
     adjustGridItem(el, shouldResizeGrid = true) {
         const gridItemEl = el.closest(".o_grid_item");
         if (gridItemEl && gridItemEl !== el && !this.config.isMobileView(gridItemEl)) {
-            const rowEl = gridItemEl.parentElement;
-            const { rowGap, rowSize } = getGridProperties(rowEl);
-            const { rowStart, rowEnd } = getGridItemProperties(gridItemEl);
-            const oldRowSpan = rowEnd - rowStart;
-
-            // Compute the new height.
-            const { borderTop, borderBottom, paddingTop, paddingBottom } =
-                window.getComputedStyle(gridItemEl);
-            const borderY = parseFloat(borderTop) + parseFloat(borderBottom);
-            const paddingY = parseFloat(paddingTop) + parseFloat(paddingBottom);
-            const height = gridItemEl.scrollHeight + borderY + paddingY;
-
-            const rowSpan = Math.ceil((height + rowGap) / (rowSize + rowGap));
-            gridItemEl.style.gridRowEnd = rowStart + rowSpan;
-            gridItemEl.classList.remove(`g-height-${oldRowSpan}`);
-            gridItemEl.classList.add(`g-height-${rowSpan}`);
-            if (shouldResizeGrid) {
-                resizeGrid(rowEl);
-            }
-
-            return () => {
-                // Restore the grid item height.
-                gridItemEl.style.gridRowEnd = rowEnd;
-                gridItemEl.classList.remove(`g-height-${rowSpan}`);
-                gridItemEl.classList.add(`g-height-${oldRowSpan}`);
-                if (shouldResizeGrid) {
-                    resizeGrid(rowEl);
-                }
-            };
+            adjustGridItem(gridItemEl, shouldResizeGrid);
+            // // Check if the grid item content is overflowing.
+            // const rowEl = gridItemEl.parentElement;
+            // const { rowGap, rowSize } = getGridProperties(rowEl);
+            // rowEl.style.gridAutoRows = `${rowSize}px`;
+            // const overflow = isContentOverflowing(gridItemEl);
+            // rowEl.style.removeProperty("grid-auto-rows");
+            // if (!overflow) {
+            //     return () => {};
+            // }
+            // const { rowStart, rowEnd } = getGridItemProperties(gridItemEl);
+            // const oldRowSpan = rowEnd - rowStart;
+            // // Compute the new height.
+            // const rowOverflow = Math.ceil((overflow + rowGap) / (rowSize + rowGap));
+            // const rowSpan = oldRowSpan + rowOverflow;
+            // gridItemEl.style.gridRowEnd = rowStart + rowSpan;
+            // gridItemEl.classList.remove(`g-height-${oldRowSpan}`);
+            // gridItemEl.classList.add(`g-height-${rowSpan}`);
+            // if (shouldResizeGrid) {
+            //     resizeGrid(rowEl);
+            // }
+            // return () => {
+            //     // Restore the grid item height.
+            //     gridItemEl.style.gridRowEnd = rowEnd;
+            //     gridItemEl.classList.remove(`g-height-${rowSpan}`);
+            //     gridItemEl.classList.add(`g-height-${oldRowSpan}`);
+            //     if (shouldResizeGrid) {
+            //         resizeGrid(rowEl);
+            //     }
+            // };
         }
 
+        return () => {};
+    }
+
+    prepareDrag() {
         return () => {};
     }
 

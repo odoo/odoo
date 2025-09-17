@@ -189,6 +189,22 @@ div[data-oe-local-overlay-id="builder-overlay-container"] {
                         display: none;
                     }
                 }
+
+                &.o_resizing_blocked {
+                    &::before {
+                        background: $o-we-color-danger
+                    }
+
+                    .o_handle_indicator {
+                        border-color: $o-we-color-danger;
+                    }
+
+                    &:hover, &:active {
+                        .o_handle_indicator {
+                            outline-color: $o-we-color-danger;
+                        }
+                    }
+                }
             }
         }
 

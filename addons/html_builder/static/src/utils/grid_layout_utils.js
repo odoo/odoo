@@ -421,3 +421,129 @@ function convertImageColumn(columnEl) {
     columnEl.classList.add("o_grid_item_image");
     imageEl.style.removeProperty("width");
 }
+/**
+ * Checks if the content of the given grid item overflows it and returns the
+ * overflow amount (in pixels) if it does.
+ *
+ * @param {HTMLElement} columnEl the grid item
+ * @returns {Boolean|Number} - false if there is no overflow,
+ *                           - the overflow amount otherwise.
+ */
+export function isContentOverflowing(columnEl) {
+    // No overflow if the grid item is empty.
+    if (columnEl.childNodes.length === 0) {
+        return false;
+    }
+    // Compute the maximum bottom position to not exceed.
+    const { paddingBottom, borderBottom } = window.getComputedStyle(columnEl);
+    const columnBottom = columnEl.getBoundingClientRect().bottom;
+    const columnLimit = columnBottom - parseFloat(paddingBottom) - parseFloat(borderBottom);
+
+    // Add a placeholder as the last element to compute the content end.
+    const placeholderEl = document.createElement("div");
+    columnEl.appendChild(placeholderEl);
+    const contentEnd = placeholderEl.getBoundingClientRect().bottom;
+    placeholderEl.remove();
+
+    // Compute the overflow and return it.
+    const overflow = contentEnd - columnLimit;
+    return overflow > 0 ? overflow : false;
+}
+
+/**
+ * Adapts the height of the grid item to its content and returns a function
+ * restoring the grid item height.
+ * Note: should be called when the grid row size is locked.
+ *
+ * @param {HTMLElement} columnEl the grid item
+ * @param {Boolean} [shouldResizeGrid=true] `true` if the grid height should
+ *   also be adapted.
+ * @returns {Function} a function restoring the grid item state
+ */
+export function adjustGridItem(columnEl, shouldResizeGrid = true) {
+    // Check if the grid item content is overflowing.
+    const rowEl = columnEl.parentElement;
+    const { rowGap, rowSize } = getGridProperties(rowEl);
+    const overflow = isContentOverflowing(columnEl);
+    if (!overflow) {
+        return () => {};
+    }
+
+    // Compute the new height.
+    const { rowStart, rowEnd } = getGridItemProperties(columnEl);
+    const oldRowSpan = rowEnd - rowStart;
+    const rowOverflow = Math.ceil((overflow + rowGap) / (rowSize + rowGap));
+    const rowSpan = oldRowSpan + rowOverflow;
+    columnEl.style.gridRowEnd = rowStart + rowSpan;
+    columnEl.classList.remove(`g-height-${oldRowSpan}`);
+    columnEl.classList.add(`g-height-${rowSpan}`);
+    if (shouldResizeGrid) {
+        resizeGrid(rowEl);
+    }
+
+    return () => {
+        // Restore the grid item height.
+        columnEl.style.gridRowEnd = rowEnd;
+        columnEl.classList.remove(`g-height-${rowSpan}`);
+        columnEl.classList.add(`g-height-${oldRowSpan}`);
+        if (shouldResizeGrid) {
+            resizeGrid(rowEl);
+        }
+    };
+}
+
+/**
+ * Adapts the grid and the grid items so the rows are back to a fixed size, in
+ * order to have a consistent grid when modifying it. Returns the info needed to
+ * restore the grid and grid items to their state before adapting them.
+ *
+ * @param {HTMLElement} rowEl the grid to adjust
+ * @param {HTMLElement} [draggedItemEl=undefined] the dragged grid item, if any.
+ * @returns {Object} - `restoreGridItems`: an array of callbacks restoring the
+ *   grid items dimensions
+ *                   - `oldRowCount`: the row count before adapting
+ */
+export function adjustGrid(rowEl, draggedItemEl = undefined) {
+    const { rowGap, rowSize } = getGridProperties(rowEl);
+    const columnEls = [...rowEl.children].filter(
+        (el) => el.classList.contains("o_grid_item") && el !== draggedItemEl
+    );
+
+    const restoreGridItems = [];
+    const newGridAreas = [];
+    const oldRowCount = rowEl.dataset.rowCount;
+    let newRowCount = 0;
+    for (const columnEl of columnEls) {
+        const { rowStart, rowEnd, columnStart, columnEnd } = getGridItemProperties(columnEl);
+        const rowSpan = rowEnd - rowStart;
+        // Compute the new vertical placement.
+        const columnTop = columnEl.offsetTop;
+        const columnHeight = columnEl.offsetHeight; // Also consider borders.
+        const newRowStart = Math.round((columnTop + rowGap) / (rowSize + rowGap)) + 1;
+        const newRowSpan = Math.ceil((columnHeight + rowGap) / (rowSize + rowGap));
+        const newRowEnd = newRowStart + newRowSpan;
+
+        // Update the grid size class.
+        columnEl.classList.remove(`g-height-${rowSpan}`);
+        columnEl.classList.add(`g-height-${newRowSpan}`);
+
+        // Store the new dimensions.
+        newGridAreas.push(`${newRowStart} / ${columnStart} / ${newRowEnd} / ${columnEnd}`);
+        newRowCount = Math.max(newRowEnd, newRowCount);
+
+        // Store the restore function.
+        restoreGridItems.push(() => {
+            columnEl.style.gridRowStart = rowStart;
+            columnEl.style.gridRowEnd = rowEnd;
+            columnEl.classList.remove(`g-height-${newRowSpan}`);
+            columnEl.classList.add(`g-height-${rowSpan}`);
+        });
+    }
+
+    // Update the grid-areas and the row count.
+    [...columnEls].forEach((columnEl, i) => (columnEl.style.gridArea = newGridAreas[i]));
+    rowEl.dataset.rowCount = newRowCount - 1;
+
+    // Return the info needed to restore the grid.
+    return { restoreGridItems, oldRowCount };
+}
