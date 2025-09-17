@@ -157,7 +157,7 @@ test("colorpicker inside the builder are linked to the builder theme colors", as
             applyColorPreview() {},
             applyColorResetPreview() {},
             colorPrefix: "",
-            themeColorPrefix: "xyz-",
+            cssVarColorPrefix: "xyz-",
         },
     });
     const getButtonColor = (sel) => getComputedStyle(queryOne(sel)).backgroundColor;
@@ -195,7 +195,7 @@ test("colorpicker outside the builder are not linked to the builder theme colors
             applyColorPreview() {},
             applyColorResetPreview() {},
             colorPrefix: "",
-            themeColorPrefix: "",
+            cssVarColorPrefix: "",
         },
     });
     const getButtonColor = (sel) => getComputedStyle(queryOne(sel)).backgroundColor;
