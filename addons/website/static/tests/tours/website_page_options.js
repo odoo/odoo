@@ -24,7 +24,7 @@ registerWebsitePreviewTour('website_page_options', {
     ...clickOnEditAndWaitEditMode(),
     ...clickOnSnippet({id: 'o_header_standard', name: 'Header'}),
     {
-        content: "Open the color picker to change the backaground color of the header",
+        content: "Open the color picker to change the background color of the header",
         trigger:"div[data-container-title='Header'] .hb-row-sublevel-1[data-label='Background'] button",
         run: "click",
     },
