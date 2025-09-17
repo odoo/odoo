@@ -18,7 +18,10 @@ class AccountMove(models.Model):
         if document_type_code in ['66', '67']:
             pos = invoice_number = '0'
         else:
-            pos, invoice_number = document_number.split('-')
+            try:
+                pos, invoice_number = document_number.split('-')
+            except ValueError:
+                raise UserError(_("The associated receipt number does not appear to be in the Argentine format: %s ", document_number))
         return {'invoice_number': int(invoice_number), 'point_of_sale': int(pos)}
 
     l10n_ar_afip_responsibility_type_id = fields.Many2one(
