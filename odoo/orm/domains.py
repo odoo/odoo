@@ -573,9 +573,9 @@ class DomainNary(Domain):
     ZERO: DomainBool = _FALSE_DOMAIN  # default for lint checks
 
     __slots__ = ('children',)
-    children: list[Domain]
+    children: tuple[Domain, ...]
 
-    def __new__(cls, children: list[Domain]):
+    def __new__(cls, children: tuple[Domain, ...]):
         """Create the n-ary domain with at least 2 conditions."""
         assert len(children) >= 2
         self = object.__new__(cls)
@@ -589,7 +589,7 @@ class DomainNary(Domain):
         children = cls._flatten(items)
         if len(children) == 1:
             return children[0]
-        return cls(children)
+        return cls(tuple(children))
 
     @classmethod
     def _flatten(cls, children: Iterable[Domain]) -> list[Domain]:
@@ -598,7 +598,7 @@ class DomainNary(Domain):
         and subdomains of the same class are flattened into the list.
         The returned list is never empty.
         """
-        result = []
+        result: list[Domain] = []
         for child in children:
             if isinstance(child, DomainBool):
                 if child != cls.ZERO:
@@ -622,7 +622,7 @@ class DomainNary(Domain):
         )
 
     def __hash__(self):
-        return hash(self.OPERATOR) ^ hash(tuple(self.children))
+        return hash(self.OPERATOR) ^ hash(self.children)
 
     @classproperty
     def INVERSE(cls) -> type[DomainNary]:
@@ -630,10 +630,10 @@ class DomainNary(Domain):
         raise NotImplementedError
 
     def __invert__(self):
-        return self.INVERSE([~child for child in self.children])
+        return self.INVERSE(tuple(~child for child in self.children))
 
     def _negate(self, model):
-        return self.INVERSE([child._negate(model) for child in self.children])
+        return self.INVERSE(tuple(child._negate(model) for child in self.children))
 
     def iter_conditions(self):
         for child in self.children:
@@ -930,6 +930,7 @@ class DomainCondition(Domain):
             # inherits implies both Field.delegate=True and Field.bypass_search_access=True
             # so no additional permissions will be added by the 'any' operator below
             if field.inherited:
+                assert field.related
                 parent_fname = field.related.split('.')[0]
                 parent_domain = DomainCondition(self.field_expr, self.operator, self.value)
                 return DomainCondition(parent_fname, 'any', parent_domain)
@@ -1875,7 +1876,7 @@ def _optimize_merge_any(cls, conditions, model):
     if len(merge_conditions) < 2:
         return conditions
     base = merge_conditions[0]
-    sub_domain = cls([c.value for c in merge_conditions])
+    sub_domain = cls(tuple(c.value for c in merge_conditions))
     return [DomainCondition(base.field_expr, base.operator, sub_domain), *other_conditions]
 
 
@@ -1897,7 +1898,7 @@ def _optimize_merge_not_any(cls, conditions, model):
     if len(merge_conditions) < 2:
         return conditions
     base = merge_conditions[0]
-    sub_domain = cls.INVERSE([c.value for c in merge_conditions])
+    sub_domain = cls.INVERSE(tuple(c.value for c in merge_conditions))
     return [DomainCondition(base.field_expr, base.operator, sub_domain), *other_conditions]
 
 
