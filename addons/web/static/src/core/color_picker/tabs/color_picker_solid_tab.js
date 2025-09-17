@@ -13,7 +13,7 @@ class ColorPickerSolidTab extends Component {
         onFocusout: Function,
         currentCustomColor: { type: String, optional: true },
         defaultColorSet: { type: String | Boolean, optional: true },
-        themeColorPrefix: { type: String, optional: true },
+        cssVarColorPrefix: { type: String, optional: true },
         defaultColors: Array,
         defaultThemeColorVars: Array,
         "*": { optional: true },

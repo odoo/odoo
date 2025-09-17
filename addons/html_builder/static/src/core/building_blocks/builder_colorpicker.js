@@ -138,7 +138,7 @@ export class BuilderColorPicker extends Component {
                 getUsedCustomColors:
                     this.props.getUsedCustomColors || this.getUsedCustomColors.bind(this),
                 colorPrefix: "color-prefix-",
-                themeColorPrefix: "hb-cp-",
+                cssVarColorPrefix: "hb-cp-",
                 noTransparency: this.props.noTransparency,
                 enabledTabs: this.props.enabledTabs,
                 grayscales: this.props.grayscales,

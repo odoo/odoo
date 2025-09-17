@@ -22,7 +22,7 @@ class ColorPickerCustomTab extends Component {
         defaultColorSet: { type: String | Boolean, optional: true },
         defaultOpacity: { type: Number, optional: true },
         grayscales: { type: Object, optional: true },
-        themeColorPrefix: { type: String, optional: true },
+        cssVarColorPrefix: { type: String, optional: true },
         noTransparency: { type: Boolean, optional: true },
         setOnCloseCallback: { type: Function, optional: true },
         setOperationCallbacks: { type: Function, optional: true },
