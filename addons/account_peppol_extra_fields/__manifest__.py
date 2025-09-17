@@ -11,6 +11,7 @@ by the 'account_peppol_advanced_fields' module
     'depends': ['account_peppol_advanced_fields'],
     'data': [
         'views/account_move_views.xml',
+        'views/account_tax_views.xml',
     ],
     'auto_install': True,
     'installable': True,

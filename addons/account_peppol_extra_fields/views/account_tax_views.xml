@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="view_account_tax_form_inherit" model="ir.ui.view">
+        <field name="name">account.tax.form.inherit</field>
+        <field name="model">account.tax</field>
+        <field name="inherit_id" ref="account_edi_ubl_cii.view_account_invoice_form_inherit"/>
+        <field name="arch" type="xml">
+            <field name="ubl_cii_tax_category_code" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </field>
+            <field name="ubl_cii_tax_exemption_reason_code" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </field>
+
+            <group name="advanced_booleans" position="after">
+                <group name="einvoicing" string="E-Invoicing">
+                    <field name="ubl_cii_tax_category_code"/>
+                    <field name="ubl_cii_tax_exemption_reason_code"
+                           invisible="not ubl_cii_requires_exemption_reason"
+                           required="ubl_cii_requires_exemption_reason"/>
+                    <field name="ubl_cii_allowance_reason_code"
+                           widget="value_label_selection_field"
+                           invisible="amount_type == 'percent' or amount &gt; 0.0"/>
+                    <field name="ubl_cii_charge_reason_code"
+                           widget="value_label_selection_field"
+                           invisible="amount_type == 'percent' or amount &lt; 0.0"/>
+                    <field name="ubl_cii_allowance_charge_reason" invisible="amount_type == 'percent'"/>
+                </group>
+            </group>
+        </field>
+    </record>
+</odoo>
