@@ -30,18 +30,6 @@ class StockAverageCostReport(models.AbstractModel):
     avco_value = fields.Float(string='AVCO Value', compute='_compute_cumulative_fields')
 
     def init(self):
-        """
-        Because we can transfer a product from a warehouse to another one thanks to a stock move, we need to
-        generate some fake stock moves before processing all of them. That way, in case of an interwarehouse
-        transfer, we will have an outgoing stock move for the source warehouse and an incoming stock move
-        for the destination one. To do so, we select all relevant SM (incoming, outgoing and interwarehouse),
-        then we duplicate all these SM and edit the values:
-            - product_qty is kept if the SM is not the duplicated one or if the SM is an interwarehouse one
-                otherwise, we set the value to 0 (this allows us to filter it out during the SM processing)
-            - the source warehouse is kept if the SM is not the duplicated one
-            - the dest warehouse is kept if the SM is not the duplicated one and is not an interwarehouse
-                OR the SM is the duplicated one and is an interwarehouse
-        """
         tools.drop_view_if_exists(self.env.cr, 'stock_avco_report')
         query = """
 CREATE OR REPLACE VIEW stock_avco_report AS (
@@ -74,7 +62,7 @@ WHERE
     -- Ignore moves for standard cost method. Only display the list of cost updates
     AND (
         (pt.categ_id IS NOT NULL AND pc.property_cost_method ->> company.id::text IN ('fifo', 'average'))
-        OR (pt.categ_id IS NULL AND company.cost_method IN ('fifo', 'average'))
+        OR (pt.categ_id IS NULL OR pc.property_cost_method IS NULL AND company.cost_method IN ('fifo', 'average'))
     )
 UNION ALL
 SELECT
