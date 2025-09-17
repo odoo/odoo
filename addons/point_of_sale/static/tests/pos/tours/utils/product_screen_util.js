@@ -989,3 +989,65 @@ export function clickFastPaymentButton(paymentMethodName) {
         },
     ];
 }
+<<<<<<< 6b08c4eeafd2913c385c63f8aba79738fd4743ce
+||||||| 45fcd9716fe8cabd4db2ddbdf54caa8f69d5a013
+
+export function longPressOrderline(productName, delay = 500) {
+    return [
+        {
+            content: `long press on orderline with product '${productName}'`,
+            trigger: `.order-container .orderline:has(.product-name:contains("${productName}"))`,
+            run: async () => {
+                const el = queryFirst`.order-container .orderline:has(.product-name:contains("${productName}"))`;
+                if (!el) {
+                    throw new Error(`Orderline with product '${productName}' not found`);
+                }
+                el.dispatchEvent(new PointerEvent("pointerdown", { bubbles: true }));
+                await new Promise((resolve) => setTimeout(resolve, delay));
+                el.dispatchEvent(new PointerEvent("pointerup", { bubbles: true }));
+            },
+        },
+    ];
+}
+
+export function openCartMobile() {
+    return [
+        {
+            content: "Mobile - open cart",
+            trigger: ".switchpane .btn-switchpane:contains('Cart')",
+            run: "click",
+            isActive: ["mobile"],
+        },
+    ];
+}
+=======
+
+export function longPressOrderline(productName, delay = 500) {
+    return [
+        {
+            content: `long press on orderline with product '${productName}'`,
+            trigger: `.order-container .orderline:has(.product-name:contains("${productName}"))`,
+            run: async ({ queryFirst }) => {
+                const el = queryFirst`.order-container .orderline:has(.product-name:contains("${productName}"))`;
+                if (!el) {
+                    throw new Error(`Orderline with product '${productName}' not found`);
+                }
+                el.dispatchEvent(new PointerEvent("pointerdown", { bubbles: true }));
+                await new Promise((resolve) => setTimeout(resolve, delay));
+                el.dispatchEvent(new PointerEvent("pointerup", { bubbles: true }));
+            },
+        },
+    ];
+}
+
+export function openCartMobile() {
+    return [
+        {
+            content: "Mobile - open cart",
+            trigger: ".switchpane .btn-switchpane:contains('Cart')",
+            run: "click",
+            isActive: ["mobile"],
+        },
+    ];
+}
+>>>>>>> c409575f1c1d2dd0d161657cb1bbadcba2df99af
