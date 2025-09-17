@@ -45,6 +45,27 @@ export class DiscussChannel extends Record {
             }, undefined);
         },
     });
+    lastSelfMessageSeenByEveryone = fields.One("mail.message", {
+        compute() {
+            if (!this.lastMessageSeenByAllId) {
+                return false;
+            }
+            let res;
+            // starts from most recent persistent messages to find early
+            for (let i = this.thread.persistentMessages.length - 1; i >= 0; i--) {
+                const message = this.thread.persistentMessages[i];
+                if (!message.isSelfAuthored) {
+                    continue;
+                }
+                if (message.id > this.lastMessageSeenByAllId) {
+                    continue;
+                }
+                res = message;
+                break;
+            }
+            return res;
+        },
+    });
 
     correspondent = fields.One("discuss.channel.member", {
         /** @this {import("models").Thread} */

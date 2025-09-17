@@ -39,10 +39,10 @@ const messagePatch = {
         this.isMessagePreviousToLastSelfMessageSeenByEveryone = fields.Attr(false, {
             /** @this {import("models").Message} */
             compute() {
-                if (!this.thread?.lastSelfMessageSeenByEveryone) {
+                if (!this.thread?.channel?.lastSelfMessageSeenByEveryone) {
                     return false;
                 }
-                return this.id < this.thread.lastSelfMessageSeenByEveryone.id;
+                return this.id < this.thread.channel.lastSelfMessageSeenByEveryone.id;
             },
         });
         /** @type {Promise<Thread>[]} */
