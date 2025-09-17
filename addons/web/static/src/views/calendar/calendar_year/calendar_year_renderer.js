@@ -6,7 +6,7 @@ import { CalendarYearPopover } from "./calendar_year_popover";
 import { makeWeekColumn } from "@web/views/calendar/calendar_common/calendar_common_week_column";
 import { getLocalWeekNumber } from "@web/core/l10n/dates";
 
-import { Component, useEffect, useRef } from "@odoo/owl";
+import { Component, useRef, useExternalListener, onMounted } from "@odoo/owl";
 
 export class CalendarYearRenderer extends Component {
     static components = {
@@ -35,10 +35,8 @@ export class CalendarYearRenderer extends Component {
         this.popover = useCalendarPopover(this.constructor.components.Popover);
         this.rootRef = useRef("root");
         this.onWindowResizeDebounced = useDebounced(this.onWindowResize, 200);
-
-        useEffect(() => {
-            this.updateSize();
-        });
+        useExternalListener(window, "resize", this.onWindowResizeDebounced);
+        onMounted(() => this.updateSize());
     }
 
     get options() {

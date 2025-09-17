@@ -5454,3 +5454,21 @@ test("calendar (year): tap on date switch to day scale", async () => {
     // should open a Quick create modal view in mobile on short tap on date in monthly view
     expect(".modal").toHaveCount(1);
 });
+test("calendar year view resizes correctly on window resize", async () => {
+    await mountView({
+        resModel: "event",
+        type: "calendar",
+        arch: `<calendar mode="year" date_start="start" date_stop="stop"/>`,
+    });
+    const root = queryFirst(".o_calendar_widget");
+    const originalGetBoundingClientRect = root.getBoundingClientRect;
+
+    root.getBoundingClientRect = () => ({ top: 500 });
+    window.innerHeight = 1000;
+    window.dispatchEvent(new window.Event("resize"));
+
+    await new Promise((resolve) => setTimeout(resolve, 250));
+
+    expect(root.style.height).toBe("500px");
+    root.getBoundingClientRect = originalGetBoundingClientRect;
+});
