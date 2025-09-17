@@ -312,7 +312,13 @@
         }
     }
     .row.o_kanban_card_manage_settings:last-child {
-        flex-direction: column;
+        &:has(:not(.o_field_boolean_favorite)) {
+            flex-direction: column-reverse;
+
+            .o_field_kanban_color_picker {
+                padding: map-get($spacers, 3);
+            }
+        }
 
         div[class*="col-"] + div[class*="col-"] {
             border-left: none;
