@@ -6,7 +6,6 @@ import { browser, makeRAMLocalStorage } from "@web/core/browser/browser";
 import { patchTimeZone, patchWithCleanup } from "@web/../tests/helpers/utils";
 import { memoize } from "@web/core/utils/functions";
 import { registerCleanup } from "./helpers/cleanup";
-import { prepareRegistriesWithCleanup } from "./helpers/mock_env";
 import { session as sessionInfo } from "@web/session";
 import { config as transitionConfig } from "@web/core/transition";
 import { loadLanguages } from "@web/core/l10n/translation";
@@ -360,7 +359,6 @@ export async function setupTests() {
     // }
 
     QUnit.testStart(() => {
-        prepareRegistriesWithCleanup();
         forceLocaleAndTimezoneWithCleanup();
         cleanLoadedLanguages();
         patchBrowserWithCleanup();

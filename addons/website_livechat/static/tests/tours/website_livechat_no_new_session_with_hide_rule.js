@@ -1,5 +1,5 @@
 import { registry } from "@web/core/registry";
-import { contains, click } from "@web/../tests/utils";
+import { contains } from "@web/../tests/utils";
 
 const sendFirstMessageSteps = [
     {
@@ -32,11 +32,10 @@ registry.category("web_tour.tours").add("website_livechat_no_session_with_hide_r
         },
         {
             trigger: ".o-livechat-root:shadow p:contains('Did we correctly answer your question?')",
-            async run() {
-                // Use contains instead of click action to ensure negative
-                // assertion is based on the correct parameters below.
-                await click("button", { target: this.anchor.getRootNode(), text: "New Session" });
-            },
+        },
+        {
+            trigger: ".o-livechat-root:shadow button:contains('New Session')",
+            run: "click",
         },
         ...sendFirstMessageSteps,
         {

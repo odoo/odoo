@@ -14,9 +14,6 @@
         'web.assets_backend': [
             'hr_calendar/static/src/**/*',
         ],
-        'web.qunit_suite_tests': [
-            'hr_calendar/static/tests/**/*',
-        ],
     },
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',

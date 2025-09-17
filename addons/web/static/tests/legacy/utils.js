@@ -90,29 +90,6 @@ export async function inputFiles(selector, files, options) {
 
 /**
  * Waits until exactly one element matching the given `selector` is present in
- * `options.target` and then pastes `files` on it.
- *
- * @param {string} selector
- * @param {Object[]} files
- * @param {ContainsOptions} [options] forwarded to `contains`
- */
-export async function pasteFiles(selector, files, options) {
-    await contains(selector, { pasteFiles: files, ...options });
-}
-
-/**
- * Waits until exactly one element matching the given `selector` is present in
- * `options.target` and then focuses on it.
- *
- * @param {string} selector
- * @param {ContainsOptions} [options] forwarded to `contains`
- */
-export async function focus(selector, options) {
-    await contains(selector, { setFocus: true, ...options });
-}
-
-/**
- * Waits until exactly one element matching the given `selector` is present in
  * `options.target` and then inserts the given `content`.
  *
  * @param {string} selector
@@ -138,18 +115,6 @@ export async function scroll(selector, scrollTop, options) {
     await contains(selector, { setScroll: scrollTop, ...options });
 }
 
-/**
- * Waits until exactly one element matching the given `selector` is present in
- * `options.target` and then triggers `event` on it.
- *
- * @param {string} selector
- * @param {(import("@web/../tests/helpers/utils").EventType|[import("@web/../tests/helpers/utils").EventType, EventInit])[]} events
- * @param {ContainsOptions} [options] forwarded to `contains`
- */
-export async function triggerEvents(selector, events, options) {
-    await contains(selector, { triggerEvents: events, ...options });
-}
-
 function log(ok, message) {
     if (window.QUnit) {
         QUnit.assert.ok(ok, message);
@@ -163,9 +128,6 @@ function log(ok, message) {
 }
 
 let hasUsedContainsPositively = false;
-if (window.QUnit) {
-    QUnit.testStart(() => (hasUsedContainsPositively = false));
-}
 /**
  * @typedef {[string, ContainsOptions]} ContainsTuple tuple representing params of the contains
  *  function, where the first element is the selector, and the second element is the options param.
@@ -609,77 +571,4 @@ class Contains {
  */
 export async function contains(selector, options) {
     await new Contains(selector, options).run();
-}
-
-const stepState = {
-    expectedSteps: null,
-    deferred: null,
-    timeout: null,
-    currentSteps: [],
-
-    clear() {
-        clearTimeout(this.timeout);
-        this.timeout = null;
-        this.deferred = null;
-        this.currentSteps = [];
-        this.expectedSteps = null;
-    },
-
-    check({ crashOnFail = false } = {}) {
-        const success =
-            this.expectedSteps.length === this.currentSteps.length &&
-            this.expectedSteps.every((s, i) => s === this.currentSteps[i]);
-        if (!success && !crashOnFail) {
-            return;
-        }
-        QUnit.config.current.assert.verifySteps(this.expectedSteps);
-        if (success) {
-            this.deferred.resolve();
-        } else {
-            this.deferred.reject(new Error("Steps do not match."));
-        }
-        this.clear();
-    },
-};
-
-if (window.QUnit) {
-    QUnit.testStart(() =>
-        registerCleanup(() => {
-            if (stepState.expectedSteps) {
-                stepState.check({ crashOnFail: true });
-            } else {
-                stepState.clear();
-            }
-        })
-    );
-}
-
-/**
- * Indicate the completion of a test step. This step must then be verified by
- * calling `assertSteps`.
- *
- * @param {string} step
- */
-export function step(step) {
-    stepState.currentSteps.push(step);
-    QUnit.config.current.assert.step(step);
-    if (stepState.expectedSteps) {
-        stepState.check();
-    }
-}
-
-/**
- * Wait for the given steps to be executed or for the timeout to be reached.
- *
- * @param {string[]} steps
- */
-export function assertSteps(steps) {
-    if (stepState.expectedSteps) {
-        stepState.check({ crashOnFail: true });
-    }
-    stepState.expectedSteps = steps;
-    stepState.deferred = makeDeferred();
-    stepState.timeout = setTimeout(() => stepState.check({ crashOnFail: true }), 2000);
-    stepState.check();
-    return stepState.deferred;
 }

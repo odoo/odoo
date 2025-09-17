@@ -2,6 +2,17 @@
 import { registerCleanup } from "@web/../tests/helpers/cleanup";
 import { getFixture, nextTick } from "@web/../tests/helpers/utils";
 import { DEBOUNCE, makeAsyncHandler, makeButtonHandler } from '@web/legacy/js/public/minimal_dom';
+import { registry } from "@web/core/registry";
+import { patchWithCleanup } from "../helpers/utils";
+
+function patchServiceCategory() {
+    patchWithCleanup(registry.category("services"), {
+        content: {},
+        elements: null,
+        entries: null,
+        subRegistries: {},
+    });
+}
 
 QUnit.module('core', {}, function () {
 
@@ -10,6 +21,8 @@ QUnit.module('core', {}, function () {
     QUnit.test('MakeButtonHandler does not retrigger the same error', async function (assert) {
         assert.expect(1);
         assert.expectErrors();
+
+        patchServiceCategory();
 
         // create a target for the button handler
         const fixture = getFixture();
@@ -38,6 +51,8 @@ QUnit.module('core', {}, function () {
     QUnit.test('MakeAsyncHandler does not retrigger the same error', async function (assert) {
         assert.expect(1);
         assert.expectErrors();
+
+        patchServiceCategory();
 
         // get a way to reject the promise later
         let rejectPromise;

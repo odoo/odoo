@@ -372,9 +372,6 @@
             'website/static/src/snippets/s_table_of_content/000.scss',
             'google_recaptcha/static/src/js/recaptcha.js',
         ],
-        'web.tests_assets': [
-            'website/static/tests/website_service_mock.js',
-        ],
         'web._assets_frontend_helpers': [
             ('prepend', 'website/static/src/scss/bootstrap_overridden.scss'),
         ],

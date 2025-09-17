@@ -194,14 +194,10 @@ For more specific needs, you may also assign custom-defined actions
         # Unit test files
         'web.assets_unit_tests': [
             'mail/static/tests/**/*',
-            ('remove', 'mail/static/tests/legacy/helpers/mock_services.js'), # to remove when all legacy tests are ported
             ('remove', 'mail/static/tests/tours/**/*'),
         ],
         'web.assets_tests': [
             'mail/static/tests/tours/**/*',
-        ],
-        'web.tests_assets': [
-            'mail/static/tests/legacy/helpers/mock_services.js',
         ],
         'mail.assets_odoo_sfu': [
             'mail/static/lib/odoo_sfu/odoo_sfu.js',
