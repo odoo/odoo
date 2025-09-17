@@ -1937,8 +1937,19 @@ def _optimize_same_conditions(cls, conditions, model):
     Quick optimization for some conditions, just compare if we have the same
     condition twice.
     """
+    # check if we need to create a new list (this is usually not the case)
+    prev = None
+    for condition in conditions:
+        if prev == condition:
+            break
+        prev = condition
+    else:
+        return conditions
+
+    # avoid any function calls, and use the stack semantics for prev comparison
+    prev = None
     return [
-        b
-        for a, b in itertools.pairwise(itertools.chain([None], conditions))
-        if a != b
+        condition
+        for condition in conditions
+        if prev != (prev := condition)
     ]
