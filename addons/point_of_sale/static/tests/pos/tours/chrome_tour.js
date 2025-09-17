@@ -188,6 +188,15 @@ registry.category("web_tour.tours").add("test_reload_page_before_payment_with_cu
             PaymentScreen.clickValidate(),
             ReceiptScreen.clickNextOrder(),
             ProductScreen.isShown(),
+            ProductScreen.clickDisplayedProduct("Desk Organizer", true, "1.0"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Customer Account"),
+            PaymentScreen.clickValidate(),
+            Dialog.cancel(),
+            PaymentScreen.clickValidate(),
+            Dialog.confirm("Ok"),
+            PaymentScreen.clickCustomer("Partner Test 1"),
+            PaymentScreen.clickValidate(),
         ].flat(),
 });
 
