@@ -8,7 +8,7 @@ Message.components = { ...Message.components, MessageSeenIndicator };
 /** @type {Message} */
 const messagePatch = {
     get showSeenIndicator() {
-        return this.props.message.isSelfAuthored && this.props.thread?.hasSeenFeature;
+        return this.props.message.isSelfAuthored && this.props.thread?.channel?.hasSeenFeature;
     },
 };
 patch(Message.prototype, messagePatch);

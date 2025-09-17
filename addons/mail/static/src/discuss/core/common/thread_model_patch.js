@@ -91,14 +91,6 @@ const threadPatch = {
         /** @type {"not_fetched"|"fetching"|"fetched"} */
         this.fetchChannelInfoState = "not_fetched";
         this.group_ids = fields.Many("res.groups");
-        this.hasSeenFeature = fields.Attr(false, {
-            /** @this {import("models").Thread} */
-            compute() {
-                return this.store.channel_types_with_seen_infos.includes(
-                    this.channel?.channel_type
-                );
-            },
-        });
         this.firstUnreadMessage = fields.One("mail.message", {
             /** @this {import("models").Thread} */
             compute() {
@@ -137,7 +129,7 @@ const threadPatch = {
         this.lastMessageSeenByAllId = fields.Attr(undefined, {
             /** @this {import("models").Thread} */
             compute() {
-                if (!this.hasSeenFeature) {
+                if (!this.channel?.hasSeenFeature) {
                     return;
                 }
                 return this.channel?.channel_member_ids.reduce((lastMessageSeenByAllId, member) => {

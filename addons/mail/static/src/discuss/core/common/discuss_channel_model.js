@@ -22,6 +22,13 @@ export class DiscussChannel extends Record {
     typingMembers = fields.Many("discuss.channel.member");
     firstUnreadMessage = fields.One("mail.message");
     default_display_mode;
+    hasSeenFeature = fields.Attr(false, {
+        /** @this {import("models").Thread} */
+        compute() {
+            return this.store.channel_types_with_seen_infos.includes(this.channel_type);
+        },
+    });
+
     correspondent = fields.One("discuss.channel.member", {
         /** @this {import("models").Thread} */
         compute() {
