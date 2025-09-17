@@ -496,6 +496,9 @@ test("Use saved volume settings", async () => {
     await openDiscuss(channelId);
     await click("[title='Start a Call']");
     await contains(".o-discuss-Call");
+    await contains(
+        `.o-discuss-CallParticipantCard[title='${partnerName}'] .o-discuss-CallParticipantCard-contextMenuAnchor`
+    );
     await triggerEvents(`.o-discuss-CallParticipantCard[title='${partnerName}']`, ["contextmenu"]);
     await contains(".o-discuss-CallContextMenu");
     const rangeInput = queryFirst(".o-discuss-CallContextMenu input[type='range']");
@@ -541,4 +544,34 @@ test("should also invite to the call when inviting to the channel", async () => 
     await click(".o-discuss-ChannelInvitation-selectable", { text: "TestPartner" });
     await click("[title='Invite to Channel']:enabled");
     await contains(".o-discuss-CallParticipantCard.o-isInvitation");
+});
+
+test("should not show context menu on participant card when not in a call", async () => {
+    mockGetMedia();
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({
+        name: "General",
+    });
+    pyEnv["discuss.channel.rtc.session"].create([
+        {
+            channel_member_id: pyEnv["discuss.channel.member"].create({
+                channel_id: channelId,
+                partner_id: pyEnv["res.partner"].create({ name: "Awesome Partner" }),
+            }),
+            channel_id: channelId,
+        },
+    ]);
+    await start();
+    await openDiscuss(channelId);
+    await contains(".o-discuss-CallParticipantCard[title='Awesome Partner']");
+    await contains(
+        ".o-discuss-CallParticipantCard[title='Awesome Partner'] .o-discuss-CallParticipantCard-contextMenuAnchor",
+        { count: 0 }
+    );
+    await click("[title='Join Call']");
+    await contains(
+        ".o-discuss-CallParticipantCard[title='Awesome Partner'] .o-discuss-CallParticipantCard-contextMenuAnchor"
+    );
+    await triggerEvents(".o-discuss-CallParticipantCard[title='Awesome Partner']", ["contextmenu"]);
+    await contains(".o-discuss-CallContextMenu");
 });
