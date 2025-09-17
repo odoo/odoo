@@ -1,3 +1,4 @@
+import { DeviceSelect } from "@mail/discuss/call/common/device_select";
 import { CallDropdown } from "@mail/discuss/call/common/call_dropdown";
 import { attClassObjectToString } from "@mail/utils/common/format";
 import { Component, onWillUnmount } from "@odoo/owl";
@@ -25,7 +26,7 @@ class Action extends Component {
         ...actionListProps,
     ];
     static defaultProps = { fw: true };
-    static components = { Action, DropdownItem };
+    static components = { Action, DropdownItem, DeviceSelect };
     static template = "mail.Action";
 
     get ActionList() {

@@ -14,11 +14,9 @@
         &:not(.o-hasBtnBg) {
             background-color: inherit;
         }
-
+        $_btn-height: calc((#{$btn-font-size} * #{$btn-line-height}) + #{$btn-padding-y} * 2);
         &.o-inline {
             &:where(:has(i:first-child:last-child)) {
-                $_btn-height: calc((#{$btn-font-size} * #{$btn-line-height}) + #{$btn-padding-y} * 2);
-
                 height: var(--o-mail-ActionList-Button-height, #{$_btn-height});
                 aspect-ratio: var(--o-mail-ActionList-Button-aspect-ratio, 1.1);
                 filter: brightness(var(--o-mail-ActionList-Button-opacity));
@@ -35,6 +33,10 @@
             &.o-odooControlPanelSwitchStyle i {
                 opacity: var(--mail-ActionList-buttonInlineIconOpacity);
             }
+        }
+
+        &.dropdown-toggle-split {
+            height: $_btn-height;
         }
 
         &:not(.o-inline) > i {
