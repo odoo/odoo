@@ -140,3 +140,13 @@ COUNTRY_MAPPING = {
     'YT': 'FR',  # Mayotte
     'MF': 'FR',  # Saint-Martin
 }
+
+# Stripe-specific mapping of currency codes in ISO 4217 format to the number of decimals.
+# Only currencies for which Stripe does not follow the ISO 4217 norm are listed here.
+CURRENCY_DECIMALS = {
+    # https://docs.stripe.com/currencies#special-cases
+    'ISK': 2,
+    'UGX': 2,
+    # https://docs.stripe.com/currencies#zero-decimal
+    'MGA': 0,
+}
