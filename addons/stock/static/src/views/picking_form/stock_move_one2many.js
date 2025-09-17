@@ -2,8 +2,10 @@ import { registry } from "@web/core/registry";
 import { ListRenderer } from "@web/views/list/list_renderer";
 import { X2ManyField, x2ManyField } from "@web/views/fields/x2many/x2many_field";
 import { ProductNameAndDescriptionListRendererMixin } from "@product/product_name_and_description/product_name_and_description";
+import { user } from "@web/core/user";
 import { patch } from "@web/core/utils/patch";
 import { useOwnedDialogs, useService } from "@web/core/utils/hooks";
+import { onWillStart } from "@odoo/owl";
 import { SelectCreateDialog } from "@web/views/view_dialogs/select_create_dialog";
 import { _t } from "@web/core/l10n/translation";
 
@@ -19,6 +21,10 @@ export class MovesListRenderer extends ListRenderer {
         this.productColumns = ["product_id", "product_template_id"];
         this.pickingId = this.props.list.context.default_picking_id || 0;
         this.locationId = this.props.list.context.default_location_id || 0;
+
+        onWillStart(async () => {
+            this.hasPackageActive = await user.hasGroup("stock.group_tracking_lot");
+        });
     }
 
     async onClickMovePackage() {
@@ -57,6 +63,7 @@ export class MovesListRenderer extends ListRenderer {
 
     get canAddPackage() {
         return (
+            this.hasPackageActive &&
             !["done", "cancel"].includes(this.props.list.context.picking_state) &&
             this.props.list.context.picking_type_code !== "incoming"
         );
