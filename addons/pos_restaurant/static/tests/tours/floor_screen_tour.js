@@ -61,7 +61,7 @@ registry.category("web_tour.tours").add("FloorScreenTour", {
                 trigger: `.edit-buttons i[aria-label="Add Table"]`,
                 run: "click",
             },
-            FloorScreen.selectedTableIs("1"),
+            FloorScreen.selectedTableIs("6"),
             FloorScreen.clickEditButton("Rename"),
 
             NumberPopup.enterValue("100"),
@@ -92,8 +92,8 @@ registry.category("web_tour.tours").add("FloorScreenTour", {
             FloorScreen.ctrlClickTable("3"),
             FloorScreen.selectedTableIs("3"),
             FloorScreen.clickEditButton("Clone"),
-            FloorScreen.selectedTableIs("2"),
             FloorScreen.selectedTableIs("4"),
+            FloorScreen.selectedTableIs("5"),
 
             //test delete multiple tables
             FloorScreen.clickEditButton("Delete"),
