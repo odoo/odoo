@@ -421,6 +421,9 @@ class TestCustomize(HttpCaseWithUserDemo, HttpCaseWithUserPortal, TestProductCon
             login='website_user',
         )
 
+    def test_13_shop_editor_create_and_set_product_ribbon(self):
+        self.start_tour('/', 'website_sale.shop_editor_create_and_set_product_ribbon', login='admin')
+
     def test_shop_editor_no_alternative_products_visibility(self):
         product_no_alternative = self.env['product.template'].create({
             'name': 'product_without_alternative',
