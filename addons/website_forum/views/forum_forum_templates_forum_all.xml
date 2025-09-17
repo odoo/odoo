@@ -92,7 +92,7 @@
 <!-- (simulate an oe_structure edition) -->
 <template id="forum_all_oe_structure_forum_all_top" inherit_id="website_forum.forum_all" name="Forum Navigation (oe_structure_forum_all_top)">
     <xpath expr="//*[hasclass('oe_structure')][@id='oe_structure_forum_all_top']" position="replace">
-        <div class="oe_structure oe_empty" id="oe_structure_forum_all_top">
+        <div class="oe_structure oe_empty" id="oe_structure_forum_all_top" t-ignore="True">
             <section class="s_cover o_colored_level s_parallax_no_overflow_hidden pt96 pb48" data-scroll-background-ratio="0" data-snippet="s_cover" data-name="Cover">
                 <div class="s_allow_columns container">
                     <h1 class="display-3" style="text-align: center; font-weight: bold;">Community Forums</h1>
