@@ -31,7 +31,7 @@
                     </div>
                 </xpath>
                 <xpath expr="//t[@name='warning_section']" position="inside">
-                    <div class="alert alert-warning text-center mb-2" role="alert" invisible="analytic_account_active or not allow_timesheets or is_template" groups="hr_timesheet.group_hr_timesheet_user">
+                    <div class="alert alert-warning text-center mb-2" role="alert" invisible="analytic_account_active or not allow_timesheets or is_template or has_project_template" groups="hr_timesheet.group_hr_timesheet_user">
                         You cannot log timesheets on this project since it is linked to an inactive analytic account.<br/> Please change this account, or reactivate the current one to timesheet on the project.
                     </div>
                 </xpath>
@@ -40,7 +40,7 @@
                     <t groups="hr_timesheet.group_hr_timesheet_user">
                         <field name="analytic_account_active" invisible="1"/>
                     </t>
-                    <page string="Timesheets" name="page_timesheets" id="timesheets_tab" invisible="not allow_timesheets or has_template_ancestor or (not id and context.get('hide_timesheet_ids'))" groups="hr_timesheet.group_hr_timesheet_user">
+                    <page string="Timesheets" name="page_timesheets" id="timesheets_tab" invisible="not allow_timesheets or has_template_ancestor or has_project_template or (not id and context.get('hide_timesheet_ids'))" groups="hr_timesheet.group_hr_timesheet_user">
                     <field name="timesheet_ids" mode="list,kanban" readonly="not analytic_account_active" context="{'default_project_id': project_id, 'default_name': '', 'form_view_ref': 'hr_timesheet.timesheet_view_form_user'}">
                         <list editable="top" string="Timesheet Activities" decoration-muted="readonly_timesheet == True">
                             <field name="readonly_timesheet" column_invisible="True"/>

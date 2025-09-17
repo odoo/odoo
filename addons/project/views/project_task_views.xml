@@ -429,7 +429,7 @@
                                 class="o_task_user_field"
                                 options="{'no_open': True}"
                                 widget="many2many_avatar_user"/>
-                            <field name="role_ids" invisible="not (is_template and has_project_template)" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}" placeholder="Assign at project creation"/>
+                            <field name="role_ids" invisible="not (is_template or has_project_template)" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}" placeholder="Assign at project creation"/>
                         </group>
                         <group>
                             <field name="active" invisible="1"/>
