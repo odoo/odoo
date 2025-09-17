@@ -2332,6 +2332,36 @@ class PropertiesSearchCase(TransactionExpressionCase, TestPropertiesMixin):
         self.assertEqual(result[1], self.message_1)
         self.assertEqual(result[2], self.message_2)
 
+    def test_properties_field_search_order_many2one(self):
+        """Test that we can order record by properties integer values."""
+        self.partner.name = 'ZZZZZZZ'
+        self.partner_2.name = 'AAAAAAA'
+
+        self.message_1.attributes = [{
+            'name': 'mypartner',
+            'string': 'My Partner',
+            'type': 'many2one',
+            'value': self.partner.id,
+            'comodel': 'test_orm.partner',
+            'definition_changed': True,
+        }]
+        self.message_2.attributes = {'mypartner': self.partner_2.id}
+
+        message_4 = self.env['test_orm.message'].create({
+            'name': 'Test Message',
+            'discussion': self.discussion_1.id,
+            'author': self.user.id,
+        })
+        message_4.attributes = {'mypartner': False}  # explicit False value
+
+        self.env.flush_all()
+
+        records = self.env['test_orm.message'].search([], order='attributes.mypartner ASC, id')
+        self.assertEqual(records.ids, (self.message_2 + self.message_1 + self.message_3 + message_4).ids)
+
+        records = self.env['test_orm.message'].search([], order='attributes.mypartner DESC, id DESC')
+        self.assertEqual(records.ids, (message_4 + self.message_3 + self.message_1 + self.message_2).ids)
+
     def test_properties_field_search_order_integer(self):
         """Test that we can order record by properties integer values."""
         (self.message_1 | self.message_2 | self.message_3).discussion = self.discussion_1
@@ -2450,7 +2480,7 @@ class PropertiesGroupByCase(TestPropertiesMixin):
         self.env.flush_all()
 
         # group by the char property
-        with self.assertQueryCount(3):
+        with self.assertQueryCount(4):
             result = Model.formatted_read_group(
                 domain=[],
                 aggregates=['__count'],
@@ -2478,7 +2508,7 @@ class PropertiesGroupByCase(TestPropertiesMixin):
         self._check_domains_count(result)
 
         # group by the integer property
-        with self.assertQueryCount(3):
+        with self.assertQueryCount(4):
             result = Model.formatted_read_group(
                 domain=[],
                 aggregates=['__count'],
@@ -2497,7 +2527,7 @@ class PropertiesGroupByCase(TestPropertiesMixin):
 
         # falsy properties
         self.message_3.attributes = {'mychar': False, 'myinteger': False}
-        with self.assertQueryCount(3):
+        with self.assertQueryCount(4):
             result = Model.formatted_read_group(
                 domain=[],
                 aggregates=['__count'],
@@ -2517,7 +2547,7 @@ class PropertiesGroupByCase(TestPropertiesMixin):
             """,
             [self.message_2.id],
         )
-        with self.assertQueryCount(3):
+        with self.assertQueryCount(4):
             result = Model.formatted_read_group(
                 domain=[],
                 aggregates=['__count'],
@@ -2576,7 +2606,7 @@ class PropertiesGroupByCase(TestPropertiesMixin):
         self.message_3.attributes = {'mychar': 'boum'}
 
         Model = self.env['test_orm.message']
-        with self.assertQueryCount(6):  # 3 for formatted_read_group + 1 query by group opened
+        with self.assertQueryCount(7):  # 6 for formatted_read_group + 1 query by group opened
             result = Model.web_read_group(
                 domain=[],
                 aggregates=['__count'],
@@ -2938,7 +2968,7 @@ class PropertiesGroupByCase(TestPropertiesMixin):
 
         (partners[4] | partners[7] | partners[9]).unlink()
 
-        with self.assertQueryCount(4):
+        with self.assertQueryCount(5):
             result = Model.formatted_read_group(
                 domain=[('discussion', '!=', self.wrong_discussion_id)],
                 aggregates=['__count'],
@@ -2965,7 +2995,7 @@ class PropertiesGroupByCase(TestPropertiesMixin):
 
         # now message 1 and 2 will also be in the falsy group
         partners[:8].unlink()
-        with self.assertQueryCount(4):
+        with self.assertQueryCount(5):
             result = Model.formatted_read_group(
                 domain=[('discussion', '!=', self.wrong_discussion_id)],
                 aggregates=['__count'],
@@ -3014,6 +3044,10 @@ class PropertiesGroupByCase(TestPropertiesMixin):
     def test_properties_field_read_group_many2one(self):
         Model = self.env['test_orm.message']
 
+        # Inverse the order to make sure that the comodel order is taken in account
+        self.partner.name = 'ZZZZZ'
+        self.partner_2.name = 'AAAAA'
+
         # group by many2one property
         self.message_1.attributes = [{
             'name': 'mypartner',
@@ -3039,36 +3073,38 @@ class PropertiesGroupByCase(TestPropertiesMixin):
         )
 
         self.env.invalidate_all()
-        with self.assertQueryCount(4):
+        with self.assertQueryCount(6):
             result = Model.formatted_read_group(
                 domain=[],
                 groupby=['attributes.mypartner'],
                 aggregates=['__count'],
             )
 
-        self.assertEqual(len(result), 3, 'Should ignore the partner that has been removed')
-
-        self.assertEqual(result[0]['__count'], 1)
-        self.assertEqual(result[0]['attributes.mypartner'][0], self.partner.id)
-        self.assertEqual(result[0]['attributes.mypartner'][1], self.partner.display_name)
-        self.assertEqual(result[0]['__extra_domain'], [('attributes.mypartner', '=', self.partner.id)])
-
-        self.assertEqual(result[1]['__count'], 1)
-        self.assertEqual(result[1]['attributes.mypartner'][0], self.partner_2.id)
-        self.assertEqual(result[1]['attributes.mypartner'][1], self.partner_2.display_name)
-        self.assertEqual(result[1]['__extra_domain'], [('attributes.mypartner', '=', self.partner_2.id)])
-
-        # falsy domain, automatically generated, contains the false value
-        # and the ids of the records that doesn't exist in the database
-        self.assertEqual(result[2]['__count'], 2)
-        self.assertEqual(result[2]['attributes.mypartner'], False)
         self.assertEqual(
-            result[2]['__extra_domain'],
+            result,
             [
-                '|',
-                ('attributes.mypartner', '=', False),
-                ('attributes.mypartner', 'not in', [self.partner.id, self.partner_2.id]),
-            ],
+                {
+                    'attributes.mypartner': (self.partner_2.id, self.partner_2.display_name),
+                    '__count': 1,
+                    '__extra_domain': [('attributes.mypartner', '=', self.partner_2.id)],
+                },
+                {
+                    'attributes.mypartner': (self.partner.id, self.partner.display_name),
+                    '__count': 1,
+                    '__extra_domain': [('attributes.mypartner', '=', self.partner.id)],
+                },
+                {
+                    'attributes.mypartner': False,
+                    '__count': 2,
+                    # falsy domain, automatically generated, contains the false value
+                    # and the ids of the records that doesn't exist in the database
+                    '__extra_domain': [
+                        '|',
+                        ('attributes.mypartner', '=', False),
+                        ('attributes.mypartner', 'not in', [self.partner_2.id, self.partner.id]),
+                    ],
+                },
+            ]
         )
 
         # when there's no "('property', '=', False)" domain, it should be created
@@ -3084,7 +3120,7 @@ class PropertiesGroupByCase(TestPropertiesMixin):
             [
                 '|',
                 ('attributes.mypartner', '=', False),
-                ('attributes.mypartner', 'not in', [self.partner.id, self.partner_2.id]),
+                ('attributes.mypartner', 'not in', [self.partner_2.id, self.partner.id]),
             ],
         )
 
@@ -3138,7 +3174,7 @@ class PropertiesGroupByCase(TestPropertiesMixin):
             [self.message_3.id],
         )
 
-        with self.assertQueryCount(3):
+        with self.assertQueryCount(4):
             result = Model.formatted_read_group(
                 domain=[('discussion', '!=', self.wrong_discussion_id)],
                 groupby=['attributes.myselection'],
@@ -3214,7 +3250,7 @@ class PropertiesGroupByCase(TestPropertiesMixin):
         )
         self.env.invalidate_all()
 
-        with self.assertQueryCount(3):
+        with self.assertQueryCount(4):
             result = Model.formatted_read_group(
                 domain=[('discussion', '!=', self.wrong_discussion_id)],
                 aggregates=['__count'],
@@ -3256,7 +3292,7 @@ class PropertiesGroupByCase(TestPropertiesMixin):
         )
         self.env.invalidate_all()
 
-        with self.assertQueryCount(3):
+        with self.assertQueryCount(4):
             result = Model.formatted_read_group(
                 domain=[('discussion', '!=', self.wrong_discussion_id)],
                 aggregates=['__count'],
