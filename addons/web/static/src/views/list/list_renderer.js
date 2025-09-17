@@ -767,7 +767,7 @@ export class ListRenderer extends Component {
     }
 
     getFieldCurrencies(fieldName) {
-        const column = this.columns.find((c) => c.name === fieldName);
+        const column = this.allColumns.find((c) => c.name === fieldName);
         const currencyField = this.getCurrencyField(column);
         let values;
         if (this.props.list.selection.length) {
