@@ -126,26 +126,9 @@ const threadPatch = {
                     : lastInterestDt;
             },
         });
-        this.lastMessageSeenByAllId = fields.Attr(undefined, {
-            /** @this {import("models").Thread} */
-            compute() {
-                if (!this.channel?.hasSeenFeature) {
-                    return;
-                }
-                return this.channel?.channel_member_ids.reduce((lastMessageSeenByAllId, member) => {
-                    if (member.persona.notEq(this.store.self) && member.seen_message_id) {
-                        return lastMessageSeenByAllId
-                            ? Math.min(lastMessageSeenByAllId, member.seen_message_id.id)
-                            : member.seen_message_id.id;
-                    } else {
-                        return lastMessageSeenByAllId;
-                    }
-                }, undefined);
-            },
-        });
         this.lastSelfMessageSeenByEveryone = fields.One("mail.message", {
             compute() {
-                if (!this.lastMessageSeenByAllId) {
+                if (!this.channel.lastMessageSeenByAllId) {
                     return false;
                 }
                 let res;
@@ -155,7 +138,7 @@ const threadPatch = {
                     if (!message.isSelfAuthored) {
                         continue;
                     }
-                    if (message.id > this.lastMessageSeenByAllId) {
+                    if (message.id > this.channel.lastMessageSeenByAllId) {
                         continue;
                     }
                     res = message;

@@ -28,6 +28,23 @@ export class DiscussChannel extends Record {
             return this.store.channel_types_with_seen_infos.includes(this.channel_type);
         },
     });
+    lastMessageSeenByAllId = fields.Attr(undefined, {
+        /** @this {import("models").Thread} */
+        compute() {
+            if (!this.hasSeenFeature) {
+                return;
+            }
+            return this.channel_member_ids.reduce((lastMessageSeenByAllId, member) => {
+                if (member.persona.notEq(this.store.self) && member.seen_message_id) {
+                    return lastMessageSeenByAllId
+                        ? Math.min(lastMessageSeenByAllId, member.seen_message_id.id)
+                        : member.seen_message_id.id;
+                } else {
+                    return lastMessageSeenByAllId;
+                }
+            }, undefined);
+        },
+    });
 
     correspondent = fields.One("discuss.channel.member", {
         /** @this {import("models").Thread} */
