@@ -64,7 +64,7 @@ class TestLivechatLead(HttpCase, TestCrmCommon):
             'channel_partner_ids': [(4, self.user_sales_manager.partner_id.id)]
         })
         lead = channel._convert_visitor_to_lead(self.env.user.partner_id, '/lead TestLead command')
-        self.assertEqual(lead.partner_id, self.env['res.partner'])
+        self.assertEqual(lead.partner_id, self.user_sales_manager.partner_id)
 
     @users('user_sales_leads')
     def test_crm_lead_creation_portal(self):
@@ -118,3 +118,18 @@ class TestLivechatLead(HttpCase, TestCrmCommon):
         self.assertFalse(channel.lead_ids)
         channel.with_user(bob_operator).execute_command_lead(body="/lead BobLead")
         self.assertEqual(channel.lead_ids.name, "BobLead")
+
+    @users("admin")
+    def test_crm_lead_creation_logged_in_user(self):
+        livechat_visitor = self.env["res.users"].create({"name": "Visitor", "login": "Visitor"})
+        channel = self.env["discuss.channel"].create(
+            {
+                "name": "Livechat Test",
+                "channel_type": "livechat",
+                "livechat_operator_id": self.env.user.partner_id.id,
+                "channel_member_ids": [Command.create({"partner_id": livechat_visitor.partner_id.id})],
+            },
+        )
+        lead = channel._convert_visitor_to_lead(self.env.user.partner_id, "/lead TestLead command")
+        self.assertEqual(lead.origin_channel_id, channel)
+        self.assertEqual(lead.partner_id, livechat_visitor.partner_id)

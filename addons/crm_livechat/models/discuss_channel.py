@@ -49,14 +49,14 @@ class DiscussChannel(models.Model):
         :param key: operator input in chat ('/lead Lead about Product')
         """
         # if public user is part of the chat: consider lead to be linked to an
-        # anonymous user whatever the participants. Otherwise keep only share
-        # partners (no user or portal user) to link to the lead.
+        # anonymous user whatever the participants. Otherwise keep share
+        # partners and users link to the lead.
         customers = self.env['res.partner']
-        for customer in self.with_context(active_test=False).channel_partner_ids.filtered(lambda p: p != partner and p.partner_share):
-            if customer.is_public:
-                customers = self.env['res.partner']
-                break
-            else:
+        if self.channel_type == "livechat":
+            for customer in self.with_context(active_test=False).channel_partner_ids.filtered(lambda p: p != partner):
+                if customer.is_public:
+                    customers = self.env["res.partner"]
+                    break
                 customers |= customer
 
         utm_source = self.env.ref('crm_livechat.utm_source_livechat', raise_if_not_found=False)
