@@ -1,4 +1,6 @@
 import {
+    changeBackgroundColor,
+    changeOption,
     clickOnEditAndWaitEditMode,
     clickOnSave,
     registerWebsitePreviewTour,
@@ -66,6 +68,51 @@ registerWebsitePreviewTour(
         {
             content: "Check that the ribbon was properly saved",
             trigger: ':iframe .oe_product:first .o_ribbons:contains("Sale")',
+        },
+    ]
+);
+
+registerWebsitePreviewTour(
+    "website_sale.shop_editor_create_and_set_product_ribbon",
+    {
+        edition: true,
+    },
+    () => [
+        {
+            content: "Click on first product",
+            trigger: ":iframe .oe_product:first",
+            run: "click",
+        },
+        changeOption("Product", "createRibbon"),
+        {
+            trigger: "[data-action-id='modifyRibbon'] input",
+            run: "edit New Ribbon",
+        },
+        changeBackgroundColor(),
+        {
+            content: "Select the color #FF9C00",
+            trigger: ".popover button[data-color='#FF9C00']",
+            run: "click",
+        },
+        {
+            content: "Check the ribbon name appears in the dropdown title",
+            trigger: "[data-container-title='Product'] .o-hb-select-toggle:contains(New Ribbon)",
+        },
+        {
+            content: "Check the background color preview displays correctly in the dropdown",
+            trigger:
+                "[data-action-id='setRibbon'] div:contains(New Ribbon) .o_wsale_color_preview[style='background-color: #FF9C00; border: ;']",
+        },
+        {
+            content: "Check the font color preview displays correctly in the dropdown",
+            trigger:
+                "[data-action-id='setRibbon'] div:contains(New Ribbon) .o_wsale_color_preview[style='background-color: purple !important; border: ;']",
+        },
+        ...clickOnSave(),
+        {
+            content: "Check that the ribbon was properly saved",
+            trigger:
+                ":iframe .oe_product:first .o_ribbons:contains('New Ribbon')[style='color: purple; background-color:#FF9C00']",
         },
     ]
 );
