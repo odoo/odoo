@@ -1,3 +1,5 @@
+import { isEmptyBlock } from "@html_editor/utils/dom_info";
+
 import { fields, Record } from "@mail/core/common/record";
 import {
     EMOJI_REGEX,
@@ -316,22 +318,7 @@ export class Message extends Record {
     });
     isBodyEmpty = fields.Attr(undefined, {
         compute() {
-            return (
-                !this.body ||
-                [
-                    "",
-                    "<p></p>",
-                    "<p><br></p>",
-                    "<p><br/></p>",
-                    "<div></div>",
-                    "<div><br></div>",
-                    "<div><br/></div>",
-                ].includes(
-                    this.body
-                        .replace('<span class="o-mail-Message-edited"></span>', "")
-                        .replace(/\s/g, "")
-                )
-            );
+            return !this.body || isEmptyBlock(createElementWithContent("div", this.body));
         },
     });
 
