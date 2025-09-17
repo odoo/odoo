@@ -113,7 +113,7 @@ export class SectionAndNoteListRenderer extends ListRenderer {
         return this.record.data.collapse_prices;
     }
 
-    get hideCompositions() {
+    get hideComposition() {
         return this.record.data.collapse_composition;
     }
 
