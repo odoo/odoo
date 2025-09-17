@@ -206,4 +206,17 @@ describe("pos.order", () => {
         order.preset_time = "2025-08-11 14:00:00";
         expect(order.presetRequirementsFilled).toBe(true);
     });
+
+    test("setShippingDate and getShippingDate with Luxon", async () => {
+        const store = await setupPosEnv();
+        const order = store.addNewOrder();
+
+        const testDate = "2019-03-11";
+        order.setShippingDate(testDate);
+
+        expect(order.shipping_date.toISODate()).toBe(testDate);
+        expect(typeof order.getShippingDate()).toBe("string");
+        order.setShippingDate(null);
+        expect(order.getShippingDate()).toBeEmpty();
+    });
 });
