@@ -78,6 +78,11 @@ class TestProjectTemplates(TestProjectCommon):
                 Command.create({
                     'name': 'Task 3',
                     'role_ids': [role2.id, role5.id],
+                    'child_ids': [Command.create({
+                        'name': 'Sub Task 1',
+                    }), Command.create({
+                        'name': 'Sub Task 2',
+                    })],
                 }),
                 Command.create({
                     'name': 'Task 4',
