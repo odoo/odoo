@@ -139,6 +139,8 @@ function computePosition(popper, target, { container, flip, margin, position, sh
     const iframeBox = iframe?.getBoundingClientRect() ?? { top: 0, left: 0 };
 
     const containerIsHTMLNode = container === container.ownerDocument.firstElementChild;
+    const containerIsInIframe =
+        shouldAccountForIFrame && target.ownerDocument === container.ownerDocument;
 
     // Compute positioning data
     const directionsData = {
@@ -166,16 +168,19 @@ function computePosition(popper, target, { container, flip, margin, position, sh
         const variantPrefix = vertical ? "v" : "h";
         const directionValue = directionsData[d];
         let variantValue = variantsData[variantPrefix + v];
+        const [leftCompensation, topCompensation] = containerIsInIframe
+            ? [iframeBox.left, iframeBox.top]
+            : [0, 0];
 
         const [directionSize, variantSize] = vertical
             ? [popBox.height, popBox.width]
             : [popBox.width, popBox.height];
         let [directionMin, directionMax] = vertical
-            ? [contBox.top, contBox.bottom]
-            : [contBox.left, contBox.right];
+            ? [contBox.top + topCompensation, contBox.bottom + topCompensation]
+            : [contBox.left + leftCompensation, contBox.right + leftCompensation];
         let [variantMin, variantMax] = vertical
-            ? [contBox.left, contBox.right]
-            : [contBox.top, contBox.bottom];
+            ? [contBox.left + leftCompensation, contBox.right + leftCompensation]
+            : [contBox.top + topCompensation, contBox.bottom + topCompensation];
 
         if (containerIsHTMLNode) {
             if (vertical) {
