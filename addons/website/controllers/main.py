@@ -821,6 +821,9 @@ class Website(Home):
             model['field'] = 'arch_db' if model['field'] == 'arch' else model['field']
             tree = html.fromstring(str(record[model['field']]))
             for index, el in enumerate(tree.xpath('//img')):
+                if el.get('t-attf-src') or el.get('t-att-src'):
+                    # Such images are not user-editable
+                    continue
                 role = el.get('role')
                 decorative = role == "presentation"
                 alt = el.get('alt')
