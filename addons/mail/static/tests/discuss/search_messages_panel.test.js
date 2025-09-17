@@ -11,6 +11,7 @@ import {
     triggerHotkey,
 } from "@mail/../tests/mail_test_helpers";
 import { describe, expect, test } from "@odoo/hoot";
+import { press } from "@odoo/hoot-dom";
 import { tick } from "@odoo/hoot-mock";
 import { serverState } from "@web/../tests/web_test_helpers";
 
@@ -36,6 +37,24 @@ test("Should open the search panel when search button is clicked", async () => {
     await contains(".o-mail-SearchMessagesPanel");
     await contains(".o_searchview");
     await contains(".o_searchview_input");
+});
+
+test("Should open the search panel with hotkey 'f'", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    pyEnv["mail.message"].create({
+        author_id: serverState.partnerId,
+        body: "This is a message",
+        attachment_ids: [],
+        message_type: "comment",
+        model: "discuss.channel",
+        res_id: channelId,
+    });
+    await start();
+    await openDiscuss(channelId);
+    await contains(".o-mail-Message");
+    await press("alt+f");
+    await contains(".o-mail-SearchMessagesPanel");
 });
 
 test("Search a message", async () => {
