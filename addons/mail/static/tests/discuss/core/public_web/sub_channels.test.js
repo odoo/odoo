@@ -31,7 +31,7 @@ test("navigate to sub channel", async () => {
     await click(".o-mail-DiscussSidebarChannel", { name: "General" });
     await contains(".o-mail-DiscussContent-threadName", { value: "General" });
     await click("button[title='Threads']");
-    await click(".o-mail-SubChannelList-thread", { text: "New Thread" });
+    await click(".o-mail-SubChannelPreview", { text: "New Thread" });
     await contains(".o-mail-DiscussContent-threadName", { value: "New Thread" });
     // Should access sub-thread when clicking on the notification.
     await click(".o-mail-DiscussSidebarChannel", { name: "General" });
@@ -79,9 +79,13 @@ test("create sub thread from existing message", async () => {
     await click(".o-mail-DiscussSidebarChannel", { name: "General" });
     await click(".o-mail-Message-actions [title='Expand']");
     await contains(".o-dropdown-item:contains('Create Thread')", { count: 0 });
-    await click(".o-dropdown-item:contains('View Thread')");
+    await contains(".o-mail-SubChannelPreview:contains('Selling a training session and')");
+    await click(".o-mail-SubChannelPreview:contains('Selling a training session and')");
     await contains(".o-mail-DiscussContent-threadName", {
         value: "Selling a training session and",
+    });
+    await contains(".o-mail-SubChannelPreview:contains('Selling a training session and')", {
+        count: 0,
     });
 });
 
