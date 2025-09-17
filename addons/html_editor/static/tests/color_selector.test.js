@@ -1,4 +1,3 @@
-import { getCSSVariableValue, getHtmlStyle } from "@html_editor/utils/formatting";
 import { describe, expect, test } from "@odoo/hoot";
 import {
     click,
@@ -663,6 +662,10 @@ test("custom tab color navigation using keys", async () => {
     await expandToolbar();
     await click(".o-we-toolbar .o-select-color-foreground");
     await animationFrame();
+    await click(".o_color_button[data-color='#FF0000']");
+    await animationFrame();
+    await click(".o-we-toolbar .o-select-color-foreground");
+    await animationFrame();
     await press("Tab");
     expect(getActiveElement()).toBe(queryFirst('.o_font_color_selector button:contains("Custom")'));
     await press("Enter");
@@ -671,10 +674,8 @@ test("custom tab color navigation using keys", async () => {
     await press("Tab");
     await press("Tab");
     await press("Tab");
-    const htmlStyle = getHtmlStyle(document);
-    const defaultColor = getCSSVariableValue("body-color", htmlStyle);
     expect(getActiveElement()).toBe(
-        queryFirst(`.o_font_color_selector button[data-color="${defaultColor.toLowerCase()}"]`)
+        queryFirst(`.o_font_color_selector button[data-color="#ff0000"]`)
     );
     await press("ArrowDown");
     expect(getActiveElement()).toBe(
@@ -685,7 +686,7 @@ test("custom tab color navigation using keys", async () => {
         queryFirst('.o_font_color_selector button[data-color="black"]') // Should do nothing
     );
     await press("Enter");
-    expect(getContent(el)).toBe(`<p><font class="text-black">[test]</font></p>`);
+    expect(getContent(el)).toBe(`<p><font style="" class="text-black">[test]</font></p>`);
 });
 
 describe.tags("desktop");
