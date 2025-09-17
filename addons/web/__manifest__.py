@@ -425,7 +425,7 @@ This module provides the core of the Odoo Web Client.
             'web/static/tests/legacy/helpers/cleanup.js',
             'web/static/tests/legacy/helpers/utils.js',
             'web/static/tests/legacy/utils.js',
-            'web/static/tests/tours/**/*'
+            'web/static/tests/tours/**/*',
         ],
         'web.__assets_tests_call__': [
             'web/static/tests/legacy/ignore_missing_deps_start.js',
@@ -478,8 +478,6 @@ This module provides the core of the Odoo Web Client.
             'web/static/tests/legacy/patch_translations.js',
             'web/static/lib/qunit/qunit-2.9.1.css',
             'web/static/lib/qunit/qunit-2.9.1.js',
-            'web/static/tests/legacy/legacy_tests/helpers/**/*',
-            ('remove', 'web/static/tests/legacy/legacy_tests/helpers/test_utils_tests.js'),
 
             ('include', 'web._assets_jquery'),
 
@@ -503,34 +501,19 @@ This module provides the core of the Odoo Web Client.
             'web/static/lib/signature_pad/signature_pad.umd.js',
 
             'web/static/tests/legacy/helpers/**/*.js',
-            'web/static/tests/legacy/views/helpers.js',
-            'web/static/tests/legacy/search/helpers.js',
-            'web/static/tests/legacy/views/calendar/helpers.js',
-            'web/static/tests/legacy/webclient/**/helpers.js',
             'web/static/tests/legacy/qunit.js',
             'web/static/tests/legacy/main.js',
-            'web/static/tests/legacy/mock_server_tests.js',
             'web/static/tests/legacy/setup.js',
-            'web/static/tests/legacy/utils.js',
             'web/static/src/webclient/clickbot/clickbot.js',
         ],
         'web.qunit_suite_tests': [
             'web/static/src/legacy/js/core/class.js',
             'web/static/src/legacy/js/public/minimal_dom.js',
             'web/static/src/legacy/js/public/public_widget.js',
-            'web/static/tests/legacy/core/**/*.js',
-            'web/static/tests/legacy/search/**/*.js',
-            ('remove', 'web/static/tests/legacy/search/helpers.js'),
-            'web/static/tests/legacy/views/**/*.js',
-            ('remove', 'web/static/tests/legacy/views/helpers.js'),
-            ('remove', 'web/static/tests/legacy/views/calendar/helpers.js'),
-            'web/static/tests/legacy/webclient/**/*.js',
-            ('remove', 'web/static/tests/legacy/webclient/**/helpers.js'),
             'web/static/tests/legacy/public/**/*.js',
 
             # Legacy
             'web/static/tests/legacy/legacy_tests/**/*.js',
-            ('remove', 'web/static/tests/legacy/legacy_tests/helpers/**/*.js'),
         ],
         'web.assets_clickbot': [
             'web/static/src/webclient/clickbot/clickbot.js',
