@@ -47,6 +47,8 @@ class PrivacyLookupWizard(models.TransientModel):
         name = self.name.strip()
         email = f"%{self.email.strip()}%"
         email_normalized = tools.email_normalize(self.email.strip())
+        if not email_normalized:
+            raise UserError(_('Invalid email address “%s”', self.email))
 
         # Step 1: Retrieve users/partners liked to email address or name
         query = SQL("""
