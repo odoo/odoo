@@ -1,7 +1,12 @@
 import { Component, useEffect, useRef, useState } from "@odoo/owl";
 import { CustomColorPicker } from "@web/core/color_picker/custom_color_picker/custom_color_picker";
 import { usePopover } from "@web/core/popover/popover_hook";
-import { applyOpacityToGradient, isCSSColor, isColorGradient } from "@web/core/utils/colors";
+import {
+    applyOpacityToGradient,
+    isCSSColor,
+    isColorGradient,
+    normalizeCSSColor,
+} from "@web/core/utils/colors";
 import { cookie } from "@web/core/browser/cookie";
 import { GradientPicker } from "./gradient_picker/gradient_picker";
 import { POSITION_BUS } from "../position/position_hook";
@@ -29,7 +34,7 @@ const DEFAULT_GRADIENT_COLORS = [
     "linear-gradient(135deg, rgb(255, 222, 202) 0%, rgb(202, 115, 69) 100%)",
 ];
 
-const DEFAULT_GRAYSCALES = {
+export const DEFAULT_GRAYSCALES = {
     solid: ["black", "900", "800", "600", "400", "200", "100", "white"],
 };
 
@@ -52,6 +57,8 @@ export class ColorPicker extends Component {
                 selectedColorCombination: { type: String, optional: true },
                 getTargetedElements: { type: Function, optional: true },
                 defaultTab: String,
+                selectedTab: { type: String, optional: true },
+                // todo: remove the `mode` prop in master
                 mode: { type: String, optional: true },
             },
         },
@@ -90,7 +97,7 @@ export class ColorPicker extends Component {
         this.defaultColor = this.props.state.selectedColor;
         this.focusedBtn = null;
         this.state = useState({
-            activeTab: this.getDefaultTab(),
+            activeTab: this.props.state.selectedTab || this.getDefaultTab(),
             currentCustomColor: this.props.state.selectedColor,
             showGradientPicker: false,
         });
@@ -217,10 +224,9 @@ export class ColorPicker extends Component {
     }
 
     getDefaultColorSet() {
-        if (!this.props.state.getTargetedElements || !this.props.state.mode) {
+        if (!this.props.state.selectedColor) {
             return;
         }
-        const targetedEls = this.props.state.getTargetedElements();
         let defaultColors = this.props.enabledTabs.includes("solid")
             ? this.DEFAULT_THEME_COLOR_VARS
             : [];
@@ -228,43 +234,22 @@ export class ColorPicker extends Component {
             defaultColors = defaultColors.concat(grayscale);
         }
 
-        const extractColorFromClasses = (targetedEls, prefix, defaultColors) => {
-            for (const el of targetedEls) {
-                for (const className of el.classList) {
-                    const match = className.match(new RegExp(`^${prefix}-(.+)$`));
-                    if (match && defaultColors.includes(match[1])) {
-                        return match[1];
-                    }
-                }
-            }
-            return false;
-        };
-        switch (this.props.state.mode) {
-            case "color":
-                return extractColorFromClasses(targetedEls, "text", defaultColors);
-            case "background-color":
-            case "backgroundColor":
-                return extractColorFromClasses(targetedEls, "bg", defaultColors);
-            case "selectFilterColor": {
-                const filterEls = targetedEls
-                    .map((el) => el.querySelector(".o_we_bg_filter"))
-                    .filter((el) => el !== null);
-                return extractColorFromClasses(filterEls, "bg", defaultColors);
-            }
-            default: {
-                for (const el of targetedEls) {
-                    const color = el.dataset[this.props.state.mode];
-                    if (
-                        defaultColors.includes(color) ||
-                        defaultColors.includes(this.props.state.mode)
-                    ) {
-                        return color;
-                    }
-                }
-                return false;
+        const targetedElement =
+            this.props.state.getTargetedElements?.()[0] || document.documentElement;
+        const selectedColor = this.props.state.selectedColor.toUpperCase();
+        const htmlStyle =
+            targetedElement.ownerDocument.defaultView.getComputedStyle(targetedElement);
+
+        for (const color of defaultColors) {
+            const cssVar = normalizeCSSColor(htmlStyle.getPropertyValue(`--${color}`));
+            if (cssVar?.toUpperCase() === selectedColor) {
+                return color;
             }
         }
+
+        return false;
     }
+
     toggleGradientPicker() {
         this.state.showGradientPicker = !this.state.showGradientPicker;
     }

@@ -313,7 +313,7 @@ test("custom gradient must be defined", async () => {
     await mountWithCleanup(ColorPicker, {
         props: {
             state: {
-                selectedColor: "#FF0000", //linear-gradient(0deg, rgb(0,0,0) 0%, rgb(100,100,100) 100%)",
+                selectedColor: "linear-gradient(0deg, rgb(0,0,0) 0%, rgb(100,100,100) 100%)",
                 defaultTab: "gradient",
             },
             getUsedCustomColors: () => [],
@@ -326,4 +326,26 @@ test("custom gradient must be defined", async () => {
     await click(".o_custom_gradient_button");
     await animationFrame();
     expect(".gradient-colors input[type='range']").toHaveCount(2);
+});
+
+test("should mark default color as selected when it is selected", async () => {
+    defineStyle(`
+        :root {
+            --900: #212527;
+        }
+    `);
+    await mountWithCleanup(ColorPicker, {
+        props: {
+            state: {
+                selectedColor: "#212527",
+                defaultTab: "custom",
+            },
+            getUsedCustomColors: () => [],
+            applyColor() {},
+            applyColorPreview() {},
+            applyColorResetPreview() {},
+            colorPrefix: "",
+        },
+    });
+    expect(".o_color_button[data-color='900']").toHaveClass("selected");
 });
