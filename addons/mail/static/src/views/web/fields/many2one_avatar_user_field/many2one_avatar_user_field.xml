@@ -8,8 +8,12 @@
             </t>
             <Many2OneAvatarUser t-props="m2oProps" cssClass="'w-100'">
                 <t t-set-slot="inviteTeammates" t-slot-scope="inviteTeammatesScope">
-                    <i class="fa fa-envelope-o fa-lg me-2 d-inline"/>
-                    <t t-out="inviteTeammatesScope.label"/>
+                    <div class="d-flex align-items-center">
+                        <div class="o_icon d-flex align-items-center justify-content-center me-2">
+                            <i class="fa fa-envelope-o fa-lg"/>
+                        </div>
+                        <span t-out="inviteTeammatesScope.label"/>
+                    </div>
                 </t>
                 <t t-set-slot="autoCompleteItem" t-slot-scope="autoCompleteItemScope">
                     <div class="o_avatar_many2x_autocomplete d-flex align-items-center">
