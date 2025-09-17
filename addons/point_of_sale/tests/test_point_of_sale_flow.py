@@ -2750,3 +2750,41 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
         refund_payment.with_context(**payment_context).check()
         current_session.close_session_from_ui()
         self.assertEqual(current_session.picking_ids.mapped('state'), ['done', 'done'])
+
+    def test_search_paid_order_ids(self):
+        """ Test if the orders from other configs are excluded in search_paid_order_ids """
+        other_pos_config = self.env['pos.config'].create({
+            'name': 'Other POS',
+            'picking_type_id': self.env['stock.picking.type'].search([('code', '=', 'outgoing')], limit=1).id,
+        })
+        self.pos_config.open_ui()
+        other_pos_config.open_ui()
+        current_session = self.pos_config.current_session_id
+        other_session = other_pos_config.current_session_id
+
+        paid_order_1, paid_order_2 = self.PosOrder.create([{
+            'company_id': self.env.company.id,
+            'session_id': session_id,
+            'partner_id': self.partner1.id,
+            'lines': [
+                Command.create({
+                    'product_id': self.product_a.id,
+                    'qty': 1,
+                    'price_subtotal': 134.38,
+                    'price_subtotal_incl': 134.38,
+                }),
+            ],
+            'amount_tax': 0.0,
+            'amount_total': 134.38,
+            'amount_paid': 134.38,
+            'amount_return': 0.0,
+            'state': 'paid',
+        } for session_id in (current_session.id, other_session.id)])
+
+        order_ids = [oi[0] for oi in self.PosOrder.search_paid_order_ids(other_pos_config.id, [], 80, 0)['ordersInfo']]
+        self.assertNotIn(paid_order_1.id, order_ids)
+        self.assertIn(paid_order_2.id, order_ids)
+
+        order_ids = [oi[0] for oi in self.PosOrder.search_paid_order_ids(other_pos_config.id, [('partner_id.complete_name', 'ilike', self.partner1.complete_name)], 80, 0)['ordersInfo']]
+        self.assertNotIn(paid_order_1.id, order_ids)
+        self.assertIn(paid_order_2.id, order_ids)
