@@ -12,26 +12,26 @@ export const accountTaxHelpers = {
      * [!] Mirror of the same method in account_tax.py.
      * PLZ KEEP BOTH METHODS CONSISTENT WITH EACH OTHERS.
      */
-     flatten_taxes_and_sort_them(taxes) {
-         function sort_key(taxes) {
-             return taxes.toSorted((t1, t2) => t1.sequence - t2.sequence || t1.id - t2.id);
-         }
+    flatten_taxes_and_sort_them(taxes) {
+        function sort_key(taxes) {
+            return taxes.toSorted((t1, t2) => t1.sequence - t2.sequence || t1.id - t2.id);
+        }
 
-         const group_per_tax = {};
-         const sorted_taxes = [];
-         for (const tax of sort_key(taxes)) {
-             if (tax.amount_type === "group") {
-                 const children = sort_key(tax.children_tax_ids);
-                 for (const child of children) {
-                     group_per_tax[child.id] = tax;
-                     sorted_taxes.push(child);
-                 }
-             } else {
-                 sorted_taxes.push(tax);
-             }
-         }
-         return { sorted_taxes, group_per_tax };
-     },
+        const group_per_tax = {};
+        const sorted_taxes = [];
+        for (const tax of sort_key(taxes)) {
+            if (tax.amount_type === "group") {
+                const children = sort_key(tax.children_tax_ids);
+                for (const child of children) {
+                    group_per_tax[child.id] = tax;
+                    sorted_taxes.push(child);
+                }
+            } else {
+                sorted_taxes.push(tax);
+            }
+        }
+        return { sorted_taxes, group_per_tax };
+    },
 
     /**
      * [!] Mirror of the same method in account_tax.py.
@@ -575,8 +575,8 @@ export const accountTaxHelpers = {
             discount: load("discount", 0.0),
             currency_id: currency,
             sign: load("sign", 1.0),
-            special_mode: load('special_mode', null),
-            special_type: load('special_type', null),
+            special_mode: load("special_mode", null),
+            special_type: load("special_type", null),
             rate: load("rate", 1.0),
             filter_tax_function: load("filter_tax_function", null),
         };
@@ -768,7 +768,8 @@ export const accountTaxHelpers = {
                 }
 
                 if (index === 0) {
-                    tax_details.total_excluded_currency = tax_details.total_included_currency = tax_data.base_amount_currency;
+                    tax_details.total_excluded_currency = tax_details.total_included_currency =
+                        tax_data.base_amount_currency;
                     tax_details.total_excluded = tax_details.total_included = tax_data.base_amount;
                 }
 
@@ -880,10 +881,8 @@ export const accountTaxHelpers = {
 
             // If not, just account the base amounts.
             if (!taxes_data.length) {
-                tax_details.total_excluded_currency = tax_details.total_included_currency = roundPrecision(
-                    tax_details.raw_total_excluded_currency,
-                    currency.rounding
-                );
+                tax_details.total_excluded_currency = tax_details.total_included_currency =
+                    roundPrecision(tax_details.raw_total_excluded_currency, currency.rounding);
                 tax_details.total_excluded = tax_details.total_included = roundPrecision(
                     tax_details.raw_total_excluded,
                     company.currency_id.rounding
@@ -1205,9 +1204,12 @@ export const accountTaxHelpers = {
             }
 
             // Dispatch the base delta evenly on the base lines, starting from the biggest line.
-            const factors = Array(base_amounts.base_lines.length).fill({ factor: 1.0 / base_amounts.base_lines.length });
-            const base_lines_sorted = base_amounts.base_lines.sort((a, b) => 
-                a.tax_details.total_included_currency - b.tax_details.total_included_currency
+            const factors = Array(base_amounts.base_lines.length).fill({
+                factor: 1.0 / base_amounts.base_lines.length,
+            });
+            const base_lines_sorted = base_amounts.base_lines.sort(
+                (a, b) =>
+                    a.tax_details.total_included_currency - b.tax_details.total_included_currency
             );
             for (const [delta_currency_indicator, delta_currency, delta_amount] of [
                 ["_currency", base_amounts.currency, delta_base_amount_currency],
@@ -1216,11 +1218,12 @@ export const accountTaxHelpers = {
                 const amounts_to_distribute = this.distribute_delta_amount_smoothly(
                     delta_currency.decimal_places,
                     delta_amount,
-                    factors,
+                    factors
                 );
 
                 for (const [i, base_line] of base_lines_sorted.entries()) {
-                    base_line.tax_details[`delta_total_excluded${delta_currency_indicator}`] += amounts_to_distribute[i];
+                    base_line.tax_details[`delta_total_excluded${delta_currency_indicator}`] +=
+                        amounts_to_distribute[i];
                 }
             }
         }
@@ -1517,7 +1520,7 @@ export const accountTaxHelpers = {
         const taxes_data = tax_details.taxes_data;
 
         // If there are no taxes, we pass an empty object to the grouping function.
-        for (const tax_data of (taxes_data.length !== 0 ? taxes_data : [null])) {
+        for (const tax_data of taxes_data.length !== 0 ? taxes_data : [null]) {
             const generated_grouping_key = grouping_function(base_line, tax_data);
             let raw_grouping_key = generated_grouping_key;
             let grouping_key = generated_grouping_key;
@@ -1525,7 +1528,11 @@ export const accountTaxHelpers = {
             // There is no FrozenDict in javascript.
             // When the key is a record, it can't be jsonified so this is a trick to provide both the
             // raw_grouping_key (to be jsonified) from the grouping_key (to be added to the values).
-            if (raw_grouping_key && typeof raw_grouping_key === "object" && "raw_grouping_key" in raw_grouping_key) {
+            if (
+                raw_grouping_key &&
+                typeof raw_grouping_key === "object" &&
+                "raw_grouping_key" in raw_grouping_key
+            ) {
                 raw_grouping_key = generated_grouping_key.raw_grouping_key;
                 grouping_key = generated_grouping_key.grouping_key;
             }
@@ -1730,7 +1737,7 @@ export const accountTaxHelpers = {
                 tax_ids: new_base_line.tax_ids.map((tax) => tax.id),
                 computation_key: base_line.computation_key,
             };
-            let grouping_key = {
+            const grouping_key = {
                 tax_ids: new_base_line.tax_ids.map((tax) => tax),
                 computation_key: base_line.computation_key,
             };
@@ -1846,7 +1853,7 @@ export const accountTaxHelpers = {
                 const base_line = target_factor.base_line;
                 const tax_details = base_line.tax_details;
                 const taxes_data = tax_details.taxes_data;
-                if (delta_suffix === '_currency') {
+                if (delta_suffix === "_currency") {
                     base_line.price_unit +=
                         amount_to_distribute / Math.abs(base_line.quantity || 1.0);
                 }
