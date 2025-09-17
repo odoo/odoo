@@ -71,6 +71,7 @@ const threadPatch = {
                         self_member_id: this.self_member_id,
                         typingMembers: this.typingMembers,
                         avatar_cache_key: this.avatar_cache_key,
+                        firstUnreadMessage: this.firstUnreadMessage,
                     };
                 }
                 return undefined;

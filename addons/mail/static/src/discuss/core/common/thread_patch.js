@@ -30,8 +30,8 @@ const threadPatch = {
     /** @override */
     applyScrollContextually(thread) {
         if (thread.self_member_id && thread.scrollUnread) {
-            if (thread.firstUnreadMessage) {
-                const messageEl = this.refByMessageId.get(thread.firstUnreadMessage.id)?.el;
+            if (thread.channel.firstUnreadMessage) {
+                const messageEl = this.refByMessageId.get(thread.channel.firstUnreadMessage.id)?.el;
                 if (!messageEl) {
                     return;
                 }
@@ -76,7 +76,7 @@ const threadPatch = {
             this.props.thread.self_member_id.new_message_separator_ui
         );
         this.messageHighlight?.highlightMessage(
-            this.props.thread.firstUnreadMessage,
+            this.props.thread.channel.firstUnreadMessage,
             this.props.thread
         );
     },
