@@ -24,6 +24,13 @@ class TestLivechatLead(HttpCase, TestCrmCommon):
             notification_type='email',
             groups='base.group_portal',
         )
+        cls.user_visitor = mail_new_test_user(
+            cls.env, login="user_visitor",
+            name="Victor Visitor", email="user_visitor@test.example.com",
+            company_id=cls.company_main.id,
+            notification_type="email",
+            groups="base.group_user",
+        )
 
     @users('user_sales_leads')
     def test_crm_lead_creation_guest(self):
@@ -64,7 +71,7 @@ class TestLivechatLead(HttpCase, TestCrmCommon):
             'channel_partner_ids': [(4, self.user_sales_manager.partner_id.id)]
         })
         lead = channel._convert_visitor_to_lead(self.env.user.partner_id, '/lead TestLead command')
-        self.assertEqual(lead.partner_id, self.env['res.partner'])
+        self.assertEqual(lead.partner_id, self.user_sales_manager.partner_id)
 
     @users('user_sales_leads')
     def test_crm_lead_creation_portal(self):
@@ -118,3 +125,16 @@ class TestLivechatLead(HttpCase, TestCrmCommon):
         self.assertFalse(channel.lead_ids)
         channel.with_user(bob_operator).execute_command_lead(body="/lead BobLead")
         self.assertEqual(channel.lead_ids.name, "BobLead")
+
+    @users("user_sales_leads")
+    def test_crm_lead_creation_internal_user(self):
+        # internal user as visitor: should be set as customer
+        self.authenticate("user_visitor", "user_visitor")
+        data = self.make_jsonrpc_request("/im_livechat/get_session", {
+            "anonymous_name": "Visitor",
+            "channel_id": self.livechat_channel.id,
+            "persisted": True,
+        })
+        channel = self.env["discuss.channel"].browse(data["channel_id"])
+        lead = channel._convert_visitor_to_lead(self.env.user.partner_id, "/lead TestLead command")
+        self.assertEqual(lead.partner_id, self.user_visitor.partner_id)
