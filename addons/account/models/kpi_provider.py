@@ -1,4 +1,4 @@
-from odoo import api, models
+from odoo import api, fields, models
 
 
 class KpiProvider(models.AbstractModel):
@@ -6,10 +6,15 @@ class KpiProvider(models.AbstractModel):
 
     @api.model
     def get_account_kpi_summary(self):
-        grouped_moves_to_report = self.env['account.move']._read_group([
-            '|', ('state', '=', 'draft'),
-            '&', ('state', '=', 'posted'), ('checked', '=', False),
-        ], ['journal_id'], ['journal_id:count'])
+        grouped_moves_to_report = self.env['account.move']._read_group(
+            fields.Domain.OR([
+                [('state', '=', 'draft')],
+                [('state', '=', 'posted'), ('checked', '=', False)],
+                [('state', '=', 'posted'), ('journal_id.type', '=', 'bank'), ('statement_line_id.is_reconciled', '=', False)],
+            ]),
+            ['journal_id'],
+            ['journal_id:count'],
+        )
 
         FieldsSelection = self.env['ir.model.fields.selection'].with_context(lang=self.env.user.lang)
         journal_type_names = {x.value: x.name for x in FieldsSelection.search([
