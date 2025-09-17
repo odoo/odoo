@@ -272,7 +272,7 @@
     <template id="portal_record_sidebar" name="My Portal Record Sidebar">
         <div t-attf-class="d-flex #{classes}">
             <div class="o_portal_sidebar_content flex-grow-1 mb-4 mb-lg-0 pe-lg-4" id="sidebar_content">
-                <div t-if="title" class="position-relative d-flex align-items-center justify-content-md-center justify-content-lg-between flex-wrap gap-2">
+                <div t-if="title" class="position-relative">
                     <t t-out="title"/>
                 </div>
                 <t t-if="entries" t-out="entries"/>
