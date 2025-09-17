@@ -48,7 +48,8 @@ export class ColorSelector extends Component {
         effect(
             (selectedColors) => {
                 this.state.selectedColor = selectedColors[this.props.mode];
-                this.state.defaultTab = this.getCorrespondingColorTab(
+                this.state.defaultTab = "solid";
+                this.state.selectedTab = this.getCorrespondingColorTab(
                     selectedColors[this.props.mode]
                 );
                 this.state.getTargetedElements = this.props.getTargetedElements;

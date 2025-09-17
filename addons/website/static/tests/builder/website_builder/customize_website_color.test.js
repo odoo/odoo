@@ -76,6 +76,7 @@ test("BuilderColorPicker with action “customizeWebsiteColor” is correctly di
     // Setting preset does not impact solid color
     expect.step("set preset on solid color");
     await contains("button.o_we_color_preview").click();
+    await contains("button.theme-tab").click();
     await contains("button[data-color='o_cc3'").click();
     // Should wait for 2 ticks (debounced): customizeWebsiteColors, reloadBundles
     await def;
@@ -105,6 +106,7 @@ test("BuilderColorPicker with action “customizeWebsiteColor” is correctly di
     // Setting preset does not impact gradient
     expect.step("set preset on gradient");
     await contains("button.o_we_color_preview").click();
+    await contains("button.theme-tab").click();
     await contains("button[data-color='o_cc4'").click();
     // Should wait for 2 ticks (debounced): customizeWebsiteColors, reloadBundles
     await def;
