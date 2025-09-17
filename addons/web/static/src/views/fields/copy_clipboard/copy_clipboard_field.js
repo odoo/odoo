@@ -31,7 +31,7 @@ class CopyClipboardField extends Component {
         return `o_btn_${this.type}_copy btn-sm`;
     }
     get fieldProps() {
-        return omit(this.props, "string", "disabledExpr");
+        return omit(this.props, "string", "disabledExpr", "saveOnCopy");
     }
     get type() {
         return this.props.record.fields[this.props.name].type;

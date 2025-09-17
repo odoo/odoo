@@ -65,7 +65,7 @@ class ProductFeed(models.Model):
     feed_cache = fields.Binary(compute='_compute_feed_cache', store=True, readonly=True)
     cache_expiry = fields.Datetime(readonly=True, required=True, default=fields.Datetime.now)
 
-    @api.depends('target')
+    @api.depends('target', 'access_token')
     def _compute_url(self):
         """Compute the full feed url."""
         for feed in self:
