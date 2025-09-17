@@ -147,6 +147,7 @@ class ReportProjectTaskUser(models.Model):
     def _where(self):
         return """
                 t.project_id IS NOT NULL
+                AND p.is_template IS NOT TRUE
         """
 
     def init(self):
