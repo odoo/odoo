@@ -50,43 +50,30 @@ class ReferencesCarouselOptionPlugin extends Plugin {
     }
 
     onCloned({ cloneEl, originalEl }) {
+        let itemEl;
         // If we cloned an img element that had a _cloneTarget, we need to handle this specially
-        if (originalEl._cloneTarget && cloneEl.matches('.s_references_carousel .s_references_carousel_item img')) {
-            // Remove the cloned img element
-            cloneEl.remove();
-
-            // Clone the li.item instead
-            const liItemEl = originalEl._cloneTarget;
-            const clonedLiEl = liItemEl.cloneNode(true);
+        if (cloneEl.matches(".s_references_carousel .s_references_carousel_item img")) {
+            // Clone the parent li.item
+            itemEl = originalEl.closest("li.s_references_carousel_item").cloneNode();
+            itemEl.appendChild(cloneEl);
 
             // Insert the cloned li at the end of the list
-            const listEl = liItemEl.closest('.s_references_carousel_list');
-            if (listEl) {
-                listEl.appendChild(clonedLiEl);
-            }
-
-            // Update the position and quantity
-            const sliderEl = clonedLiEl.closest('.s_references_carousel_slider');
-            if (sliderEl) {
-                const itemEls = sliderEl.querySelectorAll('.s_references_carousel_item');
-                // Update the position of the cloned element
-                clonedLiEl.style.setProperty('--position', itemEls.length);
-                // Update the quantity on the slider
-                sliderEl.style.setProperty('--quantity', itemEls.length);
-            }
-
-            // Clean up the temporary property
-            delete originalEl._cloneTarget;
-        } else if (cloneEl.matches('.s_references_carousel .s_references_carousel_item')) {
-            // Normal case: we cloned a li.item element directly
-            const sliderEl = cloneEl.closest('.s_references_carousel_slider');
-            if (sliderEl) {
-                const itemEls = sliderEl.querySelectorAll('.s_references_carousel_item');
-                // Update the position of the cloned element
-                cloneEl.style.setProperty('--position', itemEls.length);
-                // Update the quantity on the slider
-                sliderEl.style.setProperty('--quantity', itemEls.length);
-            }
+            const listEl = originalEl.closest(".s_references_carousel_list");
+            listEl.appendChild(itemEl);
+        } else if (cloneEl.matches(".s_references_carousel .s_references_carousel_item")) {
+            itemEl = cloneEl;
+        }
+        if (!itemEl) {
+            return;
+        }
+        // Update the position and quantity
+        const sliderEl = itemEl.closest(".s_references_carousel_slider");
+        if (sliderEl) {
+            const itemEls = sliderEl.querySelectorAll(".s_references_carousel_item");
+            // Update the position of the cloned element
+            itemEl.style.setProperty("--position", itemEls.length);
+            // Update the quantity on the slider
+            sliderEl.style.setProperty("--quantity", itemEls.length);
         }
     }
 
