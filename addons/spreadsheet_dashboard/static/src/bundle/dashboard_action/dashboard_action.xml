@@ -17,7 +17,7 @@
                     t-if="loader.getActiveDashboard()"
                     title="Toggle favorite"
                     t-on-click="toggleFavorite"
-                    t-attf-class="o_dashboard_star fa fa-lg fa-star{{!loader.getActiveDashboard().data.is_favorite ? '-o' : ' favorite_button_enabled'}}"
+                    t-attf-class="o_dashboard_star fa fa-lg fa-star{{!loader.getActiveDashboard().data.is_favorite ? '-o' : ''}}"
                 />
             </t>
         </ControlPanel>
