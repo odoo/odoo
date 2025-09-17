@@ -319,21 +319,25 @@ export class SectionAndNoteListRenderer extends ListRenderer {
      * - If the parent is a subsection: use parent subsection OR its section.
      * @param {object} record
      * @param {string} fieldName
+     * @param {boolean} checkTopSection - if true, also checks `fieldName` for the `line_section`
      * @returns {boolean}
      */
-    shouldCollapse(record, fieldName) {
+    shouldCollapse(record, fieldName, checkTopSection = false) {
         if (this.isTopSection(record)) {
-            return false;
-        } else {
-            const parentSection = getParentSectionRecord(this.props.list, record);
-            if (parentSection?.data.display_type === DISPLAY_TYPES.SUBSECTION) {
-                return (
-                    parentSection.data[fieldName]
-                    || getParentSectionRecord(this.props.list, parentSection)?.data[fieldName]
-                );
-            }
-            return parentSection?.data[fieldName];
+            return checkTopSection ? record.data[fieldName] : false;
         }
+
+        const parentSection = getParentSectionRecord(this.props.list, record);
+        if (!parentSection) {
+            return false;
+        }
+
+        if (this.isSubSection(parentSection)) {
+            const grandParent = getParentSectionRecord(this.props.list, parentSection);
+            return parentSection.data[fieldName] || grandParent?.data[fieldName];
+        }
+
+        return parentSection.data[fieldName];
     }
 
     getRowClass(record) {
@@ -451,8 +455,7 @@ export class SectionAndNoteListRenderer extends ListRenderer {
 
     /**
      * @override
-     * This override basically resets the values of `collapse_` fields of subsection if it is dragged
-     * under hidden section.
+     * Reset the values of `collapse_` fields of the subsection if it is dragged
      */
     async sortDrop(dataRowId, dataGroupId, options) {
         await super.sortDrop(dataRowId, dataGroupId, options);
