@@ -232,9 +232,9 @@ export class DomPlugin extends Plugin {
             }
         }
 
+        const textNode = this.document.createTextNode("");
         if (startNode.nodeType === Node.ELEMENT_NODE) {
             if (selection.anchorOffset === 0) {
-                const textNode = this.document.createTextNode("");
                 if (isSelfClosingElement(startNode)) {
                     startNode.parentNode.insertBefore(textNode, startNode);
                 } else {
@@ -374,6 +374,8 @@ export class DomPlugin extends Plugin {
             }
             currentNode = nodeToInsert;
         }
+        // Remove the empty text node created earlier
+        textNode.remove();
         allInsertedNodes.push(...lastInsertedNodes);
         let insertedNodesParents = getConnectedParents(allInsertedNodes);
         for (const parent of insertedNodesParents) {
