@@ -304,9 +304,10 @@ class Domain:
         return DomainOr.apply(Domain(item) for item in items)
 
     def __setattr__(self, name, value):
-        if hasattr(self, name):
-            raise TypeError("Domain objects are immutable")
-        return super().__setattr__(name, value)
+        raise TypeError("Domain objects are immutable")
+
+    def __delattr__(self, name):
+        raise TypeError("Domain objects are immutable")
 
     def __and__(self, other):
         """Domain & Domain"""
@@ -477,8 +478,8 @@ class DomainBool(Domain):
     def __new__(cls, value: bool):
         """Create a constant domain."""
         self = object.__new__(cls)
-        self.value = value
-        self._opt_level = OptimizationLevel.FULL
+        object.__setattr__(self, 'value', value)
+        object.__setattr__(self, '_opt_level', OptimizationLevel.FULL)
         return self
 
     def __eq__(self, other):
@@ -531,8 +532,8 @@ class DomainNot(Domain):
     def __new__(cls, child: Domain):
         """Create a domain which is the inverse of the child."""
         self = object.__new__(cls)
-        self.child = child
-        self._opt_level = OptimizationLevel.NONE
+        object.__setattr__(self, 'child', child)
+        object.__setattr__(self, '_opt_level', OptimizationLevel.NONE)
         return self
 
     def __invert__(self):
@@ -579,8 +580,8 @@ class DomainNary(Domain):
         """Create the n-ary domain with at least 2 conditions."""
         assert len(children) >= 2
         self = object.__new__(cls)
-        self.children = children
-        self._opt_level = OptimizationLevel.NONE
+        object.__setattr__(self, 'children', children)
+        object.__setattr__(self, '_opt_level', OptimizationLevel.NONE)
         return self
 
     @classmethod
@@ -727,6 +728,9 @@ class DomainCustom(Domain):
     """Domain condition that generates directly SQL and possibly a ``filtered`` predicate."""
     __slots__ = ('_filtered', '_sql')
 
+    _filtered: Callable[[BaseModel], bool] | None
+    _sql: Callable[[BaseModel, str, Query], SQL]
+
     def __new__(
         cls,
         sql: Callable[[BaseModel, str, Query], SQL],
@@ -740,9 +744,9 @@ class DomainCustom(Domain):
                           when filtering (``Model.filtered``)
         """
         self = object.__new__(cls)
-        self._sql = sql
-        self._filtered = filtered
-        self._opt_level = OptimizationLevel.FULL
+        object.__setattr__(self, '_sql', sql)
+        object.__setattr__(self, '_filtered', filtered)
+        object.__setattr__(self, '_opt_level', OptimizationLevel.FULL)
         return self
 
     def _as_predicate(self, records):
@@ -789,11 +793,11 @@ class DomainCondition(Domain):
         :param value: A value for the comparison
         """
         self = object.__new__(cls)
-        self.field_expr = field_expr
-        self.operator = operator
-        self.value = value
-        self._field_instance = None
-        self._opt_level = OptimizationLevel.NONE
+        object.__setattr__(self, 'field_expr', field_expr)
+        object.__setattr__(self, 'operator', operator)
+        object.__setattr__(self, 'value', value)
+        object.__setattr__(self, '_field_instance', None)
+        object.__setattr__(self, '_opt_level', OptimizationLevel.NONE)
         return self
 
     def checked(self) -> DomainCondition:
