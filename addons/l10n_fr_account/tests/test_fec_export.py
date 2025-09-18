@@ -6,7 +6,16 @@ from odoo.tests.common import tagged
 class TestFECExport(AccountTestInvoicingCommon):
     def test_fec_export(self):
         self.init_invoice("out_invoice", self.partner_a, "2019-01-01", amounts=[1000, 2000], post=True)
-        self.init_invoice("out_invoice", self.partner_a, "2020-01-01", amounts=[1000, 2000], post=True)
+        inv = self.init_invoice("out_invoice", self.partner_a, "2020-01-01", amounts=[1000, 2000])
+        inv.write({
+            "line_ids": [
+                Command.create({
+                    "name": "Note",
+                    "display_type": "line_note",
+                })
+            ]
+        })
+        inv.action_post()
         # Create a new FEC export
         fec_export = self.env['l10n_fr.fec.export.wizard'].create({
             'date_from': '2020-01-01',

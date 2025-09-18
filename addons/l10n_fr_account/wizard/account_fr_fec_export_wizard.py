@@ -263,7 +263,7 @@ class FecExportWizard(models.TransientModel):
             limit=query_limit + 1,
             order='date, move_name, id',
         )
-        account_alias = query.left_join('account_move_line', 'account_id', 'account_account', 'id', 'account_id')
+        account_alias = query.join('account_move_line', 'account_id', 'account_account', 'id', 'account_id')
         aa_code = self.env['account.account']._field_to_sql(account_alias, 'code', query)
 
         aj_name = self.env['account.journal']._field_to_sql('account_move_line__journal_id', 'name')
