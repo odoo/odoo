@@ -1,8 +1,14 @@
 import { setupInteractionWhiteList, startInteractions } from "@web/../tests/public/helpers";
-
 import { beforeEach, describe, expect, test } from "@odoo/hoot";
-import { animationFrame, click, queryOne, scroll } from "@odoo/hoot-dom";
-import { enableTransitions } from "@odoo/hoot-mock";
+import { animationFrame, click, queryOne, scroll, waitFor } from "@odoo/hoot-dom";
+import { advanceTime, enableTransitions } from "@odoo/hoot-mock";
+import {
+    defineWebsiteModels,
+    setupWebsiteBuilder,
+} from "@website/../tests/builder/website_helpers";
+import { setSelection, thirdClick } from "@html_editor/../tests/_helpers/selection";
+import { expandToolbar } from "@html_editor/../tests/_helpers/toolbar";
+import { contains } from "@web/../tests/web_test_helpers";
 
 setupInteractionWhiteList("website.animation");
 beforeEach(enableTransitions);
@@ -83,4 +89,46 @@ test("onAppearance animation in modal starts once visible", async () => {
     window.Modal.getOrCreateInstance(queryOne(".modal")).show();
     await animationFrame();
     expect(".o_animate").toHaveClass("o_animating");
+});
+
+defineWebsiteModels();
+
+test("Applied animation from floating toolbar should not reset", async () => {
+    // Initialize the builder with sample content to trigger toolbars and popovers
+    await setupWebsiteBuilder(`<div>
+                            <h5>About us</h5>
+                            <p>We are a team of passionate people whose goal is to improve everyone's life through disruptive products. We build great products to solve your business problems.
+                            <br><br>Our products are designed for small to medium size companies willing to optimize their performance.</p>
+                        </div>`);
+    const paragraphEl = queryOne(":iframe p");
+    setSelection({
+        anchorNode: paragraphEl.firstChild,
+        anchorOffset: 0,
+        focusNode: paragraphEl.lastChild,
+        focusOffset: paragraphEl.lastChild.length,
+    });
+    await waitFor(".o-we-toolbar");
+    await expandToolbar();
+
+    // Apply text highlight to the selected text.
+    await contains(".o-we-toolbar button[title='Apply highlight']").click();
+    await contains(".o_popover .o_text_highlight_underline").click();
+
+    // Select all the text in the paragraph
+    await thirdClick(paragraphEl);
+    await advanceTime(500);
+    await waitFor(".o-we-toolbar");
+    await expandToolbar();
+
+    // Apply the default animation to the selected text.
+    await contains(".o-we-toolbar button[title='Animate Text']").click();
+
+    // Reselect all the text again
+    await thirdClick(paragraphEl);
+    await advanceTime(500);
+    await waitFor(".o-we-toolbar");
+    await expandToolbar();
+
+    // Verify that the animation effect is still applied.
+    expect(queryOne(".o-we-toolbar button[title='Animate Text']")).toHaveClass("active");
 });
