@@ -505,6 +505,94 @@ class TestUsers2(UsersCommonCase):
                 "group_ids": [Command.link(contact_creation_group.id)],
             })
 
+    def test_portal_user_manager_access(self):
+        # groups
+        group_portal = self.env.ref('base.group_portal')
+        group_user = self.env.ref('base.group_user')
+        group_partner_manager = self.env.ref('base.group_partner_manager')
+        group_portal_user_manager = self.env['res.groups'].create({
+            'name': 'Portal User Manager',
+            'user_ids': [],
+        })
+
+        # ACL
+        self.env['ir.model.access'].create({
+            'name': 'Allow user profile update',
+            'model_id': self.env['ir.model']._get('res.users').id,
+            'group_id': group_portal_user_manager.id,
+            'perm_write': True,
+        })
+
+        # Rules
+        self.env['ir.rule'].create({
+            'name': 'Allow updates by Portal Managers on PORTAL users (only)',
+            'model_id': self.env['ir.model']._get('res.users').id,
+            'groups': [group_portal_user_manager.id],
+            'domain_force': [('share', '=', True)],
+            'perm_write': True,
+        })
+
+        # Users
+        portal_user_manager = self.env['res.users'].create({
+            'name': 'Portal User Manager',
+            'login': 'maintainer',
+            'password': 'password',
+            'group_ids': [group_user.id, group_partner_manager.id, group_portal_user_manager.id],
+        })
+        user = self.env['res.users'].create({
+            'name': 'User',
+            'login': 'user_',
+            'password': 'password',
+            'group_ids': [group_user.id, group_partner_manager.id],
+        })
+        portal = self.env['res.users'].create({
+            'name': 'Portal',
+            'login': 'portal_',
+            'password': 'password',
+            'group_ids': [group_portal.id],
+        })
+
+        # A UPM cannot update the user profile of another USER
+        with self.assertRaises(AccessError):
+            user.with_user(portal_user_manager).write({
+                'name': 'New name for you'
+            })
+        # A UPM can update the user profile of a PORTAL user
+        portal.with_user(portal_user_manager).write({
+            'name': 'New name for you'
+        })
+
+        # A UPM cannot update the partner profile of another USER
+        with self.assertRaises(AccessError):
+            user.partner_id.with_user(portal_user_manager).write({
+                'name': 'New name for you'
+            })
+        # A UPM can update the partner profile of a PORTAL user
+        portal.partner_id.with_user(portal_user_manager).write({
+            'name': 'New name for you'
+        })
+
+        # A USER cannot update the user profile of another USER
+        with self.assertRaises(AccessError):
+            self.user_internal.with_user(user).write({
+                'name': 'New name for you'
+            })
+        # A USER cannot update the user profile of a PORTAL user
+        with self.assertRaises(AccessError):
+            portal.with_user(user).write({
+                'name': 'New name for you'
+            })
+
+        # A USER cannot update the partner profile of another USER
+        with self.assertRaises(AccessError):
+            self.user_internal.partner_id.with_user(user).write({
+                'name': 'New name for you'
+            })
+        # A USER can update the partner profile of a PORTAL user
+        portal.partner_id.with_user(user).write({
+            'name': 'New name for you'
+        })
+
 
 @tagged('at_install', '-post_install')  # LEGACY at_install
 class TestUsersTweaks(TransactionCase):
