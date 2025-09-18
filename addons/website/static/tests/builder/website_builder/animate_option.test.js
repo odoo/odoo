@@ -6,7 +6,8 @@ import {
     defineWebsiteModels,
     setupWebsiteBuilder,
 } from "@website/../tests/builder/website_helpers";
-import { setSelection } from "@html_editor/../tests/_helpers/selection";
+import { setSelection, thirdClick } from "@html_editor/../tests/_helpers/selection";
+import { advanceTime } from "@odoo/hoot-mock";
 
 defineWebsiteModels();
 
@@ -600,6 +601,44 @@ describe("animate text in toolbar", () => {
         const span = queryOne(":iframe span");
         setSelection({ anchorNode: span, anchorOffset: 0, focusNode: span, focusOffset: 1 });
         await expandToolbar();
+        expect("button[title='Animate Text']").toHaveClass("active");
+    });
+
+    test("Applied animation from floating toolbar should not reset", async () => {
+        await setupWebsiteBuilder(`<div>
+            <h5>About us</h5>
+            <p>We are a team of passionate people whose goal is to improve everyone's life through disruptive products. We build great products to solve your business problems.
+            <br><br>Our products are designed for small to medium size companies willing to optimize their performance.</p>
+        </div>`);
+        const paragraphEl = queryOne(":iframe p");
+        setSelection({
+            anchorNode: paragraphEl.firstChild,
+            anchorOffset: 0,
+            focusNode: paragraphEl.lastChild,
+            focusOffset: paragraphEl.lastChild.length,
+        });
+        await waitFor(".o-we-toolbar");
+        await expandToolbar();
+
+        // Apply text highlight from the floating toolbar.
+        await contains(".o-we-toolbar button[title='Apply highlight']").click();
+        await contains(".o_popover .o_text_highlight_underline").click();
+
+        // Reselect all the text in the paragraph and reopen toolbar.
+        await thirdClick(paragraphEl);
+        await advanceTime(500);
+        await waitFor(".o-we-toolbar");
+        await expandToolbar();
+
+        // Apply the default animation to the selected text.
+        await contains(".o-we-toolbar button[title='Animate Text']").click();
+
+        // Reselect all the text again and verify animate button remains active.
+        await thirdClick(paragraphEl);
+        await advanceTime(500);
+        await waitFor(".o-we-toolbar");
+        await expandToolbar();
+
         expect("button[title='Animate Text']").toHaveClass("active");
     });
 });
