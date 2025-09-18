@@ -1290,6 +1290,9 @@ def _operator_equal_as_in(condition, _):
 def _optimize_in_set(condition, _model):
     """Make sure the value is an OrderedSet or use 'any' operator"""
     value = condition.value
+    if isinstance(value, OrderedSet) and value:
+        # very common case, just skip creation of a new Domain instance
+        return condition
     if isinstance(value, ANY_TYPES):
         operator = 'any' if condition.operator == 'in' else 'not any'
         return DomainCondition(condition.field_expr, operator, value)
