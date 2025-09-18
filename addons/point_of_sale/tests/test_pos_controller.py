@@ -63,6 +63,7 @@ class TestPoSController(TestPointOfSaleHttpCommon):
         self.url_open(f'/pos/ticket/validate?access_token={self.pos_order.access_token}', data=get_invoice_data)
         self.assertEqual(self.env['res.partner'].sudo().search_count([('name', '=', 'AAA Partner')]), 1)
         self.assertTrue(self.pos_order.is_invoiced, "The pos order should have an invoice")
+        self.assertTrue(len(self.pos_order.pos_reference) >= 12, "The pos reference should not be less than 12 characters")
 
     def test_qr_code_receipt_user_connected(self):
         """This test make sure that when the user is already connected he correctly gets redirected to the invoice."""
