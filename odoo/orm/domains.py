@@ -180,6 +180,11 @@ class OptimizationLevel(enum.IntEnum):
     DYNAMIC_VALUES = enum.auto()
     FULL = enum.auto()
 
+    @functools.cached_property
+    def next_level(self):
+        assert self is not OptimizationLevel.FULL, "FULL level is the last one"
+        return OptimizationLevel(int(self) + 1)
+
 
 MAX_OPTIMIZE_ITERATIONS = 1000
 
@@ -450,7 +455,7 @@ class Domain:
         while domain._opt_level < level:
             if (count := count + 1) > MAX_OPTIMIZE_ITERATIONS:
                 raise RecursionError("Domain.optimize: too many loops")
-            next_level = OptimizationLevel(domain._opt_level + 1)
+            next_level = domain._opt_level.next_level
             previous, domain = domain, domain._optimize_step(model, next_level)
             # set the optimization level if necessary (unlike DomainBool, for instance)
             if domain == previous and domain._opt_level < next_level:
@@ -926,7 +931,7 @@ class DomainCondition(Domain):
         - Run optimizations.
         - Check the output.
         """
-        assert level == self._opt_level + 1, f"Trying to skip optimization level after {self._opt_level}"
+        assert level is self._opt_level.next_level, f"Trying to skip optimization level after {self._opt_level}"
 
         if level == OptimizationLevel.BASIC:
             # optimize path
