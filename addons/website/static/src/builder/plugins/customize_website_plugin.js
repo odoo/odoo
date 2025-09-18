@@ -166,7 +166,7 @@ export class CustomizeWebsitePlugin extends Plugin {
                 const isColorCombination = /^o_cc[12345]$/.test(color);
                 if (isColorCombination) {
                     finalColors[combinationColor] = parseInt(color.substring(4));
-                    delete finalColors[colorName];
+                    finalColors[colorName] = "";
                 } else if (isCSSVariable(color)) {
                     const customProperty = color.match(/var\(--(.+?)\)/)[1];
                     finalColors[colorName] = this.getWebsiteVariableValue(customProperty);
@@ -921,14 +921,12 @@ export class CustomizeWebsiteColorAction extends BuilderAction {
                     // Do not touch CC if a gradient is being set
                     resetCcOnEmpty: !gradientValue,
                     // Reload bundle will be handled by setting gradient
-                    reloadBundles: isColorCombination,
+                    reloadBundles: false,
                 }
             );
-            if (!isColorCombination) {
-                await this.dependencies.customizeWebsite.customizeWebsiteVariables({
-                    [gradientColor]: gradientValue || nullValue,
-                }); // reloads bundles
-            }
+            await this.dependencies.customizeWebsite.customizeWebsiteVariables({
+                [gradientColor]: isColorCombination ? nullValue : gradientValue || nullValue,
+            }); // reloads bundles
         } else {
             await this.dependencies.customizeWebsite.customizeWebsiteColors(
                 { [color]: value },
