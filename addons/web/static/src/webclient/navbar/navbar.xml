@@ -115,6 +115,7 @@
           <nav class="o_burger_menu_content flex-grow-1 flex-shrink-1 overflow-auto o_burger_menu_app">
                 <div t-if="!state.isAllAppsMenuOpened and currentApp" class="d-flex align-items-center m-3 mb-0">
                   <img style="height: 2em;" t-if="currentApp.webIconData" class="o_app_icon me-2" t-attf-src="{{currentApp.webIconData}}"/>
+                  <i t-elif="currentApp.webIcon" t-att-class="`${currentApp.webIconClass} fa-2x me-2`" t-att-style="'color:' + currentApp.webIconColor"></i>
                   <span class="fs-4 fw-bolder"><t t-esc="currentApp.name"/></span>
                 </div>
                 <ul class="list-unstyled py-2 ps-0 mb-0">
@@ -131,6 +132,7 @@
                         <li t-att-data-menu-xmlid="app.xmlid" class="o_app fw-bolder py-2" t-att-class="{'bg-primary-subtle': menuService.getCurrentApp() === app}" t-on-click="() => {this.onNavBarDropdownItemSelection(app); this._closeAppMenuSidebar();}">
                           <div class="d-flex align-items-center">
                             <img style="height: 3em;" t-if="app.webIconData" class="o_app_icon me-2" t-attf-src="{{app.webIconData}}"/>
+                            <i t-elif="app.webIcon" t-att-class="app.webIcon.split(',')[0] + ' fa-3x me-2'" t-att-style="'color:' + app.webIcon.split(',')[1]"></i>
                             <t t-esc="app.name"/>
                           </div>
                         </li>

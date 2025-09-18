@@ -85,7 +85,17 @@ export class NavBar extends Component {
     }
 
     get currentApp() {
-        return this.menuService.getCurrentApp();
+        const app = this.menuService.getCurrentApp();
+        if (app?.webIcon) {
+            const [webIconClass, webIconColor, webIconBg] = app.webIcon.split(",");
+            return {
+                ...app,
+                webIconClass,
+                webIconColor,
+                webIconBg,
+            };
+        }
+        return app;
     }
 
     get currentAppSections() {
