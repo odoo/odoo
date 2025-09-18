@@ -148,6 +148,24 @@ class TestPickShip(TestStockCommon):
         quants = self.env['stock.quant']._gather(product_unreserve, stock_location, strict=True)
         self.assertEqual(quants[0].reserved_quantity, 2)
 
+    def test_unlink_move_from_ready_picking(self):
+        receipt = self.env['stock.picking'].create({
+            'location_id': self.supplier_location,
+            'location_dest_id': self.stock_location,
+            'picking_type_id': self.picking_type_in,
+            'state': 'draft',
+            'move_ids': [(0, 0, {
+                'name': self.productA.name,
+                'product_id': self.productA.id,
+                'product_uom_qty': 10,
+                'product_uom': self.productA.uom_id.id,
+                'location_id': self.supplier_location,
+                'location_dest_id': self.stock_location,
+            })]
+        })
+        receipt.action_confirm()
+        with self.assertRaises(UserError):
+            receipt.move_ids.unlink()
 
     def test_mto_moves(self):
         """
@@ -2192,6 +2210,9 @@ class TestSinglePicking(TestStockCommon):
 
         picking = Form(picking)
         picking.move_ids_without_package.remove(0)
+        with self.assertRaises(UserError):
+            picking = picking.save()
+        picking._record.action_cancel()
         picking = picking.save()
         self.assertEqual(len(picking.move_ids_without_package), 0)
 
