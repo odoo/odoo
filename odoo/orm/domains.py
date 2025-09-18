@@ -1335,6 +1335,9 @@ def _optimize_any_domain(condition, model):
         # id ANY domain  <=>  domain
         # id NOT ANY domain  <=>  ~domain
         return domain if condition.operator in ('any', 'any!') else ~domain
+    if value is domain:
+        # avoid recreating the same condition
+        return condition
     return DomainCondition(condition.field_expr, condition.operator, domain)
 
 
@@ -1355,6 +1358,9 @@ def _optimize_any_domain_at_level(level: OptimizationLevel, condition, model):
     # if the domain is True, we keep it as is
     if domain.is_false():
         return _FALSE_DOMAIN if condition.operator in ('any', 'any!') else _TRUE_DOMAIN
+    if domain is condition.value:
+        # avoid recreating the same condition
+        return condition
     return DomainCondition(condition.field_expr, condition.operator, domain)
 
 
