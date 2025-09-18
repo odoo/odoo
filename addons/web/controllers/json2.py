@@ -78,8 +78,8 @@ class Json2RpcDispatcher(http.Dispatcher):
 class WebJson2Controller(http.Controller):
     def _web_json_2_rpc_readonly(self, rule, args):
         try:
-            model_name = args['model']
-            method_name = args['method']
+            model_name = args['__model__']
+            method_name = args['__method__']
             Model = request.registry[model_name]
         except KeyError:
             # no need of a read/write cursor to send a 404 http error
@@ -91,7 +91,7 @@ class WebJson2Controller(http.Controller):
         return False
 
     @http.route(
-        '/json/2/<model>/<method>',
+        '/json/2/<__model__>/<__method__>',
         # methods=['POST'], # must accept all methods, otherwise /json/<path:subpath> takes over
         auth='bearer',
         type='/json/2/rpc',
@@ -100,8 +100,8 @@ class WebJson2Controller(http.Controller):
     )
     def web_json_2_rpc(
         self,
-        model: str,
-        method: str,
+        __model__: str,
+        __method__: str,
         ids: Sequence[int] = (),
         context: Mapping[str, Any] = frozendict(),
         **kwargs,
@@ -110,17 +110,17 @@ class WebJson2Controller(http.Controller):
             raise MethodNotAllowed()
 
         try:
-            Model = request.env[model].with_context(context)
+            Model = request.env[__model__].with_context(context)
         except KeyError as exc:
-            e = f"the model {model!r} does not exist"
+            e = f"the model {__model__!r} does not exist"
             raise NotFound(e) from exc
 
         try:
-            func = get_public_method(Model, method)
+            func = get_public_method(Model, __method__)
         except AttributeError as exc:
             raise NotFound(exc.args[0]) from exc
         if hasattr(func, '_api_model') and ids:
-            e = f"cannot call {model}.{method} with ids"
+            e = f"cannot call {__model__}.{__method__} with ids"
             raise UnprocessableEntity(e)
 
         records = Model.browse(ids)
