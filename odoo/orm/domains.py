@@ -656,6 +656,10 @@ class DomainNary(Domain):
                 children = merge(cls, children, model)
                 if len(children) < size:
                     break
+            else:
+                # if no change, skip creation of a new object
+                if len(self.children) == len(children) and all(map(operator.is_, self.children, children)):
+                    return self
         return self.apply(children)
 
     def _to_sql(self, model: BaseModel, alias: str, query: Query) -> SQL:
