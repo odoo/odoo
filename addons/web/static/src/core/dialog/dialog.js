@@ -55,6 +55,7 @@ export class Dialog extends Component {
         },
         withBodyPadding: { type: Boolean, optional: true },
         onExpand: { type: Function, optional: true },
+        onMobilesnippet: { type: Boolean, optional: true },
     };
     static defaultProps = {
         contentClass: "",
@@ -70,6 +71,7 @@ export class Dialog extends Component {
 
     setup() {
         this.modalRef = useForwardRefToParent("modalRef");
+        this.isMobilePreviewSnippet  = false;
         useActiveElement("modalRef");
         this.data = useState(this.env.dialogData);
         useHotkey("escape", () => this.onEscape());
@@ -118,6 +120,19 @@ export class Dialog extends Component {
 
     get isFullscreen() {
         return this.props.fullscreen || this.env.isSmall;
+    }
+
+    toggleMobilePreview() {
+        this.isMobilePreviewSnippet = !this.isMobilePreviewSnippet;
+        const dialogContent = this.modalRef.el.querySelector("iframe");
+        const Htmlcontent = dialogContent.contentDocument.querySelector('html');
+        if (this.isMobilePreviewSnippet) {
+            dialogContent.classList.add("o_is_mobile");
+            Htmlcontent.classList.add("o_is_mobile_preview");
+        } else {
+            dialogContent.classList.remove("o_is_mobile");
+            Htmlcontent.classList.remove("o_is_mobile_preview");
+        }
     }
 
     get contentStyle() {
