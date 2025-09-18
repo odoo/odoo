@@ -4125,6 +4125,7 @@ class BaseModel(metaclass=MetaModel):
         This method is implemented thanks to methods :meth:`_search` and
         :meth:`_fetch_query`, and should not be overridden.
         """
+        self = self._origin  # noqa: PLW0642 filtered out new records
         if not self or not field_names:
             return
 
