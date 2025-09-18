@@ -439,7 +439,7 @@ class CustomerPortal(Controller):
             ),
             'address_type': address_type,
             'can_edit_vat': can_edit_vat,
-            'can_edit_country': not partner_sudo or partner_sudo._can_edit_country(),
+            'can_edit_country': not partner_sudo.country_id or partner_sudo._can_edit_country(),
             'callback': callback,
             'country': country_sudo,
             'countries': request.env['res.country'].sudo().search([]),
