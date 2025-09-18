@@ -52,7 +52,8 @@ test("BuilderColorPicker with action “customizeWebsiteColor” is correctly di
     await def;
     expect.verifySteps([
         "set preset",
-        '/website/static/src/scss/options/colors/user_color_palette.scss {"test":4}',
+        '/website/static/src/scss/options/colors/user_color_palette.scss {"test-custom":"NULL","test":4}',
+        '/website/static/src/scss/options/user_values.scss {"test-gradient":"NULL"}',
         "asset reload",
     ]);
 
@@ -80,7 +81,8 @@ test("BuilderColorPicker with action “customizeWebsiteColor” is correctly di
     await def;
     expect.verifySteps([
         "set preset on solid color",
-        '/website/static/src/scss/options/colors/user_color_palette.scss {"test":3}',
+        '/website/static/src/scss/options/colors/user_color_palette.scss {"test-custom":"NULL","test":3}',
+        '/website/static/src/scss/options/user_values.scss {"test-gradient":"NULL"}',
         "asset reload",
     ]);
 
@@ -108,7 +110,8 @@ test("BuilderColorPicker with action “customizeWebsiteColor” is correctly di
     await def;
     expect.verifySteps([
         "set preset on gradient",
-        '/website/static/src/scss/options/colors/user_color_palette.scss {"test":4}',
+        '/website/static/src/scss/options/colors/user_color_palette.scss {"test-custom":"NULL","test":4}',
+        '/website/static/src/scss/options/user_values.scss {"test-gradient":"NULL"}',
         "asset reload",
     ]);
 
