@@ -1006,9 +1006,33 @@ class SaleOrder(models.Model):
                     "You can not delete a sent quotation or a confirmed sales order."
                     " You must first cancel it."))
 
+    def _get_protected_fields(self):
+        """ Give the fields that should not be modified on a locked SO.
+
+        :returns: list of field names
+        :rtype: list
+        """
+        return [
+            'partner_id'
+        ]
+
     def write(self, vals):
         if 'pricelist_id' in vals and any(so.state == 'sale' for so in self):
             raise UserError(_("You cannot change the pricelist of a confirmed order !"))
+
+        # Prevent writing on a locked SO.
+        protected_fields = self._get_protected_fields()
+        if any(self.mapped('locked')) and any(f in vals for f in protected_fields):
+            protected_fields_modified = list(set(protected_fields) & set(vals.keys()))
+            fields = self.env['ir.model.fields'].sudo().search([
+                ('name', 'in', protected_fields_modified), ('model', '=', self._name)
+            ])
+            if fields:
+                raise UserError(
+                    _('It is forbidden to modify the following fields in a locked order:\n%s',
+                      '\n'.join(fields.mapped('field_description')))
+                )
+
         res = super().write(vals)
         if vals.get('partner_id'):
             self.filtered(lambda so: so.state in ('sent', 'sale')).message_subscribe(
