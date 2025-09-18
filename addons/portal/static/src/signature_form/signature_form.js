@@ -47,10 +47,13 @@ export class SignatureForm extends Component {
 
         // Correctly set up the signature area if it is inside a modal
         onMounted(() => {
-            this.rootRef.el.closest('.modal').addEventListener('shown.bs.modal', () => {
-                this.signature.resetSignature();
-                this.toggleSignatureFormVisibility();
-            });
+            const modal_el = this.rootRef.el.closest('.modal');
+            if (modal_el !== null) {
+                modal_el.addEventListener('shown.bs.modal', () => {
+                    this.signature.resetSignature();
+                    this.toggleSignatureFormVisibility();
+                });
+            }
         });
     }
 

@@ -13,7 +13,7 @@ class TestGenericSAEdi(TestGenericLocalization):
         super().setUpClass()
         cls.main_pos_config.journal_id._l10n_sa_load_edi_demo_data()
         cls.company.write({
-            'name': 'SA Company Test',
+            'name': 'Generic SA EDI',
             'email': 'info@company.saexample.com',
             'phone': '+966 51 234 5678',
             'street2': 'Testomania',

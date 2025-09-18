@@ -12,4 +12,5 @@ class IrHttp(models.AbstractModel):
         ICP = self.env['ir.config_parameter'].sudo()
         if ICP.get_param('cloud_storage_provider'):
             res['cloud_storage_min_file_size'] = ICP.get_param('cloud_storage_min_file_size', DEFAULT_CLOUD_STORAGE_MIN_FILE_SIZE)
+            res['cloud_storage_unsupported_models'] = self.env['ir.attachment']._get_cloud_storage_unsupported_models()
         return res
