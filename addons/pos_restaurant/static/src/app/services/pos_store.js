@@ -395,15 +395,18 @@ patch(PosStore.prototype, {
 
         return false;
     },
-    async onDeleteOrder(order) {
-        const orderIsDeleted = await super.onDeleteOrder(...arguments);
+    removeOrder(order) {
+        const wasCurrentOrder = this.selectedOrderUuid === order?.uuid;
+        const orderRemoved = super.removeOrder(...arguments);
         if (
-            orderIsDeleted &&
+            orderRemoved &&
+            wasCurrentOrder &&
             this.config.module_pos_restaurant &&
             this.router.state.current !== "TicketScreen"
         ) {
             this.navigate("FloorScreen");
         }
+        return orderRemoved;
     },
     async closingSessionNotification(data) {
         await super.closingSessionNotification(...arguments);
@@ -479,18 +482,6 @@ patch(PosStore.prototype, {
     },
     get selectedTable() {
         return this.getOrder()?.table_id;
-    },
-    navigate(routeName, routeParams = {}) {
-        const order = this.getOrder();
-        if (
-            this.config.module_pos_restaurant &&
-            this.router.state.current === "ProductScreen" &&
-            order &&
-            !order.isBooked
-        ) {
-            this.removeOrder(order);
-        }
-        return super.navigate(routeName, routeParams);
     },
     showDefault() {
         const page = this.defaultPage;
